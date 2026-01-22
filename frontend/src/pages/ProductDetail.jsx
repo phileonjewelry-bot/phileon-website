@@ -102,11 +102,11 @@ const ProductDetail = () => {
 
             {/* Try-On Button */}
             <Button
-              onClick={() => setShowTryOn(!showTryOn)}
+              onClick={() => setShowTryOn(true)}
               className="w-full mt-6 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-semibold py-6 text-lg"
             >
               <Scan className="w-5 h-5 mr-2" />
-              Virtual Try-On (Coming Soon)
+              Try On with AR Camera
             </Button>
           </div>
 
