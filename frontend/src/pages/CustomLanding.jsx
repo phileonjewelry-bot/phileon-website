@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Award, Clock, Shield } from 'lucide-react';
+import { ArrowRight, Sparkles, Award, Clock, Shield, Calendar } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 
 const CustomLanding = () => {
+  const bookingUrl = process.env.REACT_APP_BOOKING_URL || 'https://calendly.com/phileon/consultation';
+  
   const pastWork = [
     { id: 1, image: 'https://images.pexels.com/photos/14823622/pexels-photo-14823622.jpeg', title: 'Custom Diamond Ring' },
     { id: 2, image: 'https://images.unsplash.com/photo-1605100804567-1ffe942b5cd6', title: 'Bespoke Gold Chain' },
