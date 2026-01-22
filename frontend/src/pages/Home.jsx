@@ -205,8 +205,12 @@ const Home = () => {
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute top-3 right-3 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
-                        BESTSELLER
+                      <div className="absolute top-3 right-3">
+                        <StockBadge 
+                          stockStatus={product.stockStatus} 
+                          isNew={product.isNew} 
+                          isBestseller={product.bestseller}
+                        />
                       </div>
                     </div>
                     <div className="p-4">
