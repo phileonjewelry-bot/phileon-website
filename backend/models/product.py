@@ -8,6 +8,7 @@ class Product(BaseModel):
     category: str  # necklaces, rings, bracelets, earrings
     price: float
     images: List[str] = []  # URLs or file paths
+    videos: List[str] = []  # Video URLs or file paths (360 rotation, promotional)
     description: str = ""
     material: str = ""
     weight: str = ""
