@@ -79,22 +79,79 @@ export const products = [
   },
   {
     id: '5',
-    name: 'Wedding Band Set',
+    name: 'Classic Wedding Band Set',
     category: 'rings',
     price: 1799.99,
     images: [
-      'https://images.pexels.com/photos/204993/pexels-photo-204993.jpeg',
-      'https://images.unsplash.com/photo-1611540497578-4cb17aa00718',
+      'https://images.pexels.com/photos/2735981/pexels-photo-2735981.jpeg',
+      'https://images.unsplash.com/photo-1648564585735-19491888545c',
       'https://images.pexels.com/photos/2849742/pexels-photo-2849742.jpeg'
     ],
-    description: 'Matching wedding bands in lustrous gold',
-    material: '18K Yellow Gold',
+    description: 'Matching wedding bands in lustrous white gold with diamond accents',
+    material: '18K White Gold',
     weight: '8.0g (pair)',
     certification: 'Hallmarked Gold',
     inStock: true,
     bestseller: true,
     rating: 5.0,
     reviews: 156
+  },
+  {
+    id: '9',
+    name: 'Cushion Cut Diamond Ring',
+    category: 'rings',
+    price: 3299.99,
+    images: [
+      'https://images.unsplash.com/photo-1747116404311-55f8d8944e83',
+      'https://images.unsplash.com/photo-1605100804567-1ffe942b5cd6',
+      'https://images.pexels.com/photos/2849742/pexels-photo-2849742.jpeg'
+    ],
+    description: '2 carat cushion-cut diamond with pavé halo and band',
+    material: '18K White Gold, Diamond',
+    weight: '4.1g',
+    certification: 'GIA Certified Diamond',
+    inStock: true,
+    bestseller: true,
+    rating: 4.9,
+    reviews: 145
+  },
+  {
+    id: '10',
+    name: 'Rose Gold Engagement Ring',
+    category: 'rings',
+    price: 2899.99,
+    images: [
+      'https://images.unsplash.com/photo-1588814096146-e7c56156f9f8',
+      'https://images.unsplash.com/photo-1648564585735-19491888545c',
+      'https://images.unsplash.com/photo-1605100804567-1ffe942b5cd6'
+    ],
+    description: 'Elegant rose gold ring with round brilliant diamond',
+    material: '14K Rose Gold, Diamond',
+    weight: '3.5g',
+    certification: 'IGI Certified Diamond',
+    inStock: true,
+    bestseller: false,
+    rating: 4.8,
+    reviews: 98
+  },
+  {
+    id: '11',
+    name: 'Trio Ring Collection',
+    category: 'rings',
+    price: 1599.99,
+    images: [
+      'https://images.unsplash.com/photo-1719924998065-0c60e329ef58',
+      'https://images.pexels.com/photos/2735981/pexels-photo-2735981.jpeg',
+      'https://images.unsplash.com/photo-1648564585735-19491888545c'
+    ],
+    description: 'Set of three stackable gold rings with diamond accents',
+    material: '14K Yellow Gold, Diamonds',
+    weight: '5.2g',
+    certification: 'Hallmarked Gold',
+    inStock: true,
+    bestseller: false,
+    rating: 4.7,
+    reviews: 76
   },
   {
     id: '6',
