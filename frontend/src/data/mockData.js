@@ -26,11 +26,11 @@ export const products = [
     category: 'rings',
     price: 2499.99,
     images: [
-      'https://images.unsplash.com/photo-1611540497578-4cb17aa00718',
-      'https://images.pexels.com/photos/1395306/pexels-photo-1395306.jpeg',
+      'https://images.unsplash.com/photo-1605100804567-1ffe942b5cd6',
+      'https://images.unsplash.com/photo-1648564585735-19491888545c',
       'https://images.pexels.com/photos/2849742/pexels-photo-2849742.jpeg'
     ],
-    description: '1.5 carat round brilliant cut diamond set in 14K gold',
+    description: '1.5 carat pear-shaped diamond with double halo set in white gold',
     material: '14K White Gold, Diamond',
     weight: '3.2g',
     certification: 'IGI Certified Diamond',
