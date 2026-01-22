@@ -77,30 +77,77 @@ const ProductDetail = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Product Images */}
+          {/* Product Images & Videos */}
           <div>
-            <div className="relative overflow-hidden rounded-lg aspect-square mb-4">
-              <img
-                src={product.images[selectedImage]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+            <div className="relative overflow-hidden rounded-lg aspect-square mb-4 bg-gray-900">
+              {selectedMediaType === 'image' ? (
+                <img
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <video
+                  src={product.videos[selectedVideoIndex]}
+                  className="w-full h-full object-cover"
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                />
+              )}
               {product.bestseller && (
                 <div className="absolute top-4 left-4 bg-yellow-500 text-black text-sm font-bold px-4 py-2 rounded-full">
                   BESTSELLER
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            
+            {/* Media Gallery Thumbnails */}
+            <div className="grid grid-cols-4 gap-4">
+              {/* Image Thumbnails */}
               {product.images.map((img, index) => (
                 <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
+                  key={`img-${index}`}
+                  onClick={() => {
+                    setSelectedImage(index);
+                    setSelectedMediaType('image');
+                  }}
                   className={`relative overflow-hidden rounded-lg aspect-square border-2 transition-all duration-300 ${
-                    selectedImage === index ? 'border-yellow-500' : 'border-gray-800 hover:border-gray-600'
+                    selectedMediaType === 'image' && selectedImage === index 
+                      ? 'border-yellow-500' 
+                      : 'border-gray-800 hover:border-gray-600'
                   }`}
                 >
                   <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+              
+              {/* Video Thumbnails */}
+              {hasVideos && product.videos.map((vid, index) => (
+                <button
+                  key={`vid-${index}`}
+                  onClick={() => {
+                    setSelectedVideoIndex(index);
+                    setSelectedMediaType('video');
+                  }}
+                  className={`relative overflow-hidden rounded-lg aspect-square border-2 transition-all duration-300 ${
+                    selectedMediaType === 'video' && selectedVideoIndex === index 
+                      ? 'border-yellow-500' 
+                      : 'border-gray-800 hover:border-gray-600'
+                  }`}
+                >
+                  <video src={vid} className="w-full h-full object-cover" muted />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="bg-yellow-500 rounded-full p-2">
+                      <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-2 py-0.5 rounded">
+                    360°
+                  </div>
                 </button>
               ))}
             </div>
