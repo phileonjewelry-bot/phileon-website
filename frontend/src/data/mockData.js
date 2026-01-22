@@ -11,13 +11,16 @@ export const products = [
       'https://images.unsplash.com/photo-1583095880514-777b51b6c771',
       'https://images.pexels.com/photos/3641059/pexels-photo-3641059.jpeg'
     ],
-    videos: [], // Product videos (360 rotation, close-ups, etc.)
+    videos: [],
     description: 'Handcrafted 18K gold chain necklace with intricate detailing',
     material: '18K Yellow Gold',
     weight: '12.5g',
     certification: 'GIA Certified',
     inStock: true,
+    stockQuantity: 8,
+    stockStatus: 'in_stock', // 'in_stock', 'low_stock', 'almost_sold_out', 'sold_out', 'new', 'coming_soon'
     bestseller: true,
+    isNew: false,
     rating: 4.8,
     reviews: 127
   },
