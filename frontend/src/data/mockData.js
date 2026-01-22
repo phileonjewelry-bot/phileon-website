@@ -296,11 +296,6 @@ export const trustBadges = [
     icon: 'Truck',
     title: 'Free Shipping',
     description: 'On orders over $100'
-  },
-  {
-    icon: 'RotateCcw',
-    title: '30-Day Returns',
-    description: 'Hassle-free returns'
   }
 ];
 
