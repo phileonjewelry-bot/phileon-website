@@ -284,12 +284,30 @@ const VirtualTryOn = ({ product, onClose }) => {
 
   if (error) {
     return (
-      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <Card className="max-w-md">
-          <CardContent className="p-6">
-            <div className="text-center space-y-4">
-              <p className="text-red-500">{error}</p>
-              <Button onClick={onClose} variant="outline">
+      <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+        <Card className="max-w-md bg-gray-900 border-gray-800">
+          <CardContent className="p-8">
+            <div className="text-center space-y-6">
+              <div className="bg-red-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+                <X className="w-10 h-10 text-red-500" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white mb-2">Camera Access Required</h3>
+                <p className="text-gray-400">{error}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded-lg text-left">
+                <p className="text-sm text-gray-300 mb-2 font-semibold">To use AR Try-On:</p>
+                <ul className="text-sm text-gray-400 space-y-1 list-disc list-inside">
+                  <li>Allow camera access when prompted</li>
+                  <li>Use Chrome, Safari, or Firefox browser</li>
+                  <li>Ensure camera is not in use by another app</li>
+                  <li>Check camera permissions in browser settings</li>
+                </ul>
+              </div>
+              <Button 
+                onClick={onClose} 
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+              >
                 Close
               </Button>
             </div>
