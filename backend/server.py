@@ -21,8 +21,13 @@ db = client[os.environ['DB_NAME']]
 # Create the main app without a prefix
 app = FastAPI()
 
-# Mount static files for uploads
-app.mount("/uploads", StaticFiles(directory="/app/backend/uploads"), name="uploads")
+# Create uploads directory if it doesn't exist and mount static files
+uploads_dir = "/app/backend/uploads"
+os.makedirs(uploads_dir, exist_ok=True)
+os.makedirs(f"{uploads_dir}/products", exist_ok=True)
+os.makedirs(f"{uploads_dir}/customers", exist_ok=True)
+
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
