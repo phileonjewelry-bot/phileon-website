@@ -33,6 +33,9 @@ const Header = () => {
 
   return (
     <>
+      {/* Live Gold Price Ticker */}
+      <LiveGoldPriceTicker />
+      
       {/* Announcement Bar */}
       <div className="bg-yellow-500 text-black text-center py-2 px-4 font-semibold">
         Free shipping over $100
