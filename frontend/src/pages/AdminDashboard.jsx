@@ -69,6 +69,36 @@ const AdminDashboard = () => {
     });
   };
 
+  // Drag and Drop Handlers for Product Videos
+  const handleProductVideoDrop = (e, isNewProduct = true) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    handleProductVideoFiles(files, isNewProduct);
+  };
+
+  const handleProductVideoFiles = (files, isNewProduct = true) => {
+    files.forEach(file => {
+      if (file.type.startsWith('video/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const videoUrl = e.target.result;
+          if (isNewProduct) {
+            setNewProduct(prev => ({
+              ...prev,
+              videos: [...prev.videos, videoUrl]
+            }));
+          } else if (editingProduct) {
+            setEditingProduct(prev => ({
+              ...prev,
+              videos: [...prev.videos, videoUrl]
+            }));
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  };
+
   // Drag and Drop for Customer Photos
   const handleCustomerPhotoDrop = (e) => {
     e.preventDefault();
