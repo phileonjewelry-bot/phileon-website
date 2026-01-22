@@ -24,6 +24,10 @@ async def check_low_stock_products():
     for product in products:
         stock_qty = product.get('stockQuantity', 0)
         
+        # Remove MongoDB _id field for JSON serialization
+        if '_id' in product:
+            del product['_id']
+        
         if stock_qty == 0:
             sold_out_products.append(product)
         elif stock_qty <= ALMOST_SOLD_OUT_THRESHOLD:
