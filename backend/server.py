@@ -37,6 +37,7 @@ api_router.include_router(products.router)
 api_router.include_router(cart.router)
 api_router.include_router(orders.router)
 api_router.include_router(customer_photos.router)
+api_router.include_router(inventory.router)
 
 # Add basic health check
 @api_router.get("/")
