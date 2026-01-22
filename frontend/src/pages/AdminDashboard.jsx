@@ -622,6 +622,7 @@ const AdminDashboard = () => {
         </Tabs>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 
