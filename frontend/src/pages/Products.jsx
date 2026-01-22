@@ -4,6 +4,7 @@ import { Star, Filter } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { products } from '../data/mockData';
+import StockBadge from '../components/StockBadge';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
