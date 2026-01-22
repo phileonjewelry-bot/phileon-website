@@ -26,7 +26,8 @@ const AdminDashboard = () => {
     material: '',
     weight: '',
     certification: '',
-    images: []
+    images: [],
+    videos: []
   });
 
   // Customer Photos State
