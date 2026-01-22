@@ -99,11 +99,13 @@ const Products = () => {
                           alt={product.name}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
-                        {product.bestseller && (
-                          <div className="absolute top-3 right-3 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
-                            BESTSELLER
-                          </div>
-                        )}
+                        <div className="absolute top-3 right-3 flex flex-col gap-2">
+                          <StockBadge 
+                            stockStatus={product.stockStatus} 
+                            isNew={product.isNew} 
+                            isBestseller={product.bestseller}
+                          />
+                        </div>
                       </div>
                       <div className="p-4">
                         <h3 className="text-white font-semibold mb-2 line-clamp-2">{product.name}</h3>
