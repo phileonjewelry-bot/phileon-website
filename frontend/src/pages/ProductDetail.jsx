@@ -201,6 +201,14 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Virtual Try-On Modal */}
+      {showTryOn && (
+        <VirtualTryOn
+          product={product}
+          onClose={() => setShowTryOn(false)}
+        />
+      )}
     </div>
   );
 };
