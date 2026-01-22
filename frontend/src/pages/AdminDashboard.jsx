@@ -221,25 +221,36 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Admin Header */}
-      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 py-6">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-black">Admin Dashboard</h1>
-              <p className="text-black/80 mt-1">Manage your products and customer gallery</p>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-black">
+        {/* Admin Header */}
+        <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 py-6">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-black">Admin Dashboard</h1>
+                <p className="text-black/80 mt-1">Manage your products and customer gallery</p>
+              </div>
+              <div className="flex gap-4">
+                <Button
+                  onClick={() => navigate('/')}
+                  variant="outline"
+                  className="border-black text-black hover:bg-black hover:text-yellow-500"
+                >
+                  View Store
+                </Button>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="border-black text-black hover:bg-red-500 hover:text-white hover:border-red-500"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
             </div>
-            <Button
-              onClick={() => navigate('/')}
-              variant="outline"
-              className="border-black text-black hover:bg-black hover:text-yellow-500"
-            >
-              View Store
-            </Button>
           </div>
         </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
