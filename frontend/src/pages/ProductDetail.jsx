@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { products } from '../data/mockData';
 import { useToast } from '../hooks/use-toast';
+import VirtualTryOn from '../components/VirtualTryOn';
 
 const ProductDetail = () => {
   const { id } = useParams();
