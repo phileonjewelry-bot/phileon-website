@@ -29,6 +29,7 @@ const Header = () => {
     { name: 'Rings', path: '/products?category=rings' },
     { name: 'Bracelets', path: '/products?category=bracelets' },
     { name: 'Earrings', path: '/products?category=earrings' },
+    { name: 'Custom', path: '/custom' },
   ];
 
   return (
