@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Plus, Trash2, Save, Image as ImageIcon, Users, Package } from 'lucide-react';
+import { Upload, Plus, Trash2, Save, Image as ImageIcon, Users, Package, LogOut } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -9,11 +9,22 @@ import { Textarea } from '../components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { useToast } from '../hooks/use-toast';
 import { products, customerPhotos } from '../data/mockData';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('products');
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminEmail');
+    toast({
+      title: 'Logged Out',
+      description: 'You have been logged out successfully',
+    });
+    navigate('/admin');
+  };
 
   // Product Management State
   const [productList, setProductList] = useState(products);
