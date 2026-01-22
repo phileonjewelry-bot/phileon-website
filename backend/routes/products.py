@@ -119,3 +119,26 @@ async def upload_product_image(file: UploadFile = File(...)):
     image_url = f"/uploads/products/{unique_filename}"
     
     return {"imageUrl": image_url, "filename": unique_filename}
+
+@router.post("/upload-video")
+async def upload_product_video(file: UploadFile = File(...)):
+    """Upload product video (360° rotation or promotional)"""
+    
+    # Create uploads directory if it doesn't exist
+    upload_dir = "/app/backend/uploads/videos"
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    # Generate unique filename
+    file_extension = file.filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4()}.{file_extension}"
+    file_path = os.path.join(upload_dir, unique_filename)
+    
+    # Save file
+    contents = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(contents)
+    
+    # Return URL
+    video_url = f"/uploads/videos/{unique_filename}"
+    
+    return {"videoUrl": video_url, "filename": unique_filename}
