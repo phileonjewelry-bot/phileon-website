@@ -215,45 +215,66 @@ export const products = [
 export const customerPhotos = [
   {
     id: 'c1',
-    image: 'https://images.unsplash.com/photo-1750032627215-69fb9f57887d',
-    customerName: 'Sarah M.',
-    productName: 'Eternal Gold Chain Necklace',
-    location: 'New York, USA'
+    image: 'https://images.pexels.com/photos/3674231/pexels-photo-3674231.jpeg',
+    customerName: 'Amara K.',
+    productName: 'Diamond Solitaire Ring',
+    location: 'Paris, France'
   },
   {
     id: 'c2',
-    image: 'https://images.unsplash.com/photo-1750032627218-b6b5ae6b0411',
-    customerName: 'Emily R.',
-    productName: 'Diamond Solitaire Ring',
-    location: 'Los Angeles, USA'
+    image: 'https://images.pexels.com/photos/10050218/pexels-photo-10050218.jpeg',
+    customerName: 'Marcus D.',
+    productName: 'Statement Gold Necklace',
+    location: 'London, UK'
   },
   {
     id: 'c3',
-    image: 'https://images.unsplash.com/photo-1741885177676-98cd52bd6484',
-    customerName: 'Jessica T.',
-    productName: 'Classic Gold Bracelet',
-    location: 'Chicago, USA'
+    image: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg',
+    customerName: 'Zara M.',
+    productName: 'Eternal Gold Chain Necklace',
+    location: 'Milan, Italy'
   },
   {
     id: 'c4',
-    image: 'https://images.unsplash.com/photo-1750032439477-443d414ac4d5',
-    customerName: 'Amanda K.',
-    productName: 'Statement Gold Necklace',
-    location: 'Miami, USA'
+    image: 'https://images.pexels.com/photos/2584269/pexels-photo-2584269.jpeg',
+    customerName: 'Nia T.',
+    productName: 'Classic Gold Bracelet',
+    location: 'Geneva, Switzerland'
   },
   {
     id: 'c5',
-    image: 'https://images.pexels.com/photos/9418856/pexels-photo-9418856.jpeg',
-    customerName: 'Rachel P.',
-    productName: 'Wedding Band Set',
-    location: 'Boston, USA'
+    image: 'https://images.pexels.com/photos/3693139/pexels-photo-3693139.jpeg',
+    customerName: 'Imani R.',
+    productName: 'Cushion Cut Diamond Ring',
+    location: 'Monaco'
   },
   {
     id: 'c6',
-    image: 'https://images.pexels.com/photos/4550854/pexels-photo-4550854.jpeg',
-    customerName: 'Lauren B.',
+    image: 'https://images.pexels.com/photos/35358557/pexels-photo-35358557.jpeg',
+    customerName: 'Sékou J.',
+    productName: 'Wedding Band Set',
+    location: 'Brussels, Belgium'
+  },
+  {
+    id: 'c7',
+    image: 'https://images.pexels.com/photos/33871730/pexels-photo-33871730.jpeg',
+    customerName: 'Aaliyah W.',
+    productName: 'Pearl Drop Earrings',
+    location: 'Zurich, Switzerland'
+  },
+  {
+    id: 'c8',
+    image: 'https://images.pexels.com/photos/15011369/pexels-photo-15011369.jpeg',
+    customerName: 'Xavier B.',
     productName: 'Hoop Earrings',
-    location: 'Seattle, USA'
+    location: 'Amsterdam, Netherlands'
+  },
+  {
+    id: 'c9',
+    image: 'https://images.pexels.com/photos/35598284/pexels-photo-35598284.jpeg',
+    customerName: 'Zuri H.',
+    productName: 'Rose Gold Engagement Ring',
+    location: 'Copenhagen, Denmark'
   }
 ];
 
