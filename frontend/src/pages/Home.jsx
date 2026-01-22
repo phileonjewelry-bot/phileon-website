@@ -237,6 +237,51 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Custom Bespoke Section */}
+      <section className="bg-gradient-to-b from-black via-gray-900 to-black py-32">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <div className="mb-8">
+            <span className="inline-block text-yellow-500 text-sm font-semibold tracking-wider uppercase mb-4">
+              Bespoke Creations
+            </span>
+          </div>
+          <h2 className="text-5xl md:text-6xl font-serif font-light text-[#f5f5dc] mb-6 leading-tight">
+            Your story.
+            <br />
+            <span className="text-yellow-500">Crafted in gold.</span>
+          </h2>
+          <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Don't see exactly what you're looking for? Our master jewelers can create a one-of-a-kind piece that captures your unique vision and meaning.
+          </p>
+          <Link to="/custom">
+            <Button
+              size="lg"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-12 py-8 text-lg transition-all duration-300 hover:scale-105"
+            >
+              Explore Custom Jewelry
+            </Button>
+          </Link>
+          
+          <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div className="bg-[#0a0a0a] p-8 rounded-lg border border-gray-800">
+              <div className="text-yellow-500 text-4xl mb-4">01</div>
+              <h3 className="text-[#f5f5dc] text-xl font-semibold mb-3">Share Your Vision</h3>
+              <p className="text-gray-400">Tell us your story, style preferences, and budget</p>
+            </div>
+            <div className="bg-[#0a0a0a] p-8 rounded-lg border border-gray-800">
+              <div className="text-yellow-500 text-4xl mb-4">02</div>
+              <h3 className="text-[#f5f5dc] text-xl font-semibold mb-3">Design Together</h3>
+              <p className="text-gray-400">Collaborate with our designers on your unique piece</p>
+            </div>
+            <div className="bg-[#0a0a0a] p-8 rounded-lg border border-gray-800">
+              <div className="text-yellow-500 text-4xl mb-4">03</div>
+              <h3 className="text-[#f5f5dc] text-xl font-semibold mb-3">Receive Your Treasure</h3>
+              <p className="text-gray-400">Get a handcrafted masterpiece in 4-6 weeks</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
