@@ -154,15 +154,27 @@ const CustomLanding = () => {
           <p className="text-xl text-gray-400 mb-12">
             It takes just 5 minutes to share your vision with us.
           </p>
-          <Link to="/custom/start">
-            <Button
-              size="lg"
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-12 py-8 text-lg rounded-none"
-            >
-              Start Your Custom Request
-              <ArrowRight className="ml-3 w-5 h-5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/custom/start">
+              <Button
+                size="lg"
+                className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-12 py-8 text-lg rounded-none"
+              >
+                Start Your Custom Request
+                <ArrowRight className="ml-3 w-5 h-5" />
+              </Button>
+            </Link>
+            <a href={bookingUrl} target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black px-12 py-8 text-lg rounded-none"
+              >
+                <Calendar className="mr-3 w-5 h-5" />
+                Talk to a Designer
+              </Button>
+            </a>
+          </div>
         </div>
       </section>
     </div>
