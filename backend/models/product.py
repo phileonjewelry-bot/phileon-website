@@ -37,6 +37,7 @@ class ProductUpdate(BaseModel):
     category: Optional[str] = None
     price: Optional[float] = None
     images: Optional[List[str]] = None
+    videos: Optional[List[str]] = None
     description: Optional[str] = None
     material: Optional[str] = None
     weight: Optional[str] = None
