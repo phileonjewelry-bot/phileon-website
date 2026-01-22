@@ -30,6 +30,7 @@ const VirtualTryOn = ({ product, onClose }) => {
         hands.close();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeAR = async () => {
