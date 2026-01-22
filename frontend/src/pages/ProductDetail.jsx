@@ -12,7 +12,12 @@ const ProductDetail = () => {
   const product = products.find(p => p.id === id);
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedMediaType, setSelectedMediaType] = useState('image'); // 'image' or 'video'
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);
   const [showTryOn, setShowTryOn] = useState(false);
+
+  // Combine images and videos for gallery
+  const hasVideos = product?.videos && product.videos.length > 0;
 
   if (!product) {
     return (
