@@ -1,4 +1,3 @@
-import { Textarea as TextareaBase } from "@radix-ui/react-textarea";
 import * as React from "react";
 
 import { cn } from "../../lib/utils";
