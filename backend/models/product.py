@@ -25,6 +25,7 @@ class ProductCreate(BaseModel):
     category: str
     price: float
     images: List[str] = []
+    videos: List[str] = []
     description: str = ""
     material: str = ""
     weight: str = ""
