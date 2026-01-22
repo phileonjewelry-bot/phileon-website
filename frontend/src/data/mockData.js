@@ -302,8 +302,8 @@ export const heroSlides = [
   {
     id: 'h1',
     image: 'https://images.pexels.com/photos/14823622/pexels-photo-14823622.jpeg',
-    title: 'Timeless Elegance',
-    subtitle: 'Discover our signature collection',
+    title: 'Every Phileon piece begins as a thought',
+    subtitle: 'A moment worth preserving',
     cta: 'Shop Now'
   },
   {
