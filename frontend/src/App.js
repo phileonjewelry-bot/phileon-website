@@ -11,6 +11,8 @@ import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import AdminDashboard from "./pages/AdminDashboard";
+import CustomLanding from "./pages/CustomLanding";
+import CustomWizard from "./pages/CustomWizard";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/wishlist" element={<Wishlist />} />
                   <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/custom" element={<CustomLanding />} />
+                  <Route path="/custom/start" element={<CustomWizard />} />
                 </Routes>
               </main>
               <Footer />
