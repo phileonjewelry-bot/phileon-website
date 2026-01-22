@@ -37,6 +37,23 @@ const VirtualTryOn = ({ product, onClose }) => {
     try {
       setIsLoading(true);
 
+      // Check if getUserMedia is supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setError('Camera not supported on this device/browser.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Request camera permission first
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream.getTracks().forEach(track => track.stop()); // Stop the test stream
+      } catch (permissionError) {
+        setError('Camera access denied. Please allow camera permissions and try again.');
+        setIsLoading(false);
+        return;
+      }
+
       // Initialize based on product category
       if (product.category === 'rings') {
         await initializeHandTracking();
@@ -47,7 +64,7 @@ const VirtualTryOn = ({ product, onClose }) => {
       setIsLoading(false);
     } catch (err) {
       console.error('AR initialization failed:', err);
-      setError('Failed to initialize camera. Please check permissions.');
+      setError('Failed to initialize AR. Please check your camera and try again.');
       setIsLoading(false);
     }
   };
