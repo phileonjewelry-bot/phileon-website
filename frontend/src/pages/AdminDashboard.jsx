@@ -296,6 +296,51 @@ const AdminDashboard = () => {
                       )}
                     </div>
 
+                    {/* Video Upload Area */}
+                    <div>
+                      <Label className="text-gray-300 mb-2 block">Product Videos</Label>
+                      <p className="text-gray-500 text-xs mb-2">Upload 360° rotation videos or promotional clips</p>
+                      <div
+                        onDrop={(e) => handleProductVideoDrop(e, true)}
+                        onDragOver={(e) => e.preventDefault()}
+                        className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center hover:border-yellow-500 transition-colors cursor-pointer"
+                        onClick={() => document.getElementById('product-video-input').click()}
+                      >
+                        <Upload className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                        <p className="text-gray-400 text-sm mb-1">Drag & drop videos here</p>
+                        <p className="text-gray-600 text-xs">or click to browse (MP4, MOV, WebM)</p>
+                        <input
+                          id="product-video-input"
+                          type="file"
+                          multiple
+                          accept="video/*"
+                          className="hidden"
+                          onChange={(e) => handleProductVideoFiles(Array.from(e.target.files), true)}
+                        />
+                      </div>
+                      {newProduct.videos.length > 0 && (
+                        <div className="grid grid-cols-2 gap-2 mt-3">
+                          {newProduct.videos.map((vid, idx) => (
+                            <div key={idx} className="relative group">
+                              <video src={vid} className="w-full h-24 object-cover rounded" muted />
+                              <button
+                                onClick={() => setNewProduct(prev => ({
+                                  ...prev,
+                                  videos: prev.videos.filter((_, i) => i !== idx)
+                                }))}
+                                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                              <div className="absolute bottom-1 left-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                Video {idx + 1}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
                     <div>
                       <Label htmlFor="name" className="text-gray-300 mb-2 block">Product Name</Label>
                       <Input
