@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Shield, Award, Truck, RotateCcw, BadgeCheck,
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { heroSlides, trustBadges, customerPhotos, products, certifications } from '../data/mockData';
+import StockBadge from '../components/StockBadge';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
