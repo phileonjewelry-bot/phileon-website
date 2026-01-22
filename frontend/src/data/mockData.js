@@ -11,6 +11,7 @@ export const products = [
       'https://images.unsplash.com/photo-1583095880514-777b51b6c771',
       'https://images.pexels.com/photos/3641059/pexels-photo-3641059.jpeg'
     ],
+    videos: [], // Product videos (360 rotation, close-ups, etc.)
     description: 'Handcrafted 18K gold chain necklace with intricate detailing',
     material: '18K Yellow Gold',
     weight: '12.5g',
