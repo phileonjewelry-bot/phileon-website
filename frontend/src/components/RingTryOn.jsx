@@ -4,6 +4,14 @@ import { Camera } from '@mediapipe/camera_utils';
 import { X, Camera as CameraIcon, Download, RotateCcw, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+// Finger landmark indices for MediaPipe Hands (constant, doesn't change)
+const FINGER_LANDMARKS = {
+  index: { base: 5, tip: 8 },
+  middle: { base: 9, tip: 12 },
+  ring: { base: 13, tip: 16 },
+  pinky: { base: 17, tip: 20 },
+};
+
 const RingTryOn = ({ ringImage, ringName, onClose }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -13,14 +21,6 @@ const RingTryOn = ({ ringImage, ringName, onClose }) => {
   const [ringScale, setRingScale] = useState(1);
   const handsRef = useRef(null);
   const cameraRef = useRef(null);
-
-  // Finger landmark indices for MediaPipe Hands
-  const fingerLandmarks = {
-    index: { base: 5, tip: 8 },
-    middle: { base: 9, tip: 12 },
-    ring: { base: 13, tip: 16 },
-    pinky: { base: 17, tip: 20 },
-  };
 
   const onResults = useCallback((results) => {
     const canvas = canvasRef.current;
