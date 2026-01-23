@@ -718,3 +718,270 @@ input:focus, textarea:focus, select:focus, button:focus {
     animation: none !important;
   }
 }
+
+/* ===== PHILEON SHOP DROP ===== */
+.shop-drop {
+  min-height: 100vh;
+  background: var(--color-black);
+}
+
+/* Hero */
+.shop-drop__hero {
+  padding: 160px 24px 80px;
+  text-align: center;
+}
+
+.shop-drop__hero-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.shop-drop__eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 20px;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.shop-drop__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 8vw, 56px);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--color-ivory);
+  margin-bottom: 16px;
+  animation: fadeUp 0.8s ease 0.1s forwards;
+  opacity: 0;
+}
+
+.shop-drop__subtitle {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: rgba(245, 245, 245, 0.65);
+  animation: fadeUp 0.8s ease 0.2s forwards;
+  opacity: 0;
+}
+
+.shop-drop__divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 40px auto 0;
+  animation: fadeUp 0.8s ease 0.3s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Product Grid */
+.shop-drop__grid-section {
+  padding: 0 24px 80px;
+}
+
+.shop-drop__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .shop-drop__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .shop-drop__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Product Card */
+.shop-drop__card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.shop-drop__card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shop-drop__card-link {
+  display: block;
+  text-decoration: none;
+}
+
+.shop-drop__card-image {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  background: var(--color-near-black);
+}
+
+.shop-drop__card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease, filter 0.7s ease;
+}
+
+.shop-drop__card-link:hover .shop-drop__card-image img {
+  transform: scale(1.05);
+  filter: brightness(0.85);
+}
+
+/* Hover Overlay */
+.shop-drop__card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.shop-drop__card-link:hover .shop-drop__card-overlay {
+  opacity: 1;
+}
+
+.shop-drop__card-cta {
+  padding: 14px 28px;
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  transform: translateY(10px);
+  transition: transform 0.4s ease, background 0.3s ease;
+}
+
+.shop-drop__card-link:hover .shop-drop__card-cta {
+  transform: translateY(0);
+}
+
+.shop-drop__card-cta:hover {
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+
+/* Card Info */
+.shop-drop__card-info {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.shop-drop__card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-ivory);
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+
+.shop-drop__card-link:hover .shop-drop__card-name {
+  color: var(--color-gold);
+}
+
+.shop-drop__card-material {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: rgba(245, 245, 245, 0.55);
+}
+
+/* Custom Exit Hatch */
+.shop-drop__custom {
+  padding: 100px 24px;
+  background: var(--color-near-black);
+  border-top: 1px solid rgba(201, 162, 77, 0.15);
+  position: relative;
+}
+
+.shop-drop__custom-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.shop-drop__custom-lines::before,
+.shop-drop__custom-lines::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(400px, 80vw);
+  height: 1px;
+  background: rgba(201, 162, 77, 0.2);
+}
+
+.shop-drop__custom-lines::before {
+  top: -50px;
+}
+
+.shop-drop__custom-lines::after {
+  bottom: -50px;
+}
+
+.shop-drop__custom-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 20px;
+}
+
+.shop-drop__custom-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-ivory);
+  margin-bottom: 20px;
+}
+
+.shop-drop__custom-text {
+  font-size: 14px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: rgba(245, 245, 245, 0.65);
+  margin-bottom: 36px;
+}
+
+.shop-drop__custom-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.shop-drop__custom-btn:hover {
+  background: #d4b055;
+  transform: translateY(-2px);
+}
