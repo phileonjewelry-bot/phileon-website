@@ -314,40 +314,39 @@ input:focus, textarea:focus, select:focus, button:focus {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 60;
-  background-color: var(--color-black);
-  border-bottom: 1px solid rgba(201, 169, 98, 0.3);
+  z-index: 1000;
+  background-color: var(--color-near-black);
+  color: var(--color-gold);
+  font-size: 12px;
+  letter-spacing: 2px;
+  padding: 8px 0;
   overflow: hidden;
-  height: 40px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Fade AND slide up on scroll */
+.phileon-ticker--faded {
+  opacity: 0;
+  transform: translateY(-100%);
 }
 
 .phileon-ticker__track {
   display: flex;
-  align-items: center;
-  height: 40px;
+  gap: 40px;
+  padding-left: 20px;
   white-space: nowrap;
-  animation: ticker-scroll 25s linear infinite;
+  animation: ticker-scroll 30s linear infinite;
 }
 
 .phileon-ticker__track:hover {
   animation-play-state: paused;
 }
 
-/* Faded state after scroll */
-.phileon-ticker--faded {
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
-}
-
-.phileon-ticker--faded:hover {
-  opacity: 1;
-}
-
 @keyframes ticker-scroll {
-  0% {
+  from {
     transform: translateX(0);
   }
-  100% {
+  to {
     transform: translateX(-50%);
   }
 }
@@ -355,56 +354,19 @@ input:focus, textarea:focus, select:focus, button:focus {
 .phileon-ticker__item {
   display: flex;
   align-items: center;
-  font-size: 13px;
+  gap: 6px;
   color: var(--color-ivory);
 }
 
-.phileon-ticker__metal {
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  opacity: 0.85;
+.phileon-ticker__live {
+  display: inline-flex;
+  align-items: center;
   color: var(--color-gold);
 }
 
-.phileon-ticker__price {
-  margin-left: 6px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-
-.phileon-ticker__chg {
-  margin-left: 6px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  display: inline-flex;
-  align-items: center;
-}
-
-.phileon-ticker__chg.is-up {
-  color: #22c55e;
-}
-
-.phileon-ticker__chg.is-down {
-  color: #ef4444;
-}
-
-.phileon-ticker__live {
-  margin-left: 8px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  opacity: 0.8;
-  color: #22c55e;
-  display: inline-flex;
-  align-items: center;
-}
-
 .phileon-ticker__dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: 4px;
-  border-radius: 50%;
-  background: #22c55e;
+  color: #1eff00;
+  margin-right: 6px;
   animation: pulse 1.6s ease-in-out infinite;
 }
 
@@ -414,10 +376,20 @@ input:focus, textarea:focus, select:focus, button:focus {
   100% { opacity: 0.4; }
 }
 
-.phileon-ticker__sep {
-  margin: 0 16px;
-  opacity: 0.35;
+.phileon-ticker__metal {
   color: var(--color-gold);
+}
+
+.phileon-ticker__price {
+  color: var(--color-ivory);
+}
+
+.phileon-ticker__chg.is-up {
+  color: #1eff00;
+}
+
+.phileon-ticker__chg.is-down {
+  color: #ef4444;
 }
 
 /* ===== PHILEON HEADER ===== */
