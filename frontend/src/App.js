@@ -44,7 +44,7 @@ function App() {
           {/* Surprise Drop Pages (standalone, no layout) */}
           <Route path="/drop" element={<DropPage />} />
           <Route path="/m-drop" element={<MobileDropPage />} />
-          <Route path="/secret" element={<SecretDropPage />} />
+          <Route path="/secret-drop" element={<SecretDropPage />} />
 
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
