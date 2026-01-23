@@ -127,7 +127,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block">
-              <GoldLogo />
+              <PhileonLogo />
             </Link>
             <p className="mt-6 text-sm text-phileon-ivory-muted leading-relaxed max-w-md">
               Crafting timeless jewelry that tells your story. Each piece is a 
