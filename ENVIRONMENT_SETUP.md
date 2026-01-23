@@ -8,7 +8,7 @@ Your Phileon jewelry store uses these environment variables:
 
 ```bash
 # Backend API URL (already configured for production)
-REACT_APP_BACKEND_URL=https://jewelry-tryout.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://premium-rings-1.preview.emergentagent.com
 
 # Calendly booking link for consultations
 REACT_APP_BOOKING_URL=https://calendly.com/YOURNAME/15min

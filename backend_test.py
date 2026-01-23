@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class PhileonAPITester:
-    def __init__(self, base_url="https://code-continue-17.preview.emergentagent.com"):
+    def __init__(self, base_url="https://premium-rings-1.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
@@ -246,7 +246,7 @@ class PhileonAPITester:
 
 def main():
     print("🚀 Starting Phileon Jewelry API Tests")
-    print(f"Testing against: https://code-continue-17.preview.emergentagent.com")
+    print(f"Testing against: https://premium-rings-1.preview.emergentagent.com")
     
     tester = PhileonAPITester()
     
