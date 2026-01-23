@@ -202,13 +202,13 @@ const PublicLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Live Gold Price Ticker - Fixed at top */}
-      <LiveGoldPriceTicker />
+      {/* Live Metal Price Ticker - Fixed at very top, sticky on scroll */}
+      <LiveMetalTicker />
       
       {/* Header */}
       <Header />
       
-      {/* Main content */}
+      {/* Main content - account for ticker height (40px) */}
       <main className="flex-grow pt-[40px]">
         <Outlet />
       </main>
