@@ -1,74 +1,55 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
-
-// Navigation links
-const navLinks = [
-  { name: 'Shop', path: '/collections' },
-  { name: 'Custom Jewelry', path: '/custom-design' },
-  { name: 'About', path: '/about' },
-  { name: 'Contact', path: '/contact' },
-];
+import PhileonMenu from '@/components/PhileonMenu';
+import GoldPulseProvider from '@/components/GoldPulseProvider';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
 
   return (
-    <header id="site-header">
-      {/* Left: Logo Icon */}
-      <div className="header-left">
-        <Link to="/" data-testid="logo-link" aria-label="Phileon Home">
-          <img 
-            src="/logo.png" 
-            alt="Phileon Icon" 
-            className="logo-icon"
-          />
-        </Link>
-      </div>
+    <>
+      <header id="site-header">
+        {/* Left: Logo Icon */}
+        <div className="header-left">
+          <Link to="/" data-testid="logo-link" aria-label="Phileon Home">
+            <img 
+              src="/logo.png" 
+              alt="Phileon Icon" 
+              className="logo-icon"
+            />
+          </Link>
+        </div>
 
-      {/* Center: Brand Name */}
-      <div className="header-center">
-        <Link to="/" className="brand-name" data-testid="brand-text">
-          PHILEON
-        </Link>
-      </div>
+        {/* Center: Brand Name */}
+        <div className="header-center">
+          <Link to="/" className="brand-name" data-testid="brand-text">
+            PHILEON
+          </Link>
+        </div>
 
-      {/* Right: Hamburger Menu */}
-      <div className="header-right">
-        <button 
-          className={`menu-btn ${isMenuOpen ? 'is-open' : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          data-testid="mobile-menu-toggle"
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
+        {/* Right: Hamburger Menu */}
+        <div className="header-right">
+          <button 
+            className="menu-btn"
+            onClick={() => setIsMenuOpen(true)}
+            data-testid="mobile-menu-toggle"
+            aria-label="Open menu"
+            aria-expanded={isMenuOpen}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </header>
 
-      {/* Navigation Overlay */}
-      <div className={`nav-overlay ${isMenuOpen ? 'is-open' : ''}`}>
-        <nav className="nav-menu">
-          {navLinks.map((link, index) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`nav-link ${location.pathname === link.path ? 'is-active' : ''}`}
-              style={{ transitionDelay: isMenuOpen ? `${index * 100}ms` : '0ms' }}
-              data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
-      </div>
-    </header>
+      {/* Vault Reveal Menu */}
+      <PhileonMenu 
+        isOpen={isMenuOpen} 
+        onClose={() => setIsMenuOpen(false)} 
+      />
+    </>
   );
 };
 
