@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { publicApi } from '@/lib/api';
+import DropReveal from '@/components/DropReveal';
 
 const HomePage = () => {
   const [collections, setCollections] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDropReveal, setShowDropReveal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,51 +31,45 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  const handleShopDrop = () => {
+    setShowDropReveal(true);
+  };
+
   return (
     <div className="min-h-screen" data-testid="home-page">
-      {/* Hero Section - Centered vertically, high-end jewelry image, subtle dark overlay */}
+      {/* Drop Reveal Animation */}
+      <DropReveal isActive={showDropReveal} targetPath="/shop" dropText="DROP 001" />
+
+      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2000&q=80')`,
+            backgroundImage: `url('https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=2000&q=80')`,
           }}
         >
-          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/95" />
         </div>
         
         <div className="relative z-10 text-center px-8 max-w-4xl mx-auto">
           {/* Hero headline */}
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-[0.12em] text-phileon-ivory leading-tight uppercase">
-            Timeless Elegance,<br />
-            <span className="text-phileon-gold">Crafted for You</span>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-[0.3em] text-phileon-ivory leading-tight">
+            TIMELESS ELEGANCE
           </h1>
           
           {/* Hero subtext */}
-          <p className="mt-8 text-sm md:text-base text-phileon-ivory-muted tracking-[0.2em] uppercase">
-            Bespoke Jewelry That Tells Your Story
+          <p className="mt-6 text-sm md:text-base text-phileon-ivory-muted tracking-[0.15em] opacity-75">
+            Crafted for you
           </p>
           
-          {/* CTAs with hover animation */}
-          <div className="mt-14 flex flex-col sm:flex-row gap-5 justify-center">
-            {/* Primary CTA - Solid gold */}
-            <Link 
-              to="/collections" 
-              className="px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02] hover:shadow-lg hover:shadow-phileon-gold/20"
-              data-testid="hero-explore-btn"
-            >
-              Explore Collections
-            </Link>
-            
-            {/* Secondary CTA - Gold outline only (transparent) */}
-            <Link 
-              to="/custom-design" 
-              className="hero-btn-outline px-10 py-4 text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:scale-[1.02]"
-              data-testid="hero-custom-btn"
-            >
-              Begin a Custom Piece
-            </Link>
-          </div>
+          {/* SHOP DROP button */}
+          <button 
+            onClick={handleShopDrop}
+            className="mt-10 px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.25em] uppercase font-medium transition-all duration-300 hover:shadow-[0_0_0_1px_#1e5bff]"
+            data-testid="shop-drop-btn"
+          >
+            Shop Drop
+          </button>
         </div>
 
         {/* Scroll indicator */}
