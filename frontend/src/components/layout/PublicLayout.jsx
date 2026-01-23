@@ -115,8 +115,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           {/* Brand */}
           <div className="md:col-span-5">
-            <Link to="/" className="inline-block">
-              <PhileonLogo />
+            <Link to="/" className="inline-flex items-center gap-3">
+              <img src="/logo.png" alt="Phileon" className="h-10 w-10 object-contain" />
+              <span className="font-serif text-lg tracking-[0.3em] text-phileon-gold">PHILEON</span>
             </Link>
             <p className="mt-6 text-sm text-phileon-ivory-muted leading-relaxed max-w-sm">
               Timeless elegance, crafted for you.
