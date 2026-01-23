@@ -11,29 +11,13 @@ const navLinks = [
   { name: 'Contact', path: '/contact' },
 ];
 
-// Gold P. Logo SVG - matches brand identity
-const GoldLogo = ({ className = "" }) => (
-  <svg 
-    viewBox="0 0 100 100" 
-    className={`h-10 lg:h-12 w-auto ${className}`}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <defs>
-      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#d4b978" />
-        <stop offset="50%" stopColor="#c9a962" />
-        <stop offset="100%" stopColor="#a88b4a" />
-      </linearGradient>
-    </defs>
-    {/* P letter */}
-    <path
-      d="M25 85V15h25c8 0 14.5 2 19.5 6s7.5 9.5 7.5 16.5c0 7-2.5 12.5-7.5 16.5S57 60 49 60H40v25H25z M40 28v19h8c4 0 7-1 9-3s3-4.5 3-7.5-1-5.5-3-7.5-5-3-9-3h-8z"
-      fill="url(#goldGradient)"
-    />
-    {/* Dot */}
-    <circle cx="78" cy="78" r="8" fill="url(#goldGradient)" />
-  </svg>
+// Phileon Logo - uses uploaded brand logo
+const PhileonLogo = ({ className = "" }) => (
+  <img 
+    src="/logo.png" 
+    alt="Phileon"
+    className={`h-10 lg:h-12 w-auto rounded ${className}`}
+  />
 );
 
 const Header = () => {
