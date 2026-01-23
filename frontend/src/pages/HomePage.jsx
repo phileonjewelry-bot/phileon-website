@@ -65,10 +65,10 @@ const HomePage = () => {
               Explore Collections
             </Link>
             
-            {/* Secondary CTA - Gold outline */}
+            {/* Secondary CTA - Gold outline (transparent bg with gold border) */}
             <Link 
               to="/custom-design" 
-              className="px-10 py-4 border border-phileon-gold text-phileon-gold bg-transparent text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black hover:scale-[1.02]"
+              className="px-10 py-4 bg-transparent border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black hover:scale-[1.02]"
               data-testid="hero-custom-btn"
             >
               Begin a Custom Piece
