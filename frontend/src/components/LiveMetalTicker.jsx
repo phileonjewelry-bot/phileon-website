@@ -3,6 +3,23 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Fade ticker after scroll
+function useTickerFadeAfterScroll(thresholdPx = 24) {
+  useEffect(() => {
+    const el = document.querySelector('.phileon-ticker');
+    if (!el) return;
+
+    const onScroll = () => {
+      const shouldFade = window.scrollY > thresholdPx;
+      el.classList.toggle('phileon-ticker--faded', shouldFade);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [thresholdPx]);
+}
+
 const LiveMetalTicker = () => {
   const [metals, setMetals] = useState([
     { label: 'GOLD', price: 2650.00, changePct: 0.00 },
@@ -10,6 +27,9 @@ const LiveMetalTicker = () => {
     { label: 'PLATINUM', price: 980.00, changePct: 0.00 },
     { label: 'PALLADIUM', price: 1050.00, changePct: 0.00 },
   ]);
+
+  // Enable fade on scroll
+  useTickerFadeAfterScroll(24);
 
   const fetchMetalPrices = async () => {
     try {
