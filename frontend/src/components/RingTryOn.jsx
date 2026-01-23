@@ -176,10 +176,14 @@ const RingTryOn = ({ ringImage, ringName, onClose }) => {
           <div className="flex items-center gap-3">
             <Sparkles className="text-phileon-gold" size={20} />
             <div>
-              <h2 className="font-serif text-lg tracking-wider text-phileon-ivory">Virtual Ring Try-On</h2>
+              <h2 className="font-serif text-lg tracking-wider text-phileon-ivory">Virtual Try-On</h2>
               {ringName && <p className="text-xs text-phileon-ivory-muted">{ringName}</p>}
             </div>
           </div>
+          {/* Disclaimer */}
+          <p className="text-xs text-phileon-ivory-muted/60 hidden md:block">
+            For visualization only
+          </p>
           <button 
             onClick={onClose}
             className="p-2 text-phileon-ivory-muted hover:text-phileon-ivory transition-colors"
