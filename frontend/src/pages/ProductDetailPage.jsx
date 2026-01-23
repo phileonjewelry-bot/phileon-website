@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, ZoomIn } from 'lucide-react';
 import { publicApi } from '@/lib/api';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ const ProductDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const [tryOnOpen, setTryOnOpen] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -52,11 +53,11 @@ const ProductDetailPage = () => {
         inquiry_type: 'product_inquiry',
         product_id: product.id,
       });
-      toast.success('Inquiry sent successfully! We\'ll be in touch soon.');
+      toast.success('Your request has been received. We\'ll be in touch soon.');
       setInquiryOpen(false);
       setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error) {
-      toast.error('Failed to send inquiry. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -73,6 +74,9 @@ const ProductDetailPage = () => {
       setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
     }
   };
+
+  const isRing = product?.name?.toLowerCase().includes('ring') || 
+                 product?.collection_id?.toLowerCase().includes('ring');
 
   if (loading) {
     return (
@@ -101,39 +105,45 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen pt-24" data-testid="product-detail-page">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+      <div className="max-w-7xl mx-auto px-8 lg:px-16 py-12">
         {/* Back Link */}
         <Link 
           to="/collections" 
-          className="inline-flex items-center gap-2 text-phileon-ivory-muted hover:text-phileon-gold transition-colors text-sm mb-8"
+          className="inline-flex items-center gap-2 text-phileon-ivory-muted hover:text-phileon-gold transition-colors text-sm mb-10"
         >
-          <ArrowLeft size={16} /> Back to Collections
+          <ArrowLeft size={16} /> Back
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Image Gallery */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
+          {/* Large Hero Image with zoom */}
           <div>
-            <div className="relative aspect-square bg-phileon-charcoal overflow-hidden">
+            <div 
+              className="relative aspect-square bg-phileon-charcoal overflow-hidden cursor-zoom-in group"
+              onClick={() => setZoomOpen(true)}
+            >
               <img
                 src={images[currentImageIndex]}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
+              <div className="absolute top-4 right-4 p-2 bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <ZoomIn size={20} />
+              </div>
               {images.length > 1 && (
                 <>
                   <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white hover:bg-black/70 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/40 text-white hover:bg-black/60 transition-colors"
                     data-testid="prev-image-btn"
                   >
-                    <ChevronLeft size={24} />
+                    <ChevronLeft size={20} />
                   </button>
                   <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 text-white hover:bg-black/70 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/40 text-white hover:bg-black/60 transition-colors"
                     data-testid="next-image-btn"
                   >
-                    <ChevronRight size={24} />
+                    <ChevronRight size={20} />
                   </button>
                 </>
               )}
@@ -146,8 +156,8 @@ const ProductDetailPage = () => {
                   <button
                     key={idx}
                     onClick={() => setCurrentImageIndex(idx)}
-                    className={`w-20 h-20 overflow-hidden border-2 transition-colors ${
-                      idx === currentImageIndex ? 'border-phileon-gold' : 'border-transparent'
+                    className={`w-20 h-20 overflow-hidden border transition-colors ${
+                      idx === currentImageIndex ? 'border-phileon-gold' : 'border-transparent hover:border-phileon-charcoal'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -158,108 +168,95 @@ const ProductDetailPage = () => {
           </div>
 
           {/* Product Info */}
-          <div className="lg:py-8">
-            <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-4">
-              {product.availability === 'available' && 'Available Now'}
-              {product.availability === 'made_to_order' && 'Made to Order'}
-              {product.availability === 'inquiry_only' && 'By Inquiry'}
-            </p>
-            
-            <h1 className="font-serif text-3xl md:text-4xl tracking-[0.1em] text-phileon-ivory">
+          <div className="lg:py-4">
+            <h1 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-phileon-ivory">
               {product.name}
             </h1>
-            
-            {product.price_range && (
-              <p className="text-phileon-gold text-xl mt-4">{product.price_range}</p>
-            )}
 
-            <div className="luxury-line-left my-8" />
+            <div className="w-12 h-px bg-phileon-gold my-8" />
 
-            <p className="text-phileon-ivory-muted leading-relaxed">
+            {/* Emotional description */}
+            <p className="text-phileon-ivory-muted leading-relaxed text-base">
               {product.description}
             </p>
 
             {/* Materials */}
             {product.materials?.length > 0 && (
-              <div className="mt-8">
-                <h3 className="text-xs tracking-[0.2em] uppercase text-phileon-ivory-muted mb-3">
+              <div className="mt-10">
+                <p className="text-xs tracking-[0.2em] uppercase text-phileon-gold mb-4">
                   Materials
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.materials.map((material, idx) => (
-                    <span 
-                      key={idx}
-                      className="px-4 py-2 bg-phileon-charcoal text-phileon-ivory text-sm"
-                    >
-                      {material}
-                    </span>
-                  ))}
-                </div>
+                </p>
+                <p className="text-phileon-ivory">
+                  {product.materials.join(' · ')}
+                </p>
               </div>
             )}
 
-            {/* Details */}
-            {product.details && Object.keys(product.details).length > 0 && (
-              <div className="mt-8">
-                <h3 className="text-xs tracking-[0.2em] uppercase text-phileon-ivory-muted mb-3">
-                  Details
-                </h3>
-                <div className="space-y-2">
-                  {Object.entries(product.details).map(([key, value]) => (
-                    <div key={key} className="flex justify-between text-sm">
-                      <span className="text-phileon-ivory-muted capitalize">{key.replace(/_/g, ' ')}</span>
-                      <span className="text-phileon-ivory">{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Delivery timeframe */}
+            <div className="mt-8">
+              <p className="text-xs tracking-[0.2em] uppercase text-phileon-gold mb-4">
+                Delivery
+              </p>
+              <p className="text-phileon-ivory-muted text-sm">
+                Handcrafted to order. Please allow 6-8 weeks for creation.
+              </p>
+            </div>
+
+            {/* Care instructions */}
+            <div className="mt-8">
+              <p className="text-xs tracking-[0.2em] uppercase text-phileon-gold mb-4">
+                Care
+              </p>
+              <p className="text-phileon-ivory-muted text-sm leading-relaxed">
+                Store in the provided pouch. Clean gently with a soft cloth. 
+                Avoid contact with perfumes and chemicals. Professional cleaning recommended annually.
+              </p>
+            </div>
 
             {/* CTA Buttons */}
             <div className="mt-12 space-y-4">
-              {/* Ring Try-On button - only for rings */}
-              {(product.name?.toLowerCase().includes('ring') || 
-                product.collection_id?.toLowerCase().includes('ring') ||
-                product.materials?.some(m => m.toLowerCase().includes('ring'))) && (
+              {/* Ring Try-On - optional */}
+              {isRing && (
                 <button 
                   onClick={() => setTryOnOpen(true)}
-                  className="btn-outline w-full flex items-center justify-center gap-2"
+                  className="w-full px-8 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black flex items-center justify-center gap-3"
                   data-testid="try-on-btn"
                 >
-                  <Sparkles size={18} />
-                  Virtual Ring Try-On
+                  <Sparkles size={16} />
+                  Virtual Try-On
                 </button>
               )}
+              
+              {/* Primary CTA - Request This Design */}
               <button 
                 onClick={() => setInquiryOpen(true)}
-                className="btn-primary w-full"
+                className="w-full px-8 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90"
                 data-testid="inquire-btn"
               >
-                Inquire About This Piece
+                Request This Design
               </button>
-              <Link 
-                to="/contact" 
-                className="btn-outline w-full block text-center"
-                data-testid="consultation-btn"
-              >
-                Book a Consultation
-              </Link>
             </div>
-
-            {/* Note */}
-            <p className="mt-8 text-xs text-phileon-ivory-muted text-center">
-              Each piece is handcrafted. Customization options available upon request.
-            </p>
           </div>
         </div>
       </div>
+
+      {/* Zoom Modal */}
+      <Dialog open={zoomOpen} onOpenChange={setZoomOpen}>
+        <DialogContent className="bg-phileon-black border-phileon-charcoal max-w-4xl p-0">
+          <img
+            src={images[currentImageIndex]}
+            alt={product.name}
+            className="w-full h-auto"
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* Inquiry Modal */}
       <Dialog open={inquiryOpen} onOpenChange={setInquiryOpen}>
         <DialogContent className="bg-phileon-near-black border-phileon-charcoal text-phileon-ivory max-w-md">
           <DialogHeader>
             <DialogTitle className="font-serif text-xl tracking-wider">
-              Inquire About {product.name}
+              Request This Design
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleInquiry} className="space-y-4 mt-4">
@@ -296,10 +293,9 @@ const ProductDetailPage = () => {
             </div>
             <div>
               <Textarea
-                placeholder="Your message or questions about this piece..."
+                placeholder="Tell us about your interest in this piece..."
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                required
                 rows={4}
                 className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50 resize-none"
                 data-testid="inquiry-message"
@@ -308,16 +304,16 @@ const ProductDetailPage = () => {
             <Button 
               type="submit" 
               disabled={submitting}
-              className="w-full btn-primary"
+              className="w-full bg-phileon-gold text-phileon-black hover:bg-phileon-gold/90"
               data-testid="submit-inquiry"
             >
-              {submitting ? 'Sending...' : 'Send Inquiry'}
+              {submitting ? 'Sending...' : 'Send Request'}
             </Button>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* Ring Try-On Modal */}
+      {/* Ring Try-On Modal with disclaimer */}
       {tryOnOpen && (
         <RingTryOn 
           ringImage={images[currentImageIndex]}
