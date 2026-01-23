@@ -100,6 +100,8 @@ const RingTryOn = ({ ringImage, ringName, onClose }) => {
   }, [selectedFinger, ringScale, ringImage]);
 
   useEffect(() => {
+    let camera = null;
+    
     const initializeCamera = async () => {
       try {
         setIsLoading(true);
@@ -122,7 +124,7 @@ const RingTryOn = ({ ringImage, ringName, onClose }) => {
         handsRef.current = hands;
 
         if (videoRef.current) {
-          const camera = new Camera(videoRef.current, {
+          camera = new Camera(videoRef.current, {
             onFrame: async () => {
               if (handsRef.current && videoRef.current) {
                 await handsRef.current.send({ image: videoRef.current });
