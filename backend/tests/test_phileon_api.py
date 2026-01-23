@@ -176,7 +176,7 @@ class TestInquiryCreation:
             "name": "TEST_John Doe",
             "email": "test@example.com",
             "phone": "+1234567890",
-            "subject": "Custom Ring Inquiry",
+            "inquiry_type": "custom_design",
             "message": "I'm interested in a custom engagement ring."
         }
         response = requests.post(f"{BASE_URL}/api/inquiries", json=inquiry_data)
