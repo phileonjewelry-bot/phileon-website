@@ -132,6 +132,7 @@ Metal: ${materialOptions.metals.find(m => m.id === formData.metal)?.name}
 Stone: ${materialOptions.stones.find(s => s.id === formData.stone)?.name || 'Not specified'}
 Finish: ${materialOptions.finishes.find(f => f.id === formData.finish)?.name}
 Budget: ${budgetRanges.find(b => b.id === formData.budget)?.name}
+Inspiration Images: ${inspirationImages.length > 0 ? `${inspirationImages.length} uploaded` : 'None'}
 
 Additional notes: ${formData.message || 'None'}
       `.trim();
