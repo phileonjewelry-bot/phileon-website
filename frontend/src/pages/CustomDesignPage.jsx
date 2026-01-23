@@ -261,8 +261,94 @@ Additional notes: ${formData.message || 'None'}
             </div>
           )}
 
-          {/* Step 2: Style */}
+          {/* Step 2: Inspiration Images */}
           {currentStep === 2 && (
+            <div data-testid="step-2">
+              <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-4">
+                Share your inspiration
+              </h2>
+              <p className="text-phileon-ivory-muted mb-8">
+                Upload images that inspire your vision. These help our artisans understand your aesthetic.
+              </p>
+
+              {/* Upload Area */}
+              <div 
+                className="border-2 border-dashed border-phileon-charcoal hover:border-phileon-gold/50 transition-colors p-8 text-center cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  data-testid="inspiration-upload"
+                />
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-phileon-charcoal flex items-center justify-center">
+                    <Upload className="text-phileon-gold" size={24} />
+                  </div>
+                  <div>
+                    <p className="text-phileon-ivory font-medium">Click to upload inspiration images</p>
+                    <p className="text-sm text-phileon-ivory-muted mt-1">PNG, JPG up to 10MB each · Max 5 images</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Uploaded Images Preview */}
+              {inspirationImages.length > 0 && (
+                <div className="mt-8">
+                  <p className="text-phileon-gold text-xs tracking-[0.2em] uppercase mb-4">
+                    Uploaded ({inspirationImages.length}/5)
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {inspirationImages.map((img) => (
+                      <div key={img.id} className="relative group aspect-square">
+                        <img 
+                          src={img.url} 
+                          alt={img.name}
+                          className="w-full h-full object-cover border border-phileon-charcoal"
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeImage(img.id);
+                          }}
+                          className="absolute top-2 right-2 w-8 h-8 bg-black/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label="Remove image"
+                        >
+                          <X size={16} />
+                        </button>
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/70 px-2 py-1">
+                          <p className="text-xs text-phileon-ivory truncate">{img.name}</p>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {/* Add more button */}
+                    {inspirationImages.length < 5 && (
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="aspect-square border-2 border-dashed border-phileon-charcoal hover:border-phileon-gold/50 flex flex-col items-center justify-center gap-2 transition-colors"
+                      >
+                        <ImageIcon className="text-phileon-charcoal" size={24} />
+                        <span className="text-xs text-phileon-ivory-muted">Add more</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Skip note */}
+              <p className="mt-8 text-center text-sm text-phileon-ivory-muted">
+                This step is optional. You can continue without uploading images.
+              </p>
+            </div>
+          )}
+
+          {/* Step 3: Style */}
+          {currentStep === 3 && (
             <div data-testid="step-2">
               <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-8">
                 What style speaks to you?
