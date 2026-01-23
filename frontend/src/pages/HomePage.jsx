@@ -65,10 +65,23 @@ const HomePage = () => {
               Explore Collections
             </Link>
             
-            {/* Secondary CTA - Gold outline (transparent bg with gold border) */}
+            {/* Secondary CTA - Gold outline only (no fill) */}
             <Link 
               to="/custom-design" 
-              className="px-10 py-4 bg-transparent border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black hover:scale-[1.02]"
+              className="px-10 py-4 text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid #c9a962',
+                color: '#c9a962',
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#c9a962';
+                e.target.style.color = '#0a0a0a';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = '#c9a962';
+              }}
               data-testid="hero-custom-btn"
             >
               Begin a Custom Piece
