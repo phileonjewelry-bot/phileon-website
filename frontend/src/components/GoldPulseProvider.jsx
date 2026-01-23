@@ -1,20 +1,18 @@
 import { useEffect } from 'react';
 
-// Gold pulse effect on tap/click
-const useGoldPulse = () => {
+// Intent Flash effect - blue radial gradient on click
+const useIntentFlash = () => {
   useEffect(() => {
-    let lastPulse = 0;
-    const cooldownMs = 120;
+    let lastFlash = 0;
+    const cooldownMs = 100;
 
-    const createPulse = (x, y) => {
+    const createFlash = () => {
       const now = Date.now();
-      if (now - lastPulse < cooldownMs) return;
-      lastPulse = now;
+      if (now - lastFlash < cooldownMs) return;
+      lastFlash = now;
 
       const el = document.createElement('div');
-      el.className = 'ph-pulse';
-      el.style.left = `${x}px`;
-      el.style.top = `${y}px`;
+      el.className = 'intent-flash';
       document.body.appendChild(el);
       
       el.addEventListener('animationend', () => {
@@ -25,7 +23,7 @@ const useGoldPulse = () => {
     const handlePointerDown = (e) => {
       // Ignore right click
       if (e.button !== undefined && e.button !== 0) return;
-      createPulse(e.clientX, e.clientY);
+      createFlash();
     };
 
     window.addEventListener('pointerdown', handlePointerDown, { passive: true });
@@ -36,9 +34,9 @@ const useGoldPulse = () => {
   }, []);
 };
 
-const GoldPulseProvider = ({ children }) => {
-  useGoldPulse();
+const IntentFlashProvider = ({ children }) => {
+  useIntentFlash();
   return children;
 };
 
-export default GoldPulseProvider;
+export default IntentFlashProvider;
