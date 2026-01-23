@@ -65,6 +65,8 @@ const CustomDesignPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [inspirationImages, setInspirationImages] = useState([]);
+  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     jewelryType: '',
     style: '',
@@ -78,13 +80,44 @@ const CustomDesignPage = () => {
     message: '',
   });
 
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (inspirationImages.length + files.length > 5) {
+      toast.error('Maximum 5 inspiration images allowed');
+      return;
+    }
+
+    files.forEach(file => {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`${file.name} is too large. Max 10MB per image.`);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setInspirationImages(prev => [...prev, {
+          id: Date.now() + Math.random(),
+          name: file.name,
+          url: event.target.result,
+          file: file
+        }]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeImage = (id) => {
+    setInspirationImages(prev => prev.filter(img => img.id !== id));
+  };
+
   const canProceed = () => {
     switch (currentStep) {
       case 1: return formData.jewelryType;
-      case 2: return formData.style;
-      case 3: return formData.metal && formData.finish;
-      case 4: return formData.budget;
-      case 5: return formData.name && formData.email;
+      case 2: return true; // Inspiration is optional
+      case 3: return formData.style;
+      case 4: return formData.metal && formData.finish;
+      case 5: return formData.budget;
+      case 6: return formData.name && formData.email;
       default: return false;
     }
   };
