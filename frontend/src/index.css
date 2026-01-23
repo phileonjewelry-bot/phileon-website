@@ -51,7 +51,7 @@ html {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--color-black);
   color: var(--color-ivory);
   -webkit-font-smoothing: antialiased;
@@ -62,18 +62,17 @@ body {
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  letter-spacing: 0.1em;
 }
 
 .font-serif {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Playfair Display', serif;
 }
 
 .font-sans {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Gold gradient text */
