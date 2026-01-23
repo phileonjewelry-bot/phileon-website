@@ -668,8 +668,8 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 /* Subtle hover "gold ink" */
 .ph-menu__link:hover {
-  color: rgba(201, 162, 77, 0.98);
-  text-shadow: 0 0 18px rgba(201, 162, 77, 0.12);
+  color: var(--color-blue);
+  text-shadow: 0 0 18px rgba(30, 91, 255, 0.2);
 }
 
 /* Footer note */
