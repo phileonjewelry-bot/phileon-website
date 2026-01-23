@@ -217,6 +217,19 @@ const ProductDetailPage = () => {
 
             {/* CTA Buttons */}
             <div className="mt-12 space-y-4">
+              {/* Ring Try-On button - only for rings */}
+              {(product.name?.toLowerCase().includes('ring') || 
+                product.collection_id?.toLowerCase().includes('ring') ||
+                product.materials?.some(m => m.toLowerCase().includes('ring'))) && (
+                <button 
+                  onClick={() => setTryOnOpen(true)}
+                  className="btn-outline w-full flex items-center justify-center gap-2"
+                  data-testid="try-on-btn"
+                >
+                  <Sparkles size={18} />
+                  Virtual Ring Try-On
+                </button>
+              )}
               <button 
                 onClick={() => setInquiryOpen(true)}
                 className="btn-primary w-full"
