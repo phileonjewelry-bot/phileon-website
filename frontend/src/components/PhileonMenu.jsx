@@ -60,7 +60,10 @@ const PhileonMenu = ({ isOpen, onClose }) => {
       {/* Close button */}
       <button 
         className="ph-menu__close" 
-        onClick={onClose}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
         aria-label="Close menu"
         data-testid="menu-close-btn"
       >
