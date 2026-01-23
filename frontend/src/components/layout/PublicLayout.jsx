@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import LiveGoldPriceTicker from '@/components/LiveGoldPriceTicker';
 
 const navLinks = [
   { name: 'Collections', path: '/collections' },
@@ -9,6 +10,29 @@ const navLinks = [
   { name: 'Craftsmanship', path: '/craftsmanship' },
   { name: 'Contact', path: '/contact' },
 ];
+
+// Logo component - uses uploaded logo or fallback text
+const Logo = ({ className = "" }) => {
+  const [logoError, setLogoError] = useState(false);
+  const logoUrl = "/logo.png"; // Place your logo at /app/frontend/public/logo.png
+  
+  if (logoError) {
+    return (
+      <span className={`font-serif text-2xl lg:text-3xl tracking-[0.2em] ${className}`}>
+        PHILEON
+      </span>
+    );
+  }
+  
+  return (
+    <img 
+      src={logoUrl}
+      alt="Phileon"
+      className="h-10 lg:h-12 w-auto"
+      onError={() => setLogoError(true)}
+    />
+  );
+};
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,19 +53,19 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled ? 'bg-phileon-black/95 backdrop-blur-sm' : 'bg-transparent'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20 lg:h-24">
-          {/* Logo */}
+          {/* Logo - Left side, clickable to home */}
           <Link 
             to="/" 
-            className="font-serif text-2xl lg:text-3xl tracking-[0.2em] text-phileon-ivory hover:text-phileon-gold transition-colors"
+            className="text-phileon-ivory hover:text-phileon-gold transition-colors flex items-center"
             data-testid="logo-link"
           >
-            PHILEON
+            <Logo className="text-phileon-ivory hover:text-phileon-gold" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -75,7 +99,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         <div
-          className={`lg:hidden fixed inset-0 top-20 bg-phileon-black z-40 transition-transform duration-500 ${
+          className={`lg:hidden fixed inset-0 top-[104px] bg-phileon-black z-40 transition-transform duration-500 ${
             isMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -108,8 +132,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link to="/" className="font-serif text-3xl tracking-[0.2em] text-phileon-ivory">
-              PHILEON
+            <Link to="/" className="inline-block">
+              <Logo className="text-phileon-ivory" />
             </Link>
             <p className="mt-6 text-sm text-phileon-ivory-muted leading-relaxed max-w-md">
               Crafting timeless jewelry that tells your story. Each piece is a 
@@ -192,8 +216,14 @@ const PublicLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Live Gold Price Ticker - Pinned at very top */}
+      <LiveGoldPriceTicker />
+      
+      {/* Header - Below ticker */}
       <Header />
-      <main className="flex-grow">
+      
+      {/* Main content with padding for fixed header + ticker */}
+      <main className="flex-grow pt-[40px]">
         <Outlet />
       </main>
       <Footer />
