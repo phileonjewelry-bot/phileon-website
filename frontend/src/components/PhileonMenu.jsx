@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const navLinks = [
-  { name: 'Shop', path: '/collections' },
+  { name: 'Shop', path: '/shop' },
   { name: 'Custom Jewelry', path: '/custom-design' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
