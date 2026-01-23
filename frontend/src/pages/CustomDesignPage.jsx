@@ -349,7 +349,7 @@ Additional notes: ${formData.message || 'None'}
 
           {/* Step 3: Style */}
           {currentStep === 3 && (
-            <div data-testid="step-2">
+            <div data-testid="step-3">
               <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-8">
                 What style speaks to you?
               </h2>
@@ -368,8 +368,8 @@ Additional notes: ${formData.message || 'None'}
             </div>
           )}
 
-          {/* Step 3: Materials */}
-          {currentStep === 3 && (
+          {/* Step 4: Materials */}
+          {currentStep === 4 && (
             <div data-testid="step-3">
               <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-8">
                 Select your materials
