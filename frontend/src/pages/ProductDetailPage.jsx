@@ -316,6 +316,15 @@ const ProductDetailPage = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Ring Try-On Modal */}
+      {tryOnOpen && (
+        <RingTryOn 
+          ringImage={images[currentImageIndex]}
+          ringName={product.name}
+          onClose={() => setTryOnOpen(false)}
+        />
+      )}
     </div>
   );
 };
