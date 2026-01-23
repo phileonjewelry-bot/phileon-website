@@ -1,52 +1,34 @@
-/* Phileon Luxury Jewelry E-commerce Styles */
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
 
-.App {
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #0f0f10;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #000000;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
-main {
-    flex: 1;
+.App-link {
+    color: #61dafb;
 }
 
-/* Smooth transitions for interactive elements */
-button, a, img {
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* Image hover effects */
-img:hover {
-    opacity: 0.9;
-}
-
-/* Prevent layout shift on load */
-img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-/* Custom scrollbar for dark theme */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #eab308;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #facc15;
-}
-
-/* Smooth scroll behavior */
-html {
-    scroll-behavior: smooth;
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
