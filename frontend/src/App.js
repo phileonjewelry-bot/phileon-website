@@ -13,6 +13,8 @@ import TestimonialsPage from "@/pages/TestimonialsPage";
 import ContactPage from "@/pages/ContactPage";
 import FAQPage from "@/pages/FAQPage";
 import CraftsmanshipPage from "@/pages/CraftsmanshipPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import TermsPage from "@/pages/TermsPage";
 
 // Admin Pages
 import AdminLoginPage from "@/pages/admin/AdminLoginPage";
@@ -47,9 +49,11 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/craftsmanship" element={<CraftsmanshipPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
           </Route>
           
-          {/* Admin Routes */}
+          {/* Admin Routes - Not visible publicly */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
