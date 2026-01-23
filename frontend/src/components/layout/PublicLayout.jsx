@@ -47,14 +47,14 @@ const Header = () => {
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20 lg:h-24">
-          {/* Logo - Left side, always links to home, always gold */}
+          {/* Logo - Left side, always links to home */}
           <Link 
             to="/" 
             className="flex items-center transition-transform duration-300 hover:scale-105"
             data-testid="logo-link"
             aria-label="Phileon Home"
           >
-            <GoldLogo />
+            <PhileonLogo />
           </Link>
 
           {/* Desktop Navigation */}
