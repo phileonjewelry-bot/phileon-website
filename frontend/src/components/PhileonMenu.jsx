@@ -13,7 +13,10 @@ const PhileonMenu = ({ isOpen, onClose }) => {
 
   // Close on route change
   useEffect(() => {
-    if (isOpen) onClose();
+    if (isOpen) {
+      onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   // ESC closes menu
