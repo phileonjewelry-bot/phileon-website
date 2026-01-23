@@ -519,3 +519,202 @@ input:focus, textarea:focus, select:focus, button:focus {
 .nav-link.is-active {
   color: var(--color-gold);
 }
+
+/* ===== PHILEON MENU OVERLAY (Vault Reveal) ===== */
+.ph-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+.ph-menu.is-open {
+  display: block;
+}
+
+/* Slide down panel */
+.ph-menu__panel {
+  position: absolute;
+  inset: 0;
+  transform: translateY(-110%);
+  transition: transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  padding: 92px 22px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.ph-menu.is-open .ph-menu__panel {
+  transform: translateY(0);
+}
+
+/* Thin gold "vault lines" */
+.ph-menu__lines::before,
+.ph-menu__lines::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(520px, 86vw);
+  height: 1px;
+  background: rgba(201, 162, 77, 0.28);
+}
+
+.ph-menu__lines::before {
+  top: 78px;
+}
+
+.ph-menu__lines::after {
+  bottom: 78px;
+}
+
+/* Watermark monogram */
+.ph-menu__wm {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: min(48vw, 420px);
+  letter-spacing: 0.02em;
+  color: rgba(201, 162, 77, 0.06);
+  user-select: none;
+  pointer-events: none;
+  transform: translateY(14px);
+}
+
+/* Top brand block */
+.ph-menu__brand {
+  position: absolute;
+  top: 22px;
+  left: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ph-menu__brand img {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(201, 162, 77, 0.25);
+}
+
+.ph-menu__brand .name {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.35em;
+  font-size: 14px;
+  color: rgba(245, 245, 245, 0.92);
+}
+
+.ph-menu__brand .tag {
+  margin-top: 2px;
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(201, 162, 77, 0.75);
+}
+
+/* Close button */
+.ph-menu__close {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(201, 162, 77, 0.25);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(245, 245, 245, 0.9);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ph-menu__close:hover {
+  background: rgba(201, 162, 77, 0.15);
+}
+
+/* Links + stagger animation */
+.ph-menu__link {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 22px;
+  color: rgba(245, 245, 245, 0.92);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 520ms ease, transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1), color 0.3s;
+}
+
+.ph-menu.is-open .ph-menu__link {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ph-menu.is-open .ph-menu__link:nth-of-type(1) { transition-delay: 120ms; }
+.ph-menu.is-open .ph-menu__link:nth-of-type(2) { transition-delay: 200ms; }
+.ph-menu.is-open .ph-menu__link:nth-of-type(3) { transition-delay: 280ms; }
+.ph-menu.is-open .ph-menu__link:nth-of-type(4) { transition-delay: 360ms; }
+
+/* Subtle hover "gold ink" */
+.ph-menu__link:hover {
+  color: rgba(201, 162, 77, 0.98);
+  text-shadow: 0 0 18px rgba(201, 162, 77, 0.12);
+}
+
+/* Footer note */
+.ph-menu__foot {
+  position: absolute;
+  bottom: 28px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.55);
+}
+
+/* ===== TAP GOLD PULSE (Micro interaction) ===== */
+.ph-pulse {
+  position: fixed;
+  pointer-events: none;
+  z-index: 20000;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 162, 77, 0.55);
+  box-shadow: 0 0 0 0 rgba(201, 162, 77, 0.25);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.9;
+  animation: phPulse 520ms ease-out forwards;
+}
+
+@keyframes phPulse {
+  0% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(201, 162, 77, 0.25);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(14);
+    box-shadow: 0 0 0 28px rgba(201, 162, 77, 0);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ph-menu__panel,
+  .ph-menu__link,
+  .ph-pulse {
+    transition: none !important;
+    animation: none !important;
+  }
+}
