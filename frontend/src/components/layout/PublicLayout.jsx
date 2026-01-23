@@ -11,18 +11,6 @@ const navLinks = [
   { name: 'Contact', path: '/contact' },
 ];
 
-// Phileon Logo - generous padding, no stretch/distort
-const PhileonLogo = () => (
-  <div className="p-2">
-    <img 
-      src="/logo.png" 
-      alt="Phileon"
-      className="h-10 lg:h-12 w-auto object-contain"
-      style={{ maxWidth: '48px' }}
-    />
-  </div>
-);
-
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -48,50 +36,46 @@ const Header = () => {
           : 'bg-transparent'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-8 lg:px-16">
-        <div className="flex items-center justify-between h-20 lg:h-24">
-          {/* Logo - Top left, generous padding, links to home */}
+      <nav className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          
+          {/* Left: Icon - links to home */}
           <Link 
             to="/" 
-            className="flex items-center transition-transform duration-300 hover:scale-105"
+            className="flex items-center"
             data-testid="logo-link"
             aria-label="Phileon Home"
           >
-            <PhileonLogo />
+            <img 
+              src="/logo.png" 
+              alt="Phileon"
+              className="h-10 w-10 object-contain"
+            />
           </Link>
 
-          {/* Desktop Navigation - Minimal, no icons */}
-          <div className="hidden lg:flex items-center space-x-14">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-xs tracking-[0.18em] uppercase transition-colors duration-300 ${
-                  location.pathname === link.path || location.pathname.startsWith(link.path + '/')
-                    ? 'text-phileon-gold'
-                    : 'text-phileon-ivory-muted hover:text-phileon-gold'
-                }`}
-                data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
+          {/* Center: PHILEON text */}
+          <Link 
+            to="/"
+            className="absolute left-1/2 -translate-x-1/2 font-serif text-xl tracking-[0.35em] text-phileon-gold"
+            data-testid="brand-text"
+          >
+            PHILEON
+          </Link>
 
-          {/* Mobile Hamburger Menu */}
+          {/* Right: Hamburger menu */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden text-phileon-ivory p-3 hover:text-phileon-gold transition-colors"
+            className="text-phileon-gold text-2xl p-2 hover:opacity-80 transition-opacity"
             data-testid="mobile-menu-toggle"
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {/* Mobile Navigation - Smooth open */}
+        {/* Mobile Navigation - Full screen overlay */}
         <div
-          className={`lg:hidden fixed inset-0 top-[104px] bg-phileon-black z-40 transition-all duration-500 ease-in-out ${
+          className={`fixed inset-0 top-[96px] bg-phileon-black z-40 transition-all duration-500 ease-in-out ${
             isMenuOpen 
               ? 'opacity-100 translate-y-0' 
               : 'opacity-0 -translate-y-4 pointer-events-none'
