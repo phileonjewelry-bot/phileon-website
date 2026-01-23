@@ -168,20 +168,6 @@ Additional notes: ${formData.message || 'None'}
     }
   };
 
-  const SelectOption = ({ selected, onClick, children }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`p-6 text-left border transition-all duration-300 ${
-        selected
-          ? 'border-phileon-gold bg-phileon-gold/10'
-          : 'border-phileon-charcoal hover:border-phileon-gold/50'
-      }`}
-    >
-      {children}
-    </button>
-  );
-
   // Confirmation screen
   if (submitted) {
     return (
