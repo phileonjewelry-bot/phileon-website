@@ -131,7 +131,7 @@ const PublicLayout = () => {
   }, [location.pathname]);
 
   return (
-    <GoldPulseProvider>
+    <IntentFlashProvider>
       <div className="min-h-screen flex flex-col">
         {/* Live Metal Price Ticker - Fixed at very top */}
         <LiveMetalTicker />
@@ -146,7 +146,7 @@ const PublicLayout = () => {
         
         <Footer />
       </div>
-    </GoldPulseProvider>
+    </IntentFlashProvider>
   );
 };
 
