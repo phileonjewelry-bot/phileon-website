@@ -327,11 +327,21 @@ input:focus, textarea:focus, select:focus, button:focus {
   align-items: center;
   height: 40px;
   white-space: nowrap;
-  animation: ticker-scroll 45s linear infinite;
+  animation: ticker-scroll 25s linear infinite;
 }
 
 .phileon-ticker__track:hover {
   animation-play-state: paused;
+}
+
+/* Faded state after scroll */
+.phileon-ticker--faded {
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.phileon-ticker--faded:hover {
+  opacity: 1;
 }
 
 @keyframes ticker-scroll {
