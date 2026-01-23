@@ -17,6 +17,8 @@ import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import RingTryOnPage from "@/pages/RingTryOnPage";
 import ShopDropPage from "@/pages/ShopDropPage";
+import DropPage from "@/pages/DropPage";
+import MobileDropPage from "@/pages/MobileDropPage";
 
 // Admin Pages
 import AdminLoginPage from "@/pages/admin/AdminLoginPage";
