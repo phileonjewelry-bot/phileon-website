@@ -1,6 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 
+// Release System Pages (One-Object Release Model)
+import { 
+  LandingPage, 
+  ReleasePage, 
+  ClaimPage, 
+  ArchivePage, 
+  ReleaseAboutPage 
+} from "@/pages/ReleaseSystem";
+
 // Public Pages
 import HomePage from "@/pages/HomePage";
 import CollectionsPage from "@/pages/CollectionsPage";
@@ -38,9 +47,16 @@ function App() {
     <div className="min-h-screen bg-phileon-black">
       <BrowserRouter>
         <Routes>
-          {/* Public Routes */}
+          {/* One-Object Release System (Main Site) */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/release" element={<ReleasePage />} />
+          <Route path="/claim" element={<ClaimPage />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/about" element={<ReleaseAboutPage />} />
+
+          {/* Legacy/Secondary Public Routes (with original layout) */}
           <Route element={<PublicLayout />}>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/shop" element={<ShopDropPage />} />
             <Route path="/collections" element={<CollectionsPage />} />
             <Route path="/collections/:slug" element={<CollectionDetailPage />} />
@@ -48,7 +64,7 @@ function App() {
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />
             <Route path="/process" element={<ProcessPage />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route path="/about-us" element={<AboutPage />} />
             <Route path="/testimonials" element={<TestimonialsPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
@@ -57,7 +73,7 @@ function App() {
             <Route path="/terms" element={<TermsPage />} />
           </Route>
           
-          {/* Admin Routes - Not visible publicly */}
+          {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
