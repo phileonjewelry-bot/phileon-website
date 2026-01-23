@@ -40,6 +40,10 @@ function App() {
     <div className="min-h-screen bg-phileon-black">
       <BrowserRouter>
         <Routes>
+          {/* Surprise Drop Pages (standalone, no layout) */}
+          <Route path="/drop" element={<DropPage />} />
+          <Route path="/m-drop" element={<MobileDropPage />} />
+
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
