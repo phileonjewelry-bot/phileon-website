@@ -44,6 +44,7 @@ function App() {
             <Route path="/collections/:slug" element={<CollectionDetailPage />} />
             <Route path="/piece/:slug" element={<ProductDetailPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
+            <Route path="/ring-try-on" element={<RingTryOnPage />} />
             <Route path="/process" element={<ProcessPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/testimonials" element={<TestimonialsPage />} />
