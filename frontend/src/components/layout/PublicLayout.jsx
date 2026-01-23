@@ -11,28 +11,30 @@ const navLinks = [
   { name: 'Contact', path: '/contact' },
 ];
 
-// Logo component - uses uploaded logo or fallback text
-const Logo = ({ className = "" }) => {
-  const [logoError, setLogoError] = useState(false);
-  const logoUrl = "/logo.png"; // Place your logo at /app/frontend/public/logo.png
-  
-  if (logoError) {
-    return (
-      <span className={`font-serif text-2xl lg:text-3xl tracking-[0.2em] ${className}`}>
-        PHILEON
-      </span>
-    );
-  }
-  
-  return (
-    <img 
-      src={logoUrl}
-      alt="Phileon"
-      className="h-10 lg:h-12 w-auto"
-      onError={() => setLogoError(true)}
+// Gold P. Logo SVG - matches brand identity
+const GoldLogo = ({ className = "" }) => (
+  <svg 
+    viewBox="0 0 100 100" 
+    className={`h-10 lg:h-12 w-auto ${className}`}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#d4b978" />
+        <stop offset="50%" stopColor="#c9a962" />
+        <stop offset="100%" stopColor="#a88b4a" />
+      </linearGradient>
+    </defs>
+    {/* P letter */}
+    <path
+      d="M25 85V15h25c8 0 14.5 2 19.5 6s7.5 9.5 7.5 16.5c0 7-2.5 12.5-7.5 16.5S57 60 49 60H40v25H25z M40 28v19h8c4 0 7-1 9-3s3-4.5 3-7.5-1-5.5-3-7.5-5-3-9-3h-8z"
+      fill="url(#goldGradient)"
     />
-  );
-};
+    {/* Dot */}
+    <circle cx="78" cy="78" r="8" fill="url(#goldGradient)" />
+  </svg>
+);
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -53,19 +55,22 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? 'bg-phileon-black/95 backdrop-blur-sm' : 'bg-transparent'
+      className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+        isScrolled 
+          ? 'bg-phileon-black shadow-lg shadow-black/20' 
+          : 'bg-transparent'
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20 lg:h-24">
-          {/* Logo - Left side, clickable to home */}
+          {/* Logo - Left side, always links to home, always gold */}
           <Link 
             to="/" 
-            className="text-phileon-ivory hover:text-phileon-gold transition-colors flex items-center"
+            className="flex items-center transition-transform duration-300 hover:scale-105"
             data-testid="logo-link"
+            aria-label="Phileon Home"
           >
-            <Logo className="text-phileon-ivory hover:text-phileon-gold" />
+            <GoldLogo />
           </Link>
 
           {/* Desktop Navigation */}
@@ -89,7 +94,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden text-phileon-ivory p-2"
+            className="lg:hidden text-phileon-ivory p-2 hover:text-phileon-gold transition-colors"
             data-testid="mobile-menu-toggle"
             aria-label="Toggle menu"
           >
@@ -99,20 +104,25 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         <div
-          className={`lg:hidden fixed inset-0 top-[104px] bg-phileon-black z-40 transition-transform duration-500 ${
-            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          className={`lg:hidden fixed inset-0 top-[104px] bg-phileon-black z-40 transition-all duration-500 ${
+            isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
           }`}
         >
           <div className="flex flex-col items-center justify-center h-full space-y-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-lg tracking-[0.2em] uppercase transition-colors ${
+                className={`text-lg tracking-[0.2em] uppercase transition-all duration-300 ${
                   location.pathname === link.path
                     ? 'text-phileon-gold'
                     : 'text-phileon-ivory hover:text-phileon-gold'
                 }`}
+                style={{ 
+                  transitionDelay: isMenuOpen ? `${index * 50}ms` : '0ms',
+                  opacity: isMenuOpen ? 1 : 0,
+                  transform: isMenuOpen ? 'translateY(0)' : 'translateY(20px)'
+                }}
                 data-testid={`mobile-nav-${link.name.toLowerCase().replace(' ', '-')}`}
               >
                 {link.name}
@@ -133,7 +143,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block">
-              <Logo className="text-phileon-ivory" />
+              <GoldLogo />
             </Link>
             <p className="mt-6 text-sm text-phileon-ivory-muted leading-relaxed max-w-md">
               Crafting timeless jewelry that tells your story. Each piece is a 
