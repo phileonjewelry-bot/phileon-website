@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import LiveGoldPriceTicker from '@/components/LiveGoldPriceTicker';
+import LiveMetalTicker from '@/components/LiveMetalTicker';
 
 // Navigation: Shop, Custom Jewelry, About, Contact (minimal, no icons)
 const navLinks = [
