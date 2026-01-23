@@ -422,9 +422,9 @@ Additional notes: ${formData.message || 'None'}
             </div>
           )}
 
-          {/* Step 4: Budget */}
-          {currentStep === 4 && (
-            <div data-testid="step-4">
+          {/* Step 5: Budget */}
+          {currentStep === 5 && (
+            <div data-testid="step-5">
               <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-8">
                 What is your budget range?
               </h2>
