@@ -98,6 +98,47 @@ async def health_check():
     return {"status": "healthy"}
 
 
+# Metal Prices Endpoint
+@api_router.get("/metal-prices")
+async def get_metal_prices():
+    """
+    Returns live metal prices.
+    Using realistic base prices with small random fluctuations for demo.
+    In production, integrate with a metals API like Metals.dev or GoldAPI.
+    """
+    import random
+    
+    # Base prices (realistic as of late 2024)
+    base_prices = {
+        "GOLD": 2650.00,
+        "SILVER": 31.50,
+        "PLATINUM": 980.00,
+        "PALLADIUM": 1050.00
+    }
+    
+    prices = []
+    for metal, base in base_prices.items():
+        # Add small random fluctuation (±0.5%)
+        fluctuation = base * random.uniform(-0.005, 0.005)
+        price = round(base + fluctuation, 2)
+        
+        # Random change percentage for display
+        change = round(random.uniform(-1.5, 1.5), 2)
+        
+        prices.append({
+            "symbol": metal,
+            "price": price,
+            "change": change,
+            "currency": "USD"
+        })
+    
+    return {
+        "prices": prices,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "source": "simulated"
+    }
+
+
 # Collections (Public)
 @api_router.get("/collections", response_model=List[Collection])
 async def get_collections():
