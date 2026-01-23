@@ -2,298 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap');
-
-:root {
-  /* Phileon Luxury Palette */
-  --color-black: #0a0a0a;
-  --color-near-black: #121212;
-  --color-charcoal: #1a1a1a;
-  --color-dark-gray: #2a2a2a;
-  --color-gold: #c9a962;
-  --color-gold-light: #d4b978;
-  --color-gold-dark: #a88b4a;
-  --color-ivory: #f5f2eb;
-  --color-ivory-muted: #e8e4db;
-  --color-white: #fefefe;
-  
-  /* Shadcn overrides for dark luxury theme */
-  --background: 0 0% 4%;
-  --foreground: 42 30% 92%;
-  --card: 0 0% 7%;
-  --card-foreground: 42 30% 92%;
-  --popover: 0 0% 7%;
-  --popover-foreground: 42 30% 92%;
-  --primary: 43 45% 59%;
-  --primary-foreground: 0 0% 4%;
-  --secondary: 0 0% 12%;
-  --secondary-foreground: 42 30% 92%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 60%;
-  --accent: 43 45% 59%;
-  --accent-foreground: 0 0% 4%;
-  --destructive: 0 62% 50%;
-  --destructive-foreground: 42 30% 92%;
-  --border: 0 0% 18%;
-  --input: 0 0% 18%;
-  --ring: 43 45% 59%;
-  --radius: 0px;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
 body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--color-black);
-  color: var(--color-ivory);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  letter-spacing: 0.02em;
+    margin: 0;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+code {
+    font-family:
+        source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.font-serif {
-  font-family: 'Cormorant Garamond', serif;
-}
-
-.font-sans {
-  font-family: 'Montserrat', sans-serif;
-}
-
-/* Gold gradient text */
-.text-gold-gradient {
-  background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 50%, var(--color-gold-dark) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-near-black);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-gold-dark);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold);
-}
-
-/* Selection color */
-::selection {
-  background: var(--color-gold);
-  color: var(--color-black);
-}
-
-/* Links */
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-/* Buttons */
-.btn-primary {
-  background-color: var(--color-gold);
-  color: var(--color-black);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 1rem 2.5rem;
-  border: none;
-  cursor: pointer;
-  transition: all 0.4s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-gold-light);
-  transform: translateY(-2px);
-}
-
-.btn-outline {
-  background-color: transparent;
-  color: var(--color-gold);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 1rem 2.5rem;
-  border: 1px solid var(--color-gold);
-  cursor: pointer;
-  transition: all 0.4s ease;
-}
-
-.btn-outline:hover {
-  background-color: var(--color-gold);
-  color: var(--color-black);
-}
-
-/* Luxury line decorations */
-.luxury-line {
-  width: 60px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
-}
-
-.luxury-line-left {
-  width: 60px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--color-gold), transparent);
-}
-
-/* Image hover effect */
-.img-hover-zoom {
-  overflow: hidden;
-}
-
-.img-hover-zoom img {
-  transition: transform 0.8s ease;
-}
-
-.img-hover-zoom:hover img {
-  transform: scale(1.05);
-}
-
-/* Fade in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.8s ease forwards;
-}
-
-/* Stagger animation delays */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
-
-/* Page transitions */
-.page-enter {
-  opacity: 0;
-}
-
-.page-enter-active {
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-/* Form inputs luxury style */
-input, textarea, select {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.875rem;
-  letter-spacing: 0.02em;
-}
-
-input::placeholder, textarea::placeholder {
-  color: var(--color-ivory-muted);
-  opacity: 0.5;
-}
-
-/* Hide default focus outline, add custom */
-input:focus, textarea:focus, select:focus, button:focus {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--color-gold);
-}
-
-/* Loading spinner */
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 2px solid var(--color-charcoal);
-  border-top-color: var(--color-gold);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive spacing */
-.section-padding {
-  padding: 6rem 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .section-padding {
-    padding: 8rem 3rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .section-padding {
-    padding: 10rem 5rem;
-  }
-}
-
-/* Admin specific styles */
-.admin-sidebar {
-  background-color: var(--color-near-black);
-  border-right: 1px solid var(--color-charcoal);
-}
-
-.admin-header {
-  background-color: var(--color-near-black);
-  border-bottom: 1px solid var(--color-charcoal);
-}
-
-/* Override shadcn for luxury feel */
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --radius: 0.5rem;
+    }
+    .dark {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+    }
 }
 
-/* Tailwind utilities for luxury colors */
-@layer utilities {
-  .bg-phileon-black { background-color: var(--color-black); }
-  .bg-phileon-near-black { background-color: var(--color-near-black); }
-  .bg-phileon-charcoal { background-color: var(--color-charcoal); }
-  .bg-phileon-gold { background-color: var(--color-gold); }
-  .text-phileon-gold { color: var(--color-gold); }
-  .text-phileon-ivory { color: var(--color-ivory); }
-  .text-phileon-ivory-muted { color: var(--color-ivory-muted); }
-  .border-phileon-gold { border-color: var(--color-gold); }
-  .border-phileon-charcoal { border-color: var(--color-charcoal); }
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
 }
