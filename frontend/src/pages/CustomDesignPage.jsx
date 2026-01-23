@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { publicApi } from '@/lib/api';
-import { Check } from 'lucide-react';
+import { Check, Upload, X, Image as ImageIcon } from 'lucide-react';
 
 const steps = [
   { id: 1, title: 'Jewelry Type' },
-  { id: 2, title: 'Style' },
-  { id: 3, title: 'Materials' },
-  { id: 4, title: 'Budget' },
-  { id: 5, title: 'Contact' },
+  { id: 2, title: 'Inspiration' },
+  { id: 3, title: 'Style' },
+  { id: 4, title: 'Materials' },
+  { id: 5, title: 'Budget' },
+  { id: 6, title: 'Contact' },
 ];
 
 const jewelryTypes = [
