@@ -46,7 +46,10 @@ function UnlockGlitchHero({ src, alt }) {
       <img 
         src={src || "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80"} 
         alt={alt} 
-        style={imgStyle} 
+        style={imgStyle}
+        onError={(e) => {
+          e.target.src = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80";
+        }}
       />
 
       {/* Scanline */}
