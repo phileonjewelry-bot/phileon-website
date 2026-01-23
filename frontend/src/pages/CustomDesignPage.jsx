@@ -370,7 +370,7 @@ Additional notes: ${formData.message || 'None'}
 
           {/* Step 4: Materials */}
           {currentStep === 4 && (
-            <div data-testid="step-3">
+            <div data-testid="step-4">
               <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-8">
                 Select your materials
               </h2>
