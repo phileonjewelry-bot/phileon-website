@@ -131,20 +131,22 @@ const PublicLayout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Live Metal Price Ticker - Fixed at very top, sticky on scroll */}
-      <LiveMetalTicker />
-      
-      {/* Header */}
-      <Header />
-      
-      {/* Main content - account for ticker height (40px) */}
-      <main className="flex-grow pt-[40px]">
-        <Outlet />
-      </main>
-      
-      <Footer />
-    </div>
+    <GoldPulseProvider>
+      <div className="min-h-screen flex flex-col">
+        {/* Live Metal Price Ticker - Fixed at very top */}
+        <LiveMetalTicker />
+        
+        {/* Header */}
+        <Header />
+        
+        {/* Main content - account for ticker height */}
+        <main className="flex-grow pt-[36px]">
+          <Outlet />
+        </main>
+        
+        <Footer />
+      </div>
+    </GoldPulseProvider>
   );
 };
 
