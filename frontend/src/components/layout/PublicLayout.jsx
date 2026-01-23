@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
 import PhileonMenu from '@/components/PhileonMenu';
-import GoldPulseProvider from '@/components/GoldPulseProvider';
+import IntentFlashProvider from '@/components/GoldPulseProvider';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
