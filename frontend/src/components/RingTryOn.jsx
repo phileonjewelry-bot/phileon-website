@@ -33,7 +33,7 @@ const RingTryOn = ({ ringImage, ringName, onClose }) => {
     
     if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
       for (const landmarks of results.multiHandLandmarks) {
-        const finger = fingerLandmarks[selectedFinger];
+        const finger = FINGER_LANDMARKS[selectedFinger];
         const baseLandmark = landmarks[finger.base];
         const tipLandmark = landmarks[finger.tip];
         
