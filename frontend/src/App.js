@@ -15,6 +15,7 @@ import FAQPage from "@/pages/FAQPage";
 import CraftsmanshipPage from "@/pages/CraftsmanshipPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
+import RingTryOnPage from "@/pages/RingTryOnPage";
 
 // Admin Pages
 import AdminLoginPage from "@/pages/admin/AdminLoginPage";
