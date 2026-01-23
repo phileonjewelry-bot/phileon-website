@@ -442,9 +442,9 @@ Additional notes: ${formData.message || 'None'}
             </div>
           )}
 
-          {/* Step 5: Contact */}
-          {currentStep === 5 && (
-            <div data-testid="step-5">
+          {/* Step 6: Contact */}
+          {currentStep === 6 && (
+            <div data-testid="step-6">
               <h2 className="font-serif text-2xl tracking-[0.08em] text-phileon-ivory mb-8">
                 How can we reach you?
               </h2>
