@@ -20,6 +20,7 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [inquiryOpen, setInquiryOpen] = useState(false);
+  const [tryOnOpen, setTryOnOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
