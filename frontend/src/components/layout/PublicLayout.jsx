@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
 
-// Navigation: Shop, Custom Jewelry, About, Contact (minimal, no icons)
+// Navigation: Shop, Custom Jewelry, About, Contact
 const navLinks = [
   { name: 'Shop', path: '/collections' },
   { name: 'Custom Jewelry', path: '/custom-design' },
@@ -30,80 +29,61 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-        isScrolled 
-          ? 'bg-phileon-black shadow-lg shadow-black/20' 
-          : 'bg-transparent'
+      id="site-header"
+      className={`fixed top-[40px] left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? 'bg-phileon-black' : 'bg-transparent'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          
-          {/* Left: Icon - links to home */}
-          <Link 
-            to="/" 
-            className="flex items-center"
-            data-testid="logo-link"
-            aria-label="Phileon Home"
-          >
+      <div className="header-inner">
+        {/* Left: Logo Icon */}
+        <div className="header-left">
+          <Link to="/" data-testid="logo-link" aria-label="Phileon Home">
             <img 
               src="/logo.png" 
-              alt="Phileon"
-              className="h-10 w-10 object-contain"
+              alt="Phileon Logo" 
+              className="logo-icon"
             />
           </Link>
+        </div>
 
-          {/* Center: PHILEON text */}
-          <Link 
-            to="/"
-            className="absolute left-1/2 -translate-x-1/2 font-serif text-xl tracking-[0.35em] text-phileon-gold"
-            data-testid="brand-text"
-          >
+        {/* Center: Brand Name */}
+        <div className="header-center">
+          <Link to="/" className="brand-name" data-testid="brand-text">
             PHILEON
           </Link>
+        </div>
 
-          {/* Right: Hamburger menu */}
-          <button
+        {/* Right: Menu Button */}
+        <div className="header-right">
+          <button 
+            className="menu-btn"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-phileon-gold text-2xl p-2 hover:opacity-80 transition-opacity"
             data-testid="mobile-menu-toggle"
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {isMenuOpen ? '✕' : '☰'}
           </button>
         </div>
+      </div>
 
-        {/* Mobile Navigation - Full screen overlay */}
-        <div
-          className={`fixed inset-0 top-[96px] bg-phileon-black z-40 transition-all duration-500 ease-in-out ${
-            isMenuOpen 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 -translate-y-4 pointer-events-none'
-          }`}
-        >
-          <div className="flex flex-col items-center justify-center h-full space-y-10">
-            {navLinks.map((link, index) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-xl tracking-[0.2em] uppercase transition-all duration-500 ${
-                  location.pathname === link.path
-                    ? 'text-phileon-gold'
-                    : 'text-phileon-ivory hover:text-phileon-gold'
-                }`}
-                style={{ 
-                  transitionDelay: isMenuOpen ? `${index * 80}ms` : '0ms',
-                  opacity: isMenuOpen ? 1 : 0,
-                  transform: isMenuOpen ? 'translateY(0)' : 'translateY(20px)'
-                }}
-                data-testid={`mobile-nav-${link.name.toLowerCase().replace(' ', '-')}`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </nav>
+      {/* Navigation Overlay */}
+      <div
+        className={`nav-overlay ${isMenuOpen ? 'is-open' : ''}`}
+      >
+        <nav className="nav-menu">
+          {navLinks.map((link, index) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`nav-link ${location.pathname === link.path ? 'is-active' : ''}`}
+              style={{ animationDelay: isMenuOpen ? `${index * 80}ms` : '0ms' }}
+              data-testid={`nav-${link.name.toLowerCase().replace(' ', '-')}`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
     </header>
   );
 };
