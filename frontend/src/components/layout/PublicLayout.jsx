@@ -3,21 +3,24 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import LiveGoldPriceTicker from '@/components/LiveGoldPriceTicker';
 
+// Navigation: Shop, Custom Jewelry, About, Contact (minimal, no icons)
 const navLinks = [
-  { name: 'Collections', path: '/collections' },
-  { name: 'Custom Design', path: '/custom-design' },
-  { name: 'Our Story', path: '/about' },
-  { name: 'Craftsmanship', path: '/craftsmanship' },
+  { name: 'Shop', path: '/collections' },
+  { name: 'Custom Jewelry', path: '/custom-design' },
+  { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
 ];
 
-// Phileon Logo - uses uploaded brand logo
-const PhileonLogo = ({ className = "" }) => (
-  <img 
-    src="/logo.png" 
-    alt="Phileon"
-    className={`h-10 lg:h-12 w-auto rounded ${className}`}
-  />
+// Phileon Logo - generous padding, no stretch/distort
+const PhileonLogo = () => (
+  <div className="p-2">
+    <img 
+      src="/logo.png" 
+      alt="Phileon"
+      className="h-10 lg:h-12 w-auto object-contain"
+      style={{ maxWidth: '48px' }}
+    />
+  </div>
 );
 
 const Header = () => {
@@ -45,9 +48,9 @@ const Header = () => {
           : 'bg-transparent'
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 lg:px-12">
+      <nav className="max-w-7xl mx-auto px-8 lg:px-16">
         <div className="flex items-center justify-between h-20 lg:h-24">
-          {/* Logo - Left side, always links to home */}
+          {/* Logo - Top left, generous padding, links to home */}
           <Link 
             to="/" 
             className="flex items-center transition-transform duration-300 hover:scale-105"
@@ -57,14 +60,14 @@ const Header = () => {
             <PhileonLogo />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-12">
+          {/* Desktop Navigation - Minimal, no icons */}
+          <div className="hidden lg:flex items-center space-x-14">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
-                  location.pathname === link.path
+                className={`text-xs tracking-[0.18em] uppercase transition-colors duration-300 ${
+                  location.pathname === link.path || location.pathname.startsWith(link.path + '/')
                     ? 'text-phileon-gold'
                     : 'text-phileon-ivory-muted hover:text-phileon-gold'
                 }`}
@@ -75,10 +78,10 @@ const Header = () => {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Hamburger Menu */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden text-phileon-ivory p-2 hover:text-phileon-gold transition-colors"
+            className="lg:hidden text-phileon-ivory p-3 hover:text-phileon-gold transition-colors"
             data-testid="mobile-menu-toggle"
             aria-label="Toggle menu"
           >
@@ -86,24 +89,26 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Smooth open */}
         <div
-          className={`lg:hidden fixed inset-0 top-[104px] bg-phileon-black z-40 transition-all duration-500 ${
-            isMenuOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'
+          className={`lg:hidden fixed inset-0 top-[104px] bg-phileon-black z-40 transition-all duration-500 ease-in-out ${
+            isMenuOpen 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
         >
-          <div className="flex flex-col items-center justify-center h-full space-y-8">
+          <div className="flex flex-col items-center justify-center h-full space-y-10">
             {navLinks.map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-lg tracking-[0.2em] uppercase transition-all duration-300 ${
+                className={`text-xl tracking-[0.2em] uppercase transition-all duration-500 ${
                   location.pathname === link.path
                     ? 'text-phileon-gold'
                     : 'text-phileon-ivory hover:text-phileon-gold'
                 }`}
                 style={{ 
-                  transitionDelay: isMenuOpen ? `${index * 50}ms` : '0ms',
+                  transitionDelay: isMenuOpen ? `${index * 80}ms` : '0ms',
                   opacity: isMenuOpen ? 1 : 0,
                   transform: isMenuOpen ? 'translateY(0)' : 'translateY(20px)'
                 }}
@@ -121,80 +126,67 @@ const Header = () => {
 
 const Footer = () => {
   return (
-    <footer className="bg-phileon-near-black border-t border-phileon-charcoal">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+    <footer className="bg-phileon-near-black border-t border-phileon-charcoal/50">
+      <div className="max-w-7xl mx-auto px-8 lg:px-16 py-16 lg:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           {/* Brand */}
-          <div className="lg:col-span-2">
+          <div className="md:col-span-5">
             <Link to="/" className="inline-block">
               <PhileonLogo />
             </Link>
-            <p className="mt-6 text-sm text-phileon-ivory-muted leading-relaxed max-w-md">
-              Crafting timeless jewelry that tells your story. Each piece is a 
-              testament to exceptional craftsmanship and the enduring power of 
-              meaningful design.
+            <p className="mt-6 text-sm text-phileon-ivory-muted leading-relaxed max-w-sm">
+              Timeless elegance, crafted for you.
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-serif text-sm tracking-[0.2em] text-phileon-gold mb-6">
-              EXPLORE
-            </h4>
-            <ul className="space-y-3">
-              {[
-                { name: 'Collections', path: '/collections' },
-                { name: 'Custom Design', path: '/custom-design' },
-                { name: 'Our Process', path: '/process' },
-                { name: 'Testimonials', path: '/testimonials' },
-              ].map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+          {/* Links - Minimal */}
+          <div className="md:col-span-3">
+            <ul className="space-y-4">
+              <li>
+                <Link to="/contact" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link to="/custom-design" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                  Custom Jewelry
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Support */}
-          <div>
-            <h4 className="font-serif text-sm tracking-[0.2em] text-phileon-gold mb-6">
-              SUPPORT
-            </h4>
-            <ul className="space-y-3">
-              {[
-                { name: 'Contact Us', path: '/contact' },
-                { name: 'FAQ', path: '/faq' },
-                { name: 'Care Guide', path: '/craftsmanship' },
-                { name: 'About Us', path: '/about' },
-              ].map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+          {/* Legal - Quiet */}
+          <div className="md:col-span-4">
+            <ul className="space-y-4">
+              <li>
+                <Link to="/privacy" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                  Terms
+                </Link>
+              </li>
+              <li>
+                <a 
+                  href="https://instagram.com/phileon" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors"
+                >
+                  Instagram
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-phileon-charcoal flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-phileon-ivory-muted tracking-wider">
-            © {new Date().getFullYear()} PHILEON. All rights reserved.
+        {/* Bottom - Minimal */}
+        <div className="mt-16 pt-8 border-t border-phileon-charcoal/30">
+          <p className="text-xs text-phileon-ivory-muted/60 tracking-wider">
+            © {new Date().getFullYear()} Phileon
           </p>
-          <div className="flex items-center space-x-6">
-            <span className="text-xs text-phileon-ivory-muted tracking-wider">
-              Crafted with intention
-            </span>
-          </div>
         </div>
       </div>
     </footer>
@@ -210,16 +202,17 @@ const PublicLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Live Gold Price Ticker - Pinned at very top */}
+      {/* Live Gold Price Ticker - Fixed at top */}
       <LiveGoldPriceTicker />
       
-      {/* Header - Below ticker */}
+      {/* Header */}
       <Header />
       
-      {/* Main content with padding for fixed header + ticker */}
+      {/* Main content */}
       <main className="flex-grow pt-[40px]">
         <Outlet />
       </main>
+      
       <Footer />
     </div>
   );
