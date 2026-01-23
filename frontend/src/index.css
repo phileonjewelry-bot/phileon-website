@@ -710,6 +710,71 @@ input:focus, textarea:focus, select:focus, button:focus {
   }
 }
 
+/* ===== DROP REVEAL (Signature Animation) ===== */
+.drop-reveal {
+  position: fixed;
+  inset: 0;
+  background: black;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.drop-reveal.is-active {
+  display: flex;
+}
+
+.drop-reveal__bg {
+  position: absolute;
+  font-family: 'Playfair Display', serif;
+  font-size: 50vw;
+  color: rgba(255, 255, 255, 0.03);
+  user-select: none;
+  pointer-events: none;
+}
+
+.drop-reveal__line {
+  width: 0;
+  height: 2px;
+  background: var(--color-blue);
+  animation: lineIn 0.6s ease forwards;
+}
+
+.drop-reveal__text {
+  margin-top: 40px;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.4em;
+  font-size: 18px;
+  color: var(--color-ivory);
+  opacity: 0;
+  animation: textIn 0.4s ease forwards;
+  animation-delay: 0.6s;
+}
+
+@keyframes lineIn {
+  to { width: 260px; }
+}
+
+@keyframes textIn {
+  to { opacity: 1; }
+}
+
+/* ===== INTENT FLASH (Blue Radial) ===== */
+.intent-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99998;
+  background: radial-gradient(circle at center, rgba(30, 91, 255, 0.28), transparent 65%);
+  animation: intentFlash 0.35s ease forwards;
+}
+
+@keyframes intentFlash {
+  to { opacity: 0; }
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .ph-menu__panel,
