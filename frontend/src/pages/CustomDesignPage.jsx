@@ -515,7 +515,7 @@ Additional notes: ${formData.message || 'None'}
               <div />
             )}
 
-            {currentStep < 5 ? (
+            {currentStep < 6 ? (
               <button
                 onClick={() => canProceed() && setCurrentStep(currentStep + 1)}
                 disabled={!canProceed()}
