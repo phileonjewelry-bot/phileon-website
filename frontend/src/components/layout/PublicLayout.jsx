@@ -168,7 +168,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="https://instagram.com/phileon" 
+                  href="https://www.instagram.com/houseofphileon?igsh=ZHA2Y2c2dXVuazBp" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors"
