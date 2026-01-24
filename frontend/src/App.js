@@ -87,6 +87,9 @@ function App() {
             <Route path="/craftsmanship" element={<CraftsmanshipPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout/success" element={<CheckoutSuccess />} />
+            <Route path="/checkout/cancel" element={<CheckoutCancel />} />
           </Route>
           
           {/* Admin Routes */}
