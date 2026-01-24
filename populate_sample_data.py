@@ -102,6 +102,10 @@ SAMPLE_PRODUCTS = [
         "inventory_count": 1,  # Low stock for testing
         "low_stock_threshold": 5,
         "is_bestseller": False,
+        "low_stock_alert_sent": False,
+        "restock_alert_sent": False,
+        "low_stock_alert_sent_at": None,
+        "restock_alert_sent_at": None,
         "tryon_glb_url": None,
         "tryon_preview_png_url": "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=400&q=80",
         "tryon_ring_scale": 1.1,
