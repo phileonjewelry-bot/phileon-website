@@ -53,7 +53,7 @@ const HARDCODED_PRODUCTS = [
 const ShopDropPage = () => {
   const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
-  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { has, toggle } = useWishlist();
 
   useEffect(() => {
     const fetchProducts = async () => {
