@@ -20,13 +20,11 @@ const Checkout = () => {
     city: '',
     state: '',
     zipCode: '',
-    country: 'USA',
-    cardNumber: '',
-    cardName: '',
-    expiryDate: '',
-    cvv: ''
+    country: 'USA'
   });
   const [shippingCost, setShippingCost] = useState(15);
+  const [currentStep, setCurrentStep] = useState(1); // 1: Contact, 2: Shipping, 3: Payment
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
