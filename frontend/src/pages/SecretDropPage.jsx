@@ -32,11 +32,11 @@ export default function SecretDropPage() {
       setDenied(false);
 
       // ✅ Trigger flash FIRST, then unlock after delay
-      setUnlockFlash(true);        // 1) HIT
-      setTimeout(() => {
-        setUnlockFlash(false);
-        setUnlocked(true);         // 2) SETTLE
-      }, 120);
+      setUnlockFlash(true);
+      setTimeout(() => { 
+        setUnlocked(true); 
+        setUnlockFlash(false); 
+      }, 450);
       return;
     }
 
