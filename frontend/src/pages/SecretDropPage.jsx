@@ -7,8 +7,26 @@ export default function SecretDropPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [denied, setDenied] = useState(false);
   const [unlockFlash, setUnlockFlash] = useState(false);
+  const navigate = useNavigate();
 
   const denyTimerRef = useRef(null);
+
+  // Analytics function
+  const logEvent = (type) => {
+    const event = {
+      type,
+      ts: Date.now(),
+      path: window.location.pathname
+    };
+    
+    // Log to console
+    console.log('Phileon Analytics:', event);
+    
+    // Save to localStorage
+    const events = JSON.parse(localStorage.getItem('phileon_events') || '[]');
+    events.push(event);
+    localStorage.setItem('phileon_events', JSON.stringify(events));
+  };
 
   const handleInputChange = (e) => {
     setCode(e.target.value);
