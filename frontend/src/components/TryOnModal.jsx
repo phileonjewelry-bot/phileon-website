@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { X, Smartphone, Camera, Cube, Image } from 'lucide-react';
+import { X, Smartphone, Camera, Box, Image } from 'lucide-react';
 import TryOn3D from './TryOn3D';
 import TryOnPhoto from './TryOnPhoto';
 import TryOnLiveAR from './TryOnLiveAR';
