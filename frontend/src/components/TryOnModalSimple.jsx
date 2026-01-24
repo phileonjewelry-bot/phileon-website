@@ -31,7 +31,7 @@ const TryOnModalSimple = ({ isOpen, onClose, product }) => {
         <DialogHeader className="border-b border-yellow-600/20 pb-4">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-2xl font-light text-white flex items-center gap-3">
-              <Box className="h-6 w-6 text-yellow-600" />
+              <Sparkles className="h-6 w-6 text-yellow-600" />
               Try On: {product.name}
             </DialogTitle>
             <Button
