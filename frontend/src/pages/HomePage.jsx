@@ -10,6 +10,8 @@ const HomePage = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDropReveal, setShowDropReveal] = useState(false);
+  const navigate = useNavigate();
+  const keyBufferRef = useRef('');
 
   useEffect(() => {
     const fetchData = async () => {
