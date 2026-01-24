@@ -303,3 +303,161 @@ class TryOnAnalytics(BaseModel):
     device_info: Optional[dict] = None
     session_id: Optional[str] = None
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+# ============ CUSTOMER AUTHENTICATION ============
+class CustomerBase(BaseModel):
+    email: str
+    first_name: str
+    last_name: str
+    phone: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    marketing_consent: bool = True
+
+
+class CustomerRegister(CustomerBase):
+    password: str
+
+
+class CustomerLogin(BaseModel):
+    email: str
+    password: str
+
+
+class CustomerUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    marketing_consent: Optional[bool] = None
+
+
+class Customer(CustomerBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    password_hash: str
+    is_verified: bool = False
+    verification_token: Optional[str] = None
+    reset_token: Optional[str] = None
+    reset_token_expires: Optional[datetime] = None
+    last_login: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class CustomerToken(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    customer: Customer
+
+
+class PasswordReset(BaseModel):
+    email: str
+
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
+
+
+class EmailVerification(BaseModel):
+    token: str
+
+
+# ============ CUSTOMER ADDRESSES ============
+class AddressBase(BaseModel):
+    type: str  # billing, shipping
+    first_name: str
+    last_name: str
+    company: Optional[str] = None
+    address_line_1: str
+    address_line_2: Optional[str] = None
+    city: str
+    state_province: str
+    postal_code: str
+    country: str = "Canada"
+    phone: Optional[str] = None
+    is_default: bool = False
+
+
+class AddressCreate(AddressBase):
+    pass
+
+
+class AddressUpdate(BaseModel):
+    type: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    company: Optional[str] = None
+    address_line_1: Optional[str] = None
+    address_line_2: Optional[str] = None
+    city: Optional[str] = None
+    state_province: Optional[str] = None
+    postal_code: Optional[str] = None
+    country: Optional[str] = None
+    phone: Optional[str] = None
+    is_default: Optional[bool] = None
+
+
+class Address(AddressBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    customer_id: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+# ============ CUSTOMER ORDERS ============
+class OrderStatus(str):
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    IN_PRODUCTION = "in_production"
+    READY_FOR_PICKUP = "ready_for_pickup"
+    SHIPPED = "shipped"
+    DELIVERED = "delivered"
+    CANCELLED = "cancelled"
+
+
+class OrderItemBase(BaseModel):
+    product_id: str
+    product_name: str
+    product_image: Optional[str] = None
+    quantity: int = 1
+    unit_price: float
+    variant: Optional[str] = None
+
+
+class OrderItem(OrderItemBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+
+
+class OrderBase(BaseModel):
+    subtotal: float
+    tax_amount: float = 0.0
+    shipping_amount: float = 0.0
+    total_amount: float
+    currency: str = "CAD"
+    status: str = OrderStatus.PENDING
+    notes: Optional[str] = None
+
+
+class OrderCreate(OrderBase):
+    items: List[OrderItemBase]
+    shipping_address: AddressCreate
+    billing_address: Optional[AddressCreate] = None
+
+
+class Order(OrderBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    order_number: str = Field(default_factory=lambda: f"PHI-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:8].upper()}")
+    customer_id: str
+    items: List[OrderItem]
+    shipping_address: Address
+    billing_address: Optional[Address] = None
+    tracking_number: Optional[str] = None
+    shipped_date: Optional[datetime] = None
+    delivered_date: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
