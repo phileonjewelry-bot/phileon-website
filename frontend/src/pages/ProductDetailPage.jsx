@@ -48,7 +48,7 @@ const ProductDetailPage = () => {
 
   // Context hooks
   const { addToCart } = useCart();
-  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { has, toggle } = useWishlist();
 
   useEffect(() => {
     const fetchProduct = async () => {
