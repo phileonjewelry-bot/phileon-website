@@ -1,156 +1,103 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { lsGet, lsSet } from "../lib/storage";
 
-const CartContext = createContext();
+const CartContext = createContext(null);
+const CART_KEY = "phileon_cart_v1";
 
-const STORAGE_KEY = 'phileon_cart';
-
-// Cart reducer
-const cartReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TO_CART': {
-      const { product, qty = 1, variant } = action.payload;
-      const existingItemIndex = state.items.findIndex(
-        item => item.product_id === product.id && item.variant === variant
-      );
-
-      if (existingItemIndex > -1) {
-        // Update quantity of existing item
-        const updatedItems = [...state.items];
-        updatedItems[existingItemIndex].qty += qty;
-        return { ...state, items: updatedItems };
-      } else {
-        // Add new item
-        const newItem = {
-          product_id: product.id,
-          name: product.name,
-          price: product.price_range || 'Inquiry',
-          image: product.images?.[0] || '',
-          qty,
-          variant: variant || null,
-          slug: product.slug
-        };
-        return { ...state, items: [...state.items, newItem] };
-      }
-    }
-
-    case 'REMOVE_FROM_CART': {
-      const { product_id } = action.payload;
-      return {
-        ...state,
-        items: state.items.filter(item => item.product_id !== product_id)
-      };
-    }
-
-    case 'UPDATE_QTY': {
-      const { product_id, qty } = action.payload;
-      if (qty <= 0) {
-        return cartReducer(state, { type: 'REMOVE_FROM_CART', payload: { product_id } });
-      }
-      
-      const updatedItems = state.items.map(item =>
-        item.product_id === product_id ? { ...item, qty } : item
-      );
-      return { ...state, items: updatedItems };
-    }
-
-    case 'CLEAR_CART':
-      return { ...state, items: [] };
-
-    case 'LOAD_CART':
-      return { ...state, items: action.payload };
-
-    default:
-      return state;
-  }
-};
-
-// Initial state
-const initialState = {
-  items: []
+const normalizeItem = (product, qty = 1, variant = null) => {
+  // product should include: id/_id, name/title, price, image
+  const id = product?.id || product?._id;
+  return {
+    product_id: String(id),
+    name: product?.name || product?.title || "Product",
+    price: Number(product?.price ?? 0),
+    image: product?.image || product?.thumbnail || product?.images?.[0] || "",
+    qty: Math.max(1, Number(qty || 1)),
+    variant: variant || null,
+    inventory_count: Number(product?.inventory_count ?? product?.stock ?? 999999),
+  };
 };
 
 export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [items, setItems] = useState(() => lsGet(CART_KEY, []));
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem(STORAGE_KEY);
-    if (savedCart) {
-      try {
-        const cartData = JSON.parse(savedCart);
-        dispatch({ type: 'LOAD_CART', payload: cartData });
-      } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
-      }
-    }
-  }, []);
+    lsSet(CART_KEY, items);
+  }, [items]);
 
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
-  }, [state.items]);
+  const openCart = () => setIsOpen(true);
+  const closeCart = () => setIsOpen(false);
+  const toggleCart = () => setIsOpen((v) => !v);
 
-  // Analytics helper
-  const logAnalytics = async (eventType, data = {}) => {
-    try {
-      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/analytics/tryon`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event_type: eventType,
-          product_id: data.product_id || '',
-          device_info: data,
-          session_id: sessionStorage.getItem('phileon_session_id') || 'anonymous'
-        })
-      });
-    } catch (error) {
-      console.warn('Analytics logging failed:', error);
-    }
-  };
-
-  // Cart actions
   const addToCart = (product, qty = 1, variant = null) => {
-    dispatch({ type: 'ADD_TO_CART', payload: { product, qty, variant } });
-    logAnalytics('cart_add', { product_id: product.id, qty, variant });
+    const item = normalizeItem(product, qty, variant);
+
+    // Sold out guard (optional)
+    if (item.inventory_count <= 0) return;
+
+    setItems((prev) => {
+      const idx = prev.findIndex(
+        (x) => x.product_id === item.product_id && JSON.stringify(x.variant) === JSON.stringify(item.variant)
+      );
+      if (idx >= 0) {
+        const next = [...prev];
+        next[idx] = { ...next[idx], qty: next[idx].qty + item.qty };
+        return next;
+      }
+      return [...prev, item];
+    });
+
+    setIsOpen(true);
   };
 
-  const removeFromCart = (product_id) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: { product_id } });
-    logAnalytics('cart_remove', { product_id });
+  const removeFromCart = (product_id, variant = null) => {
+    setItems((prev) =>
+      prev.filter(
+        (x) => !(x.product_id === String(product_id) && JSON.stringify(x.variant) === JSON.stringify(variant))
+      )
+    );
   };
 
-  const updateQty = (product_id, qty) => {
-    dispatch({ type: 'UPDATE_QTY', payload: { product_id, qty } });
+  const updateQty = (product_id, qty, variant = null) => {
+    const q = Math.max(1, Number(qty || 1));
+    setItems((prev) =>
+      prev.map((x) => {
+        if (x.product_id === String(product_id) && JSON.stringify(x.variant) === JSON.stringify(variant)) {
+          return { ...x, qty: q };
+        }
+        return x;
+      })
+    );
   };
 
-  const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
-  };
+  const clearCart = () => setItems([]);
 
-  const getCartTotal = () => {
-    return state.items.reduce((total, item) => total + item.qty, 0);
-  };
+  const subtotal = useMemo(() => {
+    return items.reduce((sum, x) => sum + Number(x.price || 0) * Number(x.qty || 0), 0);
+  }, [items]);
+
+  const count = useMemo(() => items.reduce((n, x) => n + Number(x.qty || 0), 0), [items]);
 
   const value = {
-    items: state.items,
+    items,
+    count,
+    subtotal,
+    isOpen,
+    openCart,
+    closeCart,
+    toggleCart,
     addToCart,
     removeFromCart,
     updateQty,
     clearCart,
-    getCartTotal
   };
 
-  return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used within CartProvider");
+  return ctx;
 };
