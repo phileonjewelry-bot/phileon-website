@@ -86,6 +86,16 @@ const PhileonMenu = ({ isOpen, onClose }) => {
             to={link.path}
             className="ph-menu__link"
             data-testid={`menu-link-${link.name.toLowerCase().replace(' ', '-')}`}
+            onClick={() => {
+              // Force navigation if Link fails
+              setTimeout(() => {
+                if (window.location.pathname === link.path) {
+                  onClose();
+                } else {
+                  window.location.href = link.path;
+                }
+              }, 100);
+            }}
           >
             {link.name}
           </Link>
