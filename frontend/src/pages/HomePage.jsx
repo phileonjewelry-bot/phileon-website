@@ -33,6 +33,30 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  // Hidden gate: capture keypresses and check for "phileon"
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Only process letter keys
+      if (/^[a-zA-Z]$/.test(e.key)) {
+        keyBufferRef.current += e.key.toLowerCase();
+        
+        // Keep only last 10 characters
+        if (keyBufferRef.current.length > 10) {
+          keyBufferRef.current = keyBufferRef.current.slice(-10);
+        }
+        
+        // Check for "phileon"
+        if (keyBufferRef.current.includes('phileon')) {
+          keyBufferRef.current = ''; // Reset buffer
+          navigate('/secret-drop');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [navigate]);
+
   const handleShopDrop = () => {
     setShowDropReveal(true);
   };
