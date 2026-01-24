@@ -47,9 +47,6 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 // Components
 import CartDrawer from "@/components/CartDrawer";
 
-// Import Wishlist Page
-import WishlistPage from "@/pages/WishlistPage";
-
 function App() {
   const handleCheckout = async () => {
     // TODO: hook to your existing Stripe checkout endpoint using cart items
