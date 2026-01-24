@@ -23,6 +23,7 @@ const ProductDetailPage = () => {
   const [tryOnOpen, setTryOnOpen] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
