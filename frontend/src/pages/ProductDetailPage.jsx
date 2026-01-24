@@ -336,8 +336,9 @@ const ProductDetailPage = () => {
                           setTryOnOpen(true);
                           logTryOnAnalytics('open_ar');
                         }}
-                        className="px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2 sm:col-span-2"
+                        className={`px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2 sm:col-span-2 ${soldOut ? 'ph-disabled' : ''}`}
                         data-testid="try-on-ar-btn"
+                        disabled={soldOut}
                       >
                         <Camera size={14} />
                         Try On Live (AR)
