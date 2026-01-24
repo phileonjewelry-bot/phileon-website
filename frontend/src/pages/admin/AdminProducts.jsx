@@ -176,6 +176,34 @@ const AdminProducts = () => {
     }
   };
 
+  const updateProductStock = async (productId, newStock) => {
+    try {
+      const stockValue = parseInt(newStock) || 0;
+      await adminApi.updateProduct(productId, { stock: stockValue });
+      // Update the local state immediately for better UX
+      setProducts(products.map(p => 
+        p.id === productId ? { ...p, stock: stockValue } : p
+      ));
+      toast.success('Stock updated');
+    } catch (error) {
+      toast.error('Failed to update stock');
+    }
+  };
+
+  const toggleBestseller = async (productId) => {
+    try {
+      const product = products.find(p => p.id === productId);
+      await adminApi.updateProduct(productId, { is_bestseller: !product.is_bestseller });
+      // Update the local state immediately for better UX
+      setProducts(products.map(p => 
+        p.id === productId ? { ...p, is_bestseller: !p.is_bestseller } : p
+      ));
+      toast.success('Bestseller status updated');
+    } catch (error) {
+      toast.error('Failed to update bestseller status');
+    }
+  };
+
   const filteredProducts = filterCollection === 'all' 
     ? products 
     : products.filter(p => p.collection_id === filterCollection);
