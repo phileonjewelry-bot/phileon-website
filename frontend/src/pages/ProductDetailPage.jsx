@@ -349,7 +349,7 @@ const ProductDetailPage = () => {
               )}
               
               {/* Primary CTA */}
-              {product.inventory_count > 0 ? (
+              {!soldOut ? (
                 <button 
                   onClick={() => setInquiryOpen(true)}
                   className="w-full px-8 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90"
