@@ -463,6 +463,51 @@ const ProductDetailPage = () => {
           onClose={() => setTryOnOpen(false)}
         />
       )}
+
+      {/* Restock Notification Modal */}
+      <Dialog open={restockOpen} onOpenChange={setRestockOpen}>
+        <DialogContent className="bg-phileon-near-black border-phileon-charcoal text-phileon-ivory max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl tracking-wider">
+              Join Restock List
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleRestock} className="space-y-4 mt-4">
+            <p className="text-phileon-ivory-muted text-sm">
+              We'll notify you as soon as this piece becomes available again.
+            </p>
+            <div>
+              <Input
+                placeholder="Your Name"
+                value={restockData.name}
+                onChange={(e) => setRestockData({ ...restockData, name: e.target.value })}
+                required
+                className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50"
+                data-testid="restock-name"
+              />
+            </div>
+            <div>
+              <Input
+                type="email"
+                placeholder="Email Address"
+                value={restockData.email}
+                onChange={(e) => setRestockData({ ...restockData, email: e.target.value })}
+                required
+                className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50"
+                data-testid="restock-email"
+              />
+            </div>
+            <Button 
+              type="submit" 
+              disabled={restockSubmitting}
+              className="w-full bg-phileon-gold text-phileon-black hover:bg-phileon-gold/90"
+              data-testid="submit-restock"
+            >
+              {restockSubmitting ? 'Joining...' : 'Join Restock List'}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
