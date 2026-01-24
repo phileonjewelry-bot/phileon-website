@@ -36,7 +36,7 @@ export default function SecretDropPage() {
       setTimeout(() => { 
         setUnlocked(true); 
         setUnlockFlash(false); 
-      }, 450);
+      }, 650);
       return;
     }
 
