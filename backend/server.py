@@ -738,6 +738,41 @@ async def log_tryon_analytics(analytics: TryOnAnalytics):
         raise HTTPException(status_code=500, detail="Error logging analytics")
 
 
+# ============ INVENTORY ALERTS ============
+@api_router.post("/inventory/check-alerts")
+async def check_inventory_alerts():
+    """Check for low stock products and send alerts"""
+    try:
+        # Find products with low stock that haven't been alerted
+        low_stock_products = await db.products.find({
+            "inventory_count": {"$gt": 0, "$lte": "$low_stock_threshold"},
+            "low_stock_alert_sent": {"$ne": True}
+        }).to_list(100)
+        
+        alerts_sent = 0
+        for product in low_stock_products:
+            # Send email alert (mock implementation)
+            try:
+                # In production, integrate with email service
+                logger.warning(f"LOW STOCK ALERT: {product['name']} has {product['inventory_count']} items remaining")
+                
+                # Mark alert as sent
+                await db.products.update_one(
+                    {"id": product["id"]},
+                    {"$set": {"low_stock_alert_sent": True}}
+                )
+                alerts_sent += 1
+                
+            except Exception as e:
+                logger.error(f"Failed to send alert for product {product['id']}: {str(e)}")
+        
+        return {"alerts_sent": alerts_sent}
+        
+    except Exception as e:
+        logger.error(f"Error checking inventory alerts: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error checking inventory alerts")
+
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import mimetypes
