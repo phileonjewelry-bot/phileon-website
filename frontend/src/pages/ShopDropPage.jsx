@@ -28,6 +28,8 @@ const ShopDropPage = () => {
 
     fetchProducts();
   }, []);
+// Hardcoded products as fallback
+const HARDCODED_PRODUCTS = [
   {
     id: '1',
     name: 'Eclipse Ring',
