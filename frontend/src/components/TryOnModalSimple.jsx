@@ -56,7 +56,7 @@ const TryOnModalSimple = ({ isOpen, onClose, product }) => {
               value="3d" 
               className="data-[state=active]:bg-yellow-600/20 data-[state=active]:text-yellow-600 text-gray-400 hover:text-white flex items-center gap-2"
             >
-              <Box className="h-4 w-4" />
+              <Scan className="h-4 w-4" />
               <span className="hidden sm:inline">3D View</span>
               <span className="sm:hidden">3D</span>
             </TabsTrigger>
