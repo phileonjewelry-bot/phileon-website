@@ -96,7 +96,7 @@ const TryOnModalSimple = ({ isOpen, onClose, product }) => {
             <TabsContent value="photo" className="h-full mt-0">
               <div className="flex items-center justify-center h-full bg-gray-900 rounded-lg">
                 <div className="text-center">
-                  <Image className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
+                  <Camera className="h-16 w-16 text-yellow-600 mx-auto mb-4" />
                   <h3 className="text-xl text-white mb-2">Photo Try-On</h3>
                   <p className="text-gray-400">Photo upload will be available here</p>
                 </div>
