@@ -167,32 +167,30 @@ a {
 
 /* Badge styles for product cards */
 .badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 4px;
   position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  border-radius: 2px;
+  z-index: 5;
 }
 
 .badge-gold {
-  background: linear-gradient(135deg, #c9a24d, #a88338);
-  color: #030303;
+  background: #b08b3a;
+  color: #111;
 }
 
 .badge-warning {
-  background: rgba(255, 165, 0, 0.9);
-  color: #030303;
+  background: #5a0f0f;
+  color: #fff;
 }
 
 .badge-soldout {
-  background: rgba(220, 38, 38, 0.9);
-  color: #ffffff;
+  background: #000;
+  color: #777;
+  border: 1px solid #333;
 }
 
 /* Luxury line decorations */
