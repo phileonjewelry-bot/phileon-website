@@ -798,6 +798,362 @@ async def serve_tryon_result(filename: str):
     return FileResponse(path=str(file_path), media_type=mime_type)
 
 
+# ============ CUSTOMER AUTHENTICATION ============
+import sys
+sys.path.append('/app/backend/services')
+from auth import (
+    hash_password, verify_password, generate_token, create_access_token, 
+    verify_access_token, send_verification_email, send_password_reset_email
+)
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer(auto_error=False)
+
+async def get_current_customer(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Customer:
+    """Get current authenticated customer."""
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated"
+        )
+    
+    payload = verify_access_token(credentials.credentials)
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+    
+    customer_id = payload.get("sub")
+    if not customer_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )
+    
+    customer = await db.customers.find_one({"id": customer_id})
+    if not customer:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Customer not found"
+        )
+    
+    return Customer(**customer)
+
+
+@api_router.post("/auth/register", response_model=CustomerToken)
+async def register_customer(customer_data: CustomerRegister):
+    """Register a new customer."""
+    try:
+        # Check if customer already exists
+        existing_customer = await db.customers.find_one({"email": customer_data.email.lower()})
+        if existing_customer:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        
+        # Create customer
+        password_hash = hash_password(customer_data.password)
+        verification_token = generate_token()
+        
+        customer_dict = customer_data.model_dump()
+        del customer_dict["password"]
+        customer_dict.update({
+            "email": customer_data.email.lower(),
+            "password_hash": password_hash,
+            "is_verified": False,
+            "verification_token": verification_token,
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        })
+        
+        # Add ID
+        customer_dict["id"] = str(uuid.uuid4())
+        
+        # Save to database
+        await db.customers.insert_one(customer_dict)
+        
+        # Send verification email
+        send_verification_email(customer_data.email, verification_token)
+        
+        # Create access token
+        access_token = create_access_token(data={"sub": customer_dict["id"]})
+        
+        # Return customer data without sensitive info
+        customer = Customer(**customer_dict)
+        
+        return CustomerToken(
+            access_token=access_token,
+            customer=customer
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error registering customer: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Registration failed"
+        )
+
+
+@api_router.post("/auth/login", response_model=CustomerToken)
+async def login_customer(login_data: CustomerLogin):
+    """Login customer."""
+    try:
+        # Find customer
+        customer = await db.customers.find_one({"email": login_data.email.lower()})
+        if not customer:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password"
+            )
+        
+        # Verify password
+        if not verify_password(login_data.password, customer["password_hash"]):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password"
+            )
+        
+        # Update last login
+        await db.customers.update_one(
+            {"id": customer["id"]},
+            {"$set": {"last_login": datetime.now(timezone.utc)}}
+        )
+        
+        # Create access token
+        access_token = create_access_token(data={"sub": customer["id"]})
+        
+        # Return customer data
+        customer_obj = Customer(**customer)
+        
+        return CustomerToken(
+            access_token=access_token,
+            customer=customer_obj
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error logging in customer: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Login failed"
+        )
+
+
+@api_router.post("/auth/verify-email")
+async def verify_email(verification: EmailVerification):
+    """Verify customer email."""
+    try:
+        customer = await db.customers.find_one({"verification_token": verification.token})
+        if not customer:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid verification token"
+            )
+        
+        # Update customer
+        await db.customers.update_one(
+            {"id": customer["id"]},
+            {
+                "$set": {
+                    "is_verified": True,
+                    "verification_token": None,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        return {"message": "Email verified successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verifying email: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Email verification failed"
+        )
+
+
+@api_router.post("/auth/reset-password")
+async def request_password_reset(reset_data: PasswordReset):
+    """Request password reset."""
+    try:
+        customer = await db.customers.find_one({"email": reset_data.email.lower()})
+        if not customer:
+            # Don't reveal if email exists or not
+            return {"message": "If the email exists, a reset link has been sent"}
+        
+        # Generate reset token
+        reset_token = generate_token()
+        reset_expires = datetime.now(timezone.utc) + timedelta(hours=1)
+        
+        # Update customer
+        await db.customers.update_one(
+            {"id": customer["id"]},
+            {
+                "$set": {
+                    "reset_token": reset_token,
+                    "reset_token_expires": reset_expires,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        # Send reset email
+        send_password_reset_email(reset_data.email, reset_token)
+        
+        return {"message": "If the email exists, a reset link has been sent"}
+        
+    except Exception as e:
+        logger.error(f"Error requesting password reset: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Password reset request failed"
+        )
+
+
+@api_router.post("/auth/reset-password/confirm")
+async def confirm_password_reset(reset_data: PasswordResetConfirm):
+    """Confirm password reset."""
+    try:
+        customer = await db.customers.find_one({
+            "reset_token": reset_data.token,
+            "reset_token_expires": {"$gt": datetime.now(timezone.utc)}
+        })
+        
+        if not customer:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid or expired reset token"
+            )
+        
+        # Update password
+        password_hash = hash_password(reset_data.new_password)
+        await db.customers.update_one(
+            {"id": customer["id"]},
+            {
+                "$set": {
+                    "password_hash": password_hash,
+                    "reset_token": None,
+                    "reset_token_expires": None,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        return {"message": "Password reset successful"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error confirming password reset: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Password reset failed"
+        )
+
+
+@api_router.get("/auth/me", response_model=Customer)
+async def get_current_customer_profile(current_customer: Customer = Depends(get_current_customer)):
+    """Get current customer profile."""
+    return current_customer
+
+
+@api_router.put("/auth/me", response_model=Customer)
+async def update_customer_profile(
+    update_data: CustomerUpdate,
+    current_customer: Customer = Depends(get_current_customer)
+):
+    """Update customer profile."""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump(exclude_unset=True).items() if v is not None}
+        update_dict["updated_at"] = datetime.now(timezone.utc)
+        
+        await db.customers.update_one(
+            {"id": current_customer.id},
+            {"$set": update_dict}
+        )
+        
+        updated_customer = await db.customers.find_one({"id": current_customer.id})
+        return Customer(**updated_customer)
+        
+    except Exception as e:
+        logger.error(f"Error updating customer profile: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Profile update failed"
+        )
+
+
+# ============ CUSTOMER ADDRESSES ============
+@api_router.get("/customers/addresses", response_model=List[Address])
+async def get_customer_addresses(current_customer: Customer = Depends(get_current_customer)):
+    """Get customer addresses."""
+    try:
+        addresses = await db.addresses.find({"customer_id": current_customer.id}).to_list(100)
+        return [Address(**addr) for addr in addresses]
+    except Exception as e:
+        logger.error(f"Error fetching addresses: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch addresses"
+        )
+
+
+@api_router.post("/customers/addresses", response_model=Address)
+async def create_customer_address(
+    address_data: AddressCreate,
+    current_customer: Customer = Depends(get_current_customer)
+):
+    """Create customer address."""
+    try:
+        address_dict = address_data.model_dump()
+        address_dict.update({
+            "id": str(uuid.uuid4()),
+            "customer_id": current_customer.id,
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        })
+        
+        # If this is set as default, unset others
+        if address_dict.get("is_default", False):
+            await db.addresses.update_many(
+                {"customer_id": current_customer.id},
+                {"$set": {"is_default": False}}
+            )
+        
+        await db.addresses.insert_one(address_dict)
+        return Address(**address_dict)
+        
+    except Exception as e:
+        logger.error(f"Error creating address: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Address creation failed"
+        )
+
+
+# ============ CUSTOMER ORDERS ============
+@api_router.get("/customers/orders", response_model=List[Order])
+async def get_customer_orders(current_customer: Customer = Depends(get_current_customer)):
+    """Get customer orders."""
+    try:
+        orders = await db.orders.find({"customer_id": current_customer.id}).sort("created_at", -1).to_list(100)
+        return [Order(**order) for order in orders]
+    except Exception as e:
+        logger.error(f"Error fetching orders: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch orders"
+        )
+
+
 # ============ INVENTORY MANAGEMENT ============
 from pydantic import BaseModel
 import sys
