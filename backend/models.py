@@ -49,9 +49,16 @@ class ProductBase(BaseModel):
     is_visible: bool = True
     display_order: int = 0
     details: dict = {}  # Additional details like dimensions, weight, etc.
-    stock: int = 0
+    inventory_count: int = 0
     low_stock_threshold: int = 5
     low_stock_alert_sent: bool = False
+    is_bestseller: bool = False
+    # Try-on system fields
+    tryon_glb_url: Optional[str] = None  # 3D GLB model for Three.js
+    tryon_preview_png_url: Optional[str] = None  # Preview image for try-on
+    tryon_ring_scale: float = 1.0  # Default scale for ring sizing
+    # Legacy compatibility
+    stock: int = 0  # Will be mapped to inventory_count
 
 
 class ProductCreate(ProductBase):
