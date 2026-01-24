@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import TryOnModal from '@/components/TryOnModal';
+import TryOnModal from '@/components/TryOnModalSimple';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
