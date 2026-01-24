@@ -264,3 +264,38 @@ class SiteSettingsUpdate(BaseModel):
     contact_phone: Optional[str] = None
     address: Optional[str] = None
     social_links: Optional[dict] = None
+
+
+# ============ TRY-ON SYSTEM ============
+class TryOnPhotoRequest(BaseModel):
+    product_id: str
+    finger_position: Optional[dict] = None  # {x, y} coordinates if user tapped
+    ring_size: Optional[str] = "7"  # Default ring size
+    metal_variant: Optional[str] = None  # If product has variants
+    stone_variant: Optional[str] = None  # If product has stone options
+
+
+class TryOnPhotoResponse(BaseModel):
+    result_url: str
+    product_id: str
+    processing_time: Optional[float] = None
+    cache_hit: bool = False
+
+
+class TryOnAssetsResponse(BaseModel):
+    product_id: str
+    tryon_glb_url: Optional[str] = None
+    tryon_preview_png_url: Optional[str] = None
+    tryon_ring_scale: float = 1.0
+    available_metals: List[str] = []
+    available_stones: List[str] = []
+    available_sizes: List[str] = ["4", "5", "6", "7", "8", "9", "10", "11", "12"]
+
+
+class TryOnAnalytics(BaseModel):
+    event_type: str  # photo_upload, 3d_view, ar_attempt, result_download, result_share
+    product_id: str
+    user_agent: Optional[str] = None
+    device_info: Optional[dict] = None
+    session_id: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
