@@ -8,7 +8,13 @@ const DropReveal = ({ isActive, targetPath = '/shop', dropText = 'DROP 001' }) =
     if (isActive) {
       // Navigate after animation completes
       const timer = setTimeout(() => {
-        navigate(targetPath);
+        try {
+          navigate(targetPath);
+        } catch (error) {
+          console.error('Navigation failed, trying window.location:', error);
+          // Fallback to window.location if navigate fails
+          window.location.href = targetPath;
+        }
       }, 1200);
       return () => clearTimeout(timer);
     }
