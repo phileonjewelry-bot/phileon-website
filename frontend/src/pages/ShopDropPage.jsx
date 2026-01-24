@@ -110,7 +110,23 @@ const ShopDropPage = () => {
               className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <Link to={`/piece/${product.slug}`} className="shop-drop__card-link">
+              <div className="relative">
+                {/* Wishlist Heart Button */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleWishlist(product.id);
+                  }}
+                  className="absolute top-3 right-3 z-10 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all duration-200 backdrop-blur-sm"
+                  title={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                  <Heart 
+                    className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current text-red-400' : ''}`} 
+                  />
+                </button>
+                
+                <Link to={`/piece/${product.slug}`} className="shop-drop__card-link">
                 <div className="shop-drop__card-image relative">
                   {/* BESTSELLER */}
                   {product.is_bestseller && (
