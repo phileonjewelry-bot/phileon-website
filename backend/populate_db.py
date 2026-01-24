@@ -15,6 +15,28 @@ load_dotenv(ROOT_DIR / '.env')
 # Sample products data
 products_data = [
     {
+        "id": "ring-001",
+        "name": "Phileon Signet Ring",
+        "slug": "phileon-signet-ring", 
+        "category": "rings",
+        "price": 2500.00,
+        "images": [
+            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1605100804567-1ffe942b5cd6?auto=format&fit=crop&w=800&q=80"
+        ],
+        "description": "Elegant signet ring crafted with timeless precision. A signature piece that embodies the Phileon legacy.",
+        "material": "18K Gold",
+        "weight": "8.5g", 
+        "certification": "Phileon Certified",
+        "inStock": True,
+        "stock": 12,
+        "low_stock_threshold": 5,
+        "bestseller": True,
+        "is_active": True,
+        "rating": 4.9,
+        "reviews": 45
+    },
+    {
         "id": "1",
         "name": "Eternal Gold Chain Necklace",
         "category": "necklaces",
