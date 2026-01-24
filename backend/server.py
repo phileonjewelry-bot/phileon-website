@@ -600,6 +600,163 @@ app.add_middleware(
 )
 
 
+# ============ TRY-ON ENDPOINTS ============
+from fastapi import File, UploadFile, Form
+from fastapi.responses import JSONResponse
+import hashlib
+import json
+import time
+from models import TryOnPhotoRequest, TryOnPhotoResponse, TryOnAssetsResponse, TryOnAnalytics
+
+# Mock S3-compatible storage paths (in production, use actual S3)
+TRYON_UPLOADS_PATH = Path("/app/tryon_uploads")
+TRYON_RESULTS_PATH = Path("/app/tryon_results")
+TRYON_UPLOADS_PATH.mkdir(exist_ok=True)
+TRYON_RESULTS_PATH.mkdir(exist_ok=True)
+
+@api_router.post("/tryon/photo", response_model=TryOnPhotoResponse)
+async def process_tryon_photo(
+    file: UploadFile = File(...),
+    product_id: str = Form(...),
+    finger_position: Optional[str] = Form(None),  # JSON string of {x, y}
+    ring_size: str = Form("7"),
+    metal_variant: Optional[str] = Form(None),
+    stone_variant: Optional[str] = Form(None)
+):
+    """Process photo try-on request"""
+    start_time = time.time()
+    
+    try:
+        # Read and hash the uploaded image for caching
+        image_content = await file.read()
+        image_hash = hashlib.md5(image_content).hexdigest()
+        
+        # Create cache key based on image + product + settings
+        settings_str = f"{product_id}_{ring_size}_{metal_variant}_{stone_variant}_{finger_position}"
+        cache_key = hashlib.md5(f"{image_hash}_{settings_str}".encode()).hexdigest()
+        
+        # Check if result already exists in cache
+        result_path = TRYON_RESULTS_PATH / f"{cache_key}.jpg"
+        
+        if result_path.exists():
+            # Return cached result
+            processing_time = time.time() - start_time
+            return TryOnPhotoResponse(
+                result_url=f"/api/tryon/results/{cache_key}.jpg",
+                product_id=product_id,
+                processing_time=processing_time,
+                cache_hit=True
+            )
+        
+        # Save uploaded image
+        upload_path = TRYON_UPLOADS_PATH / f"{cache_key}_original.jpg"
+        with open(upload_path, "wb") as buffer:
+            buffer.write(image_content)
+        
+        # Get product details for try-on processing
+        product = await db.products.find_one({"id": product_id})
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        # Mock try-on processing (in production, integrate with AI service)
+        # For now, we'll copy the original image as a placeholder result
+        import shutil
+        shutil.copy2(upload_path, result_path)
+        
+        # Log analytics
+        analytics_data = TryOnAnalytics(
+            event_type="photo_upload",
+            product_id=product_id,
+            device_info={
+                "ring_size": ring_size,
+                "metal_variant": metal_variant,
+                "stone_variant": stone_variant,
+                "has_finger_position": finger_position is not None
+            }
+        )
+        await db.tryon_analytics.insert_one(analytics_data.model_dump())
+        
+        processing_time = time.time() - start_time
+        
+        return TryOnPhotoResponse(
+            result_url=f"/api/tryon/results/{cache_key}.jpg",
+            product_id=product_id,
+            processing_time=processing_time,
+            cache_hit=False
+        )
+    
+    except Exception as e:
+        logger.error(f"Error processing try-on photo: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error processing try-on image")
+
+
+@api_router.get("/tryon/assets", response_model=TryOnAssetsResponse)
+async def get_tryon_assets(product_id: str):
+    """Get try-on assets for a product"""
+    try:
+        product = await db.products.find_one({"id": product_id})
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        # Extract materials for variant options
+        available_metals = []
+        available_stones = []
+        
+        if "materials" in product:
+            for material in product["materials"]:
+                material_lower = material.lower()
+                if any(metal in material_lower for metal in ["gold", "silver", "platinum", "titanium", "steel"]):
+                    available_metals.append(material)
+                elif any(stone in material_lower for stone in ["diamond", "sapphire", "ruby", "emerald", "pearl"]):
+                    available_stones.append(material)
+        
+        return TryOnAssetsResponse(
+            product_id=product_id,
+            tryon_glb_url=product.get("tryon_glb_url"),
+            tryon_preview_png_url=product.get("tryon_preview_png_url"),
+            tryon_ring_scale=product.get("tryon_ring_scale", 1.0),
+            available_metals=available_metals,
+            available_stones=available_stones
+        )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching try-on assets: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error fetching try-on assets")
+
+
+@api_router.post("/analytics/tryon")
+async def log_tryon_analytics(analytics: TryOnAnalytics):
+    """Log try-on analytics events"""
+    try:
+        await db.tryon_analytics.insert_one(analytics.model_dump())
+        return {"status": "logged"}
+    except Exception as e:
+        logger.error(f"Error logging try-on analytics: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error logging analytics")
+
+
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import mimetypes
+
+# Serve try-on result images
+@api_router.get("/tryon/results/{filename}")
+async def serve_tryon_result(filename: str):
+    """Serve try-on result images"""
+    file_path = TRYON_RESULTS_PATH / filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Result image not found")
+    
+    # Determine MIME type
+    mime_type, _ = mimetypes.guess_type(str(file_path))
+    if not mime_type:
+        mime_type = "image/jpeg"
+    
+    return FileResponse(path=str(file_path), media_type=mime_type)
+
+
 @app.on_event("startup")
 async def startup_db():
     # Create indexes for better performance
@@ -608,6 +765,7 @@ async def startup_db():
     await db.products.create_index("collection_id")
     await db.inquiries.create_index("status")
     await db.consultations.create_index("status")
+    await db.tryon_analytics.create_index("timestamp")
     logger.info("Database indexes created")
 
 
