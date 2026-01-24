@@ -27,9 +27,13 @@ SAMPLE_PRODUCTS = [
         "is_featured": True,
         "is_visible": True,
         "display_order": 1,
-        "inventory_count": 3,
+        "inventory_count": 3,  # Low stock for testing
         "low_stock_threshold": 5,
         "is_bestseller": True,
+        "low_stock_alert_sent": False,
+        "restock_alert_sent": False,
+        "low_stock_alert_sent_at": None,
+        "restock_alert_sent_at": None,
         "tryon_glb_url": None,  # Will be added when 3D models are available
         "tryon_preview_png_url": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=80",
         "tryon_ring_scale": 1.2,
