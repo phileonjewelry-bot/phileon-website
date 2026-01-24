@@ -599,6 +599,10 @@ async def admin_get_stats(_: str = Depends(verify_admin)):
 app.include_router(api_router)
 app.include_router(admin_router)
 
+# Add Stripe routes
+from routes.stripe_routes import router as stripe_router
+app.include_router(stripe_router, prefix="/api")
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
