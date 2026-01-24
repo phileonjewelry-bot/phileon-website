@@ -111,11 +111,14 @@ const AdminProducts = () => {
       images: product.images || [],
       materials: product.materials || [],
       price_range: product.price_range || '',
-      availability: product.availability,
-      is_featured: product.is_featured,
-      is_visible: product.is_visible,
-      display_order: product.display_order,
+      availability: product.availability || 'inquiry_only',
+      is_featured: product.is_featured || false,
+      is_visible: product.is_visible !== false,
+      display_order: product.display_order || 0,
       details: product.details || {},
+      stock: product.stock || 0,
+      low_stock_threshold: product.low_stock_threshold || 5,
+      is_bestseller: product.is_bestseller || false,
     });
     setModalOpen(true);
   };
