@@ -13,6 +13,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import TryOnModal from '@/components/TryOnModalSimple';
+import InventoryBadges from '@/components/InventoryBadges';
+import '@/styles/inventory-badges.css';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
