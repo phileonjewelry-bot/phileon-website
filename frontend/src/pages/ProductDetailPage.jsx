@@ -85,6 +85,51 @@ const ProductDetailPage = () => {
     }
   };
 
+  const logTryOnAnalytics = async (eventType) => {
+    try {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/analytics/tryon`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_type: eventType,
+          product_id: product.id,
+          user_agent: navigator.userAgent,
+          device_info: {
+            is_mobile: isMobile,
+            screen_width: window.innerWidth,
+            screen_height: window.innerHeight
+          },
+          session_id: sessionStorage.getItem('phileon_session_id') || 'anonymous'
+        })
+      });
+    } catch (error) {
+      console.warn('Analytics logging failed:', error);
+    }
+  };
+
+  const handleRestock = async (e) => {
+    e.preventDefault();
+    setRestockSubmitting(true);
+    try {
+      await publicApi.createInquiry({
+        name: restockData.name,
+        email: restockData.email,
+        inquiry_type: 'restock_notification',
+        product_id: product.id,
+        message: `Please notify me when ${product.name} is back in stock.`,
+      });
+      
+      toast.success('Thank you! We\'ll notify you when this piece is available again.');
+      setRestockOpen(false);
+      setRestockData({ name: '', email: '' });
+    } catch (error) {
+      console.error('Error submitting restock request:', error);
+      toast.error('Unable to join restock list. Please try again.');
+    } finally {
+      setRestockSubmitting(false);
+    }
+  };
+
   const nextImage = () => {
     if (product?.images?.length > 1) {
       setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
