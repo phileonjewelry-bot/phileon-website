@@ -12,8 +12,6 @@ const HomePage = () => {
   const [showDropReveal, setShowDropReveal] = useState(false);
   const navigate = useNavigate();
   const keyBufferRef = useRef('');
-  const tapCountRef = useRef(0);
-  const tapTimerRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
