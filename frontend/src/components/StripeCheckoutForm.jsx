@@ -7,10 +7,10 @@ import {
   CardExpiryElement,
   CardCvcElement
 } from '@stripe/react-stripe-js';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { useToast } from '../../hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import { CreditCard, Lock } from 'lucide-react';
 import axios from 'axios';
 
