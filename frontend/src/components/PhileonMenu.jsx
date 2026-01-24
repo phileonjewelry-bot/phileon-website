@@ -81,24 +81,14 @@ const PhileonMenu = ({ isOpen, onClose }) => {
         aria-label="Site menu"
       >
         {navLinks.map((link) => (
-          <Link
+          <a
             key={link.path}
-            to={link.path}
+            href={link.path}
             className="ph-menu__link"
             data-testid={`menu-link-${link.name.toLowerCase().replace(' ', '-')}`}
-            onClick={() => {
-              // Force navigation if Link fails
-              setTimeout(() => {
-                if (window.location.pathname === link.path) {
-                  onClose();
-                } else {
-                  window.location.href = link.path;
-                }
-              }, 100);
-            }}
           >
             {link.name}
-          </Link>
+          </a>
         ))}
       </div>
 
