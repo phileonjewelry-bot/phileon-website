@@ -11,11 +11,10 @@ const navLinks = [
 const PhileonMenu = ({ isOpen, onClose }) => {
   const location = useLocation();
 
-  // Close on route change - but delay it to allow navigation
+  // Close on route change
   useEffect(() => {
     if (isOpen) {
-      // Small delay to allow navigation to complete
-      setTimeout(onClose, 500);
+      onClose();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
