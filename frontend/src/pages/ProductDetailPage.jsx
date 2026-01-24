@@ -122,11 +122,19 @@ const ProductDetailPage = () => {
   };
 
   const handleShare = async () => {
-    const shareData = {
-      title: `Phileon Jewelry - ${product.name}`,
-      text: `Check out this beautiful ${product.name} from Phileon Jewelry`,
-      url: window.location.href
-    };
+    const result = await shareProduct({ 
+      title: `Phileon Jewelry - ${product.name}`, 
+      text: `Check out this beautiful ${product.name} from Phileon Jewelry`, 
+      url: window.location.href 
+    });
+
+    if (result.ok) {
+      if (result.method === 'copy') {
+        toast.success('Product link copied to clipboard!');
+      }
+    } else {
+      toast.error('Unable to share product link');
+    }
 
     // Log analytics
     try {
@@ -141,25 +149,6 @@ const ProductDetailPage = () => {
       });
     } catch (error) {
       console.warn('Analytics logging failed:', error);
-    }
-
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('Error sharing:', error);
-        }
-      }
-    } else {
-      // Fallback: copy to clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success('Product link copied to clipboard!');
-      } catch (error) {
-        console.error('Error copying to clipboard:', error);
-        toast.error('Unable to share product link');
-      }
     }
   };
 
