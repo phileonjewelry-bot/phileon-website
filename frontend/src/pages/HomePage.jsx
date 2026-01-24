@@ -35,29 +35,63 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  // Hidden gate: capture keypresses and check for "phileon"
+  // Hidden gate: capture keypresses and check for "phileon" (desktop only)
   useEffect(() => {
-    const handleKeyPress = (e) => {
-      // Only process letter keys
-      if (/^[a-zA-Z]$/.test(e.key)) {
-        keyBufferRef.current += e.key.toLowerCase();
-        
-        // Keep only last 10 characters
-        if (keyBufferRef.current.length > 10) {
-          keyBufferRef.current = keyBufferRef.current.slice(-10);
+    // Check if device is mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    if (!isMobile) {
+      const handleKeyPress = (e) => {
+        // Only process letter keys
+        if (/^[a-zA-Z]$/.test(e.key)) {
+          keyBufferRef.current += e.key.toLowerCase();
+          
+          // Keep only last 10 characters
+          if (keyBufferRef.current.length > 10) {
+            keyBufferRef.current = keyBufferRef.current.slice(-10);
+          }
+          
+          // Check for "phileon"
+          if (keyBufferRef.current.includes('phileon')) {
+            keyBufferRef.current = ''; // Reset buffer
+            navigate('/secret-drop');
+          }
         }
-        
-        // Check for "phileon"
-        if (keyBufferRef.current.includes('phileon')) {
-          keyBufferRef.current = ''; // Reset buffer
-          navigate('/secret-drop');
-        }
-      }
-    };
+      };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+      window.addEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
+    }
   }, [navigate]);
+
+  // Mobile gesture gate: 7 taps on Phileon logo within 3 seconds
+  const handleLogoTap = () => {
+    // Check if device is mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    if (isMobile) {
+      tapCountRef.current += 1;
+      
+      // Clear existing timer and start new one
+      if (tapTimerRef.current) {
+        clearTimeout(tapTimerRef.current);
+      }
+      
+      // Reset tap count after 3 seconds
+      tapTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+      }, 3000);
+      
+      // Check if 7 taps reached
+      if (tapCountRef.current >= 7) {
+        tapCountRef.current = 0; // Reset counter
+        if (tapTimerRef.current) {
+          clearTimeout(tapTimerRef.current);
+        }
+        navigate('/secret-drop');
+      }
+    }
+  };
 
   const handleShopDrop = () => {
     setShowDropReveal(true);
