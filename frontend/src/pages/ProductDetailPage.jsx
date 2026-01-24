@@ -310,8 +310,10 @@ const ProductDetailPage = () => {
               {/* Try-On Button Group - Show if ring product */}
               {isRing && (
                 <div className="space-y-3">
-                  <p className="text-xs tracking-[0.2em] uppercase text-phileon-gold mb-4 text-center">
+                  <p className="text-xs tracking-[0.2em] uppercase text-phileon-gold mb-4 text-center flex items-center justify-center gap-2">
+                    <Sparkles size={12} />
                     Try Before You Inquire
+                    <Sparkles size={12} />
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
