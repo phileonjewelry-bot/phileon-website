@@ -82,14 +82,14 @@ const PhileonMenu = ({ isOpen, onClose }) => {
         aria-label="Site menu"
       >
         {navLinks.map((link) => (
-          <a
+          <Link
             key={link.path}
-            href={link.path}
+            to={link.path}
             className="ph-menu__link"
             data-testid={`menu-link-${link.name.toLowerCase().replace(' ', '-')}`}
           >
             {link.name}
-          </a>
+          </Link>
         ))}
       </div>
 
