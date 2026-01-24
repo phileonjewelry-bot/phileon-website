@@ -12,15 +12,25 @@ const Header = () => {
 
   // Mobile gesture gate: 7 taps on Phileon logo within 3 seconds
   const handleLogoTap = (e) => {
-    // Prevent default navigation behavior
-    e.preventDefault();
+    // Check if device is mobile (more comprehensive check)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                     ('ontouchstart' in window) || 
+                     (navigator.maxTouchPoints > 0) ||
+                     window.innerWidth <= 768;
     
-    // Check if device is mobile
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
-    console.log('Logo tapped:', { isMobile, userAgent: navigator.userAgent, windowWidth: window.innerWidth });
+    console.log('Logo tapped:', { 
+      isMobile, 
+      userAgent: navigator.userAgent.substring(0, 50) + '...', 
+      windowWidth: window.innerWidth,
+      touchSupport: 'ontouchstart' in window,
+      maxTouchPoints: navigator.maxTouchPoints
+    });
     
     if (isMobile) {
+      // Prevent default navigation only on mobile when we're counting taps
+      e.preventDefault();
+      e.stopPropagation();
+      
       tapCountRef.current += 1;
       console.log(`Tap count: ${tapCountRef.current}/7`);
       
@@ -37,15 +47,19 @@ const Header = () => {
       
       // Check if 7 taps reached
       if (tapCountRef.current >= 7) {
-        console.log('7 taps reached! Navigating to secret-drop');
+        console.log('🎉 7 taps reached! Navigating to secret-drop');
         tapCountRef.current = 0; // Reset counter
         if (tapTimerRef.current) {
           clearTimeout(tapTimerRef.current);
         }
         navigate('/secret-drop');
+        return false; // Prevent any navigation
       }
+      
+      return false; // Prevent normal navigation while counting
     } else {
-      console.log('Desktop detected, mobile gesture disabled');
+      console.log('Desktop detected, allowing normal navigation');
+      // Allow normal navigation on desktop
     }
   };
 
