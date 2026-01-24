@@ -191,7 +191,22 @@ const HomePage = () => {
                   className="group"
                   data-testid={`featured-product-${product.slug}`}
                 >
-                  <div className="aspect-square overflow-hidden bg-phileon-charcoal">
+                  <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                    {/* BESTSELLER */}
+                    {product.is_bestseller && (
+                      <span className="badge badge-gold">BESTSELLER</span>
+                    )}
+                    
+                    {/* LOW STOCK */}
+                    {product.stock > 0 && product.stock <= product.low_stock_threshold && (
+                      <span className="badge badge-warning">LOW STOCK</span>
+                    )}
+                    
+                    {/* SOLD OUT */}
+                    {product.stock === 0 && (
+                      <span className="badge badge-soldout">SOLD OUT</span>
+                    )}
+                    
                     <img
                       src={product.images?.[0] || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'}
                       alt={product.name}
