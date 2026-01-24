@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import StripeCheckoutForm from './StripeCheckoutForm';
 import StripeExpressCheckout from './StripeExpressCheckout';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CreditCard, Smartphone, Wallet } from 'lucide-react';
 
 // Initialize Stripe (you'll need to get your publishable key)
