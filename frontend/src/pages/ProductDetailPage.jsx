@@ -39,6 +39,10 @@ const ProductDetailPage = () => {
     email: '',
   });
 
+  // Inventory state calculations
+  const inv = Number(product?.inventory_count ?? 0);
+  const soldOut = inv <= 0;
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
