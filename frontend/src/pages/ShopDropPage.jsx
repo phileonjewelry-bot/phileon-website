@@ -79,12 +79,12 @@ const ShopDropPage = () => {
 
   // Stagger product reveal
   useEffect(() => {
-    PRODUCTS.forEach((_, index) => {
+    products.forEach((_, index) => {
       setTimeout(() => {
         setVisibleProducts(prev => [...prev, index]);
       }, 150 * index);
     });
-  }, []);
+  }, [products]);
 
   return (
     <div className="shop-drop" data-testid="shop-drop-page">
