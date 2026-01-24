@@ -455,12 +455,12 @@ const ProductDetailPage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Ring Try-On Modal with disclaimer */}
+      {/* Hybrid Try-On Modal */}
       {tryOnOpen && (
         <TryOnModal 
-          ringImage={images[currentImageIndex]}
-          ringName={product.name}
+          isOpen={tryOnOpen}
           onClose={() => setTryOnOpen(false)}
+          product={product}
         />
       )}
 
