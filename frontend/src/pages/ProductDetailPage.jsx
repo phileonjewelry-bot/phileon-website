@@ -474,7 +474,7 @@ const ProductDetailPage = () => {
           </DialogHeader>
           <form onSubmit={handleRestock} className="space-y-4 mt-4">
             <p className="text-phileon-ivory-muted text-sm">
-              We'll notify you as soon as this piece becomes available again.
+              We&apos;ll notify you as soon as this piece becomes available again.
             </p>
             <div>
               <Input
