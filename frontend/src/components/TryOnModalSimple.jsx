@@ -65,7 +65,7 @@ const TryOnModalSimple = ({ isOpen, onClose, product }) => {
               value="photo" 
               className="data-[state=active]:bg-yellow-600/20 data-[state=active]:text-yellow-600 text-gray-400 hover:text-white flex items-center gap-2"
             >
-              <Image className="h-4 w-4" />
+              <Camera className="h-4 w-4" />
               <span className="hidden sm:inline">Photo Try-On</span>
               <span className="sm:hidden">Photo</span>
             </TabsTrigger>
