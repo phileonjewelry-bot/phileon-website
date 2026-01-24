@@ -427,6 +427,17 @@ const ProductDetailPage = () => {
                 </div>
               )}
               
+              {/* Add to Cart Button */}
+              {!soldOut && (
+                <button 
+                  onClick={handleAddToCart}
+                  className="w-full px-8 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black"
+                  data-testid="add-to-cart-btn"
+                >
+                  Add to Cart
+                </button>
+              )}
+              
               {/* Primary CTA */}
               {!soldOut ? (
                 <button 
