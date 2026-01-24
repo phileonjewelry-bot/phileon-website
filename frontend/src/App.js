@@ -98,6 +98,7 @@ function App() {
             <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>
+        <CartDrawer onCheckout={handleCheckout} />
       </BrowserRouter>
       </WishlistProvider>
     </CartProvider>
