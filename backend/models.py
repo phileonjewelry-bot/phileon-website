@@ -49,6 +49,9 @@ class ProductBase(BaseModel):
     is_visible: bool = True
     display_order: int = 0
     details: dict = {}  # Additional details like dimensions, weight, etc.
+    stock: int = 0
+    low_stock_threshold: int = 5
+    low_stock_alert_sent: bool = False
 
 
 class ProductCreate(ProductBase):
