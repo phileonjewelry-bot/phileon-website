@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Heart, Menu, X, Search } from 'lucide-react';
+import { Heart, Menu, X, Search } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import LiveGoldPriceTicker from './LiveGoldPriceTicker';
-import CartDrawer from './CartDrawer';
-import { useCart } from '@/contexts/CartContext';
-import { useWishlist } from '@/contexts/WishlistContext';
+import HeaderCartButton from './HeaderCartButton';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
