@@ -4,8 +4,8 @@ import {
   useElements,
   PaymentRequestButtonElement
 } from '@stripe/react-stripe-js';
-import { Button } from '../ui/button';
-import { useToast } from '../../hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import { Smartphone, CreditCard } from 'lucide-react';
 import axios from 'axios';
 
