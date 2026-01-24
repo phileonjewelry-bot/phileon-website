@@ -9,22 +9,13 @@ import { useWishlist } from '@/contexts/WishlistContext';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-  const [wishlistCount, setWishlistCount] = useState(0);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const { getCartTotal } = useCart();
+  const { ids: wishlistIds } = useWishlist();
   const location = useLocation();
 
-  useEffect(() => {
-    updateCounts();
-    window.addEventListener('storage', updateCounts);
-    return () => window.removeEventListener('storage', updateCounts);
-  }, [location]);
-
-  const updateCounts = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    setCartCount(cart.reduce((sum, item) => sum + item.quantity, 0));
-    setWishlistCount(wishlist.length);
-  };
+  const cartCount = getCartTotal();
+  const wishlistCount = wishlistIds.length;
 
   const navigation = [
     { name: 'Home', path: '/' },
