@@ -53,6 +53,10 @@ class ProductBase(BaseModel):
     low_stock_threshold: int = 5
     low_stock_alert_sent: bool = False
     is_bestseller: bool = False
+    # Alert guard fields
+    restock_alert_sent: bool = False
+    low_stock_alert_sent_at: Optional[datetime] = None
+    restock_alert_sent_at: Optional[datetime] = None
     # Try-on system fields
     tryon_glb_url: Optional[str] = None  # 3D GLB model for Three.js
     tryon_preview_png_url: Optional[str] = None  # Preview image for try-on
