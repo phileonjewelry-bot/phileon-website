@@ -20,7 +20,12 @@ from models import (
     FAQ, FAQCreate, FAQUpdate,
     AdminLogin, Token,
     SiteSettings, SiteSettingsUpdate,
-    TryOnPhotoRequest, TryOnPhotoResponse, TryOnAssetsResponse, TryOnAnalytics
+    TryOnPhotoRequest, TryOnPhotoResponse, TryOnAssetsResponse, TryOnAnalytics,
+    # Customer auth models
+    Customer, CustomerRegister, CustomerLogin, CustomerUpdate, CustomerToken,
+    PasswordReset, PasswordResetConfirm, EmailVerification,
+    Address, AddressCreate, AddressUpdate,
+    Order, OrderCreate
 )
 
 ROOT_DIR = Path(__file__).parent
