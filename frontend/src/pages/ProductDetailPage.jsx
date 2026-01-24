@@ -18,6 +18,7 @@ import '@/styles/inventory-badges.css';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { Heart, Share2 } from 'lucide-react';
+import { shareProduct } from '@/lib/share';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
