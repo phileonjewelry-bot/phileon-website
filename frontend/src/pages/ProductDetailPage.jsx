@@ -288,30 +288,8 @@ const ProductDetailPage = () => {
 
             {/* CTA Buttons */}
             <div className="mt-12 space-y-4">
-              {/* Inventory Status Banner */}
-              {product.inventory_count <= 0 && (
-                <div className="px-4 py-2 bg-red-900/20 border border-red-500/30 rounded-lg">
-                  <p className="text-red-300 text-sm text-center font-medium">
-                    Currently Sold Out
-                  </p>
-                </div>
-              )}
-              
-              {product.is_bestseller && (
-                <div className="px-4 py-2 bg-phileon-gold/20 border border-phileon-gold/50 rounded-lg">
-                  <p className="text-phileon-gold text-sm text-center font-medium tracking-wider">
-                    ⭐ BESTSELLER
-                  </p>
-                </div>
-              )}
-              
-              {product.inventory_count > 0 && product.inventory_count <= product.low_stock_threshold && (
-                <div className="px-4 py-2 bg-orange-900/20 border border-orange-500/30 rounded-lg">
-                  <p className="text-orange-300 text-sm text-center font-medium">
-                    Only {product.inventory_count} left in stock
-                  </p>
-                </div>
-              )}
+              {/* Inventory Status Badges */}
+              <InventoryBadges product={product} />
 
               {/* Try-On Button Group - Show if ring product */}
               {isRing && (
