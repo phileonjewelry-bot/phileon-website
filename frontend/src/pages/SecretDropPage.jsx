@@ -1,18 +1,42 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "../styles/secret-drop.css";
 
 export default function SecretDropPage() {
   const [code, setCode] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [denied, setDenied] = useState(false);
+  const denyTimerRef = useRef(null);
 
   const handleUnlock = () => {
     if (code.trim().toLowerCase() === "phileon") {
       setUnlocked(true);
       setDenied(false);
+      // Clear any existing timer
+      if (denyTimerRef.current) {
+        clearTimeout(denyTimerRef.current);
+        denyTimerRef.current = null;
+      }
     } else {
       setDenied(true);
-      setTimeout(() => setDenied(false), 2000);
+      // Clear any existing timer before setting new one
+      if (denyTimerRef.current) {
+        clearTimeout(denyTimerRef.current);
+      }
+      // Set timer to clear denied state after 2 seconds
+      denyTimerRef.current = setTimeout(() => {
+        setDenied(false);
+        denyTimerRef.current = null;
+      }, 2000);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setCode(e.target.value);
+    setDenied(false);
+    // Clear the timer when user starts typing
+    if (denyTimerRef.current) {
+      clearTimeout(denyTimerRef.current);
+      denyTimerRef.current = null;
     }
   };
 
@@ -29,10 +53,7 @@ export default function SecretDropPage() {
             className="code-input"
             placeholder="ENTER CODE"
             value={code}
-            onChange={(e) => {
-              setCode(e.target.value);
-              setDenied(false);
-            }}
+            onChange={handleInputChange}
           />
 
           <button className="unlock-btn" onClick={handleUnlock}>
