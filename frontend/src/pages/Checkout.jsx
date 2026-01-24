@@ -53,19 +53,68 @@ const Checkout = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error for this field
+    if (formErrors[e.target.name]) {
+      setFormErrors({
+        ...formErrors,
+        [e.target.name]: ''
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Mock payment processing
+  const validateStep = (step) => {
+    const errors = {};
+    
+    if (step === 1) {
+      if (!formData.email) errors.email = 'Email is required';
+      if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Email is invalid';
+    }
+    
+    if (step === 2) {
+      if (!formData.firstName) errors.firstName = 'First name is required';
+      if (!formData.lastName) errors.lastName = 'Last name is required';
+      if (!formData.address) errors.address = 'Address is required';
+      if (!formData.city) errors.city = 'City is required';
+      if (!formData.state) errors.state = 'State is required';
+      if (!formData.zipCode) errors.zipCode = 'ZIP code is required';
+      if (!formData.country) errors.country = 'Country is required';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
+  const handlePaymentSuccess = (paymentData) => {
     toast({
-      title: 'Order Placed Successfully!',
+      title: 'Payment Successful!',
       description: 'Thank you for your purchase. Order confirmation sent to your email.',
     });
     localStorage.setItem('cart', '[]');
-    setTimeout(() => {
-      navigate('/');
-    }, 2000);
+    navigate('/checkout/success', { 
+      state: { 
+        orderId: paymentData.order?.order_id,
+        paymentIntent: paymentData.paymentIntent
+      } 
+    });
+  };
+
+  const handlePaymentError = (error) => {
+    console.error('Payment error:', error);
+    toast({
+      title: 'Payment Failed',
+      description: error.message || 'An error occurred while processing your payment.',
+      variant: 'destructive'
+    });
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
