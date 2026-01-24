@@ -7,13 +7,7 @@ import HeaderCartButton from './HeaderCartButton';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
-  const { getCartTotal } = useCart();
-  const { ids: wishlistIds } = useWishlist();
   const location = useLocation();
-
-  const cartCount = getCartTotal();
-  const wishlistCount = wishlistIds.length;
 
   const navigation = [
     { name: 'Home', path: '/' },
