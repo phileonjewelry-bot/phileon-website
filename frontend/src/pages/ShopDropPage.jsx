@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Heart } from 'lucide-react';
 import { publicApi } from '../lib/api';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 // Hardcoded products as fallback
 const HARDCODED_PRODUCTS = [
