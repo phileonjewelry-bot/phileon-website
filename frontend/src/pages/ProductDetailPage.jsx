@@ -120,6 +120,55 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleShare = async () => {
+    const shareData = {
+      title: `Phileon Jewelry - ${product.name}`,
+      text: `Check out this beautiful ${product.name} from Phileon Jewelry`,
+      url: window.location.href
+    };
+
+    // Log analytics
+    try {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/analytics/tryon`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_type: 'share_click',
+          product_id: product.id,
+          session_id: sessionStorage.getItem('phileon_session_id') || 'anonymous'
+        })
+      });
+    } catch (error) {
+      console.warn('Analytics logging failed:', error);
+    }
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Error sharing:', error);
+        }
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success('Product link copied to clipboard!');
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        toast.error('Unable to share product link');
+      }
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (!soldOut) {
+      addToCart(product);
+      toast.success('Added to cart!');
+    }
+  };
+
   const handleRestock = async (e) => {
     e.preventDefault();
     setRestockSubmitting(true);
