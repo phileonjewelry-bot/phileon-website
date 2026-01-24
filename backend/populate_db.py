@@ -58,6 +58,7 @@ products_data = [
     {
         "id": "2",
         "name": "Diamond Solitaire Ring",
+        "slug": "diamond-solitaire-ring",
         "category": "rings",
         "price": 2499.99,
         "images": [
