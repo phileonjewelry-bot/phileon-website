@@ -39,6 +39,7 @@ products_data = [
     {
         "id": "1",
         "name": "Eternal Gold Chain Necklace",
+        "slug": "eternal-gold-chain-necklace",
         "category": "necklaces",
         "price": 1299.99,
         "images": [
