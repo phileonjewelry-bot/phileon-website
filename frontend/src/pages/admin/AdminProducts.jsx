@@ -41,6 +41,9 @@ const AdminProducts = () => {
     is_visible: true,
     display_order: 0,
     details: {},
+    stock: 0,
+    low_stock_threshold: 5,
+    is_bestseller: false,
   });
   const [newImage, setNewImage] = useState('');
   const [newMaterial, setNewMaterial] = useState('');
