@@ -1,47 +1,21 @@
-/* ===========================
-PHILEON SHOP (DROP VIBE)
-- Drop hero copy, limited grid, no filters, no prices on grid
-- "Request This Piece" CTA
-- "Custom exit hatch" section
-- Subtle luxury animations (fade-up + hover)
-=========================== */
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { publicApi } from '../lib/api';
 
-const ShopDropPage = () => {
-  const [products, setProducts] = useState([]);
-  const [visibleProducts, setVisibleProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await publicApi.getProducts({ featured: true });
-        setProducts(response.data || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        // Keep the hardcoded products as fallback
-        setProducts(HARDCODED_PRODUCTS);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 // Hardcoded products as fallback
 const HARDCODED_PRODUCTS = [
   {
     id: '1',
     name: 'Eclipse Ring',
-    materialLine: '18K Gold · Black Diamond',
+    materialLine: 'Titanium · Black Diamond',
     imageUrl: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
     href: '/piece/eclipse-ring',
   },
   {
     id: '2',
     name: 'Celestial Band',
-    materialLine: 'Platinum · Pavé Diamonds',
-    imageUrl: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80',
+    materialLine: 'White Gold · Star Sapphire',
+    imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=800&q=80',
     href: '/piece/celestial-band',
   },
   {
@@ -75,7 +49,23 @@ const HARDCODED_PRODUCTS = [
 ];
 
 const ShopDropPage = () => {
+  const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await publicApi.getProducts({ featured: true });
+        setProducts(response.data || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // Keep the hardcoded products as fallback
+        setProducts(HARDCODED_PRODUCTS);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Stagger product reveal
   useEffect(() => {
@@ -88,21 +78,21 @@ const ShopDropPage = () => {
 
   return (
     <div className="shop-drop" data-testid="shop-drop-page">
-      
-      {/* ===== DROP HERO ===== */}
+      {/* Hero */}
       <section className="shop-drop__hero">
         <div className="shop-drop__hero-inner">
-          <p className="shop-drop__eyebrow">Limited Release</p>
-          <h1 className="shop-drop__title">The Collection</h1>
-          <p className="shop-drop__subtitle">
-            Six pieces. Handcrafted. Available by request only.
+          <span className="shop-drop__hero-badge">EXCLUSIVE ACCESS</span>
+          <h1 className="shop-drop__hero-title">SHOP DROP</h1>
+          <p className="shop-drop__hero-description">
+            Curated pieces available for immediate inquiry. Each creation represents 
+            months of development and reflects our commitment to exceptional craftsmanship.
           </p>
-          <div className="shop-drop__divider" />
+          <div className="shop-drop__hero-line" />
         </div>
       </section>
 
-      {/* ===== PRODUCT GRID ===== */}
-      <section className="shop-drop__grid-section">
+      {/* Products Grid */}
+      <section className="shop-drop__section">
         <div className="shop-drop__grid">
           {products.map((product, index) => (
             <article 
@@ -145,25 +135,6 @@ const ShopDropPage = () => {
           ))}
         </div>
       </section>
-
-      {/* ===== CUSTOM EXIT HATCH ===== */}
-      <section className="shop-drop__custom">
-        <div className="shop-drop__custom-inner">
-          <div className="shop-drop__custom-lines" />
-          <p className="shop-drop__custom-eyebrow">Bespoke</p>
-          <h2 className="shop-drop__custom-title">
-            Don't see what you're looking for?
-          </h2>
-          <p className="shop-drop__custom-text">
-            Commission a one-of-one piece designed around your vision.
-            Our artisans work directly with you to create something truly unique.
-          </p>
-          <Link to="/custom-design" className="shop-drop__custom-btn">
-            Begin Custom Design
-          </Link>
-        </div>
-      </section>
-
     </div>
   );
 };
