@@ -46,7 +46,9 @@ import WishlistPage from "@/pages/WishlistPage";
 function App() {
   return (
     <div className="min-h-screen bg-phileon-black">
-      <BrowserRouter>
+      <CartProvider>
+        <WishlistProvider>
+          <BrowserRouter>
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}
           <Route path="/drop" element={<DropPage />} />
