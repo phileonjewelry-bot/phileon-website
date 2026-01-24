@@ -79,9 +79,15 @@ class ProductUpdate(BaseModel):
     is_visible: Optional[bool] = None
     display_order: Optional[int] = None
     details: Optional[dict] = None
-    stock: Optional[int] = None
+    inventory_count: Optional[int] = None
     low_stock_threshold: Optional[int] = None
     low_stock_alert_sent: Optional[bool] = None
+    is_bestseller: Optional[bool] = None
+    tryon_glb_url: Optional[str] = None
+    tryon_preview_png_url: Optional[str] = None
+    tryon_ring_scale: Optional[float] = None
+    # Legacy compatibility
+    stock: Optional[int] = None
 
 
 class Product(ProductBase):
