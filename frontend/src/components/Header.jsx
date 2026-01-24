@@ -94,12 +94,6 @@ const Header = () => {
           </div>
         )}
       </header>
-      
-      {/* Cart Drawer */}
-      <CartDrawer 
-        isOpen={cartDrawerOpen} 
-        onClose={() => setCartDrawerOpen(false)} 
-      />
     </>
   );
 };
