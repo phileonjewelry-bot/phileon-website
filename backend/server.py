@@ -19,7 +19,8 @@ from models import (
     Testimonial, TestimonialCreate, TestimonialUpdate,
     FAQ, FAQCreate, FAQUpdate,
     AdminLogin, Token,
-    SiteSettings, SiteSettingsUpdate
+    SiteSettings, SiteSettingsUpdate,
+    TryOnPhotoRequest, TryOnPhotoResponse, TryOnAssetsResponse, TryOnAnalytics
 )
 
 ROOT_DIR = Path(__file__).parent
