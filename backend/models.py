@@ -437,8 +437,12 @@ class OrderBase(BaseModel):
     tax_amount: float = 0.0
     shipping_amount: float = 0.0
     total_amount: float
-    currency: str = "CAD"
+    currency: str = "USD"
     status: str = OrderStatus.PENDING
+    payment_status: str = "pending"  # pending, completed, failed, refunded
+    payment_method: str = "card"  # card, apple_pay, google_pay, paypal
+    payment_intent_id: Optional[str] = None
+    checkout_session_id: Optional[str] = None
     notes: Optional[str] = None
 
 
