@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreditCard, MapPin, Package, CheckCircle2 } from 'lucide-react';
+import { CreditCard, MapPin, Package, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useToast } from '../hooks/use-toast';
+import PaymentMethods from '../components/PaymentMethods';
 
 const Checkout = () => {
   const navigate = useNavigate();
