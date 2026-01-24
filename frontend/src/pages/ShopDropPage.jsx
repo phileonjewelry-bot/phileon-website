@@ -56,7 +56,14 @@ const ShopDropPage = () => {
     const fetchProducts = async () => {
       try {
         const response = await publicApi.getProducts({ featured: true });
-        setProducts(response.data || []);
+        const apiProducts = response.data || [];
+        
+        // Use API products if available, otherwise fallback to hardcoded
+        if (apiProducts.length > 0) {
+          setProducts(apiProducts);
+        } else {
+          setProducts(HARDCODED_PRODUCTS);
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
         // Keep the hardcoded products as fallback
