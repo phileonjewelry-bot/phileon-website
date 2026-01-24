@@ -15,6 +15,9 @@ import {
 import TryOnModal from '@/components/TryOnModalSimple';
 import InventoryBadges from '@/components/InventoryBadges';
 import '@/styles/inventory-badges.css';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { Heart, Share2 } from 'lucide-react';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
