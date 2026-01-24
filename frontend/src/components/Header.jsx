@@ -55,29 +55,15 @@ const Header = () => {
             </nav>
 
             {/* Right Actions */}
-            <div className="flex items-center space-x-4">
-              <Link
+            <div className="flex items-center space-x-3">
+              <Link 
                 to="/wishlist"
-                className="relative text-gray-300 hover:text-yellow-500 transition-colors duration-300"
+                className="relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/10 hover:border-white/25"
               >
-                <Heart className="w-6 h-6" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {wishlistCount}
-                  </span>
-                )}
+                <Heart className="h-5 w-5 text-white/80" />
               </Link>
-              <button
-                onClick={() => setCartDrawerOpen(true)}
-                className="relative text-gray-300 hover:text-yellow-500 transition-colors duration-300"
-              >
-                <ShoppingCart className="w-6 h-6" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+              
+              <HeaderCartButton />
 
               {/* Mobile Menu Button */}
               <button
