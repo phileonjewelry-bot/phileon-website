@@ -307,8 +307,9 @@ const ProductDetailPage = () => {
                         setTryOnOpen(true);
                         logTryOnAnalytics('open_3d');
                       }}
-                      className="px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2"
+                      className={`px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2 ${soldOut ? 'ph-disabled' : ''}`}
                       data-testid="try-on-3d-btn"
+                      disabled={soldOut}
                     >
                       <Scan size={14} />
                       Try On (3D)
@@ -320,8 +321,9 @@ const ProductDetailPage = () => {
                         setTryOnOpen(true);
                         logTryOnAnalytics('open_photo');
                       }}
-                      className="px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2"
+                      className={`px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2 ${soldOut ? 'ph-disabled' : ''}`}
                       data-testid="try-on-photo-btn"
+                      disabled={soldOut}
                     >
                       <Camera size={14} />
                       Try On (Photo)
