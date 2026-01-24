@@ -104,16 +104,31 @@ const ShopDropPage = () => {
       {/* ===== PRODUCT GRID ===== */}
       <section className="shop-drop__grid-section">
         <div className="shop-drop__grid">
-          {PRODUCTS.map((product, index) => (
+          {products.map((product, index) => (
             <article 
               key={product.id}
               className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <Link to={product.href || '#'} className="shop-drop__card-link">
-                <div className="shop-drop__card-image">
+              <Link to={`/piece/${product.slug}`} className="shop-drop__card-link">
+                <div className="shop-drop__card-image relative">
+                  {/* BESTSELLER */}
+                  {product.is_bestseller && (
+                    <span className="badge badge-gold">BESTSELLER</span>
+                  )}
+                  
+                  {/* LOW STOCK */}
+                  {product.stock > 0 && product.stock <= product.low_stock_threshold && (
+                    <span className="badge badge-warning">LOW STOCK</span>
+                  )}
+                  
+                  {/* SOLD OUT */}
+                  {product.stock === 0 && (
+                    <span className="badge badge-soldout">SOLD OUT</span>
+                  )}
+                  
                   <img 
-                    src={product.imageUrl} 
+                    src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
                     alt={product.name}
                     loading="lazy"
                   />
@@ -123,7 +138,7 @@ const ShopDropPage = () => {
                 </div>
                 <div className="shop-drop__card-info">
                   <h3 className="shop-drop__card-name">{product.name}</h3>
-                  <p className="shop-drop__card-material">{product.materialLine}</p>
+                  <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                 </div>
               </Link>
             </article>
