@@ -296,12 +296,12 @@ const ProductDetailPage = () => {
               {/* Wishlist + Share Actions */}
               <div className="flex items-center gap-2 ml-4">
                 <button
-                  onClick={() => toggleWishlist(product.id)}
+                  onClick={() => toggle(product.id)}
                   className="p-2 text-phileon-gold hover:bg-phileon-gold/10 rounded-full transition-all duration-200"
-                  title={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                 >
                   <Heart 
-                    className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-current' : ''}`} 
+                    className={`w-6 h-6 ${has(product.id) ? 'fill-current' : ''}`} 
                   />
                 </button>
                 
