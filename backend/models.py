@@ -72,6 +72,9 @@ class ProductUpdate(BaseModel):
     is_visible: Optional[bool] = None
     display_order: Optional[int] = None
     details: Optional[dict] = None
+    stock: Optional[int] = None
+    low_stock_threshold: Optional[int] = None
+    low_stock_alert_sent: Optional[bool] = None
 
 
 class Product(ProductBase):
