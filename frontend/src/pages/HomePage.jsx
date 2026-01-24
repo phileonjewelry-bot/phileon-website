@@ -90,7 +90,7 @@ const HomePage = () => {
           
           {/* SHOP DROP button */}
           <Link 
-            to="/shop"
+            to="/shop-drop"
             className="inline-block mt-10 px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.25em] uppercase font-medium transition-all duration-300 hover:shadow-[0_0_0_1px_#1e5bff]"
             data-testid="shop-drop-btn"
           >
