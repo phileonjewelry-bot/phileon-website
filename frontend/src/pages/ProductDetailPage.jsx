@@ -298,9 +298,32 @@ const ProductDetailPage = () => {
 
           {/* Product Info */}
           <div className="lg:py-4">
-            <h1 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-phileon-ivory">
-              {product.name}
-            </h1>
+            <div className="flex items-start justify-between">
+              <h1 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-phileon-ivory">
+                {product.name}
+              </h1>
+              
+              {/* Wishlist + Share Actions */}
+              <div className="flex items-center gap-2 ml-4">
+                <button
+                  onClick={() => toggleWishlist(product.id)}
+                  className="p-2 text-phileon-gold hover:bg-phileon-gold/10 rounded-full transition-all duration-200"
+                  title={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                  <Heart 
+                    className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-current' : ''}`} 
+                  />
+                </button>
+                
+                <button
+                  onClick={handleShare}
+                  className="p-2 text-phileon-gold hover:bg-phileon-gold/10 rounded-full transition-all duration-200"
+                  title="Share this product"
+                >
+                  <Share2 className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
 
             <div className="w-12 h-px bg-phileon-gold my-8" />
 
