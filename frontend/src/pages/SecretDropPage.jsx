@@ -5,43 +5,49 @@ export default function SecretDropPage() {
   const [code, setCode] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [denied, setDenied] = useState(false);
-  const denyTimerRef = useRef(null);
+  const [unlockFlash, setUnlockFlash] = useState(false);
 
-  const handleUnlock = () => {
-    if (code.trim().toLowerCase() === "phileon") {
-      setUnlocked(true);
-      setDenied(false);
-      // Clear any existing timer
-      if (denyTimerRef.current) {
-        clearTimeout(denyTimerRef.current);
-        denyTimerRef.current = null;
-      }
-    } else {
-      setDenied(true);
-      // Clear any existing timer before setting new one
-      if (denyTimerRef.current) {
-        clearTimeout(denyTimerRef.current);
-      }
-      // Set timer to clear denied state after 2 seconds
-      denyTimerRef.current = setTimeout(() => {
-        setDenied(false);
-        denyTimerRef.current = null;
-      }, 2000);
-    }
-  };
+  const denyTimerRef = useRef(null);
 
   const handleInputChange = (e) => {
     setCode(e.target.value);
+
+    // clear denial immediately on typing
     setDenied(false);
-    // Clear the timer when user starts typing
     if (denyTimerRef.current) {
       clearTimeout(denyTimerRef.current);
       denyTimerRef.current = null;
     }
   };
 
+  const handleUnlock = () => {
+    const ok = code.trim().toLowerCase() === "phileon";
+
+    if (ok) {
+      // success: clear timers + deny state
+      if (denyTimerRef.current) {
+        clearTimeout(denyTimerRef.current);
+        denyTimerRef.current = null;
+      }
+      setDenied(false);
+
+      // ✅ Trigger 1-frame/short glitch flash on unlock
+      setUnlockFlash(true);
+      setTimeout(() => setUnlockFlash(false), 450);
+
+      // ✅ Apply sketchpad mode AFTER unlock
+      setUnlocked(true);
+      return;
+    }
+
+    // wrong code
+    setDenied(true);
+    if (denyTimerRef.current) clearTimeout(denyTimerRef.current);
+    denyTimerRef.current = setTimeout(() => setDenied(false), 2000);
+  };
+
   return (
-    <div className={`secret-shell ${unlocked ? "sketchpad" : ""}`}>
+    <div className={`secret-shell ${unlocked ? "sketchpad" : ""} ${unlockFlash ? "unlock-glitch" : ""}`}>
       {!unlocked ? (
         <div className={`lock-card ${denied ? "deny-glitch" : ""}`}>
           <div className="secret-top-right">SECRET ACCESS</div>
@@ -61,11 +67,15 @@ export default function SecretDropPage() {
           </button>
 
           {denied && <p className="access-denied">ACCESS DENIED</p>}
+          <p className="hint">Hint: The unlock code is case-insensitive</p>
         </div>
       ) : (
-        <div className="unlocked-wrap glitch-once">
+        <div className="unlocked-wrap">
           <div className="level-unlocked">ACCESS GRANTED</div>
-          <h2>SECRET DROP UNLOCKED</h2>
+          <h2 className="drop-title">SECRET DROP UNLOCKED</h2>
+          <p className="drop-sub">You just unlocked a hidden level.</p>
+
+          {/* put your secret drop content here */}
         </div>
       )}
     </div>
