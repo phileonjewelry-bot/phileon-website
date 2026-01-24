@@ -44,7 +44,7 @@ const Header = () => {
       <header id="site-header">
         {/* Left: Logo Icon */}
         <div className="header-left">
-          <Link to="/" data-testid="logo-link" aria-label="Phileon Home">
+          <Link to="/" data-testid="logo-link" aria-label="Phileon Home" onClick={handleLogoTap}>
             <img 
               src="/logo.png" 
               alt="Phileon Icon" 
@@ -55,7 +55,7 @@ const Header = () => {
 
         {/* Center: Brand Name */}
         <div className="header-center">
-          <Link to="/" className="brand-name" data-testid="brand-text">
+          <Link to="/" className="brand-name" data-testid="brand-text" onClick={handleLogoTap}>
             PHILEON
           </Link>
         </div>
