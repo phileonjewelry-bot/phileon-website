@@ -89,7 +89,7 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
               value="3d" 
               className="data-[state=active]:bg-phileon-gold/20 data-[state=active]:text-phileon-gold text-phileon-ivory/70 hover:text-phileon-ivory flex items-center gap-2"
             >
-              <Cube className="w-4 h-4" />
+              <Box className="w-4 h-4" />
               <span className="hidden sm:inline">3D View</span>
               <span className="sm:hidden">3D</span>
             </TabsTrigger>
