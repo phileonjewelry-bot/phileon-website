@@ -157,6 +157,7 @@ const ShopDropPage = () => {
                   <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                 </div>
               </Link>
+              </div>
             </article>
           ))}
         </div>
