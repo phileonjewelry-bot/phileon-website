@@ -8,9 +8,26 @@ PHILEON SHOP (DROP VIBE)
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { publicApi } from '../services/api';
 
-// Sample products - replace with real data from API
-const PRODUCTS = [
+const ShopDropPage = () => {
+  const [products, setProducts] = useState([]);
+  const [visibleProducts, setVisibleProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await publicApi.getProducts({ featured: true });
+        setProducts(response.data || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // Keep the hardcoded products as fallback
+        setProducts(HARDCODED_PRODUCTS);
+      }
+    };
+
+    fetchProducts();
+  }, []);
   {
     id: '1',
     name: 'Eclipse Ring',
