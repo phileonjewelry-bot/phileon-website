@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -10,6 +10,8 @@ from typing import List, Optional
 from datetime import datetime, timezone, timedelta
 import jwt
 import bcrypt
+import uuid
+import mimetypes
 
 from models import (
     Collection, CollectionCreate, CollectionUpdate,
