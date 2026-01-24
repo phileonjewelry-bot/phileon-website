@@ -116,13 +116,13 @@ const ShopDropPage = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleWishlist(product.id);
+                    toggle(product.id);
                   }}
                   className="absolute top-3 right-3 z-10 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all duration-200 backdrop-blur-sm"
-                  title={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                 >
                   <Heart 
-                    className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current text-red-400' : ''}`} 
+                    className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
                   />
                 </button>
                 
