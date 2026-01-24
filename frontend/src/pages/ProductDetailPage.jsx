@@ -46,6 +46,10 @@ const ProductDetailPage = () => {
   const inv = Number(product?.inventory_count ?? 0);
   const soldOut = inv <= 0;
 
+  // Context hooks
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
