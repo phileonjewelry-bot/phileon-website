@@ -40,6 +40,9 @@ import AdminLayout from "@/components/layout/AdminLayout";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 
+// Components
+import CartDrawer from "@/components/CartDrawer";
+
 // Import Wishlist Page
 import WishlistPage from "@/pages/WishlistPage";
 
