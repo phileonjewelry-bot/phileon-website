@@ -21,14 +21,20 @@ const ProductDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const [tryOnOpen, setTryOnOpen] = useState(false);
+  const [restockOpen, setRestockOpen] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [restockSubmitting, setRestockSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     message: '',
+  });
+  const [restockData, setRestockData] = useState({
+    name: '',
+    email: '',
   });
 
   useEffect(() => {
