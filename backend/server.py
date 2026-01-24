@@ -250,6 +250,33 @@ async def create_consultation(consultation: ConsultationCreate):
     doc['created_at'] = doc['created_at'].isoformat()
     doc['updated_at'] = doc['updated_at'].isoformat()
     await db.consultations.insert_one(doc)
+    
+    # Send email notification
+    try:
+        from email_utils import send_email
+        subject = "New Consultation Request - Phileon Jewelry"
+        body = f"""
+New consultation request received from Phileon website:
+
+Name: {consultation.name}
+Email: {consultation.email}
+Phone: {consultation.phone or 'Not provided'}
+Service: {consultation.service_type.replace('_', ' ').title()}
+Budget: {consultation.budget_range or 'Not specified'}
+Timeline: {consultation.timeline or 'Not specified'}
+Preferred Contact: {consultation.preferred_contact or 'Not specified'}
+
+Message:
+{consultation.message}
+
+---
+This consultation request was submitted through the Phileon website.
+        """
+        send_email(subject, body)
+    except Exception as e:
+        print(f"Failed to send consultation email notification: {e}")
+        # Continue without failing the consultation creation
+    
     return serialize_doc(doc)
 
 
