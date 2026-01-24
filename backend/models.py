@@ -50,7 +50,7 @@ class ProductBase(BaseModel):
     display_order: int = 0
     details: dict = {}  # Additional details like dimensions, weight, etc.
     inventory_count: int = 0
-    low_stock_threshold: int = 5
+    low_stock_threshold: int = 2  # DROP MODE: Default threshold = 2
     low_stock_alert_sent: bool = False
     is_bestseller: bool = False
     # Alert guard fields
