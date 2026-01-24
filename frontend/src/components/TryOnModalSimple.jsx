@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { X, Box, Image, Camera } from 'lucide-react';
+import { X, Sparkles, Camera, Scan, Image } from 'lucide-react';
 
 const TryOnModalSimple = ({ isOpen, onClose, product }) => {
   const [activeTab, setActiveTab] = useState('3d');
