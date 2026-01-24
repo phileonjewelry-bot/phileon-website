@@ -362,6 +362,13 @@ async def admin_create_product(product: ProductCreate, _: str = Depends(verify_a
 
 @admin_router.put("/products/{product_id}", response_model=Product)
 async def admin_update_product(product_id: str, update: ProductUpdate, _: str = Depends(verify_admin)):
+    # Get the current product for comparison
+    current_product = await db.products.find_one({"id": product_id})
+    if not current_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    previous_stock = current_product.get('stock', 0)
+    
     update_data = {k: v for k, v in update.model_dump().items() if v is not None}
     update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
     
@@ -372,6 +379,34 @@ async def admin_update_product(product_id: str, update: ProductUpdate, _: str = 
     )
     if not result:
         raise HTTPException(status_code=404, detail="Product not found")
+    
+    # Handle inventory alerts if stock was updated
+    if 'stock' in update_data:
+        try:
+            from inventory_alerts import handle_inventory_alerts
+            from types import SimpleNamespace
+            
+            # Create a simple object with the needed attributes
+            product_obj = SimpleNamespace(
+                name=result.get('name'),
+                stock=result.get('stock', 0),
+                low_stock_threshold=result.get('low_stock_threshold', 5),
+                low_stock_alert_sent=result.get('low_stock_alert_sent', False)
+            )
+            
+            handle_inventory_alerts(product_obj, previous_stock)
+            
+            # Update the database with any changes to low_stock_alert_sent
+            if result.get('low_stock_alert_sent') != product_obj.low_stock_alert_sent:
+                await db.products.update_one(
+                    {"id": product_id},
+                    {"$set": {"low_stock_alert_sent": product_obj.low_stock_alert_sent}}
+                )
+                result['low_stock_alert_sent'] = product_obj.low_stock_alert_sent
+        except Exception as e:
+            print(f"Failed to send inventory alert: {e}")
+            # Continue without failing the update
+    
     return serialize_doc(result)
 
 
