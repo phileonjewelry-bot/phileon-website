@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, ZoomIn } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, ZoomIn, Cube, Image, Camera } from 'lucide-react';
 import { publicApi } from '@/lib/api';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import RingTryOn from '@/components/RingTryOn';
+import TryOnModal from '@/components/TryOnModal';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
