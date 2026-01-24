@@ -51,6 +51,7 @@ function App() {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopDropPage />} />
+            <Route path="/shop-drop" element={<ShopDropPage />} />
             <Route path="/collections" element={<CollectionsPage />} />
             <Route path="/collections/:slug" element={<CollectionDetailPage />} />
             <Route path="/piece/:slug" element={<ProductDetailPage />} />
