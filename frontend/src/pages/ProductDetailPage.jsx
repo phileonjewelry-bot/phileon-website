@@ -45,6 +45,21 @@ const ProductDetailPage = () => {
     fetchProduct();
   }, [slug]);
 
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      setIsMobile(isMobileDevice || (isTouchDevice && isSmallScreen));
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const handleInquiry = async (e) => {
     e.preventDefault();
     setSubmitting(true);
