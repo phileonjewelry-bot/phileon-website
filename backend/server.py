@@ -212,6 +212,33 @@ async def create_inquiry(inquiry: InquiryCreate):
     doc['created_at'] = doc['created_at'].isoformat()
     doc['updated_at'] = doc['updated_at'].isoformat()
     await db.inquiries.insert_one(doc)
+    
+    # Send email notification
+    try:
+        from email_utils import send_email
+        subject = f"New Inquiry: {inquiry.inquiry_type.replace('_', ' ').title()}"
+        body = f"""
+New inquiry received from Phileon website:
+
+Name: {inquiry.name}
+Email: {inquiry.email}
+Phone: {inquiry.phone or 'Not provided'}
+Type: {inquiry.inquiry_type.replace('_', ' ').title()}
+Product ID: {inquiry.product_id or 'General inquiry'}
+Budget Range: {inquiry.budget_range or 'Not specified'}
+Timeline: {inquiry.timeline or 'Not specified'}
+
+Message:
+{inquiry.message}
+
+---
+This inquiry was submitted through the Phileon website.
+        """
+        send_email(subject, body)
+    except Exception as e:
+        print(f"Failed to send email notification: {e}")
+        # Continue without failing the inquiry creation
+    
     return serialize_doc(doc)
 
 
