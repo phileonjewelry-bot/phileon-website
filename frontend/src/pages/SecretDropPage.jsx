@@ -40,9 +40,15 @@ export default function SecretDropPage() {
   };
 
   const handleUnlock = () => {
+    // Log unlock attempt
+    logEvent('unlock_attempt');
+    
     const ok = code.trim().toLowerCase() === "phileon";
 
     if (ok) {
+      // Log success
+      logEvent('unlock_success');
+      
       // success: clear timers + deny state
       if (denyTimerRef.current) {
         clearTimeout(denyTimerRef.current);
@@ -54,10 +60,18 @@ export default function SecretDropPage() {
       setUnlockFlash(true);
       setTimeout(() => { 
         setUnlocked(true); 
-        setUnlockFlash(false); 
-      }, 650);
+        setUnlockFlash(false);
+        
+        // After showing unlocked state, redirect to /shop-drop
+        setTimeout(() => {
+          navigate('/shop-drop');
+        }, 1200);
+      }, 450);
       return;
     }
+
+    // Log failure
+    logEvent('unlock_fail');
 
     // wrong code
     setDenied(true);
