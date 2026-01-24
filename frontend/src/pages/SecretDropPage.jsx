@@ -31,12 +31,12 @@ export default function SecretDropPage() {
       }
       setDenied(false);
 
-      // ✅ Trigger 1-frame/short glitch flash on unlock
-      setUnlockFlash(true);
-      setTimeout(() => setUnlockFlash(false), 450);
-
-      // ✅ Apply sketchpad mode AFTER unlock
-      setUnlocked(true);
+      // ✅ Trigger flash FIRST, then unlock after delay
+      setUnlockFlash(true);        // 1) HIT
+      setTimeout(() => {
+        setUnlockFlash(false);
+        setUnlocked(true);         // 2) SETTLE
+      }, 120);
       return;
     }
 
