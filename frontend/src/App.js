@@ -36,6 +36,13 @@ import AdminSettings from "@/pages/admin/AdminSettings";
 import PublicLayout from "@/components/layout/PublicLayout";
 import AdminLayout from "@/components/layout/AdminLayout";
 
+// Context Providers
+import { CartProvider } from "@/contexts/CartContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
+
+// Import Wishlist Page
+import WishlistPage from "@/pages/WishlistPage";
+
 function App() {
   return (
     <div className="min-h-screen bg-phileon-black">
