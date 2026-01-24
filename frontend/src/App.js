@@ -47,6 +47,11 @@ import CartDrawer from "@/components/CartDrawer";
 import WishlistPage from "@/pages/WishlistPage";
 
 function App() {
+  const handleCheckout = async () => {
+    // TODO: hook to your existing Stripe checkout endpoint using cart items
+    console.log('Checkout functionality will be integrated with Stripe');
+  };
+
   return (
     <div className="min-h-screen bg-phileon-black">
       <CartProvider>
