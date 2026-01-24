@@ -50,7 +50,7 @@ export default function SecretDropPage() {
     <div
       className={`secret-shell ${
         unlocked ? "sketchpad" : ""
-      } ${unlockFlash ? "unlock-glitch rgb-split" : ""}`}
+      } ${unlockFlash ? "unlock-flash" : ""}`}
     >
       {!unlocked ? (
         <div className={`lock-card ${denied ? "deny-glitch" : ""}`}>
