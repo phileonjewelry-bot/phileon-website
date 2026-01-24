@@ -8,7 +8,7 @@ PHILEON SHOP (DROP VIBE)
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { publicApi } from '../services/api';
+import { publicApi } from '../lib/api';
 
 const ShopDropPage = () => {
   const [products, setProducts] = useState([]);
