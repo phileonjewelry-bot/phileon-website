@@ -297,6 +297,36 @@ const AdminProducts = () => {
                     <span className="text-phileon-gold text-xs">{product.price_range}</span>
                   )}
                 </div>
+                
+                {/* Stock and Bestseller Controls */}
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs text-phileon-ivory-muted">Stock:</label>
+                    <input
+                      type="number"
+                      value={product.stock || 0}
+                      onChange={(e) => updateProductStock(product.id, e.target.value)}
+                      className="w-16 px-2 py-1 text-xs bg-phileon-near-black border border-phileon-charcoal text-phileon-ivory rounded"
+                      min="0"
+                    />
+                    {product.stock <= (product.low_stock_threshold || 5) && product.stock > 0 && (
+                      <span className="text-xs text-orange-400">Low Stock</span>
+                    )}
+                    {product.stock === 0 && (
+                      <span className="text-xs text-red-400">Sold Out</span>
+                    )}
+                  </div>
+                  
+                  <label className="flex items-center gap-2 text-xs text-phileon-ivory-muted">
+                    <input
+                      type="checkbox"
+                      checked={product.is_bestseller || false}
+                      onChange={() => toggleBestseller(product.id)}
+                      className="rounded border-phileon-charcoal"
+                    />
+                    Bestseller
+                  </label>
+                </div>
                 <div className="flex items-center gap-2 mt-4 pt-4 border-t border-phileon-near-black">
                   <Button
                     variant="ghost"
