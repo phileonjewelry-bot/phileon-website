@@ -45,6 +45,7 @@ function App() {
           <Route path="/drop" element={<DropPage />} />
           <Route path="/m-drop" element={<MobileDropPage />} />
           <Route path="/secret-drop" element={<SecretDropPage />} />
+          <Route path="/secretdrop" element={<SecretDropPage />} />
 
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
