@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, ZoomIn, Box, Image, Camera } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, ZoomIn, Scan, Camera } from 'lucide-react';
 import { publicApi } from '@/lib/api';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
