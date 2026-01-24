@@ -75,8 +75,8 @@ const Header = () => {
                   </span>
                 )}
               </Link>
-              <Link
-                to="/cart"
+              <button
+                onClick={() => setCartDrawerOpen(true)}
                 className="relative text-gray-300 hover:text-yellow-500 transition-colors duration-300"
               >
                 <ShoppingCart className="w-6 h-6" />
@@ -85,7 +85,7 @@ const Header = () => {
                     {cartCount}
                   </span>
                 )}
-              </Link>
+              </button>
 
               {/* Mobile Menu Button */}
               <button
