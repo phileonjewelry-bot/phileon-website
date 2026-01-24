@@ -101,6 +101,23 @@ class Product(ProductBase):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+# ============ RESTOCK LIST ============
+class RestockListBase(BaseModel):
+    product_id: str
+    email: str
+    name: Optional[str] = None
+    notified: bool = False
+
+class RestockListCreate(RestockListBase):
+    pass
+
+class RestockList(RestockListBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
 # ============ INQUIRIES ============
 class InquiryBase(BaseModel):
     name: str
