@@ -6,6 +6,38 @@ import IntentFlashProvider from '@/components/GoldPulseProvider';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef(null);
+
+  // Mobile gesture gate: 7 taps on Phileon logo within 3 seconds
+  const handleLogoTap = () => {
+    // Check if device is mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    if (isMobile) {
+      tapCountRef.current += 1;
+      
+      // Clear existing timer and start new one
+      if (tapTimerRef.current) {
+        clearTimeout(tapTimerRef.current);
+      }
+      
+      // Reset tap count after 3 seconds
+      tapTimerRef.current = setTimeout(() => {
+        tapCountRef.current = 0;
+      }, 3000);
+      
+      // Check if 7 taps reached
+      if (tapCountRef.current >= 7) {
+        tapCountRef.current = 0; // Reset counter
+        if (tapTimerRef.current) {
+          clearTimeout(tapTimerRef.current);
+        }
+        navigate('/secret-drop');
+      }
+    }
+  };
 
   return (
     <>
