@@ -793,6 +793,53 @@ async def serve_tryon_result(filename: str):
     return FileResponse(path=str(file_path), media_type=mime_type)
 
 
+# ============ INVENTORY MANAGEMENT ============
+from pydantic import BaseModel
+import sys
+sys.path.append('/app/backend/services')
+from inventory_alerts import handle_inventory_alerts
+
+class InventoryUpdate(BaseModel):
+    inventory_count: int
+
+@api_router.patch("/products/{product_id}/inventory")
+async def update_inventory(product_id: str, payload: InventoryUpdate):
+    """Update product inventory and trigger alerts if needed"""
+    try:
+        product = await db.products.find_one({"id": product_id})
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+        prev_count = int(product.get("inventory_count", 0))
+        new_count = int(payload.inventory_count)
+
+        # Update inventory count
+        await db.products.update_one(
+            {"id": product_id},
+            {"$set": {"inventory_count": new_count}}
+        )
+
+        # Reload product for alert logic
+        updated_product = await db.products.find_one({"id": product_id})
+        
+        # Handle inventory alerts
+        alert_updates = await handle_inventory_alerts(updated_product, prev_count, new_count)
+
+        if alert_updates:
+            await db.products.update_one(
+                {"id": product_id},
+                {"$set": alert_updates}
+            )
+
+        # Return final updated product
+        final_product = await db.products.find_one({"id": product_id})
+        return final_product
+
+    except Exception as e:
+        logger.error(f"Error updating inventory: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error updating inventory")
+
+
 @app.on_event("startup")
 async def startup_db():
     # Create indexes for better performance
