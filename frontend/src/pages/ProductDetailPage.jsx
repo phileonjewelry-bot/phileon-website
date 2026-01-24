@@ -231,26 +231,101 @@ const ProductDetailPage = () => {
 
             {/* CTA Buttons */}
             <div className="mt-12 space-y-4">
-              {/* Ring Try-On - optional */}
-              {isRing && (
-                <button 
-                  onClick={() => setTryOnOpen(true)}
-                  className="w-full px-8 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black flex items-center justify-center gap-3"
-                  data-testid="try-on-btn"
-                >
-                  <Sparkles size={16} />
-                  Virtual Try-On
-                </button>
+              {/* Inventory Status Banner */}
+              {product.inventory_count <= 0 && (
+                <div className="px-4 py-2 bg-red-900/20 border border-red-500/30 rounded-lg">
+                  <p className="text-red-300 text-sm text-center font-medium">
+                    Currently Sold Out
+                  </p>
+                </div>
               )}
               
-              {/* Primary CTA - Request This Design */}
-              <button 
-                onClick={() => setInquiryOpen(true)}
-                className="w-full px-8 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90"
-                data-testid="inquire-btn"
-              >
-                Request This Design
-              </button>
+              {product.is_bestseller && (
+                <div className="px-4 py-2 bg-phileon-gold/20 border border-phileon-gold/50 rounded-lg">
+                  <p className="text-phileon-gold text-sm text-center font-medium tracking-wider">
+                    ⭐ BESTSELLER
+                  </p>
+                </div>
+              )}
+              
+              {product.inventory_count > 0 && product.inventory_count <= product.low_stock_threshold && (
+                <div className="px-4 py-2 bg-orange-900/20 border border-orange-500/30 rounded-lg">
+                  <p className="text-orange-300 text-sm text-center font-medium">
+                    Only {product.inventory_count} left in stock
+                  </p>
+                </div>
+              )}
+
+              {/* Try-On Button Group - Show if ring product */}
+              {isRing && (
+                <div className="space-y-3">
+                  <p className="text-xs tracking-[0.2em] uppercase text-phileon-gold mb-4 text-center">
+                    Try Before You Inquire
+                  </p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* 3D Try-On */}
+                    <button 
+                      onClick={() => {
+                        setTryOnOpen(true);
+                        logTryOnAnalytics('open_3d');
+                      }}
+                      className="px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2"
+                      data-testid="try-on-3d-btn"
+                    >
+                      <Cube size={14} />
+                      Try On (3D)
+                    </button>
+                    
+                    {/* Photo Try-On */}
+                    <button 
+                      onClick={() => {
+                        setTryOnOpen(true);
+                        logTryOnAnalytics('open_photo');
+                      }}
+                      className="px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2"
+                      data-testid="try-on-photo-btn"
+                    >
+                      <Image size={14} />
+                      Try On (Photo)
+                    </button>
+                    
+                    {/* Live AR Try-On - Mobile Only */}
+                    {isMobile && (
+                      <button 
+                        onClick={() => {
+                          setTryOnOpen(true);
+                          logTryOnAnalytics('open_ar');
+                        }}
+                        className="px-6 py-3 border border-phileon-gold/50 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 flex items-center justify-center gap-2 sm:col-span-2"
+                        data-testid="try-on-ar-btn"
+                      >
+                        <Camera size={14} />
+                        Try On Live (AR)
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Primary CTA */}
+              {product.inventory_count > 0 ? (
+                <button 
+                  onClick={() => setInquiryOpen(true)}
+                  className="w-full px-8 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90"
+                  data-testid="inquire-btn"
+                >
+                  Request This Design
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setRestockOpen(true)}
+                  className="w-full px-8 py-4 bg-gray-600 text-white text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-gray-500"
+                  data-testid="restock-btn"
+                >
+                  Join Restock List
+                </button>
+              )}
             </div>
           </div>
         </div>
