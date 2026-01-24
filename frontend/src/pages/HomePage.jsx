@@ -64,7 +64,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen" data-testid="home-page">
       {/* Drop Reveal Animation */}
-      <DropReveal isActive={showDropReveal} targetPath="/shop" dropText="DROP 001" />
+      <DropReveal isActive={showDropReveal} targetPath="/shop-drop" dropText="DROP 001" />
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
