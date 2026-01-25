@@ -102,11 +102,11 @@ const Header = () => {
         </div>
 
         {/* Right: Cart, Wishlist, and Menu */}
-        <div className="header-right flex items-center gap-6 ml-8">
+        <div className="header-right flex items-center gap-6 ml-16">
           {/* Cart Icon */}
           <button
             onClick={() => setCartOpen(true)}
-            className="relative p-2 text-phileon-gold hover:text-yellow-400 transition-colors"
+            className="relative p-3 text-phileon-gold hover:text-yellow-400 transition-colors"
             aria-label="Open cart"
             data-testid="cart-button"
           >
@@ -121,7 +121,7 @@ const Header = () => {
           {/* Wishlist Icon */}
           <Link
             to="/wishlist"
-            className="relative p-2 text-phileon-gold hover:text-yellow-400 transition-colors"
+            className="relative p-3 text-phileon-gold hover:text-yellow-400 transition-colors"
             aria-label="View wishlist"
             data-testid="wishlist-button"
           >
@@ -135,7 +135,7 @@ const Header = () => {
 
           {/* Hamburger Menu */}
           <button 
-            className="menu-btn"
+            className="menu-btn ml-4"
             onClick={() => setIsMenuOpen(true)}
             data-testid="mobile-menu-toggle"
             aria-label="Open menu"
