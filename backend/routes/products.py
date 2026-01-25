@@ -14,13 +14,13 @@ def get_db():
     from server import db
     return db
 
-@router.get("", response_model=List[Product])
+@router.get("")
 async def get_products(
     category: Optional[str] = None,
     bestseller: Optional[bool] = None,
     search: Optional[str] = None
 ):
-    """Get all products with optional filters"""
+    """Get all products with optional filters and inventory status"""
     db = get_db()
     query = {}
     
