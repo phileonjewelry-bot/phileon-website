@@ -70,39 +70,21 @@ const Header = () => {
 
   return (
     <>
-      <header id="site-header">
-        {/* Left: Logo Icon */}
-        <div className="header-left">
-          <Link 
-            to="/" 
-            data-testid="logo-link" 
-            aria-label="Phileon Home" 
+      <header className="header relative h-16 flex items-center px-6">
+        {/* CENTER LOGO — LOCKED POSITION */}
+        <div className="absolute left-1/2 -translate-x-1/2">
+          <div 
+            className="brand-text text-phileon-gold font-bold text-xl tracking-widest cursor-pointer"
             onClick={handleLogoTap}
             onTouchStart={handleLogoTap}
-          >
-            <img 
-              src="/logo.png" 
-              alt="Phileon Icon" 
-              className="logo-icon"
-            />
-          </Link>
-        </div>
-
-        {/* Center: Brand Name */}
-        <div className="header-center">
-          <Link 
-            to="/" 
-            className="brand-name" 
-            data-testid="brand-text" 
-            onClick={handleLogoTap}
-            onTouchStart={handleLogoTap}
+            data-testid="brand-text"
           >
             PHILEON
-          </Link>
+          </div>
         </div>
 
-        {/* Right: Cart, Wishlist, and Menu */}
-        <div className="header-right flex items-center gap-6 ml-16">
+        {/* RIGHT UTILITIES */}
+        <div className="ml-auto flex items-center gap-6">
           {/* Cart Icon */}
           <button
             onClick={() => setCartOpen(true)}
@@ -135,7 +117,7 @@ const Header = () => {
 
           {/* Hamburger Menu */}
           <button 
-            className="menu-btn ml-4"
+            className="menu-btn"
             onClick={() => setIsMenuOpen(true)}
             data-testid="mobile-menu-toggle"
             aria-label="Open menu"
