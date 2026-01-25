@@ -55,11 +55,27 @@ const CartDrawer = () => {
       
     } catch (error) {
       console.error('Checkout error:', error);
-      toast({
-        title: 'Checkout Error',
-        description: 'Unable to start checkout. Please try again.',
-        variant: 'destructive'
-      });
+      
+      // Handle inventory validation errors
+      if (error.response?.data?.detail?.code === 'OUT_OF_STOCK') {
+        const messages = error.response.data.detail.messages || [];
+        toast({
+          title: 'Items Out of Stock',
+          description: messages.length > 1 
+            ? `${messages.length} items have stock issues. Please review your cart.`
+            : messages[0] || 'Some items are no longer available.',
+          variant: 'destructive'
+        });
+        
+        // Show detailed errors in console for debugging
+        console.warn('Inventory errors:', messages);
+      } else {
+        toast({
+          title: 'Checkout Error',
+          description: 'Unable to start checkout. Please try again.',
+          variant: 'destructive'
+        });
+      }
     } finally {
       setIsCheckingOut(false);
     }
