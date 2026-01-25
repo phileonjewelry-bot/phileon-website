@@ -604,7 +604,7 @@ from routes.products import router as products_router
 from routes.inventory import router as inventory_router  
 # from routes.cart import router as cart_router  # Temporarily disabled - using frontend cart context
 from routes.orders import router as orders_router
-from routes.customer_photos import router as customer_photos_router
+# from routes.customer_photos import router as customer_photos_router  # Temporarily disabled - missing models
 from routes.restock_routes import router as restock_router
 from routes.stripe_routes import router as stripe_router
 
