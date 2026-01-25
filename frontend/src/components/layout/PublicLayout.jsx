@@ -72,15 +72,12 @@ const Header = () => {
     <>
       <header className="ph-header">
         <div className="ph-header-inner">
-          {/* LEFT */}
+          {/* LEFT (optional) */}
           <div className="ph-left">
-            <a href="/shop-drop" className="ph-drop-pill" aria-label="Genesis Drop">
-              <span className="ph-live-dot" />
-              GENESIS DROP
-            </a>
+            {/* keep empty or put hamburger/logo mark later */}
           </div>
 
-          {/* CENTER: LOGO MUST NEVER MOVE */}
+          {/* CENTER LOGO (always centered) */}
           <div className="ph-center">
             <a href="/" className="ph-logo" aria-label="Phileon home">
               <div 
@@ -94,11 +91,11 @@ const Header = () => {
             </a>
           </div>
 
-          {/* RIGHT */}
+          {/* RIGHT ICONS (inline row) */}
           <div className="ph-right">
             <Link
               to="/wishlist"
-              className="ph-icon-btn ph-wishlist"
+              className="ph-icon-btn"
               aria-label="Wishlist"
               data-testid="wishlist-button"
             >
