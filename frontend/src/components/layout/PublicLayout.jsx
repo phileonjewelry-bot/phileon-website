@@ -70,63 +70,69 @@ const Header = () => {
 
   return (
     <>
-      <header className="header relative h-16 flex items-center px-6">
-        {/* CENTER LOGO — LOCKED POSITION */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <div 
-            className="brand-text text-phileon-gold font-bold text-xl tracking-widest cursor-pointer"
-            onClick={handleLogoTap}
-            onTouchStart={handleLogoTap}
-            data-testid="brand-text"
-          >
-            PHILEON
+      <header className="ph-header">
+        <div className="ph-header-inner">
+          {/* LEFT */}
+          <div className="ph-left">
+            <a href="/shop-drop" className="ph-drop-pill" aria-label="Genesis Drop">
+              <span className="ph-live-dot" />
+              GENESIS DROP
+            </a>
           </div>
-        </div>
 
-        {/* RIGHT UTILITIES */}
-        <div className="ml-auto flex items-center gap-6">
-          {/* Cart Icon */}
-          <button
-            onClick={() => setCartOpen(true)}
-            className="relative p-3 text-phileon-gold hover:text-yellow-400 transition-colors"
-            aria-label="Open cart"
-            data-testid="cart-button"
-          >
-            <ShoppingBag className="w-5 h-5" />
-            {getTotalItems() > 0 && (
-              <span className="absolute -top-1 -right-1 bg-yellow-500 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {getTotalItems()}
-              </span>
-            )}
-          </button>
+          {/* CENTER: LOGO MUST NEVER MOVE */}
+          <div className="ph-center">
+            <a href="/" className="ph-logo" aria-label="Phileon home">
+              <div 
+                className="brand-text text-phileon-gold font-bold text-xl tracking-widest cursor-pointer"
+                onClick={handleLogoTap}
+                onTouchStart={handleLogoTap}
+                data-testid="brand-text"
+              >
+                PHILEON
+              </div>
+            </a>
+          </div>
 
-          {/* Wishlist Icon */}
-          <Link
-            to="/wishlist"
-            className="relative p-3 text-phileon-gold hover:text-yellow-400 transition-colors"
-            aria-label="View wishlist"
-            data-testid="wishlist-button"
-          >
-            <Heart className="w-5 h-5" />
-            {getTotalWishlistItems() > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {getTotalWishlistItems()}
-              </span>
-            )}
-          </Link>
+          {/* RIGHT */}
+          <div className="ph-right">
+            <Link
+              to="/wishlist"
+              className="ph-icon-btn ph-wishlist"
+              aria-label="Wishlist"
+              data-testid="wishlist-button"
+            >
+              <Heart className="w-5 h-5" />
+              {getTotalWishlistItems() > 0 && (
+                <span className="ph-badge">{getTotalWishlistItems()}</span>
+              )}
+            </Link>
 
-          {/* Hamburger Menu */}
-          <button 
-            className="menu-btn"
-            onClick={() => setIsMenuOpen(true)}
-            data-testid="mobile-menu-toggle"
-            aria-label="Open menu"
-            aria-expanded={isMenuOpen}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+            <button 
+              className="ph-icon-btn" 
+              aria-label="Cart" 
+              onClick={() => setCartOpen(true)}
+              data-testid="cart-button"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {getTotalItems() > 0 && (
+                <span className="ph-badge">{getTotalItems()}</span>
+              )}
+            </button>
+
+            <button 
+              className="ph-icon-btn" 
+              aria-label="Menu" 
+              onClick={() => setIsMenuOpen(true)}
+              data-testid="mobile-menu-toggle"
+            >
+              <div className="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
         </div>
       </header>
 
