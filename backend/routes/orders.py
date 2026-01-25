@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Optional
-from models.order import Order, CreateOrderRequest
+from models import Order, OrderCreate
 import uuid
 from datetime import datetime
 
