@@ -130,65 +130,141 @@ const ShopDropPage = () => {
         </div>
       </section>
 
+      {/* Filter Controls - DROP MODE */}
+      <section className="mb-8">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between bg-gray-900/50 rounded-lg p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-4">
+              <Filter className="w-5 h-5 text-yellow-500" />
+              <span className="text-white font-medium">
+                {filteredProducts.length} pieces available
+                {soldOutCount > 0 && (
+                  <span className="text-gray-400 ml-2">
+                    ({soldOutCount} sold out {hideSoldOut ? 'hidden' : 'shown'})
+                  </span>
+                )}
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 cursor-pointer text-gray-300 hover:text-white transition-colors">
+                <input
+                  type="checkbox"
+                  checked={hideSoldOut}
+                  onChange={(e) => {
+                    setHideSoldOut(e.target.checked);
+                    setVisibleProducts([]); // Reset animation
+                  }}
+                  className="w-4 h-4 text-yellow-500 bg-gray-800 border-gray-600 rounded focus:ring-yellow-500 focus:ring-2"
+                />
+                {hideSoldOut ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                <span className="text-sm">Hide sold out</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Products Grid */}
       <section className="shop-drop__section">
         <div className="shop-drop__grid">
-          {products.map((product, index) => (
-            <article 
-              key={product.id}
-              className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
-              style={{ transitionDelay: `${index * 80}ms` }}
-            >
-              <div className="relative">
-                {/* Wishlist Heart Button */}
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggle(product.id);
-                  }}
-                  className="absolute top-3 right-3 z-10 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all duration-200 backdrop-blur-sm"
-                  title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                >
-                  <Heart 
-                    className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
-                  />
-                </button>
-                
-                <Link to={`/piece/${product.slug}`} className="shop-drop__card-link">
-                <div className="shop-drop__card-image relative">
-                  {/* BESTSELLER */}
-                  {product.is_bestseller && (
-                    <span className="badge badge-gold">BESTSELLER</span>
-                  )}
+          {filteredProducts.map((product, index) => {
+            const inventoryCount = product.inventory_count || product.stock || 0;
+            const lowStockThreshold = product.low_stock_threshold || 2;
+            const isSoldOut = inventoryCount === 0;
+            const isLowStock = inventoryCount > 0 && inventoryCount <= lowStockThreshold;
+            
+            return (
+              <article 
+                key={product.id}
+                className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''} ${isSoldOut ? 'shop-drop__card--sold-out' : ''}`}
+                style={{ transitionDelay: `${index * 80}ms` }}
+              >
+                <div className="relative">
+                  {/* Wishlist Heart Button */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggle(product.id);
+                    }}
+                    className="absolute top-3 right-3 z-20 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all duration-200 backdrop-blur-sm"
+                    title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart 
+                      className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
+                    />
+                  </button>
                   
-                  {/* LOW STOCK */}
-                  {product.stock > 0 && product.stock <= product.low_stock_threshold && (
-                    <span className="badge badge-warning">LOW STOCK</span>
-                  )}
+                  <Link to={`/piece/${product.slug}`} className="shop-drop__card-link">
+                    <div className="shop-drop__card-image relative">
+                      {/* DROP MODE BADGES - PROMINENTLY DISPLAYED */}
+                      <div className="absolute top-3 left-3 z-10 space-y-2">
+                        {/* SOLD OUT BADGE - Most Prominent */}
+                        {isSoldOut && (
+                          <div className="badge badge-soldout bg-red-600 text-white px-3 py-1 rounded-full font-bold text-sm animate-pulse">
+                            SOLD OUT
+                          </div>
+                        )}
+                        
+                        {/* LOW STOCK BADGE */}
+                        {isLowStock && !isSoldOut && (
+                          <div className="badge badge-warning bg-orange-500 text-white px-3 py-1 rounded-full font-bold text-sm animate-pulse">
+                            ONLY {inventoryCount} LEFT
+                          </div>
+                        )}
+                        
+                        {/* BESTSELLER */}
+                        {product.is_bestseller && (
+                          <div className="badge badge-gold bg-yellow-500 text-black px-3 py-1 rounded-full font-bold text-sm">
+                            BESTSELLER
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Sold Out Overlay */}
+                      {isSoldOut && (
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10">
+                          <div className="bg-red-600/90 text-white px-6 py-3 rounded-lg font-bold text-lg backdrop-blur-sm">
+                            SOLD OUT
+                          </div>
+                        </div>
+                      )}
+                      
+                      <img 
+                        src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
+                        alt={product.name}
+                        loading="lazy"
+                        className={isSoldOut ? 'grayscale' : ''}
+                      />
+                      
+                      {/* Hover Overlay */}
+                      <div className="shop-drop__card-overlay">
+                        <span className="shop-drop__card-cta">
+                          {isSoldOut ? 'Join Restock List' : 'Request This Piece'}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
                   
-                  {/* SOLD OUT */}
-                  {product.stock === 0 && (
-                    <span className="badge badge-soldout">SOLD OUT</span>
-                  )}
-                  
-                  <img 
-                    src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
-                    alt={product.name}
-                    loading="lazy"
-                  />
-                  <div className="shop-drop__card-overlay">
-                    <span className="shop-drop__card-cta">Request This Piece</span>
+                  <div className="shop-drop__card-info">
+                    <h3 className="shop-drop__card-name">{product.name}</h3>
+                    <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                    
+                    {/* DROP MODE Action Button */}
+                    <div className="mt-3">
+                      <ProductActionButton
+                        product={product}
+                        onAddToCart={handleAddToCart}
+                        size="sm"
+                        className="w-full"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="shop-drop__card-info">
-                  <h3 className="shop-drop__card-name">{product.name}</h3>
-                  <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                </div>
-              </Link>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </section>
     </div>
