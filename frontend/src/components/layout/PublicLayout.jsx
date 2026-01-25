@@ -102,7 +102,7 @@ const Header = () => {
         </div>
 
         {/* Right: Cart, Wishlist, and Menu */}
-        <div className="header-right flex items-center gap-4">
+        <div className="header-right flex items-center gap-6 ml-8">
           {/* Cart Icon */}
           <button
             onClick={() => setCartOpen(true)}
