@@ -9,7 +9,8 @@ const ProductActionButton = ({
   product, 
   onAddToCart,
   className = '',
-  size = 'default'
+  size = 'default',
+  showShare = false
 }) => {
   const [showRestockModal, setShowRestockModal] = useState(false);
   const { toast } = useToast();
@@ -50,6 +51,46 @@ const ProductActionButton = ({
 
   const handleJoinRestockList = () => {
     setShowRestockModal(true);
+  };
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/piece/${product.slug || product.id}`;
+    const title = `${product.name} - Phileon Jewelry`;
+    const text = `Check out this beautiful piece: ${product.name}`;
+
+    // Use navigator.share on mobile devices
+    if (navigator.share && /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      try {
+        await navigator.share({ title, text, url });
+        toast({
+          title: 'Shared!',
+          description: 'Link shared successfully',
+        });
+      } catch (error) {
+        // User cancelled or error occurred, fallback to clipboard
+        if (error.name !== 'AbortError') {
+          fallbackShare(url);
+        }
+      }
+    } else {
+      // Fallback to clipboard copy
+      fallbackShare(url);
+    }
+  };
+
+  const fallbackShare = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      toast({
+        title: 'Link Copied!',
+        description: 'Product link copied to clipboard',
+      });
+    }).catch(() => {
+      toast({
+        title: 'Share Link',
+        description: `Copy this link: ${url}`,
+        variant: 'default'
+      });
+    });
   };
 
   // Button size classes
