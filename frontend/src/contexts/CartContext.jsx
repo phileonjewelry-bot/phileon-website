@@ -1,103 +1,140 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { lsGet, lsSet } from "../lib/storage";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const CartContext = createContext(null);
-const CART_KEY = "phileon_cart_v1";
+const CartContext = createContext();
 
-const normalizeItem = (product, qty = 1, variant = null) => {
-  // product should include: id/_id, name/title, price, image
-  const id = product?.id || product?._id;
-  return {
-    product_id: String(id),
-    name: product?.name || product?.title || "Product",
-    price: Number(product?.price ?? 0),
-    image: product?.image || product?.thumbnail || product?.images?.[0] || "",
-    qty: Math.max(1, Number(qty || 1)),
-    variant: variant || null,
-    inventory_count: Number(product?.inventory_count ?? product?.stock ?? 999999),
-  };
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 };
 
 export const CartProvider = ({ children }) => {
-  const [items, setItems] = useState(() => lsGet(CART_KEY, []));
+  const [items, setItems] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Load cart from localStorage on mount
   useEffect(() => {
-    lsSet(CART_KEY, items);
+    const savedCart = localStorage.getItem('phileon_cart');
+    if (savedCart) {
+      try {
+        setItems(JSON.parse(savedCart));
+      } catch (error) {
+        console.error('Error parsing saved cart:', error);
+        localStorage.removeItem('phileon_cart');
+      }
+    }
+  }, []);
+
+  // Save cart to localStorage whenever items change
+  useEffect(() => {
+    localStorage.setItem('phileon_cart', JSON.stringify(items));
   }, [items]);
 
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
-  const toggleCart = () => setIsOpen((v) => !v);
+  const addToCart = (product, quantity = 1, variant = null) => {
+    const newItem = {
+      product_id: product.id,
+      name: product.name,
+      image: product.images?.[0] || product.image,
+      unit_amount_cents: Math.round((product.price || 0) * 100), // Convert to cents
+      qty: quantity,
+      variant,
+      // Additional fields for display
+      slug: product.slug,
+      materials: product.materials
+    };
 
-  const addToCart = (product, qty = 1, variant = null) => {
-    const item = normalizeItem(product, qty, variant);
-
-    // Sold out guard (optional)
-    if (item.inventory_count <= 0) return;
-
-    setItems((prev) => {
-      const idx = prev.findIndex(
-        (x) => x.product_id === item.product_id && JSON.stringify(x.variant) === JSON.stringify(item.variant)
+    setItems(prevItems => {
+      const existingIndex = prevItems.findIndex(item => 
+        item.product_id === product.id && 
+        JSON.stringify(item.variant) === JSON.stringify(variant)
       );
-      if (idx >= 0) {
-        const next = [...prev];
-        next[idx] = { ...next[idx], qty: next[idx].qty + item.qty };
-        return next;
+      
+      if (existingIndex >= 0) {
+        // Update existing item quantity
+        const updatedItems = [...prevItems];
+        updatedItems[existingIndex].qty += quantity;
+        return updatedItems;
+      } else {
+        // Add new item
+        return [...prevItems, newItem];
       }
-      return [...prev, item];
     });
-
+    
+    // Open drawer when item added
     setIsOpen(true);
   };
 
-  const removeFromCart = (product_id, variant = null) => {
-    setItems((prev) =>
-      prev.filter(
-        (x) => !(x.product_id === String(product_id) && JSON.stringify(x.variant) === JSON.stringify(variant))
+  const updateQuantity = (productId, variant, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId, variant);
+      return;
+    }
+    
+    setItems(prevItems => 
+      prevItems.map(item => 
+        item.product_id === productId && 
+        JSON.stringify(item.variant) === JSON.stringify(variant)
+          ? { ...item, qty: newQuantity }
+          : item
       )
     );
   };
 
-  const updateQty = (product_id, qty, variant = null) => {
-    const q = Math.max(1, Number(qty || 1));
-    setItems((prev) =>
-      prev.map((x) => {
-        if (x.product_id === String(product_id) && JSON.stringify(x.variant) === JSON.stringify(variant)) {
-          return { ...x, qty: q };
-        }
-        return x;
-      })
+  const removeFromCart = (productId, variant = null) => {
+    setItems(prevItems => 
+      prevItems.filter(item => 
+        !(item.product_id === productId && 
+          JSON.stringify(item.variant) === JSON.stringify(variant))
+      )
     );
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => {
+    setItems([]);
+  };
 
-  const subtotal = useMemo(() => {
-    return items.reduce((sum, x) => sum + Number(x.price || 0) * Number(x.qty || 0), 0);
-  }, [items]);
+  const getTotalItems = () => {
+    return items.reduce((total, item) => total + item.qty, 0);
+  };
 
-  const count = useMemo(() => items.reduce((n, x) => n + Number(x.qty || 0), 0), [items]);
+  const getTotalAmount = () => {
+    return items.reduce((total, item) => total + (item.unit_amount_cents * item.qty), 0);
+  };
+
+  const getFormattedTotal = () => {
+    return (getTotalAmount() / 100).toFixed(2);
+  };
+
+  // Convert cart items to format expected by Stripe checkout session
+  const getCheckoutItems = () => {
+    return items.map(item => ({
+      name: item.name,
+      description: item.materials?.join(' · ') || '',
+      price: item.unit_amount_cents / 100, // Convert back to dollars
+      quantity: item.qty,
+      images: item.image ? [item.image] : []
+    }));
+  };
 
   const value = {
     items,
-    count,
-    subtotal,
-    isOpen,
-    openCart,
-    closeCart,
-    toggleCart,
     addToCart,
+    updateQuantity,
     removeFromCart,
-    updateQty,
     clearCart,
+    getTotalItems,
+    getTotalAmount,
+    getFormattedTotal,
+    getCheckoutItems,
+    isOpen,
+    setIsOpen
   };
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-};
-
-export const useCart = () => {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used within CartProvider");
-  return ctx;
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+    </CartContext.Provider>
+  );
 };
