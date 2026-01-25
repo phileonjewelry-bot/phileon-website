@@ -613,7 +613,7 @@ app.include_router(products_router, prefix="/api")
 app.include_router(inventory_router, prefix="/api")
 # app.include_router(cart_router, prefix="/api")  # Temporarily disabled - using frontend cart context
 app.include_router(orders_router, prefix="/api")
-app.include_router(customer_photos_router, prefix="/api")
+# app.include_router(customer_photos_router, prefix="/api")  # Temporarily disabled - missing models
 app.include_router(restock_router, prefix="/api")
 app.include_router(stripe_router, prefix="/api")
 
