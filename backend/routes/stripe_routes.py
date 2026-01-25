@@ -263,7 +263,7 @@ async def get_checkout_session(session_id: str):
                     id=str(uuid.uuid4()),
                     email=session.customer_email,
                     items=[OrderItem(**item) for item in items_data],
-                    shippingAddress=ShippingAddress(**shipping_address_data),
+                    shippingAddress=Address(**shipping_address_data),
                     subtotal=subtotal,
                     shippingCost=shipping_cost,
                     total=session.amount_total / 100,
