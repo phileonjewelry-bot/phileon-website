@@ -80,13 +80,43 @@ async def create_payment_intent(payment_data: Dict[str, Any]):
 
 @router.post("/create-checkout-session")
 async def create_checkout_session(session_data: Dict[str, Any]):
-    """Create Stripe Checkout Session for comprehensive payment methods"""
+    """Create Stripe Checkout Session for comprehensive payment methods with inventory validation"""
     try:
         items = session_data.get("items", [])
         success_url = session_data.get("success_url", "https://yourdomain.com/success")
         cancel_url = session_data.get("cancel_url", "https://yourdomain.com/cancel")
         email = session_data.get("email")
         shipping_address = session_data.get("shippingAddress", {})
+        
+        # INVENTORY VALIDATION - Check stock before creating Stripe session
+        validation_errors = []
+        for item in items:
+            # Support both product_id (from cart context) and direct item data
+            pid = item.get("product_id")
+            qty = int(item.get("qty", item.get("quantity", 1)))
+
+            if pid:
+                # Validate inventory for items with product_id
+                product = await _load_product(pid)
+                if not product:
+                    validation_errors.append(f"Product not found: {pid}")
+                    continue
+
+                inv = int(product.get("inventory_count", 0))
+                if inv <= 0:
+                    validation_errors.append(f"{_pname(product)} is SOLD OUT.")
+                elif inv < qty:
+                    validation_errors.append(f"{_pname(product)} only has {inv} left (you requested {qty}).")
+        
+        # If any inventory issues, return error before creating Stripe session
+        if validation_errors:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "code": "OUT_OF_STOCK",
+                    "messages": validation_errors
+                }
+            )
         
         # Create line items for Stripe
         line_items = []
@@ -101,7 +131,7 @@ async def create_checkout_session(session_data: Dict[str, Any]):
                     },
                     "unit_amount": int(item["price"] * 100)  # Convert to cents
                 },
-                "quantity": item["quantity"]
+                "quantity": item.get("quantity", item.get("qty", 1))
             })
         
         # Calculate shipping
