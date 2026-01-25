@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File
 from typing import List, Optional
-from models.product import Product, ProductCreate, ProductUpdate
-from motor.motor_asyncio import AsyncIOMotorClient
+from models import Product, ProductCreate, ProductUpdate
+from inventory_alerts import get_inventory_status
 import os
 from datetime import datetime
 import base64
