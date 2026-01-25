@@ -12,6 +12,8 @@ const Header = () => {
   const navigate = useNavigate();
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
+  const { getTotalItems, setIsOpen: setCartOpen } = useCart();
+  const { getTotalWishlistItems } = useWishlist();
 
   // Mobile gesture gate: 7 taps on Phileon logo within 3 seconds
   const handleLogoTap = (e) => {
