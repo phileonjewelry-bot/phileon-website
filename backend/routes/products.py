@@ -115,6 +115,66 @@ async def delete_product(product_id: str):
     
     return {"message": "Product deleted successfully"}
 
+@router.put("/{product_id}/inventory")
+async def update_product_inventory(product_id: str, inventory_count: int):
+    """Update product inventory and trigger DROP MODE alerts"""
+    db = get_db()
+    
+    # Get current product
+    current_product_data = await db.products.find_one({"id": product_id})
+    if not current_product_data:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    current_product = Product(**current_product_data)
+    previous_inventory = current_product.inventory_count
+    
+    # Update inventory
+    updated_data = {
+        "inventory_count": inventory_count,
+        "updated_at": datetime.utcnow()
+    }
+    
+    await db.products.update_one(
+        {"id": product_id},
+        {"$set": updated_data}
+    )
+    
+    # Get updated product for alerts
+    updated_product_data = await db.products.find_one({"id": product_id})
+    updated_product = Product(**updated_product_data)
+    
+    # Trigger DROP MODE inventory alerts
+    from inventory_alerts import handle_inventory_alerts
+    handle_inventory_alerts(updated_product, previous_inventory)
+    
+    # If alerts changed the product, update it in database
+    if (updated_product.low_stock_alert_sent != current_product.low_stock_alert_sent or
+        updated_product.restock_alert_sent != current_product.restock_alert_sent):
+        
+        alert_updates = {
+            "low_stock_alert_sent": updated_product.low_stock_alert_sent,
+            "low_stock_alert_sent_at": updated_product.low_stock_alert_sent_at,
+            "restock_alert_sent": updated_product.restock_alert_sent,
+            "restock_alert_sent_at": updated_product.restock_alert_sent_at,
+            "updated_at": datetime.utcnow()
+        }
+        
+        await db.products.update_one(
+            {"id": product_id},
+            {"$set": alert_updates}
+        )
+    
+    # Get final product with inventory status
+    final_product_data = await db.products.find_one({"id": product_id})
+    final_product = Product(**final_product_data)
+    inventory_status = get_inventory_status(final_product)
+    
+    result = final_product.dict()
+    result['inventory_status'] = inventory_status
+    result['previous_inventory'] = previous_inventory
+    
+    return result
+
 @router.post("/upload-image")
 async def upload_product_image(file: UploadFile = File(...)):
     """Upload product image (stores locally for now)"""
