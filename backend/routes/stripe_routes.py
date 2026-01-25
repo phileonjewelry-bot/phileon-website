@@ -91,22 +91,26 @@ async def create_checkout_session(session_data: Dict[str, Any]):
         # INVENTORY VALIDATION - Check stock before creating Stripe session
         validation_errors = []
         for item in items:
-            # Support both product_id (from cart context) and direct item data
+            # STRICT VALIDATION: All items must have product_id for inventory checking
             pid = item.get("product_id")
             qty = int(item.get("qty", item.get("quantity", 1)))
 
-            if pid:
-                # Validate inventory for items with product_id
-                product = await _load_product(pid)
-                if not product:
-                    validation_errors.append(f"Product not found: {pid}")
-                    continue
+            if not pid:
+                # NO BYPASS: Missing product_id is a validation error
+                validation_errors.append("Cart item missing product reference. Please refresh and try again.")
+                continue
 
-                inv = int(product.get("inventory_count", 0))
-                if inv <= 0:
-                    validation_errors.append(f"{_pname(product)} is SOLD OUT.")
-                elif inv < qty:
-                    validation_errors.append(f"{_pname(product)} only has {inv} left (you requested {qty}).")
+            # Validate inventory for items with product_id
+            product = await _load_product(pid)
+            if not product:
+                validation_errors.append(f"Product not found: {pid}")
+                continue
+
+            inv = int(product.get("inventory_count", 0))
+            if inv <= 0:
+                validation_errors.append(f"{_pname(product)} is SOLD OUT.")
+            elif inv < qty:
+                validation_errors.append(f"{_pname(product)} only has {inv} left (you requested {qty}).")
         
         # If any inventory issues, return error before creating Stripe session
         if validation_errors:
