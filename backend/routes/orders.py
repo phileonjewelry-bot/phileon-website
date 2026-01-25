@@ -11,7 +11,7 @@ def get_db():
     return db
 
 @router.post("", response_model=Order)
-async def create_order(order_request: CreateOrderRequest):
+async def create_order(order_request: OrderCreate):
     """Create new order"""
     db = get_db()
     
