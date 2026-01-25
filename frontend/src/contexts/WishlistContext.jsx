@@ -1,30 +1,87 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { lsGet, lsSet } from "../lib/storage";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const WishlistContext = createContext(null);
-const WISHLIST_KEY = "phileon_wishlist_v1";
-
-export const WishlistProvider = ({ children }) => {
-  const [ids, setIds] = useState(() => lsGet(WISHLIST_KEY, []));
-
-  useEffect(() => {
-    lsSet(WISHLIST_KEY, ids);
-  }, [ids]);
-
-  const has = (productId) => ids.includes(String(productId));
-
-  const toggle = (productId) => {
-    const id = String(productId);
-    setIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  };
-
-  const value = useMemo(() => ({ ids, has, toggle }), [ids]);
-
-  return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
-};
+const WishlistContext = createContext();
 
 export const useWishlist = () => {
-  const ctx = useContext(WishlistContext);
-  if (!ctx) throw new Error("useWishlist must be used within WishlistProvider");
-  return ctx;
+  const context = useContext(WishlistContext);
+  if (!context) {
+    throw new Error('useWishlist must be used within a WishlistProvider');
+  }
+  return context;
+};
+
+export const WishlistProvider = ({ children }) => {
+  const [items, setItems] = useState([]);
+
+  // Load wishlist from localStorage on mount
+  useEffect(() => {
+    const savedWishlist = localStorage.getItem('phileon_wishlist');
+    if (savedWishlist) {
+      try {
+        setItems(JSON.parse(savedWishlist));
+      } catch (error) {
+        console.error('Error parsing saved wishlist:', error);
+        localStorage.removeItem('phileon_wishlist');
+      }
+    }
+  }, []);
+
+  // Save wishlist to localStorage whenever items change
+  useEffect(() => {
+    localStorage.setItem('phileon_wishlist', JSON.stringify(items));
+  }, [items]);
+
+  const addToWishlist = (productId) => {
+    setItems(prevItems => {
+      if (!prevItems.includes(productId)) {
+        return [...prevItems, productId];
+      }
+      return prevItems;
+    });
+  };
+
+  const removeFromWishlist = (productId) => {
+    setItems(prevItems => prevItems.filter(id => id !== productId));
+  };
+
+  const toggleWishlist = (productId) => {
+    setItems(prevItems => {
+      if (prevItems.includes(productId)) {
+        return prevItems.filter(id => id !== productId);
+      } else {
+        return [...prevItems, productId];
+      }
+    });
+  };
+
+  const isInWishlist = (productId) => {
+    return items.includes(productId);
+  };
+
+  const getTotalWishlistItems = () => {
+    return items.length;
+  };
+
+  const clearWishlist = () => {
+    setItems([]);
+  };
+
+  const value = {
+    items,
+    addToWishlist,
+    removeFromWishlist,
+    toggleWishlist,
+    isInWishlist,
+    getTotalWishlistItems,
+    clearWishlist,
+    // Legacy support
+    has: isInWishlist,
+    toggle: toggleWishlist
+  };
+
+  return (
+    <WishlistContext.Provider value={value}>
+      {children}
+    </WishlistContext.Provider>
+  );
 };
