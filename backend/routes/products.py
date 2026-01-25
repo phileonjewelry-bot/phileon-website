@@ -35,7 +35,19 @@ async def get_products(
         ]
     
     products = await db.products.find(query).to_list(1000)
-    return [Product(**product) for product in products]
+    
+    # Add inventory status to each product
+    products_with_status = []
+    for product_data in products:
+        product = Product(**product_data)
+        inventory_status = get_inventory_status(product)
+        
+        # Add inventory status to product data
+        product_dict = product.dict()
+        product_dict['inventory_status'] = inventory_status
+        products_with_status.append(product_dict)
+    
+    return products_with_status
 
 @router.get("/{product_id}", response_model=Product)
 async def get_product(product_id: str):
