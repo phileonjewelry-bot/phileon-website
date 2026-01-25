@@ -19,6 +19,23 @@ def get_db():
     from server import db
     return db
 
+async def _load_product(product_id: str):
+    """Load product by ID, supporting both ObjectId and string IDs"""
+    db = get_db()
+    try:
+        # First try by ObjectId for MongoDB documents with ObjectId _id
+        try:
+            return await db.products.find_one({"_id": ObjectId(product_id)})
+        except:
+            # Fallback to string ID lookup for products with string IDs
+            return await db.products.find_one({"id": product_id})
+    except Exception:
+        return None
+
+def _pname(p):
+    """Get product name from various possible fields"""
+    return p.get("name") or p.get("title") or "Product"
+
 @router.post("/create-payment-intent")
 async def create_payment_intent(payment_data: Dict[str, Any]):
     """Create Stripe Payment Intent for card payments"""
