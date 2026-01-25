@@ -110,10 +110,12 @@ export const CartProvider = ({ children }) => {
   // Convert cart items to format expected by Stripe checkout session
   const getCheckoutItems = () => {
     return items.map(item => ({
+      product_id: item.product_id, // Include for inventory validation
       name: item.name,
       description: item.materials?.join(' · ') || '',
       price: item.unit_amount_cents / 100, // Convert back to dollars
       quantity: item.qty,
+      qty: item.qty, // Support both quantity and qty
       images: item.image ? [item.image] : []
     }));
   };
