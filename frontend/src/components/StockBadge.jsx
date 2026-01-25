@@ -1,83 +1,43 @@
 import React from 'react';
+import { AlertTriangle, Package, Clock } from 'lucide-react';
 
-const StockBadge = ({ stockStatus, isNew, isBestseller }) => {
-  const getBadgeConfig = () => {
-    if (stockStatus === 'sold_out') {
-      return {
-        text: 'SOLD OUT',
-        bgColor: 'bg-gray-600',
-        textColor: 'text-white',
-        borderColor: 'border-gray-500'
-      };
-    }
-    
-    if (stockStatus === 'almost_sold_out') {
-      return {
-        text: 'ALMOST SOLD OUT',
-        bgColor: 'bg-red-600',
-        textColor: 'text-white',
-        borderColor: 'border-red-500',
-        pulse: true
-      };
-    }
-    
-    if (stockStatus === 'low_stock') {
-      return {
-        text: 'LOW STOCK',
-        bgColor: 'bg-orange-500',
-        textColor: 'text-white',
-        borderColor: 'border-orange-400'
-      };
-    }
-    
-    if (stockStatus === 'coming_soon') {
-      return {
-        text: 'COMING SOON',
-        bgColor: 'bg-purple-600',
-        textColor: 'text-white',
-        borderColor: 'border-purple-500'
-      };
-    }
-    
-    if (isNew) {
-      return {
-        text: 'NEW',
-        bgColor: 'bg-green-600',
-        textColor: 'text-white',
-        borderColor: 'border-green-500',
-        pulse: true
-      };
-    }
-    
-    if (isBestseller) {
-      return {
-        text: 'BESTSELLER',
-        bgColor: 'bg-yellow-500',
-        textColor: 'text-black',
-        borderColor: 'border-yellow-400'
-      };
-    }
-    
-    return null;
-  };
+const StockBadge = ({ inventoryCount, lowStockThreshold = 2, className = '' }) => {
+  // DROP MODE logic
+  const isSoldOut = inventoryCount === 0;
+  const isLowStock = inventoryCount > 0 && inventoryCount <= lowStockThreshold;
+  const isInStock = inventoryCount > lowStockThreshold;
 
-  const config = getBadgeConfig();
-  
-  if (!config) return null;
+  if (isSoldOut) {
+    return (
+      <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md bg-red-100 text-red-800 text-sm font-medium ${className}`}>
+        <Package className="w-4 h-4" />
+        <span>Sold Out</span>
+      </div>
+    );
+  }
 
-  return (
-    <div
-      className={`
-        ${config.bgColor} 
-        ${config.textColor} 
-        ${config.borderColor}
-        px-3 py-1 rounded-full text-xs font-bold border-2
-        ${config.pulse ? 'animate-pulse' : ''}
-      `}
-    >
-      {config.text}
-    </div>
-  );
+  if (isLowStock) {
+    const urgency = inventoryCount === 1 ? 'high' : 'medium';
+    const bgColor = urgency === 'high' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800';
+    
+    return (
+      <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md ${bgColor} text-sm font-medium animate-pulse ${className}`}>
+        <AlertTriangle className="w-4 h-4" />
+        <span>Only {inventoryCount} left!</span>
+      </div>
+    );
+  }
+
+  if (isInStock) {
+    return (
+      <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md bg-green-100 text-green-800 text-sm font-medium ${className}`}>
+        <Clock className="w-4 h-4" />
+        <span>In Stock</span>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default StockBadge;
