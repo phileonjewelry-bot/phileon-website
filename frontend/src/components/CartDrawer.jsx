@@ -59,16 +59,30 @@ const CartDrawer = () => {
       // Handle inventory validation errors
       if (error.response?.data?.detail?.code === 'OUT_OF_STOCK') {
         const messages = error.response.data.detail.messages || [];
-        toast({
-          title: 'Items Out of Stock',
-          description: messages.length > 1 
-            ? `${messages.length} items have stock issues. Please review your cart.`
-            : messages[0] || 'Some items are no longer available.',
-          variant: 'destructive'
-        });
+        
+        // Check for cart refresh error specifically
+        const hasRefreshError = messages.some(msg => 
+          msg.includes('Cart item missing product reference')
+        );
+        
+        if (hasRefreshError) {
+          toast({
+            title: 'Cart Needs Refresh',
+            description: 'Some cart items need to be refreshed. Please remove and re-add items to your cart.',
+            variant: 'destructive'
+          });
+        } else {
+          toast({
+            title: 'Items Out of Stock',
+            description: messages.length > 1 
+              ? `${messages.length} items have stock issues. Please review your cart.`
+              : messages[0] || 'Some items are no longer available.',
+            variant: 'destructive'
+          });
+        }
         
         // Show detailed errors in console for debugging
-        console.warn('Inventory errors:', messages);
+        console.warn('Inventory validation errors:', messages);
       } else {
         toast({
           title: 'Checkout Error',
