@@ -57,7 +57,9 @@ const HARDCODED_PRODUCTS = [
 const ShopDropPage = () => {
   const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
+  const [hideSoldOut, setHideSoldOut] = useState(false); // DEFAULT OFF for hype
   const { has, toggle } = useWishlist();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -81,14 +83,37 @@ const ShopDropPage = () => {
     fetchProducts();
   }, []);
 
+  // Filter products based on sold out visibility setting
+  const filteredProducts = hideSoldOut 
+    ? products.filter(product => {
+        const inventoryCount = product.inventory_count || product.stock || 0;
+        return inventoryCount > 0; // Hide if sold out
+      })
+    : products; // Show all products (including sold out) for HYPE
+
   // Stagger product reveal
   useEffect(() => {
-    products.forEach((_, index) => {
+    filteredProducts.forEach((_, index) => {
       setTimeout(() => {
         setVisibleProducts(prev => [...prev, index]);
       }, 150 * index);
     });
-  }, [products]);
+  }, [filteredProducts]);
+
+  const handleAddToCart = (product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: parseFloat(product.price_range?.split(' - ')[0]?.replace('$', '').replace(',', '') || '0'),
+      images: product.images || [product.imageUrl],
+      quantity: 1
+    });
+  };
+
+  const soldOutCount = products.filter(product => {
+    const inventoryCount = product.inventory_count || product.stock || 0;
+    return inventoryCount === 0;
+  }).length;
 
   return (
     <div className="shop-drop" data-testid="shop-drop-page">
