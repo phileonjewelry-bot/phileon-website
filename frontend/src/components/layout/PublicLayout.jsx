@@ -101,8 +101,39 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Right: Hamburger Menu */}
-        <div className="header-right">
+        {/* Right: Cart, Wishlist, and Menu */}
+        <div className="header-right flex items-center gap-4">
+          {/* Cart Icon */}
+          <button
+            onClick={() => setCartOpen(true)}
+            className="relative p-2 text-phileon-gold hover:text-yellow-400 transition-colors"
+            aria-label="Open cart"
+            data-testid="cart-button"
+          >
+            <ShoppingBag className="w-5 h-5" />
+            {getTotalItems() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-yellow-500 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {getTotalItems()}
+              </span>
+            )}
+          </button>
+
+          {/* Wishlist Icon */}
+          <Link
+            to="/wishlist"
+            className="relative p-2 text-phileon-gold hover:text-yellow-400 transition-colors"
+            aria-label="View wishlist"
+            data-testid="wishlist-button"
+          >
+            <Heart className="w-5 h-5" />
+            {getTotalWishlistItems() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {getTotalWishlistItems()}
+              </span>
+            )}
+          </Link>
+
+          {/* Hamburger Menu */}
           <button 
             className="menu-btn"
             onClick={() => setIsMenuOpen(true)}
