@@ -134,6 +134,19 @@ const ProductActionButton = ({
         </Button>
       )}
 
+      {/* Share Button */}
+      {showShare && (
+        <Button
+          onClick={handleShare}
+          variant="outline"
+          size={size}
+          className="w-full border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-300"
+        >
+          <Share2 className="w-4 h-4 mr-2" />
+          Share
+        </Button>
+      )}
+
       {/* Low Stock Warning */}
       {isLowStock && (
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
