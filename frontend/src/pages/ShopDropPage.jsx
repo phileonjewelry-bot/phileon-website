@@ -7,6 +7,7 @@ import StockBadge from '@/components/StockBadge';
 import ProductActionButton from '@/components/ProductActionButton';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import '../styles/shop-drop.css';
 
 // Hardcoded products as fallback
 const HARDCODED_PRODUCTS = [
