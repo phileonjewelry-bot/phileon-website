@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { ShoppingCart, Bell, AlertTriangle, Package } from 'lucide-react';
+import { ShoppingCart, Bell, AlertTriangle, Package, Share2 } from 'lucide-react';
 import StockBadge from './StockBadge';
 import RestockNotificationModal from './RestockNotificationModal';
 
