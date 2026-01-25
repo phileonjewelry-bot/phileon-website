@@ -6,7 +6,7 @@ import logging
 from datetime import datetime
 from bson import ObjectId
 from config import STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
-from models import Order, OrderItem, ShippingAddress
+from models import Order, OrderItem, Address
 import uuid
 
 # Configure Stripe
