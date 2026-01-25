@@ -210,7 +210,7 @@ async def confirm_payment(payment_data: Dict[str, Any]):
                 id=str(uuid.uuid4()),
                 email=email,
                 items=[OrderItem(**item) for item in items],
-                shippingAddress=ShippingAddress(**shipping_address),
+                shippingAddress=Address(**shipping_address),
                 subtotal=subtotal,
                 shippingCost=shipping_cost,
                 total=subtotal + shipping_cost,
