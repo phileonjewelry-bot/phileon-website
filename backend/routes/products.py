@@ -49,16 +49,22 @@ async def get_products(
     
     return products_with_status
 
-@router.get("/{product_id}", response_model=Product)
+@router.get("/{product_id}")
 async def get_product(product_id: str):
-    """Get single product by ID"""
+    """Get single product by ID with inventory status"""
     db = get_db()
-    product = await db.products.find_one({"id": product_id})
+    product_data = await db.products.find_one({"id": product_id})
     
-    if not product:
+    if not product_data:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    return Product(**product)
+    product = Product(**product_data)
+    inventory_status = get_inventory_status(product)
+    
+    # Return product with inventory status
+    result = product.dict()
+    result['inventory_status'] = inventory_status
+    return result
 
 @router.post("", response_model=Product)
 async def create_product(product: ProductCreate):
