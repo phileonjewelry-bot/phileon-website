@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
-from models.cart import Cart, CartItem, AddToCartRequest, UpdateCartItemRequest
-from models.product import Product
+from models import Product
 import uuid
 from datetime import datetime
 
