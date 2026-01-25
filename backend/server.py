@@ -599,8 +599,22 @@ async def admin_get_stats(_: str = Depends(verify_admin)):
 app.include_router(api_router)
 app.include_router(admin_router)
 
-# Add Stripe routes
+# Add route imports
+from routes.products import router as products_router
+from routes.inventory import router as inventory_router  
+from routes.cart import router as cart_router
+from routes.orders import router as orders_router
+from routes.customer_photos import router as customer_photos_router
+from routes.restock_routes import router as restock_router
 from routes.stripe_routes import router as stripe_router
+
+# Include all routers
+app.include_router(products_router, prefix="/api")
+app.include_router(inventory_router, prefix="/api")
+app.include_router(cart_router, prefix="/api")
+app.include_router(orders_router, prefix="/api")
+app.include_router(customer_photos_router, prefix="/api")
+app.include_router(restock_router, prefix="/api")
 app.include_router(stripe_router, prefix="/api")
 
 app.add_middleware(
