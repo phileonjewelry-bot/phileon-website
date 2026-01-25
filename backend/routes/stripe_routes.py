@@ -4,6 +4,7 @@ import stripe
 import json
 import logging
 from datetime import datetime
+from bson import ObjectId
 from config import STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
 from models import Order, OrderItem, ShippingAddress
 import uuid
