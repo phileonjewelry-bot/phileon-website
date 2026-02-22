@@ -3,41 +3,55 @@ import React from "react";
 export default function Hero() {
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
+
+      {/* Background Video (Emergent-safe external source) */}
       <video
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover"
         autoPlay
         muted
         loop
         playsInline
       >
-        <source src="/videos/phileon-opener.mp4" type="video/mp4" />
+        <source
+          src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+          type="video/mp4"
+        />
       </video>
 
-      <div className="absolute inset-0 bg-black/50" />
+      {/* Cinematic Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80"></div>
 
-      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center px-6">
+      {/* Content */}
+      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center text-center px-6">
+
         <h1 className="text-5xl md:text-7xl tracking-[0.35em] text-white font-light">
           PHILEON
         </h1>
 
-        <p className="mt-6 text-white/80 text-lg">
-          Crafted for presence.
+        <p className="mt-6 text-white/80 text-lg tracking-wide">
+          Not jewelry. Identity.
+        </p>
+
+        <p className="mt-2 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
+          #GetYourPhileon
         </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+
           <a
             href="/shop"
-            className="bg-[#C6A24A] text-black px-8 py-3 rounded-md font-semibold"
+            className="bg-[#C6A24A] text-black px-8 py-3 rounded-md font-semibold tracking-wide"
           >
-            SHOP DROP
+            GET YOUR PHILEON
           </a>
 
           <a
             href="/custom"
-            className="border border-white/70 text-white px-8 py-3 rounded-md font-semibold"
+            className="border border-white/70 text-white px-8 py-3 rounded-md font-semibold tracking-wide"
           >
             CREATE YOUR PHILEON
           </a>
+
         </div>
       </div>
     </section>
