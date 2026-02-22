@@ -72,43 +72,8 @@ const HomePage = () => {
       {/* Drop Reveal Animation */}
       <DropReveal isActive={showDropReveal} targetPath="/shop-drop" dropText="DROP 001" />
 
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?auto=format&fit=crop&w=2000&q=80')`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/95" />
-        </div>
-        
-        <div className="relative z-10 text-center px-8 max-w-4xl mx-auto">
-          {/* Hero headline */}
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-[0.3em] text-phileon-ivory leading-tight">
-            TIMELESS ELEGANCE
-          </h1>
-          
-          {/* Hero subtext */}
-          <p className="mt-6 text-sm md:text-base text-phileon-ivory-muted tracking-[0.15em] opacity-75">
-            Crafted for you
-          </p>
-          
-          {/* SHOP DROP button */}
-          <Link 
-            to="/shop-drop"
-            className="inline-block mt-10 px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.25em] uppercase font-medium transition-all duration-300 hover:shadow-[0_0_0_1px_#1e5bff]"
-            data-testid="shop-drop-btn"
-          >
-            Shop Drop
-          </Link>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-60">
-          <ChevronDown className="text-phileon-gold" size={28} />
-        </div>
-      </section>
+      {/* Hero Section - Video Opener */}
+      <Hero />
 
       {/* Introduction - Calm, intentional spacing */}
       <section className="py-24 lg:py-32 px-8 bg-phileon-black">
