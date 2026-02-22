@@ -17,6 +17,7 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
+  gap: 16px;
   padding: 0 20px;
   overflow: visible;          /* IMPORTANT */
 }
