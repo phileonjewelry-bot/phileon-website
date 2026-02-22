@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { publicApi } from '@/lib/api';
 import DropReveal from '@/components/DropReveal';
+import Hero from '@/components/Hero';
 
 const HomePage = () => {
   const [collections, setCollections] = useState([]);
