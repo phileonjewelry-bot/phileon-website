@@ -24,29 +24,30 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 flex h-full w-full flex-col items-center justify-center text-center px-6">
 
-        {/* Message (NO duplicate PHILEON) */}
-        <h1 className="text-3xl md:text-5xl text-white font-light tracking-wide">
-          Not jewelry. Identity.
+        {/* Headline */}
+        <h1 className="text-3xl md:text-5xl text-white font-light leading-tight tracking-wide">
+          Not jewelry.<br />
+          Identity.
         </h1>
 
-        {/* Campaign Tag */}
-        <p className="mt-4 bg-black/40 px-5 py-2 rounded-full text-[#C6A24A] text-xs md:text-sm tracking-[0.4em] uppercase">
+        {/* Campaign */}
+        <p className="mt-5 text-[#C6A24A] text-xs md:text-sm tracking-[0.45em] uppercase bg-black/25 px-6 py-2 rounded-full backdrop-blur-sm">
           #GetYourPhileon
         </p>
 
-        {/* Hybrid CTAs */}
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+        {/* Buttons */}
+        <div className="mt-12 flex flex-col gap-4 sm:flex-row w-full max-w-xs sm:max-w-none sm:w-auto">
 
           <a
             href="/shop"
-            className="bg-[#C6A24A] text-black px-8 py-3 rounded-md font-semibold tracking-wide"
+            className="w-full sm:w-auto bg-[#C6A24A] text-black px-8 py-4 rounded-md font-semibold tracking-wide text-center"
           >
             GET YOUR PHILEON
           </a>
 
           <a
             href="/custom"
-            className="border border-white/70 text-white px-8 py-3 rounded-md font-semibold tracking-wide"
+            className="w-full sm:w-auto border border-white/60 text-white px-8 py-4 rounded-md font-semibold tracking-wide text-center"
           >
             CREATE YOUR PHILEON
           </a>
