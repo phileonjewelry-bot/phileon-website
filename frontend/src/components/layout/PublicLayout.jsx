@@ -79,7 +79,7 @@ const Header = () => {
               <img 
                 src="/logo.png" 
                 alt="Phileon" 
-                className="h-9 w-9 object-contain rounded-lg"
+                className="h-11 w-11 object-contain rounded-lg"
                 style={{ boxShadow: '0 0 0 1px rgba(201,162,77,0.25)' }}
               />
             </a>
