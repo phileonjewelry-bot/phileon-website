@@ -13,7 +13,7 @@ export default function Hero() {
         playsInline
       >
         <source
-          src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+          src="/videos/phileon-opener.mp4"
           type="video/mp4"
         />
       </video>
