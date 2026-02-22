@@ -92,6 +92,9 @@ class PhileonAPITester:
         # Test site settings
         self.run_test("Get Site Settings", "GET", "api/settings", 200)
         
+        # Test metal prices endpoint (important for ticker)
+        self.run_test("Get Metal Prices", "GET", "api/metal-prices", 200)
+        
         return collections
 
     def test_inquiry_creation(self):
