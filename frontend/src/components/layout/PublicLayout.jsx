@@ -6,6 +6,7 @@ import PhileonMenu from '@/components/PhileonMenu';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
+import '@/styles/phileon-header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
