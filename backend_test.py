@@ -246,7 +246,7 @@ class PhileonAPITester:
 
 def main():
     print("🚀 Starting Phileon Jewelry API Tests")
-    print(f"Testing against: https://phileon-official.preview.emergentagent.com")
+    print(f"Testing against: https://phileon-website.preview.emergentagent.com")
     
     tester = PhileonAPITester()
     
