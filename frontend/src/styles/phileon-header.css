@@ -161,14 +161,14 @@
 .menu-icon {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  width: 18px;
-  height: 14px;
+  gap: 5px;
+  width: 26px;
+  height: 20px;
 }
 
 .menu-icon span {
   width: 100%;
-  height: 2px;
+  height: 2.5px;
   background: rgba(199,162,75,0.95);
   border-radius: 1px;
   transition: all 300ms ease;
