@@ -42,7 +42,6 @@
 }
 
 .ph-logo {
-  pointer-events: auto;
   display: flex;
   align-items: center;
   max-height: 40px;           /* prevents vertical crop */
