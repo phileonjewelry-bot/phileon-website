@@ -3,21 +3,20 @@
   position: sticky;
   top: 36px;
   z-index: 60;
-  height: 64px;              /* LOCKED */
-  background: rgba(0,0,0,0.55);
+  height: 80px;              /* LOCKED */
+  background: rgba(0,0,0,0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   overflow: visible;          /* IMPORTANT: prevent clipping */
-  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .ph-header-inner {
   position: relative;
-  height: 64px;               /* LOCKED */
+  height: 80px;               /* LOCKED */
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 20px;
   overflow: visible;          /* IMPORTANT */
 }
 
