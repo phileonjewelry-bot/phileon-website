@@ -178,14 +178,8 @@
     padding: 0 16px;
   }
   
-  .ph-left {
-    min-width: 50px;
-  }
-  
   .ph-right {
-    gap: 12px;
-    min-width: 50px;
-    justify-content: flex-end;
+    gap: 8px;
   }
   
   .ph-drop-pill {
