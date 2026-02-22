@@ -5,6 +5,7 @@ import { publicApi } from '@/lib/api';
 import DropReveal from '@/components/DropReveal';
 import Hero from '@/components/Hero';
 import FeaturedDrop from '@/components/FeaturedDrop';
+import LaMarvaDrop from '@/components/LaMarvaDrop';
 
 const HomePage = () => {
   const [collections, setCollections] = useState([]);
