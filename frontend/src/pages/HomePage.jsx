@@ -76,6 +76,9 @@ const HomePage = () => {
       {/* Hero Section - Video Opener */}
       <Hero />
 
+      {/* Featured Drop */}
+      <FeaturedDrop />
+
       {/* Introduction - Calm, intentional spacing */}
       <section className="py-24 lg:py-32 px-8 bg-phileon-black">
         <div className="max-w-3xl mx-auto text-center">
