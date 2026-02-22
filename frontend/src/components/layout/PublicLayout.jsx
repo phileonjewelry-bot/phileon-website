@@ -72,9 +72,16 @@ const Header = () => {
     <>
       <header className="ph-header">
         <div className="ph-header-inner">
-          {/* LEFT (optional) */}
+          {/* LEFT - Logo icon */}
           <div className="ph-left">
-            {/* keep empty or put hamburger/logo mark later */}
+            <a href="/" aria-label="Phileon home">
+              <img 
+                src="/logo.png" 
+                alt="Phileon" 
+                className="h-9 w-9 object-contain rounded-lg"
+                style={{ boxShadow: '0 0 0 1px rgba(201,162,77,0.25)' }}
+              />
+            </a>
           </div>
 
           {/* CENTER LOGO (always centered) */}
