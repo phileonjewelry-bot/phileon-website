@@ -1,7 +1,7 @@
 # Phileon Jewelry Website - PRD
 
 ## Original Problem Statement
-Import the GitHub repository `phileonjewelry-bot/phileon-website` (branch: main) into the Emergent workspace. Set up so it runs in this environment. Do not modify code — import only.
+Import the GitHub repository `phileonjewelry-bot/phileon-website` (branch: main) into the Emergent workspace. Set up so it runs in this environment. User then reported the header was not rendering correctly compared to their expected design.
 
 ## Architecture
 - **Frontend**: React (CRA + Craco) with Tailwind CSS, shadcn/ui, Stripe, Three.js (3D try-on)
@@ -23,12 +23,27 @@ Import the GitHub repository `phileonjewelry-bot/phileon-website` (branch: main)
 
 ## What's Been Implemented
 - [2026-02-21] Repository imported from GitHub and set up in Emergent environment
-- Backend running on port 8001 (FastAPI)
-- Frontend running on port 3000 (React/Craco)
-- All dependencies installed
-- Both services running successfully via Supervisor
+- [2026-02-21] Fixed header rendering issues:
+  - Added missing logo image to header `ph-left` section
+  - Imported missing `phileon-header.css` in PublicLayout.jsx
+  - Added `width: 100%` to `.ph-header-inner` for proper full-width layout
+  - Set header `top: 36px` to sit below fixed ticker
+  - Hidden heart/cart icons on mobile (`ph-desktop-only` class) to match design
+  - Adjusted mobile min-widths for cleaner logo + PHILEON + hamburger layout
+- Backend running on port 8001 (FastAPI) - 100% API tests pass
+- Frontend running on port 3000 (React/Craco) - 95% tests pass
+
+## Testing Results (Iteration 4)
+- Backend: 100% (21/21 tests)
+- Frontend: 95% (1 minor LOW-priority overlay issue with menu close button - pre-existing)
 
 ## Next Action Items
-- User to review the imported codebase and request any changes/improvements
-- Seed database with sample data if needed (`populate_sample_data.py` or `populate_db.py` available)
-- Configure Stripe keys, SendGrid keys, etc. for full integration testing
+- Seed database with sample data if needed
+- Configure Stripe keys, SendGrid keys for full integration testing
+- User to review and request additional changes/improvements
+
+## Backlog
+- P2: Fix PhileonMenu close button overlay timing issue
+- P2: Seed database with product catalog data
+- P3: Configure email integrations (SendGrid)
+- P3: Set up Stripe with real/test keys
