@@ -1,7 +1,7 @@
 /* PHILEON HEADER - SAFE AREA BAR */
 .ph-header {
   position: sticky;
-  top: 0;
+  top: 36px;
   z-index: 60;
   height: 64px;              /* LOCKED */
   background: rgba(0,0,0,0.55);
