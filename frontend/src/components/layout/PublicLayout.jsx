@@ -89,7 +89,8 @@ const Header = () => {
           <div className="ph-center">
             <a href="/" className="ph-logo" aria-label="Phileon home">
               <div 
-                className="brand-text text-phileon-gold font-bold text-xl tracking-widest cursor-pointer"
+                className="brand-text text-phileon-gold font-bold tracking-widest cursor-pointer"
+                style={{ fontFamily: "'Playfair Display', serif", fontSize: '22px', letterSpacing: '0.35em' }}
                 onClick={handleLogoTap}
                 onTouchStart={handleLogoTap}
                 data-testid="brand-text"
