@@ -14,7 +14,8 @@
   position: relative;
   height: 80px;               /* LOCKED */
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 0 20px;
   overflow: visible;          /* IMPORTANT */
