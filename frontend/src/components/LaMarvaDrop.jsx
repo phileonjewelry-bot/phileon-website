@@ -49,7 +49,7 @@ export default function LaMarvaDrop() {
           {/* Product Image */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
             <img
-              src="YOUR_IMAGE_LINK_HERE"
+              src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
               alt="Phileon La Marva Ring"
               className="w-full h-[420px] md:h-[520px] object-cover"
             />
