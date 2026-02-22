@@ -35,7 +35,7 @@ export default function LaMarvaDrop() {
         </p>
 
         <h2 className="mt-3 text-3xl md:text-5xl font-light tracking-wide">
-          PHILEON LA MARVA
+          PHILEON SKYY PINKY
         </h2>
 
         <p className="mt-6 text-white/70 max-w-2xl leading-relaxed">
