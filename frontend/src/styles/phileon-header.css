@@ -180,7 +180,7 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .ph-header-inner {
-    padding: 0 12px;
+    padding: 0 16px;
   }
   
   .ph-left {
@@ -199,13 +199,13 @@
   }
   
   .ph-icon-btn {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
   }
   
   .ph-icon-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
   
   .ph-desktop-only {
@@ -213,8 +213,13 @@
   }
   
   .menu-icon {
-    width: 22px;
-    height: 16px;
+    width: 28px;
+    height: 20px;
+    gap: 5px;
+  }
+  
+  .menu-icon span {
+    height: 2.5px;
   }
 }
 
