@@ -26,12 +26,17 @@ Import the GitHub repository `phileonjewelry-bot/phileon-website` (branch: main)
 - [2026-02-21] Fixed header rendering issues:
   - Added missing logo image to header `ph-left` section
   - Imported missing `phileon-header.css` in PublicLayout.jsx
-  - Added `width: 100%` to `.ph-header-inner` for proper full-width layout
   - Set header `top: 36px` to sit below fixed ticker
-  - Hidden heart/cart icons on mobile (`ph-desktop-only` class) to match design
-  - Adjusted mobile min-widths for cleaner logo + PHILEON + hamburger layout
-- Backend running on port 8001 (FastAPI) - 100% API tests pass
-- Frontend running on port 3000 (React/Craco) - 95% tests pass
+  - Hidden heart/cart icons on mobile (`ph-desktop-only` class)
+- [2026-02-21] Fixed PHILEON text / hamburger menu overlap on mobile:
+  - Switched from absolute centering to CSS grid layout (`grid-template-columns: auto 1fr auto`)
+  - Added `gap: 16px` between grid columns
+  - Responsive brand text: 22px/0.35em (desktop), 18px/0.25em (mobile)
+  - Moved inline styles to `.ph-brand-text` CSS class for responsive control
+  - Header height increased to 80px, background opacity to 0.92
+  - Hamburger icon enlarged (28px wide, 2.5px thick lines)
+- Backend running on port 8001 (FastAPI) - 100% tests pass
+- Frontend running on port 3000 (React/Craco) - 100% tests pass
 
 ## Testing Results (Iteration 4)
 - Backend: 100% (21/21 tests)
