@@ -80,6 +80,9 @@ const HomePage = () => {
       {/* Featured Drop */}
       <FeaturedDrop />
 
+      {/* La Marva Tiered Collection */}
+      <LaMarvaDrop />
+
       {/* Introduction - Calm, intentional spacing */}
       <section className="py-24 lg:py-32 px-8 bg-phileon-black">
         <div className="max-w-3xl mx-auto text-center">
