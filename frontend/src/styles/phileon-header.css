@@ -208,6 +208,10 @@
     width: 18px;
     height: 18px;
   }
+  
+  .ph-desktop-only {
+    display: none !important;
+  }
 }
 
 /* Ensure header doesn't interfere with page content */
