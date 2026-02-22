@@ -39,8 +39,21 @@ export default function LaMarvaDrop() {
         </h2>
 
         <p className="mt-6 text-white/70 max-w-2xl leading-relaxed">
-          One design. Three levels of presence.
-          La Marva is engineered to let you enter the brand, grow with it, or experience the full flagship execution.
+          Built on strength. Designed with grace.
+        </p>
+
+        <p className="mt-4 text-white/50 max-w-2xl leading-relaxed text-sm">
+          La Marva is named in honor of my mother — a woman whose strength, resilience, and quiet confidence shaped who I am.
+          She carries power without force and presence without noise. This piece reflects that same balance.
+          A structured grid of precision-set stones represents strength and stability, while the flowing pavé band adds warmth, elegance, and movement.
+        </p>
+
+        <p className="mt-4 text-white/60 max-w-2xl leading-relaxed text-sm italic">
+          La Marva is not delicate. It is composed. Grounded. Intentional.
+        </p>
+
+        <p className="mt-4 text-white/50 max-w-2xl leading-relaxed text-sm">
+          More than a design, this piece represents the strength behind the name — and the foundation it was built on.
         </p>
 
         {/* Layout */}
