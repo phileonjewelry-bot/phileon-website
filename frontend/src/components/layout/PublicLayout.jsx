@@ -103,7 +103,7 @@ const Header = () => {
           <div className="ph-right">
             <Link
               to="/wishlist"
-              className="ph-icon-btn"
+              className="ph-icon-btn hidden md:inline-flex"
               aria-label="Wishlist"
               data-testid="wishlist-button"
             >
@@ -114,7 +114,7 @@ const Header = () => {
             </Link>
 
             <button 
-              className="ph-icon-btn" 
+              className="ph-icon-btn hidden md:inline-flex" 
               aria-label="Cart" 
               onClick={() => setCartOpen(true)}
               data-testid="cart-button"
