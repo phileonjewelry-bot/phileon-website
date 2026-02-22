@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { publicApi } from '@/lib/api';
 import DropReveal from '@/components/DropReveal';
 import Hero from '@/components/Hero';
+import FeaturedDrop from '@/components/FeaturedDrop';
 
 const HomePage = () => {
   const [collections, setCollections] = useState([]);
