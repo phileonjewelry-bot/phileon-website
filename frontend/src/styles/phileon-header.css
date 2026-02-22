@@ -40,6 +40,22 @@
   align-items: center;
   justify-content: center;
   height: 80px;
+  overflow: hidden;
+}
+
+/* Brand Text */
+.ph-brand-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  letter-spacing: 0.35em;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .ph-brand-text {
+    font-size: 18px;
+    letter-spacing: 0.25em;
+  }
 }
 
 .ph-logo {
