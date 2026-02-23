@@ -77,11 +77,11 @@ const HomePage = () => {
       {/* Hero Section - Video Opener */}
       <Hero />
 
-      {/* Featured Drop */}
-      <FeaturedDrop />
-
       {/* La Marva Tiered Collection */}
       <LaMarvaDrop />
+
+      {/* Featured Drop */}
+      <FeaturedDrop />
 
       {/* Introduction - Calm, intentional spacing */}
       <section className="py-24 lg:py-32 px-8 bg-phileon-black">
