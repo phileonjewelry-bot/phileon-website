@@ -163,7 +163,7 @@ export default function LaMarvaDrop() {
                           href="/custom"
                           className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/90"
                         >
-                          Customize
+                          Select finger size
                         </a>
                       </>
                     ) : (
