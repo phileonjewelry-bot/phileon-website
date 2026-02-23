@@ -119,7 +119,7 @@ export default function LaMarvaDrop() {
                     </div>
 
                     <div className="text-right">
-                      <p className="text-xs text-white/50">From</p>
+                      <p className="text-xs text-white/50">Retail</p>
                       <p className="text-2xl md:text-3xl font-light">
                         {tier.price}
                         <span className="ml-2 text-sm text-white/50">CAD</span>
@@ -127,7 +127,6 @@ export default function LaMarvaDrop() {
                     </div>
                   </div>
 
-                  {/* Buttons */}
                   <div className="mt-4 flex flex-col sm:flex-row gap-3">
                     <a
                       href="/shop"
@@ -138,14 +137,14 @@ export default function LaMarvaDrop() {
                           : "border border-white/30 text-white",
                       ].join(" ")}
                     >
-                      Select {tier.name}
+                      Select
                     </a>
 
                     <a
                       href="/custom"
-                      className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/70 hover:border-white/40 transition"
+                      className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/90"
                     >
-                      Select finger size
+                      Customize
                     </a>
                   </div>
                 </div>
