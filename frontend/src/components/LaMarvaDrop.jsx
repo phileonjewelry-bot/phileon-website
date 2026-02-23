@@ -138,7 +138,7 @@ export default function LaMarvaDrop() {
                       href="/custom"
                       className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/70 hover:border-white/40 transition"
                     >
-                      Customize
+                      Select finger size
                     </a>
                   </div>
                 </div>
