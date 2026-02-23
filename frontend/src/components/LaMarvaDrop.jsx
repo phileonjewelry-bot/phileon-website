@@ -111,13 +111,13 @@ export default function LaMarvaDrop() {
                       : "border-white/10 bg-white/5",
                   ].join(" ")}
                 >
-                  <div className="flex justify-between items-start gap-6">
-                    <div>
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="min-w-0 flex-1">
                       <p className="text-xs tracking-[0.35em] uppercase text-white/60">
                         {tier.name}
                       </p>
 
-                      <h3 className="mt-2 text-xl md:text-2xl font-light">
+                      <h3 className="mt-2 text-lg md:text-2xl font-light">
                         {tier.material}
                       </h3>
 
@@ -126,18 +126,18 @@ export default function LaMarvaDrop() {
                       </p>
                     </div>
 
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       <p className="text-xs text-white/50">
                         {tier.isHeirloom ? "By consultation" : "Retail"}
                       </p>
 
                       {!tier.isHeirloom ? (
-                        <p className="text-2xl md:text-3xl font-light">
+                        <p className="text-xl md:text-3xl font-light">
                           {tier.price}
-                          <span className="ml-2 text-sm text-white/50">CAD</span>
+                          <span className="ml-1 text-xs md:text-sm text-white/50">CAD</span>
                         </p>
                       ) : (
-                        <p className="mt-1 text-lg md:text-xl font-light text-white/80">
+                        <p className="mt-1 text-sm md:text-xl font-light text-white/80">
                           Consultation required
                         </p>
                       )}
