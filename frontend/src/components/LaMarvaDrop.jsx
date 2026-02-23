@@ -127,34 +127,69 @@ export default function LaMarvaDrop() {
                     </div>
 
                     <div className="text-right">
-                      <p className="text-xs text-white/50">Retail</p>
-                      <p className="text-2xl md:text-3xl font-light">
-                        {tier.price}
-                        <span className="ml-2 text-sm text-white/50">CAD</span>
+                      <p className="text-xs text-white/50">
+                        {tier.isHeirloom ? "By consultation" : "Retail"}
                       </p>
+
+                      {!tier.isHeirloom ? (
+                        <p className="text-2xl md:text-3xl font-light">
+                          {tier.price}
+                          <span className="ml-2 text-sm text-white/50">CAD</span>
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-lg md:text-xl font-light text-white/80">
+                          Consultation required
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="mt-4 flex flex-col sm:flex-row gap-3">
-                    <a
-                      href="/shop"
-                      className={[
-                        "px-6 py-3 rounded-md font-semibold tracking-wide text-center",
-                        tier.highlight
-                          ? "bg-[#C6A24A] text-black"
-                          : "border border-white/30 text-white",
-                      ].join(" ")}
-                    >
-                      Select
-                    </a>
+                    {!tier.isHeirloom ? (
+                      <>
+                        <a
+                          href="/shop"
+                          className={[
+                            "px-6 py-3 rounded-md font-semibold tracking-wide text-center",
+                            tier.highlight
+                              ? "bg-[#C6A24A] text-black"
+                              : "border border-white/30 text-white",
+                          ].join(" ")}
+                        >
+                          Select
+                        </a>
 
-                    <a
-                      href="/custom"
-                      className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/90"
-                    >
-                      Customize
-                    </a>
+                        <a
+                          href="/custom"
+                          className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/90"
+                        >
+                          Customize
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <a
+                          href="/custom"
+                          className="bg-[#C6A24A] text-black px-6 py-3 rounded-md font-semibold tracking-wide text-center"
+                        >
+                          Request Consultation
+                        </a>
+
+                        <a
+                          href="/custom"
+                          className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/30 text-white"
+                        >
+                          Speak to Atelier
+                        </a>
+                      </>
+                    )}
                   </div>
+
+                  {tier.isHeirloom && (
+                    <p className="mt-4 text-white/50 text-xs tracking-wide">
+                      Natural diamond pieces are crafted by consultation only. Pricing reflects estimated retail.
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
