@@ -1,6 +1,10 @@
 import React from "react";
 
 export default function LaMarvaDrop() {
+  // ==========================
+  // LA MARVA — RETAIL TIERS
+  // (Heirloom = consultation)
+  // ==========================
   const TIERS = [
     {
       name: "Signature Edition",
@@ -8,6 +12,7 @@ export default function LaMarvaDrop() {
       price: "$3,400",
       note: "Entry into La Marva",
       highlight: false,
+      isHeirloom: false,
     },
     {
       name: "Foundation Edition",
@@ -15,6 +20,7 @@ export default function LaMarvaDrop() {
       price: "$5,200",
       note: "Core collection",
       highlight: true,
+      isHeirloom: false,
     },
     {
       name: "Heirloom Edition (14K)",
@@ -22,6 +28,7 @@ export default function LaMarvaDrop() {
       price: "$56,000",
       note: "Collector level",
       highlight: false,
+      isHeirloom: true,
     },
     {
       name: "Heirloom Edition (18K)",
@@ -29,6 +36,7 @@ export default function LaMarvaDrop() {
       price: "$58,000",
       note: "Flagship execution",
       highlight: false,
+      isHeirloom: true,
     },
   ];
 
