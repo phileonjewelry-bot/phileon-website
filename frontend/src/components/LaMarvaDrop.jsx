@@ -3,24 +3,31 @@ import React from "react";
 export default function LaMarvaDrop() {
   const TIERS = [
     {
-      name: "Foundation",
+      name: "Signature Edition",
       material: "Silver + Cubic",
-      price: "$895",
-      note: "Entry into the collection",
+      price: "$3,400",
+      note: "Entry into La Marva",
       highlight: false,
     },
     {
-      name: "Signature",
-      material: "10K / 14K + Lab",
-      price: "$1,850",
-      note: "Most popular",
+      name: "Foundation Edition",
+      material: "10K Gold + Lab Stones",
+      price: "$5,200",
+      note: "Core collection",
       highlight: true,
     },
     {
-      name: "Prestige",
-      material: "14K / 18K + Natural",
-      price: "$3,450",
-      note: "Flagship level",
+      name: "Heirloom Edition (14K)",
+      material: "14K Gold + Natural Diamonds",
+      price: "$56,000",
+      note: "Collector level",
+      highlight: false,
+    },
+    {
+      name: "Heirloom Edition (18K)",
+      material: "18K Gold + Natural Diamonds",
+      price: "$58,000",
+      note: "Flagship execution",
       highlight: false,
     },
   ];
