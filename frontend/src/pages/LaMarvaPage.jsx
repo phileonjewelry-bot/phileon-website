@@ -1,0 +1,198 @@
+import React from "react";
+
+const TIERS = [
+  {
+    name: "Signature Edition",
+    material: "Silver + Cubic",
+    price: "$3,400",
+    note: "Entry into La Marva",
+    highlight: false,
+    isHeirloom: false,
+  },
+  {
+    name: "Foundation Edition",
+    material: "10K Gold + Lab Stones",
+    price: "$5,200",
+    note: "Core collection",
+    highlight: true,
+    isHeirloom: false,
+  },
+  {
+    name: "Heirloom Edition (14K)",
+    material: "14K Gold + Natural Diamonds",
+    price: "$56,000",
+    note: "Collector level",
+    highlight: false,
+    isHeirloom: true,
+  },
+  {
+    name: "Heirloom Edition (18K)",
+    material: "18K Gold + Natural Diamonds",
+    price: "$58,000",
+    note: "Flagship execution",
+    highlight: false,
+    isHeirloom: true,
+  },
+];
+
+export default function LaMarvaPage() {
+  return (
+    <div className="bg-black text-white min-h-screen" data-testid="la-marva-page">
+
+      {/* Hero Image */}
+      <section className="relative">
+        <img
+          src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
+          alt="Phileon La Marva Ring"
+          className="w-full h-[50vh] md:h-[65vh] object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+
+        <div className="absolute bottom-10 left-0 right-0 text-center">
+          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
+            Core Collection
+          </p>
+          <h1 className="mt-3 text-4xl md:text-6xl font-light tracking-wide">
+            LA MARVA
+          </h1>
+        </div>
+      </section>
+
+      {/* Story */}
+      <section className="py-16 px-6">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-2xl md:text-3xl font-light tracking-wide">
+            Built on strength. Designed with grace.
+          </h2>
+
+          <p className="mt-6 text-white/60 leading-relaxed">
+            La Marva is named in honor of my mother — a woman whose strength, resilience, and quiet confidence shaped who I am.
+            She carries power without force and presence without noise. This piece reflects that same balance.
+          </p>
+
+          <p className="mt-4 text-white/60 leading-relaxed">
+            A structured grid of precision-set stones represents strength and stability, while the flowing pavé band adds warmth, elegance, and movement.
+          </p>
+
+          <p className="mt-4 text-white/70 leading-relaxed italic">
+            La Marva is not delicate. It is composed. Grounded. Intentional.
+          </p>
+
+          <p className="mt-4 text-white/60 leading-relaxed">
+            More than a design, this piece represents the strength behind the name — and the foundation it was built on.
+          </p>
+
+          <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
+            #GetYourPhileon
+          </p>
+        </div>
+      </section>
+
+      {/* Tiers */}
+      <section className="py-16 px-6 border-t border-white/10">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
+            Tiered Collection
+          </p>
+          <h2 className="mt-3 text-2xl md:text-4xl font-light tracking-wide">
+            Choose your level
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 gap-4">
+            {TIERS.map((tier) => (
+              <div
+                key={tier.name}
+                className={[
+                  "rounded-2xl border p-5 transition",
+                  tier.highlight
+                    ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
+                    : "border-white/10 bg-white/5",
+                ].join(" ")}
+              >
+                <div className="flex justify-between items-start gap-4">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs tracking-[0.35em] uppercase text-white/60">
+                      {tier.name}
+                    </p>
+
+                    <h3 className="mt-2 text-lg md:text-2xl font-light">
+                      {tier.material}
+                    </h3>
+
+                    <p className="mt-2 text-white/60 text-sm">
+                      {tier.note}
+                    </p>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <p className="text-xs text-white/50">
+                      {tier.isHeirloom ? "By consultation" : "Retail"}
+                    </p>
+
+                    {!tier.isHeirloom ? (
+                      <p className="text-xl md:text-3xl font-light">
+                        {tier.price}
+                        <span className="ml-1 text-xs md:text-sm text-white/50">CAD</span>
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-sm md:text-xl font-light text-white/80">
+                        Consultation required
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                  {!tier.isHeirloom ? (
+                    <>
+                      <a
+                        href="/shop"
+                        className={[
+                          "px-6 py-3 rounded-md font-semibold tracking-wide text-center",
+                          tier.highlight
+                            ? "bg-[#C6A24A] text-black"
+                            : "border border-white/30 text-white",
+                        ].join(" ")}
+                      >
+                        Select
+                      </a>
+
+                      <a
+                        href="/custom"
+                        className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/90"
+                      >
+                        Select finger size
+                      </a>
+                    </>
+                  ) : (
+                    <>
+                      <a
+                        href="/custom"
+                        className="bg-[#C6A24A] text-black px-6 py-3 rounded-md font-semibold tracking-wide text-center"
+                      >
+                        Request Consultation
+                      </a>
+
+                      <a
+                        href="/custom"
+                        className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/30 text-white"
+                      >
+                        Speak to Atelier
+                      </a>
+                    </>
+                  )}
+                </div>
+
+                {tier.isHeirloom && (
+                  <p className="mt-4 text-white/50 text-xs tracking-wide">
+                    Natural diamond pieces are crafted by consultation only. Pricing reflects estimated retail.
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
