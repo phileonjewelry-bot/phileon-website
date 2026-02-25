@@ -118,11 +118,14 @@ export default function LaMarvaPage() {
       <section className="py-16 px-6 border-t border-white/10">
         <div className="mx-auto max-w-5xl">
           <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
-            Tiered Collection
+            Available Editions
           </p>
           <h2 className="mt-3 text-2xl md:text-4xl font-light tracking-wide">
             Choose your level
           </h2>
+          <p className="mt-4 text-white/60 text-sm leading-relaxed max-w-2xl">
+            Each edition preserves the full La Marva design. Materials and craftsmanship vary to suit different preferences while maintaining the integrity of the original form.
+          </p>
 
           <div className="mt-10 grid grid-cols-1 gap-4">
             {TIERS.map((tier) => (
