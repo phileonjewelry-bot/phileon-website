@@ -178,6 +178,9 @@ export default function LaMarvaPage() {
                   {tier.specs.map((spec, i) => (
                     <p key={i}>{spec}</p>
                   ))}
+                  {tier.finish && (
+                    <p>{tier.finish}</p>
+                  )}
                 </div>
 
                 {/* Diamond Quality & Carat Weight */}
