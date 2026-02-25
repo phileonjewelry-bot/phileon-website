@@ -69,6 +69,7 @@ function App() {
             <Route path="/collections" element={<CollectionsPage />} />
             <Route path="/collections/:slug" element={<CollectionDetailPage />} />
             <Route path="/piece/:slug" element={<ProductDetailPage />} />
+            <Route path="/products/la-marva" element={<LaMarvaPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />
