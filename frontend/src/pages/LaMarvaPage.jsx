@@ -170,6 +170,25 @@ export default function LaMarvaPage() {
                   </div>
                 </div>
 
+                {/* Materials */}
+                <div className="mt-4 text-sm text-white/60 space-y-1">
+                  {tier.specs.map((spec, i) => (
+                    <p key={i}>{spec}</p>
+                  ))}
+                </div>
+
+                {/* Diamond Quality & Carat Weight */}
+                <div className="mt-3 flex flex-wrap gap-3 text-xs text-white/50">
+                  {tier.diamondQuality && (
+                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/5">
+                      {tier.diamondQuality}
+                    </span>
+                  )}
+                  <span className="px-3 py-1 rounded-full border border-white/10 bg-white/5">
+                    {tier.caratWeight}
+                  </span>
+                </div>
+
                 <div className="mt-4 flex flex-col sm:flex-row gap-3">
                   {!tier.isHeirloom ? (
                     <>
