@@ -20,6 +20,7 @@ import ShopDropPage from "@/pages/ShopDropPage";
 import DropPage from "@/pages/DropPage";
 import MobileDropPage from "@/pages/MobileDropPage";
 import SecretDropPage from "./pages/SecretDropPage";
+import LaMarvaPage from "@/pages/LaMarvaPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
