@@ -93,24 +93,19 @@ export default function LaMarvaPage() {
       <section className="py-16 px-6">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-2xl md:text-3xl font-light tracking-wide">
-            Built on strength. Designed with grace.
+            La Marva
           </h2>
 
           <p className="mt-6 text-white/60 leading-relaxed">
-            La Marva is named in honor of my mother — a woman whose strength, resilience, and quiet confidence shaped who I am.
-            She carries power without force and presence without noise. This piece reflects that same balance.
+            La Marva is named in honor of a woman whose strength, grace, and quiet presence left a lasting imprint.
           </p>
 
           <p className="mt-4 text-white/60 leading-relaxed">
-            A structured grid of precision-set stones represents strength and stability, while the flowing pavé band adds warmth, elegance, and movement.
-          </p>
-
-          <p className="mt-4 text-white/70 leading-relaxed italic">
-            La Marva is not delicate. It is composed. Grounded. Intentional.
+            Created as a tribute to legacy and devotion, the design reflects both structure and softness — a balance of power, elegance, and enduring beauty.
           </p>
 
           <p className="mt-4 text-white/60 leading-relaxed">
-            More than a design, this piece represents the strength behind the name — and the foundation it was built on.
+            Each piece is crafted to order and intended to be worn as a symbol of what matters most: love, memory, and the stories that shape us.
           </p>
 
           <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
