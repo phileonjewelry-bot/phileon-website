@@ -283,43 +283,25 @@ export default function LaMarvaPage() {
                 </div>
 
                 <div className="mt-4 flex flex-col sm:flex-row gap-3">
-                  {!tier.isHeirloom ? (
-                    <>
-                      <a
-                        href="/shop"
-                        className={[
-                          "px-6 py-3 rounded-md font-semibold tracking-wide text-center",
-                          tier.highlight
-                            ? "bg-[#C6A24A] text-black"
-                            : "border border-white/30 text-white",
-                        ].join(" ")}
-                      >
-                        Select
-                      </a>
-
-                      <a
-                        href="/custom"
-                        className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/20 text-white/90"
-                      >
-                        Select finger size
-                      </a>
-                    </>
+                  {tier.consultation ? (
+                    <a
+                      href="/custom"
+                      className="bg-[#C6A24A] text-black px-6 py-3 rounded-md font-semibold tracking-wide text-center"
+                    >
+                      Request Consultation
+                    </a>
                   ) : (
-                    <>
-                      <a
-                        href="/custom"
-                        className="bg-[#C6A24A] text-black px-6 py-3 rounded-md font-semibold tracking-wide text-center"
-                      >
-                        Request Consultation
-                      </a>
-
-                      <a
-                        href="/custom"
-                        className="px-6 py-3 rounded-md font-semibold tracking-wide text-center border border-white/30 text-white"
-                      >
-                        Speak to Atelier
-                      </a>
-                    </>
+                    <a
+                      href="/shop"
+                      className={[
+                        "px-6 py-3 rounded-md font-semibold tracking-wide text-center",
+                        tier.highlight
+                          ? "bg-[#C6A24A] text-black"
+                          : "border border-white/30 text-white",
+                      ].join(" ")}
+                    >
+                      Add to Cart
+                    </a>
                   )}
                 </div>
 
