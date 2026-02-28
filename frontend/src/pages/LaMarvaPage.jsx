@@ -193,8 +193,23 @@ export default function LaMarvaPage() {
             Each edition preserves the full La Marva design. Materials and craftsmanship vary to suit different preferences while maintaining the integrity of the original form.
           </p>
 
+          {/* Gold price status */}
+          {goldPrice && (
+            <div className="mt-4 flex items-center gap-3 text-xs text-white/40">
+              <span>Gold spot: ${goldPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}/oz</span>
+              <span className="text-white/25">|</span>
+              {adjusted ? (
+                <span className="text-[#C6A24A]">
+                  Prices adjusted ({changePct > 0 ? '+' : ''}{changePct.toFixed(1)}% gold move)
+                </span>
+              ) : (
+                <span>Prices held (gold within 5% of baseline)</span>
+              )}
+            </div>
+          )}
+
           <div className="mt-10 grid grid-cols-1 gap-4">
-            {TIERS.map((tier) => (
+            {tiers.map((tier) => (
               <div
                 key={tier.name}
                 className={[
