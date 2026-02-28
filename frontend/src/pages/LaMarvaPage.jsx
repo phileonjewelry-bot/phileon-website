@@ -150,6 +150,11 @@ export default function LaMarvaPage() {
                   <div className="min-w-0 flex-1">
                     <p className="text-xs tracking-[0.35em] uppercase text-white/60">
                       {tier.name}
+                      {tier.tag && (
+                        <span className="ml-2 text-[#C6A24A] normal-case tracking-normal">
+                          — {tier.tag}
+                        </span>
+                      )}
                     </p>
 
                     <h3 className="mt-2 text-lg md:text-2xl font-light">
@@ -157,7 +162,7 @@ export default function LaMarvaPage() {
                     </h3>
 
                     <p className="mt-2 text-white/60 text-sm">
-                      {tier.note}
+                      {tier.consultation ? "Available by consultation" : tier.note}
                     </p>
                   </div>
 
