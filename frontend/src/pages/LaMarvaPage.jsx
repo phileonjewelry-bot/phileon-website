@@ -126,7 +126,7 @@ export default function LaMarvaPage() {
       <section className="py-16 px-6 border-t border-white/10">
         <div className="mx-auto max-w-5xl">
           <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
-            Available Editions
+            Select Your Edition
           </p>
           <h2 className="mt-3 text-2xl md:text-4xl font-light tracking-wide">
             Choose your level
