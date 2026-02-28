@@ -32,14 +32,16 @@ const LiveMetalTicker = () => {
 
   const fetchMetalPrices = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/metal-prices`);
+      const response = await fetch(`${API_URL}/api/metals`, { cache: "no-store" });
       if (response.ok) {
         const data = await response.json();
-        setMetals(data.prices.map(p => ({
-          label: p.symbol,
-          price: p.price,
-          changePct: p.change
-        })));
+        if (data.status === "live" && data.gold_usd_oz > 0) {
+          setMetals(prev => [
+            { label: 'GOLD', price: data.gold_usd_oz, changePct: prev[0]?.changePct || 0 },
+            { label: 'SILVER', price: data.silver_usd_oz, changePct: prev[1]?.changePct || 0 },
+            ...prev.slice(2),
+          ]);
+        }
       }
     } catch (error) {
       console.error('Error fetching metal prices:', error);
@@ -48,7 +50,7 @@ const LiveMetalTicker = () => {
 
   useEffect(() => {
     fetchMetalPrices();
-    const interval = setInterval(fetchMetalPrices, 30000);
+    const interval = setInterval(fetchMetalPrices, 60000);
     return () => clearInterval(interval);
   }, []);
 
