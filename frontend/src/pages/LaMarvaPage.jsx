@@ -2,26 +2,13 @@ import React from "react";
 
 const TIERS = [
   {
-    name: "Signature Edition",
-    material: "Silver + precision-set stones",
-    price: "$3,800",
-    highlight: false,
-    isHeirloom: false,
-    specs: [
-      "Precision-cut simulated center stones",
-      "Synthetic pink sapphire pavé",
-    ],
-    finish: "High-polish luxury finish",
-    caratWeight: "Approx. 2.8 – 3.2 carats (simulated)",
-    diamondQuality: null,
-    note: "Entry luxury with the full La Marva design aesthetic.",
-  },
-  {
     name: "Foundation Edition",
     material: "10K Gold + lab-grown stones",
     price: "$10,500",
+    tag: "Most Popular",
     highlight: true,
     isHeirloom: false,
+    consultation: false,
     specs: [
       "Lab-grown princess-cut center diamonds",
       "Lab-grown emerald-cut side diamonds",
@@ -33,11 +20,30 @@ const TIERS = [
     note: "Modern fine jewelry with ethical sourcing and premium brilliance.",
   },
   {
+    name: "Signature Edition",
+    material: "Silver + precision-set stones",
+    price: "$3,800",
+    tag: "",
+    highlight: false,
+    isHeirloom: false,
+    consultation: false,
+    specs: [
+      "Precision-cut simulated center stones",
+      "Synthetic pink sapphire pavé",
+    ],
+    finish: "High-polish luxury finish",
+    caratWeight: "Approx. 2.8 – 3.2 carats (simulated)",
+    diamondQuality: null,
+    note: "Entry luxury with the full La Marva design aesthetic.",
+  },
+  {
     name: "Heirloom Edition (14K)",
     material: "14K Gold + natural diamonds",
     price: "Starting at $49,500",
+    tag: "Atelier",
     highlight: false,
     isHeirloom: true,
+    consultation: true,
     specs: [
       "Natural princess-cut center diamonds",
       "Natural emerald-cut side diamonds",
@@ -52,8 +58,10 @@ const TIERS = [
     name: "Heirloom Edition (18K)",
     material: "18K Gold + natural diamonds",
     price: "Starting at $58,000",
+    tag: "Atelier",
     highlight: false,
     isHeirloom: true,
+    consultation: true,
     specs: [
       "Natural princess-cut center diamonds",
       "Natural emerald-cut side diamonds",
