@@ -607,6 +607,7 @@ from routes.orders import router as orders_router
 # from routes.customer_photos import router as customer_photos_router  # Temporarily disabled - missing models
 from routes.restock_routes import router as restock_router
 from routes.stripe_routes import router as stripe_router
+from routes.metals import router as metals_router
 
 # Include all routers
 app.include_router(products_router, prefix="/api")
