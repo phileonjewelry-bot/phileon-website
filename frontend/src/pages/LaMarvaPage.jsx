@@ -2,10 +2,9 @@ import React from "react";
 
 const TIERS = [
   {
-    name: "Foundation — Essential Edition",
-    material: "10K Gold",
-    price: "$3,400",
-    note: "Entry luxury with the full La Marva design aesthetic.",
+    name: "Signature Edition",
+    material: "Silver + precision-set stones",
+    price: "$3,800",
     highlight: false,
     isHeirloom: false,
     specs: [
@@ -15,12 +14,12 @@ const TIERS = [
     finish: "High-polish luxury finish",
     caratWeight: "Approx. 2.8 – 3.2 carats (simulated)",
     diamondQuality: null,
+    note: "Entry luxury with the full La Marva design aesthetic.",
   },
   {
-    name: "Signature — Lab Diamond Edition",
-    material: "14K Gold",
-    price: "$5,200",
-    note: "Modern fine jewelry with ethical sourcing and premium brilliance.",
+    name: "Foundation Edition",
+    material: "10K Gold + lab-grown stones",
+    price: "$10,500",
     highlight: true,
     isHeirloom: false,
     specs: [
@@ -31,12 +30,12 @@ const TIERS = [
     finish: null,
     caratWeight: "Approx. 3.8 – 4.5 carats",
     diamondQuality: "VS clarity, F–G color",
+    note: "Modern fine jewelry with ethical sourcing and premium brilliance.",
   },
   {
-    name: "Heirloom — Natural Diamond Edition (14K)",
-    material: "14K Gold",
-    price: "$56,000",
-    note: "Collector-grade luxury with exceptional color and brilliance.",
+    name: "Heirloom Edition (14K)",
+    material: "14K Gold + natural diamonds",
+    price: "Starting at $49,500",
     highlight: false,
     isHeirloom: true,
     specs: [
@@ -47,12 +46,12 @@ const TIERS = [
     finish: null,
     caratWeight: "Approx. 4.5 – 5.5 carats",
     diamondQuality: "VS clarity, E–F color",
+    note: "Collector-grade luxury with exceptional color and brilliance.",
   },
   {
-    name: "Heirloom — Natural Diamond Edition (18K)",
-    material: "18K Gold",
-    price: "$58,000",
-    note: "Collector-grade luxury with exceptional color and brilliance.",
+    name: "Heirloom Edition (18K)",
+    material: "18K Gold + natural diamonds",
+    price: "Starting at $58,000",
     highlight: false,
     isHeirloom: true,
     specs: [
@@ -63,6 +62,7 @@ const TIERS = [
     finish: null,
     caratWeight: "Approx. 4.5 – 5.5 carats",
     diamondQuality: "VS clarity, E–F color",
+    note: "Collector-grade luxury with exceptional color and brilliance.",
   },
 ];
 
