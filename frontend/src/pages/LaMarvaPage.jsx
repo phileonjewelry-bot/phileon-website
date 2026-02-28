@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const TIERS = [
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
+// ==========================================
+// PRICING ENGINE
+// Baseline gold price when retail was set.
+// If gold moves > 5%, prices scale proportionally.
+// Otherwise, hold.
+// ==========================================
+const BASELINE_GOLD_USD = 2650; // USD/oz when prices were locked
+
+const BASE_TIERS = [
   {
     name: "Foundation Edition",
     material: "10K Gold + lab-grown stones",
-    price: "$10,500",
+    basePrice: 10500,
     tag: "Most Popular",
     highlight: true,
     isHeirloom: false,
@@ -22,7 +32,7 @@ const TIERS = [
   {
     name: "Signature Edition",
     material: "Silver + precision-set stones",
-    price: "$3,800",
+    basePrice: 3800,
     tag: "",
     highlight: false,
     isHeirloom: false,
@@ -39,7 +49,7 @@ const TIERS = [
   {
     name: "Heirloom Edition (14K)",
     material: "14K Gold + natural diamonds",
-    price: "Starting at $49,500",
+    basePrice: 49500,
     tag: "Atelier",
     highlight: false,
     isHeirloom: true,
@@ -57,7 +67,7 @@ const TIERS = [
   {
     name: "Heirloom Edition (18K)",
     material: "18K Gold + natural diamonds",
-    price: "Starting at $58,000",
+    basePrice: 58000,
     tag: "Atelier",
     highlight: false,
     isHeirloom: true,
@@ -73,6 +83,52 @@ const TIERS = [
     note: "Collector-grade luxury with exceptional color and brilliance.",
   },
 ];
+
+function useGoldPricing() {
+  const [goldPrice, setGoldPrice] = useState(null);
+  const [adjusted, setAdjusted] = useState(false);
+  const [changePct, setChangePct] = useState(0);
+
+  useEffect(() => {
+    async function fetchGold() {
+      try {
+        const res = await fetch(`${API_URL}/api/metals`, { cache: "no-store" });
+        const data = await res.json();
+        if (data.status === "live" && data.gold_usd_oz > 0) {
+          setGoldPrice(data.gold_usd_oz);
+          const pct = ((data.gold_usd_oz - BASELINE_GOLD_USD) / BASELINE_GOLD_USD) * 100;
+          setChangePct(pct);
+          setAdjusted(Math.abs(pct) > 5);
+        }
+      } catch (e) {
+        // hold pricing on error
+      }
+    }
+    fetchGold();
+    const t = setInterval(fetchGold, 60000);
+    return () => clearInterval(t);
+  }, []);
+
+  const tiers = BASE_TIERS.map((tier) => {
+    if (adjusted && !tier.consultation) {
+      const multiplier = goldPrice / BASELINE_GOLD_USD;
+      const newPrice = Math.round(tier.basePrice * multiplier / 100) * 100;
+      return {
+        ...tier,
+        price: `$${newPrice.toLocaleString()}`,
+        priceAdjusted: true,
+      };
+    }
+    const prefix = tier.consultation ? "Starting at " : "";
+    return {
+      ...tier,
+      price: `${prefix}$${tier.basePrice.toLocaleString()}`,
+      priceAdjusted: false,
+    };
+  });
+
+  return { tiers, goldPrice, adjusted, changePct };
+}
 
 export default function LaMarvaPage() {
   return (
