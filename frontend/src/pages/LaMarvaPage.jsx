@@ -131,6 +131,8 @@ function useGoldPricing() {
 }
 
 export default function LaMarvaPage() {
+  const { tiers, goldPrice, adjusted, changePct } = useGoldPricing();
+
   return (
     <div className="bg-black text-white min-h-screen" data-testid="la-marva-page">
 
