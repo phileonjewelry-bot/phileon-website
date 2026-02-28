@@ -248,6 +248,9 @@ export default function LaMarvaPage() {
                       <p className="text-xl md:text-3xl font-light">
                         {tier.price}
                         <span className="ml-1 text-xs md:text-sm text-white/50">CAD</span>
+                        {tier.priceAdjusted && (
+                          <span className="ml-2 text-xs text-[#C6A24A]/70">*</span>
+                        )}
                       </p>
                     ) : (
                       <p className="mt-1 text-sm md:text-xl font-light text-white/80">
