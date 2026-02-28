@@ -14,7 +14,7 @@ const BASE_TIERS = [
   {
     name: "Foundation Edition",
     material: "10K Gold + lab-grown stones",
-    basePrice: 10500,
+    basePrice: 8000,
     tag: "Most Popular",
     highlight: true,
     isHeirloom: false,
