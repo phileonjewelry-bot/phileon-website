@@ -32,7 +32,7 @@ const BASE_TIERS = [
   {
     name: "Signature Edition",
     material: "Silver + precision-set stones",
-    basePrice: 3800,
+    basePrice: 3400,
     tag: "",
     highlight: false,
     isHeirloom: false,
