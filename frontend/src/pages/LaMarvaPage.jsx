@@ -67,7 +67,7 @@ const BASE_TIERS = [
   {
     name: "Heirloom Edition (18K)",
     material: "18K Gold + natural diamonds",
-    basePrice: 29000,
+    basePrice: 22000,
     tag: "Atelier",
     highlight: false,
     isHeirloom: true,
