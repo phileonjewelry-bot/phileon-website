@@ -163,16 +163,52 @@ export default function LaMarvaPage() {
           </h2>
 
           <p className="mt-6 text-white/60 leading-relaxed">
-            La Marva is named in honor of a woman whose strength, grace, and quiet presence left a lasting imprint.
+            Named in honor of <span className="text-white font-medium">Marva Wilson</span> — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.
           </p>
 
           <p className="mt-4 text-white/60 leading-relaxed">
-            Created as a tribute to legacy and devotion, the design reflects both structure and softness — a balance of power, elegance, and enduring beauty.
+            La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance. Every detail speaks to what endures: <span className="text-white font-medium">love, memory, and the stories that shape us.</span>
           </p>
 
-          <p className="mt-4 text-white/60 leading-relaxed">
-            Each piece is crafted to order and intended to be worn as a symbol of what matters most: love, memory, and the stories that shape us.
-          </p>
+          <div className="mt-10 border-t border-white/10 pt-10">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+              <div>
+                <p className="text-2xl md:text-3xl font-light text-white">2ct</p>
+                <p className="mt-2 text-white/50 text-xs tracking-wide">Princess Cut Diamonds</p>
+              </div>
+              <div>
+                <p className="text-2xl md:text-3xl font-light text-white">0.50ct</p>
+                <p className="mt-2 text-white/50 text-xs tracking-wide">Tapered Baguettes</p>
+              </div>
+              <div>
+                <p className="text-2xl md:text-3xl font-light text-white">3.50ct</p>
+                <p className="mt-2 text-white/50 text-xs tracking-wide">Pink Sapphires</p>
+              </div>
+              <div>
+                <p className="text-2xl md:text-3xl font-light text-white">0.64ct</p>
+                <p className="mt-2 text-white/50 text-xs tracking-wide">Pavé White Diamonds</p>
+              </div>
+            </div>
+            <p className="mt-6 text-center text-white/40 text-sm italic">
+              Set in 18K Rose Gold
+            </p>
+          </div>
+
+          <div className="mt-10 border-t border-white/10 pt-10">
+            <p className="text-white/60 leading-relaxed">
+              Whether she's walking down the aisle or commanding every room she enters — <span className="text-white font-medium">La Marva ensures she will never go unnoticed.</span>
+            </p>
+
+            <p className="mt-4 text-white/50 text-sm italic">
+              Each piece is crafted to order.
+            </p>
+          </div>
+
+          <div className="mt-10 border-t border-white/10 pt-10">
+            <p className="text-white/40 text-sm italic">
+              Phileon. Worn by those who carry someone with them.
+            </p>
+          </div>
 
           <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
             #GetYourPhileon
