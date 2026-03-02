@@ -180,6 +180,56 @@ export default function LaMarvaPage() {
         </div>
       </section>
 
+      {/* Media Gallery */}
+      <section className="py-16 px-6 border-t border-white/10">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
+            Up Close
+          </p>
+          <h2 className="mt-3 text-2xl md:text-4xl font-light tracking-wide">
+            See the craft
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Video 1 */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <video
+                className="w-full h-[360px] md:h-[480px] object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              >
+                <source src="/videos/lamarva-detail.mp4" type="video/mp4" />
+              </video>
+            </div>
+
+            {/* Video 2 */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <video
+                className="w-full h-[360px] md:h-[480px] object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              >
+                <source src="/videos/lamarva-showcase.mp4" type="video/mp4" />
+              </video>
+            </div>
+
+            {/* Product image */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
+                alt="La Marva detail"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Tiers */}
       <section className="py-16 px-6 border-t border-white/10">
         <div className="mx-auto max-w-5xl">
