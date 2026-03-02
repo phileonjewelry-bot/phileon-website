@@ -235,6 +235,24 @@ export default function LaMarvaPage() {
               />
             </div>
 
+            {/* Side angle */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/s5mgzzh2_Lamarva7.png"
+                alt="La Marva side angle"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Underside craftsmanship */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/x1l682uf_Lamarva5.jpeg"
+                alt="La Marva underside detail"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
             {/* Product image */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
               <img
