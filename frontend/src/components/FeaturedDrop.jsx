@@ -31,8 +31,8 @@ export default function FeaturedDrop() {
           {/* Image */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
             <img
-              src="https://images.unsplash.com/photo-1601121141559-8a4f3f5f1a7e?auto=format&fit=crop&w=1400&q=80"
-              alt="Featured Phileon Drop"
+              src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
+              alt="Annie Rose — Phileon Featured Drop"
               className="h-[360px] md:h-[520px] w-full object-cover opacity-95"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -54,7 +54,7 @@ export default function FeaturedDrop() {
             </p>
 
             <h3 className="mt-3 text-3xl md:text-5xl font-light tracking-wide leading-tight">
-              PHILEON SKYY PINKY
+              ANNIE ROSE
             </h3>
 
             <p className="mt-5 text-white/70 leading-relaxed">
