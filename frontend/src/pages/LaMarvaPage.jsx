@@ -217,6 +217,24 @@ export default function LaMarvaPage() {
               </video>
             </div>
 
+            {/* Close-up detail */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/c78rhhdk_Lamarva6.png"
+                alt="La Marva close-up detail"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* On-hand shot */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/2mmmt7rp_LaMarva8.png"
+                alt="La Marva on hand"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
             {/* Product image */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
               <img
