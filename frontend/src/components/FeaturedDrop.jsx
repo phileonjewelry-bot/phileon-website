@@ -38,8 +38,8 @@ export default function FeaturedDrop() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
             <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between">
-              <p className="text-xs tracking-[0.4em] uppercase text-white/80">
-                #GetYourPhileon
+              <p className="text-lg tracking-[0.3em] uppercase text-white font-light">
+                Annie Rose
               </p>
               <span className="text-xs px-3 py-1 rounded-full bg-black/40 border border-white/15">
                 Limited
