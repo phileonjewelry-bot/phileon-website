@@ -189,9 +189,6 @@ export default function LaMarvaPage() {
                 <p className="mt-2 text-white/50 text-xs tracking-wide">Pavé White Diamonds</p>
               </div>
             </div>
-            <p className="mt-6 text-center text-white/40 text-sm italic">
-              Set in 18K Rose Gold
-            </p>
           </div>
 
           <div className="mt-10 border-t border-white/10 pt-10">
