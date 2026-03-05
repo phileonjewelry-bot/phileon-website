@@ -90,10 +90,55 @@ export default function AnnieRosePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
-          </div>
         </div>
       </section>
 
+
+            {/* Proposal moment */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/fw381q3d_1000139289.png"
+                alt="Annie Rose proposal moment"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* On-hand lifestyle */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/1sukhrao_1000139284.png"
+                alt="Annie Rose on hand"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Close-up detail */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/kvn5m3ac_1000139303.jpg"
+                alt="Annie Rose close-up"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* In box */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/urhdvrly_1000139305.jpg"
+                alt="Annie Rose in presentation box"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Evening event */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/g2ufvk37_1000139307.jpg"
+                alt="Annie Rose at evening event"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+          </div>
       {/* Pricing */}
       <section className="py-16 px-6 border-t border-white/10">
         <div className="mx-auto max-w-5xl">
