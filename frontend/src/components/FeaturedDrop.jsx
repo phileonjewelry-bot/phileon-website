@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function FeaturedDrop() {
   return (
@@ -29,11 +30,11 @@ export default function FeaturedDrop() {
         {/* Card */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Image */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <Link to="/products/annie-rose" className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 block">
             <img
               src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
               alt="Annie Rose — Phileon Featured Drop"
-              className="h-[360px] md:h-[520px] w-full object-cover opacity-95"
+              className="h-[360px] md:h-[520px] w-full object-cover opacity-95 transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
@@ -45,7 +46,7 @@ export default function FeaturedDrop() {
                 Limited
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* Copy */}
           <div>
