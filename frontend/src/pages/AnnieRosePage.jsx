@@ -94,6 +94,15 @@ export default function AnnieRosePage() {
       </section>
 
 
+            {/* Studio product shot */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/0yvpka9u_1000139046.png"
+                alt="Annie Rose studio detail"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
             {/* Proposal moment */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
               <img
