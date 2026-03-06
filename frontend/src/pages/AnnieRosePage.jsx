@@ -90,9 +90,6 @@ export default function AnnieRosePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
-        </div>
-      </section>
-
 
             {/* Studio product shot */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
@@ -148,6 +145,8 @@ export default function AnnieRosePage() {
               />
             </div>
           </div>
+        </div>
+      </section>
       {/* Pricing */}
       <section className="py-16 px-6 border-t border-white/10">
         <div className="mx-auto max-w-5xl">
