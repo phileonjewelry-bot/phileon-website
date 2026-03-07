@@ -6,6 +6,7 @@ import DropReveal from '@/components/DropReveal';
 import Hero from '@/components/Hero';
 import FeaturedDrop from '@/components/FeaturedDrop';
 import LaMarvaDrop from '@/components/LaMarvaDrop';
+import MonikaCoutureDrop from '@/components/MonikaCoutureDrop';
 
 const HomePage = () => {
   const [collections, setCollections] = useState([]);
@@ -82,6 +83,9 @@ const HomePage = () => {
 
       {/* Featured Drop */}
       <FeaturedDrop />
+
+      {/* Monika Couture Earrings */}
+      <MonikaCoutureDrop />
 
       {/* Introduction - Calm, intentional spacing */}
       <section className="py-24 lg:py-32 px-8 bg-phileon-black">

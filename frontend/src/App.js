@@ -22,6 +22,7 @@ import MobileDropPage from "@/pages/MobileDropPage";
 import SecretDropPage from "./pages/SecretDropPage";
 import LaMarvaPage from "@/pages/LaMarvaPage";
 import AnnieRosePage from "@/pages/AnnieRosePage";
+import MonikaCouturePage from "@/pages/MonikaCouturePage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -72,6 +73,7 @@ function App() {
             <Route path="/piece/:slug" element={<ProductDetailPage />} />
             <Route path="/products/la-marva" element={<LaMarvaPage />} />
             <Route path="/products/annie-rose" element={<AnnieRosePage />} />
+            <Route path="/products/monika-couture" element={<MonikaCouturePage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />
