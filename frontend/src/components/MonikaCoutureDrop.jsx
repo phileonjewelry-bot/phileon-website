@@ -13,14 +13,14 @@ export default function MonikaCoutureDrop() {
           <img
             src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"
             alt="The Monika Couture Earrings"
-            className="w-full h-[480px] md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-[480px] md:h-[600px] object-contain bg-black transition-transform duration-700 group-hover:scale-105"
           />
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
           <div className="absolute bottom-8 left-8 right-8">
             <h2 className="text-3xl md:text-5xl font-light tracking-wide">
-              THE MONIKA COUTURE
+              MONIKA COUTURE EARRINGS
             </h2>
           </div>
         </Link>
