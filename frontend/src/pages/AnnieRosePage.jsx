@@ -4,8 +4,12 @@ import ProductLayout, {
   ProductInfoSection,
   ProductActions,
 } from "../components/ProductLayout";
+import { useCart } from "../contexts/CartContext";
+import { Button } from "../components/ui/button";
 
 export default function AnnieRosePage() {
+  const { addToCart } = useCart();
+  
   // State for selected metal
   const [selectedMetal, setSelectedMetal] = useState({
     name: "Sterling Silver",
@@ -20,6 +24,25 @@ export default function AnnieRosePage() {
     { name: "14K Gold", label: "14K", price: 3400 },
     { name: "18K Gold", label: "18K", price: 4200 },
   ];
+
+  // Handle add to cart
+  const handleAddToCart = () => {
+    const product = {
+      id: "annie-rose",
+      name: "Annie Rose",
+      slug: "annie-rose",
+      price: selectedMetal.price,
+      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg",
+      images: ["https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"],
+      materials: [selectedMetal.name, "Stone options available"]
+    };
+
+    const variant = {
+      metal: selectedMetal.name
+    };
+
+    addToCart(product, 1, variant);
+  };
 
   // Gallery media items - memoized to prevent recreation
   const galleryItems = React.useMemo(() => [
@@ -146,12 +169,15 @@ export default function AnnieRosePage() {
               </div>
             </ProductInfoSection>
 
-            <ProductActions
-              primaryAction={{ 
-                href: `mailto:contact@phileonjewelry.com?subject=Annie%20Rose%20Inquiry&body=Product:%20Annie%20Rose%0AMetal:%20${encodeURIComponent(selectedMetal.name)}%0APrice:%20$${selectedMetal.price.toLocaleString()}`, 
-                label: "INQUIRE TO PURCHASE" 
-              }}
-            />
+            <div className="mt-6">
+              <Button
+                onClick={handleAddToCart}
+                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                data-testid="add-to-cart-button"
+              >
+                ADD TO CART
+              </Button>
+            </div>
           </>
         }
         stickyOffset={36}

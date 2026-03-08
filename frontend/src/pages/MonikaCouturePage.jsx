@@ -4,8 +4,12 @@ import ProductLayout, {
   ProductInfoSection,
   ProductActions,
 } from "../components/ProductLayout";
+import { useCart } from "../contexts/CartContext";
+import { Button } from "../components/ui/button";
 
 export default function MonikaCouturePage() {
+  const { addToCart } = useCart();
+  
   // State for selected metal
   const [selectedMetal, setSelectedMetal] = useState({
     name: "Sterling Silver",
@@ -20,6 +24,26 @@ export default function MonikaCouturePage() {
     { name: "10K Yellow Gold", label: "Yellow Gold", price: 3700 },
     { name: "10K Rose Gold", label: "Rose Gold", price: 3700 },
   ];
+
+  // Handle add to cart
+  const handleAddToCart = () => {
+    const product = {
+      id: "monika-couture",
+      name: "Monika Couture Earrings",
+      slug: "monika-couture",
+      price: selectedMetal.price,
+      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
+      images: ["https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"],
+      materials: [selectedMetal.name]
+    };
+
+    const variant = {
+      metal: selectedMetal.name
+    };
+
+    addToCart(product, 1, variant);
+  };
+
   // Gallery media items - memoized to prevent recreation
   const galleryItems = React.useMemo(() => [
     {
@@ -146,12 +170,15 @@ export default function MonikaCouturePage() {
               </div>
             </ProductInfoSection>
 
-            <ProductActions
-              primaryAction={{ 
-                href: `mailto:contact@phileonjewelry.com?subject=Monika%20Couture%20Earrings%20Inquiry&body=Product:%20Monika%20Couture%20Earrings%0AMetal:%20${encodeURIComponent(selectedMetal.name)}%0APrice:%20$${selectedMetal.price.toLocaleString()}`, 
-                label: "INQUIRE TO PURCHASE" 
-              }}
-            />
+            <div className="mt-6">
+              <Button
+                onClick={handleAddToCart}
+                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                data-testid="add-to-cart-button"
+              >
+                ADD TO CART
+              </Button>
+            </div>
           </>
         }
         stickyOffset={36}
