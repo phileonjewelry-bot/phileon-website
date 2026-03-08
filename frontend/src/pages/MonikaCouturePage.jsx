@@ -55,11 +55,70 @@ export default function MonikaCouturePage() {
           </h2>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Video */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
+              <video
+                className="w-full h-[360px] md:h-[480px] object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              >
+                <source src="/videos/monika-couture.mp4" type="video/mp4" />
+              </video>
+            </div>
+
+            {/* On-ear gold */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/n57dc44j_1000139957.jpg"
+                alt="Monika Couture worn in gold"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* All three metals */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/16wydipm_1000139955.jpg"
+                alt="Monika Couture — Silver, Gold, Rose Gold"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Silver pair */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/5zjvbk47_1000139953.jpg"
+                alt="Monika Couture Silver"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Rose Gold pair */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/jcswkfyo_1000139952.jpg"
+                alt="Monika Couture Rose Gold"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Yellow Gold pair */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg"
+                alt="Monika Couture Yellow Gold"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Hero product shot */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
               <img
                 src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"
                 alt="Monika Couture Earrings — Silver, Gold, Rose Gold"
-                className="w-full h-[360px] md:h-[520px] object-cover"
+                className="w-full h-[360px] md:h-[520px] object-contain bg-black"
               />
             </div>
           </div>
