@@ -6,30 +6,27 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 import { useCart } from "../contexts/CartContext";
 import { Button } from "../components/ui/button";
+import { products } from "../data/products";
 
 export default function AnnieRosePage() {
   const { addToCart } = useCart();
   
-  // State for selected metal
-  const [selectedMetal, setSelectedMetal] = useState({
-    name: "Sterling Silver",
-    label: "Silver",
-    price: 1250
-  });
-
-  // Metal options with pricing
+  // Metal options from products.js
   const metalOptions = [
-    { name: "Sterling Silver", label: "Silver", price: 1250 },
-    { name: "10K Gold", label: "10K", price: 2800 },
-    { name: "14K Gold", label: "14K", price: 3400 },
-    { name: "18K Gold", label: "18K", price: 4200 },
+    { name: "Sterling Silver", label: "Silver", price: products.annieRose.pricing.silver },
+    { name: "10K Gold", label: "10K", price: products.annieRose.pricing.gold10k },
+    { name: "14K Gold", label: "14K", price: products.annieRose.pricing.gold14k },
+    { name: "18K Gold", label: "18K", price: products.annieRose.pricing.gold18k },
   ];
+  
+  // State for selected metal (default to first option)
+  const [selectedMetal, setSelectedMetal] = useState(metalOptions[0]);
 
   // Handle add to cart
   const handleAddToCart = () => {
     const product = {
       id: "annie-rose",
-      name: "Annie Rose",
+      name: products.annieRose.name,
       slug: "annie-rose",
       price: selectedMetal.price,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg",
@@ -123,14 +120,14 @@ export default function AnnieRosePage() {
           <>
             <ProductInfoSection
               titleTag="Featured Drop"
-              title="Annie Rose"
+              title={products.annieRose.name}
             >
               <p className="text-white/60 leading-relaxed">
-                Created in honor of my sister Andrea.
+                {products.annieRose.tribute}
               </p>
 
               <p className="text-[#C6A24A] text-lg font-light leading-relaxed mt-4">
-                Soft in tone. Strong in spirit.
+                {products.annieRose.tagline}
               </p>
 
               <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
@@ -146,7 +143,7 @@ export default function AnnieRosePage() {
               title="Choose your metal"
             >
               <p className="text-white/60 text-sm leading-relaxed mt-2">
-                Each metal option preserves the Annie Rose design. Stone options (Cubic · Lab · Natural) available for all metals.
+                Each metal option preserves the {products.annieRose.name} design. Stone options ({products.annieRose.stones.join(' · ')}) available for all metals.
               </p>
 
               <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-white/70">

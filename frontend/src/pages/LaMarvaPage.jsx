@@ -6,6 +6,7 @@ import ProductLayout, {
   ProductPrice,
   ProductActions,
 } from "../components/ProductLayout";
+import { products } from "../data/products";
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,81 +16,13 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 // If gold moves > 5%, prices scale proportionally.
 // Otherwise, hold.
 // ==========================================
-const BASELINE_GOLD_USD = 2650; // USD/oz when prices were locked
+const BASELINE_GOLD_USD = products.laMarva.baselineGoldUSD;
 
-const BASE_TIERS = [
-  {
-    name: "Foundation Edition",
-    material: "10K Gold + lab-grown stones",
-    basePrice: 8000,
-    tag: "Most Popular",
-    highlight: true,
-    isHeirloom: false,
-    consultation: false,
-    specs: [
-      "Lab-grown princess-cut center diamonds",
-      "Lab-grown emerald-cut side diamonds",
-      "Genuine pink sapphire pavé",
-    ],
-    finish: null,
-    caratWeight: "Approx. 3.8 – 4.5 carats",
-    diamondQuality: "VS clarity, F–G color",
-    note: "Modern fine jewelry with ethical sourcing and premium brilliance.",
-  },
-  {
-    name: "Signature Edition",
-    material: "Silver + precision-set stones",
-    basePrice: 3400,
-    tag: "",
-    highlight: false,
-    isHeirloom: false,
-    consultation: false,
-    specs: [
-      "Precision-cut simulated center stones",
-      "Synthetic pink sapphire pavé",
-    ],
-    finish: "High-polish luxury finish",
-    caratWeight: "Approx. 2.8 – 3.2 carats (simulated)",
-    diamondQuality: null,
-    note: "Entry luxury with the full La Marva design aesthetic.",
-  },
-  {
-    name: "Heirloom Edition (14K)",
-    material: "14K Gold + natural diamonds",
-    basePrice: 18000,
-    tag: "Atelier",
-    highlight: false,
-    isHeirloom: true,
-    consultation: true,
-    specs: [
-      "Natural princess-cut center diamonds",
-      "Natural emerald-cut side diamonds",
-      "Pink sapphire and natural diamond pavé",
-    ],
-    finish: null,
-    caratWeight: "Approx. 4.5 – 5.5 carats",
-    diamondQuality: "VS clarity, E–F color",
-    note: "Collector-grade luxury with exceptional color and brilliance.",
-  },
-  {
-    name: "Heirloom Edition (18K)",
-    material: "18K Gold + natural diamonds",
-    basePrice: 22000,
-    tag: "Atelier",
-    highlight: false,
-    isHeirloom: true,
-    consultation: true,
-    specs: [
-      "Natural princess-cut center diamonds",
-      "Natural emerald-cut side diamonds",
-      "Pink sapphire and natural diamond pavé",
-    ],
-    finish: null,
-    caratWeight: "Approx. 4.5 – 5.5 carats",
-    diamondQuality: "VS clarity, E–F color",
-    note: "Collector-grade luxury with exceptional color and brilliance.",
-  },
-];
+// Base tiers from products.js with pricing
+const BASE_TIERS = products.laMarva.tiers.map(tier => ({
+  ...tier,
+  basePrice: products.laMarva.pricing[tier.pricingKey]
+}));
 
 function useGoldPricing() {
   const [goldPrice, setGoldPrice] = useState(null);
@@ -209,14 +142,14 @@ export default function LaMarvaPage() {
           <>
             <ProductInfoSection
               titleTag="Core Collection"
-              title="La Marva"
+              title={products.laMarva.name}
             >
               <p className="text-white/60 leading-relaxed">
-                Named in honor of <span className="text-white font-medium">Marva Wilson</span> — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.
+                {products.laMarva.tribute}
               </p>
 
               <p className="text-white/60 leading-relaxed">
-                La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance. Every detail speaks to what endures: <span className="text-white font-medium">love, memory, and the stories that shape us.</span>
+                {products.laMarva.description} Every detail speaks to what endures: <span className="text-white font-medium">love, memory, and the stories that shape us.</span>
               </p>
             </ProductInfoSection>
 

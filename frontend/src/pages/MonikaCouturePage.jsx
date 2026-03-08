@@ -6,30 +6,27 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 import { useCart } from "../contexts/CartContext";
 import { Button } from "../components/ui/button";
+import { products } from "../data/products";
 
 export default function MonikaCouturePage() {
   const { addToCart } = useCart();
   
-  // State for selected metal
-  const [selectedMetal, setSelectedMetal] = useState({
-    name: "Sterling Silver",
-    label: "Silver",
-    price: 1400
-  });
-
-  // Metal options
+  // Metal options from products.js
   const metalOptions = [
-    { name: "Sterling Silver", label: "Silver", price: 1400 },
-    { name: "10K White Gold", label: "White Gold", price: 3700 },
-    { name: "10K Yellow Gold", label: "Yellow Gold", price: 3700 },
-    { name: "10K Rose Gold", label: "Rose Gold", price: 3700 },
+    { name: "Sterling Silver", label: "Silver", price: products.monikaCouture.pricing.silver },
+    { name: "10K White Gold", label: "White Gold", price: products.monikaCouture.pricing.white10k },
+    { name: "10K Yellow Gold", label: "Yellow Gold", price: products.monikaCouture.pricing.yellow10k },
+    { name: "10K Rose Gold", label: "Rose Gold", price: products.monikaCouture.pricing.rose10k },
   ];
+  
+  // State for selected metal (default to first option)
+  const [selectedMetal, setSelectedMetal] = useState(metalOptions[0]);
 
   // Handle add to cart
   const handleAddToCart = () => {
     const product = {
       id: "monika-couture",
-      name: "Monika Couture Earrings",
+      name: products.monikaCouture.name,
       slug: "monika-couture",
       price: selectedMetal.price,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
@@ -127,7 +124,7 @@ export default function MonikaCouturePage() {
           <>
             <ProductInfoSection
               titleTag="Earring Collection"
-              title="Monika Couture Earrings"
+              title={products.monikaCouture.name}
             >
               <p className="text-white/60 leading-relaxed">
                 A sculptural couture earring inspired by the architecture of high fashion.
@@ -135,7 +132,7 @@ export default function MonikaCouturePage() {
               </p>
 
               <p className="text-white/50 text-sm">
-                Weight: approximately 10 grams per pair.
+                Weight: approximately {products.monikaCouture.weight}.
               </p>
 
               <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
