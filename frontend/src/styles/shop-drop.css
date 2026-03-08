@@ -1,0 +1,195 @@
+/* DROP MODE SOLD OUT VISIBILITY STYLES */
+
+/* Enhanced sold out card styling */
+.shop-drop__card--sold-out {
+  position: relative;
+}
+
+.shop-drop__card--sold-out::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* Sold out image overlay */
+.shop-drop__card--sold-out .shop-drop__card-image::after {
+  content: 'SOLD OUT';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  background: rgba(239, 68, 68, 0.95);
+  color: white;
+  padding: 8px 20px;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 2px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* Badge styles for DROP MODE */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+
+.badge-soldout {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  animation: pulse-red 2s infinite;
+  font-size: 12px;
+  padding: 6px 12px;
+  font-weight: 700;
+}
+
+.badge-warning {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: white;
+  animation: pulse-orange 2s infinite;
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+.badge-gold {
+  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+  color: #000;
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+/* Pulse animations for urgency */
+@keyframes pulse-red {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulse-orange {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+/* Filter controls styling */
+.shop-drop__filter-controls {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.shop-drop__filter-controls:hover {
+  background: rgba(17, 24, 39, 0.9);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+/* Sold out hover effects */
+.shop-drop__card--sold-out:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+}
+
+.shop-drop__card--sold-out .shop-drop__card-overlay {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
+}
+
+.shop-drop__card--sold-out .shop-drop__card-cta {
+  color: white;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced visibility for sold out items */
+.shop-drop__card--sold-out .shop-drop__card-name {
+  color: #f3f4f6;
+  opacity: 0.9;
+}
+
+.shop-drop__card--sold-out .shop-drop__card-material {
+  color: #d1d5db;
+  opacity: 0.8;
+}
+
+/* Responsive badge adjustments */
+@media (max-width: 768px) {
+  .badge-soldout {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .badge-warning,
+  .badge-gold {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .shop-drop__card--sold-out .shop-drop__card-image::after {
+    font-size: 14px;
+    padding: 6px 12px;
+    letter-spacing: 1px;
+  }
+}
+
+/* Accessibility improvements */
+.badge:focus-visible,
+.shop-drop__filter-controls input:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .badge-soldout {
+    background: #dc2626;
+    border: 2px solid #ffffff;
+  }
+  
+  .badge-warning {
+    background: #ea580c;
+    border: 2px solid #ffffff;
+  }
+  
+  .shop-drop__card--sold-out::before {
+    background: rgba(239, 68, 68, 0.3);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .badge-soldout,
+  .badge-warning {
+    animation: none;
+  }
+  
+  .shop-drop__card--sold-out:hover {
+    transform: none;
+  }
+}

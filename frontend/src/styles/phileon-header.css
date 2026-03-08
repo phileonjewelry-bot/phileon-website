@@ -1,0 +1,246 @@
+/* PHILEON HEADER - SAFE AREA BAR */
+.ph-header {
+  position: sticky;
+  top: 36px;
+  z-index: 60;
+  height: 80px;              /* LOCKED */
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: visible;          /* IMPORTANT: prevent clipping */
+}
+
+.ph-header-inner {
+  position: relative;
+  height: 80px;               /* LOCKED */
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  overflow: visible;          /* IMPORTANT */
+}
+
+.ph-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ph-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+.ph-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+}
+
+/* Brand Text */
+.ph-brand-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  letter-spacing: 0.35em;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .ph-brand-text {
+    font-size: 18px;
+    letter-spacing: 0.25em;
+  }
+}
+
+.ph-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: unset;
+}
+
+.ph-logo svg,
+.ph-logo img {
+  height: 34px;               /* adjust if needed */
+  width: auto;
+  display: block;
+}
+
+/* Genesis Drop Pill */
+.ph-drop-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(199,162,75,0.12);
+  border: 1px solid rgba(199,162,75,0.25);
+  color: rgba(199,162,75,0.95);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.ph-drop-pill:hover {
+  background: rgba(199,162,75,0.18);
+  border-color: rgba(199,162,75,0.4);
+  transform: translateY(-1px);
+}
+
+.ph-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Icon Buttons */
+.ph-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  color: rgba(199,162,75,0.95);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-decoration: none;
+}
+
+.ph-icon-btn:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-1px);
+}
+
+.ph-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 160ms ease, filter 200ms ease, color 200ms ease;
+}
+
+.ph-wishlist:hover svg {
+  transform: translateY(-1px) scale(1.04);
+  filter: drop-shadow(0 0 10px rgba(199,162,75,0.55));
+}
+
+/* Badge */
+.ph-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #C7A24B;
+  color: #000;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Menu Icon */
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 26px;
+  height: 20px;
+}
+
+.menu-icon span {
+  width: 100%;
+  height: 2.5px;
+  background: rgba(199,162,75,0.95);
+  border-radius: 1px;
+  transition: all 300ms ease;
+}
+
+.ph-icon-btn:hover .menu-icon span {
+  background: rgba(199,162,75,1);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .ph-header-inner {
+    padding: 0 16px;
+  }
+  
+  .ph-right {
+    gap: 8px;
+  }
+  
+  .ph-drop-pill {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .ph-icon-btn {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .ph-icon-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .ph-desktop-only {
+    display: none !important;
+  }
+  
+  .menu-icon {
+    width: 28px;
+    height: 20px;
+    gap: 5px;
+  }
+  
+  .menu-icon span {
+    height: 2.5px;
+  }
+}
+
+/* Ensure header doesn't interfere with page content */
+.ph-header + * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Backdrop blur fallback */
+@supports not (backdrop-filter: blur(10px)) {
+  .ph-header {
+    background: rgba(0,0,0,0.85);
+  }
+}
