@@ -5,7 +5,7 @@ import { publicApi } from '@/lib/api';
 import DropReveal from '@/components/DropReveal';
 import Hero from '@/components/Hero';
 import FeaturedDrop from '@/components/FeaturedDrop';
-import LaMarvaDrop from '@/components/LaMarvaDrop';
+import LaMarvaFlagship from '@/components/LaMarvaFlagship';
 import MonikaCoutureDrop from '@/components/MonikaCoutureDrop';
 
 const HomePage = () => {
@@ -78,8 +78,8 @@ const HomePage = () => {
       {/* Hero Section - Video Opener */}
       <Hero />
 
-      {/* La Marva Tiered Collection */}
-      <LaMarvaDrop />
+      {/* La Marva Flagship Section */}
+      <LaMarvaFlagship />
 
       {/* Featured Drop */}
       <FeaturedDrop />
