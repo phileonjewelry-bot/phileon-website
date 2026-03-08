@@ -15,12 +15,16 @@
 /**
  * Calculate adjusted price based on live gold movement
  * 
+ * Enhanced with two protections:
+ * 1. Slow Adjustment Curve - Only applies 40% of gold movement (dampening factor)
+ * 2. Maximum Adjustment Cap - Limits price changes to ±50%
+ * 
  * @param {number} basePrice - Base price in CAD
  * @param {number} currentGoldUSD - Current gold spot price (USD/oz)
  * @param {number} baselineGoldUSD - Baseline gold price when pricing was set (USD/oz)
  * @param {number} thresholdPct - Threshold percentage for adjustment (e.g., 5 for 5%)
  * @param {boolean} dynamicPricing - Whether to apply dynamic pricing
- * @returns {Object} - { adjustedPrice, percentMove, isAdjusted }
+ * @returns {Object} - { adjustedPrice, percentMove, adjustedMovePct, isAdjusted, currentGoldUSD }
  */
 export function calculateGoldAdjustedPrice(
   basePrice,
@@ -63,13 +67,37 @@ export function calculateGoldAdjustedPrice(
     };
   }
 
-  // Apply controlled adjustment
-  const multiplier = currentGoldUSD / baselineGoldUSD;
-  const adjustedPrice = Math.round(basePrice * multiplier);
+  // ==========================================
+  // ENHANCED ADJUSTMENT ENGINE
+  // Protection 1: Slow Adjustment Curve (40% dampening)
+  // Protection 2: Maximum Adjustment Cap (±50%)
+  // ==========================================
+  
+  // Configuration
+  const adjustmentFactor = 0.40;  // Only apply 40% of gold movement
+  const maxAdjustmentPct = 50;    // Cap price changes at ±50%
+  
+  // Calculate gold move percentage
+  const goldMovePct = percentMove;
+  
+  // Apply slow adjustment curve (dampening factor)
+  let adjustedMovePct = goldMovePct * adjustmentFactor;
+  
+  // Apply maximum adjustment cap
+  if (adjustedMovePct > maxAdjustmentPct) {
+    adjustedMovePct = maxAdjustmentPct;
+  }
+  if (adjustedMovePct < -maxAdjustmentPct) {
+    adjustedMovePct = -maxAdjustmentPct;
+  }
+  
+  // Calculate final adjusted price
+  const adjustedPrice = Math.round(basePrice * (1 + adjustedMovePct / 100));
 
   return {
     adjustedPrice,
     percentMove,
+    adjustedMovePct,  // Actual applied adjustment after dampening and cap
     isAdjusted: true,
     currentGoldUSD,
   };
