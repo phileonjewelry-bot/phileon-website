@@ -27,9 +27,8 @@ export default function FeaturedDrop() {
           </a>
         </div>
 
-        {/* Card */}
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          {/* Image */}
+        {/* Featured Drop - Image Only */}
+        <div className="mt-10">
           <Link to="/products/annie-rose" className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 block">
             <img
               src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
@@ -47,73 +46,6 @@ export default function FeaturedDrop() {
               </span>
             </div>
           </Link>
-
-          {/* Copy */}
-          <div>
-            <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
-              Drop 001
-            </p>
-
-            <h3 className="mt-3 text-3xl md:text-5xl font-light tracking-wide leading-tight">
-              ANNIE ROSE
-            </h3>
-
-            <p className="mt-5 text-white/70 leading-relaxed">
-              A signature silhouette engineered for presence. Choose your metal,
-              choose your stones — and make it yours.
-            </p>
-
-            {/* Pricing */}
-            <div className="mt-8 flex items-baseline gap-3">
-              <p className="text-white/70 text-sm tracking-wide">Starting at</p>
-              <p className="text-3xl md:text-4xl font-light">
-                $1,250
-              </p>
-              <p className="text-white/50 text-sm">
-                CAD
-              </p>
-            </div>
-
-            {/* Specs */}
-            <div className="mt-7 grid grid-cols-2 gap-4 text-sm text-white/70">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-white/50 text-xs tracking-[0.35em] uppercase">
-                  Metals
-                </p>
-                <p className="mt-2">Silver • 10K • 14K • 18K</p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-white/50 text-xs tracking-[0.35em] uppercase">
-                  Stones
-                </p>
-                <p className="mt-2">Cubic • Lab • Natural</p>
-              </div>
-            </div>
-
-            {/* CTAs */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <a
-                href="/shop"
-                className="bg-[#C6A24A] text-black px-8 py-4 rounded-md font-semibold tracking-wide text-center"
-              >
-                SHOP THIS DROP
-              </a>
-
-              <a
-                href="/custom"
-                className="border border-white/50 text-white px-8 py-4 rounded-md font-semibold tracking-wide text-center"
-              >
-                CUSTOMIZE IT
-              </a>
-            </div>
-
-            <a
-              href="/shop"
-              className="mt-6 inline-flex sm:hidden border border-white/25 px-5 py-2 rounded-md text-sm tracking-wide"
-            >
-              View All
-            </a>
-          </div>
         </div>
       </div>
     </section>
