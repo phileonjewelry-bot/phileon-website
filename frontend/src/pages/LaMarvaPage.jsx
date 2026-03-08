@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import ProductGallery from "../components/ProductGallery";
+import ProductLayout, {
+  ProductInfoSection,
+  ProductSpecs,
+  ProductPrice,
+  ProductActions,
+} from "../components/ProductLayout";
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -133,10 +140,48 @@ function useGoldPricing() {
 export default function LaMarvaPage() {
   const { tiers, goldPrice, adjusted, changePct } = useGoldPricing();
 
+  // Gallery media items
+  const galleryItems = [
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg",
+      alt: "Phileon La Marva Ring",
+    },
+    {
+      type: "video",
+      src: "/videos/lamarva-detail.mp4",
+      alt: "La Marva detail video",
+    },
+    {
+      type: "video",
+      src: "/videos/lamarva-showcase.mp4",
+      alt: "La Marva showcase video",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/c78rhhdk_Lamarva6.png",
+      alt: "La Marva close-up detail",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/2mmmt7rp_LaMarva8.png",
+      alt: "La Marva on hand",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/s5mgzzh2_Lamarva7.png",
+      alt: "La Marva side angle",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/x1l682uf_Lamarva5.jpeg",
+      alt: "La Marva underside detail",
+    },
+  ];
+
   return (
     <div className="bg-black text-white min-h-screen" data-testid="la-marva-page">
-
-      {/* Hero Image */}
+      {/* Hero Section */}
       <section className="relative">
         <img
           src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
@@ -155,285 +200,200 @@ export default function LaMarvaPage() {
         </div>
       </section>
 
-      {/* Story */}
-      <section className="py-16 px-6">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-light tracking-wide">
-            La Marva
-          </h2>
+      {/* Product Layout with Gallery + Info */}
+      <ProductLayout
+        gallery={<ProductGallery items={galleryItems} />}
+        productInfo={
+          <>
+            <ProductInfoSection
+              titleTag="Core Collection"
+              title="La Marva"
+            >
+              <p className="text-white/60 leading-relaxed">
+                Named in honor of <span className="text-white font-medium">Marva Wilson</span> — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.
+              </p>
 
-          <p className="mt-6 text-white/60 leading-relaxed">
-            Named in honor of <span className="text-white font-medium">Marva Wilson</span> — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.
-          </p>
+              <p className="text-white/60 leading-relaxed">
+                La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance. Every detail speaks to what endures: <span className="text-white font-medium">love, memory, and the stories that shape us.</span>
+              </p>
+            </ProductInfoSection>
 
-          <p className="mt-4 text-white/60 leading-relaxed">
-            La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance. Every detail speaks to what endures: <span className="text-white font-medium">love, memory, and the stories that shape us.</span>
-          </p>
-
-          <div className="mt-10 border-t border-white/10 pt-10">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-              <div>
-                <p className="text-2xl md:text-3xl font-light text-white">2ct</p>
-                <p className="mt-2 text-white/50 text-xs tracking-wide">Princess Cut Diamonds</p>
+            <div className="border-t border-white/10 pt-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-2xl font-light text-white">2ct</p>
+                  <p className="text-white/50 text-xs tracking-wide">Princess Cut Diamonds</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-2xl font-light text-white">0.50ct</p>
+                  <p className="text-white/50 text-xs tracking-wide">Tapered Baguettes</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-2xl font-light text-white">3.50ct</p>
+                  <p className="text-white/50 text-xs tracking-wide">Pink Sapphires</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-2xl font-light text-white">0.64ct</p>
+                  <p className="text-white/50 text-xs tracking-wide">Pavé White Diamonds</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl md:text-3xl font-light text-white">0.50ct</p>
-                <p className="mt-2 text-white/50 text-xs tracking-wide">Tapered Baguettes</p>
-              </div>
-              <div>
-                <p className="text-2xl md:text-3xl font-light text-white">3.50ct</p>
-                <p className="mt-2 text-white/50 text-xs tracking-wide">Pink Sapphires</p>
-              </div>
-              <div>
-                <p className="text-2xl md:text-3xl font-light text-white">0.64ct</p>
-                <p className="mt-2 text-white/50 text-xs tracking-wide">Pavé White Diamonds</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10 border-t border-white/10 pt-10">
-            <p className="text-white/60 leading-relaxed">
-              Whether she's walking down the aisle or commanding every room she enters — <span className="text-white font-medium">La Marva ensures she will never go unnoticed.</span>
-            </p>
-
-            <p className="mt-4 text-white/50 text-sm italic">
-              Each piece is crafted to order.
-            </p>
-          </div>
-
-          <div className="mt-10 border-t border-white/10 pt-10">
-            <p className="text-white/40 text-sm italic">
-              Phileon. Worn by those who carry someone with them.
-            </p>
-          </div>
-
-          <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
-            #GetYourPhileon
-          </p>
-        </div>
-      </section>
-
-      {/* Media Gallery */}
-      <section className="py-16 px-6 border-t border-white/10">
-        <div className="mx-auto max-w-5xl">
-          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
-            Up Close
-          </p>
-          <h2 className="mt-3 text-2xl md:text-4xl font-light tracking-wide">
-            See the craft
-          </h2>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Video 1 */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <video
-                className="w-full h-[360px] md:h-[480px] object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-              >
-                <source src="/videos/lamarva-detail.mp4" type="video/mp4" />
-              </video>
             </div>
 
-            {/* Video 2 */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <video
-                className="w-full h-[360px] md:h-[480px] object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-              >
-                <source src="/videos/lamarva-showcase.mp4" type="video/mp4" />
-              </video>
+            <div className="border-t border-white/10 pt-6 space-y-4">
+              <p className="text-white/60 leading-relaxed">
+                Whether she's walking down the aisle or commanding every room she enters — <span className="text-white font-medium">La Marva ensures she will never go unnoticed.</span>
+              </p>
+
+              <p className="text-white/50 text-sm italic">
+                Each piece is crafted to order.
+              </p>
             </div>
 
-            {/* Close-up detail */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <img
-                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/c78rhhdk_Lamarva6.png"
-                alt="La Marva close-up detail"
-                className="w-full h-[360px] md:h-[480px] object-cover"
-              />
+            <div className="border-t border-white/10 pt-6">
+              <p className="text-white/40 text-sm italic">
+                Phileon. Worn by those who carry someone with them.
+              </p>
+              <p className="mt-4 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
+                #GetYourPhileon
+              </p>
             </div>
+          </>
+        }
+        purchasePanel={
+          <>
+            <ProductInfoSection
+              titleTag="Select Your Edition"
+              title="Choose your level"
+            >
+              <p className="text-white/60 text-sm leading-relaxed">
+                Each edition preserves the full La Marva design. Materials and craftsmanship vary to suit different preferences while maintaining the integrity of the original form.
+              </p>
 
-            {/* On-hand shot */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <img
-                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/2mmmt7rp_LaMarva8.png"
-                alt="La Marva on hand"
-                className="w-full h-[360px] md:h-[480px] object-cover"
-              />
-            </div>
-
-            {/* Side angle */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <img
-                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/s5mgzzh2_Lamarva7.png"
-                alt="La Marva side angle"
-                className="w-full h-[360px] md:h-[480px] object-cover"
-              />
-            </div>
-
-            {/* Underside craftsmanship */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-              <img
-                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/x1l682uf_Lamarva5.jpeg"
-                alt="La Marva underside detail"
-                className="w-full h-[360px] md:h-[480px] object-cover"
-              />
-            </div>
-
-            {/* Product image */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
-              <img
-                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
-                alt="La Marva detail"
-                className="w-full h-[360px] md:h-[480px] object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tiers */}
-      <section className="py-16 px-6 border-t border-white/10">
-        <div className="mx-auto max-w-5xl">
-          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
-            Select Your Edition
-          </p>
-          <h2 className="mt-3 text-2xl md:text-4xl font-light tracking-wide">
-            Choose your level
-          </h2>
-          <p className="mt-4 text-white/60 text-sm leading-relaxed max-w-2xl">
-            Each edition preserves the full La Marva design. Materials and craftsmanship vary to suit different preferences while maintaining the integrity of the original form.
-          </p>
-
-          {/* Gold price status */}
-          {goldPrice && (
-            <div className="mt-4 flex items-center gap-3 text-xs text-white/40">
-              <span>Gold spot: ${goldPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}/oz</span>
-              <span className="text-white/25">|</span>
-              {adjusted ? (
-                <span className="text-[#C6A24A]">
-                  Prices adjusted ({changePct > 0 ? '+' : ''}{changePct.toFixed(1)}% gold move)
-                </span>
-              ) : (
-                <span>Prices held (gold within 5% of baseline)</span>
+              {/* Gold price status */}
+              {goldPrice && (
+                <div className="mt-4 flex items-center gap-3 text-xs text-white/40">
+                  <span>Gold spot: ${goldPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}/oz</span>
+                  <span className="text-white/25">|</span>
+                  {adjusted ? (
+                    <span className="text-[#C6A24A]">
+                      Prices adjusted ({changePct > 0 ? '+' : ''}{changePct.toFixed(1)}% gold move)
+                    </span>
+                  ) : (
+                    <span>Prices held (gold within 5% of baseline)</span>
+                  )}
+                </div>
               )}
-            </div>
-          )}
+            </ProductInfoSection>
 
-          <div className="mt-10 grid grid-cols-1 gap-4">
-            {tiers.map((tier) => (
-              <div
-                key={tier.name}
-                className={[
-                  "rounded-2xl border p-5 transition",
-                  tier.highlight
-                    ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
-                    : "border-white/10 bg-white/5",
-                ].join(" ")}
-              >
-                <div className="flex justify-between items-start gap-4">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs tracking-[0.35em] uppercase text-white/60">
-                      {tier.name}
-                      {tier.tag && (
-                        <span className="ml-2 text-[#C6A24A] normal-case tracking-normal">
-                          — {tier.tag}
-                        </span>
-                      )}
-                    </p>
-
-                    <h3 className="mt-2 text-lg md:text-2xl font-light">
-                      {tier.material}
-                    </h3>
-
-                    <p className="mt-2 text-white/60 text-sm">
-                      {tier.consultation ? "Available by consultation" : tier.note}
-                    </p>
-                  </div>
-
-                  <div className="text-right shrink-0">
-                    <p className="text-xs text-white/50">
-                      {tier.isHeirloom ? "By consultation" : "Retail"}
-                    </p>
-
-                    {!tier.isHeirloom ? (
-                      <p className="text-xl md:text-3xl font-light">
-                        {tier.price}
-                        <span className="ml-1 text-xs md:text-sm text-white/50">CAD</span>
-                        {tier.priceAdjusted && (
-                          <span className="ml-2 text-xs text-[#C6A24A]/70">*</span>
+            <div className="space-y-4 mt-6">
+              {tiers.map((tier) => (
+                <div
+                  key={tier.name}
+                  className={[
+                    "rounded-xl border p-4 transition",
+                    tier.highlight
+                      ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
+                      : "border-white/10 bg-white/5",
+                  ].join(" ")}
+                >
+                  <div className="flex justify-between items-start gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs tracking-[0.35em] uppercase text-white/60">
+                        {tier.name}
+                        {tier.tag && (
+                          <span className="ml-2 text-[#C6A24A] normal-case tracking-normal">
+                            — {tier.tag}
+                          </span>
                         )}
                       </p>
-                    ) : (
-                      <p className="mt-1 text-sm md:text-xl font-light text-white/80">
-                        Consultation required
+
+                      <h3 className="mt-2 text-base md:text-lg font-light">
+                        {tier.material}
+                      </h3>
+
+                      <p className="mt-2 text-white/60 text-xs">
+                        {tier.consultation ? "Available by consultation" : tier.note}
                       </p>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-white/50">
+                        {tier.isHeirloom ? "By consultation" : "Retail"}
+                      </p>
+
+                      {!tier.isHeirloom ? (
+                        <p className="text-lg md:text-xl font-light">
+                          {tier.price}
+                          <span className="ml-1 text-xs text-white/50">CAD</span>
+                          {tier.priceAdjusted && (
+                            <span className="ml-2 text-xs text-[#C6A24A]/70">*</span>
+                          )}
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-sm font-light text-white/80">
+                          Consultation required
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Materials */}
+                  <div className="mt-3 text-xs text-white/60 space-y-1">
+                    {tier.specs.map((spec, i) => (
+                      <p key={i}>{spec}</p>
+                    ))}
+                    {tier.finish && (
+                      <p>{tier.finish}</p>
                     )}
                   </div>
-                </div>
 
-                {/* Materials */}
-                <div className="mt-4 text-sm text-white/60 space-y-1">
-                  {tier.specs.map((spec, i) => (
-                    <p key={i}>{spec}</p>
-                  ))}
-                  {tier.finish && (
-                    <p>{tier.finish}</p>
-                  )}
-                </div>
-
-                {/* Diamond Quality & Carat Weight */}
-                <div className="mt-3 flex flex-wrap gap-3 text-xs text-white/50">
-                  {tier.diamondQuality && (
-                    <span className="px-3 py-1 rounded-full border border-white/10 bg-white/5">
-                      {tier.diamondQuality}
+                  {/* Diamond Quality & Carat Weight */}
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/50">
+                    {tier.diamondQuality && (
+                      <span className="px-2 py-1 rounded-full border border-white/10 bg-white/5">
+                        {tier.diamondQuality}
+                      </span>
+                    )}
+                    <span className="px-2 py-1 rounded-full border border-white/10 bg-white/5">
+                      {tier.caratWeight}
                     </span>
-                  )}
-                  <span className="px-3 py-1 rounded-full border border-white/10 bg-white/5">
-                    {tier.caratWeight}
-                  </span>
-                </div>
+                  </div>
 
-                <div className="mt-4 flex flex-col sm:flex-row gap-3">
-                  {tier.consultation ? (
-                    <a
-                      href="/custom"
-                      className="bg-[#C6A24A] text-black px-6 py-3 rounded-md font-semibold tracking-wide text-center"
-                    >
-                      Request Consultation
-                    </a>
-                  ) : (
-                    <a
-                      href="/shop"
-                      className={[
-                        "px-6 py-3 rounded-md font-semibold tracking-wide text-center",
-                        tier.highlight
-                          ? "bg-[#C6A24A] text-black"
-                          : "border border-white/30 text-white",
-                      ].join(" ")}
-                    >
-                      Add to Cart
-                    </a>
+                  <div className="mt-3 flex flex-col gap-2">
+                    {tier.consultation ? (
+                      <a
+                        href="/custom"
+                        className="bg-[#C6A24A] text-black px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm"
+                      >
+                        Request Consultation
+                      </a>
+                    ) : (
+                      <a
+                        href="/shop"
+                        className={[
+                          "px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm",
+                          tier.highlight
+                            ? "bg-[#C6A24A] text-black"
+                            : "border border-white/30 text-white",
+                        ].join(" ")}
+                      >
+                        Add to Cart
+                      </a>
+                    )}
+                  </div>
+
+                  {tier.isHeirloom && (
+                    <p className="mt-3 text-white/50 text-xs tracking-wide">
+                      Natural diamond pieces are crafted by consultation only. Pricing reflects estimated retail.
+                    </p>
                   )}
                 </div>
-
-                {tier.isHeirloom && (
-                  <p className="mt-4 text-white/50 text-xs tracking-wide">
-                    Natural diamond pieces are crafted by consultation only. Pricing reflects estimated retail.
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              ))}
+            </div>
+          </>
+        }
+        stickyOffset={36}
+      />
     </div>
   );
 }
