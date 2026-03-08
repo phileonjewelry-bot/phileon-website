@@ -52,61 +52,26 @@ export default function ProductGallery({ items = [] }) {
   useEffect(() => {
     if (!items || items.length === 0) return;
     
-    console.log(`[ProductGallery] Selected index changed to: ${selectedIndex}, type: ${items[selectedIndex]?.type}`);
-    
-    // Pause all videos first
-    videoRefs.current.forEach((video, idx) => {
-      if (video) {
+    // Pause all videos
+    videoRefs.current.forEach((video) => {
+      if (video && !video.paused) {
         video.pause();
-        // Set preload to none for non-active videos to prevent loading conflicts
-        if (idx !== selectedIndex) {
-          video.preload = "none";
-        }
       }
     });
     
-    // Play the video in the active slide
+    // Play the active video
     const activeVideo = videoRefs.current[selectedIndex];
     if (activeVideo && items[selectedIndex]?.type === "video") {
-      console.log(`[ProductGallery] Active video found at index ${selectedIndex}, readyState: ${activeVideo.readyState}`);
-      
-      // Enable preload for the active video
-      activeVideo.preload = "auto";
-      
-      // Load the video if not loaded
-      if (activeVideo.readyState === 0) {
-        console.log('[ProductGallery] Loading video...');
-        activeVideo.load();
-      }
-      
-      // Try to play with a small delay to ensure load starts
-      const playVideo = () => {
-        console.log(`[ProductGallery] Attempting to play video, readyState: ${activeVideo.readyState}`);
-        activeVideo.play().catch((err) => {
-          // Autoplay might be blocked on some browsers, log but don't error
-          if (err.name !== 'AbortError') {
-            console.log('Video autoplay prevented (browser policy):', err.message);
-          }
-        });
-      };
-      
-      // If video is ready, play immediately, otherwise wait for loadedmetadata
-      if (activeVideo.readyState >= 2) {
-        console.log('[ProductGallery] Video ready, playing immediately');
-        playVideo();
-      } else {
-        console.log('[ProductGallery] Waiting for loadedmetadata event...');
-        activeVideo.addEventListener('loadedmetadata', playVideo, { once: true });
-        // Also add a timeout fallback in case loadedmetadata doesn't fire
-        setTimeout(() => {
-          if (activeVideo.readyState >= 2) {
-            console.log('[ProductGallery] Loadedmetadata timeout, trying to play anyway');
-            playVideo();
-          }
-        }, 2000);
-      }
-    } else {
-      console.log(`[ProductGallery] No video at index ${selectedIndex} or not a video slide`);
+      // Use setTimeout to ensure DOM is ready
+      setTimeout(() => {
+        const playPromise = activeVideo.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            // Autoplay was prevented, which is OK
+            console.log('Autoplay prevented:', error.name);
+          });
+        }
+      }, 150);
     }
   }, [selectedIndex, items]);
 
@@ -156,7 +121,7 @@ export default function ProductGallery({ items = [] }) {
                     muted
                     loop
                     playsInline
-                    preload="none"
+                    preload="metadata"
                   >
                     <source src={item.src} type="video/mp4" />
                   </video>
@@ -235,9 +200,10 @@ export default function ProductGallery({ items = [] }) {
             >
               {item.type === "video" ? (
                 <video
-                  className="w-full h-full object-cover pointer-events-none"
+                  className="w-full h-full object-cover pointer-events-none bg-black"
                   muted
                   playsInline
+                  preload="metadata"
                 >
                   <source src={item.src} type="video/mp4" />
                 </video>
