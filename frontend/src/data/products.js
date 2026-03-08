@@ -96,7 +96,7 @@ export const products = {
     pricing: {
       gold10k: 6400,
       gold14k: 7400,
-      gold18k: 7900
+      gold18k: 8400
     }
   },
 
