@@ -150,11 +150,13 @@ export default function LaMarvaPage() {
     {
       type: "video",
       src: "/videos/lamarva-detail.mp4",
+      poster: "/images/thumbnails/lamarva-detail-thumb.jpg",
       alt: "La Marva detail video",
     },
     {
       type: "video",
       src: "/videos/lamarva-showcase.mp4",
+      poster: "/images/thumbnails/lamarva-showcase-thumb.jpg",
       alt: "La Marva showcase video",
     },
     {
