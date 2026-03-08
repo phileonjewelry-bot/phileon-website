@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ProductGallery from "../components/ProductGallery";
 import ProductLayout, {
   ProductInfoSection,
@@ -6,6 +6,21 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 
 export default function AnnieRosePage() {
+  // State for selected metal
+  const [selectedMetal, setSelectedMetal] = useState({
+    name: "Sterling Silver",
+    label: "Silver",
+    price: 1250
+  });
+
+  // Metal options with pricing
+  const metalOptions = [
+    { name: "Sterling Silver", label: "Silver", price: 1250 },
+    { name: "10K Gold", label: "10K", price: 2800 },
+    { name: "14K Gold", label: "14K", price: 3400 },
+    { name: "18K Gold", label: "18K", price: 4200 },
+  ];
+
   // Gallery media items - memoized to prevent recreation
   const galleryItems = React.useMemo(() => [
     {
@@ -104,31 +119,38 @@ export default function AnnieRosePage() {
         purchasePanel={
           <>
             <ProductInfoSection
-              titleTag="Product Configuration"
-              title="Annie Rose"
+              titleTag="Available Options"
+              title="Choose your metal"
             >
-              <div className="flex items-baseline gap-3 mt-4">
-                <p className="text-white/70 text-sm tracking-wide">Starting at</p>
-                <p className="text-3xl md:text-4xl font-light">
-                  $1,250
-                </p>
-                <p className="text-white/50 text-sm">CAD</p>
-              </div>
+              <p className="text-white/60 text-sm leading-relaxed mt-2">
+                Each metal option preserves the Annie Rose design. Stone options (Cubic · Lab · Natural) available for all metals.
+              </p>
 
-              <div className="mt-6 grid grid-cols-2 gap-4 text-sm text-white/70">
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Metals</p>
-                  <p className="mt-2">Silver · 10K · 14K · 18K</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Stones</p>
-                  <p className="mt-2">Cubic · Lab · Natural</p>
-                </div>
+              <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-white/70">
+                {metalOptions.map((metal) => (
+                  <button
+                    key={metal.name}
+                    onClick={() => setSelectedMetal(metal)}
+                    className={[
+                      "rounded-xl border p-4 text-center transition-all cursor-pointer",
+                      selectedMetal.name === metal.name
+                        ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
+                        : "border-white/10 bg-white/5 hover:border-white/30",
+                    ].join(" ")}
+                  >
+                    <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{metal.label}</p>
+                    <p className="mt-2 text-white text-base font-light">{metal.name}</p>
+                    <p className="mt-2 text-[#C6A24A] text-base font-light">${metal.price.toLocaleString()}</p>
+                  </button>
+                ))}
               </div>
             </ProductInfoSection>
 
             <ProductActions
-              primaryAction={{ href: "mailto:contact@phileonjewelry.com?subject=Annie%20Rose%20Inquiry", label: "INQUIRE TO PURCHASE" }}
+              primaryAction={{ 
+                href: `mailto:contact@phileonjewelry.com?subject=Annie%20Rose%20Inquiry&body=Product:%20Annie%20Rose%0AMetal:%20${encodeURIComponent(selectedMetal.name)}%0APrice:%20$${selectedMetal.price.toLocaleString()}`, 
+                label: "INQUIRE TO PURCHASE" 
+              }}
             />
           </>
         }
