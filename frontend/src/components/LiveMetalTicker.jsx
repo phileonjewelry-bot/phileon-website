@@ -33,8 +33,10 @@ const LiveMetalTicker = () => {
   const fetchMetalPrices = async () => {
     try {
       const response = await fetch(`${API_URL}/api/metals`, { cache: "no-store" });
+      
       if (response.ok) {
         const data = await response.json();
+        
         if (data.status === "live" && data.gold_usd_oz > 0) {
           setMetals(prev => [
             { label: 'GOLD', price: data.gold_usd_oz, changePct: prev[0]?.changePct || 0 },
