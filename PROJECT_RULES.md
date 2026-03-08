@@ -34,10 +34,17 @@ This repository contains the live PHILEON luxury jewelry website.
 - Heirloom 18K — $22,000
 
 **ANNIE ROSE**
-- Restore actual Annie Rose pricing from project history/data.
-- Do not use placeholder pricing.
-- Metals: Silver, 10K, 14K, 18K
-- Stones: Cubic, Lab, Natural
+- Lab-Grown Diamond Options: 10K ($6,400), 14K ($7,400), 18K ($8,400)
+- Natural Diamond Options: 10K ($8,900), 14K ($10,400), 18K ($12,200)
+- Metals: 10K, 14K, 18K
+- Stones: Lab, Natural
+
+**Annie Rose pricing clarification:**
+Annie Rose is allowed to exceed La Marva entry pricing in higher-end configurations because Annie Rose includes additional pricing variations by stone type (Lab vs Natural) and multiple metal combinations.
+
+La Marva remains the flagship icon piece, but Annie Rose may have a higher configurable ceiling due to its expanded variation structure.
+
+Do not compress Annie Rose pricing merely to keep it below La Marva entry price.
 
 **MONIKA COUTURE EARRINGS**
 - Silver — $1,400

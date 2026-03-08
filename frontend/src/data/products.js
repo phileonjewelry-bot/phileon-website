@@ -1,5 +1,10 @@
 export const products = {
 
+  // ==========================================
+  // LA MARVA
+  // Flagship ring with dynamic gold pricing
+  // Pricing keys: signature, foundation, heirloom14k, heirloom18k
+  // ==========================================
   laMarva: {
     name: "La Marva",
     story: "Named in honor of Marva Wilson.",
@@ -7,10 +12,10 @@ export const products = {
     description: "La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance.",
     baselineGoldUSD: 2650, // USD/oz when prices were locked
     pricing: {
-      signature: 3400,
-      foundation: 8000,
-      heirloom14k: 18000,
-      heirloom18k: 22000
+      signature: 3400,     // Silver + simulated stones
+      foundation: 8000,    // 10K Gold + lab-grown stones
+      heirloom14k: 18000,  // 14K Gold + natural diamonds
+      heirloom18k: 22000   // 18K Gold + natural diamonds
     },
     tiers: [
       {
@@ -87,6 +92,11 @@ export const products = {
     ]
   },
 
+  // ==========================================
+  // ANNIE ROSE
+  // Two-tier pricing: metal × stone type
+  // Pricing keys: lab.gold10k, lab.gold14k, lab.gold18k, natural.gold10k, natural.gold14k, natural.gold18k
+  // ==========================================
   annieRose: {
     name: "Annie Rose",
     tribute: "Created in honor of my sister Andrea.",
@@ -95,26 +105,31 @@ export const products = {
     stones: ["Lab", "Natural"],
     pricing: {
       lab: {
-        gold10k: 6400,
-        gold14k: 7400,
-        gold18k: 8400
+        gold10k: 6400,   // 10K Gold + Lab-Grown Diamonds
+        gold14k: 7400,   // 14K Gold + Lab-Grown Diamonds
+        gold18k: 8400    // 18K Gold + Lab-Grown Diamonds
       },
       natural: {
-        gold10k: 8900,
-        gold14k: 10400,
-        gold18k: 12200
+        gold10k: 8900,   // 10K Gold + Natural Diamonds
+        gold14k: 10400,  // 14K Gold + Natural Diamonds
+        gold18k: 12200   // 18K Gold + Natural Diamonds
       }
     }
   },
 
+  // ==========================================
+  // MONIKA COUTURE
+  // Single-tier pricing by metal type
+  // Pricing keys: silver, white10k, yellow10k, rose10k
+  // ==========================================
   monikaCouture: {
     name: "Monika Couture Earrings",
     weight: "10g per pair",
     pricing: {
-      silver: 1400,
-      white10k: 3700,
-      yellow10k: 3700,
-      rose10k: 3700
+      silver: 1400,      // Sterling Silver
+      white10k: 3700,    // 10K White Gold
+      yellow10k: 3700,   // 10K Yellow Gold
+      rose10k: 3700      // 10K Rose Gold
     }
   }
 
