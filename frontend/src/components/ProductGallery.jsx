@@ -122,6 +122,7 @@ function ProductGallery({ items = [] }) {
                     loop
                     playsInline
                     preload="metadata"
+                    poster={item.poster || undefined}
                   >
                     <source src={item.src} type="video/mp4" />
                   </video>
@@ -204,6 +205,7 @@ function ProductGallery({ items = [] }) {
                   muted
                   playsInline
                   preload="metadata"
+                  poster={item.poster || undefined}
                 >
                   <source src={item.src} type="video/mp4" />
                 </video>

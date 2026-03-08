@@ -16,11 +16,13 @@ export default function AnnieRosePage() {
     {
       type: "video",
       src: "https://customer-assets.emergentagent.com/job_phileon-jewelry/artifacts/ppw8w9p8_AnnieRosevid1-1.mp4",
+      poster: "/images/thumbnails/annierose1-thumb.jpg",
       alt: "Annie Rose video 1",
     },
     {
       type: "video",
       src: "https://customer-assets.emergentagent.com/job_phileon-jewelry/artifacts/2ad9rttz_AnnieRosevid2.mp4",
+      poster: "/images/thumbnails/annierose2-thumb.jpg",
       alt: "Annie Rose video 2",
     },
     {
