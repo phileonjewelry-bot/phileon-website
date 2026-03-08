@@ -37,7 +37,18 @@ export default function ProductGallery({ items = [] }) {
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
+    const newIndex = emblaApi.selectedScrollSnap();
+    setSelectedIndex(newIndex);
+    
+    // Play video on the active slide, pause others
+    const videos = document.querySelectorAll('.embla__slide video');
+    videos.forEach((video, idx) => {
+      if (idx === newIndex) {
+        video.play().catch(e => console.log('Video play failed:', e));
+      } else {
+        video.pause();
+      }
+    });
   }, [emblaApi]);
 
   useEffect(() => {
@@ -89,7 +100,6 @@ export default function ProductGallery({ items = [] }) {
                 {item.type === "video" ? (
                   <video
                     className="w-full h-[400px] md:h-[600px] lg:h-[700px] object-cover"
-                    autoPlay={index === 0} // Autoplay first video
                     muted
                     loop
                     playsInline

@@ -37,7 +37,8 @@ const LiveMetalTicker = () => {
       if (response.ok) {
         const data = await response.json();
         
-        if (data.status === "live" && data.gold_usd_oz > 0) {
+        // Accept both "live" and "fallback" status, as long as we have valid price data
+        if ((data.status === "live" || data.status === "fallback") && data.gold_usd_oz > 0) {
           setMetals(prev => [
             { label: 'GOLD', price: data.gold_usd_oz, changePct: prev[0]?.changePct || 0 },
             { label: 'SILVER', price: data.silver_usd_oz, changePct: prev[1]?.changePct || 0 },
