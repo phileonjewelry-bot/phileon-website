@@ -18,7 +18,7 @@ export default function MonikaCouturePage() {
             Earring Collection
           </p>
           <h1 className="mt-3 text-4xl md:text-6xl font-light tracking-wide">
-            THE MONIKA COUTURE
+            MONIKA COUTURE EARRINGS
           </h1>
         </div>
       </section>
@@ -27,15 +27,15 @@ export default function MonikaCouturePage() {
       <section className="py-16 px-6">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-2xl md:text-3xl font-light tracking-wide">
-            The Monika Couture Earrings
+            Monika Couture Earrings
           </h2>
 
           <p className="mt-6 text-white/60 leading-relaxed">
-            Inspired by the architecture of haute couture — a woven lattice silhouette shaped like a stiletto heel, reimagined as a statement earring.
+            A sculptural couture earring inspired by the architecture of high fashion.
           </p>
 
           <p className="mt-4 text-white/60 leading-relaxed">
-            Available in Silver, Gold, and Rose Gold. Each pair is crafted to order.
+            The Monika Couture design transforms the silhouette of a fashion heel into an open lattice structure that feels bold, elegant, and dramatic in movement. The airy mesh construction balances strength and lightness, creating a piece that captures runway attitude translated into statement jewelry.
           </p>
 
           <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
@@ -76,18 +76,22 @@ export default function MonikaCouturePage() {
             Choose your metal
           </h2>
 
-          <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-white/70">
+          <div className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-white/70">
             <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
               <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Silver</p>
               <p className="mt-3 text-white text-lg font-light">Sterling Silver</p>
             </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
+              <p className="text-white/50 text-xs tracking-[0.35em] uppercase">White Gold</p>
+              <p className="mt-3 text-white text-lg font-light">10K White Gold</p>
+            </div>
             <div className="rounded-xl border border-[#C6A24A]/40 bg-[#C6A24A]/10 p-5 text-center">
-              <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Gold</p>
-              <p className="mt-3 text-white text-lg font-light">10K / 14K Gold</p>
+              <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Yellow Gold</p>
+              <p className="mt-3 text-white text-lg font-light">10K Yellow Gold</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
               <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Rose Gold</p>
-              <p className="mt-3 text-white text-lg font-light">10K / 14K Rose Gold</p>
+              <p className="mt-3 text-white text-lg font-light">10K Rose Gold</p>
             </div>
           </div>
 
