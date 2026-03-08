@@ -32,10 +32,11 @@ export default function MonikaCouturePage() {
 
           <p className="mt-6 text-white/60 leading-relaxed">
             A sculptural couture earring inspired by the architecture of high fashion.
+            The Monika Couture design transforms the silhouette of a fashion heel into an open lattice structure that feels bold, elegant, and dramatic in movement.
           </p>
 
-          <p className="mt-4 text-white/60 leading-relaxed">
-            The Monika Couture design transforms the silhouette of a fashion heel into an open lattice structure that feels bold, elegant, and dramatic in movement. The airy mesh construction balances strength and lightness, creating a piece that captures runway attitude translated into statement jewelry.
+          <p className="mt-4 text-white/50 text-sm">
+            Weight: approximately 10 grams per pair.
           </p>
 
           <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
@@ -166,18 +167,22 @@ export default function MonikaCouturePage() {
             <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
               <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Silver</p>
               <p className="mt-3 text-white text-lg font-light">Sterling Silver</p>
+              <p className="mt-2 text-[#C6A24A] text-lg font-light">$1,400</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
               <p className="text-white/50 text-xs tracking-[0.35em] uppercase">White Gold</p>
               <p className="mt-3 text-white text-lg font-light">10K White Gold</p>
+              <p className="mt-2 text-[#C6A24A] text-lg font-light">$3,700</p>
             </div>
             <div className="rounded-xl border border-[#C6A24A]/40 bg-[#C6A24A]/10 p-5 text-center">
               <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Yellow Gold</p>
               <p className="mt-3 text-white text-lg font-light">10K Yellow Gold</p>
+              <p className="mt-2 text-[#C6A24A] text-lg font-light">$3,700</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center">
               <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Rose Gold</p>
               <p className="mt-3 text-white text-lg font-light">10K Rose Gold</p>
+              <p className="mt-2 text-[#C6A24A] text-lg font-light">$3,700</p>
             </div>
           </div>
 
