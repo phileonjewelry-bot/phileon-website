@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ProductGallery from "../components/ProductGallery";
 import ProductLayout, {
   ProductInfoSection,
@@ -6,6 +6,20 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 
 export default function MonikaCouturePage() {
+  // State for selected metal
+  const [selectedMetal, setSelectedMetal] = useState({
+    name: "Sterling Silver",
+    label: "Silver",
+    price: 1400
+  });
+
+  // Metal options
+  const metalOptions = [
+    { name: "Sterling Silver", label: "Silver", price: 1400 },
+    { name: "10K White Gold", label: "White Gold", price: 3700 },
+    { name: "10K Yellow Gold", label: "Yellow Gold", price: 3700 },
+    { name: "10K Rose Gold", label: "Rose Gold", price: 3700 },
+  ];
   // Gallery media items - memoized to prevent recreation
   const galleryItems = React.useMemo(() => [
     {
@@ -113,31 +127,30 @@ export default function MonikaCouturePage() {
               title="Choose your metal"
             >
               <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-white/70">
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                  <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Silver</p>
-                  <p className="mt-2 text-white text-base font-light">Sterling Silver</p>
-                  <p className="mt-2 text-[#C6A24A] text-base font-light">$1,400</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                  <p className="text-white/50 text-xs tracking-[0.35em] uppercase">White Gold</p>
-                  <p className="mt-2 text-white text-base font-light">10K White Gold</p>
-                  <p className="mt-2 text-[#C6A24A] text-base font-light">$3,700</p>
-                </div>
-                <div className="rounded-xl border border-[#C6A24A]/40 bg-[#C6A24A]/10 p-4 text-center">
-                  <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Yellow Gold</p>
-                  <p className="mt-2 text-white text-base font-light">10K Yellow Gold</p>
-                  <p className="mt-2 text-[#C6A24A] text-base font-light">$3,700</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center">
-                  <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Rose Gold</p>
-                  <p className="mt-2 text-white text-base font-light">10K Rose Gold</p>
-                  <p className="mt-2 text-[#C6A24A] text-base font-light">$3,700</p>
-                </div>
+                {metalOptions.map((metal) => (
+                  <button
+                    key={metal.name}
+                    onClick={() => setSelectedMetal(metal)}
+                    className={[
+                      "rounded-xl border p-4 text-center transition-all cursor-pointer",
+                      selectedMetal.name === metal.name
+                        ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
+                        : "border-white/10 bg-white/5 hover:border-white/30",
+                    ].join(" ")}
+                  >
+                    <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{metal.label}</p>
+                    <p className="mt-2 text-white text-base font-light">{metal.name}</p>
+                    <p className="mt-2 text-[#C6A24A] text-base font-light">${metal.price.toLocaleString()}</p>
+                  </button>
+                ))}
               </div>
             </ProductInfoSection>
 
             <ProductActions
-              primaryAction={{ href: "mailto:contact@phileonjewelry.com?subject=Monika%20Couture%20Earrings%20Inquiry", label: "INQUIRE TO PURCHASE" }}
+              primaryAction={{ 
+                href: `mailto:contact@phileonjewelry.com?subject=Monika%20Couture%20Earrings%20Inquiry&body=Product:%20Monika%20Couture%20Earrings%0AMetal:%20${encodeURIComponent(selectedMetal.name)}%0APrice:%20$${selectedMetal.price.toLocaleString()}`, 
+                label: "INQUIRE TO PURCHASE" 
+              }}
             />
           </>
         }

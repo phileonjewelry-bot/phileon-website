@@ -88,11 +88,11 @@ export default function AnnieRosePage() {
               title="Annie Rose"
             >
               <p className="text-white/60 leading-relaxed">
-                A signature silhouette engineered for presence. Choose your metal, choose your stones — and make it yours.
+                Created in honor of my sister Andrea.
               </p>
 
-              <p className="text-white/60 leading-relaxed">
-                Limited runs. Hand-finished. Built to be recognized.
+              <p className="text-[#C6A24A] text-lg font-light leading-relaxed mt-4">
+                Soft in tone. Strong in spirit.
               </p>
 
               <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
@@ -104,8 +104,8 @@ export default function AnnieRosePage() {
         purchasePanel={
           <>
             <ProductInfoSection
-              titleTag="Select Your Edition"
-              title="Choose your level"
+              titleTag="Product Configuration"
+              title="Annie Rose"
             >
               <div className="flex items-baseline gap-3 mt-4">
                 <p className="text-white/70 text-sm tracking-wide">Starting at</p>
