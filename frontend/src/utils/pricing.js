@@ -162,15 +162,16 @@ export function formatPrice(price, includeCurrency = false) {
  */
 export async function fetchLiveGoldPrice(apiUrl) {
   try {
-    const response = await fetch(`${apiUrl}/api/metal-prices`);
+    const response = await fetch(`${apiUrl}/api/metals`, { cache: "no-store" });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
     
     // Extract gold price from response
-    if (data.status === 'success' && data.prices && data.prices.gold) {
-      return data.prices.gold;
+    // Expected format: { gold_usd_oz: 5174.0, status: "live", ... }
+    if (data.status === 'live' && data.gold_usd_oz && data.gold_usd_oz > 0) {
+      return data.gold_usd_oz;
     }
     
     return null;
