@@ -148,6 +148,18 @@ export default function LaMarvaPage() {
       alt: "Phileon La Marva Ring",
     },
     {
+      type: "video",
+      src: "/videos/lamarva-detail.mp4",
+      poster: "/images/thumbnails/lamarva-detail-thumb.jpg",
+      alt: "La Marva detail video",
+    },
+    {
+      type: "video",
+      src: "/videos/lamarva-showcase.mp4",
+      poster: "/images/thumbnails/lamarva-showcase-thumb.jpg",
+      alt: "La Marva showcase video",
+    },
+    {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/c78rhhdk_Lamarva6.png",
       alt: "La Marva close-up detail",

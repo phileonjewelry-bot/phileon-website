@@ -28,6 +28,12 @@ export default function MonikaCouturePage() {
       alt: "The Monika Couture Earrings",
     },
     {
+      type: "video",
+      src: "/videos/monika-couture.mp4",
+      poster: "/images/thumbnails/monika-couture-thumb.jpg",
+      alt: "Monika Couture video",
+    },
+    {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/n57dc44j_1000139957.jpg",
       alt: "Monika Couture worn in gold",
