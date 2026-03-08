@@ -79,7 +79,7 @@ const LiveMetalTicker = () => {
       <div className="phileon-ticker__track">
         {/* LIVE indicator first */}
         <span className="phileon-ticker__live">
-          <span className="phileon-ticker__dot">●</span>LIVE
+          <span className="phileon-ticker__dot">●</span>SPOT PRICES
         </span>
         
         {/* Metal prices */}

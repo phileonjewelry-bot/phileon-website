@@ -9,12 +9,36 @@ router = APIRouter()
 
 
 def _try_metals_live():
-    """Primary: metals.live"""
-    r_gold = requests.get("https://api.metals.live/v1/spot/gold", timeout=6, verify=False)
-    r_silver = requests.get("https://api.metals.live/v1/spot/silver", timeout=6, verify=False)
-    gold = float(r_gold.json()[0][1])
-    silver = float(r_silver.json()[0][1])
-    return gold, silver, "metals.live"
+    """Primary: metals-api.com (free tier, no auth needed)"""
+    try:
+        r = requests.get(
+            "https://metals-api.com/api/latest?base=USD&symbols=XAU,XAG",
+            timeout=6
+        )
+        if r.status_code == 200:
+            data = r.json()
+            if data.get("success"):
+                rates = data.get("rates", {})
+                # Rates are in grams, convert to troy ounces (1 oz = 31.1035 grams)
+                gold_per_gram = 1 / rates.get("XAU", 0)
+                silver_per_gram = 1 / rates.get("XAG", 0)
+                gold = round(gold_per_gram * 31.1035, 2)
+                silver = round(silver_per_gram * 31.1035, 2)
+                return gold, silver, "metals-api.com"
+    except:
+        pass
+    
+    # Fallback to goldprice.org JSON
+    try:
+        r = requests.get("https://data-asg.goldprice.org/dbXRates/USD", timeout=6)
+        data = r.json()
+        gold = float(data["items"][0]["xauPrice"])
+        silver = float(data["items"][0]["xagPrice"])
+        return gold, silver, "goldprice.org"
+    except:
+        pass
+        
+    raise Exception("metals.live sources failed")
 
 
 def _try_freegoldapi():
