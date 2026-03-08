@@ -7,10 +7,78 @@
  * 
  * Features:
  * - Dynamic gold pricing with threshold-based adjustments
+ * - Slow adjustment curve (40% dampening)
+ * - Maximum adjustment cap (±50%)
+ * - 24-hour price stability window (daily pricing updates only)
  * - Graceful fallback to base pricing on API failure
  * - Per-product configuration
  * - Agent-proof architecture
  */
+
+// ==========================================
+// DAILY PRICE STABILITY - 24-HOUR CACHE
+// ==========================================
+
+const CACHE_KEY = 'phileon_pricing_cache';
+const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+/**
+ * Get cached pricing data from localStorage
+ * @returns {Object|null} Cached data or null if not found/expired
+ */
+function getCachedPricing() {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+
+    const data = JSON.parse(cached);
+    const now = Date.now();
+    
+    // Check if cache is still valid (less than 24 hours old)
+    if (now - data.timestamp < CACHE_DURATION_MS) {
+      return data;
+    }
+    
+    // Cache expired
+    return null;
+  } catch (error) {
+    console.warn('Failed to read pricing cache:', error);
+    return null;
+  }
+}
+
+/**
+ * Save pricing data to localStorage cache
+ * @param {number} goldPrice - Live gold spot price
+ * @param {Object} pricingData - Calculated pricing data
+ */
+function setCachedPricing(goldPrice, pricingData) {
+  try {
+    const cacheData = {
+      goldPrice,
+      pricingData,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+  } catch (error) {
+    console.warn('Failed to save pricing cache:', error);
+  }
+}
+
+/**
+ * Get last valid cached pricing (even if expired)
+ * Used as fallback when API fails
+ * @returns {Object|null} Last cached data or null
+ */
+function getLastValidCache() {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+    return JSON.parse(cached);
+  } catch (error) {
+    return null;
+  }
+}
 
 /**
  * Calculate adjusted price based on live gold movement
@@ -183,12 +251,30 @@ export function formatPrice(price, includeCurrency = false) {
 }
 
 /**
- * Fetch live gold price from backend
+ * Fetch live gold price with 24-hour caching
+ * 
+ * Behavior:
+ * - Returns cached price if less than 24 hours old
+ * - Fetches fresh data if cache expired or missing
+ * - Falls back to last valid cache on API failure
+ * - Returns null only if no cache and API fails
  * 
  * @param {string} apiUrl - Backend API URL
- * @returns {Promise<number|null>} - Gold price in USD/oz, or null if failed
+ * @returns {Promise<Object>} - { goldPrice: number, fromCache: boolean } or null
  */
 export async function fetchLiveGoldPrice(apiUrl) {
+  // Check cache first
+  const cached = getCachedPricing();
+  if (cached) {
+    console.log('Using cached gold price (updated:', new Date(cached.timestamp).toLocaleString(), ')');
+    return {
+      goldPrice: cached.goldPrice,
+      fromCache: true,
+      timestamp: cached.timestamp,
+    };
+  }
+
+  // Cache miss or expired - fetch fresh data
   try {
     const response = await fetch(`${apiUrl}/api/metals`, { cache: "no-store" });
     if (!response.ok) {
@@ -197,26 +283,71 @@ export async function fetchLiveGoldPrice(apiUrl) {
     const data = await response.json();
     
     // Extract gold price from response
-    // Expected format: { gold_usd_oz: 5174.0, status: "live", ... }
     if (data.status === 'live' && data.gold_usd_oz && data.gold_usd_oz > 0) {
-      return data.gold_usd_oz;
+      console.log('Fetched fresh gold price:', data.gold_usd_oz);
+      return {
+        goldPrice: data.gold_usd_oz,
+        fromCache: false,
+      };
     }
     
-    return null;
+    throw new Error('Invalid gold price data');
   } catch (error) {
     console.warn('Failed to fetch live gold price:', error.message);
+    
+    // Try to use last valid cache as fallback (even if expired)
+    const lastValid = getLastValidCache();
+    if (lastValid) {
+      console.log('Using last valid cached price as fallback');
+      return {
+        goldPrice: lastValid.goldPrice,
+        fromCache: true,
+        fallback: true,
+        timestamp: lastValid.timestamp,
+      };
+    }
+    
+    // No cache available at all
     return null;
   }
 }
 
 /**
- * Hook-friendly pricing calculator
+ * Pricing calculator with daily stability (not a React hook)
  * Use this in React components
  * 
+ * Automatically handles 24-hour caching for stable daily pricing
+ * 
  * @param {Object} productConfig - Product configuration from products.js
- * @param {number|null} liveGoldPrice - Live gold price from API
- * @returns {Object} - Calculated pricing data
+ * @param {Object|null} liveGoldData - Live gold data from fetchLiveGoldPrice()
+ * @returns {Object} - Calculated pricing data with cache status
  */
-export function usePricingCalculation(productConfig, liveGoldPrice = null) {
-  return calculateProductPricing(productConfig, liveGoldPrice);
+export function calculatePricingWithCache(productConfig, liveGoldData = null) {
+  // If we have cached data, check if we should use it
+  if (liveGoldData && liveGoldData.fromCache) {
+    const cached = getCachedPricing();
+    if (cached && cached.pricingData) {
+      console.log('Using cached pricing calculations');
+      return {
+        ...cached.pricingData,
+        fromCache: true,
+        cacheAge: Date.now() - cached.timestamp,
+      };
+    }
+  }
+
+  // Calculate fresh pricing
+  const goldPrice = liveGoldData ? liveGoldData.goldPrice : null;
+  const pricingData = calculateProductPricing(productConfig, goldPrice);
+  
+  // Cache the results if we have fresh data
+  if (liveGoldData && !liveGoldData.fromCache && goldPrice) {
+    setCachedPricing(goldPrice, pricingData);
+    console.log('Cached fresh pricing data');
+  }
+  
+  return {
+    ...pricingData,
+    fromCache: false,
+  };
 }

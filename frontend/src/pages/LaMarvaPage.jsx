@@ -7,39 +7,39 @@ import ProductLayout, {
   ProductActions,
 } from "../components/ProductLayout";
 import { products } from "../data/products";
-import { fetchLiveGoldPrice, calculateProductPricing, formatPrice } from "../utils/pricing";
+import { fetchLiveGoldPrice, calculatePricingWithCache, formatPrice } from "../utils/pricing";
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 /**
  * Custom hook for La Marva pricing with live gold data
- * Uses centralized pricing utility
+ * Uses centralized pricing utility with 24-hour caching for daily stability
  */
 function useLaMarvaPricing() {
-  const [liveGoldPrice, setLiveGoldPrice] = useState(null);
+  const [goldData, setGoldData] = useState(null);
   const [pricingData, setPricingData] = useState(null);
 
   useEffect(() => {
     async function fetchAndCalculate() {
       try {
-        // Fetch live gold price using utility
-        const goldPrice = await fetchLiveGoldPrice(API_URL);
-        setLiveGoldPrice(goldPrice);
+        // Fetch gold price (will use cache if valid)
+        const data = await fetchLiveGoldPrice(API_URL);
+        setGoldData(data);
 
-        // Calculate pricing using utility
-        const calculated = calculateProductPricing(products.laMarva, goldPrice);
+        // Calculate pricing using utility (will use cached calculations if valid)
+        const calculated = calculatePricingWithCache(products.laMarva, data);
         setPricingData(calculated);
       } catch (error) {
         console.error('Error fetching gold price:', error);
         // Fall back to base pricing
-        const calculated = calculateProductPricing(products.laMarva, null);
+        const calculated = calculatePricingWithCache(products.laMarva, null);
         setPricingData(calculated);
       }
     }
 
     fetchAndCalculate();
     
-    // Refresh every 60 seconds
+    // Check for updates every 60 seconds (but cache will prevent recalculation within 24h)
     const interval = setInterval(fetchAndCalculate, 60000);
     return () => clearInterval(interval);
   }, []);
