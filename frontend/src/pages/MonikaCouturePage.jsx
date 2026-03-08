@@ -16,6 +16,7 @@ export default function MonikaCouturePage() {
     {
       type: "video",
       src: "/videos/monika-couture.mp4",
+      poster: "/images/thumbnails/monika-couture-thumb.jpg",
       alt: "Monika Couture video",
     },
     {
