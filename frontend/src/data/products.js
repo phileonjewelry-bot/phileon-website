@@ -92,11 +92,18 @@ export const products = {
     tribute: "Created in honor of my sister Andrea.",
     tagline: "Soft in tone. Strong in spirit.",
     metals: ["10K", "14K", "18K"],
-    stones: ["Cubic", "Lab", "Natural"],
+    stones: ["Lab", "Natural"],
     pricing: {
-      gold10k: 6400,
-      gold14k: 7400,
-      gold18k: 8400
+      lab: {
+        gold10k: 6400,
+        gold14k: 7400,
+        gold18k: 8400
+      },
+      natural: {
+        gold10k: 8900,
+        gold14k: 10400,
+        gold18k: 12200
+      }
     }
   },
 

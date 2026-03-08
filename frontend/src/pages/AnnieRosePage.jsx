@@ -11,15 +11,25 @@ import { products } from "../data/products";
 export default function AnnieRosePage() {
   const { addToCart } = useCart();
   
-  // Metal options from products.js
+  // Metal options
   const metalOptions = [
-    { name: "10K Gold", label: "10K", price: products.annieRose.pricing.gold10k },
-    { name: "14K Gold", label: "14K", price: products.annieRose.pricing.gold14k },
-    { name: "18K Gold", label: "18K", price: products.annieRose.pricing.gold18k },
+    { name: "10K Gold", label: "10K", key: "gold10k" },
+    { name: "14K Gold", label: "14K", key: "gold14k" },
+    { name: "18K Gold", label: "18K", key: "gold18k" },
+  ];
+
+  // Stone options from products.js
+  const stoneOptions = [
+    { name: "Lab-Grown Diamonds", label: "Lab", key: "lab" },
+    { name: "Natural Diamonds", label: "Natural", key: "natural" },
   ];
   
-  // State for selected metal (default to first option)
+  // State for selections (default to first options)
   const [selectedMetal, setSelectedMetal] = useState(metalOptions[0]);
+  const [selectedStone, setSelectedStone] = useState(stoneOptions[0]);
+
+  // Calculate price based on both selections
+  const currentPrice = products.annieRose.pricing[selectedStone.key][selectedMetal.key];
 
   // Handle add to cart
   const handleAddToCart = () => {
@@ -27,14 +37,15 @@ export default function AnnieRosePage() {
       id: "annie-rose",
       name: products.annieRose.name,
       slug: "annie-rose",
-      price: selectedMetal.price,
+      price: currentPrice,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg",
       images: ["https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"],
-      materials: [selectedMetal.name, "Stone options available"]
+      materials: [selectedMetal.name, selectedStone.name]
     };
 
     const variant = {
-      metal: selectedMetal.name
+      metal: selectedMetal.name,
+      stone: selectedStone.name
     };
 
     addToCart(product, 1, variant);
@@ -139,29 +150,65 @@ export default function AnnieRosePage() {
           <>
             <ProductInfoSection
               titleTag="Available Options"
-              title="Choose your metal"
+              title="Configure your ring"
             >
               <p className="text-white/60 text-sm leading-relaxed mt-2">
-                Each metal option preserves the {products.annieRose.name} design. Stone options ({products.annieRose.stones.join(' · ')}) available for all metals.
+                Choose your metal and diamond type. Each combination is crafted to preserve the {products.annieRose.name} design.
               </p>
 
-              <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-white/70">
-                {metalOptions.map((metal) => (
-                  <button
-                    key={metal.name}
-                    onClick={() => setSelectedMetal(metal)}
-                    className={[
-                      "rounded-xl border p-4 text-center transition-all cursor-pointer",
-                      selectedMetal.name === metal.name
-                        ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
-                        : "border-white/10 bg-white/5 hover:border-white/30",
-                    ].join(" ")}
-                  >
-                    <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{metal.label}</p>
-                    <p className="mt-2 text-white text-base font-light">{metal.name}</p>
-                    <p className="mt-2 text-[#C6A24A] text-base font-light">${metal.price.toLocaleString()}</p>
-                  </button>
-                ))}
+              {/* Metal Selector */}
+              <div className="mt-6">
+                <p className="text-white/70 text-sm tracking-wide mb-3">Step 1: Choose your metal</p>
+                <div className="grid grid-cols-3 gap-3 text-sm text-white/70">
+                  {metalOptions.map((metal) => (
+                    <button
+                      key={metal.name}
+                      onClick={() => setSelectedMetal(metal)}
+                      className={[
+                        "rounded-xl border p-4 text-center transition-all cursor-pointer",
+                        selectedMetal.name === metal.name
+                          ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
+                          : "border-white/10 bg-white/5 hover:border-white/30",
+                      ].join(" ")}
+                    >
+                      <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{metal.label}</p>
+                      <p className="mt-2 text-white text-base font-light">{metal.name}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stone Type Selector */}
+              <div className="mt-6">
+                <p className="text-white/70 text-sm tracking-wide mb-3">Step 2: Choose your diamond type</p>
+                <div className="grid grid-cols-2 gap-3 text-sm text-white/70">
+                  {stoneOptions.map((stone) => (
+                    <button
+                      key={stone.name}
+                      onClick={() => setSelectedStone(stone)}
+                      className={[
+                        "rounded-xl border p-4 text-center transition-all cursor-pointer",
+                        selectedStone.name === stone.name
+                          ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
+                          : "border-white/10 bg-white/5 hover:border-white/30",
+                      ].join(" ")}
+                    >
+                      <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{stone.label}</p>
+                      <p className="mt-2 text-white text-base font-light">{stone.name}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Display */}
+              <div className="mt-6 rounded-xl border border-[#C6A24A]/30 bg-[#C6A24A]/5 p-4">
+                <div className="flex items-baseline justify-between">
+                  <div>
+                    <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Your Configuration</p>
+                    <p className="mt-1 text-white/80 text-sm">{selectedMetal.name} · {selectedStone.name}</p>
+                  </div>
+                  <p className="text-2xl font-light text-[#C6A24A]">${currentPrice.toLocaleString()}</p>
+                </div>
               </div>
             </ProductInfoSection>
 
