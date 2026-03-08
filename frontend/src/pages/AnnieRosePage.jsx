@@ -13,7 +13,6 @@ export default function AnnieRosePage() {
   
   // Metal options from products.js
   const metalOptions = [
-    { name: "Sterling Silver", label: "Silver", price: products.annieRose.pricing.silver },
     { name: "10K Gold", label: "10K", price: products.annieRose.pricing.gold10k },
     { name: "14K Gold", label: "14K", price: products.annieRose.pricing.gold14k },
     { name: "18K Gold", label: "18K", price: products.annieRose.pricing.gold18k },

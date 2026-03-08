@@ -91,13 +91,12 @@ export const products = {
     name: "Annie Rose",
     tribute: "Created in honor of my sister Andrea.",
     tagline: "Soft in tone. Strong in spirit.",
-    metals: ["Silver", "10K", "14K", "18K"],
+    metals: ["10K", "14K", "18K"],
     stones: ["Cubic", "Lab", "Natural"],
     pricing: {
-      silver: 1250,
-      gold10k: 2800,
-      gold14k: 3400,
-      gold18k: 4200
+      gold10k: 6400,
+      gold14k: 7400,
+      gold18k: 7900
     }
   },
 
