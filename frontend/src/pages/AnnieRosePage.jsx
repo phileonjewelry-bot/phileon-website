@@ -6,8 +6,8 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 
 export default function AnnieRosePage() {
-  // Gallery media items
-  const galleryItems = [
+  // Gallery media items - memoized to prevent recreation
+  const galleryItems = React.useMemo(() => [
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg",
@@ -53,7 +53,7 @@ export default function AnnieRosePage() {
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/g2ufvk37_1000139307.jpg",
       alt: "Annie Rose at evening event",
     },
-  ];
+  ], []);
 
   return (
     <div className="bg-black text-white min-h-screen" data-testid="annie-rose-page">

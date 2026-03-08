@@ -140,8 +140,8 @@ function useGoldPricing() {
 export default function LaMarvaPage() {
   const { tiers, goldPrice, adjusted, changePct } = useGoldPricing();
 
-  // Gallery media items
-  const galleryItems = [
+  // Gallery media items - memoized to prevent recreation on every render
+  const galleryItems = React.useMemo(() => [
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg",
@@ -177,7 +177,7 @@ export default function LaMarvaPage() {
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/x1l682uf_Lamarva5.jpeg",
       alt: "La Marva underside detail",
     },
-  ];
+  ], []);
 
   return (
     <div className="bg-black text-white min-h-screen" data-testid="la-marva-page">

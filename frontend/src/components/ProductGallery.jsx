@@ -14,7 +14,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
  * - Only active slide video plays
  */
 
-export default function ProductGallery({ items = [] }) {
+function ProductGallery({ items = [] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "start" });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -241,3 +241,7 @@ export default function ProductGallery({ items = [] }) {
     </div>
   );
 }
+
+// Memoize to prevent unnecessary re-renders when parent updates
+const MemoizedProductGallery = React.memo(ProductGallery);
+export default MemoizedProductGallery;

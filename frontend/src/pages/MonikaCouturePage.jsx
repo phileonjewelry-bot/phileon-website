@@ -6,8 +6,8 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 
 export default function MonikaCouturePage() {
-  // Gallery media items
-  const galleryItems = [
+  // Gallery media items - memoized to prevent recreation
+  const galleryItems = React.useMemo(() => [
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
@@ -58,7 +58,7 @@ export default function MonikaCouturePage() {
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/ttzpwg0u_1000139962.jpg",
       alt: "Monika Couture lifestyle",
     },
-  ];
+  ], []);
 
   return (
     <div className="bg-black text-white min-h-screen" data-testid="monika-couture-page">
