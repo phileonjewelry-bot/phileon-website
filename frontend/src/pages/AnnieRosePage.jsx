@@ -15,13 +15,13 @@ export default function AnnieRosePage() {
     },
     {
       type: "video",
-      src: "/videos/annierose-1.mp4",
-      alt: "Annie Rose detail video",
+      src: "https://customer-assets.emergentagent.com/job_phileon-jewelry/artifacts/ppw8w9p8_AnnieRosevid1-1.mp4",
+      alt: "Annie Rose video 1",
     },
     {
       type: "video",
-      src: "/videos/annierose-2.mp4",
-      alt: "Annie Rose showcase video",
+      src: "https://customer-assets.emergentagent.com/job_phileon-jewelry/artifacts/2ad9rttz_AnnieRosevid2.mp4",
+      alt: "Annie Rose video 2",
     },
     {
       type: "image",
