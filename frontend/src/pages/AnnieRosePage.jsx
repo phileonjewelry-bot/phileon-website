@@ -128,8 +128,7 @@ export default function AnnieRosePage() {
             </ProductInfoSection>
 
             <ProductActions
-              primaryAction={{ href: "/shop", label: "SHOP THIS DROP" }}
-              secondaryAction={{ href: "/custom", label: "CUSTOMIZE IT" }}
+              primaryAction={{ href: "mailto:contact@phileonjewelry.com?subject=Annie%20Rose%20Inquiry", label: "INQUIRE TO PURCHASE" }}
             />
           </>
         }

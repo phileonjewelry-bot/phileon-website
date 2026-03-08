@@ -137,7 +137,7 @@ export default function MonikaCouturePage() {
             </ProductInfoSection>
 
             <ProductActions
-              primaryAction={{ href: "/shop", label: "ADD TO CART" }}
+              primaryAction={{ href: "mailto:contact@phileonjewelry.com?subject=Monika%20Couture%20Earrings%20Inquiry", label: "INQUIRE TO PURCHASE" }}
             />
           </>
         }

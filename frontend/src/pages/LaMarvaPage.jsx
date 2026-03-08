@@ -364,14 +364,14 @@ export default function LaMarvaPage() {
                   <div className="mt-3 flex flex-col gap-2">
                     {tier.consultation ? (
                       <a
-                        href="/custom"
+                        href="mailto:contact@phileonjewelry.com?subject=La%20Marva%20Consultation%20Request"
                         className="bg-[#C6A24A] text-black px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm"
                       >
                         Request Consultation
                       </a>
                     ) : (
                       <a
-                        href="/shop"
+                        href="mailto:contact@phileonjewelry.com?subject=La%20Marva%20Purchase%20Inquiry"
                         className={[
                           "px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm",
                           tier.highlight
@@ -379,7 +379,7 @@ export default function LaMarvaPage() {
                             : "border border-white/30 text-white",
                         ].join(" ")}
                       >
-                        Add to Cart
+                        Inquire to Purchase
                       </a>
                     )}
                   </div>
