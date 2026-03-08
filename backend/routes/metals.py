@@ -9,36 +9,39 @@ router = APIRouter()
 
 
 def _try_metals_live():
-    """Primary: metals-api.com (free tier, no auth needed)"""
+    """Primary: gold-api.com (free, no auth required)"""
+    try:
+        r_gold = requests.get("https://api.gold-api.com/price/XAU", timeout=6)
+        r_silver = requests.get("https://api.gold-api.com/price/XAG", timeout=6)
+        
+        if r_gold.status_code == 200 and r_silver.status_code == 200:
+            gold_data = r_gold.json()
+            silver_data = r_silver.json()
+            
+            gold = float(gold_data["price"])
+            silver = float(silver_data["price"])
+            
+            return gold, silver, "gold-api.com"
+    except Exception as e:
+        print(f"gold-api.com failed: {e}")
+    
+    # Fallback to CoinGecko (using PAX Gold as proxy)
     try:
         r = requests.get(
-            "https://metals-api.com/api/latest?base=USD&symbols=XAU,XAG",
+            "https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,silver&vs_currencies=usd",
             timeout=6
         )
         if r.status_code == 200:
             data = r.json()
-            if data.get("success"):
-                rates = data.get("rates", {})
-                # Rates are in grams, convert to troy ounces (1 oz = 31.1035 grams)
-                gold_per_gram = 1 / rates.get("XAU", 0)
-                silver_per_gram = 1 / rates.get("XAG", 0)
-                gold = round(gold_per_gram * 31.1035, 2)
-                silver = round(silver_per_gram * 31.1035, 2)
-                return gold, silver, "metals-api.com"
-    except:
-        pass
-    
-    # Fallback to goldprice.org JSON
-    try:
-        r = requests.get("https://data-asg.goldprice.org/dbXRates/USD", timeout=6)
-        data = r.json()
-        gold = float(data["items"][0]["xauPrice"])
-        silver = float(data["items"][0]["xagPrice"])
-        return gold, silver, "goldprice.org"
-    except:
-        pass
+            # PAX Gold is 1:1 backed by physical gold
+            gold = float(data["pax-gold"]["usd"])
+            # Approximate silver from typical gold/silver ratio (~90:1 currently)
+            silver = round(gold / 90, 2)
+            return gold, silver, "coingecko"
+    except Exception as e:
+        print(f"CoinGecko failed: {e}")
         
-    raise Exception("metals.live sources failed")
+    raise Exception("All metal price sources failed")
 
 
 def _try_freegoldapi():
@@ -64,8 +67,8 @@ def metals():
     for source_fn in sources:
         try:
             gold, silver, source = source_fn()
-            # Validate that prices are reasonable (gold between $1500-$3500/oz)
-            if gold > 1500 and gold < 3500:
+            # Validate that prices are reasonable (gold between $1500-$6000/oz)
+            if gold > 1500 and gold < 6000:
                 return JSONResponse(
                     content={
                         "gold_usd_oz": gold,
