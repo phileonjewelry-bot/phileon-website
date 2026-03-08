@@ -113,6 +113,33 @@ export default function MonikaCouturePage() {
               />
             </div>
 
+            {/* Packaging */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/s2t8dt8y_1000139942.jpg"
+                alt="Monika Couture packaging"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Detail shot */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gjmyama0_1000139948.jpg"
+                alt="Monika Couture detail"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
+            {/* Lifestyle shot */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
+              <img
+                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/ttzpwg0u_1000139962.jpg"
+                alt="Monika Couture lifestyle"
+                className="w-full h-[360px] md:h-[480px] object-cover"
+              />
+            </div>
+
             {/* Hero product shot */}
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:col-span-2">
               <img
@@ -160,12 +187,6 @@ export default function MonikaCouturePage() {
               className="bg-[#C6A24A] text-black px-8 py-4 rounded-md font-semibold tracking-wide text-center"
             >
               ADD TO CART
-            </a>
-            <a
-              href="/custom"
-              className="border border-white/50 text-white px-8 py-4 rounded-md font-semibold tracking-wide text-center"
-            >
-              CUSTOMIZE IT
             </a>
           </div>
         </div>
