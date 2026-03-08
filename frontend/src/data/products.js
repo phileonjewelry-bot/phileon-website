@@ -13,7 +13,8 @@ export const products = {
 
   annieRose: {
     name: "Annie Rose",
-    startingPrice: 1250,
+    tribute: "Created in honor of my sister Andrea.",
+    tagline: "Soft in tone. Strong in spirit.",
     metals: ["Silver", "10K", "14K", "18K"],
     stones: ["Cubic", "Lab", "Natural"]
   },
