@@ -10,7 +10,12 @@ export const products = {
     story: "Named in honor of Marva Wilson.",
     tribute: "Named in honor of Marva Wilson — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.",
     description: "La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance.",
+    
+    // Dynamic Pricing Configuration
     baselineGoldUSD: 2650, // USD/oz when prices were locked
+    adjustmentThresholdPct: 5, // Only adjust if gold moves > 5%
+    dynamicPricing: true, // Enable dynamic gold-based pricing
+    
     pricing: {
       signature: 3400,     // Silver + simulated stones
       foundation: 8000,    // 10K Gold + lab-grown stones
@@ -95,6 +100,7 @@ export const products = {
   // ==========================================
   // ANNIE ROSE
   // Two-tier pricing: metal × stone type
+  // Fixed pricing (no dynamic gold adjustments)
   // Pricing keys: lab.gold10k, lab.gold14k, lab.gold18k, natural.gold10k, natural.gold14k, natural.gold18k
   // ==========================================
   annieRose: {
@@ -103,6 +109,10 @@ export const products = {
     tagline: "Soft in tone. Strong in spirit.",
     metals: ["10K", "14K", "18K"],
     stones: ["Lab", "Natural"],
+    
+    // Pricing Configuration
+    dynamicPricing: false, // Fixed pricing, no gold adjustments
+    
     pricing: {
       lab: {
         gold10k: 6400,   // 10K Gold + Lab-Grown Diamonds
@@ -120,11 +130,16 @@ export const products = {
   // ==========================================
   // MONIKA COUTURE
   // Single-tier pricing by metal type
+  // Fixed pricing (no dynamic gold adjustments)
   // Pricing keys: silver, white10k, yellow10k, rose10k
   // ==========================================
   monikaCouture: {
     name: "Monika Couture Earrings",
     weight: "10g per pair",
+    
+    // Pricing Configuration
+    dynamicPricing: false, // Fixed pricing, no gold adjustments
+    
     pricing: {
       silver: 1400,      // Sterling Silver
       white10k: 3700,    // 10K White Gold

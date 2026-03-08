@@ -7,71 +7,67 @@ import ProductLayout, {
   ProductActions,
 } from "../components/ProductLayout";
 import { products } from "../data/products";
+import { fetchLiveGoldPrice, calculateProductPricing, formatPrice } from "../utils/pricing";
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
-// ==========================================
-// PRICING ENGINE
-// Baseline gold price when retail was set.
-// If gold moves > 5%, prices scale proportionally.
-// Otherwise, hold.
-// ==========================================
-const BASELINE_GOLD_USD = products.laMarva.baselineGoldUSD;
-
-// Base tiers from products.js with pricing
-const BASE_TIERS = products.laMarva.tiers.map(tier => ({
-  ...tier,
-  basePrice: products.laMarva.pricing[tier.pricingKey]
-}));
-
-function useGoldPricing() {
-  const [goldPrice, setGoldPrice] = useState(null);
-  const [adjusted, setAdjusted] = useState(false);
-  const [changePct, setChangePct] = useState(0);
+/**
+ * Custom hook for La Marva pricing with live gold data
+ * Uses centralized pricing utility
+ */
+function useLaMarvaPricing() {
+  const [liveGoldPrice, setLiveGoldPrice] = useState(null);
+  const [pricingData, setPricingData] = useState(null);
 
   useEffect(() => {
-    async function fetchGold() {
+    async function fetchAndCalculate() {
       try {
-        const res = await fetch(`${API_URL}/api/metals`, { cache: "no-store" });
-        const data = await res.json();
-        if (data.status === "live" && data.gold_usd_oz > 0) {
-          setGoldPrice(data.gold_usd_oz);
-          const pct = ((data.gold_usd_oz - BASELINE_GOLD_USD) / BASELINE_GOLD_USD) * 100;
-          setChangePct(pct);
-          setAdjusted(Math.abs(pct) > 5);
-        }
-      } catch (e) {
-        // hold pricing on error
+        // Fetch live gold price using utility
+        const goldPrice = await fetchLiveGoldPrice(API_URL);
+        setLiveGoldPrice(goldPrice);
+
+        // Calculate pricing using utility
+        const calculated = calculateProductPricing(products.laMarva, goldPrice);
+        setPricingData(calculated);
+      } catch (error) {
+        console.error('Error fetching gold price:', error);
+        // Fall back to base pricing
+        const calculated = calculateProductPricing(products.laMarva, null);
+        setPricingData(calculated);
       }
     }
-    fetchGold();
-    const t = setInterval(fetchGold, 60000);
-    return () => clearInterval(t);
+
+    fetchAndCalculate();
+    
+    // Refresh every 60 seconds
+    const interval = setInterval(fetchAndCalculate, 60000);
+    return () => clearInterval(interval);
   }, []);
 
-  const tiers = BASE_TIERS.map((tier) => {
-    if (adjusted && !tier.consultation) {
-      const multiplier = goldPrice / BASELINE_GOLD_USD;
-      const newPrice = Math.round(tier.basePrice * multiplier / 100) * 100;
-      return {
-        ...tier,
-        price: `$${newPrice.toLocaleString()}`,
-        priceAdjusted: true,
-      };
-    }
-    const prefix = tier.consultation ? "Starting at " : "";
+  // Return base pricing while loading
+  if (!pricingData) {
     return {
-      ...tier,
-      price: `${prefix}$${tier.basePrice.toLocaleString()}`,
-      priceAdjusted: false,
+      tiers: products.laMarva.tiers.map(tier => ({
+        ...tier,
+        basePrice: products.laMarva.pricing[tier.pricingKey],
+        adjustedPrice: products.laMarva.pricing[tier.pricingKey],
+        isAdjusted: false,
+      })),
+      goldPricing: {
+        currentGoldUSD: products.laMarva.baselineGoldUSD,
+        baselineGoldUSD: products.laMarva.baselineGoldUSD,
+        percentMove: 0,
+        isAdjusted: false,
+        status: 'loading',
+      },
     };
-  });
+  }
 
-  return { tiers, goldPrice, adjusted, changePct };
+  return pricingData;
 }
 
 export default function LaMarvaPage() {
-  const { tiers, goldPrice, adjusted, changePct } = useGoldPricing();
+  const { tiers, goldPricing } = useLaMarvaPricing();
 
   // Gallery media items - memoized to prevent recreation on every render
   const galleryItems = React.useMemo(() => [
@@ -205,13 +201,13 @@ export default function LaMarvaPage() {
               </p>
 
               {/* Gold price status */}
-              {goldPrice && (
+              {goldPricing && goldPricing.status !== 'loading' && (
                 <div className="mt-4 flex items-center gap-3 text-xs text-white/40">
-                  <span>Gold spot: ${goldPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}/oz</span>
+                  <span>Gold spot: ${goldPricing.currentGoldUSD.toLocaleString(undefined, { maximumFractionDigits: 0 })}/oz</span>
                   <span className="text-white/25">|</span>
-                  {adjusted ? (
+                  {goldPricing.isAdjusted ? (
                     <span className="text-[#C6A24A]">
-                      Prices adjusted ({changePct > 0 ? '+' : ''}{changePct.toFixed(1)}% gold move)
+                      Prices adjusted ({goldPricing.percentMove > 0 ? '+' : ''}{goldPricing.percentMove.toFixed(1)}% gold move)
                     </span>
                   ) : (
                     <span>Prices held (gold within 5% of baseline)</span>
@@ -258,9 +254,9 @@ export default function LaMarvaPage() {
 
                       {!tier.isHeirloom ? (
                         <p className="text-lg md:text-xl font-light">
-                          {tier.price}
+                          {formatPrice(tier.adjustedPrice)}
                           <span className="ml-1 text-xs text-white/50">CAD</span>
-                          {tier.priceAdjusted && (
+                          {tier.isAdjusted && (
                             <span className="ml-2 text-xs text-[#C6A24A]/70">*</span>
                           )}
                         </p>
