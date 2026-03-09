@@ -117,7 +117,9 @@ function ProductGallery({ items = [] }) {
                 {item.type === "video" ? (
                   <video
                     ref={(el) => (videoRefs.current[index] = el)}
-                    className="w-full h-[400px] md:h-[600px] lg:h-[700px] object-cover bg-black"
+                    className={`w-full h-[400px] md:h-[600px] lg:h-[700px] bg-black ${
+                      item.objectFit === "contain" ? "object-contain" : "object-cover"
+                    }`}
                     autoPlay
                     muted
                     loop

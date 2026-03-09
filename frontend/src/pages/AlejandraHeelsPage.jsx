@@ -109,6 +109,7 @@ export default function AlejandraHeelsPage() {
         type: "video",
         src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
         alt: "Alejandra Heels - Product Video",
+        objectFit: "contain", // Use contain to show full product without cropping
       },
       {
         type: "image",
