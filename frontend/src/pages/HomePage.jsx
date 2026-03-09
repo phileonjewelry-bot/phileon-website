@@ -165,7 +165,7 @@ const HomePage = () => {
             >
               <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
                 <img
-                  src="https://images.pexels.com/photos/16180694/pexels-photo-16180694.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg"
                   alt="Alejandra Heels"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

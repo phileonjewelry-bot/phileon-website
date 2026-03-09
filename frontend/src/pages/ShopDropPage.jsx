@@ -49,7 +49,7 @@ const CORE_PRODUCTS = [
     name: 'Alejandra Heels',
     slug: 'alejandra-heels',
     materialLine: 'Heel Earrings · Silver & Solid Gold',
-    imageUrl: 'https://images.pexels.com/photos/16180694/pexels-photo-16180694.jpeg?auto=compress&cs=tinysrgb&w=800',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg',
     href: '/products/alejandra-heels',
     price_range: 'From $1,250',
     inventory_count: 100,
