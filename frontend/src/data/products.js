@@ -146,6 +146,49 @@ export const products = {
       yellow10k: 3700,   // 10K Yellow Gold
       rose10k: 3700      // 10K Rose Gold
     }
+  },
+
+  // ==========================================
+  // ALEJANDRA HEELS
+  // Sculptural heel earrings with three-tier pricing
+  // Fixed pricing (no dynamic gold adjustments)
+  // Pricing keys: silver.cubic, plated.cubic, solid10k.lab, solid14k.lab
+  // ==========================================
+  alejandraHeels: {
+    name: "Alejandra Heels",
+    category: "Heel Earrings",
+    description: "Sculptural miniature heels cast in precious metal and finished with a pavé strap.",
+    tagline: "A playful couture design created to capture the spirit of fashion, movement, and confidence.",
+    
+    // Pricing Configuration
+    dynamicPricing: false, // Fixed pricing, no gold adjustments
+    
+    // Material tiers
+    tiers: ["Silver", "Gold Plated", "Solid Gold"],
+    stones: ["Cubic", "Lab Diamonds"],
+    
+    pricing: {
+      // Tier 1: Sterling Silver + Cubic Zirconia
+      silver: {
+        cubic: 1250
+      },
+      // Tier 2: Gold Plated Silver + Cubic Zirconia
+      plated: {
+        yellowCubic: 1450,
+        roseCubic: 1450
+      },
+      // Tier 3: Solid Gold + Lab Diamonds
+      solid10k: {
+        whiteLab: 4800,
+        yellowLab: 4800,
+        roseLab: 4800
+      },
+      solid14k: {
+        whiteLab: 5300,
+        yellowLab: 5300,
+        roseLab: 5300
+      }
+    }
   }
 
 };
