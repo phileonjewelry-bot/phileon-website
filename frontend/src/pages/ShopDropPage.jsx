@@ -9,49 +9,82 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import '../styles/shop-drop.css';
 
-// Hardcoded products as fallback
-const HARDCODED_PRODUCTS = [
+// Core collection products - Always shown first
+const CORE_PRODUCTS = [
+  {
+    id: 'la-marva',
+    name: 'La Marva',
+    slug: 'la-marva',
+    materialLine: 'Signature Ring · Dynamic Pricing',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/f24sncpd_Phile%CC%81on%20Jewelry%20-%20La%20Marva%20Collection%201.png',
+    href: '/products/la-marva',
+    price_range: 'From $3,400',
+    inventory_count: 100,
+    is_core: true,
+  },
+  {
+    id: 'annie-rose',
+    name: 'Annie Rose',
+    slug: 'annie-rose',
+    materialLine: 'Lab & Natural Diamonds · 10K-18K Gold',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/tsl0l7jn_Phile%CC%81on%20Jewelry%20-%20Annie%20Rose%20Collection%201.png',
+    href: '/products/annie-rose',
+    price_range: 'From $6,400',
+    inventory_count: 100,
+    is_core: true,
+  },
+  {
+    id: 'monika-couture',
+    name: 'Monika Couture',
+    slug: 'monika-couture',
+    materialLine: 'Earrings · Silver & Gold Options',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/9d64hztv_Phile%CC%81on%20Jewelry%20-%20Monika%20Couture%20Earrings%201.png',
+    href: '/products/monika-couture',
+    price_range: 'From $1,400',
+    inventory_count: 100,
+    is_core: true,
+  },
+  {
+    id: 'alejandra-heels',
+    name: 'Alejandra Heels',
+    slug: 'alejandra-heels',
+    materialLine: 'Heel Earrings · Silver & Solid Gold',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg',
+    href: '/products/alejandra-heels',
+    price_range: 'From $1,250',
+    inventory_count: 100,
+    is_core: true,
+  },
+];
+
+// Additional drop products as fallback
+const DROP_PRODUCTS = [
   {
     id: '1',
     name: 'Eclipse Ring',
+    slug: 'eclipse-ring',
     materialLine: 'Titanium · Black Diamond',
     imageUrl: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
     href: '/piece/eclipse-ring',
+    inventory_count: 0,
   },
   {
     id: '2',
     name: 'Celestial Band',
+    slug: 'celestial-band',
     materialLine: 'White Gold · Star Sapphire',
     imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=800&q=80',
     href: '/piece/celestial-band',
+    inventory_count: 0,
   },
   {
     id: '3',
     name: 'Serpent Coil',
+    slug: 'serpent-coil',
     materialLine: '18K Rose Gold · Emerald Eyes',
     imageUrl: 'https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80',
     href: '/piece/serpent-coil',
-  },
-  {
-    id: '4',
-    name: 'Monarch Signet',
-    materialLine: '22K Gold · Hand Engraved',
-    imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=800&q=80',
-    href: '/piece/monarch-signet',
-  },
-  {
-    id: '5',
-    name: 'Infinity Embrace',
-    materialLine: 'White Gold · VS1 Diamonds',
-    imageUrl: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80',
-    href: '/piece/infinity-embrace',
-  },
-  {
-    id: '6',
-    name: 'Noir Statement',
-    materialLine: 'Black Rhodium · Onyx',
-    imageUrl: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
-    href: '/piece/noir-statement',
+    inventory_count: 0,
   },
 ];
 
@@ -68,16 +101,21 @@ const ShopDropPage = () => {
         const response = await publicApi.getProducts({ featured: true });
         const apiProducts = response.data || [];
         
-        // Use API products if available, otherwise fallback to hardcoded
-        if (apiProducts.length > 0) {
-          setProducts(apiProducts);
-        } else {
-          setProducts(HARDCODED_PRODUCTS);
-        }
+        // Always show core products first, then API products (excluding duplicates), then drop products
+        const coreIds = CORE_PRODUCTS.map(p => p.id);
+        const filteredApiProducts = apiProducts.filter(p => !coreIds.includes(p.id));
+        
+        const allProducts = [
+          ...CORE_PRODUCTS,
+          ...filteredApiProducts,
+          ...DROP_PRODUCTS,
+        ];
+        
+        setProducts(allProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
-        // Keep the hardcoded products as fallback
-        setProducts(HARDCODED_PRODUCTS);
+        // Show core products + drop products as fallback
+        setProducts([...CORE_PRODUCTS, ...DROP_PRODUCTS]);
       }
     };
 
@@ -197,7 +235,7 @@ const ShopDropPage = () => {
                     />
                   </button>
                   
-                  <Link to={`/piece/${product.slug}`} className="shop-drop__card-link">
+                  <Link to={product.href || `/piece/${product.slug}`} className="shop-drop__card-link">
                     <div className="shop-drop__card-image relative">
                       {/* DROP MODE BADGES - PROMINENTLY DISPLAYED */}
                       <div className="absolute top-3 left-3 z-10 space-y-2">

@@ -78,6 +78,121 @@ const HomePage = () => {
       {/* Hero Section - Video Opener */}
       <Hero />
 
+      {/* Core Products Showcase */}
+      <section className="py-24 lg:py-32 px-8 bg-phileon-near-black">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-4">Core Collection</p>
+            <h2 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-phileon-ivory">
+              Signature Pieces
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Link
+              to="/products/la-marva"
+              className="group"
+              data-testid="product-card-la-marva"
+            >
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/f24sncpd_Phile%CC%81on%20Jewelry%20-%20La%20Marva%20Collection%201.png"
+                  alt="La Marva"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-6 text-center">
+                <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  La Marva
+                </h3>
+                <p className="text-sm text-phileon-ivory-muted mt-2">
+                  Signature Ring · Dynamic Pricing
+                </p>
+                <p className="text-sm text-phileon-gold mt-1">From $3,400</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/products/annie-rose"
+              className="group"
+              data-testid="product-card-annie-rose"
+            >
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/tsl0l7jn_Phile%CC%81on%20Jewelry%20-%20Annie%20Rose%20Collection%201.png"
+                  alt="Annie Rose"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-6 text-center">
+                <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  Annie Rose
+                </h3>
+                <p className="text-sm text-phileon-ivory-muted mt-2">
+                  Lab & Natural Diamonds
+                </p>
+                <p className="text-sm text-phileon-gold mt-1">From $6,400</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/products/monika-couture"
+              className="group"
+              data-testid="product-card-monika-couture"
+            >
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/9d64hztv_Phile%CC%81on%20Jewelry%20-%20Monika%20Couture%20Earrings%201.png"
+                  alt="Monika Couture"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-6 text-center">
+                <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  Monika Couture
+                </h3>
+                <p className="text-sm text-phileon-ivory-muted mt-2">
+                  Earrings · Silver & Gold
+                </p>
+                <p className="text-sm text-phileon-gold mt-1">From $1,400</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/products/alejandra-heels"
+              className="group"
+              data-testid="product-card-alejandra-heels"
+            >
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg"
+                  alt="Alejandra Heels"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="mt-6 text-center">
+                <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  Alejandra Heels
+                </h3>
+                <p className="text-sm text-phileon-ivory-muted mt-2">
+                  Heel Earrings · Sculptural Design
+                </p>
+                <p className="text-sm text-phileon-gold mt-1">From $1,250</p>
+              </div>
+            </Link>
+          </div>
+
+          <div className="text-center mt-14">
+            <Link 
+              to="/shop" 
+              className="px-10 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black"
+            >
+              View All Products
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* La Marva Flagship Section */}
       <LaMarvaFlagship />
 

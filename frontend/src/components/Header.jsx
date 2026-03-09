@@ -7,11 +7,22 @@ import HeaderCartButton from './HeaderCartButton';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
   const location = useLocation();
 
   const navigation = [
     { name: 'Home', path: '/' },
     { name: 'Shop', path: '/shop' },
+    { 
+      name: 'Products', 
+      path: '/shop',
+      dropdown: [
+        { name: 'La Marva Ring', path: '/products/la-marva' },
+        { name: 'Annie Rose Ring', path: '/products/annie-rose' },
+        { name: 'Monika Couture Earrings', path: '/products/monika-couture' },
+        { name: 'Alejandra Heels Earrings', path: '/products/alejandra-heels' },
+      ]
+    },
     { name: 'Collections', path: '/collections' },
     { name: 'Custom Design', path: '/custom-design' },
     { name: 'About', path: '/about' },
@@ -39,13 +50,42 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className="text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300 text-sm uppercase tracking-wider"
-                >
-                  {item.name}
-                </Link>
+                item.dropdown ? (
+                  <div 
+                    key={item.name}
+                    className="relative group"
+                    onMouseEnter={() => setProductsDropdownOpen(true)}
+                    onMouseLeave={() => setProductsDropdownOpen(false)}
+                  >
+                    <Link
+                      to={item.path}
+                      className="text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300 text-sm uppercase tracking-wider"
+                    >
+                      {item.name}
+                    </Link>
+                    {productsDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-md shadow-xl py-2 z-50">
+                        {item.dropdown.map((subItem) => (
+                          <Link
+                            key={subItem.path}
+                            to={subItem.path}
+                            className="block px-4 py-2 text-sm text-gray-300 hover:text-yellow-500 hover:bg-gray-800 transition-colors"
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className="text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300 text-sm uppercase tracking-wider"
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
             </nav>
 
@@ -76,14 +116,38 @@ const Header = () => {
           <div className="md:hidden bg-gray-900 border-t border-gray-800">
             <nav className="px-6 py-4 space-y-4">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300"
-                >
-                  {item.name}
-                </Link>
+                item.dropdown ? (
+                  <div key={item.name} className="space-y-2">
+                    <Link
+                      to={item.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300"
+                    >
+                      {item.name}
+                    </Link>
+                    <div className="pl-4 space-y-2">
+                      {item.dropdown.map((subItem) => (
+                        <Link
+                          key={subItem.path}
+                          to={subItem.path}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block text-sm text-gray-400 hover:text-yellow-500 transition-colors duration-300"
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300"
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
             </nav>
           </div>
