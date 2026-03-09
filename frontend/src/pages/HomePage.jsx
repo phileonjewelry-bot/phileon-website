@@ -96,7 +96,7 @@ const HomePage = () => {
             >
               <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
                 <img
-                  src="https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/f24sncpd_Phile%CC%81on%20Jewelry%20-%20La%20Marva%20Collection%201.png"
+                  src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
                   alt="La Marva"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -119,7 +119,7 @@ const HomePage = () => {
             >
               <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
                 <img
-                  src="https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/tsl0l7jn_Phile%CC%81on%20Jewelry%20-%20Annie%20Rose%20Collection%201.png"
+                  src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
                   alt="Annie Rose"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -142,7 +142,7 @@ const HomePage = () => {
             >
               <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
                 <img
-                  src="https://customer-assets.emergentagent.com/job_69cdf068-95a9-44ef-b008-a4c2998096d0/artifacts/9d64hztv_Phile%CC%81on%20Jewelry%20-%20Monika%20Couture%20Earrings%201.png"
+                  src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"
                   alt="Monika Couture"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -165,7 +165,7 @@ const HomePage = () => {
             >
               <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
                 <img
-                  src="https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg"
+                  src="https://images.pexels.com/photos/16180694/pexels-photo-16180694.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Alejandra Heels"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
