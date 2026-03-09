@@ -4,7 +4,16 @@ export default function Hero() {
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
 
-      {/* Background Video or Image */}
+      {/* Background Hero Image */}
+      <div className="absolute inset-0 h-full w-full">
+        <img 
+          src="https://images.unsplash.com/photo-1616837874254-8d5aaa63e273?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwzfHxsdXh1cnklMjBqZXdlbHJ5fGVufDB8fHx8MTc3MzA5NjI1MHww&ixlib=rb-4.1.0&q=85&w=1920"
+          alt="PHILEON Luxury Jewelry"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
+      
+      {/* Optional: Video overlay if available */}
       <video
         className="absolute inset-0 h-full w-full object-cover"
         autoPlay
@@ -12,10 +21,7 @@ export default function Hero() {
         loop
         playsInline
       >
-        <source
-          src="/videos/phileon-opener.mp4"
-          type="video/mp4"
-        />
+        <source src="/videos/phileon-opener.mp4" type="video/mp4" />
       </video>
 
       {/* Cinematic Overlay */}
