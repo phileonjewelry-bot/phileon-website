@@ -88,8 +88,23 @@ export default function AlejandraHeelsPage() {
   const galleryItems = React.useMemo(() => [
     {
       type: "image",
-      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ctwrb3no_1000140403.jpg",
-      alt: "Alejandra Heels - Sculptural Heel Earrings",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
+      alt: "Alejandra Heels - Sterling Silver",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+      alt: "Alejandra Heels - White Gold",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+      alt: "Alejandra Heels - Yellow Gold",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+      alt: "Alejandra Heels - Rose Gold",
     },
   ], []);
 
