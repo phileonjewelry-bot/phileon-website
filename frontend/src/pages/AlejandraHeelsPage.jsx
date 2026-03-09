@@ -100,39 +100,35 @@ export default function AlejandraHeelsPage() {
     addToCart(product, 1, variant);
   };
 
-  // Gallery items - dynamically update first image based on selected metal color
-  const galleryItems = React.useMemo(() => {
-    const firstImage = metalImages[selectedMetal.color] || metalImages.Silver;
-    
-    return [
-      {
-        type: "video",
-        src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
-        alt: "Alejandra Heels - Product Video",
-        objectFit: "contain", // Use contain to show full product without cropping
-      },
-      {
-        type: "image",
-        src: firstImage,
-        alt: `Alejandra Heels - ${selectedMetal.color} ${selectedMetal.name}`,
-      },
-      {
-        type: "image",
-        src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
-        alt: "Alejandra Heels - White Gold",
-      },
-      {
-        type: "image",
-        src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
-        alt: "Alejandra Heels - Yellow Gold",
-      },
-      {
-        type: "image",
-        src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
-        alt: "Alejandra Heels - Rose Gold",
-      },
-    ];
-  }, [selectedMetal.color]);
+  // Gallery items
+  const galleryItems = React.useMemo(() => [
+    {
+      type: "video",
+      src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
+      alt: "Alejandra Heels - Product Video",
+      objectFit: "contain", // Use contain to show full product without cropping
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
+      alt: "Alejandra Heels - Sterling Silver",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+      alt: "Alejandra Heels - White Gold",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+      alt: "Alejandra Heels - Yellow Gold",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+      alt: "Alejandra Heels - Rose Gold",
+    },
+  ], []);
 
   return (
     <div className="min-h-screen bg-black text-white">
