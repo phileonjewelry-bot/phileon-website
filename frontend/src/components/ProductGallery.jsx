@@ -118,6 +118,7 @@ function ProductGallery({ items = [] }) {
                   <video
                     ref={(el) => (videoRefs.current[index] = el)}
                     className="w-full h-[400px] md:h-[600px] lg:h-[700px] object-cover bg-black"
+                    autoPlay
                     muted
                     loop
                     playsInline

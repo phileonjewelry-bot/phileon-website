@@ -87,6 +87,11 @@ export default function AlejandraHeelsPage() {
   // Gallery items
   const galleryItems = React.useMemo(() => [
     {
+      type: "video",
+      src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
+      alt: "Alejandra Heels - Product Video",
+    },
+    {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
       alt: "Alejandra Heels - Sterling Silver",
