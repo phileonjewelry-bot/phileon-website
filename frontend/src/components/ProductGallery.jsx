@@ -202,7 +202,7 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
               key={index}
               onClick={() => scrollTo(index)}
               className={[
-                "flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border-2 transition-all",
+                "relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border-2 transition-all",
                 selectedIndex === index
                   ? "border-[#C6A24A] opacity-100"
                   : "border-white/20 opacity-50 hover:opacity-75",
@@ -211,15 +211,30 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
               data-testid={`gallery-thumb-${index}`}
             >
               {item.type === "video" ? (
-                <video
-                  className="w-full h-full object-cover pointer-events-none bg-black"
-                  muted
-                  playsInline
-                  preload="metadata"
-                  poster={item.poster || undefined}
-                >
-                  <source src={item.src} type="video/mp4" />
-                </video>
+                <>
+                  <video
+                    className="w-full h-full object-cover pointer-events-none bg-black"
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster={item.poster || undefined}
+                  >
+                    <source src={item.src} type="video/mp4" />
+                  </video>
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 pointer-events-none">
+                    <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className="w-5 h-5 text-black ml-0.5"
+                      >
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <img
                   src={item.src}
