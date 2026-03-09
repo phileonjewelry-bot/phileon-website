@@ -91,14 +91,14 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Link
               to="/products/la-marva"
-              className="group"
+              className="group block"
               data-testid="product-card-la-marva"
             >
-              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative transition-transform duration-[350ms] ease-in-out group-hover:scale-105">
                 <img
                   src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
                   alt="La Marva"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="mt-6 text-center">
@@ -114,14 +114,14 @@ const HomePage = () => {
 
             <Link
               to="/products/annie-rose"
-              className="group"
+              className="group block"
               data-testid="product-card-annie-rose"
             >
-              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative transition-transform duration-[350ms] ease-in-out group-hover:scale-105">
                 <img
                   src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
                   alt="Annie Rose"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="mt-6 text-center">
@@ -137,14 +137,14 @@ const HomePage = () => {
 
             <Link
               to="/products/monika-couture"
-              className="group"
+              className="group block"
               data-testid="product-card-monika-couture"
             >
-              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative transition-transform duration-[350ms] ease-in-out group-hover:scale-105">
                 <img
                   src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"
                   alt="Monika Couture"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="mt-6 text-center">
@@ -160,14 +160,14 @@ const HomePage = () => {
 
             <Link
               to="/products/alejandra-heels"
-              className="group"
+              className="group block"
               data-testid="product-card-alejandra-heels"
             >
-              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+              <div className="aspect-square overflow-hidden bg-phileon-charcoal relative transition-transform duration-[350ms] ease-in-out group-hover:scale-105">
                 <img
                   src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg"
                   alt="Alejandra Heels"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="mt-6 text-center">
