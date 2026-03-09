@@ -17,15 +17,8 @@ export default function MonikaCouturePage() {
       name: "Sterling Silver", 
       label: "Silver", 
       price: products.monikaCouture.pricing.silver,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/5zjvbk47_1000139953.jpg",
+      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
       gradient: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
-    },
-    { 
-      name: "10K Yellow Gold", 
-      label: "Yellow Gold", 
-      price: products.monikaCouture.pricing.yellow10k,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
-      gradient: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
     },
     { 
       name: "10K Rose Gold", 
@@ -35,11 +28,11 @@ export default function MonikaCouturePage() {
       gradient: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)",
     },
     { 
-      name: "10K White Gold", 
-      label: "White Gold", 
-      price: products.monikaCouture.pricing.white10k,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
-      gradient: "linear-gradient(135deg, #f5f5f5 0%, #cfcfcf 100%)",
+      name: "10K Yellow Gold", 
+      label: "Yellow Gold", 
+      price: products.monikaCouture.pricing.yellow10k,
+      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
+      gradient: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
     },
   ];
   
