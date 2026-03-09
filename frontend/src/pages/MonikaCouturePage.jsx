@@ -123,13 +123,18 @@ export default function MonikaCouturePage() {
   return (
     <div className="bg-black text-white min-h-screen" data-testid="monika-couture-page">
       {/* Hero Section */}
-      <section className="relative">
-        <img
-          key={selectedMetal.name}
-          src={selectedMetal.image}
-          alt="The Monika Couture Earrings"
-          className="w-full h-[50vh] md:h-[65vh] object-cover animate-fadeScale"
-        />
+      <section className="relative overflow-hidden">
+        <div className="relative w-full h-[50vh] md:h-[65vh]">
+          <img
+            key={selectedMetal.name}
+            src={selectedMetal.image}
+            alt="The Monika Couture Earrings"
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
+            style={{
+              animation: 'fadeIn 0.5s ease-out'
+            }}
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
         <div className="absolute bottom-10 left-0 right-0 text-center">
@@ -141,22 +146,6 @@ export default function MonikaCouturePage() {
           </h1>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeScale {
-          from {
-            opacity: 0;
-            transform: scale(1);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1.02);
-          }
-        }
-        .animate-fadeScale {
-          animation: fadeScale 0.35s ease-out forwards;
-        }
-      `}</style>
 
       {/* Product Layout with Gallery + Info */}
       <ProductLayout
