@@ -10,6 +10,22 @@ import { products } from "../data/products";
 export default function AlejandraHeelsPage() {
   const { addToCart } = useCart();
   
+  // Metal color to swatch color mapping
+  const metalSwatchColors = {
+    Silver: "#C0C0C0",
+    White: "#F5F5F5",
+    Yellow: "#FFD700",
+    Rose: "#E0BFB8"
+  };
+
+  // Metal color to image mapping
+  const metalImages = {
+    Silver: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
+    White: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+    Yellow: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+    Rose: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg"
+  };
+
   // Configuration options
   const metalOptions = {
     silver: [
@@ -84,34 +100,38 @@ export default function AlejandraHeelsPage() {
     addToCart(product, 1, variant);
   };
 
-  // Gallery items
-  const galleryItems = React.useMemo(() => [
-    {
-      type: "video",
-      src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
-      alt: "Alejandra Heels - Product Video",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
-      alt: "Alejandra Heels - Sterling Silver",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
-      alt: "Alejandra Heels - White Gold",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
-      alt: "Alejandra Heels - Yellow Gold",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
-      alt: "Alejandra Heels - Rose Gold",
-    },
-  ], []);
+  // Gallery items - dynamically update first image based on selected metal color
+  const galleryItems = React.useMemo(() => {
+    const firstImage = metalImages[selectedMetal.color] || metalImages.Silver;
+    
+    return [
+      {
+        type: "video",
+        src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
+        alt: "Alejandra Heels - Product Video",
+      },
+      {
+        type: "image",
+        src: firstImage,
+        alt: `Alejandra Heels - ${selectedMetal.color} ${selectedMetal.name}`,
+      },
+      {
+        type: "image",
+        src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+        alt: "Alejandra Heels - White Gold",
+      },
+      {
+        type: "image",
+        src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+        alt: "Alejandra Heels - Yellow Gold",
+      },
+      {
+        type: "image",
+        src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+        alt: "Alejandra Heels - Rose Gold",
+      },
+    ];
+  }, [selectedMetal.color]);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -195,25 +215,45 @@ export default function AlejandraHeelsPage() {
                 </div>
               )}
 
-              {/* Metal Color Selector */}
+              {/* Metal Color Selector with Swatches */}
               <div className="mt-6">
-                <p className="text-white/70 text-sm tracking-wide mb-3">
+                <p className="text-white/70 text-sm tracking-wide mb-4">
                   {selectedStone.key === "lab" ? "Step 3: Choose your gold color" : "Step 2: Choose your finish"}
                 </p>
-                <div className="grid grid-cols-3 gap-3 text-sm text-white/70">
+                
+                {/* Circular Metal Swatches */}
+                <div className="flex flex-wrap gap-4">
                   {metalOptions[selectedTier].map((metal) => (
                     <button
                       key={metal.key}
                       onClick={() => handleMetalChange(metal)}
-                      className={[
-                        "rounded-xl border p-4 text-center transition-all cursor-pointer",
-                        selectedMetal.key === metal.key
-                          ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
-                          : "border-white/10 bg-white/5 hover:border-white/30",
-                      ].join(" ")}
+                      className="flex flex-col items-center gap-2 group"
+                      data-testid={`metal-swatch-${metal.color.toLowerCase()}`}
                     >
-                      <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{metal.color}</p>
-                      <p className="mt-2 text-white text-sm font-light">{metal.color}</p>
+                      {/* Circular Swatch */}
+                      <div
+                        className={[
+                          "w-14 h-14 rounded-full border-2 transition-all duration-300",
+                          selectedMetal.key === metal.key
+                            ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/30"
+                            : "border-white/20 group-hover:border-white/40 group-hover:scale-105",
+                        ].join(" ")}
+                        style={{ 
+                          backgroundColor: metalSwatchColors[metal.color],
+                          boxShadow: selectedMetal.key === metal.key 
+                            ? `0 0 20px ${metalSwatchColors[metal.color]}40` 
+                            : 'none'
+                        }}
+                      />
+                      {/* Label */}
+                      <span className={[
+                        "text-xs tracking-wider transition-colors duration-300 text-center",
+                        selectedMetal.key === metal.key
+                          ? "text-[#C6A24A] font-medium"
+                          : "text-white/60 group-hover:text-white/80"
+                      ].join(" ")}>
+                        {metal.color}
+                      </span>
                     </button>
                   ))}
                 </div>
