@@ -11,35 +11,35 @@ import { products } from "../data/products";
 export default function MonikaCouturePage() {
   const { addToCart } = useCart();
   
-  // Metal options with images and colors
+  // Metal options with images and gradient swatch colors
   const metalOptions = [
     { 
       name: "Sterling Silver", 
       label: "Silver", 
       price: products.monikaCouture.pricing.silver,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/5zjvbk47_1000139953.jpg",
-      color: "#C0C0C0", // Silver
+      gradient: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
     },
     { 
       name: "10K Yellow Gold", 
       label: "Yellow Gold", 
       price: products.monikaCouture.pricing.yellow10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
-      color: "#FFD700", // Gold
+      gradient: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
     },
     { 
       name: "10K Rose Gold", 
       label: "Rose Gold", 
       price: products.monikaCouture.pricing.rose10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/jcswkfyo_1000139952.jpg",
-      color: "#E0BFB8", // Rose Gold
+      gradient: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)",
     },
     { 
       name: "10K White Gold", 
       label: "White Gold", 
       price: products.monikaCouture.pricing.white10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
-      color: "#F5F5F5", // White Gold / Platinum
+      gradient: "linear-gradient(135deg, #f5f5f5 0%, #cfcfcf 100%)",
     },
   ];
   
@@ -125,9 +125,10 @@ export default function MonikaCouturePage() {
       {/* Hero Section */}
       <section className="relative">
         <img
+          key={selectedMetal.name}
           src={selectedMetal.image}
           alt="The Monika Couture Earrings"
-          className="w-full h-[50vh] md:h-[65vh] object-cover transition-opacity duration-500"
+          className="w-full h-[50vh] md:h-[65vh] object-cover animate-fadeScale"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
@@ -140,6 +141,22 @@ export default function MonikaCouturePage() {
           </h1>
         </div>
       </section>
+
+      <style jsx>{`
+        @keyframes fadeScale {
+          from {
+            opacity: 0;
+            transform: scale(1);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1.02);
+          }
+        }
+        .animate-fadeScale {
+          animation: fadeScale 0.35s ease-out forwards;
+        }
+      `}</style>
 
       {/* Product Layout with Gallery + Info */}
       <ProductLayout
@@ -180,19 +197,16 @@ export default function MonikaCouturePage() {
                     className="flex flex-col items-center gap-2 group"
                     data-testid={`metal-swatch-${metal.label.toLowerCase().replace(' ', '-')}`}
                   >
-                    {/* Circular Swatch */}
+                    {/* Circular Gradient Swatch */}
                     <div
                       className={[
-                        "w-12 h-12 rounded-full border-2 transition-all duration-300",
+                        "w-7 h-7 rounded-full border-2 transition-all duration-300",
                         selectedMetal.name === metal.name
-                          ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/30"
-                          : "border-white/20 group-hover:border-white/40 group-hover:scale-105",
+                          ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/40"
+                          : "border-white/30 group-hover:border-white/50 group-hover:scale-105",
                       ].join(" ")}
                       style={{ 
-                        backgroundColor: metal.color,
-                        boxShadow: selectedMetal.name === metal.name 
-                          ? `0 0 20px ${metal.color}40` 
-                          : 'none'
+                        background: metal.gradient,
                       }}
                     />
                     {/* Label */}

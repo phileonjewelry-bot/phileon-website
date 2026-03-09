@@ -14,12 +14,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
  * - Only active slide video plays
  */
 
-function ProductGallery({ items = [] }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "start" });
-  const [selectedIndex, setSelectedIndex] = useState(0);
+function ProductGallery({ items = [], initialSlide = 0 }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "start", startIndex: initialSlide });
+  const [selectedIndex, setSelectedIndex] = useState(initialSlide);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const videoRefs = useRef([]);
+
+  // Update selected index when initialSlide prop changes
+  useEffect(() => {
+    if (emblaApi && initialSlide !== selectedIndex) {
+      emblaApi.scrollTo(initialSlide);
+      setSelectedIndex(initialSlide);
+    }
+  }, [initialSlide, emblaApi]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();

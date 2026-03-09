@@ -10,20 +10,20 @@ import { products } from "../data/products";
 export default function AlejandraHeelsPage() {
   const { addToCart } = useCart();
   
-  // Metal color to swatch color mapping
-  const metalSwatchColors = {
-    Silver: "#C0C0C0",
-    White: "#F5F5F5",
-    Yellow: "#FFD700",
-    Rose: "#E0BFB8"
+  // Metal color to gradient swatch mapping
+  const metalSwatchGradients = {
+    Silver: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
+    White: "linear-gradient(135deg, #f5f5f5 0%, #cfcfcf 100%)",
+    Yellow: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
+    Rose: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)"
   };
 
-  // Metal color to image mapping
-  const metalImages = {
-    Silver: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
-    White: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
-    Yellow: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
-    Rose: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg"
+  // Metal color to gallery index mapping (video is index 0, images start at 1)
+  const metalGalleryIndex = {
+    Silver: 1,
+    White: 2,
+    Yellow: 3,
+    Rose: 4
   };
 
   // Configuration options
@@ -56,6 +56,7 @@ export default function AlejandraHeelsPage() {
   const [selectedStone, setSelectedStone] = useState(stoneOptions[0]); // Default: Cubic
   const [selectedTier, setSelectedTier] = useState("silver"); // Default tier for Cubic
   const [selectedMetal, setSelectedMetal] = useState(metalOptions.silver[0]); // Default: Sterling Silver
+  const [currentSlide, setCurrentSlide] = useState(1); // Track current gallery slide (start at 1, silver image)
 
   // Calculate current price
   const currentPrice = selectedMetal.price;
@@ -66,18 +67,29 @@ export default function AlejandraHeelsPage() {
     // Switch to appropriate tier
     const defaultTier = stone.tiers[0];
     setSelectedTier(defaultTier);
-    setSelectedMetal(metalOptions[defaultTier][0]);
+    const newMetal = metalOptions[defaultTier][0];
+    setSelectedMetal(newMetal);
+    // Switch to corresponding gallery image
+    const galleryIndex = metalGalleryIndex[newMetal.color];
+    setCurrentSlide(galleryIndex);
   };
 
   // Handle tier change (for solid gold: 10K vs 14K)
   const handleTierChange = (tier) => {
     setSelectedTier(tier);
-    setSelectedMetal(metalOptions[tier][0]);
+    const newMetal = metalOptions[tier][0];
+    setSelectedMetal(newMetal);
+    // Switch to corresponding gallery image
+    const galleryIndex = metalGalleryIndex[newMetal.color];
+    setCurrentSlide(galleryIndex);
   };
 
   // Handle metal change within tier
   const handleMetalChange = (metal) => {
     setSelectedMetal(metal);
+    // Switch to corresponding gallery image
+    const galleryIndex = metalGalleryIndex[metal.color];
+    setCurrentSlide(galleryIndex);
   };
 
   // Handle add to cart
@@ -133,7 +145,7 @@ export default function AlejandraHeelsPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <ProductLayout
-        gallery={<ProductGallery items={galleryItems} />}
+        gallery={<ProductGallery items={galleryItems} initialSlide={currentSlide} />}
         purchasePanel={
           <>
             <ProductInfoSection
@@ -227,19 +239,16 @@ export default function AlejandraHeelsPage() {
                       className="flex flex-col items-center gap-2 group"
                       data-testid={`metal-swatch-${metal.color.toLowerCase()}`}
                     >
-                      {/* Circular Swatch */}
+                      {/* Circular Gradient Swatch */}
                       <div
                         className={[
-                          "w-14 h-14 rounded-full border-2 transition-all duration-300",
+                          "w-7 h-7 rounded-full border-2 transition-all duration-300",
                           selectedMetal.key === metal.key
-                            ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/30"
-                            : "border-white/20 group-hover:border-white/40 group-hover:scale-105",
+                            ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/40"
+                            : "border-white/30 group-hover:border-white/50 group-hover:scale-105",
                         ].join(" ")}
                         style={{ 
-                          backgroundColor: metalSwatchColors[metal.color],
-                          boxShadow: selectedMetal.key === metal.key 
-                            ? `0 0 20px ${metalSwatchColors[metal.color]}40` 
-                            : 'none'
+                          background: metalSwatchGradients[metal.color],
                         }}
                       />
                       {/* Label */}
