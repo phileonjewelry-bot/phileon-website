@@ -74,13 +74,17 @@ const HomePage = () => {
 
       {/* Cinematic Hero Section */}
       <section className="relative h-screen w-full overflow-hidden bg-black">
-        {/* Hero Background Image */}
+        {/* Hero Background Video */}
         <div className="absolute inset-0 h-full w-full">
-          <img 
-            src="https://images.unsplash.com/photo-1616837874254-8d5aaa63e273?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwzfHxsdXh1cnklMjBqZXdlbHJ5fGVufDB8fHx8MTc3MzA5NjI1MHww&ixlib=rb-4.1.0&q=85&w=1920"
-            alt="PHILEON Luxury Jewelry"
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="absolute inset-0 h-full w-full object-cover"
-          />
+          >
+            <source src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/a8omotqb_phileon-opener.mp4" type="video/mp4" />
+          </video>
         </div>
         
         {/* Cinematic Overlay */}
