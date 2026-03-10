@@ -19,7 +19,15 @@ export default function MonikaCouturePage() {
       price: products.monikaCouture.pricing.silver,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
       gradient: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
-      galleryIndex: 1, // Index in galleryItems
+      galleryIndex: 4, // Slide 5 of 7
+    },
+    { 
+      name: "10K White Gold", 
+      label: "White Gold", 
+      price: products.monikaCouture.pricing.white10k,
+      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
+      gradient: "linear-gradient(135deg, #f5f5f5 0%, #cfcfcf 100%)",
+      galleryIndex: 4, // Slide 5 of 7
     },
     { 
       name: "10K Rose Gold", 
@@ -27,7 +35,7 @@ export default function MonikaCouturePage() {
       price: products.monikaCouture.pricing.rose10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/jcswkfyo_1000139952.jpg",
       gradient: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)",
-      galleryIndex: 2, // Index in galleryItems
+      galleryIndex: 5, // Slide 6 of 7
     },
     { 
       name: "10K Yellow Gold", 
@@ -35,13 +43,13 @@ export default function MonikaCouturePage() {
       price: products.monikaCouture.pricing.yellow10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
       gradient: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
-      galleryIndex: 3, // Index in galleryItems
+      galleryIndex: 6, // Slide 7 of 7
     },
   ];
   
   // State for selected metal (default to first option)
   const [selectedMetal, setSelectedMetal] = useState(metalOptions[0]);
-  const [currentSlide, setCurrentSlide] = useState(1); // Start at silver image
+  const [currentSlide, setCurrentSlide] = useState(4); // Start at slide 5 (silver/white)
 
   // Handle metal change and update gallery
   const handleMetalChange = (metal) => {
