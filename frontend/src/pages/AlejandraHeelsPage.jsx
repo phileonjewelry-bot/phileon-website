@@ -140,6 +140,11 @@ export default function AlejandraHeelsPage() {
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
       alt: "Alejandra Heels - Rose Gold",
     },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/cvvwbdch_1000140396.jpg",
+      alt: "Alejandra Heels - Rose Gold Detail with Diamonds",
+    },
   ], []);
 
   return (
