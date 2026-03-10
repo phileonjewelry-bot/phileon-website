@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useCart } from "../contexts/CartContext";
 import ProductGallery from "../components/ProductGallery";
 import ProductLayout, {
   ProductInfoSection,
@@ -68,6 +69,19 @@ function useLaMarvaPricing() {
 
 export default function LaMarvaPage() {
   const { tiers, goldPricing } = useLaMarvaPricing();
+  const { addToCart } = useCart();
+
+  // Handle Add to Cart for purchasable editions
+  const handleAddToCart = (tier) => {
+    addToCart({
+      productId: `la-marva-${tier.pricingKey}`,
+      name: `La Marva - ${tier.name}`,
+      price: tier.adjustedPrice,
+      quantity: 1,
+      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg",
+      edition: tier.name,
+    });
+  };
 
   // Gallery media items - memoized to prevent recreation on every render
   const galleryItems = React.useMemo(() => [
@@ -299,17 +313,18 @@ export default function LaMarvaPage() {
                         Request Consultation
                       </a>
                     ) : (
-                      <a
-                        href="mailto:contact@phileonjewelry.com?subject=La%20Marva%20Purchase%20Inquiry"
+                      <button
+                        onClick={() => handleAddToCart(tier)}
                         className={[
-                          "px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm",
+                          "px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm transition-all duration-300",
                           tier.highlight
-                            ? "bg-[#C6A24A] text-black"
-                            : "border border-white/30 text-white",
+                            ? "bg-[#C6A24A] text-black hover:bg-[#B8944A]"
+                            : "border border-white/30 text-white hover:border-white/50",
                         ].join(" ")}
+                        data-testid={`add-to-cart-${tier.pricingKey}`}
                       >
-                        Inquire to Purchase
-                      </a>
+                        Add to Cart
+                      </button>
                     )}
                   </div>
 

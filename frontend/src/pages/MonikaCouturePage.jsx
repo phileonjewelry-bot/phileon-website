@@ -19,6 +19,7 @@ export default function MonikaCouturePage() {
       price: products.monikaCouture.pricing.silver,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
       gradient: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
+      galleryIndex: 1, // Index in galleryItems
     },
     { 
       name: "10K Rose Gold", 
@@ -26,6 +27,7 @@ export default function MonikaCouturePage() {
       price: products.monikaCouture.pricing.rose10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/jcswkfyo_1000139952.jpg",
       gradient: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)",
+      galleryIndex: 2, // Index in galleryItems
     },
     { 
       name: "10K Yellow Gold", 
@@ -33,11 +35,19 @@ export default function MonikaCouturePage() {
       price: products.monikaCouture.pricing.yellow10k,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
       gradient: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
+      galleryIndex: 3, // Index in galleryItems
     },
   ];
   
   // State for selected metal (default to first option)
   const [selectedMetal, setSelectedMetal] = useState(metalOptions[0]);
+  const [currentSlide, setCurrentSlide] = useState(1); // Start at silver image
+
+  // Handle metal change and update gallery
+  const handleMetalChange = (metal) => {
+    setSelectedMetal(metal);
+    setCurrentSlide(metal.galleryIndex);
+  };
 
   // Handle add to cart
   const handleAddToCart = () => {
@@ -142,7 +152,7 @@ export default function MonikaCouturePage() {
 
       {/* Product Layout with Gallery + Info */}
       <ProductLayout
-        gallery={<ProductGallery items={galleryItems} />}
+        gallery={<ProductGallery items={galleryItems} initialSlide={currentSlide} />}
         productInfo={
           <>
             <ProductInfoSection
@@ -175,7 +185,7 @@ export default function MonikaCouturePage() {
                 {metalOptions.map((metal) => (
                   <button
                     key={metal.name}
-                    onClick={() => setSelectedMetal(metal)}
+                    onClick={() => handleMetalChange(metal)}
                     className="flex flex-col items-center gap-2 group"
                     data-testid={`metal-swatch-${metal.label.toLowerCase().replace(' ', '-')}`}
                   >
