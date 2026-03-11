@@ -92,8 +92,8 @@ const HomePage = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-8">
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-[0.08em] text-phileon-ivory mb-6 leading-tight">
-            Sculpted to be recognized.
+          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-[0.12em] text-phileon-ivory mb-6 leading-[1.3] md:leading-[1.35]">
+            Not jewelry.<br />Identity.
           </h1>
           <p className="text-xl md:text-2xl text-phileon-ivory-muted tracking-wide mb-12 max-w-2xl">
             Precious forms designed to hold attention.
