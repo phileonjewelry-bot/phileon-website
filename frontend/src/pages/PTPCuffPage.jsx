@@ -108,7 +108,7 @@ export default function PTPCuffPage() {
         </div>
       </section>
 
-      {/* Product Layout with Gallery + Info */}
+      {/* Product Layout with Gallery + Purchase Panel */}
       <ProductLayout
         gallery={<ProductGallery items={galleryItems} />}
         productInfo={
@@ -117,20 +117,8 @@ export default function PTPCuffPage() {
               titleTag="Cuff Collection"
               title={product.name}
             >
-              <p className="text-[#C6A24A] text-sm tracking-[0.15em] uppercase mb-4">
+              <p className="text-[#C6A24A] text-sm tracking-[0.15em] uppercase">
                 {product.subtitle}
-              </p>
-              
-              <p className="text-white/60 leading-relaxed">
-                {product.description}
-              </p>
-
-              <p className="text-white/50 text-sm mt-4 leading-relaxed">
-                {product.tagline}
-              </p>
-
-              <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
-                #GetYourPhileon
               </p>
             </ProductInfoSection>
           </>
@@ -247,6 +235,32 @@ export default function PTPCuffPage() {
         }
         stickyOffset={36}
       />
+
+      {/* About The PTP Cuff Section */}
+      <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-6">
+            About The PTP Cuff
+          </p>
+          
+          <h2 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-white mb-10">
+            Power To The People
+          </h2>
+          
+          <p className="text-white/70 text-lg md:text-xl leading-relaxed mb-8">
+            A symbol cast in gold.
+          </p>
+          
+          <p className="text-white/60 leading-relaxed max-w-2xl mx-auto">
+            The PTP Cuff transforms a universal gesture of unity into wearable sculpture.
+            A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.
+          </p>
+          
+          <p className="mt-12 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
+            #GetYourPhileon
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
