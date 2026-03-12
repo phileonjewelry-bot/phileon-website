@@ -3,7 +3,7 @@
 ## Project Overview
 PHILEON is a luxury jewelry e-commerce website built with React frontend and FastAPI backend. The site features a premium, editorial design aesthetic with dynamic pricing for select products.
 
-## Core Products (5 Total)
+## Core Products (6 Total)
 
 ### 1. La Marva (Flagship Ring)
 - **Route**: `/products/la-marva`
@@ -29,7 +29,7 @@ PHILEON is a luxury jewelry e-commerce website built with React frontend and Fas
 - **Options**: Silver + Cubic ($1,250), Gold Plated + Cubic ($1,450), Solid 10K/14K + Lab ($4,800-$5,300)
 - **Features**: Metal swatches with gallery sync
 
-### 5. PTP Cuff (NEW - Added March 2026)
+### 5. PTP Cuff (Added March 2026)
 - **Route**: `/products/ptp-cuff`
 - **Subtitle**: "PTP — Power To The People"
 - **Description**: Sculptural cuff bracelet with raised fists symbolizing unity
@@ -41,6 +41,16 @@ PHILEON is a luxury jewelry e-commerce website built with React frontend and Fas
 - **Gallery**: Video (first item) + 4 images (hero reflection, angled, macro detail, on-wrist lifestyle)
 - **Video**: Autoplay, looped, muted (CDN hosted, ~5MB)
 - **Visual Hierarchy**: Signature Edition card has enhanced styling (larger, gold border, stronger shadow)
+
+### 6. Rosaria (NEW - Added March 2026)
+- **Route**: `/products/rosaria`
+- **Subtitle**: "The Rosaria Earrings"
+- **Tagline**: "Sculpted Roses in Rose Gold"
+- **Description**: Sculpted rose earrings capturing a rose in full bloom
+- **Materials**: 10K Rose Gold, 14K Rose Gold (exclusively rose gold)
+- **Pricing**: PENDING - Awaiting gram weight confirmation
+- **Purchase Flow**: "Request Pricing" button (links to /contact)
+- **Gallery**: 4 images (hero product shot, on-ear, editorial, detail)
 
 ## Architecture
 
@@ -85,6 +95,8 @@ PHILEON is a luxury jewelry e-commerce website built with React frontend and Fas
 ## Backlog / Future Tasks
 1. Monika Couture swatch refinement (map swatches to specific gallery slides)
 2. Git workflow improvements (clean branch strategy)
+3. Rosaria pricing - add once gram weight confirmed
+4. Rosaria additional gallery images (packaging, champagne lifestyle)
 
 ## Notes
 - Village Cuff concept has been fully absorbed into "The PTP Cuff" - no separate product exists

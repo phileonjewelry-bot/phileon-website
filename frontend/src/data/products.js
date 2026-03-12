@@ -255,6 +255,48 @@ export const products = {
       detail: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/1666v1g8_1000140951.jpg",
       lifestyle: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/5y6bu9xr_1000140979.jpg"
     }
+  },
+
+  // ==========================================
+  // ROSARIA
+  // Sculpted rose earrings in rose gold
+  // Pricing pending - awaiting gram weight confirmation
+  // ==========================================
+  rosaria: {
+    name: "Rosaria",
+    subtitle: "The Rosaria Earrings",
+    category: "Earrings",
+    tagline: "Sculpted Roses in Rose Gold",
+    description: "Rosaria captures the beauty of a rose in full bloom, transformed into wearable sculpture. Each rose is sculpted in precious metal and arranged in a cascading composition that moves gracefully with the wearer. The design preserves the elegance of a flower in gold — a tribute to love, celebration, and permanence.",
+    materialNote: "Available exclusively in 10K and 14K rose gold.",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    pricingPending: true, // Awaiting gram weight confirmation
+    
+    // Material options (rose gold only)
+    materials: [
+      {
+        name: "10K Rose Gold",
+        karat: "10K",
+        color: "Rose",
+        pricingKey: "rose10k"
+      },
+      {
+        name: "14K Rose Gold",
+        karat: "14K",
+        color: "Rose",
+        pricingKey: "rose14k"
+      }
+    ],
+    
+    // Gallery images
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/b1uzfa87_Screenshot_20260312_012027_Gallery.jpg",
+      onEar: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/8aqkuvvr_VideoCapture_20260312-012104.jpg",
+      editorial: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/x1hffp1h_VideoCapture_20260312-012145.jpg",
+      detail: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/xra7n9tm_VideoCapture_20260312-012448.jpg"
+    }
   }
 
 };
