@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 
-// New navigation structure with categories
+// Navigation structure with categories
 const menuCategories = [
   {
     name: 'Ladies First',
-    subcategories: [
+    items: [
       { name: 'Rings', path: '/shop?category=rings' },
       { name: 'Earrings', path: '/shop?category=earrings' },
       { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets' },
@@ -15,7 +15,7 @@ const menuCategories = [
   },
   {
     name: "The Gentleman's Club",
-    subcategories: [
+    items: [
       { name: 'Rings', path: '/shop?category=mens-rings' },
       { name: 'Earrings', path: '/shop?category=mens-earrings' },
       { name: 'Bracelets / Cuffs', path: '/shop?category=mens-bracelets' },
@@ -24,7 +24,7 @@ const menuCategories = [
   },
   {
     name: 'The Collective',
-    products: [
+    items: [
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
       { name: 'Rosaria', path: '/products/rosaria' },
       { name: 'La Marva', path: '/products/la-marva' },
@@ -69,7 +69,13 @@ const PhileonMenu = ({ isOpen, onClose }) => {
 
   // Toggle category expansion
   const toggleCategory = (categoryName) => {
-    setExpandedCategory(expandedCategory === categoryName ? null : categoryName);
+    setExpandedCategory(prev => prev === categoryName ? null : categoryName);
+  };
+
+  // Handle link click - close menu
+  const handleLinkClick = () => {
+    setExpandedCategory(null);
+    onClose();
   };
 
   return (
@@ -112,82 +118,31 @@ const PhileonMenu = ({ isOpen, onClose }) => {
         role="dialog" 
         aria-modal="true" 
         aria-label="Site menu"
-        style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
       >
-        {menuCategories.map((category) => (
-          <div key={category.name} className="ph-menu__category">
+        {menuCategories.map((category, idx) => (
+          <div key={category.name} className="ph-menu__category-wrapper">
+            {/* Category header button */}
             <button
               onClick={() => toggleCategory(category.name)}
-              className="ph-menu__link"
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'space-between',
-                width: '100%',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                paddingRight: '1rem'
-              }}
-              data-testid={`menu-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+              className="ph-menu__link ph-menu__category-btn"
+              data-testid={`menu-category-${idx}`}
             >
               <span>{category.name}</span>
               <ChevronDown 
-                className={`transition-transform duration-300 ${expandedCategory === category.name ? 'rotate-180' : ''}`}
-                style={{ width: '1rem', height: '1rem', color: '#C6A24A' }}
+                className={`ph-menu__chevron ${expandedCategory === category.name ? 'ph-menu__chevron--open' : ''}`}
               />
             </button>
             
-            {/* Expandable submenu */}
-            <div 
-              style={{
-                overflow: 'hidden',
-                maxHeight: expandedCategory === category.name ? '400px' : '0',
-                opacity: expandedCategory === category.name ? 1 : 0,
-                transition: 'all 0.3s ease-in-out',
-                paddingLeft: '1.5rem',
-              }}
-            >
-              {/* Subcategories (Ladies First, Gentleman's Club) */}
-              {category.subcategories && category.subcategories.map((subcat) => (
+            {/* Expandable items */}
+            <div className={`ph-menu__submenu ${expandedCategory === category.name ? 'ph-menu__submenu--open' : ''}`}>
+              {category.items.map((item) => (
                 <Link
-                  key={subcat.path}
-                  to={subcat.path}
+                  key={item.path}
+                  to={item.path}
+                  onClick={handleLinkClick}
                   className="ph-menu__sublink"
-                  style={{
-                    display: 'block',
-                    padding: '0.6rem 0',
-                    color: 'rgba(255,255,255,0.7)',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.1em',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => e.target.style.color = '#C6A24A'}
-                  onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.7)'}
                 >
-                  {subcat.name}
-                </Link>
-              ))}
-              {/* Products (The Collective) */}
-              {category.products && category.products.map((product) => (
-                <Link
-                  key={product.path}
-                  to={product.path}
-                  className="ph-menu__sublink"
-                  style={{
-                    display: 'block',
-                    padding: '0.6rem 0',
-                    color: 'rgba(255,255,255,0.7)',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.1em',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => e.target.style.color = '#C6A24A'}
-                  onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.7)'}
-                >
-                  {product.name}
+                  {item.name}
                 </Link>
               ))}
             </div>
@@ -197,9 +152,9 @@ const PhileonMenu = ({ isOpen, onClose }) => {
         {/* Contact link (always visible) */}
         <Link
           to="/contact"
+          onClick={handleLinkClick}
           className="ph-menu__link"
           data-testid="menu-link-contact"
-          style={{ marginTop: '1rem' }}
         >
           Contact
         </Link>
