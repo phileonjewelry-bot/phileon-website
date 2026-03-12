@@ -55,6 +55,17 @@ const CORE_PRODUCTS = [
     inventory_count: 100,
     is_core: true,
   },
+  {
+    id: 'ptp-cuff',
+    name: 'PTP Cuff',
+    slug: 'ptp-cuff',
+    materialLine: 'Cuff Bracelet · Vermeil to 14K Gold',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg',
+    href: '/products/ptp-cuff',
+    price_range: 'From $850',
+    inventory_count: 100,
+    is_core: true,
+  },
 ];
 
 // Additional drop products as fallback
