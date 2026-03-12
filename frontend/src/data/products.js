@@ -189,6 +189,68 @@ export const products = {
         roseLab: 5300
       }
     }
+  },
+
+  // ==========================================
+  // PTP CUFF
+  // Power To The People - Sculptural cuff bracelet
+  // Three edition tiers with fixed pricing
+  // Pricing keys: movement, signature, heirloom
+  // ==========================================
+  ptpCuff: {
+    name: "PTP Cuff",
+    subtitle: "PTP — Power To The People",
+    category: "Cuff Bracelet",
+    description: "The PTP Cuff transforms a universal symbol of unity into wearable sculpture. A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.",
+    tagline: "Bold, sculptural, and unapologetically symbolic, the cuff is designed to feel substantial on the wrist while maintaining a refined luxury finish.",
+    
+    // Pricing Configuration
+    dynamicPricing: false, // Fixed pricing, no gold adjustments
+    
+    // Edition tiers
+    editions: ["Movement", "Signature", "Heirloom"],
+    
+    pricing: {
+      movement: 850,    // Gold Vermeil (Sterling Silver base with heavy gold plating)
+      signature: 4200,  // 10K Solid Gold
+      heirloom: 6800    // 14K Solid Gold
+    },
+    
+    // Edition details
+    tiers: [
+      {
+        name: "Movement Edition",
+        material: "Gold Vermeil",
+        materialDetail: "Sterling Silver base with heavy gold plating",
+        pricingKey: "movement",
+        tag: "",
+        highlight: false
+      },
+      {
+        name: "Signature Edition",
+        material: "10K Solid Gold",
+        materialDetail: "Solid 10-karat gold construction",
+        pricingKey: "signature",
+        tag: "Most Popular",
+        highlight: true
+      },
+      {
+        name: "Heirloom Edition",
+        material: "14K Solid Gold",
+        materialDetail: "Solid 14-karat gold for lasting legacy",
+        pricingKey: "heirloom",
+        tag: "Collector",
+        highlight: false
+      }
+    ],
+    
+    // Gallery images
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg",
+      angled: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/zxaoj5g6_1000140884.jpg",
+      detail: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/1666v1g8_1000140951.jpg",
+      lifestyle: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/5y6bu9xr_1000140979.jpg"
+    }
   }
 
 };

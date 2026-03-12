@@ -121,6 +121,50 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* PTP Cuff Feature Section */}
+      <section className="py-24 lg:py-32 px-8 bg-phileon-black">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Image */}
+            <div className="order-2 lg:order-1">
+              <Link to="/products/ptp-cuff" className="block group">
+                <div className="relative aspect-square overflow-hidden">
+                  <img
+                    src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
+                    alt="The PTP Cuff"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              </Link>
+            </div>
+            
+            {/* Content */}
+            <div className="order-1 lg:order-2 text-center lg:text-left">
+              <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-4">
+                THE PTP CUFF
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] text-phileon-ivory leading-tight">
+                Power To The People
+              </h2>
+              <p className="mt-8 text-phileon-ivory-muted leading-relaxed max-w-lg mx-auto lg:mx-0">
+                A symbol cast in gold.<br /><br />
+                The PTP Cuff transforms a universal gesture of unity into wearable sculpture.
+                A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.
+              </p>
+              <div className="mt-10">
+                <Link 
+                  to="/products/ptp-cuff" 
+                  className="inline-block px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02]"
+                  data-testid="ptp-cuff-cta"
+                >
+                  Discover The PTP Cuff
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Core Products Showcase */}
       <section className="py-24 lg:py-32 px-8 bg-phileon-near-black">
         <div className="max-w-7xl mx-auto">
