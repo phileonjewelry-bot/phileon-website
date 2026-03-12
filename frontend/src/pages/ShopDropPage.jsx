@@ -71,7 +71,7 @@ const CORE_PRODUCTS = [
     name: 'Rosaria',
     slug: 'rosaria',
     materialLine: 'Earrings · 10K & 14K Rose Gold',
-    imageUrl: 'https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/b1uzfa87_Screenshot_20260312_012027_Gallery.jpg',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/d15gu165_VideoCapture_20260312-012448.jpg',
     href: '/products/rosaria',
     price_range: 'Price on Request',
     inventory_count: 100,
