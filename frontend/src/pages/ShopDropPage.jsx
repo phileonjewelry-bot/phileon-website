@@ -62,7 +62,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Cuff Bracelet · Vermeil to 14K Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg',
     href: '/products/ptp-cuff',
-    price_range: 'From $850',
+    price_range: 'From $1,050 CAD',
     inventory_count: 100,
     is_core: true,
   },

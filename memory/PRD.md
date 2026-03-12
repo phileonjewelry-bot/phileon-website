@@ -33,12 +33,14 @@ PHILEON is a luxury jewelry e-commerce website built with React frontend and Fas
 - **Route**: `/products/ptp-cuff`
 - **Subtitle**: "PTP — Power To The People"
 - **Description**: Sculptural cuff bracelet with raised fists symbolizing unity
+- **Currency**: CAD
 - **Editions**:
-  - Movement Edition: Gold Vermeil - $850
-  - Signature Edition: 10K Solid Gold - $4,200 (Most Popular)
-  - Heirloom Edition: 14K Solid Gold - $6,800
+  - Movement Edition: Gold Vermeil - $1,050 CAD (Entry into the PTP design)
+  - Signature Edition: 10K Solid Gold - $4,400 CAD ⭐ Most Popular (Best balance of weight and value)
+  - Heirloom Edition: 14K Solid Gold - $8,400 CAD (Collector-level edition)
 - **Gallery**: Video (first item) + 4 images (hero reflection, angled, macro detail, on-wrist lifestyle)
 - **Video**: Autoplay, looped, muted (CDN hosted, ~5MB)
+- **Visual Hierarchy**: Signature Edition card has enhanced styling (larger, gold border, stronger shadow)
 
 ## Architecture
 

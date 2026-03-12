@@ -12,11 +12,12 @@ export default function PTPCuffPage() {
   const { addToCart } = useCart();
   const product = products.ptpCuff;
   
-  // Edition options
+  // Edition options with positioning text
   const editionOptions = product.tiers.map((tier) => ({
     name: tier.name,
     material: tier.material,
     materialDetail: tier.materialDetail,
+    positioning: tier.positioning,
     price: product.pricing[tier.pricingKey],
     tag: tier.tag,
     highlight: tier.highlight,
@@ -142,60 +143,79 @@ export default function PTPCuffPage() {
             >
               {/* Edition Selection */}
               <div className="mt-6 space-y-3">
-                {editionOptions.map((edition) => (
-                  <button
-                    key={edition.name}
-                    onClick={() => handleEditionChange(edition)}
-                    className={[
-                      "w-full p-4 rounded-lg border transition-all duration-300 text-left relative",
-                      selectedEdition.name === edition.name
-                        ? "border-[#C6A24A] bg-[#C6A24A]/10"
-                        : "border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10",
-                    ].join(" ")}
-                    data-testid={`edition-${edition.pricingKey}`}
-                  >
-                    {/* Tag Badge */}
-                    {edition.tag && (
-                      <span className={[
-                        "absolute -top-2 right-3 px-2 py-0.5 text-[10px] tracking-wider uppercase rounded",
-                        edition.highlight 
-                          ? "bg-[#C6A24A] text-black font-semibold"
-                          : "bg-white/20 text-white/80"
-                      ].join(" ")}>
-                        {edition.tag}
-                      </span>
-                    )}
-                    
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className={[
-                          "font-medium tracking-wide",
-                          selectedEdition.name === edition.name
-                            ? "text-[#C6A24A]"
-                            : "text-white"
+                {editionOptions.map((edition) => {
+                  const isSelected = selectedEdition.name === edition.name;
+                  const isSignature = edition.highlight;
+                  
+                  return (
+                    <button
+                      key={edition.name}
+                      onClick={() => handleEditionChange(edition)}
+                      className={[
+                        "w-full rounded-lg border text-left relative transition-all duration-300",
+                        // Base padding - Signature gets extra height
+                        isSignature ? "p-5" : "p-4",
+                        // Selection and highlight states
+                        isSelected
+                          ? "border-[#C6A24A] bg-[#C6A24A]/10 scale-[1.02]"
+                          : isSignature
+                            ? "border-[#C6A24A]/50 bg-[#C6A24A]/5 shadow-lg shadow-[#C6A24A]/10"
+                            : "border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10",
+                      ].join(" ")}
+                      style={{
+                        // Signature card gets enhanced shadow
+                        boxShadow: isSignature && !isSelected 
+                          ? '0 4px 20px rgba(198, 162, 74, 0.15)' 
+                          : undefined
+                      }}
+                      data-testid={`edition-${edition.pricingKey}`}
+                    >
+                      {/* Tag Badge */}
+                      {edition.tag && (
+                        <span className={[
+                          "absolute -top-2.5 right-3 px-3 py-1 text-[10px] tracking-wider uppercase rounded-full",
+                          edition.highlight 
+                            ? "bg-[#C6A24A] text-black font-bold shadow-md"
+                            : "bg-white/20 text-white/80 font-medium"
                         ].join(" ")}>
-                          {edition.name}
-                        </p>
-                        <p className="text-white/50 text-sm mt-1">
-                          {edition.material}
-                        </p>
-                        <p className="text-white/40 text-xs mt-0.5">
-                          {edition.materialDetail}
-                        </p>
+                          {edition.tag}
+                        </span>
+                      )}
+                      
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <p className={[
+                            "font-medium tracking-wide",
+                            isSelected ? "text-[#C6A24A]" : "text-white"
+                          ].join(" ")}>
+                            {edition.name}
+                          </p>
+                          <p className="text-white/60 text-sm mt-1">
+                            {edition.material}
+                          </p>
+                          <p className="text-white/40 text-xs mt-1">
+                            {edition.materialDetail}
+                          </p>
+                          <p className={[
+                            "text-xs mt-2 italic",
+                            isSignature ? "text-[#C6A24A]/70" : "text-white/30"
+                          ].join(" ")}>
+                            {edition.positioning}
+                          </p>
+                        </div>
+                        <div className="text-right ml-4">
+                          <p className={[
+                            "text-lg font-light",
+                            isSelected ? "text-[#C6A24A]" : "text-white/80"
+                          ].join(" ")}>
+                            ${edition.price.toLocaleString()}
+                          </p>
+                          <p className="text-white/40 text-[10px] tracking-wider">CAD</p>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <p className={[
-                          "text-lg font-light",
-                          selectedEdition.name === edition.name
-                            ? "text-[#C6A24A]"
-                            : "text-white/80"
-                        ].join(" ")}>
-                          ${edition.price.toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Selected Edition Summary */}
@@ -208,7 +228,7 @@ export default function PTPCuffPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-white/50 text-xs tracking-widest uppercase">Price</p>
-                    <p className="text-[#C6A24A] text-xl font-light mt-1">${selectedEdition.price.toLocaleString()}</p>
+                    <p className="text-[#C6A24A] text-xl font-light mt-1">${selectedEdition.price.toLocaleString()} <span className="text-sm text-white/40">CAD</span></p>
                   </div>
                 </div>
               </div>

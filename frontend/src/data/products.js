@@ -194,7 +194,7 @@ export const products = {
   // ==========================================
   // PTP CUFF
   // Power To The People - Sculptural cuff bracelet
-  // Three edition tiers with fixed pricing
+  // Three edition tiers with fixed pricing (CAD)
   // Pricing keys: movement, signature, heirloom
   // ==========================================
   ptpCuff: {
@@ -206,14 +206,15 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false, // Fixed pricing, no gold adjustments
+    currency: "CAD",
     
     // Edition tiers
     editions: ["Movement", "Signature", "Heirloom"],
     
     pricing: {
-      movement: 850,    // Gold Vermeil (Sterling Silver base with heavy gold plating)
-      signature: 4200,  // 10K Solid Gold
-      heirloom: 6800    // 14K Solid Gold
+      movement: 1050,    // Gold Vermeil (Sterling Silver base with heavy gold plating)
+      signature: 4400,   // 10K Solid Gold
+      heirloom: 8400     // 14K Solid Gold
     },
     
     // Edition details
@@ -221,7 +222,8 @@ export const products = {
       {
         name: "Movement Edition",
         material: "Gold Vermeil",
-        materialDetail: "Sterling Silver base with heavy gold plating",
+        materialDetail: "Sterling silver base with heavy gold plating.",
+        positioning: "Entry into the PTP design.",
         pricingKey: "movement",
         tag: "",
         highlight: false
@@ -229,7 +231,8 @@ export const products = {
       {
         name: "Signature Edition",
         material: "10K Solid Gold",
-        materialDetail: "Solid 10-karat gold construction",
+        materialDetail: "Solid 10-karat gold construction.",
+        positioning: "Best balance of weight and value.",
         pricingKey: "signature",
         tag: "Most Popular",
         highlight: true
@@ -237,7 +240,8 @@ export const products = {
       {
         name: "Heirloom Edition",
         material: "14K Solid Gold",
-        materialDetail: "Solid 14-karat gold for lasting legacy",
+        materialDetail: "Solid 14-karat gold for lasting legacy.",
+        positioning: "Collector-level edition.",
         pricingKey: "heirloom",
         tag: "Collector",
         highlight: false
