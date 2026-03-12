@@ -561,7 +561,8 @@ input:focus, textarea:focus, select:focus, button:focus {
 }
 
 .ph-menu.is-open {
-  display: block;
+  display: block !important;
+  opacity: 1;
 }
 
 /* Slide down panel */
@@ -718,26 +719,41 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 /* Category wrapper */
 .ph-menu__category-wrapper {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
-/* Category button styling */
+/* Category button styling - MUST override ph-menu__link opacity */
 .ph-menu__category-btn {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
   cursor: pointer;
-  padding-right: 1rem;
+  padding: 0.75rem 1rem 0.75rem 0;
   text-align: left;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 20px;
+  color: rgba(245, 245, 245, 0.92);
+}
+
+/* Ensure buttons are visible when menu is open */
+.ph-menu.is-open .ph-menu__category-btn {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.ph-menu__category-btn:hover {
+  color: #C6A24A;
 }
 
 /* Chevron icon */
 .ph-menu__chevron {
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   color: #C6A24A;
   transition: transform 0.3s ease;
   flex-shrink: 0;
@@ -759,16 +775,17 @@ input:focus, textarea:focus, select:focus, button:focus {
 .ph-menu__submenu--open {
   max-height: 400px;
   opacity: 1;
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
   padding-bottom: 0.5rem;
 }
 
 /* Sublink styling */
 .ph-menu__sublink {
   display: block;
-  padding: 0.6rem 0;
-  color: rgba(255,255,255,0.7);
-  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
   letter-spacing: 0.1em;
   text-decoration: none;
   transition: color 0.2s ease;

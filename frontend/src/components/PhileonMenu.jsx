@@ -121,10 +121,10 @@ const PhileonMenu = ({ isOpen, onClose }) => {
       >
         {menuCategories.map((category, idx) => (
           <div key={category.name} className="ph-menu__category-wrapper">
-            {/* Category header button */}
+            {/* Category header button - removed ph-menu__link class to fix opacity issue */}
             <button
               onClick={() => toggleCategory(category.name)}
-              className="ph-menu__link ph-menu__category-btn"
+              className="ph-menu__category-btn"
               data-testid={`menu-category-${idx}`}
             >
               <span>{category.name}</span>

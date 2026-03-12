@@ -46,7 +46,7 @@ export default function RosariaPage() {
     <div className="bg-black text-white min-h-screen" data-testid="rosaria-page">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="relative w-full h-[50vh] md:h-[65vh] bg-black">
+        <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[65vh] bg-black">
           <img
             src={product.images.hero}
             alt="Rosaria Earrings"
@@ -55,14 +55,14 @@ export default function RosariaPage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
 
-        <div className="absolute bottom-10 left-0 right-0 text-center">
-          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
+        <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 text-center px-4">
+          <p className="text-[#C6A24A] text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.45em] uppercase">
             Earring Collection
           </p>
-          <h1 className="mt-3 text-4xl md:text-6xl font-light tracking-wide">
+          <h1 className="mt-2 sm:mt-3 text-2xl sm:text-4xl md:text-6xl font-light tracking-wide sm:tracking-wider">
             ROSARIA
           </h1>
-          <p className="mt-2 text-white/70 text-sm tracking-[0.2em] uppercase">
+          <p className="mt-1 sm:mt-2 text-white/70 text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.2em] uppercase">
             {product.tagline}
           </p>
         </div>
