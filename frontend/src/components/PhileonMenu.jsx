@@ -38,13 +38,15 @@ const PhileonMenu = ({ isOpen, onClose }) => {
   const location = useLocation();
   const [expandedCategory, setExpandedCategory] = useState(null);
 
-  // Close on route change
+  // Close on route change - only when pathname actually changes while menu is open
   useEffect(() => {
+    // Only close if menu is currently open and we navigated
     if (isOpen) {
       onClose();
       setExpandedCategory(null);
     }
-  }, [location.pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]); // Intentionally exclude isOpen/onClose to only trigger on navigation
 
   // Lock body scroll when open
   useEffect(() => {

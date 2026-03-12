@@ -127,11 +127,15 @@ const Header = () => {
             <button 
               className="ph-icon-btn" 
               aria-label="Menu" 
-              onClick={() => setIsMenuOpen(true)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsMenuOpen(true);
+              }}
               data-testid="mobile-menu-toggle"
               type="button"
             >
-              <div className="menu-icon" style={{ pointerEvents: 'none' }}>
+              <div className="menu-icon" aria-hidden="true">
                 <span></span>
                 <span></span>
                 <span></span>
