@@ -236,6 +236,44 @@ export default function PTPCuffPage() {
         stickyOffset={36}
       />
 
+      {/* Craft & Material Section */}
+      <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-6">
+            Craft & Material
+          </p>
+          
+          <p className="text-white/60 leading-relaxed mb-8 max-w-2xl mx-auto">
+            Each PTP Cuff is cast as a sculptural form, where repeated raised fists create a continuous band of symbolic strength.
+          </p>
+          
+          <p className="text-white/60 leading-relaxed mb-12 max-w-2xl mx-auto">
+            The piece is finished with a high-polish surface that amplifies the depth of each sculpted element and reflects light across the contours of the design.
+          </p>
+          
+          <p className="text-white/50 text-sm tracking-wider uppercase mb-8">
+            Editions are available in:
+          </p>
+          
+          <div className="space-y-6 max-w-md mx-auto">
+            <div>
+              <p className="text-[#C6A24A] font-medium tracking-wide">Gold Vermeil</p>
+              <p className="text-white/50 text-sm mt-1">Sterling silver base with heavy gold plating.</p>
+            </div>
+            
+            <div>
+              <p className="text-[#C6A24A] font-medium tracking-wide">10K Solid Gold</p>
+              <p className="text-white/50 text-sm mt-1">Solid 10-karat gold construction.</p>
+            </div>
+            
+            <div>
+              <p className="text-[#C6A24A] font-medium tracking-wide">14K Solid Gold</p>
+              <p className="text-white/50 text-sm mt-1">Solid 14-karat gold for heirloom durability.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* About The PTP Cuff Section */}
       <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
         <div className="max-w-3xl mx-auto text-center">
