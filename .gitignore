@@ -81,3 +81,7 @@ chainlit.md
 *credentials.json*
 frontend/node_modules/.cache/default-development/11.pack
 frontend/node_modules/.cache/default-development/0.pack
+-e 
+# Environment files
+*.env
+*.env.*
