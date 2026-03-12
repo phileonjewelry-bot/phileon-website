@@ -64,7 +64,6 @@ const Header = () => {
       
       return false; // Prevent normal navigation while counting
     } else {
-      console.log('Desktop detected, allowing normal navigation');
       // Allow normal navigation on desktop
     }
   };
@@ -130,8 +129,9 @@ const Header = () => {
               aria-label="Menu" 
               onClick={() => setIsMenuOpen(true)}
               data-testid="mobile-menu-toggle"
+              type="button"
             >
-              <div className="menu-icon">
+              <div className="menu-icon" style={{ pointerEvents: 'none' }}>
                 <span></span>
                 <span></span>
                 <span></span>

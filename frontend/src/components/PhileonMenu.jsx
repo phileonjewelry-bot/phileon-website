@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 
 // Navigation structure with categories
 const menuCategories = [
@@ -44,124 +44,177 @@ const PhileonMenu = ({ isOpen, onClose }) => {
       onClose();
       setExpandedCategory(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  // ESC closes menu
+  // Lock body scroll when open
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
     if (isOpen) {
-      window.addEventListener('keydown', handleEsc);
       document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
     return () => {
-      window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = '';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
-  // Click backdrop to close
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
+  // Toggle category
+  const toggleCategory = (name) => {
+    setExpandedCategory(prev => prev === name ? null : name);
   };
 
-  // Toggle category expansion
-  const toggleCategory = (categoryName) => {
-    setExpandedCategory(prev => prev === categoryName ? null : categoryName);
-  };
-
-  // Handle link click - close menu
+  // Handle link click
   const handleLinkClick = () => {
     setExpandedCategory(null);
     onClose();
   };
 
+  // Don't render if not open
+  if (!isOpen) return null;
+
   return (
     <div 
-      className={`ph-menu ${isOpen ? 'is-open' : ''}`}
-      onClick={handleBackdropClick}
-      aria-hidden={!isOpen}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.98)',
+        zIndex: 99999,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'auto',
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      {/* Watermark monogram */}
-      <div className="ph-menu__wm">P.</div>
-      
-      {/* Gold vault lines */}
-      <div className="ph-menu__lines"></div>
-
-      {/* Brand block */}
-      <div className="ph-menu__brand">
-        <img src="/logo.png" alt="Phileon" />
-        <div>
-          <div className="name">PHILEON</div>
-          <div className="tag">Get Your Phileon</div>
-        </div>
-      </div>
-
       {/* Close button */}
-      <button 
-        className="ph-menu__close" 
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
+      <button
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          background: 'none',
+          border: 'none',
+          color: '#C6A24A',
+          cursor: 'pointer',
+          padding: '10px',
+          zIndex: 100000,
         }}
         aria-label="Close menu"
-        data-testid="menu-close-btn"
       >
-        ✕
+        <X size={32} />
       </button>
 
-      {/* Navigation panel with categories */}
-      <div 
-        className="ph-menu__panel" 
-        role="dialog" 
-        aria-modal="true" 
-        aria-label="Site menu"
-      >
-        {menuCategories.map((category, idx) => (
-          <div key={category.name} className="ph-menu__category-wrapper">
-            {/* Category header button - removed ph-menu__link class to fix opacity issue */}
+      {/* Menu content */}
+      <nav style={{
+        padding: '80px 30px 40px',
+        maxWidth: '500px',
+        margin: '0 auto',
+        width: '100%',
+      }}>
+        {/* Brand */}
+        <div style={{ 
+          textAlign: 'center', 
+          marginBottom: '50px',
+          color: '#C6A24A',
+          fontSize: '28px',
+          letterSpacing: '0.3em',
+          fontFamily: "'Playfair Display', serif",
+        }}>
+          PHILEON
+        </div>
+
+        {/* Categories */}
+        {menuCategories.map((category) => (
+          <div key={category.name} style={{ marginBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
             <button
               onClick={() => toggleCategory(category.name)}
-              className="ph-menu__category-btn"
-              data-testid={`menu-category-${idx}`}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '18px 0',
+                background: 'none',
+                border: 'none',
+                color: '#C6A24A',
+                fontSize: '18px',
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                fontFamily: "'Playfair Display', serif",
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
             >
               <span>{category.name}</span>
               <ChevronDown 
-                className={`ph-menu__chevron ${expandedCategory === category.name ? 'ph-menu__chevron--open' : ''}`}
+                size={20}
+                style={{
+                  transform: expandedCategory === category.name ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.3s ease',
+                }}
               />
             </button>
             
-            {/* Expandable items */}
-            <div className={`ph-menu__submenu ${expandedCategory === category.name ? 'ph-menu__submenu--open' : ''}`}>
-              {category.items.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={handleLinkClick}
-                  className="ph-menu__sublink"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+            {/* Submenu */}
+            {expandedCategory === category.name && (
+              <div style={{ paddingLeft: '20px', paddingBottom: '15px' }}>
+                {category.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={handleLinkClick}
+                    style={{
+                      display: 'block',
+                      padding: '10px 0',
+                      color: 'rgba(255,255,255,0.7)',
+                      fontSize: '15px',
+                      letterSpacing: '0.1em',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         ))}
-        
-        {/* Contact link (always visible) */}
+
+        {/* Contact */}
         <Link
           to="/contact"
           onClick={handleLinkClick}
-          className="ph-menu__link"
-          data-testid="menu-link-contact"
+          style={{
+            display: 'block',
+            padding: '18px 0',
+            color: '#C6A24A',
+            fontSize: '18px',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            fontFamily: "'Playfair Display', serif",
+            textDecoration: 'none',
+          }}
         >
           Contact
         </Link>
-      </div>
 
-      {/* Footer note */}
-      <div className="ph-menu__foot">Crafted in limited quantities.</div>
+        {/* Footer */}
+        <div style={{
+          marginTop: '50px',
+          textAlign: 'center',
+          color: 'rgba(255,255,255,0.3)',
+          fontSize: '11px',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+        }}>
+          #GetYourPhileon
+        </div>
+      </nav>
     </div>
   );
 };
