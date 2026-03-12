@@ -37,7 +37,8 @@ PHILEON is a luxury jewelry e-commerce website built with React frontend and Fas
   - Movement Edition: Gold Vermeil - $850
   - Signature Edition: 10K Solid Gold - $4,200 (Most Popular)
   - Heirloom Edition: 14K Solid Gold - $6,800
-- **Gallery**: 4 images (hero reflection, angled, macro detail, on-wrist lifestyle)
+- **Gallery**: Video (first item) + 4 images (hero reflection, angled, macro detail, on-wrist lifestyle)
+- **Video**: Autoplay, looped, muted (CDN hosted, ~5MB)
 
 ## Architecture
 

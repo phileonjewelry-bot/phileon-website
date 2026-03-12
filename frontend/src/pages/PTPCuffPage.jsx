@@ -51,8 +51,14 @@ export default function PTPCuffPage() {
     addToCart(cartProduct, 1, variant);
   };
 
-  // Gallery media items
+  // Gallery media items - video first, then images
   const galleryItems = React.useMemo(() => [
+    {
+      type: "video",
+      src: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/4idyl7t2_PTPCuff2.mp4",
+      poster: product.images.hero,
+      alt: "PTP Cuff - Product video",
+    },
     {
       type: "image",
       src: product.images.hero,

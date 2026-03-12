@@ -125,15 +125,21 @@ const HomePage = () => {
       <section className="py-24 lg:py-32 px-8 bg-phileon-black">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Image */}
+            {/* Video */}
             <div className="order-2 lg:order-1">
               <Link to="/products/ptp-cuff" className="block group">
-                <div className="relative aspect-square overflow-hidden">
-                  <img
-                    src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
-                    alt="The PTP Cuff"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                <div className="relative aspect-square overflow-hidden bg-phileon-black">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    disablePictureInPicture
+                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                  >
+                    <source src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/4idyl7t2_PTPCuff2.mp4" type="video/mp4" />
+                  </video>
                 </div>
               </Link>
             </div>
