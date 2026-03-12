@@ -152,11 +152,6 @@ const HomePage = () => {
               <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] text-phileon-ivory leading-tight">
                 Power To The People
               </h2>
-              <p className="mt-8 text-phileon-ivory-muted leading-relaxed max-w-lg mx-auto lg:mx-0">
-                A symbol cast in gold.<br /><br />
-                The PTP Cuff transforms a universal gesture of unity into wearable sculpture.
-                A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.
-              </p>
               <div className="mt-10">
                 <Link 
                   to="/products/ptp-cuff" 
