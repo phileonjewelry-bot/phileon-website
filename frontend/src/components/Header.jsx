@@ -7,52 +7,75 @@ import HeaderCartButton from './HeaderCartButton';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [expandedSubCategory, setExpandedSubCategory] = useState(null);
   const location = useLocation();
 
-  // Desktop navigation
+  // Desktop navigation with new structure
   const navigation = [
-    { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/shop' },
     { 
-      name: 'Products', 
+      name: 'Ladies First', 
       path: '/shop',
       dropdown: [
-        { name: 'La Marva Ring', path: '/products/la-marva' },
-        { name: 'Annie Rose Ring', path: '/products/annie-rose' },
-        { name: 'Monika Couture Earrings', path: '/products/monika-couture' },
-        { name: 'Alejandra Heels Earrings', path: '/products/alejandra-heels' },
+        { name: 'Rings', path: '/shop?category=rings' },
+        { name: 'Earrings', path: '/shop?category=earrings' },
+        { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets' },
+        { name: 'Pendants', path: '/shop?category=pendants' },
+      ]
+    },
+    { 
+      name: "The Gentleman's Club", 
+      path: '/shop',
+      dropdown: [
+        { name: 'Rings', path: '/shop?category=mens-rings' },
+        { name: 'Earrings', path: '/shop?category=mens-earrings' },
+        { name: 'Bracelets / Cuffs', path: '/shop?category=mens-bracelets' },
+        { name: 'Pendants', path: '/shop?category=mens-pendants' },
+      ]
+    },
+    { 
+      name: 'The Collective', 
+      path: '/shop',
+      dropdown: [
         { name: 'PTP Cuff', path: '/products/ptp-cuff' },
-        { name: 'Rosaria Earrings', path: '/products/rosaria' },
-      ]
-    },
-    { name: 'Collections', path: '/collections' },
-    { name: 'Custom Design', path: '/custom-design' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-  ];
-
-  // Mobile navigation with categories
-  const mobileCategories = [
-    {
-      name: 'Rings',
-      products: [
-        { name: 'La Marva', path: '/products/la-marva' },
-      ]
-    },
-    {
-      name: 'Earrings',
-      products: [
         { name: 'Rosaria', path: '/products/rosaria' },
+        { name: 'La Marva', path: '/products/la-marva' },
         { name: 'Monika Couture', path: '/products/monika-couture' },
         { name: 'Alejandra Heels', path: '/products/alejandra-heels' },
       ]
     },
+    { name: 'Contact', path: '/contact' },
+  ];
+
+  // Mobile navigation with new categories
+  const mobileCategories = [
     {
-      name: 'Bracelets / Cuffs',
+      name: 'Ladies First',
+      subcategories: [
+        { name: 'Rings', path: '/shop?category=rings' },
+        { name: 'Earrings', path: '/shop?category=earrings' },
+        { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets' },
+        { name: 'Pendants', path: '/shop?category=pendants' },
+      ]
+    },
+    {
+      name: "The Gentleman's Club",
+      subcategories: [
+        { name: 'Rings', path: '/shop?category=mens-rings' },
+        { name: 'Earrings', path: '/shop?category=mens-earrings' },
+        { name: 'Bracelets / Cuffs', path: '/shop?category=mens-bracelets' },
+        { name: 'Pendants', path: '/shop?category=mens-pendants' },
+      ]
+    },
+    {
+      name: 'The Collective',
       products: [
         { name: 'PTP Cuff', path: '/products/ptp-cuff' },
+        { name: 'Rosaria', path: '/products/rosaria' },
+        { name: 'La Marva', path: '/products/la-marva' },
+        { name: 'Monika Couture', path: '/products/monika-couture' },
+        { name: 'Alejandra Heels', path: '/products/alejandra-heels' },
       ]
     },
   ];
@@ -61,17 +84,20 @@ const Header = () => {
   useEffect(() => {
     setMobileMenuOpen(false);
     setExpandedCategory(null);
+    setExpandedSubCategory(null);
   }, [location.pathname]);
 
   // Toggle category expansion
   const toggleCategory = (categoryName) => {
     setExpandedCategory(expandedCategory === categoryName ? null : categoryName);
+    setExpandedSubCategory(null);
   };
 
   // Close menu and navigate
   const handleMobileNavClick = () => {
     setMobileMenuOpen(false);
     setExpandedCategory(null);
+    setExpandedSubCategory(null);
   };
 
   return (
@@ -93,40 +119,42 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
+            <nav className="hidden md:flex items-center space-x-6">
               {navigation.map((item) => (
                 item.dropdown ? (
                   <div 
                     key={item.name}
-                    className="relative group"
-                    onMouseEnter={() => setProductsDropdownOpen(true)}
-                    onMouseLeave={() => setProductsDropdownOpen(false)}
+                    className="relative"
+                    onMouseEnter={() => setActiveDropdown(item.name)}
+                    onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link
-                      to={item.path}
-                      className="text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300 text-sm uppercase tracking-wider"
+                    <button
+                      className="text-[#C6A24A] hover:text-[#D4B45A] font-medium transition-colors duration-300 text-sm uppercase tracking-wider flex items-center gap-1"
                     >
                       {item.name}
-                    </Link>
-                    {productsDropdownOpen && (
-                      <div className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-md shadow-xl py-2 z-50">
-                        {item.dropdown.map((subItem) => (
-                          <Link
-                            key={subItem.path}
-                            to={subItem.path}
-                            className="block px-4 py-2 text-sm text-gray-300 hover:text-yellow-500 hover:bg-gray-800 transition-colors"
-                          >
-                            {subItem.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                      <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${activeDropdown === item.name ? 'rotate-180' : ''}`} />
+                    </button>
+                    <div 
+                      className={`absolute top-full left-0 mt-2 w-56 bg-black border border-[#C6A24A]/20 shadow-xl py-2 z-50 transition-all duration-200 ${
+                        activeDropdown === item.name ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                      }`}
+                    >
+                      {item.dropdown.map((subItem) => (
+                        <Link
+                          key={subItem.path}
+                          to={subItem.path}
+                          className="block px-4 py-2.5 text-sm text-white/70 hover:text-[#C6A24A] hover:bg-white/5 transition-colors tracking-wide"
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <Link
                     key={item.name}
                     to={item.path}
-                    className="text-gray-300 hover:text-yellow-500 font-medium transition-colors duration-300 text-sm uppercase tracking-wider"
+                    className="text-[#C6A24A] hover:text-[#D4B45A] font-medium transition-colors duration-300 text-sm uppercase tracking-wider"
                   >
                     {item.name}
                   </Link>
@@ -184,14 +212,26 @@ const Header = () => {
                     />
                   </button>
                   
-                  {/* Expandable Products List */}
+                  {/* Expandable List - Products or Subcategories */}
                   <div 
                     className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                      expandedCategory === category.name ? 'max-h-96 opacity-100 pb-4' : 'max-h-0 opacity-0'
+                      expandedCategory === category.name ? 'max-h-[500px] opacity-100 pb-4' : 'max-h-0 opacity-0'
                     }`}
                   >
                     <div className="pl-4 space-y-3">
-                      {category.products.map((product) => (
+                      {/* For categories with subcategories (Ladies First, Gentleman's Club) */}
+                      {category.subcategories && category.subcategories.map((subcat) => (
+                        <Link
+                          key={subcat.path}
+                          to={subcat.path}
+                          onClick={handleMobileNavClick}
+                          className="block text-white/70 hover:text-[#C6A24A] text-base tracking-wide transition-colors duration-200"
+                        >
+                          {subcat.name}
+                        </Link>
+                      ))}
+                      {/* For categories with direct products (The Collective) */}
+                      {category.products && category.products.map((product) => (
                         <Link
                           key={product.path}
                           to={product.path}
