@@ -84,5 +84,7 @@ PHILEON is a luxury jewelry e-commerce website built with React frontend and Fas
 
 ## Backlog / Future Tasks
 1. Monika Couture swatch refinement (map swatches to specific gallery slides)
-2. Village Cuff product addition
-3. Git workflow improvements (clean branch strategy)
+2. Git workflow improvements (clean branch strategy)
+
+## Notes
+- Village Cuff concept has been fully absorbed into "The PTP Cuff" - no separate product exists
