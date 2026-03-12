@@ -18,12 +18,17 @@ export default function RosariaPage() {
     setSelectedMaterial(material);
   };
 
-  // Gallery media items
+  // Gallery media items - detail (hero) first
   const galleryItems = React.useMemo(() => [
     {
       type: "image",
+      src: product.images.detail,
+      alt: "Rosaria - Detail close-up",
+    },
+    {
+      type: "image",
       src: product.images.hero,
-      alt: "Rosaria - Hero product shot",
+      alt: "Rosaria - Product shot",
     },
     {
       type: "image",
@@ -35,11 +40,6 @@ export default function RosariaPage() {
       src: product.images.editorial,
       alt: "Rosaria - Editorial model shot",
     },
-    {
-      type: "image",
-      src: product.images.detail,
-      alt: "Rosaria - Detail close-up",
-    },
   ], [product.images]);
 
   return (
@@ -48,7 +48,7 @@ export default function RosariaPage() {
       <section className="relative overflow-hidden">
         <div className="relative w-full h-[50vh] md:h-[65vh] bg-black">
           <img
-            src={product.images.hero}
+            src={product.images.detail}
             alt="Rosaria Earrings"
             className="absolute inset-0 w-full h-full object-contain"
           />
