@@ -272,23 +272,37 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false,
-    pricingPending: true, // Awaiting gram weight confirmation
+    pricingPending: false,
     
-    // Material options (rose gold only)
+    // Weight info
+    weight: {
+      perEarring: 8,
+      perPair: 16,
+      unit: "grams"
+    },
+    
+    // Material options with fixed pricing (CAD)
     materials: [
       {
         name: "10K Rose Gold",
         karat: "10K",
         color: "Rose",
-        pricingKey: "rose10k"
+        pricingKey: "rose10k",
+        price: 3100,
+        currency: "CAD"
       },
       {
         name: "14K Rose Gold",
         karat: "14K",
         color: "Rose",
-        pricingKey: "rose14k"
+        pricingKey: "rose14k",
+        price: 3400,
+        currency: "CAD"
       }
     ],
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada.",
     
     // Gallery images
     images: {

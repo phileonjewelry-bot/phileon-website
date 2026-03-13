@@ -6,9 +6,11 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
+import { useCart } from "../contexts/CartContext";
 
 export default function RosariaPage() {
   const product = products.rosaria;
+  const { addItem } = useCart();
   
   // State for selected material
   const [selectedMaterial, setSelectedMaterial] = useState(product.materials[0]);
@@ -16,6 +18,24 @@ export default function RosariaPage() {
   // Handle material change
   const handleMaterialChange = (material) => {
     setSelectedMaterial(material);
+  };
+
+  // Format price with currency
+  const formatPrice = (price, currency = "CAD") => {
+    return `$${price.toLocaleString()} ${currency}`;
+  };
+
+  // Handle add to cart
+  const handleAddToCart = () => {
+    addItem({
+      id: `rosaria-${selectedMaterial.pricingKey}`,
+      name: product.name,
+      variant: selectedMaterial.name,
+      price: selectedMaterial.price,
+      currency: selectedMaterial.currency,
+      image: product.images.hero,
+      quantity: 1
+    });
   };
 
   // Gallery media items - hero first
@@ -129,43 +149,61 @@ export default function RosariaPage() {
                             {material.karat} Karat · {material.color} Gold
                           </p>
                         </div>
-                        {/* Rose gold swatch */}
-                        <div 
-                          className={[
-                            "w-6 h-6 rounded-full border-2 transition-all",
-                            isSelected ? "border-[#C6A24A]" : "border-white/30"
-                          ].join(" ")}
-                          style={{ backgroundColor: '#B76E79' }}
-                        />
+                        <div className="text-right">
+                          {/* Price display */}
+                          <p className={[
+                            "font-medium",
+                            isSelected ? "text-[#C6A24A]" : "text-white"
+                          ].join(" ")}>
+                            {formatPrice(material.price, material.currency)}
+                          </p>
+                          {/* Rose gold swatch */}
+                          <div 
+                            className={[
+                              "w-5 h-5 rounded-full border-2 transition-all mt-1 ml-auto",
+                              isSelected ? "border-[#C6A24A]" : "border-white/30"
+                            ].join(" ")}
+                            style={{ backgroundColor: '#B76E79' }}
+                          />
+                        </div>
                       </div>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Pricing Notice */}
+              {/* Pricing Display */}
               <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
                 <div className="text-center">
                   <p className="text-white/50 text-xs tracking-widest uppercase mb-2">Selected</p>
                   <p className="text-white text-base">{selectedMaterial.name}</p>
                   <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-[#C6A24A] text-sm tracking-wide">
-                      Pricing available upon request.
+                    <p className="text-[#C6A24A] text-2xl font-medium tracking-wide">
+                      {formatPrice(selectedMaterial.price, selectedMaterial.currency)}
+                    </p>
+                    <p className="text-white/50 text-xs mt-2 tracking-wide">
+                      Retail Price (CAD)
                     </p>
                   </div>
                 </div>
               </div>
+
+              {/* Shipping Info */}
+              <div className="mt-4 text-center">
+                <p className="text-white/60 text-sm">
+                  {product.shipping}
+                </p>
+              </div>
             </ProductInfoSection>
 
             <div className="mt-6">
-              <Link to="/contact">
-                <Button
-                  className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
-                  data-testid="request-pricing-button"
-                >
-                  REQUEST PRICING
-                </Button>
-              </Link>
+              <Button
+                onClick={handleAddToCart}
+                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                data-testid="add-to-cart-button"
+              >
+                ADD TO CART
+              </Button>
             </div>
           </>
         }
