@@ -42,28 +42,39 @@ export default function RosariaPage() {
     },
   ], [product.images]);
 
+  // Rosaria hero video URL
+  const rosariaVideoUrl = "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/rpvoajo0_20260313_144354239.mp4";
+
   return (
     <div className="bg-black text-white min-h-screen" data-testid="rosaria-page">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="relative w-full h-[40vh] sm:h-[50vh] md:h-[65vh] bg-black">
-          <img
-            src={product.images.hero}
-            alt="Rosaria Earrings"
-            className="absolute inset-0 w-full h-full object-contain"
-          />
+      {/* Hero Section with Video */}
+      <section className="bg-black py-12 sm:py-16 md:py-20">
+        {/* Video Container */}
+        <div className="flex justify-center items-center px-4 mb-8 sm:mb-12">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={product.images.onEar}
+            className="w-full max-w-2xl h-auto object-contain"
+            style={{ maxHeight: '60vh' }}
+          >
+            <source src={rosariaVideoUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
 
-        <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 text-center px-4">
-          <p className="text-[#C6A24A] text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.45em] uppercase">
+        {/* Text Stack */}
+        <div className="text-center px-4 space-y-3 sm:space-y-4">
+          <p className="text-[#C6A24A] text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.45em] uppercase">
             Earring Collection
           </p>
-          <h1 className="mt-2 sm:mt-3 text-2xl sm:text-4xl md:text-6xl font-light tracking-wide sm:tracking-wider">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl tracking-wide sm:tracking-wider text-white">
             ROSARIA
           </h1>
-          <p className="mt-1 sm:mt-2 text-white/70 text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.2em] uppercase">
-            {product.tagline}
+          <p className="text-[#C6A24A] text-xs sm:text-sm tracking-[0.15em] sm:tracking-[0.25em] uppercase">
+            Sculpted Roses in Rose Gold
           </p>
         </div>
       </section>
