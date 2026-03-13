@@ -1,102 +1,53 @@
 # PHILEON Luxury Jewelry E-Commerce Website
 
-## Project Overview
-PHILEON is a luxury jewelry e-commerce website built with React frontend and FastAPI backend. The site features a premium, editorial design aesthetic with dynamic pricing for select products.
-
-## Core Products (6 Total)
-
-### 1. La Marva (Flagship Ring)
-- **Route**: `/products/la-marva`
-- **Pricing**: Dynamic gold-based pricing
-- **Editions**: Foundation ($8,000), Signature ($3,400), Heirloom 14K ($18,000), Heirloom 18K ($22,000)
-- **Features**: Dynamic pricing engine that adjusts based on gold market prices
-
-### 2. Annie Rose
-- **Route**: `/products/annie-rose`
-- **Pricing**: Fixed tiered pricing by metal × stone type
-- **Options**: Lab/Natural diamonds, 10K/14K/18K gold
-- **Price Range**: $6,400 - $12,200
-
-### 3. Monika Couture Earrings
-- **Route**: `/products/monika-couture`
-- **Pricing**: Fixed by metal type
-- **Options**: Silver ($1,400), White/Yellow/Rose 10K Gold ($3,700)
-- **Features**: Metal swatches that switch gallery images
-
-### 4. Alejandra Heels
-- **Route**: `/products/alejandra-heels`
-- **Pricing**: Three-tier by material and stone
-- **Options**: Silver + Cubic ($1,250), Gold Plated + Cubic ($1,450), Solid 10K/14K + Lab ($4,800-$5,300)
-- **Features**: Metal swatches with gallery sync
-
-### 5. PTP Cuff (Added March 2026)
-- **Route**: `/products/ptp-cuff`
-- **Subtitle**: "PTP — Power To The People"
-- **Description**: Sculptural cuff bracelet with raised fists symbolizing unity
-- **Currency**: CAD
-- **Editions**:
-  - Movement Edition: Gold Vermeil - $1,050 CAD (Entry into the PTP design)
-  - Signature Edition: 10K Solid Gold - $4,400 CAD ⭐ Most Popular (Best balance of weight and value)
-  - Heirloom Edition: 14K Solid Gold - $8,400 CAD (Collector-level edition)
-- **Gallery**: Video (first item) + 4 images (hero reflection, angled, macro detail, on-wrist lifestyle)
-- **Video**: Autoplay, looped, muted (CDN hosted, ~5MB)
-- **Visual Hierarchy**: Signature Edition card has enhanced styling (larger, gold border, stronger shadow)
-
-### 6. Rosaria (NEW - Added March 2026)
-- **Route**: `/products/rosaria`
-- **Subtitle**: "The Rosaria Earrings"
-- **Tagline**: "Sculpted Roses in Rose Gold"
-- **Description**: Sculpted rose earrings capturing a rose in full bloom
-- **Materials**: 10K Rose Gold, 14K Rose Gold (exclusively rose gold)
-- **Pricing**: PENDING - Awaiting gram weight confirmation
-- **Purchase Flow**: "Request Pricing" button (links to /contact)
-- **Gallery**: 4 images (hero product shot, on-ear, editorial, detail)
+## Original Problem Statement
+Build and maintain a luxury jewelry e-commerce website for PHILEON brand featuring:
+- Product catalog with dynamic gold pricing
+- Multiple product pages (La Marva, Annie Rose, Monika Couture, Alejandra Heels, PTP Cuff, Rosaria)
+- Shopping cart and wishlist functionality
+- Stripe checkout integration
+- Responsive mobile-first design
 
 ## Architecture
+- **Frontend**: React with Tailwind CSS, React Router
+- **Backend**: FastAPI with MongoDB
+- **Payments**: Stripe integration
+- **Data**: Centralized product data in `/frontend/src/data/products.js`
 
-### Frontend (`/app/frontend/`)
-- **Framework**: React with React Router
-- **Styling**: Tailwind CSS with custom PHILEON theme
-- **State**: React Context (CartContext, WishlistContext)
-- **Components**: Shadcn/UI base components
+## What's Been Implemented
 
-### Backend (`/app/backend/`)
-- **Framework**: FastAPI
-- **Key Endpoint**: `/api/metals` - Live gold prices for dynamic pricing
+### Session: March 12-13, 2026
+- ✅ Fixed GitHub push protection issue (removed Stripe secret from git history)
+- ✅ Fixed mobile hamburger menu (was not opening on click)
+- ✅ Verified Rosaria page mobile layout (no text overlap)
+- ✅ Updated Rosaria hero image
+- ✅ Updated Rosaria gallery slide 1 image
+- ✅ Added `.env.example` with placeholder values
+- ✅ Cleaned up `.gitignore` file
 
-### Data Architecture
-- **Product Data**: `/app/frontend/src/data/products.js` (Single source of truth)
-- **Pricing Logic**: `/app/frontend/src/utils/pricing.js` (Centralized engine)
+### Previous Sessions
+- ✅ PTP Cuff product page with video and three-tier pricing
+- ✅ Rosaria product page with "Price on Request" state
+- ✅ Navigation overhaul with nested categories (Ladies First, Gentleman's Club, The Collective)
+- ✅ Homepage hero and layout refinements
+- ✅ Live metal price ticker
+- ✅ Cart and wishlist functionality
 
-## Key Pages
-- Homepage: Video hero, PTP Cuff feature section, Signature Pieces grid
-- Shop: Product grid with all 5 core products + drop items
-- Product pages: Individual pages with galleries, edition selectors, cart integration
+## Key Files
+- `/frontend/src/components/layout/PublicLayout.jsx` - Main layout with header/menu toggle
+- `/frontend/src/components/PhileonMenu.jsx` - Fullscreen navigation menu
+- `/frontend/src/data/products.js` - All product data
+- `/frontend/src/pages/RosariaPage.jsx` - Rosaria product page
+- `/frontend/src/pages/PTPCuffPage.jsx` - PTP Cuff product page
 
-## Recent Changes (March 2026)
+## Upcoming Tasks (P1)
+- Add Rosaria pricing when gram weight/prices are provided
+- Add missing Rosaria gallery images (packaging, champagne lifestyle shot)
 
-### Typography Refinement
-- Homepage hero headline updated to "Not jewelry. Identity."
-- Letter spacing increased to 0.12em
-- Line height adjusted for luxury balance
+## Backlog (P2)
+- Remove unused `Header.jsx` file
+- Add more product pages as needed
 
-### PTP Cuff Product Addition
-- New product page with three editions
-- Homepage feature section below hero
-- Added to shop page product grid
-- Full cart integration
-
-## Technical Notes
-- All backend routes prefixed with `/api`
-- Environment variables from `.env` files
-- MongoDB for data persistence
-- Stripe integration for checkout
-
-## Backlog / Future Tasks
-1. Monika Couture swatch refinement (map swatches to specific gallery slides)
-2. Git workflow improvements (clean branch strategy)
-3. Rosaria pricing - add once gram weight confirmed
-4. Rosaria additional gallery images (packaging, champagne lifestyle)
-
-## Notes
-- Village Cuff concept has been fully absorbed into "The PTP Cuff" - no separate product exists
+## Branch Info
+- Current branch: `websitephase2-1-session-save`
+- Repository: `phileonjewelry-bot/phileon-website`
