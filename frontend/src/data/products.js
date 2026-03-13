@@ -288,7 +288,7 @@ export const products = {
         karat: "10K",
         color: "Rose",
         pricingKey: "rose10k",
-        price: 3100,
+        price: 2950,
         currency: "CAD"
       },
       {
@@ -296,7 +296,7 @@ export const products = {
         karat: "14K",
         color: "Rose",
         pricingKey: "rose14k",
-        price: 3400,
+        price: 3250,
         currency: "CAD"
       }
     ],

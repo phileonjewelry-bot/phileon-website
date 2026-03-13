@@ -12,8 +12,8 @@ export default function RosariaPage() {
   const product = products.rosaria;
   const { addItem } = useCart();
   
-  // State for selected material
-  const [selectedMaterial, setSelectedMaterial] = useState(product.materials[0]);
+  // State for selected material - default to 14K Rose Gold
+  const [selectedMaterial, setSelectedMaterial] = useState(product.materials[1]);
 
   // Handle material change
   const handleMaterialChange = (material) => {
@@ -49,11 +49,6 @@ export default function RosariaPage() {
       type: "image",
       src: product.images.detail,
       alt: "Rosaria - Detail close-up",
-    },
-    {
-      type: "image",
-      src: product.images.onEar,
-      alt: "Rosaria - On-ear model shot",
     },
     {
       type: "image",
