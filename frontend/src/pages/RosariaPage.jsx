@@ -172,6 +172,48 @@ export default function RosariaPage() {
         stickyOffset={36}
       />
 
+      {/* Details & Dimensions Section */}
+      <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-10">
+            Details & Dimensions
+          </p>
+          
+          {/* Dimension Image */}
+          <div className="mb-12">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/2i93lke0_1000141447.jpg"
+              alt="Rosaria Earrings - Front and Profile View with Measurements"
+              className="w-full max-w-2xl mx-auto h-auto object-contain"
+            />
+          </div>
+          
+          {/* Specifications */}
+          <div className="space-y-8 text-white">
+            {/* Dimensions */}
+            <div className="space-y-2">
+              <p>Length: 32 mm</p>
+              <p>Width: 20 mm</p>
+              <p>Thickness: 6 mm</p>
+            </div>
+            
+            {/* Weight */}
+            <div className="space-y-1">
+              <p className="font-medium">Weight:</p>
+              <p>Approximately 8 grams per earring</p>
+              <p className="text-white/70">(16 grams per pair)</p>
+            </div>
+            
+            {/* Material */}
+            <div className="space-y-1">
+              <p className="font-medium">Material:</p>
+              <p>Available in 10K Rose Gold</p>
+              <p>Available in 14K Rose Gold</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Craft & Material Section */}
       <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
         <div className="max-w-3xl mx-auto text-center">
