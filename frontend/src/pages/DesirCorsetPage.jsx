@@ -64,6 +64,21 @@ export default function DesirCorsetPage() {
       src: product.images.macroDetail2,
       alt: "Désir Corset Pendant - Macro detail",
     },
+    {
+      type: "image",
+      src: product.images.inHand,
+      alt: "Désir Corset Pendant - In-hand lifestyle",
+    },
+    {
+      type: "image",
+      src: product.images.palmShot,
+      alt: "Désir Corset Pendant - Palm shot",
+    },
+    {
+      type: "image",
+      src: product.images.rooftopLifestyle,
+      alt: "Désir Corset Pendant - Rooftop lifestyle",
+    },
   ], [product.images]);
 
   return (
