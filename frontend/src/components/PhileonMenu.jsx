@@ -27,6 +27,7 @@ const menuCategories = [
     items: [
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
       { name: 'Rosaria', path: '/products/rosaria' },
+      { name: 'Désir Corset', path: '/products/desir-corset' },
       { name: 'La Marva', path: '/products/la-marva' },
       { name: 'Monika Couture', path: '/products/monika-couture' },
       { name: 'Alejandra Heels', path: '/products/alejandra-heels' },

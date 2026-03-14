@@ -26,6 +26,7 @@ import MonikaCouturePage from "@/pages/MonikaCouturePage";
 import AlejandraHeelsPage from "@/pages/AlejandraHeelsPage";
 import PTPCuffPage from "@/pages/PTPCuffPage";
 import RosariaPage from "@/pages/RosariaPage";
+import DesirCorsetPage from "@/pages/DesirCorsetPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -80,6 +81,7 @@ function App() {
             <Route path="/products/alejandra-heels" element={<AlejandraHeelsPage />} />
             <Route path="/products/ptp-cuff" element={<PTPCuffPage />} />
             <Route path="/products/rosaria" element={<RosariaPage />} />
+            <Route path="/products/desir-corset" element={<DesirCorsetPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />

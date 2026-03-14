@@ -313,6 +313,70 @@ export const products = {
       detail: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/eanzb6ck_1000141167.jpg",
       champagne: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/ujo9etr9_VideoCapture_20260313-195716.jpg"
     }
+  },
+
+  // ==========================================
+  // DÉSIR CORSET PENDANT
+  // Sculptural corset pendant in rose gold
+  // ==========================================
+  desirCorset: {
+    name: "Désir Corset Pendant",
+    subtitle: "Wearable Architecture",
+    category: "Pendants",
+    tagline: "Sculptural Form Meets Fine Jewelry",
+    description: "Inspired by the structure of couture corsetry, the Désir Corset Pendant transforms sculpted form into wearable architecture. Fine mesh panels create depth and texture within a polished rose gold frame, forming a tapered waist and sculpted cup structure that echo the lines of high fashion tailoring. Designed to sit naturally against the chest, the pendant features subtle curvature and balanced proportions that allow the piece to hang elegantly from a delicate chain. A statement piece that blends sculpture, fashion, and fine jewelry.",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    pricingPending: false,
+    
+    // Product specs
+    specs: {
+      height: "45 mm",
+      width: "38 mm",
+      weight: "12.5 grams",
+      metal: "10K Rose Gold",
+      construction: "Mesh corset architecture with sculpted frame",
+      finish: "Hand polished and hand finished",
+      chain: "Optional"
+    },
+    
+    // Purchase options with chain variants
+    options: [
+      {
+        name: "Pendant Only",
+        pricingKey: "pendant-only",
+        price: 5995,
+        currency: "CAD",
+        description: "Pendant without chain"
+      },
+      {
+        name: "Pendant + 18\" Chain",
+        pricingKey: "pendant-18-chain",
+        price: 6990,
+        currency: "CAD",
+        description: "Includes 18 inch rose gold chain"
+      },
+      {
+        name: "Pendant + 20\" Chain",
+        pricingKey: "pendant-20-chain",
+        price: 7090,
+        currency: "CAD",
+        description: "Includes 20 inch rose gold chain"
+      }
+    ],
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada.",
+    
+    // Gallery images
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/sxr71rsz_1000141578.jpg",
+      wornPortrait: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/p8urv2ow_1000141576.jpg",
+      angledMannequin: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/ggmujqbm_1000141580.jpg",
+      macroDetail1: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/rhmtewoy_1000141582.jpg",
+      macroDetail2: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/um8j2fx0_1000141584.jpg"
+    }
   }
 
 };
