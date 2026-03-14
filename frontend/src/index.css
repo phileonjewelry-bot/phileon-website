@@ -1527,3 +1527,86 @@ input:focus, textarea:focus, select:focus, button:focus {
   .ph-cta-release, .ph-input, .ph-textarea { transition: none !important; }
   .ph-blue-scan, .ph-blue-pulse { animation: none !important; display: none !important; }
 }
+/* ==========================================
+   DÉSIR CORSET PENDANT - MOTION HERO
+   Luxury floating animation for product hero
+   ========================================== */
+
+/* Wrapper for motion effects */
+.motion-hero-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Pendant floating animation */
+.motion-hero-pendant {
+  animation: pendantFloat 6s ease-in-out infinite;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+/* Subtle floating keyframes - gentle vertical drift with breathing scale */
+@keyframes pendantFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    transform: translateY(-8px) scale(1.008);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.012);
+  }
+  75% {
+    transform: translateY(-10px) scale(1.005);
+  }
+}
+
+/* Desktop hover - subtle tilt effect */
+@media (hover: hover) and (pointer: fine) {
+  .motion-hero-wrapper {
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  .motion-hero-wrapper:hover {
+    transform: perspective(1000px) rotateY(3deg) rotateX(1deg);
+  }
+  
+  .motion-hero-wrapper:hover .motion-hero-pendant {
+    animation-play-state: paused;
+    transform: translateY(-6px) scale(1.015);
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+}
+
+/* Video motion hero (for when video is added) */
+.motion-hero-media {
+  animation: mediaFloat 8s ease-in-out infinite;
+}
+
+@keyframes mediaFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .motion-hero-pendant,
+  .motion-hero-media {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  .motion-hero-wrapper:hover {
+    transform: none !important;
+  }
+  
+  .motion-hero-wrapper:hover .motion-hero-pendant {
+    transform: none !important;
+  }
+}

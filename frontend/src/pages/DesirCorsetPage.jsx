@@ -84,15 +84,35 @@ export default function DesirCorsetPage() {
 
   return (
     <div className="bg-black text-white min-h-screen" data-testid="desir-corset-page">
-      {/* Hero Section */}
-      <section className="bg-black py-12 sm:py-16 md:py-20">
+      {/* Motion Hero Section */}
+      <section className="bg-[#000000] py-12 sm:py-16 md:py-20 overflow-hidden">
+        {/* Hero Media Container - Supports video or image */}
         <div className="flex justify-center items-center px-4 mb-8 sm:mb-12">
-          <img
-            src={product.images.hero}
-            alt="Désir Corset Pendant"
-            className="w-full max-w-2xl h-auto object-contain"
-            style={{ maxHeight: '60vh' }}
-          />
+          <div className="relative w-full max-w-2xl">
+            {/* Video placeholder - uncomment when video is available
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={product.images.hero}
+              className="w-full h-auto object-contain motion-hero-media"
+              style={{ maxHeight: '60vh' }}
+            >
+              <source src="/videos/desir-corset-loop.mp4" type="video/mp4" />
+            </video>
+            */}
+            
+            {/* Animated Hero Image - CSS Motion Treatment */}
+            <div className="motion-hero-wrapper">
+              <img
+                src={product.images.hero}
+                alt="Désir Corset Pendant"
+                className="w-full h-auto object-contain motion-hero-pendant"
+                style={{ maxHeight: '60vh' }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Text Stack */}
