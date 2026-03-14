@@ -38,32 +38,27 @@ export default function RosariaPage() {
     });
   };
 
-  // Gallery media items - hero first
+  // Gallery media items - 4 slides as specified
   const galleryItems = React.useMemo(() => [
     {
       type: "image",
       src: product.images.hero,
-      alt: "Rosaria - Product shot",
+      alt: "Rosaria - Clean black background product shot",
     },
     {
       type: "image",
       src: product.images.modelProfile,
-      alt: "Rosaria - Model profile shot",
+      alt: "Rosaria - Model wearing Rosaria",
     },
     {
       type: "image",
       src: product.images.detail,
-      alt: "Rosaria - Detail close-up",
-    },
-    {
-      type: "image",
-      src: product.images.editorial,
-      alt: "Rosaria - Editorial model shot",
+      alt: "Rosaria - Jewelry box detail shot",
     },
     {
       type: "image",
       src: product.images.champagne,
-      alt: "Rosaria - Champagne lifestyle shot",
+      alt: "Rosaria - Champagne plunge shot",
     },
   ], [product.images]);
 
@@ -111,7 +106,7 @@ export default function RosariaPage() {
           <>
             <ProductInfoSection
               titleTag="Earring Collection"
-              title={product.name}
+              title="Rosaria"
             >
               <p className="text-[#C6A24A] text-sm tracking-[0.15em] uppercase">
                 {product.subtitle}
@@ -122,8 +117,8 @@ export default function RosariaPage() {
         purchasePanel={
           <>
             <ProductInfoSection
-              titleTag="Select Material"
-              title="Rose Gold Options"
+              titleTag=""
+              title="Rosaria"
             >
               {/* Material Selection */}
               <div className="mt-6 space-y-3">
@@ -150,26 +145,14 @@ export default function RosariaPage() {
                           ].join(" ")}>
                             {material.name}
                           </p>
-                          <p className="text-white/50 text-sm mt-1">
-                            {material.karat} Karat · {material.color} Gold
-                          </p>
                         </div>
                         <div className="text-right">
-                          {/* Price display */}
                           <p className={[
                             "font-medium",
                             isSelected ? "text-[#C6A24A]" : "text-white"
                           ].join(" ")}>
                             {formatPrice(material.price, material.currency)}
                           </p>
-                          {/* Rose gold swatch */}
-                          <div 
-                            className={[
-                              "w-5 h-5 rounded-full border-2 transition-all mt-1 ml-auto",
-                              isSelected ? "border-[#C6A24A]" : "border-white/30"
-                            ].join(" ")}
-                            style={{ backgroundColor: '#B76E79' }}
-                          />
                         </div>
                       </div>
                     </button>
@@ -177,26 +160,17 @@ export default function RosariaPage() {
                 })}
               </div>
 
-              {/* Pricing Display */}
-              <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-center">
-                  <p className="text-white/50 text-xs tracking-widest uppercase mb-2">Selected</p>
-                  <p className="text-white text-base">{selectedMaterial.name}</p>
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-[#C6A24A] text-2xl font-medium tracking-wide">
-                      {formatPrice(selectedMaterial.price, selectedMaterial.currency)}
-                    </p>
-                    <p className="text-white/50 text-xs mt-2 tracking-wide">
-                      Retail Price (CAD)
-                    </p>
-                  </div>
-                </div>
+              {/* Product Details */}
+              <div className="mt-6 space-y-2 text-center text-white/70 text-sm">
+                <p>Solid Rose Gold Construction</p>
+                <p>Approx. 16g Per Pair</p>
+                <p>Individually Hand Finished</p>
               </div>
 
               {/* Shipping Info */}
-              <div className="mt-4 text-center">
+              <div className="mt-6 text-center">
                 <p className="text-white/60 text-sm">
-                  {product.shipping}
+                  Complimentary insured shipping within Canada.
                 </p>
               </div>
             </ProductInfoSection>
@@ -242,16 +216,16 @@ export default function RosariaPage() {
             
             {/* Weight */}
             <div className="space-y-1">
-              <p className="font-medium">Weight:</p>
+              <p className="font-medium">Weight</p>
               <p>Approximately 8 grams per earring</p>
               <p className="text-white/70">(16 grams per pair)</p>
             </div>
             
             {/* Material */}
             <div className="space-y-1">
-              <p className="font-medium">Material:</p>
-              <p>Available in 10K Rose Gold</p>
-              <p>Available in 14K Rose Gold</p>
+              <p className="font-medium">Material</p>
+              <p>10K Rose Gold</p>
+              <p>14K Rose Gold</p>
             </div>
           </div>
         </div>
@@ -260,50 +234,29 @@ export default function RosariaPage() {
       {/* Craft & Material Section */}
       <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-6">
+          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-10">
             Craft & Material
           </p>
           
-          <p className="text-white/60 leading-relaxed mb-8 max-w-2xl mx-auto">
-            Each Rosaria earring is sculpted to capture the intricate layers of a rose in full bloom. 
-            The cascading composition creates movement and depth, reflecting light across every petal.
+          <p className="text-white/70 leading-relaxed mb-6 max-w-2xl mx-auto">
+            Rosaria is sculpted as a cluster of blooming roses, cast in solid rose gold and finished by hand.
           </p>
           
-          <p className="text-white/50 text-sm tracking-wider uppercase mb-8">
-            Available exclusively in:
+          <p className="text-white/70 leading-relaxed mb-6 max-w-2xl mx-auto">
+            Each piece is polished to a mirror finish, allowing the sculpted petals to catch light from every angle.
           </p>
           
-          <div className="space-y-6 max-w-md mx-auto">
-            <div>
-              <p className="text-[#C6A24A] font-medium tracking-wide">10K Rose Gold</p>
-              <p className="text-white/50 text-sm mt-1">Warm rose hue with excellent durability.</p>
-            </div>
-            
-            <div>
-              <p className="text-[#C6A24A] font-medium tracking-wide">14K Rose Gold</p>
-              <p className="text-white/50 text-sm mt-1">Richer rose tone for a premium finish.</p>
-            </div>
-          </div>
+          <p className="text-white/60 text-sm tracking-wide">
+            Available in 10K or 14K rose gold.
+          </p>
         </div>
       </section>
 
-      {/* About Rosaria Section */}
+      {/* Closing Line */}
       <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-6">
-            About Rosaria
-          </p>
-          
-          <h2 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-white mb-10">
-            {product.subtitle}
-          </h2>
-          
-          <p className="text-white/60 leading-relaxed mb-8 max-w-2xl mx-auto">
-            {product.description}
-          </p>
-          
-          <p className="text-white/50 text-sm leading-relaxed max-w-xl mx-auto">
-            {product.materialNote}
+          <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white/80 italic tracking-wide leading-relaxed">
+            A sculptural rose cast in gold — designed to bloom in motion.
           </p>
           
           <p className="mt-12 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
