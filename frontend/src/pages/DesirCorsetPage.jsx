@@ -6,6 +6,7 @@ import ProductLayout, {
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 import { useCart } from "../contexts/CartContext";
+import StyleItWith from "../components/StyleItWith";
 
 export default function DesirCorsetPage() {
   const product = products.desirCorset;
@@ -269,6 +270,9 @@ export default function DesirCorsetPage() {
           </div>
         </div>
       </section>
+
+      {/* Style it with Section */}
+      <StyleItWith productId="desir-corset" />
 
       {/* Closing Line */}
       <section className="py-24 lg:py-32 px-8 bg-black border-t border-white/10">
