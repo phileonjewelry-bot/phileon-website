@@ -55,6 +55,11 @@ export default function RosariaPage() {
       src: product.images.editorial,
       alt: "Rosaria - Editorial model shot",
     },
+    {
+      type: "image",
+      src: product.images.champagne,
+      alt: "Rosaria - Champagne lifestyle shot",
+    },
   ], [product.images]);
 
   // Rosaria hero video URL
