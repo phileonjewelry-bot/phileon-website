@@ -47,6 +47,11 @@ export default function RosariaPage() {
     },
     {
       type: "image",
+      src: product.images.modelProfile,
+      alt: "Rosaria - Model profile shot",
+    },
+    {
+      type: "image",
       src: product.images.detail,
       alt: "Rosaria - Detail close-up",
     },
