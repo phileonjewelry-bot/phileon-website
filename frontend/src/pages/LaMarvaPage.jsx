@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useCart } from "../contexts/CartContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import ProductGallery from "../components/ProductGallery";
 import ProductLayout, {
   ProductInfoSection,
@@ -69,18 +69,17 @@ function useLaMarvaPricing() {
 
 export default function LaMarvaPage() {
   const { tiers, goldPricing } = useLaMarvaPricing();
-  const { addToCart } = useCart();
+  const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
 
-  // Handle Add to Cart for purchasable editions
+  // Handle Add to Cart for purchasable editions with micro-interaction
   const handleAddToCart = (tier) => {
-    addToCart({
+    addWithAnimation({
       productId: `la-marva-${tier.pricingKey}`,
       name: `La Marva - ${tier.name}`,
       price: tier.adjustedPrice,
-      quantity: 1,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg",
       edition: tier.name,
-    });
+    }, 1, tier.name);
   };
 
   // Gallery media items - memoized to prevent recreation on every render
@@ -315,15 +314,18 @@ export default function LaMarvaPage() {
                     ) : (
                       <button
                         onClick={() => handleAddToCart(tier)}
+                        disabled={isAdding}
                         className={[
                           "px-4 py-2 rounded-md font-semibold tracking-wide text-center text-sm transition-all duration-300",
-                          tier.highlight
-                            ? "bg-[#C6A24A] text-black hover:bg-[#B8944A]"
-                            : "border border-white/30 text-white hover:border-white/50",
+                          isAdding
+                            ? "bg-green-600 text-white"
+                            : tier.highlight
+                              ? "bg-[#C6A24A] text-black hover:bg-[#B8944A]"
+                              : "border border-white/30 text-white hover:border-white/50",
                         ].join(" ")}
                         data-testid={`add-to-cart-${tier.pricingKey}`}
                       >
-                        Add to Cart
+                        {isAdding ? '✓ Added' : 'Add to Cart'}
                       </button>
                     )}
                   </div>

@@ -4,12 +4,12 @@ import ProductLayout, {
   ProductInfoSection,
   ProductActions,
 } from "../components/ProductLayout";
-import { useCart } from "../contexts/CartContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 
 export default function AnnieRosePage() {
-  const { addToCart } = useCart();
+  const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
   
   // Metal options
   const metalOptions = [
@@ -31,24 +31,17 @@ export default function AnnieRosePage() {
   // Calculate price based on both selections
   const currentPrice = products.annieRose.pricing[selectedStone.key][selectedMetal.key];
 
-  // Handle add to cart
+  // Handle add to cart with micro-interaction
   const handleAddToCart = () => {
-    const product = {
+    addWithAnimation({
       id: "annie-rose",
-      name: products.annieRose.name,
+      name: `${products.annieRose.name} - ${selectedMetal.name}`,
       slug: "annie-rose",
       price: currentPrice,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg",
       images: ["https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"],
       materials: [selectedMetal.name, selectedStone.name]
-    };
-
-    const variant = {
-      metal: selectedMetal.name,
-      stone: selectedStone.name
-    };
-
-    addToCart(product, 1, variant);
+    }, 1, `${selectedMetal.name} / ${selectedStone.name}`);
   };
 
   // Gallery media items - memoized to prevent recreation
@@ -215,10 +208,11 @@ export default function AnnieRosePage() {
             <div className="mt-6">
               <Button
                 onClick={handleAddToCart}
-                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                disabled={isAdding}
+                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
                 data-testid="add-to-cart-button"
               >
-                ADD TO CART
+                {buttonText}
               </Button>
             </div>
           </>

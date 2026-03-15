@@ -4,12 +4,12 @@ import ProductLayout, {
   ProductInfoSection,
   ProductActions,
 } from "../components/ProductLayout";
-import { useCart } from "../contexts/CartContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 
 export default function MonikaCouturePage() {
-  const { addToCart } = useCart();
+  const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
   
   // Metal options with images and gradient swatch colors
   const metalOptions = [
@@ -57,23 +57,17 @@ export default function MonikaCouturePage() {
     setCurrentSlide(metal.galleryIndex);
   };
 
-  // Handle add to cart
+  // Handle add to cart with micro-interaction
   const handleAddToCart = () => {
-    const product = {
+    addWithAnimation({
       id: "monika-couture",
-      name: products.monikaCouture.name,
+      name: `${products.monikaCouture.name} - ${selectedMetal.name}`,
       slug: "monika-couture",
       price: selectedMetal.price,
       image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
       images: ["https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"],
       materials: [selectedMetal.name]
-    };
-
-    const variant = {
-      metal: selectedMetal.name
-    };
-
-    addToCart(product, 1, variant);
+    }, 1, selectedMetal.name);
   };
 
   // Gallery media items - memoized to prevent recreation
@@ -240,10 +234,11 @@ export default function MonikaCouturePage() {
             <div className="mt-6">
               <Button
                 onClick={handleAddToCart}
-                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                disabled={isAdding}
+                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
                 data-testid="add-to-cart-button"
               >
-                ADD TO CART
+                {buttonText}
               </Button>
             </div>
           </>

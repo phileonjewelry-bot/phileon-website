@@ -5,12 +5,12 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
-import { useCart } from "../contexts/CartContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import StyleItWith from "../components/StyleItWith";
 
 export default function DesirCorsetPage() {
   const product = products.desirCorset;
-  const { addToCart } = useCart();
+  const { isAdding, handleAddToCart, buttonText, buttonClass } = useAddToCart();
   
   // State for selected option - default to Pendant Only
   const [selectedOption, setSelectedOption] = useState(product.options[0]);
@@ -25,9 +25,9 @@ export default function DesirCorsetPage() {
     return `$${price.toLocaleString()} ${currency}`;
   };
 
-  // Handle add to cart
-  const handleAddToCart = () => {
-    addToCart({
+  // Handle add to cart with micro-interaction
+  const onAddToCart = () => {
+    handleAddToCart({
       id: `desir-corset-${selectedOption.pricingKey}`,
       name: `${product.name} - ${selectedOption.name}`,
       image: product.images.hero,
@@ -201,11 +201,12 @@ export default function DesirCorsetPage() {
 
             <div className="mt-6">
               <Button
-                onClick={handleAddToCart}
-                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                onClick={onAddToCart}
+                disabled={isAdding}
+                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
                 data-testid="add-to-cart-button"
               >
-                ADD TO CART
+                {buttonText}
               </Button>
             </div>
           </>

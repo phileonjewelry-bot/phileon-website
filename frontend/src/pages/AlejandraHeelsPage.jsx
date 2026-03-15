@@ -3,12 +3,12 @@ import ProductGallery from "../components/ProductGallery";
 import ProductLayout, {
   ProductInfoSection,
 } from "../components/ProductLayout";
-import { useCart } from "../contexts/CartContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 
 export default function AlejandraHeelsPage() {
-  const { addToCart } = useCart();
+  const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
   
   // Metal color to gradient swatch mapping
   const metalSwatchGradients = {
@@ -92,24 +92,17 @@ export default function AlejandraHeelsPage() {
     setCurrentSlide(galleryIndex);
   };
 
-  // Handle add to cart
+  // Handle add to cart with micro-interaction
   const handleAddToCart = () => {
-    const product = {
+    addWithAnimation({
       id: "alejandra-heels",
-      name: products.alejandraHeels.name,
+      name: `${products.alejandraHeels.name} - ${selectedMetal.name}`,
       slug: "alejandra-heels",
       price: currentPrice,
       image: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ctwrb3no_1000140403.jpg",
       images: ["https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ctwrb3no_1000140403.jpg"],
       materials: [selectedMetal.name, selectedStone.name]
-    };
-
-    const variant = {
-      metal: selectedMetal.name,
-      stone: selectedStone.name
-    };
-
-    addToCart(product, 1, variant);
+    }, 1, `${selectedMetal.name} / ${selectedStone.name}`);
   };
 
   // Gallery items
@@ -285,10 +278,11 @@ export default function AlejandraHeelsPage() {
             <div className="mt-6">
               <Button
                 onClick={handleAddToCart}
-                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                disabled={isAdding}
+                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
                 data-testid="add-to-cart-button"
               >
-                ADD TO CART
+                {buttonText}
               </Button>
             </div>
           </>

@@ -4,12 +4,12 @@ import ProductLayout, {
   ProductInfoSection,
   ProductActions,
 } from "../components/ProductLayout";
-import { useCart } from "../contexts/CartContext";
+import { useAddToCart } from "../hooks/useAddToCart";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 
 export default function PTPCuffPage() {
-  const { addToCart } = useCart();
+  const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
   const product = products.ptpCuff;
   
   // Edition options with positioning text
@@ -32,24 +32,17 @@ export default function PTPCuffPage() {
     setSelectedEdition(edition);
   };
 
-  // Handle add to cart
+  // Handle add to cart with micro-interaction
   const handleAddToCart = () => {
-    const cartProduct = {
+    addWithAnimation({
       id: "ptp-cuff",
-      name: product.name,
+      name: `${product.name} - ${selectedEdition.name}`,
       slug: "ptp-cuff",
       price: selectedEdition.price,
       image: product.images.hero,
       images: [product.images.hero],
       materials: [selectedEdition.material]
-    };
-
-    const variant = {
-      edition: selectedEdition.name,
-      material: selectedEdition.material
-    };
-
-    addToCart(cartProduct, 1, variant);
+    }, 1, `${selectedEdition.name} - ${selectedEdition.material}`);
   };
 
   // Gallery media items - video first, then images
@@ -225,10 +218,11 @@ export default function PTPCuffPage() {
             <div className="mt-6">
               <Button
                 onClick={handleAddToCart}
-                className="w-full bg-[#C6A24A] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-md tracking-wide"
+                disabled={isAdding}
+                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
                 data-testid="add-to-cart-button"
               >
-                ADD TO CART
+                {buttonText}
               </Button>
             </div>
           </>
