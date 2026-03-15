@@ -13,45 +13,33 @@ const Header = ({ onVaultOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoGlow, setLogoGlow] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
   const lastTapTimeRef = useRef(0);
-  const pendingNavRef = useRef(null);
   const { getTotalItems, setIsOpen: setCartOpen } = useCart();
   const { getTotalWishlistItems } = useWishlist();
 
   // Logo easter egg: 7 taps within 2 seconds triggers vault modal
-  // Single tap navigates home after a short delay (cancelled if more taps come)
+  // Single tap navigates home immediately (unless already home)
   const handleLogoTap = (e) => {
     const now = Date.now();
+    const timeSinceLastTap = now - lastTapTimeRef.current;
     
-    // Prevent double-counting from both click and touchstart on mobile
-    if (now - lastTapTimeRef.current < 100) {
+    // Prevent double-counting from rapid events
+    if (timeSinceLastTap < 50) {
       return;
     }
-    lastTapTimeRef.current = now;
     
-    // Cancel any pending navigation
-    if (pendingNavRef.current) {
-      clearTimeout(pendingNavRef.current);
-      pendingNavRef.current = null;
-    }
+    // Check if this is a continuation of rapid tapping (within 400ms)
+    const isRapidTap = timeSinceLastTap < 400 && tapCountRef.current > 0;
+    
+    lastTapTimeRef.current = now;
     
     // Increment tap count
     tapCountRef.current += 1;
     
-    // Subtle gold pulse feedback (only after 2nd tap to stay hidden)
-    if (tapCountRef.current >= 2) {
-      setLogoGlow(true);
-      setTimeout(() => setLogoGlow(false), 180);
-      
-      // Light haptic on supported devices (very subtle)
-      if (navigator.vibrate && tapCountRef.current >= 5) {
-        navigator.vibrate(8);
-      }
-    }
-    
-    // Clear existing timer and start new one (2 second window)
+    // Clear existing reset timer
     if (tapTimerRef.current) {
       clearTimeout(tapTimerRef.current);
     }
@@ -66,27 +54,32 @@ const Header = ({ onVaultOpen }) => {
       e.preventDefault();
       e.stopPropagation();
       
-      // Reset counter
       tapCountRef.current = 0;
       if (tapTimerRef.current) {
         clearTimeout(tapTimerRef.current);
       }
       
-      // Open vault modal
       onVaultOpen();
       return;
     }
     
-    // For single tap, schedule navigation after delay (allows more taps)
-    if (tapCountRef.current === 1) {
-      pendingNavRef.current = setTimeout(() => {
-        // Only navigate if still at 1 tap (no more taps came)
-        if (tapCountRef.current === 1) {
-          navigate('/');
-          tapCountRef.current = 0;
-        }
-        pendingNavRef.current = null;
-      }, 300);
+    // Subtle gold pulse feedback (only after 2nd tap to stay hidden)
+    if (tapCountRef.current >= 2) {
+      setLogoGlow(true);
+      setTimeout(() => setLogoGlow(false), 180);
+      
+      // Light haptic on supported devices (very subtle)
+      if (navigator.vibrate && tapCountRef.current >= 5) {
+        navigator.vibrate(8);
+      }
+      return; // Don't navigate during easter egg attempt
+    }
+    
+    // First tap: navigate home immediately (if not already there)
+    if (tapCountRef.current === 1 && !isRapidTap) {
+      if (location.pathname !== '/') {
+        navigate('/');
+      }
     }
   };
 
