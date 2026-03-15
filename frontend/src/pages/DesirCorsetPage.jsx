@@ -291,6 +291,22 @@ export default function DesirCorsetPage() {
         </div>
       </section>
 
+      {/* Specification Graphic Section */}
+      <section className="py-16 lg:py-24 px-4 sm:px-8 bg-black border-t border-white/10">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-[#C6A24A] text-xs tracking-[0.4em] uppercase mb-8 text-center">
+            Dimensions
+          </p>
+          <div className="bg-white/5 rounded-lg p-4 sm:p-8">
+            <img 
+              src={product.images.specSheet}
+              alt="Désir Corset Pendant Specifications - Height: 45mm, Width: 38mm, Weight: 12.5 grams"
+              className="w-full h-auto object-contain rounded"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Style it with Section */}
       <StyleItWith productId="desir-corset" />
 
