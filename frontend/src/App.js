@@ -20,6 +20,7 @@ import ShopDropPage from "@/pages/ShopDropPage";
 import DropPage from "@/pages/DropPage";
 import MobileDropPage from "@/pages/MobileDropPage";
 import SecretDropPage from "./pages/SecretDropPage";
+import VaultPage from "@/pages/VaultPage";
 import LaMarvaPage from "@/pages/LaMarvaPage";
 import AnnieRosePage from "@/pages/AnnieRosePage";
 import MonikaCouturePage from "@/pages/MonikaCouturePage";
@@ -96,6 +97,7 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
+            <Route path="/vault/drews-world" element={<VaultPage />} />
           </Route>
           
           {/* Admin Routes */}

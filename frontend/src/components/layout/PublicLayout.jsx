@@ -3,7 +3,6 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Heart } from 'lucide-react';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
 import PhileonMenu from '@/components/PhileonMenu';
-import VaultModal from '@/components/VaultModal';
 import VaultUnlockSequence from '@/components/VaultUnlockSequence';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import { useCart } from '@/contexts/CartContext';
@@ -250,20 +249,19 @@ const Footer = () => {
 const PublicLayout = () => {
   const location = useLocation();
   const [isUnlockSequenceActive, setIsUnlockSequenceActive] = useState(false);
-  const [isVaultOpen, setIsVaultOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Handle vault unlock: start sequence, then open modal when complete
+  // Handle vault unlock trigger
   const handleVaultTrigger = () => {
     setIsUnlockSequenceActive(true);
   };
 
+  // Handle unlock complete - sequence will redirect to vault page
   const handleUnlockComplete = () => {
     setIsUnlockSequenceActive(false);
-    setIsVaultOpen(true);
   };
 
   return (
@@ -282,17 +280,10 @@ const PublicLayout = () => {
         
         <Footer />
         
-        {/* Vault Unlock Sequence - Glitch + Video */}
+        {/* Vault Unlock Sequence - Glitch + Video + Redirect */}
         <VaultUnlockSequence 
           isActive={isUnlockSequenceActive}
           onComplete={handleUnlockComplete}
-          onCancel={() => setIsUnlockSequenceActive(false)}
-        />
-        
-        {/* Vault Modal - Opens after unlock sequence */}
-        <VaultModal 
-          isOpen={isVaultOpen} 
-          onClose={() => setIsVaultOpen(false)} 
         />
       </div>
     </IntentFlashProvider>
