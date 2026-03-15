@@ -2,24 +2,24 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, X } from 'lucide-react';
 
-// Navigation structure with categories
+// Navigation structure with categories and audiences
 const menuCategories = [
   {
     name: 'Ladies First',
     items: [
-      { name: 'Rings', path: '/shop?category=rings' },
-      { name: 'Earrings', path: '/shop?category=earrings' },
-      { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets' },
-      { name: 'Pendants', path: '/shop?category=pendants' },
+      { name: 'Rings', path: '/shop?category=rings&audience=ladies' },
+      { name: 'Earrings', path: '/shop?category=earrings&audience=ladies' },
+      { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets&audience=ladies' },
+      { name: 'Pendants', path: '/shop?category=pendants&audience=ladies' },
     ]
   },
   {
     name: "The Gentleman's Club",
     items: [
-      { name: 'Rings', path: '/shop?category=mens-rings' },
-      { name: 'Earrings', path: '/shop?category=mens-earrings' },
-      { name: 'Bracelets / Cuffs', path: '/shop?category=mens-bracelets' },
-      { name: 'Pendants', path: '/shop?category=mens-pendants' },
+      { name: 'Rings', path: '/shop?category=rings&audience=gentlemens-club' },
+      { name: 'Earrings', path: '/shop?category=earrings&audience=gentlemens-club' },
+      { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets&audience=gentlemens-club' },
+      { name: 'Pendants', path: '/shop?category=pendants&audience=gentlemens-club' },
     ]
   },
   {

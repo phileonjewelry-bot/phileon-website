@@ -21,7 +21,16 @@ Build and maintain a luxury jewelry e-commerce website for PHILEON brand featuri
 - ✅ Fixed mobile cart drawer height (100dvh with flex layout, subtotal/checkout always visible)
 - ✅ Fixed Rosaria hero video poster (displays correct hero image before video loads)
 - ✅ Restored logo easter egg (7 taps in 2 seconds triggers /secret-drop)
+- ✅ Added subtle gold glow micro-animation to logo easter egg
 - ✅ Verified no development overlay in production builds
+- ✅ **Navigation audience filtering**: Products now filter by BOTH category AND audience
+  - Added `category` and `audience` fields to all products
+  - PTP Cuff: `category: bracelets`, `audience: gentlemens-club`
+  - La Marva/Annie Rose: `category: rings`, `audience: ladies`
+  - Rosaria/Monika/Alejandra: `category: earrings`, `audience: ladies`
+  - Désir Corset: `category: pendants`, `audience: ladies`
+- ✅ Updated PhileonMenu to pass both `category` and `audience` URL params
+- ✅ Updated ShopDropPage to filter by both params (products without tags excluded when filters active)
 
 ### Session: March 13-14, 2026
 - ✅ Fixed TypeError: addItem is not a function (renamed to addToCart)

@@ -7,6 +7,9 @@ export const products = {
   // ==========================================
   laMarva: {
     name: "La Marva",
+    slug: "la-marva",
+    category: "rings",
+    audience: "ladies",
     story: "Named in honor of Marva Wilson.",
     tribute: "Named in honor of Marva Wilson — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.",
     description: "La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance.",
@@ -105,6 +108,9 @@ export const products = {
   // ==========================================
   annieRose: {
     name: "Annie Rose",
+    slug: "annie-rose",
+    category: "rings",
+    audience: "ladies",
     tribute: "Created in honor of my sister Andrea.",
     tagline: "Soft in tone. Strong in spirit.",
     metals: ["10K", "14K", "18K"],
@@ -135,6 +141,9 @@ export const products = {
   // ==========================================
   monikaCouture: {
     name: "Monika Couture Earrings",
+    slug: "monika-couture",
+    category: "earrings",
+    audience: "ladies",
     weight: "10g per pair",
     
     // Pricing Configuration
@@ -156,7 +165,10 @@ export const products = {
   // ==========================================
   alejandraHeels: {
     name: "Alejandra Heels",
-    category: "Heel Earrings",
+    slug: "alejandra-heels",
+    category: "earrings",
+    audience: "ladies",
+    categoryType: "Heel Earrings",
     description: "Sculptural miniature heels cast in precious metal and finished with a pavé strap.",
     tagline: "A playful couture design created to capture the spirit of fashion, movement, and confidence.",
     
@@ -199,8 +211,11 @@ export const products = {
   // ==========================================
   ptpCuff: {
     name: "PTP Cuff",
+    slug: "ptp-cuff",
+    category: "bracelets",
+    audience: "gentlemens-club",
     subtitle: "PTP — Power To The People",
-    category: "Cuff Bracelet",
+    categoryType: "Cuff Bracelet",
     description: "The PTP Cuff transforms a universal symbol of unity into wearable sculpture. A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.",
     tagline: "Bold, sculptural, and unapologetically symbolic, the cuff is designed to feel substantial on the wrist while maintaining a refined luxury finish.",
     
@@ -264,8 +279,11 @@ export const products = {
   // ==========================================
   rosaria: {
     name: "Rosaria",
+    slug: "rosaria",
+    category: "earrings",
+    audience: "ladies",
     subtitle: "The Rosaria Earrings",
-    category: "Earrings",
+    categoryType: "Earrings",
     tagline: "Sculpted Roses in Rose Gold",
     description: "Rosaria captures the beauty of a rose in full bloom, transformed into wearable sculpture. Each rose is sculpted in precious metal and arranged in a cascading composition that moves gracefully with the wearer. The design preserves the elegance of a flower in gold — a tribute to love, celebration, and permanence.",
     materialNote: "Available exclusively in 10K and 14K rose gold.",
@@ -321,8 +339,11 @@ export const products = {
   // ==========================================
   desirCorset: {
     name: "Désir Corset Pendant",
+    slug: "desir-corset",
+    category: "pendants",
+    audience: "ladies",
     subtitle: "Wearable Architecture",
-    category: "Pendants",
+    categoryType: "Pendants",
     tagline: "Sculptural Form Meets Fine Jewelry",
     description: "Inspired by the structure of couture corsetry, the Désir Corset Pendant transforms sculpted form into wearable architecture. Fine mesh panels create depth and texture within a polished rose gold frame, forming a tapered waist and sculpted cup structure that echo the lines of high fashion tailoring. Designed to sit naturally against the chest, the pendant features subtle curvature and balanced proportions that allow the piece to hang elegantly from a delicate chain. A statement piece that blends sculpture, fashion, and fine jewelry.",
     

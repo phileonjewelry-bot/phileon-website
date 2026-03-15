@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Heart, Filter, Eye, EyeOff } from 'lucide-react';
 import { publicApi } from '../lib/api';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -10,6 +10,7 @@ import { useCart } from '@/contexts/CartContext';
 import '../styles/shop-drop.css';
 
 // Core collection products - Always shown first
+// Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
 const CORE_PRODUCTS = [
   {
     id: 'la-marva',
@@ -21,6 +22,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $3,400',
     inventory_count: 100,
     is_core: true,
+    category: 'rings',
+    audience: 'ladies',
   },
   {
     id: 'annie-rose',
@@ -32,6 +35,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $6,400',
     inventory_count: 100,
     is_core: true,
+    category: 'rings',
+    audience: 'ladies',
   },
   {
     id: 'monika-couture',
@@ -43,6 +48,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $1,400',
     inventory_count: 100,
     is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
   },
   {
     id: 'alejandra-heels',
@@ -54,6 +61,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $1,250',
     inventory_count: 100,
     is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
   },
   {
     id: 'ptp-cuff',
@@ -65,6 +74,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $1,050 CAD',
     inventory_count: 100,
     is_core: true,
+    category: 'bracelets',
+    audience: 'gentlemens-club',
   },
   {
     id: 'rosaria',
@@ -76,6 +87,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $2,950 CAD',
     inventory_count: 100,
     is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
   },
   {
     id: 'desir-corset',
@@ -87,6 +100,8 @@ const CORE_PRODUCTS = [
     price_range: 'From $5,995 CAD',
     inventory_count: 100,
     is_core: true,
+    category: 'pendants',
+    audience: 'ladies',
   },
 ];
 
@@ -122,11 +137,16 @@ const DROP_PRODUCTS = [
 ];
 
 const ShopDropPage = () => {
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [hideSoldOut, setHideSoldOut] = useState(false); // DEFAULT OFF for hype
   const { has, toggle } = useWishlist();
   const { addToCart } = useCart();
+
+  // Get filter params from URL
+  const categoryParam = searchParams.get('category');
+  const audienceParam = searchParams.get('audience');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -155,13 +175,33 @@ const ShopDropPage = () => {
     fetchProducts();
   }, []);
 
-  // Filter products based on sold out visibility setting
-  const filteredProducts = hideSoldOut 
-    ? products.filter(product => {
-        const inventoryCount = product.inventory_count || product.stock || 0;
-        return inventoryCount > 0; // Hide if sold out
-      })
-    : products; // Show all products (including sold out) for HYPE
+  // Filter products based on category, audience, and sold out visibility
+  const filteredProducts = products.filter(product => {
+    // Filter by sold out
+    if (hideSoldOut) {
+      const inventoryCount = product.inventory_count || product.stock || 0;
+      if (inventoryCount === 0) return false;
+    }
+
+    // If category or audience filter is active, only show products that have those fields defined
+    const hasFilters = categoryParam || audienceParam;
+    
+    // Filter by category if specified
+    if (categoryParam) {
+      // Exclude products without a category when filter is active
+      if (!product.category) return false;
+      if (product.category !== categoryParam) return false;
+    }
+
+    // Filter by audience if specified
+    if (audienceParam) {
+      // Exclude products without an audience when filter is active
+      if (!product.audience) return false;
+      if (product.audience !== audienceParam) return false;
+    }
+
+    return true;
+  });
 
   // Stagger product reveal
   useEffect(() => {
