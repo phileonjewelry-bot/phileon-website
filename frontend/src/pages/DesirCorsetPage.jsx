@@ -85,10 +85,10 @@ export default function DesirCorsetPage() {
   return (
     <div className="bg-black text-white min-h-screen" data-testid="desir-corset-page">
       {/* Motion Hero Section */}
-      <section className="bg-[#000000] py-12 sm:py-16 md:py-20 overflow-hidden">
+      <section className="bg-[#000000] py-8 sm:py-12 md:py-16 overflow-hidden">
         {/* Hero Media Container - Video with image fallback */}
-        <div className="flex justify-center items-center px-4 mb-8 sm:mb-12">
-          <div className="relative w-full max-w-2xl">
+        <div className="flex justify-center items-center px-2 sm:px-4 mb-6 sm:mb-10">
+          <div className="relative w-full max-w-4xl">
             {/* Hero Video - Looping */}
             <video
               autoPlay
@@ -97,7 +97,7 @@ export default function DesirCorsetPage() {
               playsInline
               poster={product.images.hero}
               className="w-full h-auto object-contain"
-              style={{ maxHeight: '60vh' }}
+              style={{ maxHeight: '75vh' }}
             >
               <source src={product.images.heroVideo} type="video/mp4" />
               {/* Fallback to image if video fails */}
