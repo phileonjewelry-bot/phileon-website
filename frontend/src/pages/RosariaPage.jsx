@@ -81,7 +81,12 @@ export default function RosariaPage() {
             style={{ maxHeight: '60vh' }}
           >
             <source src={rosariaVideoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
+            {/* Fallback to image if video fails */}
+            <img
+              src={product.images.hero}
+              alt="Rosaria Earrings"
+              className="w-full h-auto object-contain"
+            />
           </video>
         </div>
 
