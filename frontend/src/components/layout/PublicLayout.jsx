@@ -4,6 +4,7 @@ import { ShoppingBag, Heart } from 'lucide-react';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
 import PhileonMenu from '@/components/PhileonMenu';
 import VaultModal from '@/components/VaultModal';
+import VaultUnlockSequence from '@/components/VaultUnlockSequence';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -248,11 +249,22 @@ const Footer = () => {
 
 const PublicLayout = () => {
   const location = useLocation();
+  const [isUnlockSequenceActive, setIsUnlockSequenceActive] = useState(false);
   const [isVaultOpen, setIsVaultOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  // Handle vault unlock: start sequence, then open modal when complete
+  const handleVaultTrigger = () => {
+    setIsUnlockSequenceActive(true);
+  };
+
+  const handleUnlockComplete = () => {
+    setIsUnlockSequenceActive(false);
+    setIsVaultOpen(true);
+  };
 
   return (
     <IntentFlashProvider>
@@ -261,7 +273,7 @@ const PublicLayout = () => {
         <LiveMetalTicker />
         
         {/* Header */}
-        <Header onVaultOpen={() => setIsVaultOpen(true)} />
+        <Header onVaultOpen={handleVaultTrigger} />
         
         {/* Main content - account for ticker height */}
         <main className="flex-grow pt-[36px]">
@@ -270,7 +282,14 @@ const PublicLayout = () => {
         
         <Footer />
         
-        {/* Vault Modal - Easter Egg */}
+        {/* Vault Unlock Sequence - Glitch + Video */}
+        <VaultUnlockSequence 
+          isActive={isUnlockSequenceActive}
+          onComplete={handleUnlockComplete}
+          onCancel={() => setIsUnlockSequenceActive(false)}
+        />
+        
+        {/* Vault Modal - Opens after unlock sequence */}
         <VaultModal 
           isOpen={isVaultOpen} 
           onClose={() => setIsVaultOpen(false)} 
