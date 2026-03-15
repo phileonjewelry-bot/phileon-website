@@ -76,7 +76,7 @@ export default function RosariaPage() {
             muted
             loop
             playsInline
-            poster={product.images.onEar}
+            poster={product.images.hero}
             className="w-full max-w-2xl h-auto object-contain"
             style={{ maxHeight: '60vh' }}
           >

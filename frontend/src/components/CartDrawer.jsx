@@ -97,8 +97,8 @@ const CartDrawer = () => {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent className="w-full sm:max-w-lg bg-black border-gray-800">
-        <SheetHeader className="pb-6 border-b border-gray-800">
+      <SheetContent className="w-full sm:max-w-lg bg-black border-gray-800 flex flex-col h-[100dvh] max-h-[100dvh]">
+        <SheetHeader className="pb-6 border-b border-gray-800 flex-shrink-0">
           <SheetTitle className="flex items-center gap-2 text-white">
             <ShoppingBag className="w-5 h-5 text-yellow-500" />
             Your Cart ({getTotalItems()})
@@ -108,9 +108,9 @@ const CartDrawer = () => {
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
           {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto py-6 space-y-4">
+          <div className="flex-1 overflow-y-auto py-6 space-y-4 min-h-0">
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <ShoppingBag className="w-12 h-12 text-gray-600 mb-4" />
@@ -192,7 +192,7 @@ const CartDrawer = () => {
 
           {/* Cart Footer */}
           {items.length > 0 && (
-            <div className="border-t border-gray-800 pt-6 space-y-4">
+            <div className="border-t border-gray-800 pt-6 pb-[env(safe-area-inset-bottom,16px)] space-y-4 flex-shrink-0">
               {/* Subtotal */}
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Subtotal</span>

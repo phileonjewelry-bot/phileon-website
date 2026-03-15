@@ -13,58 +13,43 @@ const Header = () => {
   const navigate = useNavigate();
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
+  const lastTapTimeRef = useRef(0);
   const { getTotalItems, setIsOpen: setCartOpen } = useCart();
   const { getTotalWishlistItems } = useWishlist();
 
-  // Mobile gesture gate: 7 taps on Phileon logo within 3 seconds
+  // Logo easter egg: 7 taps within 2 seconds triggers secret modal
   const handleLogoTap = (e) => {
-    // Check if device is mobile (more comprehensive check)
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                     ('ontouchstart' in window) || 
-                     (navigator.maxTouchPoints > 0) ||
-                     window.innerWidth <= 768;
+    const now = Date.now();
     
-    console.log('Logo tapped:', { 
-      isMobile, 
-      userAgent: navigator.userAgent.substring(0, 50) + '...', 
-      windowWidth: window.innerWidth,
-      touchSupport: 'ontouchstart' in window,
-      maxTouchPoints: navigator.maxTouchPoints
-    });
+    // Prevent double-counting from both click and touchstart on mobile
+    if (now - lastTapTimeRef.current < 100) {
+      return;
+    }
+    lastTapTimeRef.current = now;
     
-    if (isMobile) {
-      // Prevent default navigation only on mobile when we're counting taps
+    // Increment tap count
+    tapCountRef.current += 1;
+    
+    // Clear existing timer and start new one (2 second window)
+    if (tapTimerRef.current) {
+      clearTimeout(tapTimerRef.current);
+    }
+    
+    // Reset tap count after 2 seconds of inactivity
+    tapTimerRef.current = setTimeout(() => {
+      tapCountRef.current = 0;
+    }, 2000);
+    
+    // Check if 7 taps reached
+    if (tapCountRef.current >= 7) {
       e.preventDefault();
       e.stopPropagation();
-      
-      tapCountRef.current += 1;
-      console.log(`Tap count: ${tapCountRef.current}/7`);
-      
-      // Clear existing timer and start new one
+      tapCountRef.current = 0;
       if (tapTimerRef.current) {
         clearTimeout(tapTimerRef.current);
       }
-      
-      // Reset tap count after 3 seconds
-      tapTimerRef.current = setTimeout(() => {
-        console.log('Tap timer expired, resetting count');
-        tapCountRef.current = 0;
-      }, 3000);
-      
-      // Check if 7 taps reached
-      if (tapCountRef.current >= 7) {
-        console.log('🎉 7 taps reached! Navigating to secret-drop');
-        tapCountRef.current = 0; // Reset counter
-        if (tapTimerRef.current) {
-          clearTimeout(tapTimerRef.current);
-        }
-        navigate('/secret-drop');
-        return false; // Prevent any navigation
-      }
-      
-      return false; // Prevent normal navigation while counting
-    } else {
-      // Allow normal navigation on desktop
+      navigate('/secret-drop');
+      return;
     }
   };
 
@@ -86,16 +71,15 @@ const Header = () => {
 
           {/* CENTER LOGO (always centered) */}
           <div className="ph-center">
-            <a href="/" className="ph-logo" aria-label="Phileon home">
+            <Link to="/" className="ph-logo" aria-label="Phileon home">
               <div 
-                className="brand-text ph-brand-text text-phileon-gold font-bold cursor-pointer"
+                className="brand-text ph-brand-text text-phileon-gold font-bold cursor-pointer select-none"
                 onClick={handleLogoTap}
-                onTouchStart={handleLogoTap}
                 data-testid="brand-text"
               >
                 PHILEON
               </div>
-            </a>
+            </Link>
           </div>
 
           {/* RIGHT ICONS (inline row) */}
