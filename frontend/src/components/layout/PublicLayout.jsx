@@ -113,7 +113,7 @@ const Header = () => {
             </Link>
 
             <button 
-              className="ph-icon-btn ph-desktop-only" 
+              className="ph-icon-btn" 
               aria-label="Cart" 
               onClick={() => setCartOpen(true)}
               data-testid="cart-button"
