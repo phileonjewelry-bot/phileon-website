@@ -7,7 +7,7 @@ import { useCart } from '@/contexts/CartContext';
  * Provides button state, animation, toast notification, and cart drawer opening
  */
 export function useAddToCart() {
-  const { addToCart, setCartOpen } = useCart();
+  const { addToCart, setIsOpen } = useCart();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = useCallback(async (product, quantity = 1, variant = null) => {
@@ -32,8 +32,8 @@ export function useAddToCart() {
     setIsAdding(false);
 
     // Open cart drawer
-    setCartOpen(true);
-  }, [addToCart, setCartOpen, isAdding]);
+    setIsOpen(true);
+  }, [addToCart, setIsOpen, isAdding]);
 
   return {
     isAdding,
