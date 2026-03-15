@@ -3,22 +3,25 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Heart } from 'lucide-react';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
 import PhileonMenu from '@/components/PhileonMenu';
+import VaultModal from '@/components/VaultModal';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import '@/styles/phileon-header.css';
 
-const Header = () => {
+const Header = ({ onVaultOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoGlow, setLogoGlow] = useState(false);
   const navigate = useNavigate();
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
   const lastTapTimeRef = useRef(0);
+  const pendingNavRef = useRef(null);
   const { getTotalItems, setIsOpen: setCartOpen } = useCart();
   const { getTotalWishlistItems } = useWishlist();
 
-  // Logo easter egg: 7 taps within 2 seconds triggers secret modal
+  // Logo easter egg: 7 taps within 2 seconds triggers vault modal
+  // Single tap navigates home after a short delay (cancelled if more taps come)
   const handleLogoTap = (e) => {
     const now = Date.now();
     
@@ -27,6 +30,12 @@ const Header = () => {
       return;
     }
     lastTapTimeRef.current = now;
+    
+    // Cancel any pending navigation
+    if (pendingNavRef.current) {
+      clearTimeout(pendingNavRef.current);
+      pendingNavRef.current = null;
+    }
     
     // Increment tap count
     tapCountRef.current += 1;
@@ -52,16 +61,32 @@ const Header = () => {
       tapCountRef.current = 0;
     }, 2000);
     
-    // Check if 7 taps reached
+    // Check if 7 taps reached - open vault
     if (tapCountRef.current >= 7) {
       e.preventDefault();
       e.stopPropagation();
+      
+      // Reset counter
       tapCountRef.current = 0;
       if (tapTimerRef.current) {
         clearTimeout(tapTimerRef.current);
       }
-      navigate('/secret-drop');
+      
+      // Open vault modal
+      onVaultOpen();
       return;
+    }
+    
+    // For single tap, schedule navigation after delay (allows more taps)
+    if (tapCountRef.current === 1) {
+      pendingNavRef.current = setTimeout(() => {
+        // Only navigate if still at 1 tap (no more taps came)
+        if (tapCountRef.current === 1) {
+          navigate('/');
+          tapCountRef.current = 0;
+        }
+        pendingNavRef.current = null;
+      }, 300);
     }
   };
 
@@ -83,15 +108,23 @@ const Header = () => {
 
           {/* CENTER LOGO (always centered) */}
           <div className="ph-center">
-            <Link to="/" className="ph-logo" aria-label="Phileon home">
+            <div 
+              className="ph-logo cursor-pointer" 
+              onClick={(e) => {
+                // If not triggering easter egg (less than 7 taps), navigate home
+                handleLogoTap(e);
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Phileon home"
+            >
               <div 
-                className={`brand-text ph-brand-text text-phileon-gold font-bold cursor-pointer select-none ${logoGlow ? 'ph-logo-glow' : ''}`}
-                onClick={handleLogoTap}
+                className={`brand-text ph-brand-text text-phileon-gold font-bold select-none ${logoGlow ? 'ph-logo-glow' : ''}`}
                 data-testid="brand-text"
               >
                 PHILEON
               </div>
-            </Link>
+            </div>
           </div>
 
           {/* RIGHT ICONS (inline row) */}
@@ -222,6 +255,7 @@ const Footer = () => {
 
 const PublicLayout = () => {
   const location = useLocation();
+  const [isVaultOpen, setIsVaultOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -234,7 +268,7 @@ const PublicLayout = () => {
         <LiveMetalTicker />
         
         {/* Header */}
-        <Header />
+        <Header onVaultOpen={() => setIsVaultOpen(true)} />
         
         {/* Main content - account for ticker height */}
         <main className="flex-grow pt-[36px]">
@@ -242,6 +276,12 @@ const PublicLayout = () => {
         </main>
         
         <Footer />
+        
+        {/* Vault Modal - Easter Egg */}
+        <VaultModal 
+          isOpen={isVaultOpen} 
+          onClose={() => setIsVaultOpen(false)} 
+        />
       </div>
     </IntentFlashProvider>
   );
