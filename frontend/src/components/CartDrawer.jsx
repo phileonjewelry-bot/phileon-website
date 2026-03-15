@@ -141,7 +141,9 @@ const CartDrawer = () => {
                     )}
                     {item.variant && (
                       <p className="text-gray-400 text-xs mt-1">
-                        {Object.entries(item.variant).map(([key, value]) => `${key}: ${value}`).join(', ')}
+                        {typeof item.variant === 'string' 
+                          ? item.variant 
+                          : Object.entries(item.variant).map(([key, value]) => `${key}: ${value}`).join(', ')}
                       </p>
                     )}
                     
