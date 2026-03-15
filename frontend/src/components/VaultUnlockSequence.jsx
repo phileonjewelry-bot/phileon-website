@@ -6,6 +6,14 @@ const VaultUnlockSequence = ({ isActive, onComplete }) => {
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const glitchTimeoutRef = useRef(null);
+  const hasNavigatedRef = useRef(false);
+
+  // Reset navigation flag when sequence becomes inactive
+  useEffect(() => {
+    if (!isActive) {
+      hasNavigatedRef.current = false;
+    }
+  }, [isActive]);
 
   // Start sequence when activated
   useEffect(() => {
@@ -56,14 +64,36 @@ const VaultUnlockSequence = ({ isActive, onComplete }) => {
 
   // Handle video end - redirect to vault page
   const handleVideoEnd = () => {
-    onComplete();
+    // Prevent multiple navigations
+    if (hasNavigatedRef.current) return;
+    hasNavigatedRef.current = true;
+    
+    // Navigate first, then notify parent
     navigate('/vault/drews-world');
+    
+    // Small delay to ensure navigation starts before cleanup
+    setTimeout(() => {
+      onComplete();
+    }, 100);
+  };
+
+  // Handle video error - still redirect on error
+  const handleVideoError = () => {
+    console.error('Video failed to load, redirecting anyway');
+    handleVideoEnd();
   };
 
   // Auto-play video when phase changes to video
   useEffect(() => {
     if (phase === 'video' && videoRef.current) {
-      videoRef.current.play().catch(console.error);
+      const video = videoRef.current;
+      
+      // Ensure video plays
+      video.play().catch((err) => {
+        console.error('Video play failed:', err);
+        // If autoplay fails, redirect after a timeout
+        setTimeout(handleVideoEnd, 1000);
+      });
     }
   }, [phase]);
 
@@ -111,6 +141,7 @@ const VaultUnlockSequence = ({ isActive, onComplete }) => {
             muted
             playsInline
             onEnded={handleVideoEnd}
+            onError={handleVideoError}
             className="unlock-video"
           />
         </div>
