@@ -10,7 +10,7 @@ import StyleItWith from "../components/StyleItWith";
 
 export default function DesirCorsetPage() {
   const product = products.desirCorset;
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
   
   // State for selected option - default to Pendant Only
   const [selectedOption, setSelectedOption] = useState(product.options[0]);
@@ -27,15 +27,14 @@ export default function DesirCorsetPage() {
 
   // Handle add to cart
   const handleAddToCart = () => {
-    addItem({
+    addToCart({
       id: `desir-corset-${selectedOption.pricingKey}`,
-      name: product.name,
-      variant: selectedOption.name,
-      price: selectedOption.price,
-      currency: selectedOption.currency,
+      name: `${product.name} - ${selectedOption.name}`,
       image: product.images.hero,
-      quantity: 1
-    });
+      price: selectedOption.price,
+      slug: 'desir-corset',
+      materials: ['10K Rose Gold']
+    }, 1, selectedOption.name);
   };
 
   // Gallery media items

@@ -11,7 +11,7 @@ import StyleItWith from "../components/StyleItWith";
 
 export default function RosariaPage() {
   const product = products.rosaria;
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
   
   // State for selected material - default to 14K Rose Gold
   const [selectedMaterial, setSelectedMaterial] = useState(product.materials[1]);
@@ -28,15 +28,14 @@ export default function RosariaPage() {
 
   // Handle add to cart
   const handleAddToCart = () => {
-    addItem({
+    addToCart({
       id: `rosaria-${selectedMaterial.pricingKey}`,
-      name: product.name,
-      variant: selectedMaterial.name,
-      price: selectedMaterial.price,
-      currency: selectedMaterial.currency,
+      name: `${product.name} - ${selectedMaterial.name}`,
       image: product.images.hero,
-      quantity: 1
-    });
+      price: selectedMaterial.price,
+      slug: 'rosaria',
+      materials: [selectedMaterial.name]
+    }, 1, selectedMaterial.name);
   };
 
   // Gallery media items - 4 slides as specified
