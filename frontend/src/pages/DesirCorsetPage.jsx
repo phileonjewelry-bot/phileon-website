@@ -86,32 +86,27 @@ export default function DesirCorsetPage() {
     <div className="bg-black text-white min-h-screen" data-testid="desir-corset-page">
       {/* Motion Hero Section */}
       <section className="bg-[#000000] py-12 sm:py-16 md:py-20 overflow-hidden">
-        {/* Hero Media Container - Supports video or image */}
+        {/* Hero Media Container - Video with image fallback */}
         <div className="flex justify-center items-center px-4 mb-8 sm:mb-12">
           <div className="relative w-full max-w-2xl">
-            {/* Video placeholder - uncomment when video is available
+            {/* Hero Video - Looping */}
             <video
               autoPlay
               muted
               loop
               playsInline
               poster={product.images.hero}
-              className="w-full h-auto object-contain motion-hero-media"
+              className="w-full h-auto object-contain"
               style={{ maxHeight: '60vh' }}
             >
-              <source src="/videos/desir-corset-loop.mp4" type="video/mp4" />
-            </video>
-            */}
-            
-            {/* Animated Hero Image - CSS Motion Treatment */}
-            <div className="motion-hero-wrapper">
+              <source src={product.images.heroVideo} type="video/mp4" />
+              {/* Fallback to image if video fails */}
               <img
                 src={product.images.hero}
                 alt="Désir Corset Pendant"
-                className="w-full h-auto object-contain motion-hero-pendant"
-                style={{ maxHeight: '60vh' }}
+                className="w-full h-auto object-contain"
               />
-            </div>
+            </video>
           </div>
         </div>
 
