@@ -10,6 +10,7 @@ import '@/styles/phileon-header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [logoGlow, setLogoGlow] = useState(false);
   const navigate = useNavigate();
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
@@ -29,6 +30,17 @@ const Header = () => {
     
     // Increment tap count
     tapCountRef.current += 1;
+    
+    // Subtle gold pulse feedback (only after 2nd tap to stay hidden)
+    if (tapCountRef.current >= 2) {
+      setLogoGlow(true);
+      setTimeout(() => setLogoGlow(false), 180);
+      
+      // Light haptic on supported devices (very subtle)
+      if (navigator.vibrate && tapCountRef.current >= 5) {
+        navigator.vibrate(8);
+      }
+    }
     
     // Clear existing timer and start new one (2 second window)
     if (tapTimerRef.current) {
@@ -73,7 +85,7 @@ const Header = () => {
           <div className="ph-center">
             <Link to="/" className="ph-logo" aria-label="Phileon home">
               <div 
-                className="brand-text ph-brand-text text-phileon-gold font-bold cursor-pointer select-none"
+                className={`brand-text ph-brand-text text-phileon-gold font-bold cursor-pointer select-none ${logoGlow ? 'ph-logo-glow' : ''}`}
                 onClick={handleLogoTap}
                 data-testid="brand-text"
               >
