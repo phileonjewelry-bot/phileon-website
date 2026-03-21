@@ -103,6 +103,19 @@ const CORE_PRODUCTS = [
     category: 'pendants',
     audience: 'ladies',
   },
+  {
+    id: 'forme-cuff',
+    name: 'Forme Cuff',
+    slug: 'forme-cuff',
+    materialLine: 'Cuff Bracelet · 10K Gold & Plated Silver',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
+    href: '/products/forme-cuff',
+    price_range: 'From $695 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'bracelets',
+    audience: 'ladies',
+  },
 ];
 
 // Additional drop products as fallback

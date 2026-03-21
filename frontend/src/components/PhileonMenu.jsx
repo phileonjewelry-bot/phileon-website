@@ -26,6 +26,7 @@ const menuCategories = [
     name: 'The Collective',
     items: [
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
+      { name: 'Forme Cuff', path: '/products/forme-cuff' },
       { name: 'Rosaria', path: '/products/rosaria' },
       { name: 'Désir Corset', path: '/products/desir-corset' },
       { name: 'La Marva', path: '/products/la-marva' },

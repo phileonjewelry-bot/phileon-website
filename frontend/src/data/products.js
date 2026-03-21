@@ -403,6 +403,75 @@ export const products = {
       specSheet: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/f6438iha_1000141530.jpg",
       heroVideo: "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/lxv7l80r_XiaoYing_Video_1773537193144.mp4"
     }
+  },
+
+  // ==========================================
+  // FORME CUFF
+  // Sculptural cuff bracelet with human form silhouettes
+  // Available in solid gold and gold-plated silver
+  // ==========================================
+  formeCuff: {
+    name: "Forme Cuff",
+    slug: "forme-cuff",
+    category: "bracelets",
+    audience: "ladies",
+    subtitle: "Shaped by the curve. Held in form.",
+    categoryType: "Cuff Bracelet",
+    description: "The Forme Cuff captures the elegance of the human form in motion — figures intertwined, dancing along the curve of the wrist. Each silhouette is precision-cut from solid gold, creating a play of light and shadow that shifts with every gesture.",
+    tagline: "A celebration of movement, connection, and the beauty of the body in balance.",
+    materialNote: "Offered in solid gold and gold-plated silver — without compromise in form.",
+
+    // Metal options with images (prepared for unique images per variant)
+    metalOptions: {
+      solidGold: [
+        {
+          id: "yellow-10k",
+          name: "10K Yellow Gold",
+          shortName: "Yellow 10K",
+          price: 2850,
+          currency: "CAD",
+          image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
+        },
+        {
+          id: "rose-10k",
+          name: "10K Rose Gold",
+          shortName: "Rose 10K",
+          price: 2850,
+          currency: "CAD",
+          image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
+        }
+      ],
+      platedSilver: [
+        {
+          id: "plated-yellow",
+          name: "Gold Plated Silver (Yellow)",
+          shortName: "Yellow Plated",
+          price: 695,
+          currency: "CAD",
+          image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
+        },
+        {
+          id: "plated-rose",
+          name: "Gold Plated Silver (Rose)",
+          shortName: "Rose Plated",
+          price: 695,
+          currency: "CAD",
+          image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
+        }
+      ]
+    },
+
+    // Default selection
+    defaultMetal: "yellow-10k",
+
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada.",
+
+    // Media assets
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png",
+      video: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/26vbm4f4_XiaoYing_Video_1774098119024.mp4"
+    }
   }
 
 };
