@@ -1,7 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const FormeCuffPage = () => {
-  // Asset URLs
+  // Metal options with pricing and images
+  const metalOptions = {
+    solidGold: {
+      label: 'Solid Gold',
+      options: [
+        {
+          id: 'yellow-10k',
+          name: '10K Yellow Gold',
+          shortName: 'Yellow 10K',
+          price: 2850,
+          currency: 'CAD',
+          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
+        },
+        {
+          id: 'rose-10k',
+          name: '10K Rose Gold',
+          shortName: 'Rose 10K',
+          price: 2850,
+          currency: 'CAD',
+          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
+        },
+      ],
+    },
+    platedSilver: {
+      label: 'Gold Plated Silver',
+      options: [
+        {
+          id: 'plated-yellow',
+          name: 'Gold Plated Silver (Yellow)',
+          shortName: 'Yellow Plated',
+          price: 695,
+          currency: 'CAD',
+          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
+        },
+        {
+          id: 'plated-rose',
+          name: 'Gold Plated Silver (Rose)',
+          shortName: 'Rose Plated',
+          price: 695,
+          currency: 'CAD',
+          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
+        },
+      ],
+    },
+  };
+
+  // Flatten all options for easy lookup
+  const allMetalOptions = [
+    ...metalOptions.solidGold.options,
+    ...metalOptions.platedSilver.options,
+  ];
+
+  // State for selected metal (default: 10K Yellow Gold)
+  const [selectedMetalId, setSelectedMetalId] = useState('yellow-10k');
+  
+  // Get current selection
+  const selectedMetal = allMetalOptions.find(m => m.id === selectedMetalId) || allMetalOptions[0];
+
+  // Format price
+  const formatPrice = (price, currency) => {
+    return new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  // Hero image (always 10K Yellow Gold)
   const heroImageUrl = "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png";
   const videoUrl = "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/26vbm4f4_XiaoYing_Video_1774098119024.mp4";
 
@@ -38,10 +106,79 @@ const FormeCuffPage = () => {
         </div>
       </section>
 
-      {/* SECTION 3 — DESCRIPTION */}
+      {/* SECTION 3 — PRODUCT DETAILS & METAL SELECTOR */}
+      <section className="forme-product-section">
+        <div className="forme-product-layout">
+          {/* Product Image */}
+          <div className="forme-product-image-container">
+            <img 
+              src={selectedMetal.image} 
+              alt={`FORME CUFF - ${selectedMetal.name}`}
+              className="forme-product-image"
+            />
+          </div>
+
+          {/* Product Info */}
+          <div className="forme-product-info">
+            <p className="forme-product-eyebrow">The Forme Collection</p>
+            <h2 className="forme-product-title">FORME CUFF</h2>
+            <p className="forme-product-price">
+              {formatPrice(selectedMetal.price, selectedMetal.currency)}
+            </p>
+
+            {/* Metal Selector */}
+            <div className="forme-metal-selector" data-testid="metal-selector">
+              {/* Solid Gold Group */}
+              <div className="forme-metal-group">
+                <p className="forme-metal-group-label">{metalOptions.solidGold.label}</p>
+                <div className="forme-metal-options">
+                  {metalOptions.solidGold.options.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => setSelectedMetalId(option.id)}
+                      className={`forme-metal-option ${selectedMetalId === option.id ? 'selected' : ''}`}
+                      data-testid={`metal-option-${option.id}`}
+                    >
+                      <span className="forme-metal-name">{option.shortName}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Plated Silver Group */}
+              <div className="forme-metal-group">
+                <p className="forme-metal-group-label">{metalOptions.platedSilver.label}</p>
+                <div className="forme-metal-options">
+                  {metalOptions.platedSilver.options.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => setSelectedMetalId(option.id)}
+                      className={`forme-metal-option ${selectedMetalId === option.id ? 'selected' : ''}`}
+                      data-testid={`metal-option-${option.id}`}
+                    >
+                      <span className="forme-metal-name">{option.shortName}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Supporting Copy */}
+            <p className="forme-metal-note">
+              Offered in solid gold and gold-plated silver — without compromise in form.
+            </p>
+
+            {/* Selected Metal Display */}
+            <p className="forme-selected-metal">
+              Selected: <span>{selectedMetal.name}</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4 — DESCRIPTION */}
       <section className="forme-description-section">
         <div className="forme-description-content">
-          <p className="forme-description-eyebrow">The Forme Collection</p>
           <h2 className="forme-description-title">Sculpted Silhouettes</h2>
           <p className="forme-description-text">
             The Forme Cuff captures the elegance of the human form in motion — 
@@ -51,10 +188,6 @@ const FormeCuffPage = () => {
           </p>
           <p className="forme-description-text">
             A celebration of movement, connection, and the beauty of the body in balance.
-          </p>
-          <div className="forme-description-divider" />
-          <p className="forme-description-material">
-            Available in 10K &amp; 14K Gold
           </p>
         </div>
       </section>
@@ -124,24 +257,144 @@ const FormeCuffPage = () => {
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
+        /* ========== PRODUCT SECTION ========== */
+        .forme-product-section {
+          background: #000;
+          padding: 80px 24px 100px;
+        }
+
+        .forme-product-layout {
+          max-width: 1100px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
+          align-items: center;
+        }
+
+        .forme-product-image-container {
+          position: relative;
+        }
+
+        .forme-product-image {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          transition: opacity 0.3s ease;
+        }
+
+        .forme-product-info {
+          padding: 20px 0;
+        }
+
+        .forme-product-eyebrow {
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          color: rgba(199, 162, 75, 0.7);
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        .forme-product-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 32px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: #fff;
+          margin-bottom: 16px;
+        }
+
+        .forme-product-price {
+          font-size: 28px;
+          font-weight: 300;
+          letter-spacing: 0.05em;
+          color: #C7A24B;
+          margin-bottom: 32px;
+        }
+
+        /* ========== METAL SELECTOR ========== */
+        .forme-metal-selector {
+          margin-bottom: 20px;
+        }
+
+        .forme-metal-group {
+          margin-bottom: 20px;
+        }
+
+        .forme-metal-group:last-child {
+          margin-bottom: 0;
+        }
+
+        .forme-metal-group-label {
+          font-size: 10px;
+          letter-spacing: 0.25em;
+          color: rgba(255, 255, 255, 0.4);
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+
+        .forme-metal-options {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .forme-metal-option {
+          padding: 10px 18px;
+          background: transparent;
+          border: 1px solid rgba(199, 162, 75, 0.25);
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 12px;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border-radius: 2px;
+        }
+
+        .forme-metal-option:hover {
+          border-color: rgba(199, 162, 75, 0.5);
+          color: #fff;
+        }
+
+        .forme-metal-option.selected {
+          border-color: #C7A24B;
+          background: rgba(199, 162, 75, 0.1);
+          color: #C7A24B;
+        }
+
+        .forme-metal-name {
+          white-space: nowrap;
+        }
+
+        .forme-metal-note {
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.4);
+          font-style: italic;
+          margin-bottom: 24px;
+          line-height: 1.6;
+        }
+
+        .forme-selected-metal {
+          font-size: 12px;
+          letter-spacing: 0.1em;
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .forme-selected-metal span {
+          color: #C7A24B;
+        }
+
         /* ========== DESCRIPTION SECTION ========== */
         .forme-description-section {
           background: #000;
-          padding: 100px 24px 120px;
+          padding: 80px 24px 120px;
+          border-top: 1px solid rgba(199, 162, 75, 0.1);
         }
 
         .forme-description-content {
           max-width: 680px;
           margin: 0 auto;
           text-align: center;
-        }
-
-        .forme-description-eyebrow {
-          font-size: 11px;
-          letter-spacing: 0.3em;
-          color: rgba(199, 162, 75, 0.7);
-          text-transform: uppercase;
-          margin-bottom: 16px;
         }
 
         .forme-description-title {
@@ -161,21 +414,7 @@ const FormeCuffPage = () => {
         }
 
         .forme-description-text:last-of-type {
-          margin-bottom: 40px;
-        }
-
-        .forme-description-divider {
-          width: 60px;
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(199, 162, 75, 0.5), transparent);
-          margin: 0 auto 24px;
-        }
-
-        .forme-description-material {
-          font-size: 13px;
-          letter-spacing: 0.2em;
-          color: rgba(199, 162, 75, 0.6);
-          text-transform: uppercase;
+          margin-bottom: 0;
         }
 
         /* ========== MOBILE RESPONSIVE ========== */
@@ -197,8 +436,37 @@ const FormeCuffPage = () => {
             border-radius: 8px;
           }
 
+          .forme-product-section {
+            padding: 60px 20px 80px;
+          }
+
+          .forme-product-layout {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+
+          .forme-product-info {
+            text-align: center;
+          }
+
+          .forme-metal-options {
+            justify-content: center;
+          }
+
+          .forme-metal-group-label {
+            text-align: center;
+          }
+
+          .forme-metal-note {
+            text-align: center;
+          }
+
+          .forme-selected-metal {
+            text-align: center;
+          }
+
           .forme-description-section {
-            padding: 80px 20px 100px;
+            padding: 60px 20px 100px;
           }
 
           .forme-description-text {
