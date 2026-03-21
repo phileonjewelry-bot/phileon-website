@@ -25,7 +25,7 @@ const Header = () => {
       ]
     },
     { 
-      name: "The Gentleman's Club", 
+      name: "Gentleman's Club", 
       path: '/shop',
       dropdown: [
         { name: 'Rings', path: '/shop?category=mens-rings' },
@@ -60,7 +60,7 @@ const Header = () => {
       ]
     },
     {
-      name: "The Gentleman's Club",
+      name: "Gentleman's Club",
       subcategories: [
         { name: 'Rings', path: '/shop?category=mens-rings' },
         { name: 'Earrings', path: '/shop?category=mens-earrings' },

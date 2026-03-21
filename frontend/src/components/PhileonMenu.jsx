@@ -14,7 +14,7 @@ const menuCategories = [
     ]
   },
   {
-    name: "The Gentleman's Club",
+    name: "Gentleman's Club",
     items: [
       { name: 'Rings', path: '/shop?category=rings&audience=gentlemens-club' },
       { name: 'Earrings', path: '/shop?category=earrings&audience=gentlemens-club' },
