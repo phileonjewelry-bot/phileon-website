@@ -1,6 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import ProductGallery from '../components/ProductGallery';
 
 const FormeCuffPage = () => {
+  // Gallery items in the specified order
+  const galleryItems = useMemo(() => [
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
+      alt: "FORME CUFF - Black background hero",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/asvnmb9f_1000142852.png",
+      alt: "FORME CUFF - Black background angled",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg",
+      alt: "FORME CUFF - Marble tabletop shot",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/w3ocrekw_1000142624.jpg",
+      alt: "FORME CUFF - Open cuff structure view",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/0vvlo7f5_1000142850.png",
+      alt: "FORME CUFF - Macro detail",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg",
+      alt: "FORME CUFF - Wrist lifestyle shot",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/2czdv0i2_1000142848.png",
+      alt: "FORME CUFF - Edge craftsmanship detail",
+    },
+  ], []);
   // Metal options with pricing and images
   const metalOptions = {
     solidGold: {
@@ -105,71 +144,10 @@ const FormeCuffPage = () => {
         </div>
       </section>
 
-      {/* SECTION 3 — GALLERY */}
+      {/* SECTION 3 — GALLERY (Horizontal Scrolling) */}
       <section className="forme-gallery-section">
         <div className="forme-gallery-container">
-          <div className="forme-gallery-grid">
-            {/* Row 1: Full-width hero - Black background front view */}
-            <div className="forme-gallery-item forme-gallery-item-full">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png" 
-                alt="FORME CUFF - Front View"
-                className="forme-gallery-image"
-                data-testid="gallery-image-1"
-              />
-            </div>
-            {/* Row 2: Black bg angled + Marble product shot */}
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/asvnmb9f_1000142852.png" 
-                alt="FORME CUFF - Angled View"
-                className="forme-gallery-image"
-                data-testid="gallery-image-2"
-              />
-            </div>
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg" 
-                alt="FORME CUFF - Product on Marble"
-                className="forme-gallery-image"
-                data-testid="gallery-image-3"
-              />
-            </div>
-            {/* Row 3: Open cuff top view + Side angle detail */}
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/w3ocrekw_1000142624.jpg" 
-                alt="FORME CUFF - Top View"
-                className="forme-gallery-image"
-                data-testid="gallery-image-4"
-              />
-            </div>
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/0vvlo7f5_1000142850.png" 
-                alt="FORME CUFF - Figure Detail"
-                className="forme-gallery-image"
-                data-testid="gallery-image-5"
-              />
-            </div>
-            {/* Row 4: Wrist lifestyle + Macro edge detail */}
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg" 
-                alt="FORME CUFF - On Wrist"
-                className="forme-gallery-image"
-                data-testid="gallery-image-6"
-              />
-            </div>
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/2czdv0i2_1000142848.png" 
-                alt="FORME CUFF - Edge Detail"
-                className="forme-gallery-image"
-                data-testid="gallery-image-7"
-              />
-            </div>
-          </div>
+          <ProductGallery items={galleryItems} />
         </div>
       </section>
 
@@ -327,42 +305,12 @@ const FormeCuffPage = () => {
         /* ========== GALLERY SECTION ========== */
         .forme-gallery-section {
           background: #000;
-          padding: 40px 24px 80px;
+          padding: 40px 24px 60px;
         }
 
         .forme-gallery-container {
           max-width: 1200px;
           margin: 0 auto;
-        }
-
-        .forme-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
-        }
-
-        .forme-gallery-item {
-          position: relative;
-          overflow: hidden;
-          border-radius: 8px;
-          aspect-ratio: 1 / 1;
-        }
-
-        .forme-gallery-item-full {
-          grid-column: 1 / -1;
-          aspect-ratio: 16 / 9;
-        }
-
-        .forme-gallery-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.5s ease, filter 0.3s ease;
-        }
-
-        .forme-gallery-item:hover .forme-gallery-image {
-          transform: scale(1.03);
-          filter: brightness(1.05);
         }
 
         /* ========== PRODUCT SECTION ========== */
@@ -546,21 +494,6 @@ const FormeCuffPage = () => {
 
           .forme-gallery-section {
             padding: 20px 12px 40px;
-          }
-
-          .forme-gallery-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-          }
-
-          .forme-gallery-item {
-            border-radius: 6px;
-            aspect-ratio: 4 / 3;
-          }
-
-          .forme-gallery-item-full {
-            grid-column: 1 / -1;
-            aspect-ratio: 16 / 10;
           }
 
           .forme-product-section {
