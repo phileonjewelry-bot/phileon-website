@@ -71,7 +71,6 @@ const FormeCuffPage = () => {
 
   // Hero image (always 10K Yellow Gold)
   const heroImageUrl = "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png";
-  const videoUrl = "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/26vbm4f4_XiaoYing_Video_1774098119024.mp4";
 
   return (
     <div className="forme-cuff-page bg-black min-h-screen" data-testid="forme-cuff-page">
@@ -98,10 +97,10 @@ const FormeCuffPage = () => {
             muted
             loop
             playsInline
-            className="forme-video"
+            controls={false}
+            className="w-full max-w-5xl rounded-lg"
           >
-            <source src={videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
+            <source src="/videos/forme-cuff.mp4" type="video/mp4" />
           </video>
         </div>
       </section>
