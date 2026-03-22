@@ -545,21 +545,22 @@ const FormeCuffPage = () => {
           }
 
           .forme-gallery-section {
-            padding: 30px 16px 60px;
+            padding: 20px 12px 40px;
           }
 
           .forme-gallery-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
           }
 
           .forme-gallery-item {
             border-radius: 6px;
+            aspect-ratio: 4 / 3;
           }
 
           .forme-gallery-item-full {
-            grid-column: 1;
-            aspect-ratio: 1 / 1;
+            grid-column: 1 / -1;
+            aspect-ratio: 16 / 10;
           }
 
           .forme-product-section {
