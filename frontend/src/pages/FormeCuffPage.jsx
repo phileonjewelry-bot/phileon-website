@@ -4,6 +4,7 @@ import ProductGallery from '../components/ProductGallery';
 const FormeCuffPage = () => {
   // Gallery items in the specified order
   const galleryItems = useMemo(() => [
+    // Yellow Gold Images
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
@@ -38,6 +39,27 @@ const FormeCuffPage = () => {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/2czdv0i2_1000142848.png",
       alt: "FORME CUFF - Edge craftsmanship detail",
+    },
+    // Rose Gold Images
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
+      alt: "FORME CUFF Rose Gold - Black background angled",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/29riw0xa_1000142651.jpg",
+      alt: "FORME CUFF Rose Gold - Front view",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/c8cqewbk_1000142653.jpg",
+      alt: "FORME CUFF Rose Gold - Top view",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/x6tgkf40_1000142649.jpg",
+      alt: "FORME CUFF Rose Gold - Detail view",
     },
   ], []);
   // Metal options with pricing and images
