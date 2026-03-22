@@ -110,62 +110,62 @@ const FormeCuffPage = () => {
       <section className="forme-gallery-section">
         <div className="forme-gallery-container">
           <div className="forme-gallery-grid">
-            {/* Row 1: Two lifestyle shots */}
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg" 
-                alt="FORME CUFF - On Wrist"
-                className="forme-gallery-image"
-                data-testid="gallery-image-1"
-              />
-            </div>
-            <div className="forme-gallery-item">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg" 
-                alt="FORME CUFF - Product on Marble"
-                className="forme-gallery-image"
-                data-testid="gallery-image-2"
-              />
-            </div>
-            {/* Row 2: Full-width front view */}
+            {/* Row 1: Full-width hero - Black background front view */}
             <div className="forme-gallery-item forme-gallery-item-full">
               <img 
                 src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png" 
                 alt="FORME CUFF - Front View"
                 className="forme-gallery-image"
-                data-testid="gallery-image-3"
+                data-testid="gallery-image-1"
               />
             </div>
-            {/* Row 3: Side angle and top view */}
+            {/* Row 2: Black bg angled + Marble product shot */}
             <div className="forme-gallery-item">
               <img 
                 src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/asvnmb9f_1000142852.png" 
-                alt="FORME CUFF - Side Angle"
+                alt="FORME CUFF - Angled View"
+                className="forme-gallery-image"
+                data-testid="gallery-image-2"
+              />
+            </div>
+            <div className="forme-gallery-item">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg" 
+                alt="FORME CUFF - Product on Marble"
+                className="forme-gallery-image"
+                data-testid="gallery-image-3"
+              />
+            </div>
+            {/* Row 3: Open cuff top view + Side angle detail */}
+            <div className="forme-gallery-item">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/w3ocrekw_1000142624.jpg" 
+                alt="FORME CUFF - Top View"
                 className="forme-gallery-image"
                 data-testid="gallery-image-4"
               />
             </div>
             <div className="forme-gallery-item">
               <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/w3ocrekw_1000142624.jpg" 
-                alt="FORME CUFF - Top View"
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/0vvlo7f5_1000142850.png" 
+                alt="FORME CUFF - Figure Detail"
                 className="forme-gallery-image"
                 data-testid="gallery-image-5"
               />
             </div>
-            {/* Row 4: Detail close-ups */}
+            {/* Row 4: Wrist lifestyle + Macro edge detail */}
             <div className="forme-gallery-item">
               <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/2czdv0i2_1000142848.png" 
-                alt="FORME CUFF - Edge Detail"
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg" 
+                alt="FORME CUFF - On Wrist"
                 className="forme-gallery-image"
                 data-testid="gallery-image-6"
               />
             </div>
             <div className="forme-gallery-item">
               <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/0vvlo7f5_1000142850.png" 
-                alt="FORME CUFF - Figure Detail"
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/2czdv0i2_1000142848.png" 
+                alt="FORME CUFF - Edge Detail"
                 className="forme-gallery-image"
                 data-testid="gallery-image-7"
               />
