@@ -88,7 +88,7 @@ const FormeCuffPage = () => {
       name: '10K Yellow Gold',
       shortName: 'Yellow 10K',
       category: 'Solid Gold',
-      price: 2850,
+      price: 14800,
       currency: 'CAD',
       swatchColor: '#D4AF37', // Yellow gold color
       galleryType: 'yellow',
@@ -99,7 +99,7 @@ const FormeCuffPage = () => {
       name: '10K Rose Gold',
       shortName: 'Rose 10K',
       category: 'Solid Gold',
-      price: 2850,
+      price: 14800,
       currency: 'CAD',
       swatchColor: '#B76E79', // Rose gold color
       galleryType: 'rose',
@@ -110,7 +110,7 @@ const FormeCuffPage = () => {
       name: 'Gold Plated Silver (Yellow)',
       shortName: 'Yellow Plated',
       category: 'Gold Plated Silver',
-      price: 695,
+      price: 1250,
       currency: 'CAD',
       swatchColor: '#D4AF37', // Yellow gold color
       galleryType: 'yellow', // Uses yellow gold image set
@@ -121,7 +121,7 @@ const FormeCuffPage = () => {
       name: 'Gold Plated Silver (Rose)',
       shortName: 'Rose Plated',
       category: 'Gold Plated Silver',
-      price: 695,
+      price: 1250,
       currency: 'CAD',
       swatchColor: '#B76E79', // Rose gold color
       galleryType: 'rose', // Uses rose gold image set
