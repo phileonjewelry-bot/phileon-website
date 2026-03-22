@@ -1,124 +1,157 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
 
 const FormeCuffPage = () => {
-  // Gallery items in the specified order
-  const galleryItems = useMemo(() => [
-    // Yellow Gold Images
+  // ========== IMAGE SETS ==========
+  // Yellow Gold Gallery Images (in specified order)
+  const yellowGoldGallery = useMemo(() => [
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
-      alt: "FORME CUFF - Black background hero",
+      alt: "FORME CUFF Yellow Gold - Hero front luxury shot",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/asvnmb9f_1000142852.png",
-      alt: "FORME CUFF - Black background angled",
+      alt: "FORME CUFF Yellow Gold - Black background angled",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg",
-      alt: "FORME CUFF - Marble tabletop shot",
+      alt: "FORME CUFF Yellow Gold - Marble tabletop shot",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/w3ocrekw_1000142624.jpg",
-      alt: "FORME CUFF - Open cuff structure view",
+      alt: "FORME CUFF Yellow Gold - Open cuff structure view",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/0vvlo7f5_1000142850.png",
-      alt: "FORME CUFF - Macro detail",
+      alt: "FORME CUFF Yellow Gold - Macro detail",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg",
-      alt: "FORME CUFF - Wrist lifestyle shot",
+      alt: "FORME CUFF Yellow Gold - Wrist lifestyle",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/2czdv0i2_1000142848.png",
-      alt: "FORME CUFF - Edge craftsmanship detail",
+      alt: "FORME CUFF Yellow Gold - Edge craftsmanship detail",
     },
-    // Rose Gold Images
+  ], []);
+
+  // Rose Gold Gallery Images (in specified order)
+  const roseGoldGallery = useMemo(() => [
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
-      alt: "FORME CUFF Rose Gold - Black background angled",
+      alt: "FORME CUFF Rose Gold - Hero front luxury shot",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/29riw0xa_1000142651.jpg",
-      alt: "FORME CUFF Rose Gold - Front view",
+      alt: "FORME CUFF Rose Gold - Black background angled",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/c8cqewbk_1000142653.jpg",
-      alt: "FORME CUFF Rose Gold - Top view",
+      alt: "FORME CUFF Rose Gold - Marble tabletop shot",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/x6tgkf40_1000142649.jpg",
-      alt: "FORME CUFF Rose Gold - Detail view",
+      alt: "FORME CUFF Rose Gold - Open cuff structure view",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
+      alt: "FORME CUFF Rose Gold - Macro detail",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/29riw0xa_1000142651.jpg",
+      alt: "FORME CUFF Rose Gold - Wrist lifestyle",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/x6tgkf40_1000142649.jpg",
+      alt: "FORME CUFF Rose Gold - Edge craftsmanship detail",
     },
   ], []);
-  // Metal options with pricing and images
-  const metalOptions = {
-    solidGold: {
-      label: 'Solid Gold',
-      options: [
-        {
-          id: 'yellow-10k',
-          name: '10K Yellow Gold',
-          shortName: 'Yellow 10K',
-          price: 2850,
-          currency: 'CAD',
-          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
-        },
-        {
-          id: 'rose-10k',
-          name: '10K Rose Gold',
-          shortName: 'Rose 10K',
-          price: 2850,
-          currency: 'CAD',
-          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
-        },
-      ],
-    },
-    platedSilver: {
-      label: 'Gold Plated Silver',
-      options: [
-        {
-          id: 'plated-yellow',
-          name: 'Gold Plated Silver (Yellow)',
-          shortName: 'Yellow Plated',
-          price: 695,
-          currency: 'CAD',
-          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
-        },
-        {
-          id: 'plated-rose',
-          name: 'Gold Plated Silver (Rose)',
-          shortName: 'Rose Plated',
-          price: 695,
-          currency: 'CAD',
-          image: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
-        },
-      ],
-    },
-  };
 
-  // Flatten all options for easy lookup
-  const allMetalOptions = [
-    ...metalOptions.solidGold.options,
-    ...metalOptions.platedSilver.options,
-  ];
+  // ========== METAL OPTIONS ==========
+  const metalOptions = useMemo(() => [
+    {
+      id: 'yellow-10k',
+      name: '10K Yellow Gold',
+      shortName: 'Yellow 10K',
+      category: 'Solid Gold',
+      price: 2850,
+      currency: 'CAD',
+      swatchColor: '#D4AF37', // Yellow gold color
+      galleryType: 'yellow',
+      heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
+    },
+    {
+      id: 'rose-10k',
+      name: '10K Rose Gold',
+      shortName: 'Rose 10K',
+      category: 'Solid Gold',
+      price: 2850,
+      currency: 'CAD',
+      swatchColor: '#B76E79', // Rose gold color
+      galleryType: 'rose',
+      heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
+    },
+    {
+      id: 'plated-yellow',
+      name: 'Gold Plated Silver (Yellow)',
+      shortName: 'Yellow Plated',
+      category: 'Gold Plated Silver',
+      price: 695,
+      currency: 'CAD',
+      swatchColor: '#D4AF37', // Yellow gold color
+      galleryType: 'yellow', // Uses yellow gold image set
+      heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
+    },
+    {
+      id: 'plated-rose',
+      name: 'Gold Plated Silver (Rose)',
+      shortName: 'Rose Plated',
+      category: 'Gold Plated Silver',
+      price: 695,
+      currency: 'CAD',
+      swatchColor: '#B76E79', // Rose gold color
+      galleryType: 'rose', // Uses rose gold image set
+      heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
+    },
+  ], []);
 
   // State for selected metal (default: 10K Yellow Gold)
   const [selectedMetalId, setSelectedMetalId] = useState('yellow-10k');
   
   // Get current selection
-  const selectedMetal = allMetalOptions.find(m => m.id === selectedMetalId) || allMetalOptions[0];
+  const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
+
+  // Get the active gallery based on selected metal's gallery type
+  const activeGallery = useMemo(() => {
+    return selectedMetal.galleryType === 'rose' ? roseGoldGallery : yellowGoldGallery;
+  }, [selectedMetal.galleryType, roseGoldGallery, yellowGoldGallery]);
+
+  // Preload hero images for instant switching
+  useEffect(() => {
+    const preloadImages = [
+      yellowGoldGallery[0]?.src,
+      roseGoldGallery[0]?.src,
+    ].filter(Boolean);
+
+    preloadImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [yellowGoldGallery, roseGoldGallery]);
 
   // Format price
   const formatPrice = (price, currency) => {
@@ -130,8 +163,12 @@ const FormeCuffPage = () => {
     }).format(price);
   };
 
-  // Hero image (always 10K Yellow Gold)
-  const heroImageUrl = "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png";
+  // Group metals by category for display
+  const solidGoldOptions = metalOptions.filter(m => m.category === 'Solid Gold');
+  const platedOptions = metalOptions.filter(m => m.category === 'Gold Plated Silver');
+
+  // Hero image changes based on selected metal
+  const heroImageUrl = selectedMetal.heroImage;
 
   return (
     <div className="forme-cuff-page bg-black min-h-screen" data-testid="forme-cuff-page">
@@ -166,20 +203,20 @@ const FormeCuffPage = () => {
         </div>
       </section>
 
-      {/* SECTION 3 — GALLERY (Horizontal Scrolling) */}
+      {/* SECTION 3 — GALLERY (Horizontal Scrolling, Metal-Based) */}
       <section className="forme-gallery-section">
         <div className="forme-gallery-container">
-          <ProductGallery items={galleryItems} />
+          <ProductGallery key={selectedMetal.galleryType} items={activeGallery} />
         </div>
       </section>
 
-      {/* SECTION 4 — PRODUCT DETAILS & METAL SELECTOR */}
+      {/* SECTION 4 — PRODUCT DETAILS & SWATCH SELECTOR */}
       <section className="forme-product-section">
         <div className="forme-product-layout">
           {/* Product Image */}
           <div className="forme-product-image-container">
             <img 
-              src={selectedMetal.image} 
+              src={selectedMetal.heroImage} 
               alt={`FORME CUFF - ${selectedMetal.name}`}
               className="forme-product-image"
             />
@@ -189,55 +226,65 @@ const FormeCuffPage = () => {
           <div className="forme-product-info">
             <p className="forme-product-eyebrow">The Forme Collection</p>
             <h2 className="forme-product-title">FORME CUFF</h2>
-            <p className="forme-product-price">
+            <p className="forme-product-price" data-testid="product-price">
               {formatPrice(selectedMetal.price, selectedMetal.currency)}
             </p>
 
-            {/* Metal Selector */}
-            <div className="forme-metal-selector" data-testid="metal-selector">
+            {/* Visual Swatch Selector */}
+            <div className="forme-swatch-selector" data-testid="swatch-selector">
               {/* Solid Gold Group */}
-              <div className="forme-metal-group">
-                <p className="forme-metal-group-label">{metalOptions.solidGold.label}</p>
-                <div className="forme-metal-options">
-                  {metalOptions.solidGold.options.map((option) => (
+              <div className="forme-swatch-group">
+                <p className="forme-swatch-group-label">Solid Gold</p>
+                <div className="forme-swatch-options">
+                  {solidGoldOptions.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => setSelectedMetalId(option.id)}
-                      className={`forme-metal-option ${selectedMetalId === option.id ? 'selected' : ''}`}
-                      data-testid={`metal-option-${option.id}`}
+                      className={`forme-swatch ${selectedMetalId === option.id ? 'selected' : ''}`}
+                      data-testid={`swatch-${option.id}`}
+                      title={option.name}
+                      aria-label={option.name}
                     >
-                      <span className="forme-metal-name">{option.shortName}</span>
+                      <span 
+                        className="forme-swatch-color"
+                        style={{ backgroundColor: option.swatchColor }}
+                      />
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Plated Silver Group */}
-              <div className="forme-metal-group">
-                <p className="forme-metal-group-label">{metalOptions.platedSilver.label}</p>
-                <div className="forme-metal-options">
-                  {metalOptions.platedSilver.options.map((option) => (
+              <div className="forme-swatch-group">
+                <p className="forme-swatch-group-label">Gold Plated Silver</p>
+                <div className="forme-swatch-options">
+                  {platedOptions.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => setSelectedMetalId(option.id)}
-                      className={`forme-metal-option ${selectedMetalId === option.id ? 'selected' : ''}`}
-                      data-testid={`metal-option-${option.id}`}
+                      className={`forme-swatch ${selectedMetalId === option.id ? 'selected' : ''}`}
+                      data-testid={`swatch-${option.id}`}
+                      title={option.name}
+                      aria-label={option.name}
                     >
-                      <span className="forme-metal-name">{option.shortName}</span>
+                      <span 
+                        className="forme-swatch-color"
+                        style={{ backgroundColor: option.swatchColor }}
+                      />
                     </button>
                   ))}
                 </div>
               </div>
             </div>
 
+            {/* Selected Metal Label */}
+            <p className="forme-selected-metal" data-testid="selected-metal-label">
+              {selectedMetal.name}
+            </p>
+
             {/* Supporting Copy */}
             <p className="forme-metal-note">
               Offered in solid gold and gold-plated silver — without compromise in form.
-            </p>
-
-            {/* Selected Metal Display */}
-            <p className="forme-selected-metal">
-              Selected: <span>{selectedMetal.name}</span>
             </p>
           </div>
         </div>
@@ -271,6 +318,7 @@ const FormeCuffPage = () => {
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: background-image 0.3s ease;
         }
 
         .forme-hero-overlay {
@@ -390,76 +438,76 @@ const FormeCuffPage = () => {
           margin-bottom: 32px;
         }
 
-        /* ========== METAL SELECTOR ========== */
-        .forme-metal-selector {
+        /* ========== SWATCH SELECTOR ========== */
+        .forme-swatch-selector {
+          margin-bottom: 24px;
+        }
+
+        .forme-swatch-group {
           margin-bottom: 20px;
         }
 
-        .forme-metal-group {
-          margin-bottom: 20px;
-        }
-
-        .forme-metal-group:last-child {
+        .forme-swatch-group:last-child {
           margin-bottom: 0;
         }
 
-        .forme-metal-group-label {
+        .forme-swatch-group-label {
           font-size: 10px;
           letter-spacing: 0.25em;
           color: rgba(255, 255, 255, 0.4);
           text-transform: uppercase;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
 
-        .forme-metal-options {
+        .forme-swatch-options {
           display: flex;
-          gap: 10px;
+          gap: 12px;
           flex-wrap: wrap;
         }
 
-        .forme-metal-option {
-          padding: 10px 18px;
+        .forme-swatch {
+          width: 44px;
+          height: 44px;
+          padding: 3px;
           background: transparent;
-          border: 1px solid rgba(199, 162, 75, 0.25);
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 12px;
-          letter-spacing: 0.1em;
+          border: 2px solid transparent;
+          border-radius: 50%;
           cursor: pointer;
           transition: all 0.2s ease;
-          border-radius: 2px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        .forme-metal-option:hover {
-          border-color: rgba(199, 162, 75, 0.5);
-          color: #fff;
+        .forme-swatch:hover {
+          border-color: rgba(199, 162, 75, 0.4);
         }
 
-        .forme-metal-option.selected {
+        .forme-swatch.selected {
           border-color: #C7A24B;
-          background: rgba(199, 162, 75, 0.1);
-          color: #C7A24B;
         }
 
-        .forme-metal-name {
-          white-space: nowrap;
+        .forme-swatch-color {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          display: block;
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .forme-selected-metal {
+          font-size: 14px;
+          letter-spacing: 0.1em;
+          color: #C7A24B;
+          margin-bottom: 16px;
+          font-weight: 400;
         }
 
         .forme-metal-note {
           font-size: 13px;
           color: rgba(255, 255, 255, 0.4);
           font-style: italic;
-          margin-bottom: 24px;
           line-height: 1.6;
-        }
-
-        .forme-selected-metal {
-          font-size: 12px;
-          letter-spacing: 0.1em;
-          color: rgba(255, 255, 255, 0.5);
-        }
-
-        .forme-selected-metal span {
-          color: #C7A24B;
         }
 
         /* ========== DESCRIPTION SECTION ========== */
@@ -531,19 +579,19 @@ const FormeCuffPage = () => {
             text-align: center;
           }
 
-          .forme-metal-options {
+          .forme-swatch-options {
             justify-content: center;
           }
 
-          .forme-metal-group-label {
-            text-align: center;
-          }
-
-          .forme-metal-note {
+          .forme-swatch-group-label {
             text-align: center;
           }
 
           .forme-selected-metal {
+            text-align: center;
+          }
+
+          .forme-metal-note {
             text-align: center;
           }
 
