@@ -106,7 +106,31 @@ const FormeCuffPage = () => {
         </div>
       </section>
 
-      {/* SECTION 3 — PRODUCT DETAILS & METAL SELECTOR */}
+      {/* SECTION 3 — GALLERY */}
+      <section className="forme-gallery-section">
+        <div className="forme-gallery-container">
+          <div className="forme-gallery-grid">
+            <div className="forme-gallery-item">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg" 
+                alt="FORME CUFF - Product Detail"
+                className="forme-gallery-image"
+                data-testid="gallery-image-1"
+              />
+            </div>
+            <div className="forme-gallery-item">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg" 
+                alt="FORME CUFF - On Wrist"
+                className="forme-gallery-image"
+                data-testid="gallery-image-2"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4 — PRODUCT DETAILS & METAL SELECTOR */}
       <section className="forme-product-section">
         <div className="forme-product-layout">
           {/* Product Image */}
@@ -176,7 +200,7 @@ const FormeCuffPage = () => {
         </div>
       </section>
 
-      {/* SECTION 4 — DESCRIPTION */}
+      {/* SECTION 5 — DESCRIPTION */}
       <section className="forme-description-section">
         <div className="forme-description-content">
           <h2 className="forme-description-title">Sculpted Silhouettes</h2>
@@ -255,6 +279,42 @@ const FormeCuffPage = () => {
           display: block;
           border-radius: 12px;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ========== GALLERY SECTION ========== */
+        .forme-gallery-section {
+          background: #000;
+          padding: 40px 24px 80px;
+        }
+
+        .forme-gallery-container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .forme-gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 24px;
+        }
+
+        .forme-gallery-item {
+          position: relative;
+          overflow: hidden;
+          border-radius: 8px;
+          aspect-ratio: 1 / 1;
+        }
+
+        .forme-gallery-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease, filter 0.3s ease;
+        }
+
+        .forme-gallery-item:hover .forme-gallery-image {
+          transform: scale(1.03);
+          filter: brightness(1.05);
         }
 
         /* ========== PRODUCT SECTION ========== */
@@ -434,6 +494,19 @@ const FormeCuffPage = () => {
 
           .forme-video {
             border-radius: 8px;
+          }
+
+          .forme-gallery-section {
+            padding: 30px 16px 60px;
+          }
+
+          .forme-gallery-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+
+          .forme-gallery-item {
+            border-radius: 6px;
           }
 
           .forme-product-section {
