@@ -112,18 +112,26 @@ const FormeCuffPage = () => {
           <div className="forme-gallery-grid">
             <div className="forme-gallery-item">
               <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg" 
-                alt="FORME CUFF - Product Detail"
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg" 
+                alt="FORME CUFF - On Wrist"
                 className="forme-gallery-image"
                 data-testid="gallery-image-1"
               />
             </div>
             <div className="forme-gallery-item">
               <img 
-                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/rgzne2e0_1000143032.jpg" 
-                alt="FORME CUFF - On Wrist"
+                src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/a5hjexrp_1000143030.jpg" 
+                alt="FORME CUFF - Product Detail"
                 className="forme-gallery-image"
                 data-testid="gallery-image-2"
+              />
+            </div>
+            <div className="forme-gallery-item forme-gallery-item-full">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png" 
+                alt="FORME CUFF - Studio Shot"
+                className="forme-gallery-image"
+                data-testid="gallery-image-3"
               />
             </div>
           </div>
@@ -303,6 +311,11 @@ const FormeCuffPage = () => {
           overflow: hidden;
           border-radius: 8px;
           aspect-ratio: 1 / 1;
+        }
+
+        .forme-gallery-item-full {
+          grid-column: 1 / -1;
+          aspect-ratio: 16 / 9;
         }
 
         .forme-gallery-image {
@@ -507,6 +520,11 @@ const FormeCuffPage = () => {
 
           .forme-gallery-item {
             border-radius: 6px;
+          }
+
+          .forme-gallery-item-full {
+            grid-column: 1;
+            aspect-ratio: 1 / 1;
           }
 
           .forme-product-section {
