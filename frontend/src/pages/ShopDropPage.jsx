@@ -366,7 +366,7 @@ const ShopDropPage = () => {
                       {/* Hover Overlay */}
                       <div className="shop-drop__card-overlay">
                         <span className="shop-drop__card-cta">
-                          {isSoldOut ? 'Join Restock List' : 'Request This Piece'}
+                          {isSoldOut ? 'Join Restock List' : 'View Details'}
                         </span>
                       </div>
                     </div>

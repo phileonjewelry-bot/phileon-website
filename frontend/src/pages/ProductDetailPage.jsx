@@ -25,19 +25,11 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [inquiryOpen, setInquiryOpen] = useState(false);
   const [tryOnOpen, setTryOnOpen] = useState(false);
   const [restockOpen, setRestockOpen] = useState(false);
   const [zoomOpen, setZoomOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [restockSubmitting, setRestockSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-  });
   const [restockData, setRestockData] = useState({
     name: '',
     email: '',
@@ -79,25 +71,6 @@ const ProductDetailPage = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  const handleInquiry = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      await publicApi.createInquiry({
-        ...formData,
-        inquiry_type: 'product_inquiry',
-        product_id: product.id,
-      });
-      toast.success('Your request has been received. We\'ll be in touch soon.');
-      setInquiryOpen(false);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    } catch (error) {
-      toast.error('Something went wrong. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const logTryOnAnalytics = async (eventType) => {
     try {
@@ -428,16 +401,8 @@ const ProductDetailPage = () => {
                 </button>
               )}
               
-              {/* Primary CTA */}
-              {!soldOut ? (
-                <button 
-                  onClick={() => setInquiryOpen(true)}
-                  className="w-full px-8 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90"
-                  data-testid="inquire-btn"
-                >
-                  Request This Design
-                </button>
-              ) : (
+              {/* Primary CTA - Restock list for sold out items */}
+              {soldOut && (
                 <button 
                   onClick={() => setRestockOpen(true)}
                   className="w-full px-8 py-4 bg-gray-600 text-white text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-gray-500"
@@ -459,68 +424,6 @@ const ProductDetailPage = () => {
             alt={product.name}
             className="w-full h-auto"
           />
-        </DialogContent>
-      </Dialog>
-
-      {/* Inquiry Modal */}
-      <Dialog open={inquiryOpen} onOpenChange={setInquiryOpen}>
-        <DialogContent className="bg-phileon-near-black border-phileon-charcoal text-phileon-ivory max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-xl tracking-wider">
-              Request This Design
-            </DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleInquiry} className="space-y-4 mt-4">
-            <div>
-              <Input
-                placeholder="Your Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
-                className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50"
-                data-testid="inquiry-name"
-              />
-            </div>
-            <div>
-              <Input
-                type="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50"
-                data-testid="inquiry-email"
-              />
-            </div>
-            <div>
-              <Input
-                type="tel"
-                placeholder="Phone (Optional)"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50"
-                data-testid="inquiry-phone"
-              />
-            </div>
-            <div>
-              <Textarea
-                placeholder="Tell us about your interest in this piece..."
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                rows={4}
-                className="bg-phileon-charcoal border-phileon-charcoal text-phileon-ivory placeholder:text-phileon-ivory-muted/50 resize-none"
-                data-testid="inquiry-message"
-              />
-            </div>
-            <Button 
-              type="submit" 
-              disabled={submitting}
-              className="w-full bg-phileon-gold text-phileon-black hover:bg-phileon-gold/90"
-              data-testid="submit-inquiry"
-            >
-              {submitting ? 'Sending...' : 'Send Request'}
-            </Button>
-          </form>
         </DialogContent>
       </Dialog>
 
