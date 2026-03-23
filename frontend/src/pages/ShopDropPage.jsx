@@ -292,20 +292,15 @@ const ShopDropPage = () => {
         <div className="shop-drop__grid">
           {filteredProducts.map((product, index) => {
             const inventoryCount = product.inventory_count || product.stock || 0;
-            const lowStockThreshold = product.low_stock_threshold || 2;
             const isSoldOut = inventoryCount === 0;
-            const isLowStock = inventoryCount > 0 && inventoryCount <= lowStockThreshold;
             
             return (
-              <Link 
+              <div 
                 key={product.id}
-                to={`/products/${product.slug}`}
-                onClick={(e) => handleCardClick(e, product.slug)}
-                className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''} ${isSoldOut ? 'shop-drop__card--sold-out' : ''}`}
+                className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
                 style={{ transitionDelay: `${index * 80}ms` }}
-                data-testid={`product-card-${product.slug}`}
               >
-                {/* Wishlist Heart Button */}
+                {/* Wishlist - Outside the link */}
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -320,44 +315,31 @@ const ShopDropPage = () => {
                   />
                 </button>
 
-                <div className="shop-drop__card-image">
-                  {/* DROP MODE BADGES */}
-                  <div className="shop-drop__badges">
-                    {isSoldOut && (
-                      <div className="badge badge-soldout">SOLD OUT</div>
-                    )}
-                    {isLowStock && !isSoldOut && (
-                      <div className="badge badge-warning">ONLY {inventoryCount} LEFT</div>
-                    )}
-                    {product.is_bestseller && (
-                      <div className="badge badge-gold">BESTSELLER</div>
-                    )}
+                {/* SIMPLE CLICKABLE CARD - No overlays inside */}
+                <Link 
+                  to={`/products/${product.slug}`}
+                  className="shop-drop__card"
+                  data-testid={`product-card-${product.slug}`}
+                >
+                  <div className="shop-drop__card-image">
+                    <img 
+                      src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
+                      alt={product.name}
+                      loading="lazy"
+                      className={isSoldOut ? 'grayscale' : ''}
+                      draggable="false"
+                    />
                   </div>
                   
-                  {/* Sold Out Overlay */}
-                  {isSoldOut && (
-                    <div className="shop-drop__sold-overlay">
-                      <span>SOLD OUT</span>
-                    </div>
-                  )}
-                  
-                  <img 
-                    src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
-                    alt={product.name}
-                    loading="lazy"
-                    className={isSoldOut ? 'grayscale' : ''}
-                    draggable="false"
-                  />
-                </div>
-                
-                <div className="shop-drop__card-info">
-                  <h3 className="shop-drop__card-name">{product.name}</h3>
-                  <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                  {product.price_range && (
-                    <p className="shop-drop__card-price">{product.price_range}</p>
-                  )}
-                </div>
-              </Link>
+                  <div className="shop-drop__card-info">
+                    <h3 className="shop-drop__card-name">{product.name}</h3>
+                    <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                    {product.price_range && (
+                      <p className="shop-drop__card-price">{product.price_range}</p>
+                    )}
+                  </div>
+                </Link>
+              </div>
             );
           })}
         </div>
