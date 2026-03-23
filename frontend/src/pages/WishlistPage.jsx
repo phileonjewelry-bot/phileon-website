@@ -4,9 +4,7 @@ import { Heart, ShoppingBag, Trash2, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
-import ProductActionButton from '@/components/ProductActionButton';
 import StockBadge from '@/components/StockBadge';
 import axios from 'axios';
 
@@ -16,7 +14,6 @@ const WishlistPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { items: wishlistIds, removeFromWishlist, clearWishlist } = useWishlist();
-  const { addToCart } = useCart();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -51,18 +48,6 @@ const WishlistPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleAddToCart = (product) => {
-    const price = parseFloat(product.price_range?.split(' - ')[0]?.replace('$', '').replace(',', '') || '0');
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price,
-      images: product.images,
-      slug: product.slug,
-      materials: product.materials
-    });
   };
 
   const handleShare = async (product) => {
@@ -244,14 +229,15 @@ const WishlistPage = () => {
                             </div>
                           )}
 
-                          {/* Action Buttons */}
+                          {/* View Product Button */}
                           <div className="space-y-2">
-                            <ProductActionButton
-                              product={product}
-                              onAddToCart={handleAddToCart}
-                              size="sm"
-                              className="w-full"
-                            />
+                            <Link to={product.href || `/products/${product.slug || product.id}`} className="block">
+                              <Button
+                                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-xs tracking-wider"
+                              >
+                                View Product
+                              </Button>
+                            </Link>
                           </div>
                         </div>
                       </div>

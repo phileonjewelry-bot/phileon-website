@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Trash2, ShoppingCart } from 'lucide-react';
+import { Heart, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { useToast } from '../hooks/use-toast';
@@ -25,22 +25,6 @@ const Wishlist = () => {
     toast({
       title: 'Removed from Wishlist',
       description: 'Item has been removed from your wishlist.',
-    });
-  };
-
-  const moveToCart = (item) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(cartItem => cartItem.id === item.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ ...item, quantity: 1 });
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    removeItem(item.id);
-    toast({
-      title: 'Moved to Cart',
-      description: `${item.name} has been added to your cart.`,
     });
   };
 
@@ -83,20 +67,20 @@ const Wishlist = () => {
                   </div>
                 </Link>
                 <div className="p-4">
-                  <Link to={`/product/${item.id}`}>
+                  <Link to={`/products/${item.slug || item.id}`}>
                     <h3 className="text-white font-semibold mb-2 hover:text-yellow-500 transition-colors line-clamp-2">
                       {item.name}
                     </h3>
                   </Link>
                   <p className="text-yellow-500 font-bold text-xl mb-4">${item.price.toFixed(2)}</p>
                   <div className="flex gap-2">
-                    <Button
-                      onClick={() => moveToCart(item)}
-                      className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
-                    >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Add to Cart
-                    </Button>
+                    <Link to={`/products/${item.slug || item.id}`} className="flex-1">
+                      <Button
+                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+                      >
+                        View Product
+                      </Button>
+                    </Link>
                     <Button
                       onClick={() => removeItem(item.id)}
                       variant="outline"

@@ -4,9 +4,7 @@ import { Heart, Filter, Eye, EyeOff } from 'lucide-react';
 import { publicApi } from '../lib/api';
 import { useWishlist } from '@/contexts/WishlistContext';
 import StockBadge from '@/components/StockBadge';
-import ProductActionButton from '@/components/ProductActionButton';
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/contexts/CartContext';
 import '../styles/shop-drop.css';
 
 // Core collection products - Always shown first
@@ -155,7 +153,6 @@ const ShopDropPage = () => {
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [hideSoldOut, setHideSoldOut] = useState(false); // DEFAULT OFF for hype
   const { has, toggle } = useWishlist();
-  const { addToCart } = useCart();
 
   // Get filter params from URL
   const categoryParam = searchParams.get('category');
@@ -224,16 +221,6 @@ const ShopDropPage = () => {
       }, 150 * index);
     });
   }, [filteredProducts]);
-
-  const handleAddToCart = (product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: parseFloat(product.price_range?.split(' - ')[0]?.replace('$', '').replace(',', '') || '0'),
-      images: product.images || [product.imageUrl],
-      quantity: 1
-    });
-  };
 
   const soldOutCount = products.filter(product => {
     const inventoryCount = product.inventory_count || product.stock || 0;
@@ -365,23 +352,15 @@ const ShopDropPage = () => {
                     </div>
                   </Link>
                   
-                  <div className="shop-drop__card-info">
-                    <h3 className="shop-drop__card-name">{product.name}</h3>
-                    <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                    {product.price_range && (
-                      <p className="shop-drop__card-price">{product.price_range}</p>
-                    )}
-                    
-                    {/* DROP MODE Action Button */}
-                    <div className="mt-3">
-                      <ProductActionButton
-                        product={product}
-                        onAddToCart={handleAddToCart}
-                        size="sm"
-                        className="w-full"
-                      />
+                  <Link to={product.href || `/products/${product.slug}`} className="shop-drop__card-info-link">
+                    <div className="shop-drop__card-info">
+                      <h3 className="shop-drop__card-name">{product.name}</h3>
+                      <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                      {product.price_range && (
+                        <p className="shop-drop__card-price">{product.price_range}</p>
+                      )}
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </article>
             );

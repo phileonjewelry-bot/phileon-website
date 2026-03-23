@@ -2,12 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
-import ProductActionButton from './ProductActionButton';
 
 const ProductCard = ({ 
   product, 
-  onAddToCart, 
-  showActionButton = true, 
   className = '',
   size = 'default' 
 }) => {
@@ -23,6 +20,9 @@ const ProductCard = ({
     default: 'w-full max-w-md',
     lg: 'w-full max-w-lg'
   };
+
+  // Route to product page
+  const productHref = product.href || `/products/${product.slug || product.id}`;
 
   return (
     <div className={`product-card ${className} ${cardSizeClasses[size]} ${isSoldOut ? 'product-card--sold-out' : ''}`}>
@@ -42,7 +42,8 @@ const ProductCard = ({
           />
         </button>
 
-        <Link to={`/piece/${product.slug || product.id}`} className="block">
+        {/* Entire card is clickable - routes to product page */}
+        <Link to={productHref} className="block cursor-pointer">
           <div className="relative aspect-square overflow-hidden">
             {/* DROP MODE BADGES - Prominent Position */}
             <div className="absolute top-3 left-3 z-10 space-y-2">
@@ -87,40 +88,28 @@ const ProductCard = ({
               loading="lazy"
             />
           </div>
-        </Link>
 
-        {/* Product Info */}
-        <div className="p-4 space-y-3">
-          <div>
-            <h3 className={`font-bold text-lg leading-tight line-clamp-2 ${
+          {/* Product Info - Also clickable */}
+          <div className="p-4 space-y-2">
+            <h3 className={`font-bold text-lg leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-yellow-500 ${
               isSoldOut ? 'text-gray-300' : 'text-white'
             }`}>
               {product.name}
             </h3>
-            <p className={`text-sm mt-1 line-clamp-1 ${
+            <p className={`text-sm line-clamp-1 ${
               isSoldOut ? 'text-gray-400' : 'text-gray-300'
             }`}>
               {product.materials?.join(' · ') || product.materialLine || product.description}
             </p>
+
+            {/* Price */}
+            {product.price_range && (
+              <div className="text-yellow-500 font-bold text-lg">
+                {product.price_range}
+              </div>
+            )}
           </div>
-
-          {/* Price */}
-          {product.price_range && (
-            <div className="text-yellow-500 font-bold text-lg">
-              {product.price_range}
-            </div>
-          )}
-
-          {/* DROP MODE Action Button */}
-          {showActionButton && (
-            <ProductActionButton
-              product={product}
-              onAddToCart={onAddToCart}
-              size="sm"
-              className="w-full"
-            />
-          )}
-        </div>
+        </Link>
       </div>
     </div>
   );

@@ -1030,6 +1030,12 @@ input:focus, textarea:focus, select:focus, button:focus {
   filter: brightness(0.9);
 }
 
+.shop-drop__card-info-link {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 /* Card Info */
 .shop-drop__card-info {
   padding: 20px 0;
