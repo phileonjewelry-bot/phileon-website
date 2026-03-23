@@ -186,14 +186,14 @@ const HomePage = () => {
         <div className="max-w-5xl mx-auto px-4 md:px-8">
           <ScrollReveal>
             {/* Product Hero - Dominant Visual */}
-            <div className="relative mb-10 md:mb-14">
+            <div className="relative mb-6 md:mb-8">
               <Link to="/products/ptp-cuff" className="block group">
                 <div className="relative w-full overflow-hidden bg-phileon-black">
-                  {/* Subtle vignette overlay for focus */}
+                  {/* Enhanced vignette overlay for strong product focus */}
                   <div 
                     className="absolute inset-0 pointer-events-none z-10"
                     style={{
-                      background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%)'
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0.6) 100%)'
                     }}
                   />
                   <video
@@ -212,16 +212,21 @@ const HomePage = () => {
             </div>
           </ScrollReveal>
           
-          {/* Content - Understated, product first */}
+          {/* Content - Heavily understated, product first */}
           <ScrollReveal delay={200}>
-            <div className="text-center">
-              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">
+            <div 
+              className="text-center py-10 px-6 relative"
+              style={{
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)'
+              }}
+            >
+              <p className="text-phileon-gold/50 text-[10px] tracking-[0.4em] uppercase mb-3">
                 THE PTP CUFF
               </p>
-              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
+              <h2 className="font-serif text-xl md:text-2xl lg:text-3xl tracking-[0.04em] text-phileon-ivory/70 leading-tight font-light">
                 Power To The People
               </h2>
-              <div className="mt-10">
+              <div className="mt-8">
                 <FeatureCTA to="/products/ptp-cuff" testId="ptp-cuff-cta">
                   Explore PTP
                 </FeatureCTA>
@@ -237,18 +242,18 @@ const HomePage = () => {
           FORME CUFF FEATURE SECTION
           New arrival with dominant product visual
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 lg:py-44 bg-[#0a0a0a]">
+      <section className="py-28 md:py-36 lg:py-44 bg-[#080808]">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <ScrollReveal delay={100}>
             {/* Product Hero - Dominant Visual */}
-            <div className="relative mb-10 md:mb-14">
+            <div className="relative mb-6 md:mb-8">
               <Link to="/products/forme-cuff" className="block group">
-                <div className="relative w-full overflow-hidden bg-phileon-black rounded-sm">
-                  {/* Subtle vignette overlay */}
+                <div className="relative w-full overflow-hidden bg-black rounded-sm">
+                  {/* Enhanced vignette overlay for strong product focus */}
                   <div 
                     className="absolute inset-0 pointer-events-none z-10"
                     style={{
-                      background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.25) 100%)'
+                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.35) 75%, rgba(0,0,0,0.5) 100%)'
                     }}
                   />
                   <img
@@ -261,19 +266,24 @@ const HomePage = () => {
             </div>
           </ScrollReveal>
           
-          {/* Content - Understated */}
+          {/* Content - Heavily understated */}
           <ScrollReveal delay={300}>
-            <div className="text-center">
-              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">
+            <div 
+              className="text-center py-10 px-6 relative"
+              style={{
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(8,8,8,0.5) 30%, rgba(8,8,8,0.5) 70%, rgba(0,0,0,0) 100%)'
+              }}
+            >
+              <p className="text-phileon-gold/50 text-[10px] tracking-[0.4em] uppercase mb-3">
                 NEW ARRIVAL
               </p>
-              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
+              <h2 className="font-serif text-xl md:text-2xl lg:text-3xl tracking-[0.04em] text-phileon-ivory/70 leading-tight font-light">
                 FORME CUFF
               </h2>
-              <p className="mt-5 text-phileon-ivory/50 text-base max-w-md mx-auto font-light">
+              <p className="mt-4 text-phileon-ivory/35 text-sm max-w-sm mx-auto font-light">
                 Shaped by the curve. Held in form.
               </p>
-              <div className="mt-10">
+              <div className="mt-8">
                 <FeatureCTA to="/products/forme-cuff" testId="forme-cuff-cta">
                   Explore FORME
                 </FeatureCTA>
@@ -469,18 +479,18 @@ const HomePage = () => {
           ROSARIA FEATURE SECTION
           Statement earrings showcase
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 lg:py-44 bg-phileon-black">
+      <section className="py-28 md:py-36 lg:py-44 bg-[#050505]">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <ScrollReveal delay={150}>
             {/* Product Hero - Dominant Visual */}
-            <div className="relative mb-10 md:mb-14">
+            <div className="relative mb-6 md:mb-8">
               <Link to="/products/rosaria" className="block group">
-                <div className="relative w-full overflow-hidden bg-phileon-black rounded-sm">
-                  {/* Subtle vignette overlay */}
+                <div className="relative w-full overflow-hidden bg-black rounded-sm">
+                  {/* Enhanced vignette overlay for strong product focus */}
                   <div 
                     className="absolute inset-0 pointer-events-none z-10"
                     style={{
-                      background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.25) 100%)'
+                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.35) 75%, rgba(0,0,0,0.5) 100%)'
                     }}
                   />
                   <img
@@ -493,19 +503,24 @@ const HomePage = () => {
             </div>
           </ScrollReveal>
           
-          {/* Content - Understated */}
+          {/* Content - Heavily understated */}
           <ScrollReveal delay={350}>
-            <div className="text-center">
-              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">
+            <div 
+              className="text-center py-10 px-6 relative"
+              style={{
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(5,5,5,0.5) 30%, rgba(5,5,5,0.5) 70%, rgba(0,0,0,0) 100%)'
+              }}
+            >
+              <p className="text-phileon-gold/50 text-[10px] tracking-[0.4em] uppercase mb-3">
                 STATEMENT EARRINGS
               </p>
-              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
+              <h2 className="font-serif text-xl md:text-2xl lg:text-3xl tracking-[0.04em] text-phileon-ivory/70 leading-tight font-light">
                 ROSARIA
               </h2>
-              <p className="mt-5 text-phileon-ivory/50 text-base max-w-md mx-auto font-light">
+              <p className="mt-4 text-phileon-ivory/35 text-sm max-w-sm mx-auto font-light">
                 Petals of rose gold, sculpted in elegance.
               </p>
-              <div className="mt-10">
+              <div className="mt-8">
                 <FeatureCTA to="/products/rosaria" testId="rosaria-cta">
                   Explore Rosaria
                 </FeatureCTA>
