@@ -2,6 +2,23 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useAddToCart } from '../hooks/useAddToCart';
 
 const AlejandraHeelsPage = () => {
+  // ========== METAL-SPECIFIC IMAGE SETS ==========
+  const metalImageSets = useMemo(() => ({
+    silver: [
+      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
+    ],
+    white: [
+      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+    ],
+    yellow: [
+      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+    ],
+    rose: [
+      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+      "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/cvvwbdch_1000140396.jpg",
+    ],
+  }), []);
+
   // ========== METAL OPTIONS (7 variants) ==========
   const metalOptions = useMemo(() => [
     {
@@ -13,7 +30,6 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#C0C0C0',
       galleryType: 'silver',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
     },
     {
       id: 'white-10k',
@@ -24,7 +40,6 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#F5F5F0',
       galleryType: 'white',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
     },
     {
       id: 'rose-10k',
@@ -35,7 +50,6 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#B76E79',
       galleryType: 'rose',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
     },
     {
       id: 'yellow-10k',
@@ -46,7 +60,6 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#D4AF37',
       galleryType: 'yellow',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
     },
     {
       id: 'white-14k',
@@ -57,7 +70,6 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#FAF9F6',
       galleryType: 'white',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
     },
     {
       id: 'rose-14k',
@@ -68,7 +80,6 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#C4756E',
       galleryType: 'rose',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
     },
     {
       id: 'yellow-14k',
@@ -79,13 +90,11 @@ const AlejandraHeelsPage = () => {
       currency: 'CAD',
       swatchColor: '#CFB53B',
       galleryType: 'yellow',
-      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
     },
   ], []);
 
   // State for selected metal (default: Silver)
   const [selectedMetalId, setSelectedMetalId] = useState('silver');
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // Add to Cart hook
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
@@ -93,34 +102,28 @@ const AlejandraHeelsPage = () => {
   // Get current selection
   const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
 
-  // ========== GALLERY IMAGES ONLY (No video) ==========
-  const galleryImages = useMemo(() => [
-    "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
-    "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
-    "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
-    "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
-    "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/cvvwbdch_1000140396.jpg",
-  ], []);
+  // Get gallery images based on selected metal's galleryType
+  const currentGalleryImages = metalImageSets[selectedMetal.galleryType] || metalImageSets.silver;
 
   // Handle add to cart
   const onAddToCart = () => {
     handleAddToCart({
       id: `alejandra-heels-${selectedMetal.id}`,
       name: 'Alejandra Heels Earrings',
-      image: selectedMetal.heroImage,
+      image: currentGalleryImages[0],
       price: selectedMetal.price,
       slug: 'alejandra-heels',
       materials: [selectedMetal.name]
     }, 1, selectedMetal.name);
   };
 
-  // Preload images
+  // Preload all images for instant switching
   useEffect(() => {
-    galleryImages.forEach(src => {
+    Object.values(metalImageSets).flat().forEach(src => {
       const img = new Image();
       img.src = src;
     });
-  }, [galleryImages]);
+  }, [metalImageSets]);
 
   // Format price
   const formatPrice = (price, currency) => {
@@ -245,39 +248,17 @@ const AlejandraHeelsPage = () => {
         </div>
       </section>
 
-      {/* ========== IMAGE GALLERY (Images only, NO video) ========== */}
+      {/* ========== IMAGE GALLERY (Metal-based, NO carousel) ========== */}
       <section className="alejandra-gallery-section">
-        <div className="alejandra-gallery-main">
-          <img 
-            src={galleryImages[currentImageIndex]} 
-            alt={`Alejandra Heels - View ${currentImageIndex + 1}`}
-            className="alejandra-gallery-image"
-          />
-          <div className="alejandra-gallery-nav">
-            <button 
-              onClick={() => setCurrentImageIndex(i => i > 0 ? i - 1 : galleryImages.length - 1)}
-              className="alejandra-gallery-arrow"
-            >
-              ‹
-            </button>
-            <span className="alejandra-gallery-counter">{currentImageIndex + 1} / {galleryImages.length}</span>
-            <button 
-              onClick={() => setCurrentImageIndex(i => i < galleryImages.length - 1 ? i + 1 : 0)}
-              className="alejandra-gallery-arrow"
-            >
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="alejandra-gallery-thumbs">
-          {galleryImages.map((img, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentImageIndex(idx)}
-              className={`alejandra-thumb ${currentImageIndex === idx ? 'active' : ''}`}
-            >
-              <img src={img} alt={`Thumbnail ${idx + 1}`} />
-            </button>
+        <div className="alejandra-gallery-grid" key={selectedMetal.galleryType}>
+          {currentGalleryImages.map((img, idx) => (
+            <div key={idx} className="alejandra-gallery-item">
+              <img 
+                src={img} 
+                alt={`${selectedMetal.name} - View ${idx + 1}`}
+                className="alejandra-gallery-image"
+              />
+            </div>
           ))}
         </div>
       </section>
@@ -458,91 +439,34 @@ const AlejandraHeelsPage = () => {
           background: #16a34a;
         }
 
-        /* GALLERY (Images only) */
+        /* GALLERY (Luxury Grid - No carousel) */
         .alejandra-gallery-section {
           padding: 40px 24px 100px;
-          max-width: 900px;
+          max-width: 1000px;
           margin: 0 auto;
         }
 
-        .alejandra-gallery-main {
-          position: relative;
-          margin-bottom: 20px;
+        .alejandra-gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 24px;
+        }
+
+        .alejandra-gallery-item {
+          aspect-ratio: 4/5;
+          overflow: hidden;
+          border-radius: 4px;
         }
 
         .alejandra-gallery-image {
           width: 100%;
-          height: auto;
-          aspect-ratio: 4/5;
-          object-fit: cover;
-          border-radius: 4px;
-        }
-
-        .alejandra-gallery-nav {
-          position: absolute;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          background: rgba(0,0,0,0.6);
-          padding: 8px 16px;
-          border-radius: 20px;
-          backdrop-filter: blur(4px);
-        }
-
-        .alejandra-gallery-arrow {
-          background: none;
-          border: none;
-          color: #fff;
-          font-size: 24px;
-          cursor: pointer;
-          padding: 4px 8px;
-          transition: color 0.2s;
-        }
-
-        .alejandra-gallery-arrow:hover {
-          color: #C7A24B;
-        }
-
-        .alejandra-gallery-counter {
-          font-size: 12px;
-          letter-spacing: 0.1em;
-          color: rgba(255,255,255,0.7);
-        }
-
-        .alejandra-gallery-thumbs {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          flex-wrap: wrap;
-        }
-
-        .alejandra-thumb {
-          width: 60px;
-          height: 75px;
-          padding: 0;
-          border: 2px solid transparent;
-          background: none;
-          cursor: pointer;
-          overflow: hidden;
-          border-radius: 4px;
-          transition: border-color 0.2s;
-        }
-
-        .alejandra-thumb:hover {
-          border-color: rgba(199, 162, 75, 0.5);
-        }
-
-        .alejandra-thumb.active {
-          border-color: #C7A24B;
-        }
-
-        .alejandra-thumb img {
-          width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+
+        .alejandra-gallery-item:hover .alejandra-gallery-image {
+          transform: scale(1.03);
         }
 
         /* MOBILE */
@@ -560,9 +484,9 @@ const AlejandraHeelsPage = () => {
             padding: 20px 16px 80px;
           }
 
-          .alejandra-thumb {
-            width: 50px;
-            height: 62px;
+          .alejandra-gallery-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
           }
         }
       `}</style>
