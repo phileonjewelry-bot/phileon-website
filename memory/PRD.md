@@ -1,85 +1,106 @@
-# PHILEON Luxury Jewelry E-Commerce Website
+# PHILEON Luxury Jewelry E-Commerce - Product Requirements Document
 
 ## Original Problem Statement
-Build and maintain a luxury jewelry e-commerce website for PHILEON brand featuring:
-- Product catalog with dynamic gold pricing
-- Multiple product pages (La Marva, Annie Rose, Monika Couture, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset Pendant)
-- Shopping cart and wishlist functionality
-- Stripe checkout integration
-- Responsive mobile-first design
+Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featuring:
+- Product showcase with high-end visual presentation
+- Metal variant selection with dynamic pricing
+- Shopping cart functionality
+- Category-based filtering (Ladies First, Gentleman's Club)
+- Secret vault easter egg experience
 
-## Architecture
-- **Frontend**: React with Tailwind CSS, React Router
-- **Backend**: FastAPI with MongoDB
-- **Payments**: Stripe integration
-- **Data**: Centralized product data in `/frontend/src/data/products.js`
-- **Notifications**: Sonner toast library for micro-interactions
+## Core Requirements
 
-## What's Been Implemented
+### Product Pages
+- Hero image/video sections
+- Horizontal scrolling gallery (ProductGallery component)
+- Metal variant swatches with visual color indicators
+- Dynamic pricing based on selected variant
+- Add to Cart with variant details
 
-### Session: March 15, 2026
-- ✅ Fixed mobile cart drawer height (100dvh with flex layout, subtotal/checkout always visible)
-- ✅ Fixed Rosaria hero video poster (displays correct hero image before video loads)
-- ✅ Restored logo easter egg (7 taps in 2 seconds triggers /secret-drop)
-- ✅ Added subtle gold glow micro-animation to logo easter egg
-- ✅ Verified no development overlay in production builds
-- ✅ **Navigation audience filtering**: Products now filter by BOTH category AND audience
-  - Added `category` and `audience` fields to all products
-  - PTP Cuff: `category: bracelets`, `audience: gentlemens-club`
-  - La Marva/Annie Rose: `category: rings`, `audience: ladies`
-  - Rosaria/Monika/Alejandra: `category: earrings`, `audience: ladies`
-  - Désir Corset: `category: pendants`, `audience: ladies`
-- ✅ Updated PhileonMenu to pass both `category` and `audience` URL params
-- ✅ Updated ShopDropPage to filter by both params (products without tags excluded when filters active)
+### Navigation Structure
+- **LADIES FIRST**: Rings, Earrings, Bracelets/Cuffs, Pendants
+- **GENTLEMAN'S CLUB**: Rings, Earrings, Bracelets/Cuffs, Pendants
+- **THE COLLECTIVE**: Curated selection (Forme Cuff, La Marva, PTP Cuff)
 
-### Session: March 13-14, 2026
-- ✅ Fixed TypeError: addItem is not a function (renamed to addToCart)
-- ✅ Fixed TypeError: setCartOpen is not a function in micro-interaction hook
-- ✅ Fixed z-index conflict between mobile header and cart drawer
-- ✅ Created new Désir Corset Pendant product page with video hero
-- ✅ Implemented "Style it with" cross-selling component
-- ✅ Added "Add to Cart" micro-interaction with toast notifications
-- ✅ Full cart functionality audit and bug fixes
+### Shop Grid
+- Product cards with image, name, material line, price range
+- "From $X" pricing format
+- Stock badges (In Stock, Sold Out)
+- Wishlist hearts
+- Category and audience filtering via URL params
 
-### Session: March 12-13, 2026
-- ✅ Fixed GitHub push protection issue (removed Stripe secret from git history)
-- ✅ Fixed mobile hamburger menu (was not opening on click)
-- ✅ Verified Rosaria page mobile layout (no text overlap)
-- ✅ Updated Rosaria hero image and gallery images
-- ✅ Added `.env.example` with placeholder values
-- ✅ Cleaned up `.gitignore` file
+## What's Been Implemented (March 2025)
 
-### Previous Sessions
-- ✅ PTP Cuff product page with video and three-tier pricing
-- ✅ Rosaria product page with material selection and dynamic pricing
-- ✅ Navigation overhaul with nested categories (Ladies First, Gentleman's Club, The Collective)
-- ✅ Homepage hero and layout refinements
-- ✅ Live metal price ticker
-- ✅ Cart and wishlist functionality
+### FORME CUFF Product (Complete)
+- Metal-based gallery switching (Yellow Gold / Rose Gold sets)
+- 4 variant swatches: 10K Yellow Gold, 10K Rose Gold, Plated Yellow, Plated Rose
+- Pricing: $14,800 (solid gold), $1,250 (plated)
+- 7 gallery images per color (hero, angled, marble, structure, macro, lifestyle, edge detail)
+- Add to Cart with correct variant/image/price
+- Video autoplay loop
+- Shop card with "From $1,250 CAD"
 
-## Key Files
-- `/frontend/src/components/layout/PublicLayout.jsx` - Main layout with header, logo easter egg
-- `/frontend/src/components/CartDrawer.jsx` - Cart slide-out drawer with mobile-optimized layout
-- `/frontend/src/components/StyleItWith.jsx` - Cross-selling recommendations component
-- `/frontend/src/components/PhileonMenu.jsx` - Fullscreen navigation menu
-- `/frontend/src/hooks/useAddToCart.js` - Cart micro-interaction hook with toast
-- `/frontend/src/data/products.js` - All product data
-- `/frontend/src/pages/RosariaPage.jsx` - Rosaria product page
-- `/frontend/src/pages/DesirCorsetPage.jsx` - Désir Corset Pendant page
-- `/frontend/src/pages/SecretDropPage.jsx` - Secret drop easter egg page
+### Earrings Category Clarity
+- Monika Couture → "Monika Couture Earrings"
+- Alejandra Heels → "Alejandra Heels Earrings"
+- Rosaria → "Rosaria Earrings"
+- All show "Statement Earrings" category label
 
-## Upcoming Tasks (P1)
-- None currently pending
+### Product Placement
+| Section | Products |
+|---------|----------|
+| Ladies First | La Marva, Annie Rose, Rosaria Earrings, Désir Corset, FORME CUFF, Monika Couture Earrings, Alejandra Heels Earrings |
+| Gentleman's Club | PTP Cuff |
+| The Collective | Forme Cuff, La Marva, PTP Cuff |
 
-## Backlog (P2)
-- Remove unused `Header.jsx` and `HeaderCartButton.jsx` files
-- Add more product pages as needed
-- Consider adding more cross-selling combinations
+### Vault Easter Egg
+- 7-tap logo trigger → glitch animation → video → redirect to /vault/drews-world
+- Animated hero on vault page
 
-## Testing Reports
-- `/app/test_reports/iteration_1.json` - Cart functionality audit
-- `/app/test_reports/iteration_3.json` - Mobile cart drawer and easter egg fixes
+## Technical Architecture
 
-## Branch Info
-- Current branch: `websitephase2-1-session-save`
-- Repository: `phileonjewelry-bot/phileon-website`
+```
+/app/frontend/src/
+├── components/
+│   ├── ProductGallery.jsx (horizontal scrolling gallery)
+│   ├── CartDrawer.jsx
+│   ├── PhileonMenu.jsx (navigation)
+│   └── VaultUnlockSequence.jsx
+├── pages/
+│   ├── FormeCuffPage.jsx (metal swatches + gallery switching)
+│   ├── ShopDropPage.jsx (filtering + product cards)
+│   └── VaultPage.jsx
+├── contexts/
+│   └── CartContext.jsx
+├── hooks/
+│   └── useAddToCart.js
+└── data/
+    └── products.js
+```
+
+## Prioritized Backlog
+
+### P0 (Critical)
+- None currently
+
+### P1 (High Priority)
+- Add more products to Gentleman's Club collection
+- On-ear lifestyle images for earrings
+- Add to Cart from shop cards (bypass product page)
+
+### P2 (Medium Priority)
+- Vault page real product drops (currently placeholders)
+- Cross-selling between products
+- File cleanup (Header.jsx redundancy check)
+
+### P3 (Low Priority)
+- Additional product pages
+- Expand filtering options
+- Performance optimization
+
+## Known Issues
+- None currently blocking
+
+## Third-Party Integrations
+- Stripe (checkout)
+- Sonner (toast notifications)
