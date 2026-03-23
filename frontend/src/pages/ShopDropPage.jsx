@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { Heart, Filter, Eye, EyeOff } from 'lucide-react';
 import { publicApi } from '../lib/api';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -149,10 +149,20 @@ const DROP_PRODUCTS = [
 
 const ShopDropPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [hideSoldOut, setHideSoldOut] = useState(false); // DEFAULT OFF for hype
   const { has, toggle } = useWishlist();
+
+  // Handle card click - backup navigation
+  const handleCardClick = (e, slug) => {
+    // Don't navigate if clicking on wishlist button
+    if (e.target.closest('.shop-drop__wishlist-btn')) {
+      return;
+    }
+    navigate(`/products/${slug}`);
+  };
 
   // Get filter params from URL
   const categoryParam = searchParams.get('category');
@@ -287,13 +297,15 @@ const ShopDropPage = () => {
             const isLowStock = inventoryCount > 0 && inventoryCount <= lowStockThreshold;
             
             return (
-              <article 
+              <Link 
                 key={product.id}
+                to={`/products/${product.slug}`}
+                onClick={(e) => handleCardClick(e, product.slug)}
                 className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''} ${isSoldOut ? 'shop-drop__card--sold-out' : ''}`}
                 style={{ transitionDelay: `${index * 80}ms` }}
                 data-testid={`product-card-${product.slug}`}
               >
-                {/* Wishlist Heart Button - positioned outside Link to prevent navigation */}
+                {/* Wishlist Heart Button */}
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -308,49 +320,44 @@ const ShopDropPage = () => {
                   />
                 </button>
 
-                {/* ENTIRE CARD IS A LINK */}
-                <Link 
-                  to={`/products/${product.slug}`}
-                  className="shop-drop__card-link"
-                >
-                  <div className="shop-drop__card-image">
-                    {/* DROP MODE BADGES */}
-                    <div className="shop-drop__badges">
-                      {isSoldOut && (
-                        <div className="badge badge-soldout">SOLD OUT</div>
-                      )}
-                      {isLowStock && !isSoldOut && (
-                        <div className="badge badge-warning">ONLY {inventoryCount} LEFT</div>
-                      )}
-                      {product.is_bestseller && (
-                        <div className="badge badge-gold">BESTSELLER</div>
-                      )}
-                    </div>
-                    
-                    {/* Sold Out Overlay */}
+                <div className="shop-drop__card-image">
+                  {/* DROP MODE BADGES */}
+                  <div className="shop-drop__badges">
                     {isSoldOut && (
-                      <div className="shop-drop__sold-overlay">
-                        <span>SOLD OUT</span>
-                      </div>
+                      <div className="badge badge-soldout">SOLD OUT</div>
                     )}
-                    
-                    <img 
-                      src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
-                      alt={product.name}
-                      loading="lazy"
-                      className={isSoldOut ? 'grayscale' : ''}
-                    />
+                    {isLowStock && !isSoldOut && (
+                      <div className="badge badge-warning">ONLY {inventoryCount} LEFT</div>
+                    )}
+                    {product.is_bestseller && (
+                      <div className="badge badge-gold">BESTSELLER</div>
+                    )}
                   </div>
                   
-                  <div className="shop-drop__card-info">
-                    <h3 className="shop-drop__card-name">{product.name}</h3>
-                    <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                    {product.price_range && (
-                      <p className="shop-drop__card-price">{product.price_range}</p>
-                    )}
-                  </div>
-                </Link>
-              </article>
+                  {/* Sold Out Overlay */}
+                  {isSoldOut && (
+                    <div className="shop-drop__sold-overlay">
+                      <span>SOLD OUT</span>
+                    </div>
+                  )}
+                  
+                  <img 
+                    src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
+                    alt={product.name}
+                    loading="lazy"
+                    className={isSoldOut ? 'grayscale' : ''}
+                    draggable="false"
+                  />
+                </div>
+                
+                <div className="shop-drop__card-info">
+                  <h3 className="shop-drop__card-name">{product.name}</h3>
+                  <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                  {product.price_range && (
+                    <p className="shop-drop__card-price">{product.price_range}</p>
+                  )}
+                </div>
+              </Link>
             );
           })}
         </div>
