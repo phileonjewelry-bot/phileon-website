@@ -117,16 +117,6 @@
   box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
 }
 
-.shop-drop__card--sold-out .shop-drop__card-overlay {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
-}
-
-.shop-drop__card--sold-out .shop-drop__card-cta {
-  color: white;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
 /* Enhanced visibility for sold out items */
 .shop-drop__card--sold-out .shop-drop__card-name {
   color: #f3f4f6;

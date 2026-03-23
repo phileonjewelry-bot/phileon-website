@@ -362,13 +362,6 @@ const ShopDropPage = () => {
                         loading="lazy"
                         className={isSoldOut ? 'grayscale' : ''}
                       />
-                      
-                      {/* Hover Overlay */}
-                      <div className="shop-drop__card-overlay">
-                        <span className="shop-drop__card-cta">
-                          {isSoldOut ? 'Join Restock List' : 'View Details'}
-                        </span>
-                      </div>
                     </div>
                   </Link>
                   

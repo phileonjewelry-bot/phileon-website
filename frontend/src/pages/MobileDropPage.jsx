@@ -137,9 +137,6 @@ export default function MobileDropPage() {
             <button style={{ ...styles.primaryBtn, width: "100%" }} data-testid="claim-mobile-btn">
               CLAIM THIS MOBILE DROP
             </button>
-            <button style={{ ...styles.secondaryBtn, width: "100%" }} data-testid="view-details-mobile-btn">
-              VIEW DETAILS
-            </button>
           </div>
 
           {/* Stamp - repositioned for mobile */}

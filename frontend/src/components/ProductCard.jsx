@@ -86,15 +86,6 @@ const ProductCard = ({
               }`}
               loading="lazy"
             />
-
-            {/* Hover Overlay */}
-            <div className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6 ${
-              isSoldOut ? 'from-red-900/60' : ''
-            }`}>
-              <span className="text-white font-semibold text-sm px-4 py-2 bg-black/40 rounded-full backdrop-blur-sm">
-                {isSoldOut ? 'Join Restock List' : 'View Details'}
-              </span>
-            </div>
           </div>
         </Link>
 
