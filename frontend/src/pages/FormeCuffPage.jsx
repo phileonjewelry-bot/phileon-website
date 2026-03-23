@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
+import { useAddToCart } from '../hooks/useAddToCart';
 
 const FormeCuffPage = () => {
   // ========== IMAGE SETS ==========
@@ -132,8 +133,23 @@ const FormeCuffPage = () => {
   // State for selected metal (default: 10K Yellow Gold)
   const [selectedMetalId, setSelectedMetalId] = useState('yellow-10k');
   
+  // Add to Cart hook
+  const { isAdding, handleAddToCart, buttonText, buttonClass } = useAddToCart();
+  
   // Get current selection
   const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
+
+  // Handle add to cart
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: `forme-cuff-${selectedMetal.id}`,
+      name: 'FORME CUFF',
+      image: selectedMetal.heroImage,
+      price: selectedMetal.price,
+      slug: 'forme-cuff',
+      materials: [selectedMetal.name]
+    }, 1, selectedMetal.name);
+  };
 
   // Get the active gallery based on selected metal's gallery type
   const activeGallery = useMemo(() => {
@@ -286,6 +302,16 @@ const FormeCuffPage = () => {
             <p className="forme-metal-note">
               Offered in solid gold and gold-plated silver — without compromise in form.
             </p>
+
+            {/* Add to Cart Button */}
+            <button
+              onClick={onAddToCart}
+              disabled={isAdding}
+              className={`forme-add-to-cart ${isAdding ? 'added' : ''}`}
+              data-testid="add-to-cart-button"
+            >
+              {buttonText}
+            </button>
           </div>
         </div>
       </section>
@@ -508,6 +534,41 @@ const FormeCuffPage = () => {
           color: rgba(255, 255, 255, 0.4);
           font-style: italic;
           line-height: 1.6;
+          margin-bottom: 28px;
+        }
+
+        /* ========== ADD TO CART BUTTON ========== */
+        .forme-add-to-cart {
+          width: 100%;
+          padding: 18px 32px;
+          background: #C7A24B;
+          border: none;
+          color: #000;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border-radius: 2px;
+        }
+
+        .forme-add-to-cart:hover {
+          background: #B8944A;
+          transform: scale(1.02);
+        }
+
+        .forme-add-to-cart:active {
+          transform: scale(0.98);
+        }
+
+        .forme-add-to-cart.added {
+          background: #16a34a;
+          transform: scale(1.02);
+        }
+
+        .forme-add-to-cart:disabled {
+          cursor: not-allowed;
         }
 
         /* ========== DESCRIPTION SECTION ========== */
