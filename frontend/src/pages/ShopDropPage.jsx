@@ -108,9 +108,9 @@ const CORE_PRODUCTS = [
     name: 'Forme Cuff',
     slug: 'forme-cuff',
     materialLine: 'Cuff Bracelet · 10K Gold & Plated Silver',
-    imageUrl: 'https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png',
     href: '/products/forme-cuff',
-    price_range: 'From $695 CAD',
+    price_range: 'From $1,250 CAD',
     inventory_count: 100,
     is_core: true,
     category: 'bracelets',
@@ -375,6 +375,9 @@ const ShopDropPage = () => {
                   <div className="shop-drop__card-info">
                     <h3 className="shop-drop__card-name">{product.name}</h3>
                     <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                    {product.price_range && (
+                      <p className="shop-drop__card-price">{product.price_range}</p>
+                    )}
                     
                     {/* DROP MODE Action Button */}
                     <div className="mt-3">
