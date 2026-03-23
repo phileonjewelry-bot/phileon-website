@@ -29,6 +29,7 @@ const RhythmMeshRingPage = () => {
     "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/5sgfwfn0_1000143092.jpg",
     "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/bze0z8es_1000143313.jpg",
     "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/kx1dagdy_1000143311.png",
+    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/xjxr3blo_1000143315.png",
   ], []);
 
   // State
