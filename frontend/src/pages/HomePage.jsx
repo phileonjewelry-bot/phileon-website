@@ -38,7 +38,7 @@ const useScrollReveal = (options = {}) => {
   return [ref, isVisible];
 };
 
-// Scroll Reveal wrapper component
+// Scroll Reveal wrapper component with configurable delay
 const ScrollReveal = ({ children, delay = 0, className = '' }) => {
   const [ref, isVisible] = useScrollReveal();
   
@@ -56,6 +56,17 @@ const ScrollReveal = ({ children, delay = 0, className = '' }) => {
     </div>
   );
 };
+
+// Featured Section CTA Button Component
+const FeatureCTA = ({ to, children, testId }) => (
+  <Link 
+    to={to}
+    className="inline-block px-8 py-4 bg-[#1a1a1a] text-phileon-gold border border-phileon-gold/60 text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-[#222] hover:border-phileon-gold hover:brightness-110"
+    data-testid={testId}
+  >
+    {children}
+  </Link>
+);
 
 const HomePage = () => {
   const [collections, setCollections] = useState([]);
@@ -88,23 +99,17 @@ const HomePage = () => {
 
   // Hidden gate: capture keypresses and check for "phileon" (desktop only)
   useEffect(() => {
-    // Check if device is mobile
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     
     if (!isMobile) {
       const handleKeyPress = (e) => {
-        // Only process letter keys
         if (/^[a-zA-Z]$/.test(e.key)) {
           keyBufferRef.current += e.key.toLowerCase();
-          
-          // Keep only last 10 characters
           if (keyBufferRef.current.length > 10) {
             keyBufferRef.current = keyBufferRef.current.slice(-10);
           }
-          
-          // Check for "phileon"
           if (keyBufferRef.current.includes('phileon')) {
-            keyBufferRef.current = ''; // Reset buffer
+            keyBufferRef.current = '';
             navigate('/secret-drop');
           }
         }
@@ -154,13 +159,13 @@ const HomePage = () => {
           <div className="flex flex-col sm:flex-row gap-5">
             <Link 
               to="/shop" 
-              className="px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02]"
+              className="px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:brightness-110"
             >
               View Collection
             </Link>
             <Link 
               to="/products/la-marva" 
-              className="px-10 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black"
+              className="px-10 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 hover:brightness-110"
             >
               Discover La Marva
             </Link>
@@ -173,14 +178,24 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* PTP Cuff Feature Section */}
-      <section className="py-24 md:py-32 lg:py-40 bg-phileon-black">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
+      {/* ═══════════════════════════════════════════════════════════════
+          PTP CUFF FEATURE SECTION
+          Product-dominant with subtle text overlay
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-28 md:py-36 lg:py-44 bg-phileon-black">
+        <div className="max-w-5xl mx-auto px-4 md:px-8">
           <ScrollReveal>
-            {/* Video Hero - Full Width */}
-            <div className="mb-12 md:mb-16">
+            {/* Product Hero - Dominant Visual */}
+            <div className="relative mb-10 md:mb-14">
               <Link to="/products/ptp-cuff" className="block group">
-                <div className="relative w-full max-w-4xl mx-auto overflow-hidden bg-phileon-black">
+                <div className="relative w-full overflow-hidden bg-phileon-black">
+                  {/* Subtle vignette overlay for focus */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%)'
+                    }}
+                  />
                   <video
                     autoPlay
                     muted
@@ -188,96 +203,98 @@ const HomePage = () => {
                     playsInline
                     preload="metadata"
                     disablePictureInPicture
-                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                   >
                     <source src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/4idyl7t2_PTPCuff2.mp4" type="video/mp4" />
                   </video>
-                  {/* Mobile cinematic overlay */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none md:hidden"
-                    style={{
-                      background: 'linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.08) 35%, rgba(0,0,0,0.22) 100%)'
-                    }}
-                  />
                 </div>
               </Link>
             </div>
           </ScrollReveal>
           
-          {/* Content - Centered */}
-          <ScrollReveal delay={150}>
+          {/* Content - Understated, product first */}
+          <ScrollReveal delay={200}>
             <div className="text-center">
-              <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-5">
+              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">
                 THE PTP CUFF
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] text-phileon-ivory leading-tight">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
                 Power To The People
               </h2>
-              <div className="mt-12">
-                <Link 
-                  to="/products/ptp-cuff" 
-                  className="inline-block px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02]"
-                  data-testid="ptp-cuff-cta"
-                >
-                  Discover The PTP Cuff
-                </Link>
+              <div className="mt-10">
+                <FeatureCTA to="/products/ptp-cuff" testId="ptp-cuff-cta">
+                  Explore PTP
+                </FeatureCTA>
               </div>
             </div>
           </ScrollReveal>
         </div>
+        {/* Scroll stop spacer */}
+        <div className="h-16 md:h-20"></div>
       </section>
 
-      {/* FORME CUFF Feature Section */}
-      <section className="py-24 md:py-32 lg:py-40 bg-phileon-near-black">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <ScrollReveal>
-            {/* Image Hero */}
-            <div className="mb-12 md:mb-16">
+      {/* ═══════════════════════════════════════════════════════════════
+          FORME CUFF FEATURE SECTION
+          New arrival with dominant product visual
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-28 md:py-36 lg:py-44 bg-[#0a0a0a]">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <ScrollReveal delay={100}>
+            {/* Product Hero - Dominant Visual */}
+            <div className="relative mb-10 md:mb-14">
               <Link to="/products/forme-cuff" className="block group">
-                <div className="relative w-full max-w-3xl mx-auto overflow-hidden bg-phileon-black rounded-lg">
+                <div className="relative w-full overflow-hidden bg-phileon-black rounded-sm">
+                  {/* Subtle vignette overlay */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.25) 100%)'
+                    }}
+                  />
                   <img
                     src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
                     alt="FORME CUFF"
-                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                   />
                 </div>
               </Link>
             </div>
           </ScrollReveal>
           
-          {/* Content - Centered */}
-          <ScrollReveal delay={150}>
+          {/* Content - Understated */}
+          <ScrollReveal delay={300}>
             <div className="text-center">
-              <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-5">
+              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">
                 NEW ARRIVAL
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] text-phileon-ivory leading-tight">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
                 FORME CUFF
               </h2>
-              <p className="mt-6 text-phileon-ivory-muted text-lg max-w-xl mx-auto">
+              <p className="mt-5 text-phileon-ivory/50 text-base max-w-md mx-auto font-light">
                 Shaped by the curve. Held in form.
               </p>
-              <div className="mt-12">
-                <Link 
-                  to="/products/forme-cuff" 
-                  className="inline-block px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02]"
-                  data-testid="forme-cuff-cta"
-                >
-                  Discover FORME CUFF
-                </Link>
+              <div className="mt-10">
+                <FeatureCTA to="/products/forme-cuff" testId="forme-cuff-cta">
+                  Explore FORME
+                </FeatureCTA>
               </div>
             </div>
           </ScrollReveal>
         </div>
+        {/* Scroll stop spacer */}
+        <div className="h-16 md:h-20"></div>
       </section>
 
-      {/* Core Products Showcase */}
+      {/* ═══════════════════════════════════════════════════════════════
+          SIGNATURE PRODUCTS GRID
+          Core collection showcase
+      ═══════════════════════════════════════════════════════════════ */}
       <section className="py-28 lg:py-40 px-8 bg-phileon-black">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-20">
-              <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-4">Core Collection</p>
-              <h2 className="font-serif text-3xl md:text-4xl tracking-[0.08em] text-phileon-ivory">
+              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">Core Collection</p>
+              <h2 className="font-serif text-2xl md:text-3xl tracking-[0.06em] text-phileon-ivory/90 font-light">
                 Signature Pieces
               </h2>
             </div>
@@ -291,6 +308,13 @@ const HomePage = () => {
                 data-testid="product-card-la-marva"
               >
                 <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                  {/* Subtle vignette */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.2) 100%)'
+                    }}
+                  />
                   <img
                     src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
                     alt="La Marva"
@@ -298,13 +322,13 @@ const HomePage = () => {
                   />
                 </div>
                 <div className="mt-8 text-center">
-                  <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
                     La Marva
                   </h3>
-                  <p className="text-sm text-phileon-ivory-muted mt-3">
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Signature Ring · Dynamic Pricing
                   </p>
-                  <p className="text-sm text-phileon-gold mt-2">From $3,400</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">From $3,400</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -316,6 +340,12 @@ const HomePage = () => {
                 data-testid="product-card-annie-rose"
               >
                 <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.2) 100%)'
+                    }}
+                  />
                   <img
                     src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
                     alt="Annie Rose"
@@ -323,13 +353,13 @@ const HomePage = () => {
                   />
                 </div>
                 <div className="mt-8 text-center">
-                  <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
                     Annie Rose
                   </h3>
-                  <p className="text-sm text-phileon-ivory-muted mt-3">
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Lab & Natural Diamonds
                   </p>
-                  <p className="text-sm text-phileon-gold mt-2">From $6,400</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">From $6,400</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -341,6 +371,12 @@ const HomePage = () => {
                 data-testid="product-card-monika-couture"
               >
                 <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.2) 100%)'
+                    }}
+                  />
                   <img
                     src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"
                     alt="Monika Couture Earrings"
@@ -348,13 +384,13 @@ const HomePage = () => {
                   />
                 </div>
                 <div className="mt-8 text-center">
-                  <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
                     Monika Couture Earrings
                   </h3>
-                  <p className="text-sm text-phileon-ivory-muted mt-3">
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Statement Earrings · Silver & Gold
                   </p>
-                  <p className="text-sm text-phileon-gold mt-2">From $1,400</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">From $1,400</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -366,6 +402,12 @@ const HomePage = () => {
                 data-testid="product-card-alejandra-heels"
               >
                 <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.2) 100%)'
+                    }}
+                  />
                   <img
                     src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg"
                     alt="Alejandra Heels Earrings"
@@ -373,13 +415,13 @@ const HomePage = () => {
                   />
                 </div>
                 <div className="mt-8 text-center">
-                  <h3 className="font-serif text-lg tracking-[0.08em] text-phileon-ivory group-hover:text-phileon-gold transition-colors duration-300">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
                     Alejandra Heels Earrings
                   </h3>
-                  <p className="text-sm text-phileon-ivory-muted mt-3">
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Statement Earrings · Sculptural Design
                   </p>
-                  <p className="text-sm text-phileon-gold mt-2">From $1,250</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">From $1,250</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -389,100 +431,120 @@ const HomePage = () => {
             <div className="text-center mt-16">
               <Link 
                 to="/shop" 
-                className="px-10 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold hover:text-phileon-black"
+                className="px-8 py-4 border border-phileon-gold/60 text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:border-phileon-gold hover:brightness-110"
               >
                 View All Products
               </Link>
             </div>
           </ScrollReveal>
         </div>
+        {/* Scroll stop spacer */}
+        <div className="h-12 md:h-16"></div>
       </section>
 
-      {/* Brand Statement Section */}
-      <section className="py-24 md:py-28 px-8 bg-phileon-black border-t border-b border-phileon-charcoal/30">
-        <ScrollReveal>
+      {/* ═══════════════════════════════════════════════════════════════
+          BRAND STATEMENT
+          Minimal text interlude
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24 px-8 bg-phileon-black border-t border-b border-white/5">
+        <ScrollReveal delay={100}>
           <div className="max-w-3xl mx-auto text-center">
-            <p className="text-xl md:text-2xl text-phileon-ivory leading-relaxed tracking-wide font-light">
+            <p className="text-xl md:text-2xl text-phileon-ivory/70 leading-relaxed tracking-wide font-light">
               Phileon creates sculptural jewelry designed to be seen, remembered, and worn with presence.
             </p>
           </div>
         </ScrollReveal>
       </section>
 
-      {/* La Marva Flagship Section - Featured Story */}
-      <ScrollReveal>
+      {/* ═══════════════════════════════════════════════════════════════
+          LA MARVA FLAGSHIP SECTION
+      ═══════════════════════════════════════════════════════════════ */}
+      <ScrollReveal delay={150}>
         <LaMarvaFlagship />
       </ScrollReveal>
+      {/* Scroll stop spacer */}
+      <div className="h-8 md:h-12 bg-phileon-black"></div>
 
-      {/* Rosaria Feature Section */}
-      <section className="py-24 md:py-32 lg:py-40 bg-phileon-black">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <ScrollReveal>
-            {/* Image Hero */}
-            <div className="mb-12 md:mb-16">
+      {/* ═══════════════════════════════════════════════════════════════
+          ROSARIA FEATURE SECTION
+          Statement earrings showcase
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-28 md:py-36 lg:py-44 bg-phileon-black">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <ScrollReveal delay={150}>
+            {/* Product Hero - Dominant Visual */}
+            <div className="relative mb-10 md:mb-14">
               <Link to="/products/rosaria" className="block group">
-                <div className="relative w-full max-w-3xl mx-auto overflow-hidden bg-phileon-black rounded-lg">
+                <div className="relative w-full overflow-hidden bg-phileon-black rounded-sm">
+                  {/* Subtle vignette overlay */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.25) 100%)'
+                    }}
+                  />
                   <img
                     src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/d15gu165_VideoCapture_20260312-012448.jpg"
                     alt="Rosaria Earrings"
-                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                   />
                 </div>
               </Link>
             </div>
           </ScrollReveal>
           
-          {/* Content - Centered */}
-          <ScrollReveal delay={150}>
+          {/* Content - Understated */}
+          <ScrollReveal delay={350}>
             <div className="text-center">
-              <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-5">
+              <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-4">
                 STATEMENT EARRINGS
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] text-phileon-ivory leading-tight">
+              <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
                 ROSARIA
               </h2>
-              <p className="mt-6 text-phileon-ivory-muted text-lg max-w-xl mx-auto">
+              <p className="mt-5 text-phileon-ivory/50 text-base max-w-md mx-auto font-light">
                 Petals of rose gold, sculpted in elegance.
               </p>
-              <div className="mt-12">
-                <Link 
-                  to="/products/rosaria" 
-                  className="inline-block px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02]"
-                  data-testid="rosaria-cta"
-                >
-                  Discover Rosaria
-                </Link>
+              <div className="mt-10">
+                <FeatureCTA to="/products/rosaria" testId="rosaria-cta">
+                  Explore Rosaria
+                </FeatureCTA>
               </div>
             </div>
           </ScrollReveal>
         </div>
+        {/* Scroll stop spacer */}
+        <div className="h-16 md:h-20"></div>
       </section>
 
-      {/* Custom Design CTA */}
-      <section className="relative py-36 md:py-40 overflow-hidden">
+      {/* ═══════════════════════════════════════════════════════════════
+          CUSTOM DESIGN CTA
+          Bespoke offerings
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative py-36 md:py-44 overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=2000&q=80')`,
           }}
         >
-          <div className="absolute inset-0 bg-black/65" />
+          <div className="absolute inset-0 bg-black/70" />
         </div>
         
-        <ScrollReveal>
+        <ScrollReveal delay={100}>
           <div className="relative z-10 max-w-3xl mx-auto text-center px-8">
-            <p className="text-phileon-gold text-xs tracking-[0.3em] uppercase mb-6">Bespoke</p>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.08em] text-phileon-ivory leading-tight">
+            <p className="text-phileon-gold/70 text-[10px] tracking-[0.35em] uppercase mb-6">Bespoke</p>
+            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl tracking-[0.06em] text-phileon-ivory/90 leading-tight font-light">
               Create Something<br />Uniquely Yours
             </h2>
-            <p className="mt-10 text-phileon-ivory-muted leading-relaxed">
+            <p className="mt-8 text-phileon-ivory/50 leading-relaxed font-light">
               From engagement rings that capture your love story to heirloom pieces 
               that carry generations of meaning—our artisans bring your vision to life.
             </p>
-            <div className="mt-14 flex flex-col sm:flex-row gap-5 justify-center">
+            <div className="mt-12 flex flex-col sm:flex-row gap-5 justify-center">
               <Link 
                 to="/custom-design" 
-                className="px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/90 hover:scale-[1.02]"
+                className="px-8 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:brightness-110"
               >
                 Begin a Custom Piece
               </Link>
