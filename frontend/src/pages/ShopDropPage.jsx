@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { Heart, Filter, Eye, EyeOff } from 'lucide-react';
 import { publicApi } from '../lib/api';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -291,77 +291,65 @@ const ShopDropPage = () => {
                 key={product.id}
                 className={`shop-drop__card ${visibleProducts.includes(index) ? 'is-visible' : ''} ${isSoldOut ? 'shop-drop__card--sold-out' : ''}`}
                 style={{ transitionDelay: `${index * 80}ms` }}
+                data-testid={`product-card-${product.slug}`}
               >
-                <div className="relative">
-                  {/* Wishlist Heart Button */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggle(product.id);
-                    }}
-                    className="absolute top-3 right-3 z-20 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full transition-all duration-200 backdrop-blur-sm"
-                    title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                  >
-                    <Heart 
-                      className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
-                    />
-                  </button>
-                  
-                  <Link to={product.href || `/piece/${product.slug}`} className="shop-drop__card-link">
-                    <div className="shop-drop__card-image relative">
-                      {/* DROP MODE BADGES - PROMINENTLY DISPLAYED */}
-                      <div className="absolute top-3 left-3 z-10 space-y-2">
-                        {/* SOLD OUT BADGE - Most Prominent */}
-                        {isSoldOut && (
-                          <div className="badge badge-soldout bg-red-600 text-white px-3 py-1 rounded-full font-bold text-sm animate-pulse">
-                            SOLD OUT
-                          </div>
-                        )}
-                        
-                        {/* LOW STOCK BADGE */}
-                        {isLowStock && !isSoldOut && (
-                          <div className="badge badge-warning bg-orange-500 text-white px-3 py-1 rounded-full font-bold text-sm animate-pulse">
-                            ONLY {inventoryCount} LEFT
-                          </div>
-                        )}
-                        
-                        {/* BESTSELLER */}
-                        {product.is_bestseller && (
-                          <div className="badge badge-gold bg-yellow-500 text-black px-3 py-1 rounded-full font-bold text-sm">
-                            BESTSELLER
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Sold Out Overlay */}
+                {/* Wishlist Heart Button - positioned outside Link to prevent navigation */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggle(product.id);
+                  }}
+                  className="shop-drop__wishlist-btn"
+                  title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                  <Heart 
+                    className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
+                  />
+                </button>
+
+                {/* ENTIRE CARD IS A LINK */}
+                <Link 
+                  to={`/products/${product.slug}`}
+                  className="shop-drop__card-link"
+                >
+                  <div className="shop-drop__card-image">
+                    {/* DROP MODE BADGES */}
+                    <div className="shop-drop__badges">
                       {isSoldOut && (
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10">
-                          <div className="bg-red-600/90 text-white px-6 py-3 rounded-lg font-bold text-lg backdrop-blur-sm">
-                            SOLD OUT
-                          </div>
-                        </div>
+                        <div className="badge badge-soldout">SOLD OUT</div>
                       )}
-                      
-                      <img 
-                        src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
-                        alt={product.name}
-                        loading="lazy"
-                        className={isSoldOut ? 'grayscale' : ''}
-                      />
+                      {isLowStock && !isSoldOut && (
+                        <div className="badge badge-warning">ONLY {inventoryCount} LEFT</div>
+                      )}
+                      {product.is_bestseller && (
+                        <div className="badge badge-gold">BESTSELLER</div>
+                      )}
                     </div>
-                  </Link>
+                    
+                    {/* Sold Out Overlay */}
+                    {isSoldOut && (
+                      <div className="shop-drop__sold-overlay">
+                        <span>SOLD OUT</span>
+                      </div>
+                    )}
+                    
+                    <img 
+                      src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
+                      alt={product.name}
+                      loading="lazy"
+                      className={isSoldOut ? 'grayscale' : ''}
+                    />
+                  </div>
                   
-                  <Link to={product.href || `/products/${product.slug}`} className="shop-drop__card-info-link">
-                    <div className="shop-drop__card-info">
-                      <h3 className="shop-drop__card-name">{product.name}</h3>
-                      <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                      {product.price_range && (
-                        <p className="shop-drop__card-price">{product.price_range}</p>
-                      )}
-                    </div>
-                  </Link>
-                </div>
+                  <div className="shop-drop__card-info">
+                    <h3 className="shop-drop__card-name">{product.name}</h3>
+                    <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                    {product.price_range && (
+                      <p className="shop-drop__card-price">{product.price_range}</p>
+                    )}
+                  </div>
+                </Link>
               </article>
             );
           })}

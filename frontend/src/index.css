@@ -990,10 +990,10 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 /* Product Card */
 .shop-drop__card {
+  position: relative;
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
-  cursor: pointer;
 }
 
 .shop-drop__card.is-visible {
@@ -1005,6 +1005,27 @@ input:focus, textarea:focus, select:focus, button:focus {
   box-shadow: 0 12px 40px rgba(199, 162, 75, 0.12);
 }
 
+/* Wishlist button - positioned absolutely over card but outside link */
+.shop-drop__wishlist-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.shop-drop__wishlist-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Card Link - covers entire card for clickability */
 .shop-drop__card-link {
   display: block;
   text-decoration: none;
@@ -1028,6 +1049,66 @@ input:focus, textarea:focus, select:focus, button:focus {
 .shop-drop__card-link:hover .shop-drop__card-image img {
   transform: scale(1.05);
   filter: brightness(0.9);
+}
+
+/* Badges container - pointer-events none so clicks pass through */
+.shop-drop__badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.shop-drop__badges .badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.shop-drop__badges .badge-soldout {
+  background: #dc2626;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.shop-drop__badges .badge-warning {
+  background: #f97316;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.shop-drop__badges .badge-gold {
+  background: #eab308;
+  color: black;
+}
+
+/* Sold out overlay - pointer-events none so clicks pass through */
+.shop-drop__sold-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.shop-drop__sold-overlay span {
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  backdrop-filter: blur(4px);
 }
 
 .shop-drop__card-info-link {
