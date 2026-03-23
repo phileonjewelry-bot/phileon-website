@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ProductGallery from "../components/ProductGallery";
 import ProductLayout, {
   ProductInfoSection,
@@ -9,277 +9,285 @@ import { products } from "../data/products";
 
 export default function AlejandraHeelsPage() {
   const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
+
+  // ========== METAL OPTIONS (7 variants) ==========
+  const metalOptions = useMemo(() => [
+    {
+      id: 'silver',
+      name: 'Silver',
+      shortName: 'Silver',
+      category: 'Silver',
+      price: 1250,
+      currency: 'CAD',
+      swatchColor: '#C0C0C0', // Silver/neutral gray
+      galleryIndex: 1, // Sterling Silver image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
+    },
+    {
+      id: 'white-10k',
+      name: '10K White Gold',
+      shortName: 'White 10K',
+      category: '10K Gold',
+      price: 2450,
+      currency: 'CAD',
+      swatchColor: '#F5F5F0', // White gold / soft champagne-white
+      galleryIndex: 2, // White Gold image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+    },
+    {
+      id: 'rose-10k',
+      name: '10K Rose Gold',
+      shortName: 'Rose 10K',
+      category: '10K Gold',
+      price: 2450,
+      currency: 'CAD',
+      swatchColor: '#B76E79', // Rose gold
+      galleryIndex: 4, // Rose Gold image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+    },
+    {
+      id: 'yellow-10k',
+      name: '10K Yellow Gold',
+      shortName: 'Yellow 10K',
+      category: '10K Gold',
+      price: 2450,
+      currency: 'CAD',
+      swatchColor: '#D4AF37', // Yellow gold
+      galleryIndex: 3, // Yellow Gold image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+    },
+    {
+      id: 'white-14k',
+      name: '14K White Gold',
+      shortName: 'White 14K',
+      category: '14K Gold',
+      price: 3250,
+      currency: 'CAD',
+      swatchColor: '#FAF9F6', // Slightly richer white tone
+      galleryIndex: 2, // White Gold image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+    },
+    {
+      id: 'rose-14k',
+      name: '14K Rose Gold',
+      shortName: 'Rose 14K',
+      category: '14K Gold',
+      price: 3250,
+      currency: 'CAD',
+      swatchColor: '#C4756E', // Rose gold (slightly darker for 14K)
+      galleryIndex: 4, // Rose Gold image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+    },
+    {
+      id: 'yellow-14k',
+      name: '14K Yellow Gold',
+      shortName: 'Yellow 14K',
+      category: '14K Gold',
+      price: 3250,
+      currency: 'CAD',
+      swatchColor: '#CFB53B', // Yellow gold (slightly richer for 14K)
+      galleryIndex: 3, // Yellow Gold image
+      heroImage: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+    },
+  ], []);
+
+  // State for selected metal (default: Silver)
+  const [selectedMetalId, setSelectedMetalId] = useState('silver');
   
-  // Metal color to gradient swatch mapping
-  const metalSwatchGradients = {
-    Silver: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
-    White: "linear-gradient(135deg, #f5f5f5 0%, #cfcfcf 100%)",
-    Yellow: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
-    Rose: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)"
-  };
-
-  // Metal color to gallery index mapping (video is index 0, images start at 1)
-  const metalGalleryIndex = {
-    Silver: 1,
-    White: 2,
-    Yellow: 3,
-    Rose: 4
-  };
-
-  // Configuration options
-  const metalOptions = {
-    silver: [
-      { name: "Sterling Silver", key: "silver", color: "Silver", price: products.alejandraHeels.pricing.silver.cubic }
-    ],
-    plated: [
-      { name: "Yellow Gold Plated Silver", key: "platedYellow", color: "Yellow", price: products.alejandraHeels.pricing.plated.yellowCubic },
-      { name: "Rose Gold Plated Silver", key: "platedRose", color: "Rose", price: products.alejandraHeels.pricing.plated.roseCubic }
-    ],
-    solid10k: [
-      { name: "10K White Gold", key: "solid10kWhite", color: "White", price: products.alejandraHeels.pricing.solid10k.whiteLab },
-      { name: "10K Yellow Gold", key: "solid10kYellow", color: "Yellow", price: products.alejandraHeels.pricing.solid10k.yellowLab },
-      { name: "10K Rose Gold", key: "solid10kRose", color: "Rose", price: products.alejandraHeels.pricing.solid10k.roseLab }
-    ],
-    solid14k: [
-      { name: "14K White Gold", key: "solid14kWhite", color: "White", price: products.alejandraHeels.pricing.solid14k.whiteLab },
-      { name: "14K Yellow Gold", key: "solid14kYellow", color: "Yellow", price: products.alejandraHeels.pricing.solid14k.yellowLab },
-      { name: "14K Rose Gold", key: "solid14kRose", color: "Rose", price: products.alejandraHeels.pricing.solid14k.roseLab }
-    ]
-  };
-
-  const stoneOptions = [
-    { name: "Cubic Zirconia", label: "Cubic", key: "cubic", tiers: ["silver", "plated"] },
-    { name: "Lab Diamonds", label: "Lab Diamonds", key: "lab", tiers: ["solid10k", "solid14k"] }
-  ];
-
-  // State
-  const [selectedStone, setSelectedStone] = useState(stoneOptions[0]); // Default: Cubic
-  const [selectedTier, setSelectedTier] = useState("silver"); // Default tier for Cubic
-  const [selectedMetal, setSelectedMetal] = useState(metalOptions.silver[0]); // Default: Sterling Silver
-  const [currentSlide, setCurrentSlide] = useState(1); // Track current gallery slide (start at 1, silver image)
-
-  // Calculate current price
-  const currentPrice = selectedMetal.price;
-
-  // Handle stone type change
-  const handleStoneChange = (stone) => {
-    setSelectedStone(stone);
-    // Switch to appropriate tier
-    const defaultTier = stone.tiers[0];
-    setSelectedTier(defaultTier);
-    const newMetal = metalOptions[defaultTier][0];
-    setSelectedMetal(newMetal);
-    // Switch to corresponding gallery image
-    const galleryIndex = metalGalleryIndex[newMetal.color];
-    setCurrentSlide(galleryIndex);
-  };
-
-  // Handle tier change (for solid gold: 10K vs 14K)
-  const handleTierChange = (tier) => {
-    setSelectedTier(tier);
-    const newMetal = metalOptions[tier][0];
-    setSelectedMetal(newMetal);
-    // Switch to corresponding gallery image
-    const galleryIndex = metalGalleryIndex[newMetal.color];
-    setCurrentSlide(galleryIndex);
-  };
-
-  // Handle metal change within tier
-  const handleMetalChange = (metal) => {
-    setSelectedMetal(metal);
-    // Switch to corresponding gallery image
-    const galleryIndex = metalGalleryIndex[metal.color];
-    setCurrentSlide(galleryIndex);
-  };
-
-  // Handle add to cart with micro-interaction
-  const handleAddToCart = () => {
-    addWithAnimation({
-      id: "alejandra-heels",
-      name: `${products.alejandraHeels.name} - ${selectedMetal.name}`,
-      slug: "alejandra-heels",
-      price: currentPrice,
-      image: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ctwrb3no_1000140403.jpg",
-      images: ["https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ctwrb3no_1000140403.jpg"],
-      materials: [selectedMetal.name, selectedStone.name]
-    }, 1, `${selectedMetal.name} / ${selectedStone.name}`);
-  };
+  // Get current selection
+  const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
 
   // Gallery items
-  const galleryItems = React.useMemo(() => [
+  const galleryItems = useMemo(() => [
     {
       type: "video",
       src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
-      alt: "Alejandra Heels - Product Video",
-      objectFit: "contain", // Use contain to show full product without cropping
+      alt: "Alejandra Heels Earrings - Product Video",
+      objectFit: "contain",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
-      alt: "Alejandra Heels - Sterling Silver",
+      alt: "Alejandra Heels Earrings - Sterling Silver",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
-      alt: "Alejandra Heels - White Gold",
+      alt: "Alejandra Heels Earrings - White Gold",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
-      alt: "Alejandra Heels - Yellow Gold",
+      alt: "Alejandra Heels Earrings - Yellow Gold",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
-      alt: "Alejandra Heels - Rose Gold",
+      alt: "Alejandra Heels Earrings - Rose Gold",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/cvvwbdch_1000140396.jpg",
-      alt: "Alejandra Heels - Rose Gold Detail with Diamonds",
+      alt: "Alejandra Heels Earrings - Rose Gold Detail with Diamonds",
     },
   ], []);
+
+  // Preload hero images for instant switching
+  useEffect(() => {
+    const preloadImages = metalOptions.map(m => m.heroImage).filter(Boolean);
+    const uniqueImages = [...new Set(preloadImages)];
+    
+    uniqueImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [metalOptions]);
+
+  // Format price
+  const formatPrice = (price, currency) => {
+    return new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  // Handle add to cart
+  const handleAddToCart = () => {
+    addWithAnimation({
+      id: `alejandra-heels-${selectedMetal.id}`,
+      name: 'Alejandra Heels Earrings',
+      slug: 'alejandra-heels',
+      price: selectedMetal.price,
+      image: selectedMetal.heroImage,
+      images: [selectedMetal.heroImage],
+      materials: [selectedMetal.name]
+    }, 1, selectedMetal.name);
+  };
+
+  // Group metals by category for display
+  const silverOptions = metalOptions.filter(m => m.category === 'Silver');
+  const gold10kOptions = metalOptions.filter(m => m.category === '10K Gold');
+  const gold14kOptions = metalOptions.filter(m => m.category === '14K Gold');
 
   return (
     <div className="min-h-screen bg-black text-white">
       <ProductLayout
-        gallery={<ProductGallery items={galleryItems} initialSlide={currentSlide} />}
+        gallery={<ProductGallery items={galleryItems} initialSlide={selectedMetal.galleryIndex} key={selectedMetal.id} />}
         purchasePanel={
           <>
             <ProductInfoSection
-              titleTag="Heel Earrings"
-              title={products.alejandraHeels.name}
+              titleTag="Statement Earrings"
+              title="Alejandra Heels Earrings"
             >
               <p className="text-white/60 leading-relaxed">
-                {products.alejandraHeels.description}
+                {products.alejandraHeels?.description || "Sculptural heel-inspired earrings that command attention with every step."}
               </p>
 
-              <p className="text-[#C6A24A] text-lg font-light leading-relaxed mt-4">
-                {products.alejandraHeels.tagline}
+              <p className="text-[#C7A24B] text-lg font-light leading-relaxed mt-4">
+                {products.alejandraHeels?.tagline || "Walk in elegance. Dance in light."}
               </p>
             </ProductInfoSection>
 
             <ProductInfoSection
-              titleTag="Available Options"
-              title="Configure your earrings"
+              titleTag="Select Metal"
+              title="Choose your finish"
             >
-              <p className="text-white/60 text-sm leading-relaxed mt-2">
-                Choose your stone type, then select your metal finish.
-              </p>
-
-              {/* Stone Type Selector */}
-              <div className="mt-6">
-                <p className="text-white/70 text-sm tracking-wide mb-3">Step 1: Choose your stone type</p>
-                <div className="grid grid-cols-2 gap-3 text-sm text-white/70">
-                  {stoneOptions.map((stone) => (
-                    <button
-                      key={stone.key}
-                      onClick={() => handleStoneChange(stone)}
-                      className={[
-                        "rounded-xl border p-4 text-center transition-all cursor-pointer",
-                        selectedStone.key === stone.key
-                          ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
-                          : "border-white/10 bg-white/5 hover:border-white/30",
-                      ].join(" ")}
-                    >
-                      <p className="text-white/50 text-xs tracking-[0.35em] uppercase">{stone.label}</p>
-                      <p className="mt-2 text-white text-base font-light">{stone.name}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Karat Selector (for Solid Gold only) */}
-              {selectedStone.key === "lab" && (
-                <div className="mt-6">
-                  <p className="text-white/70 text-sm tracking-wide mb-3">Step 2: Choose your gold karat</p>
-                  <div className="grid grid-cols-2 gap-3 text-sm text-white/70">
-                    <button
-                      onClick={() => handleTierChange("solid10k")}
-                      className={[
-                        "rounded-xl border p-4 text-center transition-all cursor-pointer",
-                        selectedTier === "solid10k"
-                          ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
-                          : "border-white/10 bg-white/5 hover:border-white/30",
-                      ].join(" ")}
-                    >
-                      <p className="text-white/50 text-xs tracking-[0.35em] uppercase">10 Karat</p>
-                      <p className="mt-2 text-white text-base font-light">10K Gold</p>
-                    </button>
-                    <button
-                      onClick={() => handleTierChange("solid14k")}
-                      className={[
-                        "rounded-xl border p-4 text-center transition-all cursor-pointer",
-                        selectedTier === "solid14k"
-                          ? "border-[#C6A24A]/70 bg-[#C6A24A]/10"
-                          : "border-white/10 bg-white/5 hover:border-white/30",
-                      ].join(" ")}
-                    >
-                      <p className="text-white/50 text-xs tracking-[0.35em] uppercase">14 Karat</p>
-                      <p className="mt-2 text-white text-base font-light">14K Gold</p>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Metal Color Selector with Swatches */}
-              <div className="mt-6">
-                <p className="text-white/70 text-sm tracking-wide mb-4">
-                  {selectedStone.key === "lab" ? "Step 3: Choose your gold color" : "Step 2: Choose your finish"}
-                </p>
-                
-                {/* Circular Metal Swatches */}
-                <div className="flex flex-wrap gap-4">
-                  {metalOptions[selectedTier].map((metal) => (
-                    <button
-                      key={metal.key}
-                      onClick={() => handleMetalChange(metal)}
-                      className="flex flex-col items-center gap-2 group"
-                      data-testid={`metal-swatch-${metal.color.toLowerCase()}`}
-                    >
-                      {/* Circular Gradient Swatch */}
-                      <div
-                        className={[
-                          "w-7 h-7 rounded-full border-2 transition-all duration-300",
-                          selectedMetal.key === metal.key
-                            ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/40"
-                            : "border-white/30 group-hover:border-white/50 group-hover:scale-105",
-                        ].join(" ")}
-                        style={{ 
-                          background: metalSwatchGradients[metal.color],
-                        }}
-                      />
-                      {/* Label */}
-                      <span className={[
-                        "text-xs tracking-wider transition-colors duration-300 text-center",
-                        selectedMetal.key === metal.key
-                          ? "text-[#C6A24A] font-medium"
-                          : "text-white/60 group-hover:text-white/80"
-                      ].join(" ")}>
-                        {metal.color}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Price Display */}
-              <div className="mt-6 rounded-xl border border-[#C6A24A]/30 bg-[#C6A24A]/5 p-4">
-                <div className="flex items-baseline justify-between">
-                  <div>
-                    <p className="text-white/50 text-xs tracking-[0.35em] uppercase">Your Configuration</p>
-                    <p className="mt-1 text-white/80 text-sm">{selectedMetal.name} · {selectedStone.name}</p>
+              <div className="mb-6">
+                <p className="text-3xl font-light text-[#C7A24B]" data-testid="product-price">
+                  {formatPrice(selectedMetal.price, selectedMetal.currency)}
+                </p>
+              </div>
+
+              {/* Visual Swatch Selector */}
+              <div className="space-y-6" data-testid="swatch-selector">
+                {/* Silver Group */}
+                <div className="swatch-group">
+                  <p className="text-[10px] tracking-[0.25em] text-white/40 uppercase mb-3">
+                    Silver
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    {silverOptions.map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => setSelectedMetalId(option.id)}
+                        className={`swatch-button ${selectedMetalId === option.id ? 'selected' : ''}`}
+                        data-testid={`swatch-${option.id}`}
+                        title={option.name}
+                        aria-label={option.name}
+                      >
+                        <span 
+                          className="swatch-color"
+                          style={{ backgroundColor: option.swatchColor }}
+                        />
+                      </button>
+                    ))}
                   </div>
-                  <p className="text-2xl font-light text-[#C6A24A]">${currentPrice.toLocaleString()}</p>
+                </div>
+
+                {/* 10K Gold Group */}
+                <div className="swatch-group">
+                  <p className="text-[10px] tracking-[0.25em] text-white/40 uppercase mb-3">
+                    10K Gold
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    {gold10kOptions.map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => setSelectedMetalId(option.id)}
+                        className={`swatch-button ${selectedMetalId === option.id ? 'selected' : ''}`}
+                        data-testid={`swatch-${option.id}`}
+                        title={option.name}
+                        aria-label={option.name}
+                      >
+                        <span 
+                          className="swatch-color"
+                          style={{ backgroundColor: option.swatchColor }}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 14K Gold Group */}
+                <div className="swatch-group">
+                  <p className="text-[10px] tracking-[0.25em] text-white/40 uppercase mb-3">
+                    14K Gold
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    {gold14kOptions.map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => setSelectedMetalId(option.id)}
+                        className={`swatch-button ${selectedMetalId === option.id ? 'selected' : ''}`}
+                        data-testid={`swatch-${option.id}`}
+                        title={option.name}
+                        aria-label={option.name}
+                      >
+                        <span 
+                          className="swatch-color"
+                          style={{ backgroundColor: option.swatchColor }}
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* Selected Metal Label */}
+              <p className="mt-6 text-sm text-[#C7A24B] tracking-wide" data-testid="selected-metal-label">
+                {selectedMetal.name}
+              </p>
             </ProductInfoSection>
 
-            <div className="mt-6">
+            {/* Add to Cart Button */}
+            <div className="mt-8">
               <Button
                 onClick={handleAddToCart}
                 disabled={isAdding}
-                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
+                className={`w-full bg-[#C7A24B] hover:bg-[#B8944A] text-black font-semibold py-6 rounded-sm tracking-wide transition-all duration-300 ${isAdding ? 'bg-green-600 hover:bg-green-600' : ''}`}
                 data-testid="add-to-cart-button"
               >
                 {buttonText}
@@ -289,6 +297,50 @@ export default function AlejandraHeelsPage() {
         }
         stickyOffset={36}
       />
+
+      <style>{`
+        /* Swatch Button Styles */
+        .swatch-button {
+          width: 44px;
+          height: 44px;
+          padding: 3px;
+          background: transparent;
+          border: 2px solid transparent;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .swatch-button:hover {
+          border-color: rgba(199, 162, 75, 0.4);
+        }
+
+        .swatch-button.selected {
+          border-color: #C7A24B;
+        }
+
+        .swatch-color {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          display: block;
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mobile Centering */
+        @media (max-width: 768px) {
+          .swatch-group {
+            text-align: center;
+          }
+          
+          .swatch-group > div {
+            justify-content: center;
+          }
+        }
+      `}</style>
     </div>
   );
 }
