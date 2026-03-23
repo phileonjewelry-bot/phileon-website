@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Heart, Filter, Eye, EyeOff } from 'lucide-react';
 import { publicApi } from '../lib/api';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -149,20 +149,10 @@ const DROP_PRODUCTS = [
 
 const ShopDropPage = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [hideSoldOut, setHideSoldOut] = useState(false); // DEFAULT OFF for hype
   const { has, toggle } = useWishlist();
-
-  // Handle card click - backup navigation
-  const handleCardClick = (e, slug) => {
-    // Don't navigate if clicking on wishlist button
-    if (e.target.closest('.shop-drop__wishlist-btn')) {
-      return;
-    }
-    navigate(`/products/${slug}`);
-  };
 
   // Get filter params from URL
   const categoryParam = searchParams.get('category');
@@ -293,12 +283,16 @@ const ShopDropPage = () => {
           {filteredProducts.map((product, index) => {
             const inventoryCount = product.inventory_count || product.stock || 0;
             const isSoldOut = inventoryCount === 0;
+            const productUrl = product.href || `/products/${product.slug}`;
             
             return (
               <div 
                 key={product.id}
                 className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
-                style={{ transitionDelay: `${index * 80}ms` }}
+                style={{ 
+                  position: 'relative',
+                  transitionDelay: `${index * 80}ms` 
+                }}
               >
                 {/* Wishlist - Outside the link */}
                 <button
@@ -307,7 +301,18 @@ const ShopDropPage = () => {
                     e.stopPropagation();
                     toggle(product.id);
                   }}
-                  className="shop-drop__wishlist-btn"
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    zIndex: 100,
+                    padding: '8px',
+                    background: 'rgba(0, 0, 0, 0.4)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    color: 'white',
+                    cursor: 'pointer',
+                  }}
                   title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                 >
                   <Heart 
@@ -315,30 +320,45 @@ const ShopDropPage = () => {
                   />
                 </button>
 
-                {/* SIMPLE CLICKABLE CARD - No overlays inside */}
-                <Link 
-                  to={`/products/${product.slug}`}
-                  className="shop-drop__card"
+                {/* NATIVE ANCHOR TAG - Full card clickable */}
+                <a 
+                  href={productUrl}
+                  style={{
+                    display: 'block',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    cursor: 'pointer',
+                  }}
                   data-testid={`product-card-${product.slug}`}
                 >
-                  <div className="shop-drop__card-image">
+                  <div style={{
+                    position: 'relative',
+                    aspectRatio: '4/5',
+                    overflow: 'hidden',
+                    background: '#111',
+                  }}>
                     <img 
                       src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
                       alt={product.name}
                       loading="lazy"
-                      className={isSoldOut ? 'grayscale' : ''}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        filter: isSoldOut ? 'grayscale(1)' : 'none',
+                      }}
                       draggable="false"
                     />
                   </div>
                   
-                  <div className="shop-drop__card-info">
+                  <div style={{ padding: '16px 0' }}>
                     <h3 className="shop-drop__card-name">{product.name}</h3>
                     <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                     {product.price_range && (
                       <p className="shop-drop__card-price">{product.price_range}</p>
                     )}
                   </div>
-                </Link>
+                </a>
               </div>
             );
           })}
