@@ -18,13 +18,15 @@ export default function LaMarvaFlagship() {
           
           {/* LEFT: Large dominant ring image (60-70% width) */}
           <div className="w-full lg:w-[65%] flex-shrink-0">
-            <div className="relative overflow-hidden rounded-2xl border border-white/10">
-              <img
-                src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
-                alt="La Marva Ring"
-                className="w-full h-auto object-cover"
-              />
-            </div>
+            <Link to="/products/la-marva" className="block group">
+              <div className="relative overflow-hidden rounded-2xl border border-white/10">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
+                  alt="La Marva Ring"
+                  className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                />
+              </div>
+            </Link>
           </div>
 
           {/* RIGHT: Minimal text block (30-40% width) */}
