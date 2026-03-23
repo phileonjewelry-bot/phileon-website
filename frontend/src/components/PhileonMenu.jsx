@@ -28,6 +28,7 @@ const menuCategories = [
       { name: 'Forme Cuff', path: '/products/forme-cuff' },
       { name: 'La Marva', path: '/products/la-marva' },
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
+      { name: 'Rhythm Mesh™ Ring', path: '/products/rhythm-mesh-ring' },
     ]
   },
 ];

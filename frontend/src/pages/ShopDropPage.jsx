@@ -114,6 +114,19 @@ const CORE_PRODUCTS = [
     category: 'bracelets',
     audience: 'ladies',
   },
+  {
+    id: 'rhythm-mesh-ring',
+    name: 'Rhythm Mesh™ Ring',
+    slug: 'rhythm-mesh-ring',
+    materialLine: 'Statement Ring · Silver & 10K White Gold',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg',
+    href: '/products/rhythm-mesh-ring',
+    price_range: 'From $1,450 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: 'unisex',
+  },
 ];
 
 // Additional drop products as fallback
