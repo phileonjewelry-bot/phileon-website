@@ -93,14 +93,8 @@ const AlejandraHeelsPage = () => {
   // Get current selection
   const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
 
-  // ========== GALLERY ITEMS ==========
+  // ========== GALLERY ITEMS (Images Only) ==========
   const galleryItems = useMemo(() => [
-    {
-      type: "video",
-      src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4",
-      alt: "Alejandra Heels Earrings - Product Video",
-      objectFit: "contain",
-    },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
@@ -186,30 +180,14 @@ const AlejandraHeelsPage = () => {
         </div>
       </section>
 
-      {/* SECTION 2 — VIDEO */}
-      <section className="alejandra-video-section">
-        <div className="alejandra-video-container">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            controls={false}
-            className="w-full max-w-5xl rounded-lg"
-          >
-            <source src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </section>
-
-      {/* SECTION 3 — GALLERY (Horizontal Scrolling) */}
+      {/* SECTION 2 — GALLERY (Still Images Only) */}
       <section className="alejandra-gallery-section">
         <div className="alejandra-gallery-container">
           <ProductGallery key={selectedMetal.galleryType} items={galleryItems} />
         </div>
       </section>
 
-      {/* SECTION 4 — PRODUCT DETAILS & SWATCH SELECTOR */}
+      {/* SECTION 3 — PRODUCT DETAILS & SWATCH SELECTOR */}
       <section className="alejandra-product-section">
         <div className="alejandra-product-layout">
           {/* Product Image */}
@@ -321,7 +299,7 @@ const AlejandraHeelsPage = () => {
         </div>
       </section>
 
-      {/* SECTION 5 — DESCRIPTION */}
+      {/* SECTION 3 — DESCRIPTION */}
       <section className="alejandra-description-section">
         <div className="alejandra-description-content">
           <h2 className="alejandra-description-title">Miniature Masterpiece</h2>
@@ -382,25 +360,6 @@ const AlejandraHeelsPage = () => {
           color: rgba(255, 255, 255, 0.85);
           font-weight: 300;
           text-transform: uppercase;
-        }
-
-        /* ========== VIDEO SECTION ========== */
-        .alejandra-video-section {
-          background: #000;
-          padding: 80px 24px;
-        }
-
-        .alejandra-video-container {
-          max-width: 1024px;
-          margin: 0 auto;
-        }
-
-        .alejandra-video {
-          width: 100%;
-          height: auto;
-          display: block;
-          border-radius: 12px;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         /* ========== GALLERY SECTION ========== */
@@ -618,14 +577,6 @@ const AlejandraHeelsPage = () => {
 
           .alejandra-hero-title {
             letter-spacing: 0.15em;
-          }
-
-          .alejandra-video-section {
-            padding: 60px 16px;
-          }
-
-          .alejandra-video {
-            border-radius: 8px;
           }
 
           .alejandra-gallery-section {
