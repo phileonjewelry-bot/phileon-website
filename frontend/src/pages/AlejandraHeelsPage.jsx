@@ -24,7 +24,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'silver',
       name: 'Silver',
-      shortName: 'Silver',
       category: 'Silver',
       price: 1250,
       currency: 'CAD',
@@ -34,7 +33,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'white-10k',
       name: '10K White Gold',
-      shortName: 'White 10K',
       category: '10K Gold',
       price: 2450,
       currency: 'CAD',
@@ -44,7 +42,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'rose-10k',
       name: '10K Rose Gold',
-      shortName: 'Rose 10K',
       category: '10K Gold',
       price: 2450,
       currency: 'CAD',
@@ -54,7 +51,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'yellow-10k',
       name: '10K Yellow Gold',
-      shortName: 'Yellow 10K',
       category: '10K Gold',
       price: 2450,
       currency: 'CAD',
@@ -64,7 +60,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'white-14k',
       name: '14K White Gold',
-      shortName: 'White 14K',
       category: '14K Gold',
       price: 3250,
       currency: 'CAD',
@@ -74,7 +69,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'rose-14k',
       name: '14K Rose Gold',
-      shortName: 'Rose 14K',
       category: '14K Gold',
       price: 3250,
       currency: 'CAD',
@@ -84,7 +78,6 @@ const AlejandraHeelsPage = () => {
     {
       id: 'yellow-14k',
       name: '14K Yellow Gold',
-      shortName: 'Yellow 14K',
       category: '14K Gold',
       price: 3250,
       currency: 'CAD',
@@ -93,16 +86,12 @@ const AlejandraHeelsPage = () => {
     },
   ], []);
 
-  // State for selected metal (default: Silver)
+  // State
   const [selectedMetalId, setSelectedMetalId] = useState('silver');
-  
-  // Add to Cart hook
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   
   // Get current selection
   const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
-
-  // Get gallery images based on selected metal's galleryType
   const currentGalleryImages = metalImageSets[selectedMetal.galleryType] || metalImageSets.silver;
 
   // Handle add to cart
@@ -117,7 +106,7 @@ const AlejandraHeelsPage = () => {
     }, 1, selectedMetal.name);
   };
 
-  // Preload all images for instant switching
+  // Preload all images
   useEffect(() => {
     Object.values(metalImageSets).flat().forEach(src => {
       const img = new Image();
@@ -143,15 +132,9 @@ const AlejandraHeelsPage = () => {
   return (
     <div className="alejandra-page" data-testid="alejandra-heels-page">
       
-      {/* ========== HERO VIDEO (ONE video only) ========== */}
-      <section className="alejandra-hero-video">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="alejandra-video"
-        >
+      {/* 1. HERO VIDEO */}
+      <section className="alejandra-hero">
+        <video autoPlay muted loop playsInline className="alejandra-hero-video">
           <source 
             src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4" 
             type="video/mp4" 
@@ -163,107 +146,111 @@ const AlejandraHeelsPage = () => {
         </div>
       </section>
 
-      {/* ========== PRODUCT INFO + METAL SELECTOR ========== */}
-      <section className="alejandra-product-section">
-        <div className="alejandra-product-container">
-          <p className="alejandra-eyebrow">Statement Earrings</p>
-          <h2 className="alejandra-title">ALEJANDRA HEELS</h2>
-          <p className="alejandra-price" data-testid="product-price">
-            {formatPrice(selectedMetal.price, selectedMetal.currency)}
-          </p>
-
-          {/* Metal Swatch Selector */}
-          <div className="alejandra-swatches" data-testid="swatch-selector">
-            {/* Silver */}
-            <div className="alejandra-swatch-group">
-              <span className="alejandra-swatch-label">Silver</span>
-              <div className="alejandra-swatch-row">
-                {silverOptions.map((opt) => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setSelectedMetalId(opt.id)}
-                    className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
-                    data-testid={`swatch-${opt.id}`}
-                    title={opt.name}
-                  >
-                    <span style={{ backgroundColor: opt.swatchColor }} />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 10K Gold */}
-            <div className="alejandra-swatch-group">
-              <span className="alejandra-swatch-label">10K Gold</span>
-              <div className="alejandra-swatch-row">
-                {gold10kOptions.map((opt) => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setSelectedMetalId(opt.id)}
-                    className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
-                    data-testid={`swatch-${opt.id}`}
-                    title={opt.name}
-                  >
-                    <span style={{ backgroundColor: opt.swatchColor }} />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 14K Gold */}
-            <div className="alejandra-swatch-group">
-              <span className="alejandra-swatch-label">14K Gold</span>
-              <div className="alejandra-swatch-row">
-                {gold14kOptions.map((opt) => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setSelectedMetalId(opt.id)}
-                    className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
-                    data-testid={`swatch-${opt.id}`}
-                    title={opt.name}
-                  >
-                    <span style={{ backgroundColor: opt.swatchColor }} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <p className="alejandra-selected-metal" data-testid="selected-metal-label">
-            {selectedMetal.name}
-          </p>
-
-          <p className="alejandra-description">
-            Sculptural miniature heels cast in precious metal and finished with a pavé strap.
-          </p>
-
-          <button
-            onClick={onAddToCart}
-            disabled={isAdding}
-            className={`alejandra-add-btn ${isAdding ? 'added' : ''}`}
-            data-testid="add-to-cart-button"
-          >
-            {buttonText}
-          </button>
-        </div>
+      {/* 2. PRODUCT TITLE */}
+      <section className="alejandra-title-section">
+        <p className="alejandra-eyebrow">Statement Earrings</p>
+        <h2 className="alejandra-product-title">ALEJANDRA HEELS</h2>
       </section>
 
-      {/* ========== IMAGE GALLERY (Metal-based, NO carousel) ========== */}
-      <section className="alejandra-gallery-section">
-        <div className="alejandra-gallery-grid" key={selectedMetal.galleryType}>
+      {/* 3. MAIN GALLERY (Metal-based) */}
+      <section className="alejandra-gallery" key={selectedMetal.galleryType}>
+        <div className="alejandra-gallery-grid">
           {currentGalleryImages.map((img, idx) => (
             <div key={idx} className="alejandra-gallery-item">
               <img 
                 src={img} 
                 alt={`${selectedMetal.name} - View ${idx + 1}`}
-                className="alejandra-gallery-image"
               />
             </div>
           ))}
         </div>
       </section>
 
-      {/* ========== STYLES ========== */}
+      {/* 4. METAL SWATCHES (Directly under gallery) */}
+      <section className="alejandra-swatches-section">
+        <div className="alejandra-swatches" data-testid="swatch-selector">
+          {/* Silver */}
+          <div className="alejandra-swatch-group">
+            <span className="alejandra-swatch-label">Silver</span>
+            <div className="alejandra-swatch-row">
+              {silverOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setSelectedMetalId(opt.id)}
+                  className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
+                  data-testid={`swatch-${opt.id}`}
+                  title={opt.name}
+                >
+                  <span style={{ backgroundColor: opt.swatchColor }} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 10K Gold */}
+          <div className="alejandra-swatch-group">
+            <span className="alejandra-swatch-label">10K Gold</span>
+            <div className="alejandra-swatch-row">
+              {gold10kOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setSelectedMetalId(opt.id)}
+                  className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
+                  data-testid={`swatch-${opt.id}`}
+                  title={opt.name}
+                >
+                  <span style={{ backgroundColor: opt.swatchColor }} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 14K Gold */}
+          <div className="alejandra-swatch-group">
+            <span className="alejandra-swatch-label">14K Gold</span>
+            <div className="alejandra-swatch-row">
+              {gold14kOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setSelectedMetalId(opt.id)}
+                  className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
+                  data-testid={`swatch-${opt.id}`}
+                  title={opt.name}
+                >
+                  <span style={{ backgroundColor: opt.swatchColor }} />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 5. SELECTED METAL LABEL */}
+        <p className="alejandra-selected-metal" data-testid="selected-metal-label">
+          {selectedMetal.name}
+        </p>
+
+        {/* 6. PRICE */}
+        <p className="alejandra-price" data-testid="product-price">
+          {formatPrice(selectedMetal.price, selectedMetal.currency)}
+        </p>
+
+        {/* 7. SHORT DESCRIPTION */}
+        <p className="alejandra-description">
+          Sculptural miniature heels cast in precious metal and finished with a pavé strap.
+        </p>
+
+        {/* 8. ADD TO CART */}
+        <button
+          onClick={onAddToCart}
+          disabled={isAdding}
+          className={`alejandra-add-btn ${isAdding ? 'added' : ''}`}
+          data-testid="add-to-cart-button"
+        >
+          {buttonText}
+        </button>
+      </section>
+
+      {/* STYLES */}
       <style>{`
         .alejandra-page {
           background: #000;
@@ -271,16 +258,16 @@ const AlejandraHeelsPage = () => {
           color: #fff;
         }
 
-        /* HERO VIDEO */
-        .alejandra-hero-video {
+        /* 1. HERO */
+        .alejandra-hero {
           position: relative;
           width: 100%;
-          height: 80vh;
-          min-height: 500px;
+          height: 75vh;
+          min-height: 450px;
           overflow: hidden;
         }
 
-        .alejandra-video {
+        .alejandra-hero-video {
           position: absolute;
           top: 50%;
           left: 50%;
@@ -295,7 +282,7 @@ const AlejandraHeelsPage = () => {
         .alejandra-hero-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
+          background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -306,54 +293,82 @@ const AlejandraHeelsPage = () => {
 
         .alejandra-hero-title {
           font-family: 'Playfair Display', serif;
-          font-size: clamp(36px, 8vw, 64px);
+          font-size: clamp(32px, 7vw, 56px);
           font-weight: 400;
           letter-spacing: 0.2em;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
           text-shadow: 0 2px 20px rgba(0,0,0,0.5);
         }
 
         .alejandra-hero-subtitle {
-          font-size: clamp(14px, 2vw, 18px);
+          font-size: clamp(12px, 1.8vw, 16px);
           letter-spacing: 0.15em;
-          color: rgba(255,255,255,0.8);
+          color: rgba(255,255,255,0.75);
           text-transform: uppercase;
         }
 
-        /* PRODUCT SECTION */
-        .alejandra-product-section {
-          padding: 80px 24px;
-          max-width: 600px;
-          margin: 0 auto;
+        /* 2. TITLE SECTION */
+        .alejandra-title-section {
           text-align: center;
+          padding: 60px 24px 40px;
         }
 
         .alejandra-eyebrow {
-          font-size: 11px;
+          font-size: 10px;
           letter-spacing: 0.3em;
-          color: rgba(199, 162, 75, 0.7);
+          color: rgba(199, 162, 75, 0.6);
           text-transform: uppercase;
           margin-bottom: 12px;
         }
 
-        .alejandra-title {
+        .alejandra-product-title {
           font-family: 'Playfair Display', serif;
-          font-size: 32px;
+          font-size: clamp(24px, 5vw, 36px);
           font-weight: 400;
-          letter-spacing: 0.15em;
-          margin-bottom: 16px;
+          letter-spacing: 0.12em;
         }
 
-        .alejandra-price {
-          font-size: 28px;
-          font-weight: 300;
-          color: #C7A24B;
-          margin-bottom: 32px;
+        /* 3. GALLERY */
+        .alejandra-gallery {
+          padding: 0 24px 50px;
+          max-width: 900px;
+          margin: 0 auto;
         }
 
-        /* SWATCHES */
+        .alejandra-gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 20px;
+        }
+
+        .alejandra-gallery-item {
+          aspect-ratio: 4/5;
+          overflow: hidden;
+          border-radius: 4px;
+          background: #111;
+        }
+
+        .alejandra-gallery-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+
+        .alejandra-gallery-item:hover img {
+          transform: scale(1.03);
+        }
+
+        /* 4-8. SWATCHES + PRODUCT INFO */
+        .alejandra-swatches-section {
+          max-width: 480px;
+          margin: 0 auto;
+          padding: 0 24px 100px;
+          text-align: center;
+        }
+
         .alejandra-swatches {
-          margin-bottom: 24px;
+          margin-bottom: 28px;
         }
 
         .alejandra-swatch-group {
@@ -362,22 +377,22 @@ const AlejandraHeelsPage = () => {
 
         .alejandra-swatch-label {
           display: block;
-          font-size: 10px;
+          font-size: 9px;
           letter-spacing: 0.25em;
-          color: rgba(255,255,255,0.4);
+          color: rgba(255,255,255,0.35);
           text-transform: uppercase;
-          margin-bottom: 12px;
+          margin-bottom: 10px;
         }
 
         .alejandra-swatch-row {
           display: flex;
           justify-content: center;
-          gap: 12px;
+          gap: 14px;
         }
 
         .alejandra-swatch {
-          width: 44px;
-          height: 44px;
+          width: 40px;
+          height: 40px;
           padding: 3px;
           background: transparent;
           border: 2px solid transparent;
@@ -403,27 +418,38 @@ const AlejandraHeelsPage = () => {
         }
 
         .alejandra-selected-metal {
-          font-size: 14px;
+          font-size: 13px;
           color: #C7A24B;
-          margin-bottom: 16px;
+          letter-spacing: 0.05em;
+          margin-bottom: 8px;
+        }
+
+        .alejandra-price {
+          font-size: 26px;
+          font-weight: 300;
+          color: #C7A24B;
+          margin-bottom: 20px;
         }
 
         .alejandra-description {
-          font-size: 13px;
-          color: rgba(255,255,255,0.5);
+          font-size: 12px;
+          color: rgba(255,255,255,0.45);
           font-style: italic;
           margin-bottom: 28px;
-          line-height: 1.6;
+          line-height: 1.7;
+          max-width: 320px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .alejandra-add-btn {
           width: 100%;
-          max-width: 320px;
-          padding: 18px 32px;
+          max-width: 300px;
+          padding: 16px 32px;
           background: #C7A24B;
           border: none;
           color: #000;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 600;
           letter-spacing: 0.2em;
           text-transform: uppercase;
@@ -439,54 +465,33 @@ const AlejandraHeelsPage = () => {
           background: #16a34a;
         }
 
-        /* GALLERY (Luxury Grid - No carousel) */
-        .alejandra-gallery-section {
-          padding: 40px 24px 100px;
-          max-width: 1000px;
-          margin: 0 auto;
-        }
-
-        .alejandra-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 24px;
-        }
-
-        .alejandra-gallery-item {
-          aspect-ratio: 4/5;
-          overflow: hidden;
-          border-radius: 4px;
-        }
-
-        .alejandra-gallery-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
-        }
-
-        .alejandra-gallery-item:hover .alejandra-gallery-image {
-          transform: scale(1.03);
-        }
-
         /* MOBILE */
         @media (max-width: 768px) {
-          .alejandra-hero-video {
-            height: 60vh;
-            min-height: 400px;
+          .alejandra-hero {
+            height: 55vh;
+            min-height: 380px;
           }
 
-          .alejandra-product-section {
-            padding: 60px 20px;
+          .alejandra-title-section {
+            padding: 48px 20px 32px;
           }
 
-          .alejandra-gallery-section {
-            padding: 20px 16px 80px;
+          .alejandra-gallery {
+            padding: 0 16px 40px;
           }
 
           .alejandra-gallery-grid {
             grid-template-columns: 1fr;
             gap: 16px;
+          }
+
+          .alejandra-swatches-section {
+            padding: 0 20px 80px;
+          }
+
+          .alejandra-swatch {
+            width: 38px;
+            height: 38px;
           }
         }
       `}</style>
