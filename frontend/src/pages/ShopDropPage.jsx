@@ -126,9 +126,10 @@ const CORE_PRODUCTS = [
     is_core: true,
     category: 'rings',
     audience: 'unisex',
-    // Lifestyle images for audience-specific displays
+    // Lifestyle images for audience-specific collection displays
     lifestyleImages: {
-      ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/3dwbzglo_1000143123.png',
+      ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/sgi718u0_1000143121.png',
+      'gentlemens-club': 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/sgi718u0_1000143121.png',
     },
   },
 ];
@@ -309,10 +310,16 @@ const ShopDropPage = () => {
             const productUrl = product.href || `/products/${product.slug}`;
             
             // Determine which image to display based on current audience filter
-            // Use lifestyle image if viewing Ladies collection and product has one
-            const displayImage = (audienceParam === 'ladies' && product.lifestyleImages?.ladies)
-              ? product.lifestyleImages.ladies
-              : (product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80');
+            // Use lifestyle image if viewing Ladies or Gents collection and product has one
+            let displayImage = product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
+            
+            if (audienceParam && product.lifestyleImages) {
+              if (audienceParam === 'ladies' && product.lifestyleImages.ladies) {
+                displayImage = product.lifestyleImages.ladies;
+              } else if (audienceParam === 'gentlemens-club' && product.lifestyleImages['gentlemens-club']) {
+                displayImage = product.lifestyleImages['gentlemens-club'];
+              }
+            }
             
             return (
               <div 
