@@ -1,23 +1,45 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
 
 const AlejandraHeelsPage = () => {
-  // ========== METAL-SPECIFIC IMAGE SETS ==========
-  const metalImageSets = useMemo(() => ({
-    silver: [
-      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
-    ],
-    white: [
-      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
-    ],
-    yellow: [
-      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
-    ],
-    rose: [
-      "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
-      "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/cvvwbdch_1000140396.jpg",
-    ],
-  }), []);
+  // ========== SHARED GALLERY IMAGES (all metals use the same set) ==========
+  // Structure: Video (if exists) -> Primary image -> Secondary images
+  const galleryItems = useMemo(() => [
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/mbasaxj6_1000140441.jpg",
+      alt: "Alejandra Heels - Silver",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/q0cdb9tx_1000140440.jpg",
+      alt: "Alejandra Heels - White Gold",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/ouebq651_1000140400.jpg",
+      alt: "Alejandra Heels - Yellow Gold",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_content-restore-8/artifacts/lghgq1oc_1000140403.jpg",
+      alt: "Alejandra Heels - Rose Gold View 1",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/cvvwbdch_1000140396.jpg",
+      alt: "Alejandra Heels - Rose Gold View 2",
+    },
+  ], []);
+
+  // Map metal galleryType to starting slide index
+  const metalToSlideIndex = {
+    silver: 0,
+    white: 1,
+    yellow: 2,
+    rose: 3,
+  };
 
   // ========== METAL OPTIONS (7 variants) ==========
   const metalOptions = useMemo(() => [
@@ -88,18 +110,28 @@ const AlejandraHeelsPage = () => {
 
   // State
   const [selectedMetalId, setSelectedMetalId] = useState('silver');
+  const [currentSlide, setCurrentSlide] = useState(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   
   // Get current selection
   const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
-  const currentGalleryImages = metalImageSets[selectedMetal.galleryType] || metalImageSets.silver;
+
+  // Handle metal change - update gallery to corresponding slide
+  const handleMetalChange = (metalId) => {
+    setSelectedMetalId(metalId);
+    const metal = metalOptions.find(m => m.id === metalId);
+    if (metal) {
+      const slideIndex = metalToSlideIndex[metal.galleryType] || 0;
+      setCurrentSlide(slideIndex);
+    }
+  };
 
   // Handle add to cart
   const onAddToCart = () => {
     handleAddToCart({
       id: `alejandra-heels-${selectedMetal.id}`,
       name: 'Alejandra Heels Earrings',
-      image: currentGalleryImages[0],
+      image: galleryItems[0].src,
       price: selectedMetal.price,
       slug: 'alejandra-heels',
       materials: [selectedMetal.name]
@@ -108,11 +140,11 @@ const AlejandraHeelsPage = () => {
 
   // Preload all images
   useEffect(() => {
-    Object.values(metalImageSets).flat().forEach(src => {
+    galleryItems.forEach(item => {
       const img = new Image();
-      img.src = src;
+      img.src = item.src;
     });
-  }, [metalImageSets]);
+  }, [galleryItems]);
 
   // Format price
   const formatPrice = (price, currency) => {
@@ -152,17 +184,10 @@ const AlejandraHeelsPage = () => {
         <h2 className="alejandra-product-title">ALEJANDRA HEELS</h2>
       </section>
 
-      {/* 3. MAIN GALLERY (Metal-based) */}
-      <section className="alejandra-gallery" key={selectedMetal.galleryType}>
-        <div className="alejandra-gallery-grid">
-          {currentGalleryImages.map((img, idx) => (
-            <div key={idx} className="alejandra-gallery-item">
-              <img 
-                src={img} 
-                alt={`${selectedMetal.name} - View ${idx + 1}`}
-              />
-            </div>
-          ))}
+      {/* 3. MAIN GALLERY - Uses ProductGallery component */}
+      <section className="alejandra-gallery-section">
+        <div className="alejandra-gallery-container">
+          <ProductGallery items={galleryItems} initialSlide={currentSlide} />
         </div>
       </section>
 
@@ -176,7 +201,7 @@ const AlejandraHeelsPage = () => {
               {silverOptions.map((opt) => (
                 <button
                   key={opt.id}
-                  onClick={() => setSelectedMetalId(opt.id)}
+                  onClick={() => handleMetalChange(opt.id)}
                   className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
                   data-testid={`swatch-${opt.id}`}
                   title={opt.name}
@@ -194,7 +219,7 @@ const AlejandraHeelsPage = () => {
               {gold10kOptions.map((opt) => (
                 <button
                   key={opt.id}
-                  onClick={() => setSelectedMetalId(opt.id)}
+                  onClick={() => handleMetalChange(opt.id)}
                   className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
                   data-testid={`swatch-${opt.id}`}
                   title={opt.name}
@@ -212,7 +237,7 @@ const AlejandraHeelsPage = () => {
               {gold14kOptions.map((opt) => (
                 <button
                   key={opt.id}
-                  onClick={() => setSelectedMetalId(opt.id)}
+                  onClick={() => handleMetalChange(opt.id)}
                   className={`alejandra-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
                   data-testid={`swatch-${opt.id}`}
                   title={opt.name}
@@ -328,35 +353,15 @@ const AlejandraHeelsPage = () => {
           letter-spacing: 0.12em;
         }
 
-        /* 3. GALLERY */
-        .alejandra-gallery {
+        /* 3. GALLERY SECTION */
+        .alejandra-gallery-section {
+          background: #000;
           padding: 0 24px 50px;
-          max-width: 900px;
+        }
+
+        .alejandra-gallery-container {
+          max-width: 1200px;
           margin: 0 auto;
-        }
-
-        .alejandra-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 20px;
-        }
-
-        .alejandra-gallery-item {
-          aspect-ratio: 4/5;
-          overflow: hidden;
-          border-radius: 4px;
-          background: #111;
-        }
-
-        .alejandra-gallery-item img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
-        }
-
-        .alejandra-gallery-item:hover img {
-          transform: scale(1.03);
         }
 
         /* 4-8. SWATCHES + PRODUCT INFO */
@@ -476,13 +481,8 @@ const AlejandraHeelsPage = () => {
             padding: 48px 20px 32px;
           }
 
-          .alejandra-gallery {
-            padding: 0 16px 40px;
-          }
-
-          .alejandra-gallery-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
+          .alejandra-gallery-section {
+            padding: 0 12px 40px;
           }
 
           .alejandra-swatches-section {

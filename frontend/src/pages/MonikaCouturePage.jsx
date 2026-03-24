@@ -1,82 +1,11 @@
-import React, { useState } from "react";
-import ProductGallery from "../components/ProductGallery";
-import ProductLayout, {
-  ProductInfoSection,
-  ProductActions,
-} from "../components/ProductLayout";
-import { useAddToCart } from "../hooks/useAddToCart";
-import { Button } from "../components/ui/button";
-import { products } from "../data/products";
+import React, { useState, useMemo, useEffect } from 'react';
+import ProductGallery from '../components/ProductGallery';
+import { useAddToCart } from '../hooks/useAddToCart';
+import { products } from '../data/products';
 
-export default function MonikaCouturePage() {
-  const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
-  
-  // Metal options with images and gradient swatch colors
-  const metalOptions = [
-    { 
-      name: "Sterling Silver", 
-      label: "Silver", 
-      price: products.monikaCouture.pricing.silver,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
-      gradient: "linear-gradient(135deg, #d9d9d9 0%, #9f9f9f 100%)",
-      galleryIndex: 4, // Slide 5 of 7
-    },
-    { 
-      name: "10K White Gold", 
-      label: "White Gold", 
-      price: products.monikaCouture.pricing.white10k,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
-      gradient: "linear-gradient(135deg, #f5f5f5 0%, #cfcfcf 100%)",
-      galleryIndex: 4, // Slide 5 of 7
-    },
-    { 
-      name: "10K Rose Gold", 
-      label: "Rose Gold", 
-      price: products.monikaCouture.pricing.rose10k,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/jcswkfyo_1000139952.jpg",
-      gradient: "linear-gradient(135deg, #e6b1a7 0%, #b76e79 100%)",
-      galleryIndex: 5, // Slide 6 of 7
-    },
-    { 
-      name: "10K Yellow Gold", 
-      label: "Yellow Gold", 
-      price: products.monikaCouture.pricing.yellow10k,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
-      gradient: "linear-gradient(135deg, #f0d36a 0%, #b88918 100%)",
-      galleryIndex: 6, // Slide 7 of 7
-    },
-  ];
-  
-  // State for selected metal (default to first option)
-  const [selectedMetal, setSelectedMetal] = useState(metalOptions[0]);
-  const [currentSlide, setCurrentSlide] = useState(4); // Start at slide 5 (silver/white)
-
-  // Handle metal change and update gallery
-  const handleMetalChange = (metal) => {
-    setSelectedMetal(metal);
-    setCurrentSlide(metal.galleryIndex);
-  };
-
-  // Handle add to cart with micro-interaction
-  const handleAddToCart = () => {
-    addWithAnimation({
-      id: "monika-couture",
-      name: `${products.monikaCouture.name} - ${selectedMetal.name}`,
-      slug: "monika-couture",
-      price: selectedMetal.price,
-      image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
-      images: ["https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"],
-      materials: [selectedMetal.name]
-    }, 1, selectedMetal.name);
-  };
-
-  // Gallery media items - memoized to prevent recreation
-  const galleryItems = React.useMemo(() => [
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
-      alt: "The Monika Couture Earrings",
-    },
+const MonikaCouturePage = () => {
+  // ========== GALLERY ITEMS (Video first, then images) ==========
+  const galleryItems = useMemo(() => [
     {
       type: "video",
       src: "/videos/monika-couture.mp4",
@@ -85,166 +14,457 @@ export default function MonikaCouturePage() {
     },
     {
       type: "image",
+      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg",
+      alt: "Monika Couture - Hero",
+    },
+    {
+      type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/n57dc44j_1000139957.jpg",
-      alt: "Monika Couture worn in gold",
+      alt: "Monika Couture - Worn",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/16wydipm_1000139955.jpg",
-      alt: "Monika Couture — Silver, Gold, Rose Gold",
+      alt: "Monika Couture - All Colors",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/5zjvbk47_1000139953.jpg",
-      alt: "Monika Couture Silver",
+      alt: "Monika Couture - Silver",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/jcswkfyo_1000139952.jpg",
-      alt: "Monika Couture Rose Gold",
+      alt: "Monika Couture - Rose Gold",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gqpaomuo_1000139951.jpg",
-      alt: "Monika Couture Yellow Gold",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/s2t8dt8y_1000139942.jpg",
-      alt: "Monika Couture packaging",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/gjmyama0_1000139948.jpg",
-      alt: "Monika Couture detail",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/ttzpwg0u_1000139962.jpg",
-      alt: "Monika Couture lifestyle",
+      alt: "Monika Couture - Yellow Gold",
     },
   ], []);
 
-  return (
-    <div className="bg-black text-white min-h-screen" data-testid="monika-couture-page">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="relative w-full h-[50vh] md:h-[65vh]">
-          <img
-            key={selectedMetal.name}
-            src={selectedMetal.image}
-            alt="The Monika Couture Earrings"
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
-            style={{
-              animation: 'fadeIn 0.5s ease-out'
-            }}
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+  // Map metal type to slide index for swatch navigation
+  const metalToSlideIndex = {
+    silver: 4,    // Silver image
+    white: 4,     // Same as silver (similar look)
+    rose: 5,      // Rose Gold image
+    yellow: 6,    // Yellow Gold image
+  };
 
-        <div className="absolute bottom-10 left-0 right-0 text-center">
-          <p className="text-[#C6A24A] text-xs tracking-[0.45em] uppercase">
-            Earring Collection
-          </p>
-          <h1 className="mt-3 text-4xl md:text-6xl font-light tracking-wide">
-            MONIKA COUTURE EARRINGS
-          </h1>
+  // ========== METAL OPTIONS ==========
+  const metalOptions = useMemo(() => [
+    {
+      id: 'silver',
+      name: 'Sterling Silver',
+      category: 'Silver',
+      price: products.monikaCouture.pricing.silver,
+      currency: 'CAD',
+      swatchColor: '#C0C0C0',
+      galleryType: 'silver',
+    },
+    {
+      id: 'white-10k',
+      name: '10K White Gold',
+      category: '10K Gold',
+      price: products.monikaCouture.pricing.white10k,
+      currency: 'CAD',
+      swatchColor: '#F5F5F0',
+      galleryType: 'white',
+    },
+    {
+      id: 'rose-10k',
+      name: '10K Rose Gold',
+      category: '10K Gold',
+      price: products.monikaCouture.pricing.rose10k,
+      currency: 'CAD',
+      swatchColor: '#B76E79',
+      galleryType: 'rose',
+    },
+    {
+      id: 'yellow-10k',
+      name: '10K Yellow Gold',
+      category: '10K Gold',
+      price: products.monikaCouture.pricing.yellow10k,
+      currency: 'CAD',
+      swatchColor: '#D4AF37',
+      galleryType: 'yellow',
+    },
+  ], []);
+
+  // State
+  const [selectedMetalId, setSelectedMetalId] = useState('silver');
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  
+  // Get current selection
+  const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
+
+  // Handle metal change - update gallery to corresponding slide
+  const handleMetalChange = (metalId) => {
+    setSelectedMetalId(metalId);
+    const metal = metalOptions.find(m => m.id === metalId);
+    if (metal) {
+      const slideIndex = metalToSlideIndex[metal.galleryType] || 0;
+      setCurrentSlide(slideIndex);
+    }
+  };
+
+  // Handle add to cart
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: `monika-couture-${selectedMetal.id}`,
+      name: 'Monika Couture Earrings',
+      image: galleryItems[1].src, // Use hero image (not video)
+      price: selectedMetal.price,
+      slug: 'monika-couture',
+      materials: [selectedMetal.name]
+    }, 1, selectedMetal.name);
+  };
+
+  // Preload all images
+  useEffect(() => {
+    galleryItems.forEach(item => {
+      if (item.type === 'image') {
+        const img = new Image();
+        img.src = item.src;
+      }
+    });
+  }, [galleryItems]);
+
+  // Format price
+  const formatPrice = (price, currency) => {
+    return new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  // Group metals by category
+  const silverOptions = metalOptions.filter(m => m.category === 'Silver');
+  const goldOptions = metalOptions.filter(m => m.category === '10K Gold');
+
+  return (
+    <div className="monika-page" data-testid="monika-couture-page">
+      
+      {/* 1. HERO IMAGE */}
+      <section className="monika-hero">
+        <img 
+          src={galleryItems[1].src}
+          alt="Monika Couture Earrings Hero"
+          className="monika-hero-image"
+        />
+        <div className="monika-hero-overlay">
+          <h1 className="monika-hero-title">MONIKA COUTURE</h1>
+          <p className="monika-hero-subtitle">Sculptural elegance. Architectural drama.</p>
         </div>
       </section>
 
-      {/* Product Layout with Gallery + Info */}
-      <ProductLayout
-        gallery={<ProductGallery items={galleryItems} initialSlide={currentSlide} />}
-        productInfo={
-          <>
-            <ProductInfoSection
-              titleTag="Earring Collection"
-              title={products.monikaCouture.name}
-            >
-              <p className="text-white/60 leading-relaxed">
-                A sculptural couture earring inspired by the architecture of high fashion.
-                The Monika Couture design transforms the silhouette of a fashion heel into an open lattice structure that feels bold, elegant, and dramatic in movement.
-              </p>
+      {/* 2. PRODUCT TITLE */}
+      <section className="monika-title-section">
+        <p className="monika-eyebrow">Earring Collection</p>
+        <h2 className="monika-product-title">MONIKA COUTURE EARRINGS</h2>
+      </section>
 
-              <p className="text-white/50 text-sm">
-                Weight: approximately {products.monikaCouture.weight}.
-              </p>
+      {/* 3. MAIN GALLERY - Uses ProductGallery component */}
+      <section className="monika-gallery-section">
+        <div className="monika-gallery-container">
+          <ProductGallery items={galleryItems} initialSlide={currentSlide} />
+        </div>
+      </section>
 
-              <p className="mt-6 text-[#C6A24A] text-sm tracking-[0.4em] uppercase">
-                #GetYourPhileon
-              </p>
-            </ProductInfoSection>
-          </>
-        }
-        purchasePanel={
-          <>
-            <ProductInfoSection
-              titleTag="Available Options"
-              title="Choose your metal"
-            >
-              {/* Metal Swatches */}
-              <div className="mt-6 flex flex-wrap gap-4">
-                {metalOptions.map((metal) => (
-                  <button
-                    key={metal.name}
-                    onClick={() => handleMetalChange(metal)}
-                    className="flex flex-col items-center gap-2 group"
-                    data-testid={`metal-swatch-${metal.label.toLowerCase().replace(' ', '-')}`}
-                  >
-                    {/* Circular Gradient Swatch */}
-                    <div
-                      className={[
-                        "w-7 h-7 rounded-full border-2 transition-all duration-300",
-                        selectedMetal.name === metal.name
-                          ? "border-[#C6A24A] scale-110 shadow-lg shadow-[#C6A24A]/40"
-                          : "border-white/30 group-hover:border-white/50 group-hover:scale-105",
-                      ].join(" ")}
-                      style={{ 
-                        background: metal.gradient,
-                      }}
-                    />
-                    {/* Label */}
-                    <span className={[
-                      "text-xs tracking-wider transition-colors duration-300",
-                      selectedMetal.name === metal.name
-                        ? "text-[#C6A24A] font-medium"
-                        : "text-white/60 group-hover:text-white/80"
-                    ].join(" ")}>
-                      {metal.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Selected Metal Info */}
-              <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-white/50 text-xs tracking-widest uppercase">Selected</p>
-                    <p className="text-white text-base mt-1">{selectedMetal.name}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-white/50 text-xs tracking-widest uppercase">Price</p>
-                    <p className="text-[#C6A24A] text-xl font-light mt-1">${selectedMetal.price.toLocaleString()}</p>
-                  </div>
-                </div>
-              </div>
-            </ProductInfoSection>
-
-            <div className="mt-6">
-              <Button
-                onClick={handleAddToCart}
-                disabled={isAdding}
-                className={`w-full text-black font-semibold py-6 rounded-md tracking-wide ${buttonClass}`}
-                data-testid="add-to-cart-button"
-              >
-                {buttonText}
-              </Button>
+      {/* 4-8. METAL SWATCHES + PRODUCT INFO */}
+      <section className="monika-purchase-section">
+        <div className="monika-swatches" data-testid="swatch-selector">
+          {/* Silver */}
+          <div className="monika-swatch-group">
+            <span className="monika-swatch-label">Silver</span>
+            <div className="monika-swatch-row">
+              {silverOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => handleMetalChange(opt.id)}
+                  className={`monika-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
+                  data-testid={`swatch-${opt.id}`}
+                  title={opt.name}
+                >
+                  <span style={{ backgroundColor: opt.swatchColor }} />
+                </button>
+              ))}
             </div>
-          </>
+          </div>
+
+          {/* 10K Gold */}
+          <div className="monika-swatch-group">
+            <span className="monika-swatch-label">10K Gold</span>
+            <div className="monika-swatch-row">
+              {goldOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => handleMetalChange(opt.id)}
+                  className={`monika-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
+                  data-testid={`swatch-${opt.id}`}
+                  title={opt.name}
+                >
+                  <span style={{ backgroundColor: opt.swatchColor }} />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Selected Metal Label */}
+        <p className="monika-selected-metal" data-testid="selected-metal-label">
+          {selectedMetal.name}
+        </p>
+
+        {/* Price */}
+        <p className="monika-price" data-testid="product-price">
+          {formatPrice(selectedMetal.price, selectedMetal.currency)}
+        </p>
+
+        {/* Description */}
+        <p className="monika-description">
+          A sculptural couture earring inspired by the architecture of high fashion.
+          The design transforms the silhouette of a fashion heel into an open lattice 
+          structure that feels bold, elegant, and dramatic in movement.
+        </p>
+
+        {/* Add to Cart */}
+        <button
+          onClick={onAddToCart}
+          disabled={isAdding}
+          className={`monika-add-btn ${isAdding ? 'added' : ''}`}
+          data-testid="add-to-cart-button"
+        >
+          {buttonText}
+        </button>
+      </section>
+
+      {/* STYLES */}
+      <style>{`
+        .monika-page {
+          background: #000;
+          min-height: 100vh;
+          color: #fff;
         }
-        stickyOffset={36}
-      />
+
+        /* 1. HERO */
+        .monika-hero {
+          position: relative;
+          width: 100%;
+          height: 75vh;
+          min-height: 450px;
+          overflow: hidden;
+        }
+
+        .monika-hero-image {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          min-width: 100%;
+          min-height: 100%;
+          width: auto;
+          height: auto;
+          object-fit: cover;
+        }
+
+        .monika-hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 24px;
+        }
+
+        .monika-hero-title {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(32px, 7vw, 56px);
+          font-weight: 400;
+          letter-spacing: 0.2em;
+          margin-bottom: 12px;
+          text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+
+        .monika-hero-subtitle {
+          font-size: clamp(12px, 1.8vw, 16px);
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.75);
+          text-transform: uppercase;
+        }
+
+        /* 2. TITLE SECTION */
+        .monika-title-section {
+          text-align: center;
+          padding: 60px 24px 40px;
+        }
+
+        .monika-eyebrow {
+          font-size: 10px;
+          letter-spacing: 0.3em;
+          color: rgba(199, 162, 75, 0.6);
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        .monika-product-title {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(24px, 5vw, 36px);
+          font-weight: 400;
+          letter-spacing: 0.12em;
+        }
+
+        /* 3. GALLERY SECTION */
+        .monika-gallery-section {
+          background: #000;
+          padding: 0 24px 50px;
+        }
+
+        .monika-gallery-container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* 4-8. PURCHASE SECTION */
+        .monika-purchase-section {
+          max-width: 480px;
+          margin: 0 auto;
+          padding: 0 24px 100px;
+          text-align: center;
+        }
+
+        .monika-swatches {
+          margin-bottom: 28px;
+        }
+
+        .monika-swatch-group {
+          margin-bottom: 20px;
+        }
+
+        .monika-swatch-label {
+          display: block;
+          font-size: 9px;
+          letter-spacing: 0.25em;
+          color: rgba(255,255,255,0.35);
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+
+        .monika-swatch-row {
+          display: flex;
+          justify-content: center;
+          gap: 14px;
+        }
+
+        .monika-swatch {
+          width: 40px;
+          height: 40px;
+          padding: 3px;
+          background: transparent;
+          border: 2px solid transparent;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .monika-swatch:hover {
+          border-color: rgba(199, 162, 75, 0.4);
+        }
+
+        .monika-swatch.selected {
+          border-color: #C7A24B;
+        }
+
+        .monika-swatch span {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .monika-selected-metal {
+          font-size: 13px;
+          color: #C7A24B;
+          letter-spacing: 0.05em;
+          margin-bottom: 8px;
+        }
+
+        .monika-price {
+          font-size: 26px;
+          font-weight: 300;
+          color: #C7A24B;
+          margin-bottom: 20px;
+        }
+
+        .monika-description {
+          font-size: 12px;
+          color: rgba(255,255,255,0.45);
+          font-style: italic;
+          margin-bottom: 28px;
+          line-height: 1.7;
+          max-width: 360px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .monika-add-btn {
+          width: 100%;
+          max-width: 300px;
+          padding: 16px 32px;
+          background: #C7A24B;
+          border: none;
+          color: #000;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .monika-add-btn:hover {
+          background: #B8944A;
+        }
+
+        .monika-add-btn.added {
+          background: #16a34a;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+          .monika-hero {
+            height: 55vh;
+            min-height: 380px;
+          }
+
+          .monika-title-section {
+            padding: 48px 20px 32px;
+          }
+
+          .monika-gallery-section {
+            padding: 0 12px 40px;
+          }
+
+          .monika-purchase-section {
+            padding: 0 20px 80px;
+          }
+
+          .monika-swatch {
+            width: 38px;
+            height: 38px;
+          }
+        }
+      `}</style>
     </div>
   );
-}
+};
+
+export default MonikaCouturePage;

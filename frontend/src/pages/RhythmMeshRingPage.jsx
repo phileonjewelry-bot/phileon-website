@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
 
 const RhythmMeshRingPage = () => {
@@ -16,35 +17,66 @@ const RhythmMeshRingPage = () => {
       id: 'white-10k',
       name: '10K White Gold',
       category: '10K Gold',
-      price: 2850,
+      price: 4800,
       currency: 'CAD',
       swatchColor: '#F5F5F0',
     },
   ], []);
 
-  // ========== GALLERY IMAGES ==========
-  const galleryImages = useMemo(() => [
-    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg",
-    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/fkn1jc4h_1000143079.jpg",
-    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/5sgfwfn0_1000143092.jpg",
-    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/bze0z8es_1000143313.jpg",
-    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/kx1dagdy_1000143311.png",
-    "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/xjxr3blo_1000143315.png",
+  // ========== GALLERY ITEMS (Same structure as FORME CUFF) ==========
+  const galleryItems = useMemo(() => [
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg",
+      alt: "Rhythm Mesh Ring - Hero",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/fkn1jc4h_1000143079.jpg",
+      alt: "Rhythm Mesh Ring - Angled View",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/5sgfwfn0_1000143092.jpg",
+      alt: "Rhythm Mesh Ring - Detail",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/bze0z8es_1000143313.jpg",
+      alt: "Rhythm Mesh Ring - Close Up",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/kx1dagdy_1000143311.png",
+      alt: "Rhythm Mesh Ring - Side View",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/xjxr3blo_1000143315.png",
+      alt: "Rhythm Mesh Ring - Lifestyle",
+    },
   ], []);
 
   // State
   const [selectedMetalId, setSelectedMetalId] = useState('silver');
+  const [currentSlide, setCurrentSlide] = useState(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   
   // Get current selection
   const selectedMetal = metalOptions.find(m => m.id === selectedMetalId) || metalOptions[0];
+
+  // Handle metal change - reset gallery to first slide
+  const handleMetalChange = (metalId) => {
+    setSelectedMetalId(metalId);
+    setCurrentSlide(0); // Reset to first slide on metal change
+  };
 
   // Handle add to cart
   const onAddToCart = () => {
     handleAddToCart({
       id: `rhythm-mesh-ring-${selectedMetal.id}`,
       name: 'Rhythm Mesh™ Ring',
-      image: galleryImages[0],
+      image: galleryItems[0].src,
       price: selectedMetal.price,
       slug: 'rhythm-mesh-ring',
       materials: [selectedMetal.name]
@@ -53,11 +85,11 @@ const RhythmMeshRingPage = () => {
 
   // Preload all images
   useEffect(() => {
-    galleryImages.forEach(src => {
+    galleryItems.forEach(item => {
       const img = new Image();
-      img.src = src;
+      img.src = item.src;
     });
-  }, [galleryImages]);
+  }, [galleryItems]);
 
   // Format price
   const formatPrice = (price, currency) => {
@@ -79,7 +111,7 @@ const RhythmMeshRingPage = () => {
       {/* 1. HERO IMAGE */}
       <section className="rhythm-hero">
         <img 
-          src={galleryImages[0]} 
+          src={galleryItems[0].src} 
           alt="Rhythm Mesh Ring Hero"
           className="rhythm-hero-image"
         />
@@ -95,17 +127,10 @@ const RhythmMeshRingPage = () => {
         <h2 className="rhythm-product-title">RHYTHM MESH™ RING</h2>
       </section>
 
-      {/* 3. MAIN GALLERY */}
-      <section className="rhythm-gallery">
-        <div className="rhythm-gallery-grid">
-          {galleryImages.map((img, idx) => (
-            <div key={idx} className="rhythm-gallery-item">
-              <img 
-                src={img} 
-                alt={`Rhythm Mesh Ring - View ${idx + 1}`}
-              />
-            </div>
-          ))}
+      {/* 3. MAIN GALLERY - Uses ProductGallery component */}
+      <section className="rhythm-gallery-section">
+        <div className="rhythm-gallery-container">
+          <ProductGallery items={galleryItems} initialSlide={currentSlide} />
         </div>
       </section>
 
@@ -119,7 +144,7 @@ const RhythmMeshRingPage = () => {
               {silverOptions.map((opt) => (
                 <button
                   key={opt.id}
-                  onClick={() => setSelectedMetalId(opt.id)}
+                  onClick={() => handleMetalChange(opt.id)}
                   className={`rhythm-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
                   data-testid={`swatch-${opt.id}`}
                   title={opt.name}
@@ -137,7 +162,7 @@ const RhythmMeshRingPage = () => {
               {goldOptions.map((opt) => (
                 <button
                   key={opt.id}
-                  onClick={() => setSelectedMetalId(opt.id)}
+                  onClick={() => handleMetalChange(opt.id)}
                   className={`rhythm-swatch ${selectedMetalId === opt.id ? 'selected' : ''}`}
                   data-testid={`swatch-${opt.id}`}
                   title={opt.name}
@@ -255,35 +280,15 @@ const RhythmMeshRingPage = () => {
           letter-spacing: 0.12em;
         }
 
-        /* 3. GALLERY */
-        .rhythm-gallery {
+        /* 3. GALLERY SECTION */
+        .rhythm-gallery-section {
+          background: #000;
           padding: 0 24px 50px;
-          max-width: 1100px;
+        }
+
+        .rhythm-gallery-container {
+          max-width: 1200px;
           margin: 0 auto;
-        }
-
-        .rhythm-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 20px;
-        }
-
-        .rhythm-gallery-item {
-          aspect-ratio: 1/1;
-          overflow: hidden;
-          border-radius: 4px;
-          background: #111;
-        }
-
-        .rhythm-gallery-item img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
-        }
-
-        .rhythm-gallery-item:hover img {
-          transform: scale(1.03);
         }
 
         /* 4-8. PURCHASE SECTION */
@@ -403,13 +408,8 @@ const RhythmMeshRingPage = () => {
             padding: 48px 20px 32px;
           }
 
-          .rhythm-gallery {
-            padding: 0 16px 40px;
-          }
-
-          .rhythm-gallery-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
+          .rhythm-gallery-section {
+            padding: 0 12px 40px;
           }
 
           .rhythm-purchase-section {
