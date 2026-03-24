@@ -23,12 +23,17 @@ const RhythmMeshRingPage = () => {
     },
   ], []);
 
-  // ========== GALLERY ITEMS (Same structure as FORME CUFF) ==========
+  // ========== GALLERY ITEMS (FORME CUFF Order: Hero Image → Video → Gallery Images) ==========
   const galleryItems = useMemo(() => [
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg",
       alt: "Rhythm Mesh Ring - Hero",
+    },
+    {
+      type: "video",
+      src: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/t5dc2wbk_XiaoYing_Video_1774306817506.mp4",
+      alt: "Rhythm Mesh Ring - Video",
     },
     {
       type: "image",
@@ -130,7 +135,7 @@ const RhythmMeshRingPage = () => {
       {/* 3. MAIN GALLERY - Uses ProductGallery component */}
       <section className="rhythm-gallery-section">
         <div className="rhythm-gallery-container">
-          <ProductGallery items={galleryItems} initialSlide={currentSlide} />
+          <ProductGallery key={selectedMetalId} items={galleryItems} initialSlide={0} />
         </div>
       </section>
 
