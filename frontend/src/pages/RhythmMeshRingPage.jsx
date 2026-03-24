@@ -23,17 +23,17 @@ const RhythmMeshRingPage = () => {
     },
   ], []);
 
-  // ========== GALLERY ITEMS (FORME CUFF Order: Hero Image → Video → Gallery Images) ==========
+  // ========== GALLERY ITEMS (Video First, then Images) ==========
   const galleryItems = useMemo(() => [
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg",
-      alt: "Rhythm Mesh Ring - Hero",
-    },
     {
       type: "video",
       src: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/9qioc0r2_XiaoYing_Video_1774325825434.mp4",
       alt: "Rhythm Mesh Ring - Video",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg",
+      alt: "Rhythm Mesh Ring - Hero",
     },
     {
       type: "image",
