@@ -126,6 +126,10 @@ const CORE_PRODUCTS = [
     is_core: true,
     category: 'rings',
     audience: 'unisex',
+    // Lifestyle images for audience-specific displays
+    lifestyleImages: {
+      ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/3dwbzglo_1000143123.png',
+    },
   },
 ];
 
@@ -220,7 +224,13 @@ const ShopDropPage = () => {
     if (audienceParam) {
       // Exclude products without an audience when filter is active
       if (!product.audience) return false;
-      if (product.audience !== audienceParam) return false;
+      // Allow unisex products to show in both ladies and gentlemens-club collections
+      if (product.audience === 'unisex') {
+        // Unisex shows in ladies and gentlemens-club, but not in other specific filters
+        if (audienceParam !== 'ladies' && audienceParam !== 'gentlemens-club') return false;
+      } else if (product.audience !== audienceParam) {
+        return false;
+      }
     }
 
     return true;
@@ -298,6 +308,12 @@ const ShopDropPage = () => {
             const isSoldOut = inventoryCount === 0;
             const productUrl = product.href || `/products/${product.slug}`;
             
+            // Determine which image to display based on current audience filter
+            // Use lifestyle image if viewing Ladies collection and product has one
+            const displayImage = (audienceParam === 'ladies' && product.lifestyleImages?.ladies)
+              ? product.lifestyleImages.ladies
+              : (product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80');
+            
             return (
               <div 
                 key={product.id}
@@ -351,7 +367,7 @@ const ShopDropPage = () => {
                     background: '#111',
                   }}>
                     <img 
-                      src={product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'} 
+                      src={displayImage} 
                       alt={product.name}
                       loading="lazy"
                       style={{
