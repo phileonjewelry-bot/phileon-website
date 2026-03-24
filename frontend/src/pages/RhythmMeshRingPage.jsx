@@ -32,7 +32,7 @@ const RhythmMeshRingPage = () => {
     },
     {
       type: "video",
-      src: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/t5dc2wbk_XiaoYing_Video_1774306817506.mp4",
+      src: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/9qioc0r2_XiaoYing_Video_1774325825434.mp4",
       alt: "Rhythm Mesh Ring - Video",
     },
     {
