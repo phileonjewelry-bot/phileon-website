@@ -309,17 +309,16 @@ const ShopDropPage = () => {
             const isSoldOut = inventoryCount === 0;
             const productUrl = product.href || `/products/${product.slug}`;
             
-            // Determine which image to display based on current audience filter
-            // Use lifestyle image if viewing Ladies or Gents collection and product has one
-            let displayImage = product.images?.[0] || product.imageUrl || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
-            
-            if (audienceParam && product.lifestyleImages) {
-              if (audienceParam === 'ladies' && product.lifestyleImages.ladies) {
-                displayImage = product.lifestyleImages.ladies;
-              } else if (audienceParam === 'gentlemens-club' && product.lifestyleImages['gentlemens-club']) {
-                displayImage = product.lifestyleImages['gentlemens-club'];
-              }
-            }
+            // Determine card image based on audience filter
+            // Check audienceImages first (from products.js), then lifestyleImages (legacy), then default
+            const cardImage = 
+              product.audienceImages?.[audienceParam] ||
+              product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
+              product.lifestyleImages?.[audienceParam] ||
+              product.lifestyleImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
+              product.images?.[0] || 
+              product.imageUrl || 
+              'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
             
             return (
               <div 
@@ -374,7 +373,7 @@ const ShopDropPage = () => {
                     background: '#111',
                   }}>
                     <img 
-                      src={displayImage} 
+                      src={cardImage} 
                       alt={product.name}
                       loading="lazy"
                       style={{
