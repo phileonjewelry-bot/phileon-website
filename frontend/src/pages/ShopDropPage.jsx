@@ -128,7 +128,7 @@ const CORE_PRODUCTS = [
     audience: 'unisex',
     // Audience-specific card images
     audienceImages: {
-      ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/4cdhfw77_1000143351.jpg',
+      ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/skzja828_1000143123.png',
       gentlemensClub: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png',
     },
   },
