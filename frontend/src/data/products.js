@@ -485,10 +485,14 @@ export const products = {
     audience: "unisex",
     description: "Structured motion. Captured in metal.",
     
-    // Default card image for ALL collections (Collective, Ladies, Gents)
+    // Default card image for Collective
     imageUrl: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg",
     
-    // No audience-specific overrides - all use the same hero image
+    // Audience-specific card images
+    audienceImages: {
+      ladies: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/4cdhfw77_1000143351.jpg",
+      gentlemensClub: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
+    },
     
     // Pricing
     pricing: {
