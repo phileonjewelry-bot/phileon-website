@@ -119,18 +119,13 @@ const CORE_PRODUCTS = [
     name: 'Rhythm Mesh™ Ring',
     slug: 'rhythm-mesh-ring',
     materialLine: 'Statement Ring · Silver & 10K White Gold',
-    imageUrl: 'https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/nhkjujpb_1000143088.jpg',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg',
     href: '/products/rhythm-mesh-ring',
     price_range: 'From $1,450 CAD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',
     audience: 'unisex',
-    // Lifestyle images for audience-specific collection displays
-    lifestyleImages: {
-      ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/sgi718u0_1000143121.png',
-      'gentlemens-club': 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/sgi718u0_1000143121.png',
-    },
   },
 ];
 

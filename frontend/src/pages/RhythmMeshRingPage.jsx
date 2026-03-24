@@ -60,6 +60,17 @@ const RhythmMeshRingPage = () => {
       src: "https://customer-assets.emergentagent.com/job_610e6b12-110f-4709-a3d7-334f7b0abd3a/artifacts/xjxr3blo_1000143315.png",
       alt: "Rhythm Mesh Ring - Lifestyle",
     },
+    // Lifestyle shots - Suit pic first, then water
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/61l88rmn_1000143368.jpg",
+      alt: "Rhythm Mesh Ring - Couple Lifestyle",
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/gkp2ka3k_1000143351.jpg",
+      alt: "Rhythm Mesh Ring - Water Lifestyle",
+    },
   ], []);
 
   // State
