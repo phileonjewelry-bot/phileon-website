@@ -122,7 +122,7 @@ const RhythmMeshRingPage = () => {
       {/* 1. HERO IMAGE */}
       <section className="rhythm-hero">
         <img 
-          src={galleryItems[0].src} 
+          src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/3kzs6s90_1000143088.jpg" 
           alt="Rhythm Mesh Ring Hero"
           className="rhythm-hero-image"
         />
