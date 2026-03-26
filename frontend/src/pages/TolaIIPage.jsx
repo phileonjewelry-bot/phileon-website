@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAddToCart } from '../hooks/useAddToCart';
+import { ringSizeProfiles } from '../data/ringSizes';
 
 export default function TolaIIPage() {
   const videoRef = useRef(null);
@@ -7,6 +8,9 @@ export default function TolaIIPage() {
   const [selectedSize, setSelectedSize] = useState(null);
   const [customSize, setCustomSize] = useState("");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  // Use gents size profile for TOLA II
+  const sizeProfile = ringSizeProfiles.gents;
 
   const tiers = {
     foundation: {
@@ -260,7 +264,7 @@ export default function TolaIIPage() {
             </p>
 
             <div className="grid grid-cols-4 gap-2">
-              {[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12].map((size) => (
+              {sizeProfile.sizes.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
@@ -299,7 +303,7 @@ export default function TolaIIPage() {
                   data-testid="custom-size-input"
                 />
                 <p className="text-xs text-[#7f7f7f] mt-2">
-                  Sizes above 12 are custom made and may require additional production time.
+                  {sizeProfile.customRule}
                 </p>
               </div>
             )}
