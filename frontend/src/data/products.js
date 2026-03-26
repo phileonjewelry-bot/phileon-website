@@ -514,8 +514,8 @@ export const products = {
     slug: "tola-ii",
     category: "rings",
     audience: "gentlemens-club",
-    tagline: "Chain-linked. Stone-crowned. Built to reign.",
-    description: "The TOLA II ring commands attention with its bold fusion of Cuban link chain motifs and black diamond pavé. A modern heirloom designed for those who lead, not follow.",
+    tagline: "Weight. Discipline. Presence.",
+    description: "TOLA II is built on restraint and control. A structured gold form, anchored by a central chain and framed with precision-set black stones. Every surface is intentional. Every detail holds weight.",
     
     // Hero image for shop cards
     imageUrl: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
@@ -523,59 +523,75 @@ export const products = {
     // Pricing Configuration (Ironclad Rules: Yellow Gold Only)
     dynamicPricing: false,
     currency: "CAD",
+    defaultMetal: "10K Yellow Gold",
+    metals: ["10K Yellow Gold", "14K Yellow Gold", "18K Yellow Gold"],
     
     // Tier-based pricing
+    pricing: {
+      foundation: 2850,
+      signature: 3700,
+      heirloom: 5200
+    },
+    
     tiers: [
       {
         id: "foundation",
-        name: "Foundation Edition",
+        name: "Foundation",
         metal: "10K Yellow Gold",
         pricingKey: "foundation",
-        price: 4200,
+        price: 2850,
         tag: "",
         highlight: false,
-        description: "Entry into the TOLA legacy. 10K solid gold construction."
+        description: "10K gold with precision-set black stones. Built for everyday structure and presence."
       },
       {
         id: "signature",
-        name: "Signature Edition",
+        name: "Signature",
         metal: "14K Yellow Gold",
         pricingKey: "signature",
-        price: 5800,
+        price: 3700,
         tag: "Most Popular",
         highlight: true,
-        description: "The definitive TOLA II experience. Best balance of weight and value."
+        description: "14K gold with enhanced depth and clarity. Balanced weight with elevated finish."
       },
       {
         id: "heirloom",
-        name: "Heirloom Edition",
+        name: "Heirloom",
         metal: "18K Yellow Gold",
         pricingKey: "heirloom",
-        price: 7400,
+        price: 5200,
         tag: "Collector",
         highlight: false,
-        description: "Collector-grade luxury. Maximum gold purity for a lasting legacy."
+        description: "18K gold with maximum richness and density. Designed for permanence."
       }
     ],
     
     // Specs
     specs: [
-      { label: "Stone Type", value: "Black Diamonds (Natural)" },
-      { label: "Setting Style", value: "Micro-pavé with blackened prongs" },
-      { label: "Center Motif", value: "Cuban link chain" },
-      { label: "Band Width", value: "14mm" },
-      { label: "Weight (approx.)", value: "18–22g depending on size" },
-      { label: "Available Sizes", value: "7–13 (half sizes available)" }
+      "Approx. top width: 12–13mm",
+      "Approx. band width: 3–4mm",
+      "Approx. weight: 15g (10K), 17g (14K), 21g (18K)",
+      "60 black stones total",
+      "High polish finish with structured pavé setting"
     ],
     
-    // Gallery images
+    // Gallery media (video first, then images)
+    media: [
+      { type: "video", src: "/videos/tola-ii.mp4" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/sm6c4t2r_1000143432.png" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png" }
+    ],
+    
+    // Legacy image references
     images: {
       hero: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
       front: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/sm6c4t2r_1000143432.png",
-      lifestyle: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png",
-      stacked: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/44jzrngc_1000143431.png",
-      macro: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png",
-      side: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png"
+      side: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png",
+      detail: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png",
+      lifestyle: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png"
     },
     
     // Shipping info

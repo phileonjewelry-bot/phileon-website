@@ -3,21 +3,19 @@ import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
 
 const TolaIIPage = () => {
-  // ========== TOLA II PRODUCT DATA ==========
+  // ========== TOLA II PRODUCT DATA (Official) ==========
   const productData = {
     name: "TOLA II",
-    tagline: "Chain-linked. Stone-crowned. Built to reign.",
+    tagline: "Weight. Discipline. Presence.",
     category: "rings",
     audience: "gentlemens-club",
-    description: "The TOLA II ring commands attention with its bold fusion of Cuban link chain motifs and black diamond pavé. A modern heirloom designed for those who lead, not follow.",
-    longDescription: "TOLA II bridges street heritage with fine jewelry tradition. The central Cuban chain band — a nod to timeless hip-hop iconography — is flanked by rows of black diamond pavé set into blackened prongs. The result is a ring that speaks power without shouting. Designed to sit heavy on the hand, TOLA II is an architectural statement of confidence, crafted for everyday wear or occasions that demand presence.",
+    description: "TOLA II is built on restraint and control. A structured gold form, anchored by a central chain and framed with precision-set black stones. Every surface is intentional. Every detail holds weight.",
     specs: [
-      { label: "Stone Type", value: "Black Diamonds (Natural)" },
-      { label: "Setting Style", value: "Micro-pavé with blackened prongs" },
-      { label: "Center Motif", value: "Cuban link chain" },
-      { label: "Band Width", value: "14mm" },
-      { label: "Weight (approx.)", value: "18–22g depending on size" },
-      { label: "Available Sizes", value: "7–13 (half sizes available)" },
+      "Approx. top width: 12–13mm",
+      "Approx. band width: 3–4mm",
+      "Approx. weight: 15g (10K), 17g (14K), 21g (18K)",
+      "60 black stones total",
+      "High polish finish with structured pavé setting"
     ]
   };
 
@@ -28,9 +26,9 @@ const TolaIIPage = () => {
       name: 'Foundation',
       tierLabel: 'Foundation Edition',
       metal: '10K Yellow Gold',
-      price: 4200,
+      price: 2850,
       currency: 'CAD',
-      description: 'Entry into the TOLA legacy. 10K solid gold construction.',
+      description: '10K gold with precision-set black stones. Built for everyday structure and presence.',
       tag: '',
       highlight: false,
     },
@@ -39,9 +37,9 @@ const TolaIIPage = () => {
       name: 'Signature',
       tierLabel: 'Signature Edition',
       metal: '14K Yellow Gold',
-      price: 5800,
+      price: 3700,
       currency: 'CAD',
-      description: 'The definitive TOLA II experience. Best balance of weight and value.',
+      description: '14K gold with enhanced depth and clarity. Balanced weight with elevated finish.',
       tag: 'Most Popular',
       highlight: true,
     },
@@ -50,20 +48,26 @@ const TolaIIPage = () => {
       name: 'Heirloom',
       tierLabel: 'Heirloom Edition',
       metal: '18K Yellow Gold',
-      price: 7400,
+      price: 5200,
       currency: 'CAD',
-      description: 'Collector-grade luxury. Maximum gold purity for a lasting legacy.',
+      description: '18K gold with maximum richness and density. Designed for permanence.',
       tag: 'Collector',
       highlight: false,
     },
   ], []);
 
-  // ========== GALLERY ITEMS (Uploaded Images) ==========
+  // ========== GALLERY ITEMS (Video First, then Images) ==========
   const galleryItems = useMemo(() => [
+    {
+      type: "video",
+      src: "/videos/tola-ii.mp4",
+      alt: "TOLA II - Product Video",
+      objectFit: "contain",
+    },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
-      alt: "TOLA II - Angled hero shot on black background",
+      alt: "TOLA II - Hero shot",
     },
     {
       type: "image",
@@ -72,23 +76,18 @@ const TolaIIPage = () => {
     },
     {
       type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png",
-      alt: "TOLA II - Lifestyle shot on hand with pinstripe suit",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/44jzrngc_1000143431.png",
-      alt: "TOLA II - Stacked rings on light background",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png",
+      alt: "TOLA II - Side profile view",
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png",
-      alt: "TOLA II - Macro detail of Cuban chain and black diamonds",
+      alt: "TOLA II - Macro detail",
     },
     {
       type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png",
-      alt: "TOLA II - Side profile view",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png",
+      alt: "TOLA II - Lifestyle shot",
     },
   ], []);
 
@@ -213,20 +212,16 @@ const TolaIIPage = () => {
           <div className="tola-description-block">
             <h2 className="tola-section-title">The TOLA II Story</h2>
             <p className="tola-description-text">{productData.description}</p>
-            <p className="tola-description-text">{productData.longDescription}</p>
           </div>
 
           {/* Specs */}
           <div className="tola-specs-block">
             <h2 className="tola-section-title">Specifications</h2>
-            <div className="tola-specs-grid">
+            <ul className="tola-specs-list">
               {productData.specs.map((spec, index) => (
-                <div key={index} className="tola-spec-item">
-                  <span className="tola-spec-label">{spec.label}</span>
-                  <span className="tola-spec-value">{spec.value}</span>
-                </div>
+                <li key={index} className="tola-spec-item">{spec}</li>
               ))}
-            </div>
+            </ul>
           </div>
 
         </div>
@@ -477,34 +472,29 @@ const TolaIIPage = () => {
           margin-bottom: 0;
         }
 
-        /* ========== SPECS GRID ========== */
-        .tola-specs-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
+        /* ========== SPECS LIST ========== */
+        .tola-specs-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
         }
 
         .tola-spec-item {
-          display: flex;
-          justify-content: space-between;
-          padding-bottom: 12px;
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.7);
+          padding: 12px 0;
           border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          line-height: 1.5;
         }
 
         .tola-spec-item:last-child {
           border-bottom: none;
         }
 
-        .tola-spec-label {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.4);
-          letter-spacing: 0.05em;
-        }
-
-        .tola-spec-value {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.8);
-          text-align: right;
+        .tola-spec-item::before {
+          content: "—";
+          margin-right: 12px;
+          color: #C7A24B;
         }
 
         /* ========== MOBILE RESPONSIVE ========== */

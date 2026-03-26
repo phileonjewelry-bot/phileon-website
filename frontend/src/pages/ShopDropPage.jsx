@@ -139,7 +139,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Statement Ring · 10K-18K Yellow Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png',
     href: '/products/tola-ii',
-    price_range: 'From $4,200 CAD',
+    price_range: 'From $2,850 CAD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',
