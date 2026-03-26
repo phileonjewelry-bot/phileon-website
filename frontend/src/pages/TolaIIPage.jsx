@@ -138,13 +138,13 @@ export default function TolaIIPage() {
                   e.currentTarget.currentTime = 0;
                   e.currentTarget.play();
                 }}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover scale-[1.03] transition-transform duration-[6000ms]"
               />
             ) : (
               <img
                 src={media[activeMedia].src}
                 alt={media[activeMedia].alt}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover scale-[1.03] transition-transform duration-[6000ms]"
               />
             )}
           </div>
