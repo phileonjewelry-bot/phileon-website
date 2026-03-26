@@ -542,7 +542,7 @@ export const products = {
         price: 5200,
         tag: "",
         highlight: false,
-        description: "10K yellow gold with black stones. Built for everyday structure and presence."
+        description: "10K yellow gold with black stones. Built for everyday presence."
       },
       {
         id: "signature",
@@ -552,7 +552,7 @@ export const products = {
         price: 6800,
         tag: "Most Popular",
         highlight: true,
-        description: "14K yellow gold with black lab-grown diamonds. Balanced weight with elevated clarity."
+        description: "14K yellow gold with black lab-grown diamonds. Balanced weight and clarity."
       },
       {
         id: "heirloom",
