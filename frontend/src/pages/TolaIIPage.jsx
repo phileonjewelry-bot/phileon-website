@@ -123,7 +123,7 @@ export default function TolaIIPage() {
         {/* LEFT SIDE */}
         <div>
           {/* HERO MEDIA */}
-          <div className="w-full overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
+          <div className="w-full aspect-square overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
             {media[activeMedia].type === "video" ? (
               <video
                 ref={videoRef}
@@ -138,13 +138,13 @@ export default function TolaIIPage() {
                   e.currentTarget.currentTime = 0;
                   e.currentTarget.play();
                 }}
-                className="w-full h-[500px] lg:h-[650px] object-cover"
+                className="w-full h-full object-cover"
               />
             ) : (
               <img
                 src={media[activeMedia].src}
                 alt={media[activeMedia].alt}
-                className="w-full h-[500px] lg:h-[650px] object-cover"
+                className="w-full h-full object-cover"
               />
             )}
           </div>
