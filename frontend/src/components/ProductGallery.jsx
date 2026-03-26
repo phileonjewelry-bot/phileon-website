@@ -71,13 +71,13 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
     const activeVideo = videoRefs.current[selectedIndex];
     if (activeVideo && items[selectedIndex]?.type === "video") {
       // Use setTimeout to ensure DOM is ready
-      setTimeout(() => {
-        const playPromise = activeVideo.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            // Autoplay was prevented, which is OK
-            console.log('Autoplay prevented:', error.name);
-          });
+      setTimeout(async () => {
+        try {
+          activeVideo.currentTime = 0;
+          await activeVideo.play();
+        } catch (error) {
+          // Autoplay was prevented, which is OK
+          console.log('Autoplay blocked:', error.name);
         }
       }, 150);
     }
@@ -132,8 +132,12 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="auto"
                     poster={item.poster || undefined}
+                    onEnded={(e) => {
+                      e.currentTarget.currentTime = 0;
+                      e.currentTarget.play();
+                    }}
                   >
                     <source src={item.src} type="video/mp4" />
                   </video>

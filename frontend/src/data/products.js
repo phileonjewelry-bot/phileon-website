@@ -528,9 +528,9 @@ export const products = {
     
     // Tier-based pricing
     pricing: {
-      foundation: 2850,
-      signature: 3700,
-      heirloom: 5200
+      foundation: 5200,
+      signature: 6800,
+      heirloom: 9200
     },
     
     tiers: [
@@ -539,7 +539,7 @@ export const products = {
         name: "Foundation",
         metal: "10K Yellow Gold",
         pricingKey: "foundation",
-        price: 2850,
+        price: 5200,
         tag: "",
         highlight: false,
         description: "10K yellow gold with black stones. Built for everyday structure and presence."
@@ -549,7 +549,7 @@ export const products = {
         name: "Signature",
         metal: "14K Yellow Gold",
         pricingKey: "signature",
-        price: 3700,
+        price: 6800,
         tag: "Most Popular",
         highlight: true,
         description: "14K yellow gold with black lab-grown diamonds. Balanced weight with elevated clarity."
@@ -559,7 +559,7 @@ export const products = {
         name: "Heirloom",
         metal: "18K Yellow Gold",
         pricingKey: "heirloom",
-        price: 5200,
+        price: 9200,
         tag: "Collector",
         highlight: false,
         description: "18K yellow gold with natural black diamonds. Maximum richness and permanence."
