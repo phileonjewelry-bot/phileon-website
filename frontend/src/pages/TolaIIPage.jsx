@@ -1,555 +1,361 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import ProductGallery from '../components/ProductGallery';
+import React, { useEffect, useRef, useState } from "react";
 import { useAddToCart } from '../hooks/useAddToCart';
 
-const TolaIIPage = () => {
-  // ========== TOLA II PRODUCT DATA (Official) ==========
-  const productData = {
-    name: "TOLA II",
-    tagline: "Weight. Discipline. Presence.",
-    category: "rings",
-    audience: "gentlemens-club",
-    description: "TOLA II is built on restraint and control. A structured gold form, anchored by a central chain and framed with precision-set black stones. Every surface is intentional. Every detail holds weight.",
-    specs: [
-      "Approx. top width: 12–13mm",
-      "Approx. band width: 3–4mm",
-      "Approx. weight: 15g (10K), 17g (14K), 21g (18K)",
-      "60 black stones total",
-      "High polish finish with structured pavé setting"
-    ]
-  };
-
-  // ========== TIER SYSTEM (Ironclad Rules) ==========
-  const tierOptions = useMemo(() => [
-    {
-      id: 'foundation',
-      name: 'Foundation',
-      tierLabel: 'Foundation Edition',
-      metal: '10K Yellow Gold',
-      price: 5200,
-      currency: 'CAD',
-      description: '10K yellow gold with black stones. Built for everyday presence.',
-      tag: '',
-      highlight: false,
-    },
-    {
-      id: 'signature',
-      name: 'Signature',
-      tierLabel: 'Signature Edition',
-      metal: '14K Yellow Gold',
-      price: 6800,
-      currency: 'CAD',
-      description: '14K yellow gold with black lab-grown diamonds. Balanced weight and clarity.',
-      tag: 'Most Popular',
-      highlight: true,
-    },
-    {
-      id: 'heirloom',
-      name: 'Heirloom',
-      tierLabel: 'Heirloom Edition',
-      metal: '18K Yellow Gold',
-      price: 9200,
-      currency: 'CAD',
-      description: '18K yellow gold with natural black diamonds. Maximum richness and permanence.',
-      tag: 'Collector',
-      highlight: false,
-    },
-  ], []);
-
-  // ========== GALLERY ITEMS (Video First, then Images) ==========
-  const galleryItems = useMemo(() => [
-    {
-      type: "video",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/29wd5jby_XiaoYing_Video_1774562301628.mp4",
-      poster: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
-      alt: "TOLA II - Product Video",
-      objectFit: "cover",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
-      alt: "TOLA II - Hero shot",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/sm6c4t2r_1000143432.png",
-      alt: "TOLA II - Front view on black background",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png",
-      alt: "TOLA II - Side profile view",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png",
-      alt: "TOLA II - Macro detail",
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png",
-      alt: "TOLA II - Lifestyle shot",
-    },
-  ], []);
-
-  // ========== STATE ==========
-  const [selectedTierId, setSelectedTierId] = useState('signature');
+export default function TolaIIPage() {
+  const videoRef = useRef(null);
+  const [selectedTier, setSelectedTier] = useState("signature");
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [customSize, setCustomSize] = useState("");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
-  // Get current selection
-  const selectedTier = tierOptions.find(t => t.id === selectedTierId) || tierOptions[1];
+  const tiers = {
+    foundation: {
+      name: "Foundation",
+      metal: "10K Yellow Gold",
+      price: 5200,
+      badge: "",
+      description: "10K yellow gold with black synthetic stones. Built for everyday presence."
+    },
+    signature: {
+      name: "Signature",
+      metal: "14K Yellow Gold",
+      price: 6800,
+      badge: "MOST POPULAR",
+      description: "14K yellow gold with black lab-grown diamonds. Balanced weight and clarity."
+    },
+    heirloom: {
+      name: "Heirloom",
+      metal: "18K Yellow Gold",
+      price: 9200,
+      badge: "COLLECTOR",
+      description: "18K yellow gold with natural black diamonds. Maximum richness and permanence."
+    }
+  };
+
+  const media = [
+    { 
+      type: "video", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/29wd5jby_XiaoYing_Video_1774562301628.mp4", 
+      poster: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png" 
+    },
+    { 
+      type: "image", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png", 
+      alt: "TOLA II hero" 
+    },
+    { 
+      type: "image", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/sm6c4t2r_1000143432.png", 
+      alt: "TOLA II front" 
+    },
+    { 
+      type: "image", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png", 
+      alt: "TOLA II side profile" 
+    },
+    { 
+      type: "image", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png", 
+      alt: "TOLA II detail" 
+    },
+    { 
+      type: "image", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png", 
+      alt: "TOLA II lifestyle" 
+    }
+  ];
+
+  const [activeMedia, setActiveMedia] = useState(0);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleEnded = () => {
+      video.currentTime = 0;
+      video.play();
+    };
+
+    video.addEventListener("ended", handleEnded);
+
+    const tryPlay = async () => {
+      try {
+        await video.play();
+      } catch (err) {
+        console.log("Autoplay blocked:", err);
+      }
+    };
+
+    tryPlay();
+
+    return () => {
+      video.removeEventListener("ended", handleEnded);
+    };
+  }, [activeMedia]);
+
+  const isSizeValid =
+    selectedSize &&
+    (selectedSize !== "custom" || (customSize && customSize.trim().length > 0));
+
+  const currentTier = tiers[selectedTier];
 
   // Handle add to cart
   const onAddToCart = () => {
+    const sizeLabel = selectedSize === "custom" ? `Custom: ${customSize}` : `Size ${selectedSize}`;
     handleAddToCart({
-      id: `tola-ii-${selectedTier.id}`,
+      id: `tola-ii-${selectedTier}-${selectedSize === "custom" ? customSize : selectedSize}`,
       name: 'TOLA II',
-      image: galleryItems[0].src,
-      price: selectedTier.price,
+      image: media[1].src,
+      price: currentTier.price,
       slug: 'tola-ii',
-      materials: [selectedTier.metal]
-    }, 1, `${selectedTier.tierLabel} — ${selectedTier.metal}`);
-  };
-
-  // Preload images
-  useEffect(() => {
-    galleryItems.forEach(item => {
-      if (item.type === 'image') {
-        const img = new Image();
-        img.src = item.src;
-      }
-    });
-  }, [galleryItems]);
-
-  // Format price
-  const formatPrice = (price, currency) => {
-    return new Intl.NumberFormat('en-CA', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
+      materials: [currentTier.metal],
+      size: sizeLabel
+    }, 1, `${currentTier.name} · ${currentTier.metal} · ${sizeLabel}`);
   };
 
   return (
-    <div className="tola-page" data-testid="tola-ii-page">
-      
-      {/* ============================================
-          IRONCLAD LAYOUT: LEFT (Gallery) + RIGHT (Sticky Info)
-          ============================================ */}
-      <div className="tola-main-layout">
-        
-        {/* LEFT COLUMN — Gallery */}
-        <div className="tola-left-column">
-          <div className="tola-gallery-wrapper">
-            <ProductGallery items={galleryItems} />
+    <div className="bg-black text-white min-h-screen" data-testid="tola-ii-page">
+      <div className="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-[1.2fr_0.8fr] gap-10">
+        {/* LEFT SIDE */}
+        <div>
+          {/* HERO MEDIA */}
+          <div className="w-full overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
+            {media[activeMedia].type === "video" ? (
+              <video
+                ref={videoRef}
+                src={media[activeMedia].src}
+                poster={media[activeMedia].poster}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                onEnded={(e) => {
+                  e.currentTarget.currentTime = 0;
+                  e.currentTarget.play();
+                }}
+                className="w-full h-[500px] lg:h-[650px] object-cover"
+              />
+            ) : (
+              <img
+                src={media[activeMedia].src}
+                alt={media[activeMedia].alt}
+                className="w-full h-[500px] lg:h-[650px] object-cover"
+              />
+            )}
+          </div>
+
+          {/* THUMBNAILS */}
+          <div className="grid grid-cols-6 gap-2 mt-4">
+            {media.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveMedia(index)}
+                className={`relative overflow-hidden rounded-lg border transition-all ${
+                  activeMedia === index
+                    ? "border-[#C6A25D]"
+                    : "border-[#2a2a2a] hover:border-[#4a4a4a]"
+                }`}
+                data-testid={`thumbnail-${index}`}
+              >
+                {item.type === "video" ? (
+                  <div className="relative">
+                    <img
+                      src={item.poster}
+                      alt="TOLA II video thumbnail"
+                      className="w-full h-16 lg:h-20 object-cover opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+                      <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-black/70 flex items-center justify-center text-white text-xs lg:text-sm">
+                        ▶
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="w-full h-16 lg:h-20 object-cover"
+                  />
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN — Sticky Product Info */}
-        <div className="tola-right-column">
-          <div className="tola-sticky-panel" data-testid="product-info-panel">
-            
-            {/* Product Name */}
-            <p className="tola-eyebrow">The TOLA Collection</p>
-            <h1 className="tola-product-name">{productData.name}</h1>
-            
-            {/* Tagline */}
-            <p className="tola-tagline">{productData.tagline}</p>
-            
-            {/* Price */}
-            <p className="tola-price" data-testid="product-price">
-              {formatPrice(selectedTier.price, selectedTier.currency)}
+        {/* RIGHT SIDE */}
+        <div className="lg:sticky lg:top-24 self-start">
+          <p className="text-xs tracking-[0.3em] text-[#8e8e8e] uppercase mb-4">
+            The TOLA Collection
+          </p>
+
+          <h1 className="text-4xl lg:text-5xl font-serif mb-3">TOLA II</h1>
+          <p className="text-[#a0a0a0] italic text-lg lg:text-xl mb-6">
+            Weight. Discipline. Presence.
+          </p>
+
+          <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
+            ${currentTier.price.toLocaleString()}
+          </div>
+
+          <p className="text-sm text-[#b5b5b5] mb-8 leading-relaxed">
+            {currentTier.metal} with{" "}
+            {selectedTier === "foundation"
+              ? "black synthetic stones"
+              : selectedTier === "signature"
+              ? "black lab-grown diamonds"
+              : "natural black diamonds"}
+            .<br />
+            {selectedTier === "foundation"
+              ? "Built for everyday presence."
+              : selectedTier === "signature"
+              ? "Engineered for balance. Built for presence."
+              : "Maximum richness. Built for permanence."}
+          </p>
+
+          {/* TIER SELECTION */}
+          <div className="mb-8">
+            <p className="text-xs tracking-[0.3em] text-[#8e8e8e] uppercase mb-3">
+              Select Tier
             </p>
 
-            {/* Tier Selector */}
-            <div className="tola-tier-selector" data-testid="tier-selector">
-              <p className="tola-selector-label">Select Tier</p>
-              <div className="tola-tier-buttons">
-                {tierOptions.map((tier) => (
-                  <button
-                    key={tier.id}
-                    onClick={() => setSelectedTierId(tier.id)}
-                    className={`tola-tier-btn ${selectedTierId === tier.id ? 'selected' : ''} ${tier.highlight ? 'highlight' : ''}`}
-                    data-testid={`tier-${tier.id}`}
-                  >
-                    {tier.tag && <span className="tola-tier-tag">{tier.tag}</span>}
-                    <span className="tola-tier-name">{tier.name}</span>
-                    <span className="tola-tier-metal">{tier.metal}</span>
-                    <span className="tola-tier-price">{formatPrice(tier.price, tier.currency)}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="space-y-3">
+              {Object.entries(tiers).map(([key, tier]) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedTier(key)}
+                  className={`w-full text-left rounded-xl border p-4 lg:p-5 transition-all ${
+                    selectedTier === key
+                      ? "border-[#C6A25D] bg-[#C6A25D]/10"
+                      : "border-[#2a2a2a] bg-black hover:border-[#4a4a4a]"
+                  }`}
+                  data-testid={`tier-${key}`}
+                >
+                  <div className="flex justify-between items-start gap-3">
+                    <div>
+                      <div className="text-xl lg:text-2xl font-medium">{tier.name}</div>
+                      <div className="text-sm text-[#9d9d9d] mt-1">
+                        {tier.metal}
+                      </div>
+                      <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
+                        ${tier.price.toLocaleString()}
+                      </div>
+                    </div>
+
+                    {tier.badge && (
+                      <div className="text-[10px] lg:text-[11px] tracking-[0.2em] px-2 lg:px-3 py-1.5 lg:py-2 rounded-md bg-[#C6A25D] text-black font-semibold whitespace-nowrap">
+                        {tier.badge}
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SIZE SELECTION */}
+          <div className="mb-8">
+            <p className="text-xs tracking-[0.3em] text-[#8e8e8e] uppercase mb-3">
+              Select Size
+            </p>
+
+            <div className="grid grid-cols-4 gap-2">
+              {[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12].map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`py-3 rounded-lg border text-sm transition-all duration-200 ${
+                    selectedSize === size
+                      ? "border-[#C6A25D] bg-[#C6A25D]/10 text-white"
+                      : "border-[#2a2a2a] text-[#d0d0d0] hover:border-[#C6A25D]"
+                  }`}
+                  data-testid={`size-${size}`}
+                >
+                  {size}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setSelectedSize("custom")}
+                className={`col-span-4 py-3 rounded-lg border text-sm tracking-[0.15em] transition-all duration-200 ${
+                  selectedSize === "custom"
+                    ? "border-[#C6A25D] bg-[#C6A25D]/10 text-white"
+                    : "border-[#2a2a2a] text-[#d0d0d0] hover:border-[#C6A25D]"
+                }`}
+                data-testid="size-custom"
+              >
+                CUSTOM SIZE
+              </button>
             </div>
 
-            {/* Selected Tier Description */}
-            <p className="tola-tier-description">{selectedTier.description}</p>
+            {selectedSize === "custom" && (
+              <div className="mt-4">
+                <input
+                  type="text"
+                  placeholder="Enter your ring size (e.g. 13, 14.5)"
+                  value={customSize}
+                  onChange={(e) => setCustomSize(e.target.value)}
+                  className="w-full p-3 bg-black border border-[#2a2a2a] rounded-lg text-white text-sm focus:border-[#C6A25D] outline-none transition-colors"
+                  data-testid="custom-size-input"
+                />
+                <p className="text-xs text-[#7f7f7f] mt-2">
+                  Sizes above 12 are custom made and may require additional production time.
+                </p>
+              </div>
+            )}
 
-            {/* BUY Button */}
-            <button
-              onClick={onAddToCart}
-              disabled={isAdding}
-              className={`tola-buy-btn ${isAdding ? 'added' : ''}`}
-              data-testid="add-to-cart-button"
-            >
-              {buttonText}
-            </button>
+            {selectedSize && selectedSize !== "custom" && (
+              <p className="text-xs text-[#7f7f7f] mt-3">
+                Between sizes? Choose the half size for a more precise fit.
+              </p>
+            )}
+          </div>
 
-            {/* Shipping Note */}
-            <p className="tola-shipping-note">
-              Complimentary insured shipping within Canada
+          {/* ADD TO CART */}
+          <button
+            disabled={!isSizeValid || isAdding}
+            onClick={onAddToCart}
+            className={`w-full py-4 rounded-xl tracking-[0.25em] text-sm font-semibold transition-all ${
+              isSizeValid && !isAdding
+                ? "bg-[#C6A25D] text-black hover:bg-[#b8944f]"
+                : "bg-[#3a3a3a] text-[#8a8a8a] cursor-not-allowed"
+            } ${isAdding ? "bg-green-600 text-white" : ""}`}
+            data-testid="add-to-cart-button"
+          >
+            {isAdding ? buttonText : (isSizeValid ? "ADD TO CART" : "SELECT A SIZE")}
+          </button>
+
+          <p className="text-center text-sm text-[#7f7f7f] mt-4">
+            Complimentary insured shipping within Canada
+          </p>
+
+          {/* STORY */}
+          <div className="mt-14">
+            <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
+              The TOLA II Story
+            </h2>
+            <p className="text-[#d2d2d2] leading-7 lg:leading-8 text-base lg:text-lg">
+              TOLA II is built on restraint and control. A structured gold form,
+              anchored by a central chain and framed with precision-set black stones.
+              Every surface is intentional. Every detail holds weight.
             </p>
+          </div>
+
+          {/* SPECIFICATIONS */}
+          <div className="mt-14 pb-16">
+            <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
+              Specifications
+            </h2>
+            <ul className="space-y-4 lg:space-y-5 text-[#d2d2d2] text-sm lg:text-base">
+              <li>— Approx. top width: 12–13mm</li>
+              <li>— Approx. band width: 3–4mm</li>
+              <li>— Structured pavé setting</li>
+              <li>— High polish finish</li>
+              <li>— Engineered gold weight for balance and presence</li>
+            </ul>
           </div>
         </div>
       </div>
-
-      {/* ============================================
-          BELOW SECTION — Description & Specs
-          ============================================ */}
-      <section className="tola-below-section">
-        <div className="tola-below-content">
-          
-          {/* Description */}
-          <div className="tola-description-block">
-            <h2 className="tola-section-title">The TOLA II Story</h2>
-            <p className="tola-description-text">{productData.description}</p>
-          </div>
-
-          {/* Specs */}
-          <div className="tola-specs-block">
-            <h2 className="tola-section-title">Specifications</h2>
-            <ul className="tola-specs-list">
-              {productData.specs.map((spec, index) => (
-                <li key={index} className="tola-spec-item">{spec}</li>
-              ))}
-            </ul>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ============================================
-          STYLES
-          ============================================ */}
-      <style>{`
-        .tola-page {
-          background: #000;
-          min-height: 100vh;
-          color: #fff;
-        }
-
-        /* ========== MAIN LAYOUT (Left/Right Split) ========== */
-        .tola-main-layout {
-          display: grid;
-          grid-template-columns: 1fr 420px;
-          gap: 0;
-          min-height: 100vh;
-        }
-
-        /* LEFT COLUMN — Gallery */
-        .tola-left-column {
-          padding: 40px 40px 80px 60px;
-          border-right: 1px solid rgba(199, 162, 75, 0.1);
-        }
-
-        .tola-gallery-wrapper {
-          max-width: 900px;
-        }
-
-        /* RIGHT COLUMN — Sticky Info */
-        .tola-right-column {
-          position: relative;
-        }
-
-        .tola-sticky-panel {
-          position: sticky;
-          top: 100px;
-          padding: 60px 40px;
-          max-height: calc(100vh - 120px);
-          overflow-y: auto;
-        }
-
-        /* Hide scrollbar but allow scrolling */
-        .tola-sticky-panel::-webkit-scrollbar {
-          width: 0;
-          display: none;
-        }
-
-        /* ========== PRODUCT INFO ========== */
-        .tola-eyebrow {
-          font-size: 10px;
-          letter-spacing: 0.3em;
-          color: rgba(199, 162, 75, 0.6);
-          text-transform: uppercase;
-          margin-bottom: 12px;
-        }
-
-        .tola-product-name {
-          font-family: 'Playfair Display', serif;
-          font-size: 36px;
-          font-weight: 400;
-          letter-spacing: 0.15em;
-          margin-bottom: 12px;
-        }
-
-        .tola-tagline {
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.6);
-          font-style: italic;
-          letter-spacing: 0.02em;
-          margin-bottom: 24px;
-          line-height: 1.5;
-        }
-
-        .tola-price {
-          font-size: 32px;
-          font-weight: 300;
-          color: #C7A24B;
-          letter-spacing: 0.02em;
-          margin-bottom: 32px;
-        }
-
-        /* ========== TIER SELECTOR ========== */
-        .tola-tier-selector {
-          margin-bottom: 24px;
-        }
-
-        .tola-selector-label {
-          font-size: 10px;
-          letter-spacing: 0.25em;
-          color: rgba(255, 255, 255, 0.4);
-          text-transform: uppercase;
-          margin-bottom: 16px;
-        }
-
-        .tola-tier-buttons {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .tola-tier-btn {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          padding: 16px 20px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.25s ease;
-          text-align: left;
-        }
-
-        .tola-tier-btn:hover {
-          border-color: rgba(199, 162, 75, 0.4);
-          background: rgba(199, 162, 75, 0.05);
-        }
-
-        .tola-tier-btn.selected {
-          border-color: #C7A24B;
-          background: rgba(199, 162, 75, 0.1);
-        }
-
-        .tola-tier-btn.highlight {
-          border-color: rgba(199, 162, 75, 0.3);
-        }
-
-        .tola-tier-tag {
-          position: absolute;
-          top: -8px;
-          right: 12px;
-          font-size: 9px;
-          letter-spacing: 0.1em;
-          color: #000;
-          background: #C7A24B;
-          padding: 3px 8px;
-          border-radius: 2px;
-          text-transform: uppercase;
-          font-weight: 600;
-        }
-
-        .tola-tier-name {
-          font-size: 14px;
-          font-weight: 500;
-          letter-spacing: 0.05em;
-          color: #fff;
-          margin-bottom: 4px;
-        }
-
-        .tola-tier-metal {
-          font-size: 11px;
-          color: rgba(255, 255, 255, 0.5);
-          margin-bottom: 6px;
-        }
-
-        .tola-tier-price {
-          font-size: 16px;
-          color: #C7A24B;
-          font-weight: 400;
-        }
-
-        .tola-tier-description {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.4);
-          font-style: italic;
-          line-height: 1.6;
-          margin-bottom: 28px;
-        }
-
-        /* ========== BUY BUTTON ========== */
-        .tola-buy-btn {
-          width: 100%;
-          padding: 18px 32px;
-          background: #C7A24B;
-          border: none;
-          color: #000;
-          font-size: 13px;
-          font-weight: 600;
-          letter-spacing: 0.2em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border-radius: 2px;
-          margin-bottom: 16px;
-        }
-
-        .tola-buy-btn:hover {
-          background: #B8944A;
-          transform: scale(1.02);
-        }
-
-        .tola-buy-btn:active {
-          transform: scale(0.98);
-        }
-
-        .tola-buy-btn.added {
-          background: #16a34a;
-        }
-
-        .tola-buy-btn:disabled {
-          cursor: not-allowed;
-        }
-
-        .tola-shipping-note {
-          font-size: 11px;
-          color: rgba(255, 255, 255, 0.35);
-          text-align: center;
-          letter-spacing: 0.05em;
-        }
-
-        /* ========== BELOW SECTION (Description & Specs) ========== */
-        .tola-below-section {
-          border-top: 1px solid rgba(199, 162, 75, 0.1);
-          padding: 80px 60px 120px;
-        }
-
-        .tola-below-content {
-          max-width: 900px;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 80px;
-        }
-
-        .tola-section-title {
-          font-family: 'Playfair Display', serif;
-          font-size: 24px;
-          font-weight: 400;
-          letter-spacing: 0.08em;
-          color: #C7A24B;
-          margin-bottom: 24px;
-        }
-
-        .tola-description-text {
-          font-size: 14px;
-          line-height: 1.8;
-          color: rgba(255, 255, 255, 0.7);
-          margin-bottom: 20px;
-        }
-
-        .tola-description-text:last-of-type {
-          margin-bottom: 0;
-        }
-
-        /* ========== SPECS LIST ========== */
-        .tola-specs-list {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .tola-spec-item {
-          font-size: 13px;
-          color: rgba(255, 255, 255, 0.7);
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          line-height: 1.5;
-        }
-
-        .tola-spec-item:last-child {
-          border-bottom: none;
-        }
-
-        .tola-spec-item::before {
-          content: "—";
-          margin-right: 12px;
-          color: #C7A24B;
-        }
-
-        /* ========== MOBILE RESPONSIVE ========== */
-        @media (max-width: 1024px) {
-          .tola-main-layout {
-            grid-template-columns: 1fr;
-          }
-
-          .tola-left-column {
-            padding: 24px 20px 40px;
-            border-right: none;
-            border-bottom: 1px solid rgba(199, 162, 75, 0.1);
-          }
-
-          .tola-right-column {
-            padding: 0;
-          }
-
-          .tola-sticky-panel {
-            position: static;
-            padding: 40px 24px 60px;
-            max-height: none;
-          }
-
-          .tola-below-content {
-            grid-template-columns: 1fr;
-            gap: 60px;
-          }
-
-          .tola-below-section {
-            padding: 60px 24px 100px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .tola-product-name {
-            font-size: 28px;
-          }
-
-          .tola-price {
-            font-size: 26px;
-          }
-
-          .tola-tier-btn {
-            padding: 14px 16px;
-          }
-
-          .tola-section-title {
-            font-size: 20px;
-          }
-        }
-      `}</style>
     </div>
   );
-};
-
-export default TolaIIPage;
+}
