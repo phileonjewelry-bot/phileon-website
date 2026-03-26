@@ -28,7 +28,7 @@ const TolaIIPage = () => {
       metal: '10K Yellow Gold',
       price: 2850,
       currency: 'CAD',
-      description: '10K gold with precision-set black stones. Built for everyday structure and presence.',
+      description: '10K yellow gold with black stones. Built for everyday structure and presence.',
       tag: '',
       highlight: false,
     },
@@ -39,7 +39,7 @@ const TolaIIPage = () => {
       metal: '14K Yellow Gold',
       price: 3700,
       currency: 'CAD',
-      description: '14K gold with enhanced depth and clarity. Balanced weight with elevated finish.',
+      description: '14K yellow gold with black lab-grown diamonds. Balanced weight with elevated clarity.',
       tag: 'Most Popular',
       highlight: true,
     },
@@ -50,7 +50,7 @@ const TolaIIPage = () => {
       metal: '18K Yellow Gold',
       price: 5200,
       currency: 'CAD',
-      description: '18K gold with maximum richness and density. Designed for permanence.',
+      description: '18K yellow gold with natural black diamonds. Maximum richness and permanence.',
       tag: 'Collector',
       highlight: false,
     },
@@ -60,9 +60,9 @@ const TolaIIPage = () => {
   const galleryItems = useMemo(() => [
     {
       type: "video",
-      src: "/videos/tola-ii.mp4",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/29wd5jby_XiaoYing_Video_1774562301628.mp4",
       alt: "TOLA II - Product Video",
-      objectFit: "contain",
+      objectFit: "cover",
     },
     {
       type: "image",

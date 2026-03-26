@@ -542,7 +542,7 @@ export const products = {
         price: 2850,
         tag: "",
         highlight: false,
-        description: "10K gold with precision-set black stones. Built for everyday structure and presence."
+        description: "10K yellow gold with black stones. Built for everyday structure and presence."
       },
       {
         id: "signature",
@@ -552,7 +552,7 @@ export const products = {
         price: 3700,
         tag: "Most Popular",
         highlight: true,
-        description: "14K gold with enhanced depth and clarity. Balanced weight with elevated finish."
+        description: "14K yellow gold with black lab-grown diamonds. Balanced weight with elevated clarity."
       },
       {
         id: "heirloom",
@@ -562,7 +562,7 @@ export const products = {
         price: 5200,
         tag: "Collector",
         highlight: false,
-        description: "18K gold with maximum richness and density. Designed for permanence."
+        description: "18K yellow gold with natural black diamonds. Maximum richness and permanence."
       }
     ],
     
@@ -577,7 +577,7 @@ export const products = {
     
     // Gallery media (video first, then images)
     media: [
-      { type: "video", src: "/videos/tola-ii.mp4" },
+      { type: "video", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/29wd5jby_XiaoYing_Video_1774562301628.mp4" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/sm6c4t2r_1000143432.png" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png" },
