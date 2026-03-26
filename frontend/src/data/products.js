@@ -502,6 +502,84 @@ export const products = {
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // TOLA II
+  // Bold men's ring with Cuban chain and black diamonds
+  // Ironclad Rules: 10K/14K/18K Yellow Gold tiers
+  // ==========================================
+  tolaII: {
+    name: "TOLA II",
+    slug: "tola-ii",
+    category: "rings",
+    audience: "gentlemens-club",
+    tagline: "Chain-linked. Stone-crowned. Built to reign.",
+    description: "The TOLA II ring commands attention with its bold fusion of Cuban link chain motifs and black diamond pavé. A modern heirloom designed for those who lead, not follow.",
+    
+    // Hero image for shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
+    
+    // Pricing Configuration (Ironclad Rules: Yellow Gold Only)
+    dynamicPricing: false,
+    currency: "CAD",
+    
+    // Tier-based pricing
+    tiers: [
+      {
+        id: "foundation",
+        name: "Foundation Edition",
+        metal: "10K Yellow Gold",
+        pricingKey: "foundation",
+        price: 4200,
+        tag: "",
+        highlight: false,
+        description: "Entry into the TOLA legacy. 10K solid gold construction."
+      },
+      {
+        id: "signature",
+        name: "Signature Edition",
+        metal: "14K Yellow Gold",
+        pricingKey: "signature",
+        price: 5800,
+        tag: "Most Popular",
+        highlight: true,
+        description: "The definitive TOLA II experience. Best balance of weight and value."
+      },
+      {
+        id: "heirloom",
+        name: "Heirloom Edition",
+        metal: "18K Yellow Gold",
+        pricingKey: "heirloom",
+        price: 7400,
+        tag: "Collector",
+        highlight: false,
+        description: "Collector-grade luxury. Maximum gold purity for a lasting legacy."
+      }
+    ],
+    
+    // Specs
+    specs: [
+      { label: "Stone Type", value: "Black Diamonds (Natural)" },
+      { label: "Setting Style", value: "Micro-pavé with blackened prongs" },
+      { label: "Center Motif", value: "Cuban link chain" },
+      { label: "Band Width", value: "14mm" },
+      { label: "Weight (approx.)", value: "18–22g depending on size" },
+      { label: "Available Sizes", value: "7–13 (half sizes available)" }
+    ],
+    
+    // Gallery images
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
+      front: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/sm6c4t2r_1000143432.png",
+      lifestyle: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1ta12tya_1000143385.png",
+      stacked: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/44jzrngc_1000143431.png",
+      macro: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/m0g80wsc_1000143416.png",
+      side: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/ipu9le7o_1000141790.png"
+    },
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

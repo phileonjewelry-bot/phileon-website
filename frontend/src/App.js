@@ -30,6 +30,7 @@ import RosariaPage from "@/pages/RosariaPage";
 import DesirCorsetPage from "@/pages/DesirCorsetPage";
 import FormeCuffPage from "@/pages/FormeCuffPage";
 import RhythmMeshRingPage from "@/pages/RhythmMeshRingPage";
+import TolaIIPage from "@/pages/TolaIIPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -87,6 +88,7 @@ function App() {
             <Route path="/products/desir-corset" element={<DesirCorsetPage />} />
             <Route path="/products/forme-cuff" element={<FormeCuffPage />} />
             <Route path="/products/rhythm-mesh-ring" element={<RhythmMeshRingPage />} />
+            <Route path="/products/tola-ii" element={<TolaIIPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />
