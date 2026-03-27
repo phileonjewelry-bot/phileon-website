@@ -41,7 +41,7 @@ const galatians614Product = {
   media: [
     { 
       type: "image", 
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dx5ms8j2_1000143661.png", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/tf1ne9cg_1000143695.jpg", 
       alt: "GALATIANS 6:14 Hero" 
     },
     { 
