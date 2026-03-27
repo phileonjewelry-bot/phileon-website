@@ -42,7 +42,7 @@ const galatians614Product = {
   media: [
     {
       type: "video",
-      src: "/videos/galatians.mp4",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qdze910e_XiaoYing_Video_1774585435855.mp4",
       poster: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/tf1ne9cg_1000143695.jpg"
     },
     {
