@@ -58,6 +58,11 @@ const galatians614Product = {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/cks161k0_1000143667.png",
       alt: "GALATIANS 6:14 pendant macro detail"
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp",
+      alt: "GALATIANS 6:14 pendant lifestyle"
     }
   ],
 
