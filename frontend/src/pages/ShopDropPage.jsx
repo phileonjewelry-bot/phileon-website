@@ -145,6 +145,19 @@ const CORE_PRODUCTS = [
     category: 'rings',
     audience: 'gentlemens-club',
   },
+  {
+    id: 'galatians-614',
+    name: 'GALATIANS 6:14',
+    slug: 'galatians-614',
+    materialLine: 'Cross Pendant · 10K-18K Yellow Gold',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/tf1ne9cg_1000143695.jpg',
+    href: '/products/galatians-614',
+    price_range: 'From $3,800 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'pendants',
+    audience: 'gentlemens-club',
+  },
 ];
 
 // Additional drop products as fallback
