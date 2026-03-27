@@ -102,12 +102,12 @@ export default function PendantProductPage({ product }) {
           </div>
 
           {/* THUMBNAILS */}
-          <div className="grid grid-cols-6 gap-2 mt-4">
+          <div className="flex gap-2 mt-4">
             {product.media.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setActiveMedia(index)}
-                className={`relative overflow-hidden rounded-lg border transition-all ${
+                className={`relative overflow-hidden rounded-lg border transition-all h-20 w-20 flex-shrink-0 ${
                   activeMedia === index
                     ? "border-[#C6A25D]"
                     : "border-[#2a2a2a] hover:border-[#4a4a4a]"
@@ -115,14 +115,14 @@ export default function PendantProductPage({ product }) {
                 data-testid={`thumbnail-${index}`}
               >
                 {item.type === "video" ? (
-                  <div className="relative">
+                  <div className="relative h-full w-full">
                     <img
                       src={item.poster}
                       alt={`${product.name} video thumbnail`}
-                      className="w-full h-16 lg:h-20 object-cover opacity-80"
+                      className="h-full w-full object-contain"
                     />
                     <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                      <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-black/70 flex items-center justify-center text-white text-xs lg:text-sm">
+                      <div className="w-8 h-8 rounded-full bg-black/70 flex items-center justify-center text-white text-xs">
                         ▶
                       </div>
                     </div>
@@ -131,7 +131,7 @@ export default function PendantProductPage({ product }) {
                   <img
                     src={item.src}
                     alt={item.alt}
-                    className="w-full h-16 lg:h-20 object-cover"
+                    className="h-full w-full object-contain"
                   />
                 )}
               </button>
