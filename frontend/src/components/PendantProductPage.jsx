@@ -159,8 +159,11 @@ export default function PendantProductPage({ product }) {
             ${currentTier.price.toLocaleString()}
           </div>
 
-          <p className="text-sm text-[#b5b5b5] mb-8 leading-relaxed">
+          <p className="text-sm text-white/70 mb-2">
             {currentTier.metal} — {currentTier.description}
+          </p>
+          <p className="text-xs text-white/50 mb-8">
+            Chain sold separately.
           </p>
 
           {/* TIER SELECTION */}
@@ -219,9 +222,6 @@ export default function PendantProductPage({ product }) {
 
           <p className="text-center text-sm text-[#7f7f7f] mt-4">
             Complimentary insured shipping within Canada
-          </p>
-          <p className="text-xs text-white/50 mt-1 text-center">
-            Chain not included.
           </p>
 
           {/* STORY */}
