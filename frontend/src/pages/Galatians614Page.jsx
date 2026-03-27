@@ -19,21 +19,21 @@ const galatians614Product = {
       metal: "10K Yellow Gold",
       price: 3800,
       badge: "",
-      description: "10K yellow gold. Built for everyday presence."
+      description: "Built for everyday presence."
     },
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
       price: 4800,
       badge: "MOST POPULAR",
-      description: "14K yellow gold. Balanced weight and clarity."
+      description: "Balanced weight and clarity."
     },
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
       price: 6400,
       badge: "COLLECTOR",
-      description: "18K yellow gold. Maximum richness and permanence."
+      description: "Maximum richness and permanence."
     }
   },
 
