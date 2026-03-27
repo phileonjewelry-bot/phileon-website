@@ -220,6 +220,9 @@ export default function PendantProductPage({ product }) {
           <p className="text-center text-sm text-[#7f7f7f] mt-4">
             Complimentary insured shipping within Canada
           </p>
+          <p className="text-xs text-white/50 mt-1 text-center">
+            Chain not included.
+          </p>
 
           {/* STORY */}
           <div className="mt-14">
