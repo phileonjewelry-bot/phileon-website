@@ -38,7 +38,6 @@ const galatians614Product = {
   },
 
   // Media array - video first, then images
-  // Replace placeholder paths with actual URLs when uploaded
   media: [
     {
       type: "video",
@@ -52,18 +51,13 @@ const galatians614Product = {
     },
     {
       type: "image",
-      src: "/images/cross-angle.jpg",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/n89fehoj_1000143702.png",
       alt: "GALATIANS 6:14 pendant angle"
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/cks161k0_1000143667.png",
       alt: "GALATIANS 6:14 pendant macro detail"
-    },
-    {
-      type: "image",
-      src: "/images/cross-lifestyle.jpg",
-      alt: "GALATIANS 6:14 pendant on body"
     }
   ],
 
