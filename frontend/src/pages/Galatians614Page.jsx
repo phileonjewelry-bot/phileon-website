@@ -37,32 +37,17 @@ const galatians614Product = {
     }
   },
 
-  // Placeholder media - replace with actual URLs when available
+  // Media with actual uploaded images
   media: [
     { 
-      type: "video", 
-      src: "/videos/galatians.mp4", 
-      poster: "/images/cross-hero.jpg" 
-    },
-    { 
       type: "image", 
-      src: "/images/cross-hero.jpg", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dx5ms8j2_1000143661.png", 
       alt: "GALATIANS 6:14 Hero" 
     },
     { 
       type: "image", 
-      src: "/images/cross-angle.jpg", 
-      alt: "GALATIANS 6:14 Angle" 
-    },
-    { 
-      type: "image", 
-      src: "/images/cross-macro.jpg", 
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/cks161k0_1000143667.png", 
       alt: "GALATIANS 6:14 Macro detail" 
-    },
-    { 
-      type: "image", 
-      src: "/images/cross-lifestyle.jpg", 
-      alt: "GALATIANS 6:14 On body" 
     }
   ],
 
