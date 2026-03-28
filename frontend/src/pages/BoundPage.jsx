@@ -41,17 +41,17 @@ const BoundPage = () => {
   const media = [
     {
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
-      alt: "BOUND model hero",
+      alt: "BOUND hero model red carpet",
+      section: null
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
+      alt: "BOUND editorial wrist black dress",
       section: null
     },
     {
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png",
       alt: "BOUND clean product front",
-      section: null
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
-      alt: "BOUND wrist on black dress",
       section: "detail"
     },
     {
@@ -149,7 +149,7 @@ const BoundPage = () => {
           MAIN PRODUCT SECTION
           2-column layout: Gallery LEFT, Info RIGHT (sticky)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-product py-24 md:py-32 animate-fadeIn">
+      <section className="bound-product py-16 md:py-22 animate-fadeIn">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-20">
             
