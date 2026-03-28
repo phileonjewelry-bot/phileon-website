@@ -355,101 +355,269 @@ const ShopDropPage = () => {
 
       {/* Products Grid */}
       <section className="shop-drop__section">
-        <div className="shop-drop__grid">
-          {filteredProducts.map((product, index) => {
-            const inventoryCount = product.inventory_count || product.stock || 0;
-            const isSoldOut = inventoryCount === 0;
-            const productUrl = product.href || `/products/${product.slug}`;
-            
-            // Determine card image based on audience filter
-            // Check audienceImages first (from products.js), then lifestyleImages (legacy), then default
-            const cardImage = 
-              product.audienceImages?.[audienceParam] ||
-              product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
-              product.lifestyleImages?.[audienceParam] ||
-              product.lifestyleImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
-              product.images?.[0] || 
-              product.imageUrl || 
-              'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
-            
-            return (
-              <div 
-                key={product.id}
-                className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
-                style={{ 
-                  position: 'relative',
-                  transitionDelay: `${index * 80}ms` 
-                }}
-              >
-                {/* Wishlist - Outside the link */}
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggle(product.id);
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    zIndex: 100,
-                    padding: '8px',
-                    background: 'rgba(0, 0, 0, 0.4)',
-                    border: 'none',
-                    borderRadius: '50%',
-                    color: 'white',
-                    cursor: 'pointer',
-                  }}
-                  title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                >
-                  <Heart 
-                    className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
-                  />
-                </button>
-
-                {/* NATIVE ANCHOR TAG - Full card clickable */}
-                <a 
-                  href={productUrl}
-                  style={{
-                    display: 'block',
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    cursor: 'pointer',
-                  }}
-                  data-testid={`product-card-${product.slug}`}
-                >
-                  <div style={{
-                    position: 'relative',
-                    aspectRatio: '4/5',
-                    overflow: 'hidden',
-                    background: '#111',
-                  }}>
-                    <img 
-                      src={cardImage} 
-                      alt={product.name}
-                      loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        filter: isSoldOut ? 'grayscale(1)' : 'none',
-                      }}
-                      draggable="false"
-                    />
-                  </div>
+        {/* Special Editorial Layout for Ladies Bracelets/Cuffs */}
+        {categoryParam === 'bracelets' && audienceParam === 'ladies' ? (
+          <>
+            {/* BOUND - Featured Anchor Product */}
+            {filteredProducts.filter(p => p.id === 'bound').map((product) => {
+              const productUrl = product.href || `/products/${product.slug}`;
+              return (
+                <div key={product.id} className="bound-featured-section mb-16">
+                  <a 
+                    href={productUrl}
+                    className="block group"
+                    data-testid="featured-bound-card"
+                  >
+                    <div className="max-w-5xl mx-auto px-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+                        {/* Image */}
+                        <div className="relative aspect-[4/5] overflow-hidden bg-[#0a0a0a] rounded-sm">
+                          <img 
+                            src={product.imageUrl}
+                            alt={product.name}
+                            className="w-full h-full object-cover transition-transform duration-[6s] ease-out group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                        </div>
+                        
+                        {/* Info */}
+                        <div className="text-center lg:text-left py-8 lg:py-0">
+                          <p className="text-[#C6A25D]/50 text-[10px] tracking-[0.4em] uppercase mb-4">
+                            FEATURED PIECE
+                          </p>
+                          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white/90 tracking-wide font-light">
+                            {product.name}
+                          </h2>
+                          <p className="text-white/40 text-lg tracking-[0.1em] mt-2">
+                            The Bustier Bangle
+                          </p>
+                          <p className="text-white/30 text-sm mt-4 max-w-md mx-auto lg:mx-0">
+                            Form, held in tension. A study in restraint and release — 
+                            engineered to move with the body, yet command the eye.
+                          </p>
+                          <p className="text-[#C6A25D] text-2xl mt-6 tracking-wide">
+                            {product.price_range}
+                          </p>
+                          <div className="mt-8">
+                            <span className="inline-block px-8 py-3 border border-white/20 text-white/80 text-sm tracking-[0.2em] uppercase transition-all duration-300 group-hover:border-[#C6A25D]/60 group-hover:shadow-[0_0_20px_rgba(198,162,93,0.15)]">
+                              VIEW PIECE
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
                   
-                  <div style={{ padding: '16px 0' }}>
-                    <h3 className="shop-drop__card-name">{product.name}</h3>
-                    <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                    {product.price_range && (
-                      <p className="shop-drop__card-price">{product.price_range}</p>
-                    )}
-                  </div>
-                </a>
+                  {/* Wishlist button */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggle(product.id);
+                    }}
+                    className="absolute top-6 right-6 z-10 p-3 bg-black/40 rounded-full text-white hover:bg-black/60 transition-colors"
+                    title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart className={`w-5 h-5 ${has(product.id) ? 'fill-current text-red-400' : ''}`} />
+                  </button>
+                </div>
+              );
+            })}
+            
+            {/* Divider */}
+            <div className="max-w-4xl mx-auto px-6 mb-12">
+              <div className="flex items-center gap-6">
+                <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                <span className="text-white/30 text-[10px] tracking-[0.3em] uppercase">
+                  MORE BRACELETS & CUFFS
+                </span>
+                <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               </div>
-            );
-          })}
-        </div>
+            </div>
+            
+            {/* Other Products Grid */}
+            <div className="shop-drop__grid">
+              {filteredProducts.filter(p => p.id !== 'bound').map((product, index) => {
+                const inventoryCount = product.inventory_count || product.stock || 0;
+                const isSoldOut = inventoryCount === 0;
+                const productUrl = product.href || `/products/${product.slug}`;
+                
+                // Use clean product shot for non-BOUND items
+                const cardImage = product.imageUrl;
+                
+                return (
+                  <div 
+                    key={product.id}
+                    className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
+                    style={{ 
+                      position: 'relative',
+                      transitionDelay: `${index * 80}ms` 
+                    }}
+                  >
+                    {/* Wishlist */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggle(product.id);
+                      }}
+                      style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        zIndex: 100,
+                        padding: '8px',
+                        background: 'rgba(0, 0, 0, 0.4)',
+                        border: 'none',
+                        borderRadius: '50%',
+                        color: 'white',
+                        cursor: 'pointer',
+                      }}
+                      title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                    >
+                      <Heart className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} />
+                    </button>
+
+                    <a 
+                      href={productUrl}
+                      style={{
+                        display: 'block',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                      data-testid={`product-card-${product.slug}`}
+                    >
+                      <div style={{
+                        position: 'relative',
+                        aspectRatio: '4/5',
+                        overflow: 'hidden',
+                        background: '#111',
+                      }}>
+                        <img 
+                          src={cardImage} 
+                          alt={product.name}
+                          loading="lazy"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            filter: isSoldOut ? 'grayscale(1)' : 'none',
+                          }}
+                          draggable="false"
+                        />
+                      </div>
+                      
+                      <div style={{ padding: '16px 0' }}>
+                        <h3 className="shop-drop__card-name">{product.name}</h3>
+                        <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                        {product.price_range && (
+                          <p className="shop-drop__card-price">{product.price_range}</p>
+                        )}
+                      </div>
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          /* Standard Grid for other categories */
+          <div className="shop-drop__grid">
+            {filteredProducts.map((product, index) => {
+              const inventoryCount = product.inventory_count || product.stock || 0;
+              const isSoldOut = inventoryCount === 0;
+              const productUrl = product.href || `/products/${product.slug}`;
+              
+              // Determine card image based on audience filter
+              const cardImage = 
+                product.audienceImages?.[audienceParam] ||
+                product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
+                product.lifestyleImages?.[audienceParam] ||
+                product.lifestyleImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
+                product.images?.[0] || 
+                product.imageUrl || 
+                'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
+              
+              return (
+                <div 
+                  key={product.id}
+                  className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
+                  style={{ 
+                    position: 'relative',
+                    transitionDelay: `${index * 80}ms` 
+                  }}
+                >
+                  {/* Wishlist - Outside the link */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggle(product.id);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: '12px',
+                      right: '12px',
+                      zIndex: 100,
+                      padding: '8px',
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      color: 'white',
+                      cursor: 'pointer',
+                    }}
+                    title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                  >
+                    <Heart 
+                      className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
+                    />
+                  </button>
+
+                  {/* NATIVE ANCHOR TAG - Full card clickable */}
+                  <a 
+                    href={productUrl}
+                    style={{
+                      display: 'block',
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      cursor: 'pointer',
+                    }}
+                    data-testid={`product-card-${product.slug}`}
+                  >
+                    <div style={{
+                      position: 'relative',
+                      aspectRatio: '4/5',
+                      overflow: 'hidden',
+                      background: '#111',
+                    }}>
+                      <img 
+                        src={cardImage} 
+                        alt={product.name}
+                        loading="lazy"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          filter: isSoldOut ? 'grayscale(1)' : 'none',
+                        }}
+                        draggable="false"
+                      />
+                    </div>
+                    
+                    <div style={{ padding: '16px 0' }}>
+                      <h3 className="shop-drop__card-name">{product.name}</h3>
+                      <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                      {product.price_range && (
+                        <p className="shop-drop__card-price">{product.price_range}</p>
+                      )}
+                    </div>
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
     </div>
   );
