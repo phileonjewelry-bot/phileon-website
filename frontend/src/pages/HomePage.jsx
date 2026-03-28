@@ -296,6 +296,100 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          GALATIANS 6:14 FEATURE SECTION
+          Image LEFT, text RIGHT
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-28 md:py-36 lg:py-44 bg-phileon-black">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Image LEFT */}
+            <ScrollReveal delay={100}>
+              <Link to="/products/galatians-614" className="block group">
+                <div className="relative aspect-square overflow-hidden bg-black rounded-sm">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.3) 80%)'
+                    }}
+                  />
+                  <img
+                    src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
+                    alt="GALATIANS 6:14 pendant"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                  />
+                </div>
+              </Link>
+            </ScrollReveal>
+            
+            {/* Text RIGHT */}
+            <ScrollReveal delay={300}>
+              <div className="text-center lg:text-left py-8">
+                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-phileon-ivory/90 leading-tight font-light">
+                  GALATIANS 6:14
+                </h2>
+                <p className="mt-4 text-phileon-ivory/50 text-lg font-light italic">
+                  Faith, worn with intention.
+                </p>
+                <div className="mt-10">
+                  <FeatureCTA to="/products/galatians-614" testId="galatians-cta">
+                    Explore
+                  </FeatureCTA>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+        <div className="h-16 md:h-20"></div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          TRACE FEATURE SECTION
+          Image RIGHT, text LEFT
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-28 md:py-36 lg:py-44 bg-[#080808]">
+        <div className="max-w-6xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Text LEFT (order changes on mobile) */}
+            <ScrollReveal delay={100} className="order-2 lg:order-1">
+              <div className="text-center lg:text-left py-8">
+                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-phileon-ivory/90 leading-tight font-light">
+                  TRACE
+                </h2>
+                <p className="mt-4 text-phileon-ivory/50 text-lg font-light italic">
+                  The imprint of form.
+                </p>
+                <div className="mt-10">
+                  <FeatureCTA to="/products/trace" testId="trace-cta">
+                    Explore
+                  </FeatureCTA>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Image RIGHT */}
+            <ScrollReveal delay={300} className="order-1 lg:order-2">
+              <Link to="/products/trace" className="block group">
+                <div className="relative aspect-square overflow-hidden bg-black rounded-sm">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.3) 80%)'
+                    }}
+                  />
+                  <img
+                    src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
+                    alt="TRACE earrings"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                  />
+                </div>
+              </Link>
+            </ScrollReveal>
+          </div>
+        </div>
+        <div className="h-16 md:h-20"></div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
           SIGNATURE PRODUCTS GRID
           Core collection showcase
       ═══════════════════════════════════════════════════════════════ */}
