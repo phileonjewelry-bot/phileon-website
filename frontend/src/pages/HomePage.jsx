@@ -335,9 +335,9 @@ const HomePage = () => {
 
         return (
           <section className="cinematic-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            {/* Fade edges - enhanced for infinite feel */}
+            <div className="strip-edge-fade-left" />
+            <div className="strip-edge-fade-right" />
             
             {/* Auto-scrolling track */}
             <div className="cinematic-strip-track">
@@ -345,7 +345,7 @@ const HomePage = () => {
                 <Link 
                   key={`${item.title}-${index}`} 
                   to={item.href} 
-                  className="strip-image"
+                  className={`strip-image ${item.title === "BOUND" ? "strip-image-bound" : ""}`}
                   data-testid={`strip-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <img

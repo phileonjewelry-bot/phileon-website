@@ -1903,12 +1903,41 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 /* ═══════════════════════════════════════════════════════════════
    CINEMATIC STRIP — AUTO-SCROLLING IMAGE SEQUENCE
-   Luxury campaign feel, variety & discovery, clickable
+   Luxury campaign feel, seamless infinite loop
 ═══════════════════════════════════════════════════════════════ */
 
 .cinematic-strip-section {
   overflow: hidden;
   position: relative;
+}
+
+/* Edge fades for infinite feel */
+.strip-edge-fade-left,
+.strip-edge-fade-right {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.strip-edge-fade-left {
+  left: 0;
+  background: linear-gradient(to right, #0a0a0a 0%, #0a0a0a 20%, transparent 100%);
+}
+
+.strip-edge-fade-right {
+  right: 0;
+  background: linear-gradient(to left, #0a0a0a 0%, #0a0a0a 20%, transparent 100%);
+}
+
+@media (min-width: 768px) {
+  .strip-edge-fade-left,
+  .strip-edge-fade-right {
+    width: 120px;
+  }
 }
 
 .cinematic-strip-track {
@@ -1917,6 +1946,13 @@ input:focus, textarea:focus, select:focus, button:focus {
   width: max-content;
   animation: cinematicStripScroll 38s linear infinite;
   will-change: transform;
+}
+
+/* Pause on hover - desktop */
+@media (hover: hover) {
+  .cinematic-strip-section:hover .cinematic-strip-track {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes cinematicStripScroll {
@@ -1935,6 +1971,12 @@ input:focus, textarea:focus, select:focus, button:focus {
   overflow: hidden;
   cursor: pointer;
   display: block;
+  border-radius: 2px;
+}
+
+/* BOUND subtle emphasis - slightly larger */
+.strip-image-bound {
+  transform: scale(1.04);
 }
 
 @media (min-width: 768px) {
@@ -1951,17 +1993,28 @@ input:focus, textarea:focus, select:focus, button:focus {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.75;
-  transition: transform 0.6s ease-out, opacity 0.4s ease-out, filter 0.4s ease-out;
+  opacity: 0.85;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.4s ease-out;
 }
 
 /* Hover effect - scale + brightness + gold tint */
 @media (hover: hover) {
   .strip-image:hover img {
     transform: scale(1.03);
-    opacity: 0.95;
-    filter: sepia(0.1) saturate(1.2);
+    opacity: 1;
+    filter: sepia(0.08) saturate(1.15);
   }
+}
+
+/* Click/tap feedback - tactile press */
+.strip-image:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease-out;
+}
+
+.strip-image-bound:active {
+  transform: scale(1.01);
 }
 
 /* Mobile optimizations */
@@ -1972,6 +2025,10 @@ input:focus, textarea:focus, select:focus, button:focus {
   
   .strip-image {
     width: 220px;
+  }
+  
+  .strip-image-bound {
+    transform: scale(1.03);
   }
 }
 
