@@ -26,7 +26,7 @@ const traceProduct = {
       metal: "10K Yellow Gold",
       price: 2600,
       badge: "MOST POPULAR",
-      description: "Balanced weight and clarity."
+      description: "Refined form."
     },
     heirloom: {
       name: "Heirloom",
@@ -41,12 +41,17 @@ const traceProduct = {
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png",
-      alt: "TRACE earrings hero - model front"
+      alt: "TRACE earrings - model front"
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rmlc16hn_1000143760.png",
       alt: "TRACE earrings - model profile"
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/s9no0imj_1000143769.png",
+      alt: "TRACE earrings - angled"
     },
     {
       type: "image",
@@ -65,23 +70,13 @@ const traceProduct = {
     },
     {
       type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/s9no0imj_1000143769.png",
-      alt: "TRACE earrings - angled view"
-    },
-    {
-      type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/nt7j2fwd_1000143773.png",
       alt: "TRACE earrings - ear wire detail"
     },
     {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/hl61ok5r_1000143771.png",
-      alt: "TRACE earrings - bust macro detail"
-    },
-    {
-      type: "image",
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xxhobbp3_1000143831.png",
-      alt: "TRACE earrings - dimensions view"
+      alt: "TRACE earrings - macro detail"
     }
   ],
 

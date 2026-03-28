@@ -149,13 +149,13 @@ export default function EarringsProductPage({ product }) {
           <h1 className="text-5xl font-serif mb-2">{product.name}</h1>
           
           {/* French tagline */}
-          <p className="text-[#a0a0a0] italic text-lg">
+          <p className="text-[#a0a0a0] italic text-lg mb-1.5">
             {product.tagline}
           </p>
           
           {/* English translation */}
           {product.taglineTranslation && (
-            <p className="text-white/40 text-xs italic mt-1 mb-6">
+            <p className="text-white/40 text-xs italic mb-6">
               {product.taglineTranslation}
             </p>
           )}
@@ -222,10 +222,10 @@ export default function EarringsProductPage({ product }) {
             {isAdding ? buttonText : "ADD TO CART"}
           </button>
 
-          <p className="text-center text-sm text-gray-500 mt-3">
+          <p className="text-center text-sm text-white/50 mt-3">
             Sold as a pair.
           </p>
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-white/50">
             Complimentary insured shipping within Canada.
           </p>
 
@@ -253,11 +253,11 @@ export default function EarringsProductPage({ product }) {
 
           {/* SPECS IMAGE (optional) */}
           {product.specsImage && (
-            <section className="mt-8 pb-16 text-center">
+            <section className="mt-20 pb-16 text-center">
               <img 
                 src={product.specsImage} 
                 alt={`${product.name} dimensions and weight`}
-                className="mx-auto max-w-sm opacity-90 rounded-lg"
+                className="mx-auto max-w-sm opacity-90"
               />
             </section>
           )}
