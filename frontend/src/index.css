@@ -1901,8 +1901,51 @@ input:focus, textarea:focus, select:focus, button:focus {
   color: rgba(198, 162, 93, 1);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   BOUND CINEMATIC STRIP — AUTO-SCROLLING IMAGE SEQUENCE
+   Luxury campaign feel, purely emotional
+═══════════════════════════════════════════════════════════════ */
+
+.bound-strip-track {
+  animation: boundStripScroll 60s linear infinite;
+  will-change: transform;
+}
+
+@keyframes boundStripScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.bound-strip-image {
+  transition: transform 1s ease-out, opacity 0.5s ease-out;
+}
+
+/* Subtle hover effect - desktop only */
+@media (hover: hover) {
+  .bound-strip-image:hover {
+    transform: scale(1.03);
+  }
+  
+  .bound-strip-image:hover img {
+    opacity: 0.85;
+  }
+}
+
+/* Pause on hover for inspection */
+.bound-strip-section:hover .bound-strip-track {
+  animation-play-state: paused;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
+  .bound-strip-track {
+    animation-duration: 45s;
+  }
+  
   @keyframes boundTeaseEntrance {
     0% {
       transform: scale(1.02);
@@ -1923,5 +1966,9 @@ input:focus, textarea:focus, select:focus, button:focus {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
+  }
+  
+  .bound-strip-track {
+    animation: none !important;
   }
 }

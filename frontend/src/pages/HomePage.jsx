@@ -277,6 +277,103 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          BOUND CINEMATIC IMAGE STRIP
+          Auto-scrolling visual sequence — purely emotional
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="bound-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
+        {/* Fade edges */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+        
+        {/* Auto-scrolling track */}
+        <div className="bound-strip-track flex gap-6 md:gap-8">
+          {/* First set of images */}
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
+              alt="BOUND product"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
+              alt="BOUND wrist"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
+              alt="BOUND sculptural"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
+              alt="BOUND macro"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png"
+              alt="BOUND structure"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          
+          {/* Duplicate set for seamless loop */}
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
+              alt="BOUND product"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
+              alt="BOUND wrist"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
+              alt="BOUND sculptural"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
+              alt="BOUND macro"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+            <img
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png"
+              alt="BOUND structure"
+              className="w-full h-full object-cover opacity-70"
+              draggable="false"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
           SECTION 4 — ENTRY TO SHOP
           Return to commerce with bracelet preview
       ═══════════════════════════════════════════════════════════════ */}
