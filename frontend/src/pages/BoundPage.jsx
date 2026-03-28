@@ -181,14 +181,14 @@ const BoundPage = () => {
                     onClick={() => setActiveImage(index)}
                     className={`flex-shrink-0 w-20 h-20 overflow-hidden rounded-sm transition-all duration-300 ${
                       activeImage === index
-                        ? "ring-1 ring-[#C6A25D] opacity-100"
-                        : "opacity-50 hover:opacity-80"
+                        ? "ring-2 ring-[#C6A25D] shadow-[0_0_12px_rgba(198,162,93,0.4)] brightness-110"
+                        : "brightness-90 contrast-105 hover:brightness-110 hover:scale-105"
                     }`}
                   >
                     <img
                       src={item.src}
                       alt={item.alt}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300"
                     />
                   </button>
                 ))}
@@ -262,10 +262,23 @@ const BoundPage = () => {
                 </div>
 
                 {/* Description */}
-                <div className="mt-10 text-white/40 text-sm leading-relaxed space-y-1">
-                  <p>Form, held in structure.</p>
-                  <p>Designed to move with the body.</p>
-                  <p>Balanced. Controlled. Intentional.</p>
+                <div className="mt-10 space-y-4">
+                  <p className="text-white/60 text-sm leading-relaxed tracking-wide">
+                    Form, held in tension.
+                  </p>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    A study in restraint and release —<br />
+                    engineered to move with the body,<br />
+                    yet command the eye.
+                  </p>
+                  <div className="text-white/50 text-sm leading-relaxed space-y-0">
+                    <p>Balanced.</p>
+                    <p>Controlled.</p>
+                    <p>Unapologetically intentional.</p>
+                  </div>
+                  <p className="text-[#C6A25D]/40 text-[10px] tracking-[0.3em] uppercase mt-6">
+                    PHILEON — OBJECT SERIES
+                  </p>
                 </div>
 
                 {/* Add to Cart */}
