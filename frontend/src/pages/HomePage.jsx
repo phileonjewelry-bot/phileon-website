@@ -124,34 +124,6 @@ const HomePage = () => {
     setShowDropReveal(true);
   };
 
-  // BOUND cinematic scroll observer
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.2,
-      rootMargin: '0px 0px -100px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-        }
-      });
-    }, observerOptions);
-
-    // Observe all BOUND scroll sections
-    const scrollSections = document.querySelectorAll('.bound-scroll-section');
-    const statementSection = document.querySelector('.bound-statement');
-    
-    scrollSections.forEach((section) => observer.observe(section));
-    if (statementSection) observer.observe(statementSection);
-
-    return () => {
-      scrollSections.forEach((section) => observer.unobserve(section));
-      if (statementSection) observer.unobserve(statementSection);
-    };
-  }, [loading]);
-
   return (
     <div className="min-h-screen" data-testid="home-page">
       {/* Drop Reveal Animation */}
@@ -267,160 +239,41 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          SECTION 1 — BOUND CAMPAIGN HERO
-          Full-width cinematic editorial section with entrance animation
+          BOUND TEASE SECTION
+          Single image, minimal text, creates curiosity
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-hero-section relative min-h-screen bg-[#0a0a0a] overflow-hidden">
-        <div className="relative h-screen w-full flex items-center justify-center">
-          {/* Hero image with cinematic entrance (zoomed in → settle) */}
-          <div className="bound-home-hero absolute inset-0 flex items-center justify-center">
+      <section className="bound-tease relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+        <Link to="/products/bound" className="block relative h-screen w-full">
+          {/* Single hero image */}
+          <div className="absolute inset-0 flex items-center justify-center">
             <img
               src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
               alt="BOUND — The Bustier Bangle"
-              className="bound-hero-image h-full w-auto max-w-none object-contain"
+              className="bound-tease-image h-full w-auto max-w-none object-contain"
             />
             {/* Gradient overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-[#0a0a0a]/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50" />
           </div>
 
-          {/* Overlay text with staggered fade-in */}
-          <div className="absolute bottom-0 left-0 right-0 pb-20 md:pb-32 lg:pb-40">
+          {/* Minimal text overlay - bottom left */}
+          <div className="absolute bottom-0 left-0 right-0 pb-24 md:pb-36 lg:pb-44">
             <div className="max-w-7xl mx-auto px-8 md:px-16">
-              <p className="bound-text-1 text-phileon-gold/50 text-[10px] tracking-[0.5em] uppercase mb-4">
-                PHILEON
-              </p>
-              <h2 className="bound-text-2 font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.02em] text-white/90 font-light">
+              <h2 className="bound-tease-title font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.02em] text-white/90 font-light">
                 BOUND
               </h2>
-              <p className="bound-text-3 text-white/50 text-lg md:text-xl tracking-[0.12em] mt-2 font-light">
+              <p className="bound-tease-subtitle text-white/45 text-lg md:text-xl tracking-[0.12em] mt-3 font-light">
                 The Bustier Bangle
               </p>
               
-              <div className="bound-text-4 mt-8 space-y-2 text-white/35 text-sm md:text-base font-light tracking-wide">
-                <p>Form, held in structure.</p>
-                <p>Designed to move with the body.</p>
+              {/* Subtle CTA */}
+              <div className="bound-tease-cta mt-12 flex items-center gap-3 text-white/50 text-sm tracking-[0.2em] uppercase group-hover:text-white/80 transition-colors duration-500">
+                <span className="text-phileon-gold/70">→</span>
+                <span>ENTER</span>
               </div>
-              
-              <p className="bound-text-5 mt-6 text-white/45 text-sm tracking-wide">
-                Balanced. Controlled. Intentional.
-              </p>
             </div>
           </div>
-
-          {/* Scroll indicator */}
-          <div className="bound-text-5 absolute bottom-8 left-1/2 -translate-x-1/2">
-            <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-phileon-gold/30 to-transparent scroll-pulse" />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          SECTION 2 — CINEMATIC SCROLL SEQUENCE
-          Full-screen image reveals — one image dominates at a time
-      ═══════════════════════════════════════════════════════════════ */}
-      
-      {/* IMAGE 1 — Clean Product Front (CLARITY) */}
-      <section className="bound-scroll-section relative min-h-screen bg-[#0a0a0a] flex items-center justify-center py-20 md:py-32">
-        <div className="bound-scroll-image-wrapper w-full max-w-5xl mx-auto px-8 md:px-16">
-          <div className="relative">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
-              alt="BOUND clean product"
-              className="bound-scroll-image w-full h-auto"
-            />
-            <p className="bound-micro-label absolute bottom-6 left-6 text-white/30 text-[10px] tracking-[0.4em] uppercase">
-              FORM
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* IMAGE 2 — Wrist Lifestyle (CONNECTION) */}
-      <section className="bound-scroll-section relative min-h-screen bg-[#0a0a0a] flex items-center justify-center py-20 md:py-32">
-        <div className="bound-scroll-image-wrapper w-full max-w-5xl mx-auto px-8 md:px-16">
-          <div className="relative">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
-              alt="BOUND lifestyle wrist"
-              className="bound-scroll-image w-full h-auto"
-            />
-            <p className="bound-micro-label absolute bottom-6 left-6 text-white/30 text-[10px] tracking-[0.4em] uppercase">
-              DETAIL
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* IMAGE 3 — Sculptural Angle (FORM) */}
-      <section className="bound-scroll-section relative min-h-screen bg-[#0a0a0a] flex items-center justify-center py-20 md:py-32">
-        <div className="bound-scroll-image-wrapper w-full max-w-5xl mx-auto px-8 md:px-16">
-          <div className="relative">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
-              alt="BOUND sculptural angle"
-              className="bound-scroll-image w-full h-auto"
-            />
-            <p className="bound-micro-label absolute bottom-6 left-6 text-white/30 text-[10px] tracking-[0.4em] uppercase">
-              CRAFT
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* IMAGE 4 — Macro Diamond Detail (PRECISION) */}
-      <section className="bound-scroll-section relative min-h-screen bg-[#0a0a0a] flex items-center justify-center py-20 md:py-32">
-        <div className="bound-scroll-image-wrapper w-full max-w-5xl mx-auto px-8 md:px-16">
-          <div className="relative">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
-              alt="BOUND macro diamond"
-              className="bound-scroll-image w-full h-auto"
-            />
-            <p className="bound-micro-label absolute bottom-6 left-6 text-white/30 text-[10px] tracking-[0.4em] uppercase">
-              PRECISION
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* IMAGE 5 — Back Structure (ENGINEERING) */}
-      <section className="bound-scroll-section relative min-h-screen bg-[#0a0a0a] flex items-center justify-center py-20 md:py-32">
-        <div className="bound-scroll-image-wrapper w-full max-w-5xl mx-auto px-8 md:px-16">
-          <div className="relative">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png"
-              alt="BOUND back structure"
-              className="bound-scroll-image w-full h-auto"
-            />
-            <p className="bound-micro-label absolute bottom-6 left-6 text-white/30 text-[10px] tracking-[0.4em] uppercase">
-              STRUCTURE
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          SECTION 3 — STATEMENT BREAK + CTA
-          Minimal centered text with final conversion button
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-40 md:py-56 bg-[#0a0a0a]">
-        <div className="bound-statement max-w-4xl mx-auto px-8 text-center">
-          <p className="bound-statement-text font-serif text-3xl md:text-4xl lg:text-5xl text-white/60 tracking-[0.04em] font-light leading-relaxed">
-            "Not worn. Composed."
-          </p>
-          
-          {/* Final CTA - DISCOVER BOUND */}
-          <div className="mt-20 md:mt-28">
-            <Link 
-              to="/products/bound"
-              className="bound-final-cta inline-block px-14 py-5 bg-transparent border border-white/20 text-white/80 text-xs tracking-[0.3em] uppercase transition-all duration-500 ease-out hover:scale-[1.04] hover:border-phileon-gold/60 hover:shadow-[0_0_30px_rgba(198,162,93,0.35)] hover:text-white active:scale-[0.97]"
-              data-testid="bound-discover-final-cta"
-            >
-              DISCOVER BOUND
-            </Link>
-          </div>
-        </div>
+        </Link>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════

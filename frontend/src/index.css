@@ -1844,20 +1844,23 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BOUND HOME HERO — CINEMATIC SCROLL ANIMATIONS
-   Luxury campaign-level motion design
+   BOUND TEASE SECTION — SIMPLE CINEMATIC ENTRANCE
+   Creates curiosity, full experience on product page
 ═══════════════════════════════════════════════════════════════ */
 
-/* Hero entrance: starts zoomed, settles down */
-.bound-hero-image {
-  animation: boundHeroEntrance 2.5s ease-out forwards;
-  will-change: transform;
+.bound-tease {
+  cursor: pointer;
 }
 
-@keyframes boundHeroEntrance {
+.bound-tease-image {
+  animation: boundTeaseEntrance 2s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes boundTeaseEntrance {
   0% {
-    transform: scale(1.05);
-    opacity: 0.7;
+    transform: scale(1.03);
+    opacity: 0.8;
   }
   100% {
     transform: scale(1);
@@ -1865,141 +1868,45 @@ input:focus, textarea:focus, select:focus, button:focus {
   }
 }
 
-/* Hero text staggered entrance */
-.bound-text-1,
-.bound-text-2,
-.bound-text-3,
-.bound-text-4,
-.bound-text-5 {
+.bound-tease-title,
+.bound-tease-subtitle,
+.bound-tease-cta {
   opacity: 0;
-  transform: translateY(20px);
-  animation: boundTextReveal 1s ease-out forwards;
+  transform: translateY(15px);
+  animation: boundTeaseTextReveal 0.8s ease-out forwards;
 }
 
-.bound-text-1 { animation-delay: 0.4s; }
-.bound-text-2 { animation-delay: 0.6s; }
-.bound-text-3 { animation-delay: 0.8s; }
-.bound-text-4 { animation-delay: 1.0s; }
-.bound-text-5 { animation-delay: 1.2s; }
+.bound-tease-title { animation-delay: 0.4s; }
+.bound-tease-subtitle { animation-delay: 0.6s; }
+.bound-tease-cta { animation-delay: 0.9s; }
 
-@keyframes boundTextReveal {
+@keyframes boundTeaseTextReveal {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Scroll indicator pulse */
-.scroll-pulse {
-  animation: scrollPulse 2s ease-in-out infinite;
+/* Hover state for entire section */
+.bound-tease:hover .bound-tease-image {
+  transform: scale(1.02);
+  transition: transform 3s ease-out;
 }
 
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
+.bound-tease:hover .bound-tease-cta {
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SCROLL-DRIVEN IMAGE SECTIONS
-   Full-screen reveals with entrance animations
-═══════════════════════════════════════════════════════════════ */
-
-.bound-scroll-section {
-  will-change: opacity;
+.bound-tease:hover .bound-tease-cta span:first-child {
+  color: rgba(198, 162, 93, 1);
 }
 
-.bound-scroll-image-wrapper {
-  opacity: 0;
-  transform: translateY(60px) scale(0.97);
-  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-}
-
-.bound-scroll-section.in-view .bound-scroll-image-wrapper {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-/* Image hover effect - desktop only */
-@media (hover: hover) {
-  .bound-scroll-image {
-    transition: transform 6s ease-out, filter 0.8s ease-out;
-  }
-  
-  .bound-scroll-image:hover {
-    transform: scale(1.03);
-    filter: brightness(1.05);
-  }
-}
-
-/* Micro labels */
-.bound-micro-label {
-  opacity: 0;
-  transition: opacity 1s ease-out 0.6s;
-}
-
-.bound-scroll-section.in-view .bound-micro-label {
-  opacity: 0.35;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   STATEMENT SECTION
-   Ultra-slow fade animation
-═══════════════════════════════════════════════════════════════ */
-
-.bound-statement {
-  opacity: 0;
-  transition: opacity 1.4s ease-out;
-}
-
-.bound-statement.in-view {
-  opacity: 1;
-}
-
-.bound-statement-text {
-  letter-spacing: 0.04em;
-  transition: letter-spacing 2s ease-out;
-}
-
-.bound-statement.in-view .bound-statement-text {
-  letter-spacing: 0.08em;
-}
-
-/* Final CTA button */
-.bound-final-cta {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 1s ease-out 0.4s, 
-              transform 1s ease-out 0.4s,
-              border-color 0.5s ease-out,
-              box-shadow 0.5s ease-out,
-              color 0.3s ease-out,
-              scale 0.2s ease-out !important;
-}
-
-.bound-statement.in-view .bound-final-cta {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   MOBILE OPTIMIZATIONS
-   Reduced motion for performance
-═══════════════════════════════════════════════════════════════ */
-
+/* Mobile optimizations */
 @media (max-width: 768px) {
-  .bound-scroll-image-wrapper {
-    transform: translateY(40px) scale(0.98);
-    transition: opacity 0.9s ease-out, transform 0.9s ease-out;
-  }
-  
-  .bound-hero-image {
-    animation-duration: 2s;
-  }
-  
-  @keyframes boundHeroEntrance {
+  @keyframes boundTeaseEntrance {
     0% {
-      transform: scale(1.03);
-      opacity: 0.8;
+      transform: scale(1.02);
+      opacity: 0.85;
     }
     100% {
       transform: scale(1);
@@ -2009,17 +1916,11 @@ input:focus, textarea:focus, select:focus, button:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bound-hero-image,
-  .bound-text-1,
-  .bound-text-2,
-  .bound-text-3,
-  .bound-text-4,
-  .bound-text-5,
-  .bound-scroll-image-wrapper,
-  .bound-statement,
-  .bound-final-cta {
+  .bound-tease-image,
+  .bound-tease-title,
+  .bound-tease-subtitle,
+  .bound-tease-cta {
     animation: none !important;
-    transition: opacity 0.3s ease-out !important;
     transform: none !important;
     opacity: 1 !important;
   }
