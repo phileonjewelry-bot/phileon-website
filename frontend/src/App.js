@@ -32,6 +32,7 @@ import FormeCuffPage from "@/pages/FormeCuffPage";
 import RhythmMeshRingPage from "@/pages/RhythmMeshRingPage";
 import TolaIIPage from "@/pages/TolaIIPage";
 import Galatians614Page from "@/pages/Galatians614Page";
+import TracePage from "@/pages/TracePage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -91,6 +92,7 @@ function App() {
             <Route path="/products/rhythm-mesh-ring" element={<RhythmMeshRingPage />} />
             <Route path="/products/tola-ii" element={<TolaIIPage />} />
             <Route path="/products/galatians-614" element={<Galatians614Page />} />
+            <Route path="/products/trace" element={<TracePage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />

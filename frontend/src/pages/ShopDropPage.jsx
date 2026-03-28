@@ -158,6 +158,19 @@ const CORE_PRODUCTS = [
     category: 'pendants',
     audience: 'gentlemens-club',
   },
+  {
+    id: 'trace',
+    name: 'TRACE',
+    slug: 'trace',
+    materialLine: 'Earrings · 10K Gold Plated - 14K Yellow Gold',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png',
+    href: '/products/trace',
+    price_range: 'From $900 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
+  },
 ];
 
 // Additional drop products as fallback
