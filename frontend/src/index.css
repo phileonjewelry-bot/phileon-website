@@ -1948,12 +1948,7 @@ input:focus, textarea:focus, select:focus, button:focus {
   will-change: transform;
 }
 
-/* Pause on hover - desktop */
-@media (hover: hover) {
-  .cinematic-strip-section:hover .cinematic-strip-track {
-    animation-play-state: paused;
-  }
-}
+/* Animation never pauses - continuous luxury campaign feel */
 
 @keyframes cinematicStripScroll {
   0% {

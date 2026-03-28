@@ -294,7 +294,7 @@ const HomePage = () => {
           },
           { 
             title: "TOLA II", 
-            image: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png", 
+            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png", 
             href: "/products/tola-ii" 
           },
           { 
@@ -319,7 +319,7 @@ const HomePage = () => {
           },
           { 
             title: "ANNIE ROSE", 
-            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png", 
+            image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg", 
             href: "/products/annie-rose" 
           },
           { 
