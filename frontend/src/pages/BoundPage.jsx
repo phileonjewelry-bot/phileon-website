@@ -12,8 +12,38 @@ const BoundPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const galleryRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  // Trigger hero load animation
+  useEffect(() => {
+    const timer = setTimeout(() => setHeroLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Intersection Observer for scroll reveal
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    document.querySelectorAll('.scroll-reveal').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const tiers = {
     foundation: {
@@ -38,41 +68,52 @@ const BoundPage = () => {
     }
   };
 
+  // Complete gallery with ALL images in correct order
   const media = [
     {
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
       alt: "BOUND hero model red carpet",
-      section: null
+      type: "image"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
+      alt: "BOUND editorial wrist black dress",
+      type: "image"
     },
     {
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png",
       alt: "BOUND clean product front",
-      section: null
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
-      alt: "BOUND lifestyle wrist black outfit",
-      section: "detail"
+      type: "image"
     },
     {
       src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png",
-      alt: "BOUND sculptural angle",
-      section: "craft"
+      alt: "BOUND angle product shot",
+      type: "image"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/4ha15kss_1000143886.webp",
+      alt: "BOUND sculptural floating shot",
+      type: "image"
     },
     {
       src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp",
-      alt: "BOUND macro diamond detail",
-      section: "macro"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png",
-      alt: "BOUND back structure",
-      section: "structure"
+      alt: "BOUND macro diamond mesh detail",
+      type: "image"
     },
     {
       src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/zwzt7f6l_1000143874.webp",
-      alt: "BOUND display jewelry table",
-      section: "lifestyle"
+      alt: "BOUND collection group display",
+      type: "image"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/k09vug5v_1000143894.png",
+      alt: "BOUND lifestyle champagne setting",
+      type: "image"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png",
+      alt: "BOUND back interior structure",
+      type: "image"
     }
   ];
 
@@ -84,6 +125,37 @@ const BoundPage = () => {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setZoomPosition({ x, y });
+  };
+
+  const handleImageChange = (index) => {
+    if (index === activeImage) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveImage(index);
+      setTimeout(() => setIsTransitioning(false), 50);
+    }, 150);
+  };
+
+  // Mobile swipe handlers
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    const threshold = 50;
+    
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0 && activeImage < media.length - 1) {
+        handleImageChange(activeImage + 1);
+      } else if (diff < 0 && activeImage > 0) {
+        handleImageChange(activeImage - 1);
+      }
+    }
   };
 
   const onAddToCart = () => {
@@ -102,77 +174,102 @@ const BoundPage = () => {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO INTRO SECTION
-          Full-screen cinematic opener - Campaign framing
+          Full-screen cinematic opener with motion and staged load-in
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-hero relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img
-            src={media[0].src}
-            alt="BOUND — The Bustier Bangle"
-            className="h-full w-auto object-contain"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/40 via-transparent to-[#0a0a0a]/40" />
+        {/* Hero image with slow zoom animation */}
+        <div className="absolute inset-0 flex items-center justify-center hero-parallax">
+          <div className={`hero-image-wrapper ${heroLoaded ? 'loaded' : ''}`}>
+            <img
+              src={media[0].src}
+              alt="BOUND — The Bustier Bangle"
+              className="hero-image h-full w-auto max-w-none object-contain"
+            />
+          </div>
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50" />
         </div>
         
-        <div className="absolute bottom-0 left-0 right-0 pb-20 md:pb-32">
+        {/* Hero text with staged fade-in */}
+        <div className="absolute bottom-0 left-0 right-0 pb-16 md:pb-24 lg:pb-32">
           <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <p className="text-[#C6A25D]/60 text-[10px] tracking-[0.5em] uppercase mb-4">
-              PHILEON
+            <p className={`hero-text-1 text-[#C6A25D]/60 text-[10px] tracking-[0.5em] uppercase mb-4 ${heroLoaded ? 'loaded' : ''}`}>
+              PHILEON — OBJECT SERIES
             </p>
-            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-[0.02em] text-white/90 font-light">
+            <h1 className={`hero-text-2 font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl tracking-[0.02em] text-white/90 font-light ${heroLoaded ? 'loaded' : ''}`}>
               BOUND
             </h1>
-            <p className="text-white/40 text-lg md:text-xl tracking-[0.15em] mt-2 font-light">
+            <p className={`hero-text-3 text-white/40 text-base sm:text-lg md:text-xl tracking-[0.15em] mt-2 font-light ${heroLoaded ? 'loaded' : ''}`}>
               The Bustier Bangle
             </p>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-[#C6A25D]/40 to-transparent" />
+        <div className={`hero-text-3 absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 ${heroLoaded ? 'loaded' : ''}`}>
+          <div className="w-[1px] h-10 md:h-12 bg-gradient-to-b from-transparent via-[#C6A25D]/40 to-transparent animate-bounce" />
         </div>
       </section>
+
+      {/* Hero to gallery transition fade */}
+      <div className="h-24 md:h-32 bg-gradient-to-b from-[#0a0a0a] to-[#0a0a0a]" />
 
       {/* ═══════════════════════════════════════════════════════════════
           MAIN PRODUCT SECTION
           2-column layout: Gallery LEFT, Info RIGHT (sticky)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-product py-16 md:py-22 animate-fadeIn">
+      <section className="bound-product py-8 md:py-16 scroll-reveal">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-20">
             
             {/* LEFT — Gallery */}
             <div ref={galleryRef}>
-              {/* Main Image */}
+              {/* Main Image with crossfade transition */}
               <div 
                 className="bound-gallery-main relative aspect-square overflow-hidden bg-[#0a0a0a] rounded-sm cursor-zoom-in"
                 onMouseEnter={() => setIsZoomed(true)}
                 onMouseLeave={() => setIsZoomed(false)}
                 onMouseMove={handleMouseMove}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               >
                 <img
                   src={media[activeImage].src}
                   alt={media[activeImage].alt}
-                  className="w-full h-full object-contain transition-transform duration-700 ease-out"
+                  className={`w-full h-full object-contain transition-all duration-300 ease-out ${
+                    isTransitioning ? 'opacity-0 scale-[1.02]' : 'opacity-100 scale-100'
+                  }`}
                   style={{
                     transform: isZoomed ? `scale(1.8)` : 'scale(1)',
-                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                    transition: isZoomed ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out, opacity 0.3s ease, scale 0.3s ease'
                   }}
                 />
+                {/* Mobile swipe indicator */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 lg:hidden">
+                  {media.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                        idx === activeImage ? 'bg-[#C6A25D] w-4' : 'bg-white/30'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
 
-              {/* Thumbnails */}
-              <div className="bound-thumbnails flex gap-3 mt-6 overflow-x-auto pb-2">
+              {/* Thumbnails - Full gallery, no limits */}
+              <div className="bound-thumbnails flex gap-2 md:gap-3 mt-4 md:mt-6 overflow-x-auto pb-2 px-1">
                 {media.map((item, index) => (
                   <button
                     key={index}
-                    onClick={() => setActiveImage(index)}
-                    className={`flex-shrink-0 w-20 h-20 overflow-hidden rounded-sm transition-all duration-300 ${
+                    onClick={() => handleImageChange(index)}
+                    className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 overflow-hidden rounded-sm transition-all duration-300 ${
                       activeImage === index
-                        ? "ring-2 ring-[#C6A25D] shadow-[0_0_12px_rgba(198,162,93,0.4)] brightness-110"
-                        : "brightness-90 contrast-105 hover:brightness-110 hover:scale-105"
+                        ? "ring-2 ring-[#C6A25D] shadow-[0_0_12px_rgba(198,162,93,0.4)] brightness-110 scale-105"
+                        : "brightness-95 contrast-105 hover:brightness-110 hover:scale-105"
                     }`}
                   >
                     <img
@@ -297,7 +394,7 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           STORY SECTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-story py-32 md:py-48">
+      <section className="bound-story py-32 md:py-48 scroll-reveal">
         <div className="max-w-3xl mx-auto px-6 md:px-12 text-center">
           <h3 className="font-serif text-3xl md:text-4xl text-[#C6A25D]/80 tracking-wide font-light">
             Form that follows you.
@@ -311,13 +408,13 @@ const BoundPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          DETAIL SECTION — Wrist on black dress
+          DETAIL SECTION — Editorial wrist shot
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-detail">
+      <section className="bound-detail scroll-reveal">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <div className="aspect-square lg:aspect-auto overflow-hidden">
             <img
-              src={media[2].src}
+              src={media[1].src}
               alt="BOUND worn elegantly"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
@@ -339,7 +436,7 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           LIFESTYLE SECTION — Collection display
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-lifestyle">
+      <section className="bound-lifestyle scroll-reveal">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <div className="flex items-center justify-center p-12 md:p-20 lg:p-32 bg-[#0a0a0a] order-2 lg:order-1">
             <div className="max-w-md">
@@ -365,7 +462,7 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           CRAFT SECTION — Sculptural angle
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-craft">
+      <section className="bound-craft scroll-reveal">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <div className="aspect-square lg:aspect-auto overflow-hidden">
             <img
@@ -391,7 +488,7 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           STRUCTURE SECTION — Back view
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-structure">
+      <section className="bound-structure scroll-reveal">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <div className="flex items-center justify-center p-12 md:p-20 lg:p-32 bg-[#0a0a0a] order-2 lg:order-1">
             <div className="max-w-md">
@@ -406,7 +503,7 @@ const BoundPage = () => {
           </div>
           <div className="aspect-square lg:aspect-auto order-1 lg:order-2 overflow-hidden">
             <img
-              src={media[5].src}
+              src={media[8].src}
               alt="BOUND structure"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
@@ -417,10 +514,10 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           MACRO SECTION — Diamond mesh detail (Full width)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-macro relative">
+      <section className="bound-macro relative scroll-reveal">
         <div className="aspect-[16/9] lg:aspect-[21/9] w-full overflow-hidden">
           <img
-            src={media[4].src}
+            src={media[5].src}
             alt="BOUND macro detail"
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-[8s] ease-out"
           />
@@ -439,7 +536,7 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           SCULPTURAL SECTION — Artistic angle
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-sculptural py-32 md:py-48">
+      <section className="bound-sculptural py-32 md:py-48 scroll-reveal">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1">
@@ -457,7 +554,7 @@ const BoundPage = () => {
             </div>
             <div className="order-1 lg:order-2 overflow-hidden rounded-sm">
               <img
-                src={media[3].src}
+                src={media[4].src}
                 alt="BOUND sculptural"
                 className="w-full h-auto hover:scale-105 transition-transform duration-[6s] ease-out"
               />
@@ -469,13 +566,13 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           SPEC SECTION — Clean product centered
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-spec py-32 md:py-48 bg-[#050505]">
+      <section className="bound-spec py-32 md:py-48 bg-[#050505] scroll-reveal">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <p className="text-[#C6A25D]/50 text-[10px] tracking-[0.4em] uppercase mb-10">
             SPECIFICATIONS
           </p>
           <img
-            src={media[1].src}
+            src={media[2].src}
             alt="BOUND specifications"
             className="w-full h-auto"
           />
@@ -503,7 +600,7 @@ const BoundPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           FINAL CTA SECTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-final-cta py-32 md:py-48 text-center">
+      <section className="bound-final-cta py-32 md:py-48 text-center scroll-reveal">
         <div className="max-w-2xl mx-auto px-6">
           <p className="text-[#C6A25D]/40 text-[10px] tracking-[0.5em] uppercase mb-6">
             PHILEON
@@ -538,63 +635,145 @@ const BoundPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          STYLES
+          STYLES — Hero motion, load-in, scroll reveal, gallery transitions
       ═══════════════════════════════════════════════════════════════ */}
       <style>{`
         .bound-page {
           font-family: 'Playfair Display', serif;
         }
 
+        /* Hero slow zoom animation */
+        .hero-image-wrapper {
+          opacity: 0;
+          transform: scale(1);
+          transition: opacity 1.2s ease-out;
+        }
+        
+        .hero-image-wrapper.loaded {
+          opacity: 1;
+        }
+        
+        .hero-image {
+          animation: heroZoom 12s ease-in-out infinite alternate;
+        }
+        
+        @keyframes heroZoom {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(1.06);
+          }
+        }
+
+        /* Hero text staged fade-in */
+        .hero-text-1,
+        .hero-text-2,
+        .hero-text-3 {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .hero-text-1.loaded {
+          opacity: 1;
+          transform: translateY(0);
+          transition-delay: 0.6s;
+        }
+
+        .hero-text-2.loaded {
+          opacity: 1;
+          transform: translateY(0);
+          transition-delay: 0.9s;
+        }
+
+        .hero-text-3.loaded {
+          opacity: 1;
+          transform: translateY(0);
+          transition-delay: 1.2s;
+        }
+
+        /* Scroll reveal animations */
+        .scroll-reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .scroll-reveal.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Gallery main area */
         .bound-gallery-main {
           background: linear-gradient(145deg, #0a0a0a 0%, #0f0f0f 100%);
         }
 
+        /* Thumbnail scrollbar */
         .bound-thumbnails::-webkit-scrollbar {
           height: 4px;
         }
 
         .bound-thumbnails::-webkit-scrollbar-thumb {
-          background: rgba(198, 162, 93, 0.2);
+          background: rgba(198, 162, 93, 0.3);
           border-radius: 999px;
         }
 
         .bound-thumbnails::-webkit-scrollbar-track {
-          background: transparent;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 999px;
         }
 
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
+        /* Button press animation */
+        .bound-btn:active {
+          transform: scale(0.98) !important;
+          transition: transform 0.1s ease-out !important;
+        }
+
+        /* Mobile hero adjustments */
+        @media (max-width: 768px) {
+          .bound-hero {
+            min-height: 100svh;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          
+          .hero-image-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 1rem;
           }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 1s ease-out forwards;
-        }
-
-        /* Smooth section transitions */
-        .bound-story,
-        .bound-detail,
-        .bound-lifestyle,
-        .bound-craft,
-        .bound-structure,
-        .bound-macro,
-        .bound-sculptural,
-        .bound-spec,
-        .bound-final-cta {
-          opacity: 0;
-          animation: fadeIn 0.8s ease-out forwards;
-          animation-delay: 0.2s;
+          
+          .hero-image {
+            max-height: 70vh;
+            width: auto;
+            object-fit: contain;
+          }
+          
+          @keyframes heroZoom {
+            0% {
+              transform: scale(1);
+            }
+            100% {
+              transform: scale(1.03);
+            }
+          }
         }
 
         /* Macro section overlay */
         .bound-macro {
           position: relative;
+        }
+
+        /* Touch device gallery swipe hint */
+        @media (hover: none) {
+          .bound-gallery-main {
+            cursor: grab;
+          }
+          .bound-gallery-main:active {
+            cursor: grabbing;
+          }
         }
       `}</style>
     </div>
