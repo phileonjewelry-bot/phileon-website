@@ -31,6 +31,46 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 
 ## What's Been Implemented (December 2025 - Latest Session)
 
+### Pricing Standardization (Complete - December 28, 2025)
+**Single Source of Truth for All Product Pricing**
+
+All product prices now pull from `/app/frontend/src/data/products.js` using `basePrice` property. This ensures pricing consistency across all pages.
+
+**Updated Files:**
+- `products.js` - Added `basePrice` to all products (13 total)
+- `ShopDropPage.jsx` - Uses `formatPrice(products.X.basePrice)`
+- `HomePage.jsx` - Uses dynamic prices from products.js
+- `MonikaCoutureProduct.jsx` - Uses products.monikaCouture.pricing
+- `StyleItWith.jsx` - Uses dynamic prices for related products
+
+**Product Pages Updated:**
+- `BoundPage.jsx` → products.bound.pricing
+- `Galatians614Page.jsx` → products.galatians614.pricing
+- `LaMarvaPage.jsx` → products.laMarva.pricing
+- `AnnieRosePage.jsx` → products.annieRose.pricing
+- `TolaIIPage.jsx` → products.tolaII.pricing
+- `RhythmMeshRingPage.jsx` → products.rhythmMeshRing.pricing
+- `TracePage.jsx` → products.trace.pricing
+- `FormeCuffPage.jsx` → products.formeCuff.metalOptions
+- `AlejandraHeelsPage.jsx` → products.alejandraHeels.pricing
+
+**Key Base Prices (Source of Truth):**
+| Product | basePrice | Currency |
+|---------|-----------|----------|
+| PTP Cuff | $1,050 | CAD |
+| La Marva | $3,400 | USD |
+| BOUND | $12,800 | CAD |
+| Annie Rose | $6,400 | USD |
+| Monika Couture | $1,400 | USD |
+| Alejandra Heels | $1,250 | USD |
+| Forme Cuff | $695 | CAD |
+| Rosaria | $2,950 | CAD |
+| Désir Corset | $5,995 | CAD |
+| Rhythm Mesh | $1,450 | CAD |
+| TOLA II | $5,200 | CAD |
+| GALATIANS 6:14 | $3,800 | CAD |
+| TRACE | $900 | CAD |
+
 ### BOUND — The Bustier Bangle (Complete)
 - **Custom Editorial Product Page** - Cartier-level luxury experience (not using standard wrapper)
 - Full-screen cinematic hero with gradient overlays
@@ -108,7 +148,6 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 - None currently
 
 ### P1 (High Priority)
-- Add BOUND to Shop Grid / Homepage features
 - Verify mobile swipe interactions for BOUND gallery
 - On-ear lifestyle images for earrings
 

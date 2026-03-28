@@ -33,7 +33,7 @@ const rhythmMeshProduct = {
     heirloom: {
       name: "Heirloom",
       metal: "14K White Gold",
-      price: 6400,
+      price: rhythmPricing.white14k,
       badge: "COLLECTOR",
       description: "14K white gold with emerald-cut citrine. Maximum presence and permanence."
     }

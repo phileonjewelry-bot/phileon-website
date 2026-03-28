@@ -506,7 +506,8 @@ export const products = {
     // Pricing
     pricing: {
       silver: 1450,
-      white10k: 4800
+      white10k: 4800,
+      white14k: 6400
     },
     
     // Shipping info
