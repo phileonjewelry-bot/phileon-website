@@ -305,7 +305,7 @@ const HomePage = () => {
           },
           { 
             title: "LA MARVA", 
-            image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg", 
+            image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg", 
             href: "/products/la-marva" 
           },
           { 
@@ -412,7 +412,7 @@ const HomePage = () => {
                     }}
                   />
                   <img
-                    src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
+                    src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
                     alt="La Marva"
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   />
@@ -422,7 +422,7 @@ const HomePage = () => {
                     LA MARVA
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Statement Ring</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">From $2,450</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">From $3,400</p>
                 </div>
               </Link>
             </ScrollReveal>
