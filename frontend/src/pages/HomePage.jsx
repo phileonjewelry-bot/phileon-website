@@ -277,96 +277,152 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          BOUND CINEMATIC IMAGE STRIP
-          Auto-scrolling visual sequence — purely emotional
+          CINEMATIC IMAGE STRIP
+          Auto-scrolling visual sequence — variety & discovery
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
+      <section className="cinematic-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
         {/* Fade edges */}
         <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
         
-        {/* Auto-scrolling track */}
-        <div className="bound-strip-track flex gap-6 md:gap-8">
-          {/* First set of images */}
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+        {/* Auto-scrolling track - width: max-content for proper animation */}
+        <div className="cinematic-strip-track">
+          {/* First set - Mixed products, BOUND appears subtly */}
+          
+          {/* 1. TRACE Earrings - fashion-forward */}
+          <div className="strip-image">
             <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
-              alt="BOUND product"
-              className="w-full h-full object-cover opacity-70"
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
+              alt="TRACE earrings"
               draggable="false"
             />
           </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          {/* 2. TOLA II Gents - adds contrast */}
+          <div className="strip-image">
             <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
-              alt="BOUND wrist"
-              className="w-full h-full object-cover opacity-70"
+              src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
+              alt="TOLA II Gents"
               draggable="false"
             />
           </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          {/* 3. GALATIANS Pendant - variety */}
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
+              alt="GALATIANS pendant"
+              draggable="false"
+            />
+          </div>
+          
+          {/* 4. FORME CUFF - sculptural */}
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
+              alt="FORME CUFF"
+              draggable="false"
+            />
+          </div>
+          
+          {/* 5. BOUND subtle appearance */}
+          <div className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
               alt="BOUND sculptural"
-              className="w-full h-full object-cover opacity-70"
               draggable="false"
             />
           </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          {/* 6. La Marva - elegant */}
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
+              alt="La Marva"
+              draggable="false"
+            />
+          </div>
+          
+          {/* 7. PTP CUFF - powerful */}
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
+              alt="PTP CUFF"
+              draggable="false"
+            />
+          </div>
+          
+          {/* 8. BOUND macro detail - discovered */}
+          <div className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
               alt="BOUND macro"
-              className="w-full h-full object-cover opacity-70"
-              draggable="false"
-            />
-          </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png"
-              alt="BOUND structure"
-              className="w-full h-full object-cover opacity-70"
               draggable="false"
             />
           </div>
           
           {/* Duplicate set for seamless loop */}
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          <div className="strip-image">
             <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
-              alt="BOUND product"
-              className="w-full h-full object-cover opacity-70"
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
+              alt="TRACE earrings"
               draggable="false"
             />
           </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          <div className="strip-image">
             <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
-              alt="BOUND wrist"
-              className="w-full h-full object-cover opacity-70"
+              src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
+              alt="TOLA II Gents"
               draggable="false"
             />
           </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
+              alt="GALATIANS pendant"
+              draggable="false"
+            />
+          </div>
+          
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
+              alt="FORME CUFF"
+              draggable="false"
+            />
+          </div>
+          
+          <div className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
               alt="BOUND sculptural"
-              className="w-full h-full object-cover opacity-70"
               draggable="false"
             />
           </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
+          
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
+              alt="La Marva"
+              draggable="false"
+            />
+          </div>
+          
+          <div className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
+              alt="PTP CUFF"
+              draggable="false"
+            />
+          </div>
+          
+          <div className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
               alt="BOUND macro"
-              className="w-full h-full object-cover opacity-70"
-              draggable="false"
-            />
-          </div>
-          <div className="bound-strip-image flex-shrink-0 w-72 md:w-96 aspect-[4/5] overflow-hidden">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png"
-              alt="BOUND structure"
-              className="w-full h-full object-cover opacity-70"
               draggable="false"
             />
           </div>
