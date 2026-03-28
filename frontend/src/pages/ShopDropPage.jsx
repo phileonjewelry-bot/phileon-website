@@ -176,7 +176,7 @@ const CORE_PRODUCTS = [
     name: 'BOUND',
     slug: 'bound',
     materialLine: 'The Bustier Bangle · 10K-18K Yellow Gold',
-    imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png',
     href: '/products/bound',
     price_range: 'From $12,800 CAD',
     inventory_count: 100,
