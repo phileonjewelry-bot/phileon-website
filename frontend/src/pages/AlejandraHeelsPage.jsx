@@ -1,8 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
+import { products } from '@/data/products';
 
 const AlejandraHeelsPage = () => {
+  // Get pricing from products.js
+  const alejandraProduct = products.alejandraHeels;
+  const pricing = alejandraProduct.pricing;
+
   // ========== SHARED GALLERY IMAGES (all metals use the same set) ==========
   // Structure: Video (if exists) -> Primary image -> Secondary images
   const galleryItems = useMemo(() => [
@@ -47,7 +52,7 @@ const AlejandraHeelsPage = () => {
       id: 'silver',
       name: 'Silver',
       category: 'Silver',
-      price: 1250,
+      price: pricing.silver.cubic,
       currency: 'CAD',
       swatchColor: '#C0C0C0',
       galleryType: 'silver',
@@ -56,7 +61,7 @@ const AlejandraHeelsPage = () => {
       id: 'white-10k',
       name: '10K White Gold',
       category: '10K Gold',
-      price: 2450,
+      price: pricing.solid10k.whiteLab,
       currency: 'CAD',
       swatchColor: '#F5F5F0',
       galleryType: 'white',
@@ -65,7 +70,7 @@ const AlejandraHeelsPage = () => {
       id: 'rose-10k',
       name: '10K Rose Gold',
       category: '10K Gold',
-      price: 2450,
+      price: pricing.solid10k.roseLab,
       currency: 'CAD',
       swatchColor: '#B76E79',
       galleryType: 'rose',
@@ -74,7 +79,7 @@ const AlejandraHeelsPage = () => {
       id: 'yellow-10k',
       name: '10K Yellow Gold',
       category: '10K Gold',
-      price: 2450,
+      price: pricing.solid10k.yellowLab,
       currency: 'CAD',
       swatchColor: '#D4AF37',
       galleryType: 'yellow',
@@ -83,7 +88,7 @@ const AlejandraHeelsPage = () => {
       id: 'white-14k',
       name: '14K White Gold',
       category: '14K Gold',
-      price: 3250,
+      price: pricing.solid14k.whiteLab,
       currency: 'CAD',
       swatchColor: '#FAF9F6',
       galleryType: 'white',
@@ -92,7 +97,7 @@ const AlejandraHeelsPage = () => {
       id: 'rose-14k',
       name: '14K Rose Gold',
       category: '14K Gold',
-      price: 3250,
+      price: pricing.solid14k.roseLab,
       currency: 'CAD',
       swatchColor: '#C4756E',
       galleryType: 'rose',
@@ -101,12 +106,12 @@ const AlejandraHeelsPage = () => {
       id: 'yellow-14k',
       name: '14K Yellow Gold',
       category: '14K Gold',
-      price: 3250,
+      price: pricing.solid14k.yellowLab,
       currency: 'CAD',
       swatchColor: '#CFB53B',
       galleryType: 'yellow',
     },
-  ], []);
+  ], [pricing]);
 
   // State
   const [selectedMetalId, setSelectedMetalId] = useState('silver');

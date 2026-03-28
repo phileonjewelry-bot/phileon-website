@@ -1,5 +1,9 @@
 import React from "react";
 import RingProductPage from "../components/RingProductPage";
+import { products } from "@/data/products";
+
+// Get pricing from products.js
+const annieRosePricing = products.annieRose.pricing;
 
 // Annie Rose Product Data (Ironclad Schema)
 const annieRoseProduct = {
@@ -14,21 +18,21 @@ const annieRoseProduct = {
     foundation: {
       name: "Foundation",
       metal: "10K Yellow Gold",
-      price: 6400,
+      price: annieRosePricing.lab.gold10k,
       badge: "",
       description: "10K gold with lab-grown diamonds. Ethical brilliance for everyday elegance."
     },
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
-      price: 10400,
+      price: annieRosePricing.natural.gold14k,
       badge: "MOST POPULAR",
       description: "14K gold with natural diamonds. Balanced weight with elevated clarity."
     },
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
-      price: 12200,
+      price: annieRosePricing.natural.gold18k,
       badge: "COLLECTOR",
       description: "18K gold with natural diamonds. Maximum richness and permanence."
     }

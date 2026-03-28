@@ -2,6 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { products } from '@/data/products';
+
+// Helper to format price from products.js basePrice
+const formatPrice = (basePrice, currency = 'CAD') => {
+  return `From $${basePrice.toLocaleString()} ${currency}`;
+};
 
 // Styling suggestions data - can be expanded for different products
 export const STYLE_SUGGESTIONS = {
@@ -13,7 +19,7 @@ export const STYLE_SUGGESTIONS = {
       materialLine: 'Earrings · 10K & 14K Rose Gold',
       imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/uxgms0ee_1000098068.jpg',
       href: '/products/rosaria',
-      price: 'From $2,950 CAD',
+      price: formatPrice(products.rosaria.basePrice),
     }
   ],
   'rosaria': [
@@ -24,7 +30,7 @@ export const STYLE_SUGGESTIONS = {
       materialLine: 'Pendant · 10K Rose Gold',
       imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/sxr71rsz_1000141578.jpg',
       href: '/products/desir-corset',
-      price: 'From $5,995 CAD',
+      price: formatPrice(products.desirCorset.basePrice),
     }
   ]
 };

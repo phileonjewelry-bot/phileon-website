@@ -1,5 +1,9 @@
 import React from "react";
 import RingProductPage from "../components/RingProductPage";
+import { products } from "@/data/products";
+
+// Get pricing from products.js
+const rhythmPricing = products.rhythmMeshRing.pricing;
 
 // Rhythm Mesh Ring Product Data (Ironclad Schema)
 // Note: This is a unisex ring, using gents size profile as default
@@ -15,14 +19,14 @@ const rhythmMeshProduct = {
     foundation: {
       name: "Foundation",
       metal: "Sterling Silver",
-      price: 1450,
+      price: rhythmPricing.silver,
       badge: "",
       description: "Sterling silver with emerald-cut citrine. Entry into the Rhythm Mesh aesthetic."
     },
     signature: {
       name: "Signature",
       metal: "10K White Gold",
-      price: 4800,
+      price: rhythmPricing.white10k,
       badge: "MOST POPULAR",
       description: "10K white gold with emerald-cut citrine. Balanced weight with elevated finish."
     },

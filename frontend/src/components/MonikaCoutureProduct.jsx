@@ -1,24 +1,27 @@
 import React, { useState } from "react";
+import { products } from "@/data/products";
 
 export default function MonikaCoutureProduct() {
+  const monika = products.monikaCouture;
+  
   const metalOptions = [
     {
-      name: "Silver — $1,400",
+      name: `Silver — $${monika.pricing.silver.toLocaleString()}`,
       value: "silver",
       image: "/products/monika-couture-silver.jpg",
     },
     {
-      name: "10K White Gold — $3,700",
+      name: `10K White Gold — $${monika.pricing.white10k.toLocaleString()}`,
       value: "10k-white",
       image: "/products/monika-couture-white.jpg",
     },
     {
-      name: "10K Yellow Gold — $3,700",
+      name: `10K Yellow Gold — $${monika.pricing.yellow10k.toLocaleString()}`,
       value: "10k-yellow",
       image: "/products/monika-couture-yellow.jpg",
     },
     {
-      name: "10K Rose Gold — $3,700",
+      name: `10K Rose Gold — $${monika.pricing.rose10k.toLocaleString()}`,
       value: "10k-rose",
       image: "/products/monika-couture-rose.jpg",
     },

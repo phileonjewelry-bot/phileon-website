@@ -5,7 +5,13 @@ import { publicApi } from '../lib/api';
 import { useWishlist } from '@/contexts/WishlistContext';
 import StockBadge from '@/components/StockBadge';
 import { Button } from '@/components/ui/button';
+import { products } from '@/data/products';
 import '../styles/shop-drop.css';
+
+// Helper to format price from products.js basePrice
+const formatPrice = (basePrice, currency = 'CAD') => {
+  return `From $${basePrice.toLocaleString()}${currency !== 'USD' ? ` ${currency}` : ''}`;
+};
 
 // Core collection products - Always shown first
 // Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
@@ -17,7 +23,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Signature Ring · Dynamic Pricing',
     imageUrl: 'https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg',
     href: '/products/la-marva',
-    price_range: 'From $3,400',
+    price_range: formatPrice(products.laMarva.basePrice, 'USD'),
     inventory_count: 100,
     is_core: true,
     category: 'rings',
@@ -30,7 +36,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Lab & Natural Diamonds · 10K-18K Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg',
     href: '/products/annie-rose',
-    price_range: 'From $6,400',
+    price_range: formatPrice(products.annieRose.basePrice, 'USD'),
     inventory_count: 100,
     is_core: true,
     category: 'rings',
@@ -43,7 +49,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Statement Earrings · Silver & Gold Options',
     imageUrl: 'https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg',
     href: '/products/monika-couture',
-    price_range: 'From $1,400',
+    price_range: formatPrice(products.monikaCouture.basePrice, 'USD'),
     inventory_count: 100,
     is_core: true,
     category: 'earrings',
@@ -56,7 +62,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Statement Earrings · Silver & Solid Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg',
     href: '/products/alejandra-heels',
-    price_range: 'From $1,250',
+    price_range: formatPrice(products.alejandraHeels.basePrice, 'USD'),
     inventory_count: 100,
     is_core: true,
     category: 'earrings',
@@ -69,7 +75,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Cuff Bracelet · Vermeil to 14K Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg',
     href: '/products/ptp-cuff',
-    price_range: 'From $1,050 CAD',
+    price_range: formatPrice(products.ptpCuff.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'bracelets',
@@ -82,7 +88,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Statement Earrings · 10K & 14K Rose Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/d15gu165_VideoCapture_20260312-012448.jpg',
     href: '/products/rosaria',
-    price_range: 'From $2,950 CAD',
+    price_range: formatPrice(products.rosaria.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'earrings',
@@ -95,7 +101,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Pendant · 10K Rose Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/sxr71rsz_1000141578.jpg',
     href: '/products/desir-corset',
-    price_range: 'From $5,995 CAD',
+    price_range: formatPrice(products.desirCorset.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'pendants',
@@ -108,7 +114,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Cuff Bracelet · 10K Gold & Plated Silver',
     imageUrl: 'https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png',
     href: '/products/forme-cuff',
-    price_range: 'From $1,250 CAD',
+    price_range: formatPrice(products.formeCuff.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'bracelets',
@@ -121,7 +127,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Statement Ring · Silver & 10K White Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg',
     href: '/products/rhythm-mesh-ring',
-    price_range: 'From $1,450 CAD',
+    price_range: formatPrice(products.rhythmMeshRing.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'rings',
@@ -139,7 +145,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Statement Ring · 10K-18K Yellow Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png',
     href: '/products/tola-ii',
-    price_range: 'From $5,200 CAD',
+    price_range: formatPrice(products.tolaII.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'rings',
@@ -152,7 +158,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Cross Pendant · 10K-18K Yellow Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/tf1ne9cg_1000143695.jpg',
     href: '/products/galatians-614',
-    price_range: 'From $3,800 CAD',
+    price_range: formatPrice(products.galatians614.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'pendants',
@@ -165,7 +171,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Earrings · 10K Gold Plated - 14K Yellow Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/7tyc41kp_1000143768.png',
     href: '/products/trace',
-    price_range: 'From $900 CAD',
+    price_range: formatPrice(products.trace.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'earrings',
@@ -178,7 +184,7 @@ const CORE_PRODUCTS = [
     materialLine: 'The Bustier Bangle · 10K-18K Yellow Gold',
     imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png',
     href: '/products/bound',
-    price_range: 'From $12,800 CAD',
+    price_range: formatPrice(products.bound.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'bracelets',

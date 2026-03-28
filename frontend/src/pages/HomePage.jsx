@@ -4,6 +4,10 @@ import { ChevronDown } from 'lucide-react';
 import { publicApi } from '@/lib/api';
 import DropReveal from '@/components/DropReveal';
 import LaMarvaFlagship from '@/components/LaMarvaFlagship';
+import { products } from '@/data/products';
+
+// Helper to format price from products.js basePrice
+const formatPrice = (basePrice) => `From $${basePrice.toLocaleString()}`;
 
 // Custom hook for scroll reveal animations
 const useScrollReveal = (options = {}) => {
@@ -397,7 +401,7 @@ const HomePage = () => {
                     FORME CUFF
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Shaped by the Curve</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">From $1,250</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">{formatPrice(products.formeCuff.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -422,7 +426,7 @@ const HomePage = () => {
                     LA MARVA
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Statement Ring</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">From $3,400</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">{formatPrice(products.laMarva.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -447,7 +451,7 @@ const HomePage = () => {
                     PTP CUFF
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Power To The People</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">From $1,050</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">{formatPrice(products.ptpCuff.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -511,7 +515,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Signature Ring · Dynamic Pricing
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">From $3,400</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.laMarva.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -542,7 +546,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Lab & Natural Diamonds
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">From $6,400</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.annieRose.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -573,7 +577,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Statement Earrings · Silver & Gold
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">From $1,400</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.monikaCouture.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -604,7 +608,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Statement Earrings · Sculptural Design
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">From $1,250</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.alejandraHeels.basePrice)}</p>
                 </div>
               </Link>
             </ScrollReveal>

@@ -1,5 +1,9 @@
 import React from "react";
 import RingProductPage from "../components/RingProductPage";
+import { products } from "@/data/products";
+
+// Get pricing from products.js
+const tolaIIPricing = products.tolaII.pricing;
 
 // TOLA II Product Data (Ironclad Schema)
 const tolaIIProduct = {
@@ -14,21 +18,21 @@ const tolaIIProduct = {
     foundation: {
       name: "Foundation",
       metal: "10K Yellow Gold",
-      price: 5200,
+      price: tolaIIPricing.foundation,
       badge: "",
       description: "10K yellow gold with black synthetic stones. Built for everyday presence."
     },
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
-      price: 6800,
+      price: tolaIIPricing.signature,
       badge: "MOST POPULAR",
       description: "14K yellow gold with black lab-grown diamonds. Balanced weight and clarity."
     },
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
-      price: 9200,
+      price: tolaIIPricing.heirloom,
       badge: "COLLECTOR",
       description: "18K yellow gold with natural black diamonds. Maximum richness and permanence."
     }

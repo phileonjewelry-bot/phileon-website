@@ -1,5 +1,9 @@
 import React from "react";
 import RingProductPage from "../components/RingProductPage";
+import { products } from "@/data/products";
+
+// Get pricing from products.js
+const lamarvaPricing = products.laMarva.pricing;
 
 // La Marva Product Data (Ironclad Schema)
 const laMarvaProduct = {
@@ -14,21 +18,21 @@ const laMarvaProduct = {
     foundation: {
       name: "Foundation",
       metal: "10K Yellow Gold",
-      price: 8000,
+      price: lamarvaPricing.foundation,
       badge: "",
       description: "10K gold with lab-grown princess-cut diamonds and genuine pink sapphire pavé."
     },
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
-      price: 18000,
+      price: lamarvaPricing.heirloom14k,
       badge: "MOST POPULAR",
       description: "14K gold with natural princess-cut diamonds and pink sapphire pavé. Collector-grade clarity."
     },
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
-      price: 22000,
+      price: lamarvaPricing.heirloom18k,
       badge: "COLLECTOR",
       description: "18K gold with natural diamonds. Maximum brilliance and lasting legacy."
     }

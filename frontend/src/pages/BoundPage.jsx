@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { products } from "@/data/products";
 
 /* ═══════════════════════════════════════════════════════════════
    BOUND — THE BUSTIER BANGLE
@@ -18,6 +19,9 @@ const BoundPage = () => {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  // Get pricing from products.js
+  const boundPricing = products.bound.pricing;
 
   // Trigger hero load animation
   useEffect(() => {
@@ -49,20 +53,20 @@ const BoundPage = () => {
     foundation: {
       name: "Foundation",
       metal: "10K Yellow Gold",
-      price: 12800,
+      price: boundPricing.foundation,
       description: "Built for presence."
     },
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
-      price: 18400,
+      price: boundPricing.signature,
       badge: "SIGNATURE",
       description: "Balanced weight and clarity."
     },
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
-      price: 24600,
+      price: boundPricing.heirloom,
       badge: "HEIRLOOM",
       description: "Maximum richness and permanence."
     }

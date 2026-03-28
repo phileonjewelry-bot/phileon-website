@@ -147,6 +147,7 @@ export const products = {
     category: "earrings",
     audience: "ladies",
     weight: "10g per pair",
+    basePrice: 1400,
     
     // Pricing Configuration
     dynamicPricing: false, // Fixed pricing, no gold adjustments
@@ -173,6 +174,7 @@ export const products = {
     categoryType: "Heel Earrings",
     description: "Sculptural miniature heels cast in precious metal and finished with a pavé strap.",
     tagline: "A playful couture design created to capture the spirit of fashion, movement, and confidence.",
+    basePrice: 1250,
     
     // Pricing Configuration
     dynamicPricing: false, // Fixed pricing, no gold adjustments
@@ -220,6 +222,7 @@ export const products = {
     categoryType: "Cuff Bracelet",
     description: "The PTP Cuff transforms a universal symbol of unity into wearable sculpture. A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.",
     tagline: "Bold, sculptural, and unapologetically symbolic, the cuff is designed to feel substantial on the wrist while maintaining a refined luxury finish.",
+    basePrice: 1050,
     
     // Pricing Configuration
     dynamicPricing: false, // Fixed pricing, no gold adjustments
@@ -289,6 +292,7 @@ export const products = {
     tagline: "Sculpted Roses in Rose Gold",
     description: "Rosaria captures the beauty of a rose in full bloom, transformed into wearable sculpture. Each rose is sculpted in precious metal and arranged in a cascading composition that moves gracefully with the wearer. The design preserves the elegance of a flower in gold — a tribute to love, celebration, and permanence.",
     materialNote: "Available exclusively in 10K and 14K rose gold.",
+    basePrice: 2950,
     
     // Pricing Configuration
     dynamicPricing: false,
@@ -348,6 +352,7 @@ export const products = {
     categoryType: "Pendants",
     tagline: "Sculptural Form Meets Fine Jewelry",
     description: "Inspired by the structure of couture corsetry, the Désir Corset Pendant transforms sculpted form into wearable architecture. Fine mesh panels create depth and texture within a polished rose gold frame, forming a tapered waist and sculpted cup structure that echo the lines of high fashion tailoring. Designed to sit naturally against the chest, the pendant features subtle curvature and balanced proportions that allow the piece to hang elegantly from a delicate chain. A statement piece that blends sculpture, fashion, and fine jewelry.",
+    basePrice: 5995,
     
     // Pricing Configuration
     dynamicPricing: false,
@@ -422,6 +427,7 @@ export const products = {
     description: "The Forme Cuff captures the elegance of the human form in motion — figures intertwined, dancing along the curve of the wrist. Each silhouette is precision-cut from solid gold, creating a play of light and shadow that shifts with every gesture.",
     tagline: "A celebration of movement, connection, and the beauty of the body in balance.",
     materialNote: "Offered in solid gold and gold-plated silver — without compromise in form.",
+    basePrice: 695,
 
     // Metal options with images (prepared for unique images per variant)
     metalOptions: {
@@ -486,6 +492,7 @@ export const products = {
     category: "rings",
     audience: "unisex",
     description: "Structured motion. Captured in metal.",
+    basePrice: 1450,
     
     // Default card image for Collective
     imageUrl: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg",
@@ -518,6 +525,7 @@ export const products = {
     audience: "gentlemens-club",
     tagline: "Weight. Discipline. Presence.",
     description: "TOLA II is built on restraint and control. A structured gold form, anchored by a central chain and framed with precision-set black stones. Every surface is intentional. Every detail holds weight.",
+    basePrice: 5200,
     
     // Hero image for shop cards
     imageUrl: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png",
@@ -598,6 +606,78 @@ export const products = {
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // GALATIANS 6:14
+  // Cross pendant with three-tier pricing
+  // ==========================================
+  galatians614: {
+    name: "GALATIANS 6:14",
+    slug: "galatians-614",
+    category: "pendants",
+    audience: "gentlemens-club",
+    tagline: "Faith, Worn With Intention.",
+    subline: "Built on Belief.",
+    basePrice: 3800,
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    
+    pricing: {
+      foundation: 3800,  // 10K Yellow Gold
+      signature: 4800,   // 14K Yellow Gold
+      heirloom: 6400     // 18K Yellow Gold
+    }
+  },
+
+  // ==========================================
+  // TRACE
+  // Earrings with gold plated to solid gold options
+  // ==========================================
+  trace: {
+    name: "TRACE",
+    slug: "trace",
+    category: "earrings",
+    audience: "ladies",
+    tagline: "Lines of Movement.",
+    basePrice: 900,
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    
+    pricing: {
+      plated: 900,       // 10K Gold Plated
+      solid10k: 2400,    // 10K Yellow Gold
+      solid14k: 3200     // 14K Yellow Gold
+    }
+  },
+
+  // ==========================================
+  // BOUND
+  // The Bustier Bangle - Flagship bangle
+  // NO SILVER - Gold only (10K/14K/18K)
+  // ==========================================
+  bound: {
+    name: "BOUND",
+    slug: "bound",
+    category: "bracelets",
+    audience: "ladies",
+    subtitle: "The Bustier Bangle",
+    tagline: "Sculptural. Structural. Unapologetically Statement.",
+    basePrice: 12800,
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    
+    pricing: {
+      foundation: 12800,  // 10K Yellow Gold
+      signature: 18400,   // 14K Yellow Gold
+      heirloom: 24600     // 18K Yellow Gold
+    }
   }
 
 };

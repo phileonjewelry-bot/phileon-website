@@ -1,5 +1,9 @@
 import React from "react";
 import EarringsProductPage from "../components/EarringsProductPage";
+import { products } from "@/data/products";
+
+// Get pricing from products.js
+const tracePricing = products.trace.pricing;
 
 // TRACE Earrings Product Data
 const traceProduct = {
@@ -17,21 +21,21 @@ const traceProduct = {
     foundation: {
       name: "Foundation",
       metal: "10K Gold Plated",
-      price: 900,
+      price: tracePricing.plated,
       badge: "",
       description: "Gold plated over base metal."
     },
     signature: {
       name: "Signature",
       metal: "10K Yellow Gold",
-      price: 2600,
+      price: tracePricing.solid10k,
       badge: "MOST POPULAR",
       description: "Refined form."
     },
     heirloom: {
       name: "Heirloom",
       metal: "14K Yellow Gold",
-      price: 3200,
+      price: tracePricing.solid14k,
       badge: "COLLECTOR",
       description: "Elevated density and finish."
     }

@@ -1,5 +1,9 @@
 import React from "react";
 import PendantProductPage from "../components/PendantProductPage";
+import { products } from "@/data/products";
+
+// Get pricing from products.js
+const galatiansPricing = products.galatians614.pricing;
 
 // GALATIANS 6:14 Product Data (Ironclad Schema for Pendants)
 const galatians614Product = {
@@ -17,21 +21,21 @@ const galatians614Product = {
     foundation: {
       name: "Foundation",
       metal: "10K Yellow Gold",
-      price: 3800,
+      price: galatiansPricing.foundation,
       badge: "",
       description: "Built for everyday presence."
     },
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
-      price: 4800,
+      price: galatiansPricing.signature,
       badge: "MOST POPULAR",
       description: "Balanced weight and clarity."
     },
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
-      price: 6400,
+      price: galatiansPricing.heirloom,
       badge: "COLLECTOR",
       description: "Maximum richness and permanence."
     }

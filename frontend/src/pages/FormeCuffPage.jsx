@@ -1,8 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
+import { products } from '@/data/products';
 
 const FormeCuffPage = () => {
+  // Get pricing from products.js
+  const formeCuffProduct = products.formeCuff;
+  const productSolidGold = formeCuffProduct.metalOptions.solidGold;
+  const productPlated = formeCuffProduct.metalOptions.platedSilver;
+
   // ========== IMAGE SETS ==========
   // Yellow Gold Gallery Images (in specified order)
   const yellowGoldGallery = useMemo(() => [
@@ -89,7 +95,7 @@ const FormeCuffPage = () => {
       name: '10K Yellow Gold',
       shortName: 'Yellow 10K',
       category: 'Solid Gold',
-      price: 14800,
+      price: productSolidGold.find(o => o.id === 'yellow-10k')?.price || 2850,
       currency: 'CAD',
       swatchColor: '#D4AF37', // Yellow gold color
       galleryType: 'yellow',
@@ -100,7 +106,7 @@ const FormeCuffPage = () => {
       name: '10K Rose Gold',
       shortName: 'Rose 10K',
       category: 'Solid Gold',
-      price: 14800,
+      price: productSolidGold.find(o => o.id === 'rose-10k')?.price || 2850,
       currency: 'CAD',
       swatchColor: '#B76E79', // Rose gold color
       galleryType: 'rose',
@@ -111,7 +117,7 @@ const FormeCuffPage = () => {
       name: 'Gold Plated Silver (Yellow)',
       shortName: 'Yellow Plated',
       category: 'Gold Plated Silver',
-      price: 1250,
+      price: productPlated.find(o => o.id === 'plated-yellow')?.price || 695,
       currency: 'CAD',
       swatchColor: '#D4AF37', // Yellow gold color
       galleryType: 'yellow', // Uses yellow gold image set
@@ -122,13 +128,13 @@ const FormeCuffPage = () => {
       name: 'Gold Plated Silver (Rose)',
       shortName: 'Rose Plated',
       category: 'Gold Plated Silver',
-      price: 1250,
+      price: productPlated.find(o => o.id === 'plated-rose')?.price || 695,
       currency: 'CAD',
       swatchColor: '#B76E79', // Rose gold color
       galleryType: 'rose', // Uses rose gold image set
       heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
     },
-  ], []);
+  ], [productSolidGold, productPlated]);
 
   // State for selected metal (default: 10K Yellow Gold)
   const [selectedMetalId, setSelectedMetalId] = useState('yellow-10k');
@@ -179,7 +185,7 @@ const FormeCuffPage = () => {
     }).format(price);
   };
 
-  // Group metals by category for display
+  // Group metals by category for display (using local metalOptions)
   const solidGoldOptions = metalOptions.filter(m => m.category === 'Solid Gold');
   const platedOptions = metalOptions.filter(m => m.category === 'Gold Plated Silver');
 
