@@ -77,6 +77,11 @@ const traceProduct = {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/hl61ok5r_1000143771.png",
       alt: "TRACE earrings - bust macro detail"
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xxhobbp3_1000143831.png",
+      alt: "TRACE earrings - dimensions view"
     }
   ],
 
