@@ -278,203 +278,175 @@ const HomePage = () => {
 
       {/* ═══════════════════════════════════════════════════════════════
           CINEMATIC IMAGE STRIP
-          Auto-scrolling visual sequence — variety & discovery
+          Auto-scrolling discovery — clickable product links
       ═══════════════════════════════════════════════════════════════ */}
       <section className="cinematic-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
         {/* Fade edges */}
         <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
         
-        {/* Auto-scrolling track - width: max-content for proper animation */}
+        {/* Auto-scrolling track */}
         <div className="cinematic-strip-track">
           {/* First set - Mixed products, BOUND appears subtly */}
           
           {/* 1. TRACE Earrings - fashion-forward */}
-          <div className="strip-image">
+          <Link to="/products/trace" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
               alt="TRACE earrings"
               draggable="false"
             />
-          </div>
+          </Link>
           
           {/* 2. TOLA II Gents - adds contrast */}
-          <div className="strip-image">
+          <Link to="/products/tola-ii" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
               alt="TOLA II Gents"
               draggable="false"
             />
-          </div>
+          </Link>
           
           {/* 3. GALATIANS Pendant - variety */}
-          <div className="strip-image">
+          <Link to="/products/galatians-614" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
               alt="GALATIANS pendant"
               draggable="false"
             />
-          </div>
+          </Link>
           
           {/* 4. FORME CUFF - sculptural */}
-          <div className="strip-image">
+          <Link to="/products/forme-cuff" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
               alt="FORME CUFF"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          {/* 5. BOUND subtle appearance */}
-          <div className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
-              alt="BOUND sculptural"
-              draggable="false"
-            />
-          </div>
-          
-          {/* 6. La Marva - elegant */}
-          <div className="strip-image">
+          {/* 5. La Marva - elegant */}
+          <Link to="/products/la-marva" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
               alt="La Marva"
               draggable="false"
             />
-          </div>
+          </Link>
+          
+          {/* 6. BOUND subtle appearance */}
+          <Link to="/products/bound" className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
+              alt="BOUND"
+              draggable="false"
+            />
+          </Link>
           
           {/* 7. PTP CUFF - powerful */}
-          <div className="strip-image">
+          <Link to="/products/ptp-cuff" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
               alt="PTP CUFF"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          {/* 8. BOUND macro detail - discovered */}
-          <div className="strip-image">
+          {/* 8. Annie Rose - variety */}
+          <Link to="/products/annie-rose" className="strip-image">
             <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
-              alt="BOUND macro"
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png"
+              alt="Annie Rose"
               draggable="false"
             />
-          </div>
+          </Link>
           
           {/* Duplicate set for seamless loop */}
           
-          <div className="strip-image">
+          <Link to="/products/trace" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
               alt="TRACE earrings"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          <div className="strip-image">
+          <Link to="/products/tola-ii" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
               alt="TOLA II Gents"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          <div className="strip-image">
+          <Link to="/products/galatians-614" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
               alt="GALATIANS pendant"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          <div className="strip-image">
+          <Link to="/products/forme-cuff" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
               alt="FORME CUFF"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          <div className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
-              alt="BOUND sculptural"
-              draggable="false"
-            />
-          </div>
-          
-          <div className="strip-image">
+          <Link to="/products/la-marva" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
               alt="La Marva"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          <div className="strip-image">
+          <Link to="/products/bound" className="strip-image">
+            <img
+              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
+              alt="BOUND"
+              draggable="false"
+            />
+          </Link>
+          
+          <Link to="/products/ptp-cuff" className="strip-image">
             <img
               src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
               alt="PTP CUFF"
               draggable="false"
             />
-          </div>
+          </Link>
           
-          <div className="strip-image">
+          <Link to="/products/annie-rose" className="strip-image">
             <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
-              alt="BOUND macro"
+              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png"
+              alt="Annie Rose"
               draggable="false"
             />
-          </div>
+          </Link>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          SECTION 4 — ENTRY TO SHOP
-          Return to commerce with bracelet preview
+          THE COLLECTIVE — Discovery Grid
+          No BOUND repetition, fresh selection
       ═══════════════════════════════════════════════════════════════ */}
       <section className="py-32 md:py-48 bg-[#080808]">
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           {/* Header */}
           <ScrollReveal delay={100}>
             <div className="text-center mb-20">
-              <p className="text-phileon-gold/50 text-[10px] tracking-[0.4em] uppercase mb-4">
-                THE COLLECTION
-              </p>
-              <h2 className="font-serif text-2xl md:text-3xl tracking-[0.06em] text-phileon-ivory/80 font-light">
-                Bracelets & Cuffs
+              <h2 className="font-serif text-2xl md:text-3xl tracking-[0.08em] text-phileon-ivory/80 font-light">
+                THE COLLECTIVE
               </h2>
             </div>
           </ScrollReveal>
 
-          {/* Preview Grid - 3 items max */}
+          {/* Preview Grid - No BOUND, fresh variety */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-16">
             <ScrollReveal delay={150}>
-              <Link to="/products/bound" className="group block">
-                <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
-                  <div 
-                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.3) 100%)'
-                    }}
-                  />
-                  <img
-                    src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
-                    alt="BOUND"
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="mt-6 text-center">
-                  <h3 className="font-serif text-lg tracking-wide text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300">
-                    BOUND
-                  </h3>
-                  <p className="text-xs text-phileon-ivory/40 mt-2">The Bustier Bangle</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">From $12,800</p>
-                </div>
-              </Link>
-            </ScrollReveal>
-
-            <ScrollReveal delay={250}>
               <Link to="/products/forme-cuff" className="group block">
                 <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
                   <div 
@@ -495,6 +467,31 @@ const HomePage = () => {
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Shaped by the Curve</p>
                   <p className="text-sm text-phileon-gold/70 mt-2">From $1,250</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={250}>
+              <Link to="/products/la-marva" className="group block">
+                <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.3) 100%)'
+                    }}
+                  />
+                  <img
+                    src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
+                    alt="La Marva"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-6 text-center">
+                  <h3 className="font-serif text-lg tracking-wide text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300">
+                    LA MARVA
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-2">Statement Ring</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">From $2,450</p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -529,11 +526,11 @@ const HomePage = () => {
           <ScrollReveal delay={450}>
             <div className="text-center">
               <Link 
-                to="/shop?category=bracelets&audience=ladies"
+                to="/shop"
                 className="inline-block px-12 py-4 border border-phileon-gold/60 text-phileon-gold text-xs tracking-[0.25em] uppercase font-medium transition-all duration-300 hover:border-phileon-gold hover:shadow-[0_0_20px_rgba(198,162,93,0.15)] hover:brightness-110"
-                data-testid="view-all-bracelets-cta"
+                data-testid="view-all-shop-cta"
               >
-                VIEW ALL BRACELETS
+                VIEW ALL
               </Link>
             </div>
           </ScrollReveal>

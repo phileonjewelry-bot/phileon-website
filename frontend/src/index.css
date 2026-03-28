@@ -1903,7 +1903,7 @@ input:focus, textarea:focus, select:focus, button:focus {
 
 /* ═══════════════════════════════════════════════════════════════
    CINEMATIC STRIP — AUTO-SCROLLING IMAGE SEQUENCE
-   Luxury campaign feel, variety & discovery
+   Luxury campaign feel, variety & discovery, clickable
 ═══════════════════════════════════════════════════════════════ */
 
 .cinematic-strip-section {
@@ -1933,6 +1933,8 @@ input:focus, textarea:focus, select:focus, button:focus {
   width: 280px;
   aspect-ratio: 4/5;
   overflow: hidden;
+  cursor: pointer;
+  display: block;
 }
 
 @media (min-width: 768px) {
@@ -1950,14 +1952,15 @@ input:focus, textarea:focus, select:focus, button:focus {
   height: 100%;
   object-fit: cover;
   opacity: 0.75;
-  transition: transform 1s ease-out, opacity 0.5s ease-out;
+  transition: transform 0.6s ease-out, opacity 0.4s ease-out, filter 0.4s ease-out;
 }
 
-/* Subtle hover effect - desktop only */
+/* Hover effect - scale + brightness + gold tint */
 @media (hover: hover) {
   .strip-image:hover img {
     transform: scale(1.03);
-    opacity: 0.9;
+    opacity: 0.95;
+    filter: sepia(0.1) saturate(1.2);
   }
 }
 
