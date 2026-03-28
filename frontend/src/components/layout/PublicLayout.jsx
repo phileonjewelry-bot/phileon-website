@@ -236,9 +236,12 @@ const Footer = () => {
         </div>
 
         {/* Bottom - Minimal */}
-        <div className="mt-16 pt-8 border-t border-phileon-charcoal/30">
+        <div className="mt-16 pt-8 border-t border-phileon-charcoal/30 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-phileon-ivory-muted/60 tracking-wider">
             © {new Date().getFullYear()} Phileon
+          </p>
+          <p className="text-xs text-phileon-ivory-muted/50 tracking-wide">
+            All prices in CAD
           </p>
         </div>
       </div>
