@@ -77,7 +77,7 @@ export default function EarringsProductPage({ product }) {
         <div>
           {/* HERO MEDIA */}
           <div className="product-media-wrap w-full max-w-full overflow-hidden">
-            <div className="product-media-main w-full max-w-full aspect-square flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
+            <div className="trace-hero rounded-2xl border border-[#1f1f1f]">
               {product.media[activeMedia].type === "video" ? (
                 <video
                   ref={videoRef}
@@ -92,13 +92,12 @@ export default function EarringsProductPage({ product }) {
                     e.currentTarget.currentTime = 0;
                     e.currentTarget.play();
                   }}
-                  className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
+                  className="w-full h-full max-w-full object-contain block"
                 />
               ) : (
                 <img
                   src={product.media[activeMedia].src}
                   alt={product.media[activeMedia].alt}
-                  className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
                 />
               )}
             </div>

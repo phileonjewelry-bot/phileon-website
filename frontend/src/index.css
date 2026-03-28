@@ -57,6 +57,42 @@ img,
 video {
   max-width: 100%;
   height: auto;
+  display: block;
+}
+
+/* TRACE hero specific styles */
+.trace-hero {
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.trace-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.02);
+  transition: transform 6s ease;
+}
+
+.trace-hero img:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .trace-hero {
+    aspect-ratio: auto;
+    height: auto;
+  }
+
+  .trace-hero img {
+    transform: scale(1);
+  }
 }
 
 /* Product page media styles */
