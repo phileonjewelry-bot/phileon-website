@@ -112,17 +112,17 @@ const BoundPage = () => {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO INTRO SECTION
-          Full-screen cinematic opener
+          Full-screen cinematic opener - Campaign framing
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-hero relative h-screen w-full overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="bound-hero relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
+        <div className="absolute inset-0 flex items-center justify-center">
           <img
             src={media[0].src}
             alt="BOUND — The Bustier Bangle"
-            className="w-full h-full object-cover object-center"
+            className="h-full w-auto object-contain"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/40 via-transparent to-[#0a0a0a]/40" />
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 pb-20 md:pb-32">
