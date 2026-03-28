@@ -1841,3 +1841,29 @@ input:focus, textarea:focus, select:focus, button:focus {
     transform: none !important;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   BOUND HOME HERO ZOOM ANIMATION
+   Subtle cinematic zoom effect for homepage BOUND section
+═══════════════════════════════════════════════════════════════ */
+@keyframes boundHomeZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.03);
+  }
+}
+
+.bound-home-hero {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes boundHomeZoom {
+    0%, 100% {
+      transform: scale(1);
+    }
+  }
+}

@@ -239,154 +239,284 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          FORME CUFF FEATURE SECTION
-          New arrival with dominant product visual
+          SECTION 1 — BOUND CAMPAIGN HERO
+          Full-width cinematic editorial section
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 lg:py-44 bg-[#080808]">
-        <div className="max-w-4xl mx-auto px-4 md:px-8">
+      <section className="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+        <ScrollReveal delay={100}>
+          <div className="relative h-screen w-full flex items-center justify-center">
+            {/* Hero image with subtle zoom animation */}
+            <div className="bound-home-hero absolute inset-0 flex items-center justify-center">
+              <img
+                src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
+                alt="BOUND — The Bustier Bangle"
+                className="h-full w-auto max-w-none object-contain"
+                style={{
+                  animation: 'boundHomeZoom 15s ease-in-out infinite alternate'
+                }}
+              />
+              {/* Gradient overlays */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-[#0a0a0a]/60" />
+            </div>
+
+            {/* Overlay text - bottom left */}
+            <div className="absolute bottom-0 left-0 right-0 pb-20 md:pb-32 lg:pb-40">
+              <div className="max-w-7xl mx-auto px-8 md:px-16">
+                <p className="text-phileon-gold/50 text-[10px] tracking-[0.5em] uppercase mb-4">
+                  PHILEON
+                </p>
+                <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[0.02em] text-white/90 font-light">
+                  BOUND
+                </h2>
+                <p className="text-white/50 text-lg md:text-xl tracking-[0.12em] mt-2 font-light">
+                  The Bustier Bangle
+                </p>
+                
+                <div className="mt-8 space-y-2 text-white/35 text-sm md:text-base font-light tracking-wide">
+                  <p>Form, held in structure.</p>
+                  <p>Designed to move with the body.</p>
+                </div>
+                
+                <p className="mt-6 text-white/45 text-sm tracking-wide">
+                  Balanced. Controlled. Intentional.
+                </p>
+
+                <div className="mt-10">
+                  <Link 
+                    to="/products/bound"
+                    className="inline-block px-10 py-4 bg-transparent border border-white/20 text-white/80 text-xs tracking-[0.25em] uppercase transition-all duration-300 hover:border-phileon-gold/60 hover:shadow-[0_0_25px_rgba(198,162,93,0.2)] hover:text-white"
+                    data-testid="bound-discover-cta"
+                  >
+                    DISCOVER BOUND
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 2 — VISUAL STRIP (SCROLL STORY)
+          Sequential image reveals using BOUND assets
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-32 md:py-48 bg-[#0a0a0a]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          {/* Desktop: Horizontal strip */}
+          <div className="hidden lg:grid grid-cols-5 gap-6">
+            <ScrollReveal delay={0}>
+              <div className="aspect-[4/5] overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
+                  alt="BOUND clean product"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <div className="aspect-[4/5] overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
+                  alt="BOUND lifestyle wrist"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={200}>
+              <div className="aspect-[4/5] overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
+                  alt="BOUND sculptural angle"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={300}>
+              <div className="aspect-[4/5] overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
+                  alt="BOUND macro diamond"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={400}>
+              <div className="aspect-[4/5] overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png"
+                  alt="BOUND back structure"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Mobile/Tablet: Stacked grid */}
+          <div className="lg:hidden grid grid-cols-2 gap-4">
+            <ScrollReveal delay={0}>
+              <div className="aspect-square overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png"
+                  alt="BOUND clean product"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <div className="aspect-square overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png"
+                  alt="BOUND lifestyle wrist"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={200}>
+              <div className="aspect-square overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
+                  alt="BOUND sculptural angle"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={300}>
+              <div className="aspect-square overflow-hidden bg-[#111] rounded-sm">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp"
+                  alt="BOUND macro diamond"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 3 — STATEMENT BREAK
+          Minimal centered text interlude
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-32 md:py-48 bg-[#0a0a0a]">
+        <ScrollReveal delay={100}>
+          <div className="max-w-4xl mx-auto px-8 text-center">
+            <p className="font-serif text-3xl md:text-4xl lg:text-5xl text-white/70 tracking-[0.04em] font-light leading-relaxed">
+              "Not worn. Composed."
+            </p>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 4 — ENTRY TO SHOP
+          Return to commerce with bracelet preview
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-32 md:py-48 bg-[#080808]">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          {/* Header */}
           <ScrollReveal delay={100}>
-            {/* Product Hero - Dominant Visual */}
-            <div className="relative mb-6 md:mb-8">
-              <Link to="/products/forme-cuff" className="block group">
-                <div className="relative w-full overflow-hidden bg-black rounded-sm">
-                  {/* Enhanced vignette overlay for strong product focus */}
+            <div className="text-center mb-20">
+              <p className="text-phileon-gold/50 text-[10px] tracking-[0.4em] uppercase mb-4">
+                THE COLLECTION
+              </p>
+              <h2 className="font-serif text-2xl md:text-3xl tracking-[0.06em] text-phileon-ivory/80 font-light">
+                Bracelets & Cuffs
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          {/* Preview Grid - 3 items max */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-16">
+            <ScrollReveal delay={150}>
+              <Link to="/products/bound" className="group block">
+                <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
                   <div 
-                    className="absolute inset-0 pointer-events-none z-10"
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
-                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.35) 75%, rgba(0,0,0,0.5) 100%)'
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.3) 100%)'
+                    }}
+                  />
+                  <img
+                    src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
+                    alt="BOUND"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-6 text-center">
+                  <h3 className="font-serif text-lg tracking-wide text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300">
+                    BOUND
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-2">The Bustier Bangle</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">From $12,800</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={250}>
+              <Link to="/products/forme-cuff" className="group block">
+                <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
+                  <div 
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.3) 100%)'
                     }}
                   />
                   <img
                     src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
                     alt="FORME CUFF"
-                    className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   />
                 </div>
-              </Link>
-            </div>
-          </ScrollReveal>
-          
-          {/* Content - Heavily understated */}
-          <ScrollReveal delay={300}>
-            <div 
-              className="text-center py-10 px-6 relative"
-              style={{
-                background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(8,8,8,0.5) 30%, rgba(8,8,8,0.5) 70%, rgba(0,0,0,0) 100%)'
-              }}
-            >
-              <p className="text-phileon-gold/50 text-[10px] tracking-[0.4em] uppercase mb-3">
-                NEW ARRIVAL
-              </p>
-              <h2 className="font-serif text-xl md:text-2xl lg:text-3xl tracking-[0.04em] text-phileon-ivory/70 leading-tight font-light">
-                FORME CUFF
-              </h2>
-              <p className="mt-4 text-phileon-ivory/35 text-sm max-w-sm mx-auto font-light">
-                Shaped by the curve. Held in form.
-              </p>
-              <div className="mt-8">
-                <FeatureCTA to="/products/forme-cuff" testId="forme-cuff-cta">
-                  Explore FORME
-                </FeatureCTA>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-        {/* Scroll stop spacer */}
-        <div className="h-16 md:h-20"></div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          GALATIANS 6:14 FEATURE SECTION
-          Image LEFT, text RIGHT
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 lg:py-44 bg-phileon-black">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Image LEFT */}
-            <ScrollReveal delay={100}>
-              <Link to="/products/galatians-614" className="block group">
-                <div className="relative aspect-square overflow-hidden bg-black rounded-sm">
-                  <div 
-                    className="absolute inset-0 pointer-events-none z-10"
-                    style={{
-                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.3) 80%)'
-                    }}
-                  />
-                  <img
-                    src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
-                    alt="GALATIANS 6:14 pendant"
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                  />
+                <div className="mt-6 text-center">
+                  <h3 className="font-serif text-lg tracking-wide text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300">
+                    FORME CUFF
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-2">Shaped by the Curve</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">From $1,250</p>
                 </div>
               </Link>
             </ScrollReveal>
-            
-            {/* Text RIGHT */}
-            <ScrollReveal delay={300}>
-              <div className="text-center lg:text-left py-8">
-                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-phileon-ivory/90 leading-tight font-light">
-                  GALATIANS 6:14
-                </h2>
-                <p className="mt-4 text-phileon-ivory/50 text-lg font-light italic">
-                  Faith, worn with intention.
-                </p>
-                <div className="mt-10">
-                  <FeatureCTA to="/products/galatians-614" testId="galatians-cta">
-                    Explore
-                  </FeatureCTA>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-        <div className="h-16 md:h-20"></div>
-      </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          TRACE FEATURE SECTION
-          Image RIGHT, text LEFT
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 lg:py-44 bg-[#080808]">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Text LEFT (order changes on mobile) */}
-            <ScrollReveal delay={100} className="order-2 lg:order-1">
-              <div className="text-center lg:text-left py-8">
-                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.04em] text-phileon-ivory/90 leading-tight font-light">
-                  TRACE
-                </h2>
-                <p className="mt-4 text-phileon-ivory/50 text-lg font-light italic">
-                  The imprint of form.
-                </p>
-                <div className="mt-10">
-                  <FeatureCTA to="/products/trace" testId="trace-cta">
-                    Explore
-                  </FeatureCTA>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Image RIGHT */}
-            <ScrollReveal delay={300} className="order-1 lg:order-2">
-              <Link to="/products/trace" className="block group">
-                <div className="relative aspect-square overflow-hidden bg-black rounded-sm">
+            <ScrollReveal delay={350}>
+              <Link to="/products/ptp-cuff" className="group block">
+                <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
                   <div 
-                    className="absolute inset-0 pointer-events-none z-10"
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
-                      background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.3) 80%)'
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.3) 100%)'
                     }}
                   />
                   <img
-                    src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
-                    alt="TRACE earrings"
-                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                    src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
+                    alt="PTP CUFF"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   />
+                </div>
+                <div className="mt-6 text-center">
+                  <h3 className="font-serif text-lg tracking-wide text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300">
+                    PTP CUFF
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-2">Power To The People</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2">From $1,050</p>
                 </div>
               </Link>
             </ScrollReveal>
           </div>
+
+          {/* CTA Button */}
+          <ScrollReveal delay={450}>
+            <div className="text-center">
+              <Link 
+                to="/shop?category=bracelets&audience=ladies"
+                className="inline-block px-12 py-4 border border-phileon-gold/60 text-phileon-gold text-xs tracking-[0.25em] uppercase font-medium transition-all duration-300 hover:border-phileon-gold hover:shadow-[0_0_20px_rgba(198,162,93,0.15)] hover:brightness-110"
+                data-testid="view-all-bracelets-cta"
+              >
+                VIEW ALL BRACELETS
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
-        <div className="h-16 md:h-20"></div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
