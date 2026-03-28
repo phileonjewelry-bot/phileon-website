@@ -31,6 +31,27 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 
 ## What's Been Implemented (December 2025 - Latest Session)
 
+### Cinematic Strip Fix (Complete - December 28, 2025)
+**Fixed click mapping and removed hover pause**
+
+- Fixed ANNIE ROSE image URL (was using TOLA II's image)
+- Fixed TOLA II image URL (corrected to rst0mhem_1000143383.png)
+- Removed hover:pause CSS rule - strip now flows continuously
+- All strip items verified with correct image→link mappings
+
+**Verified Mappings:**
+| Strip Item | Image | Navigates To |
+|------------|-------|--------------|
+| MONIKA COUTURE | xkfi3q1b_1000139956.jpg | /products/monika-couture |
+| TOLA II | rst0mhem_1000143383.png | /products/tola-ii |
+| GALATIANS 6:14 | qotxl9is_1000143699.webp | /products/galatians-614 |
+| FORME CUFF | k7kbqg47_1000142846.png | /products/forme-cuff |
+| LA MARVA | m7k7yxis_1000138213.jpg | /products/la-marva |
+| PTP CUFF | n1f04383_1000140851.jpg | /products/ptp-cuff |
+| ANNIE ROSE | vg64rc4i_1000139387.jpg | /products/annie-rose |
+| RHYTHM MESH | nl2vulxg_1000143088.jpg | /products/rhythm-mesh-ring |
+| BOUND | 4ujxm427_1000143869.png | /products/bound |
+
 ### Pricing Standardization (Complete - December 28, 2025)
 **Single Source of Truth for All Product Pricing**
 
