@@ -76,8 +76,8 @@ export default function EarringsProductPage({ product }) {
         {/* LEFT SIDE — GALLERY */}
         <div>
           {/* HERO MEDIA */}
-          <div className="product-media-wrap w-full max-w-full overflow-hidden">
-            <div className="trace-hero rounded-2xl border border-[#1f1f1f]">
+          <div className="trace-gallery-wrap">
+            <div className="trace-gallery-main aspect-square border border-[#1f1f1f]">
               {product.media[activeMedia].type === "video" ? (
                 <video
                   ref={videoRef}
@@ -92,7 +92,6 @@ export default function EarringsProductPage({ product }) {
                     e.currentTarget.currentTime = 0;
                     e.currentTarget.play();
                   }}
-                  className="w-full h-full max-w-full object-contain block"
                 />
               ) : (
                 <img
@@ -104,12 +103,12 @@ export default function EarringsProductPage({ product }) {
           </div>
 
           {/* THUMBNAILS */}
-          <div className="flex gap-2 mt-4">
+          <div className="trace-thumbnails mt-4">
             {product.media.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setActiveMedia(index)}
-                className={`relative overflow-hidden rounded-lg border transition-all h-20 w-20 flex-shrink-0 ${
+                className={`trace-thumbnail border transition-all ${
                   activeMedia === index
                     ? "border-[#C6A25D]"
                     : "border-[#2a2a2a] hover:border-[#4a4a4a]"
@@ -124,7 +123,7 @@ export default function EarringsProductPage({ product }) {
                       className="h-full w-full object-contain"
                     />
                     <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-black/70 flex items-center justify-center text-white text-xs">
+                      <div className="w-6 h-6 rounded-full bg-black/70 flex items-center justify-center text-white text-[10px]">
                         ▶
                       </div>
                     </div>
@@ -258,7 +257,7 @@ export default function EarringsProductPage({ product }) {
               <img 
                 src={product.specsImage} 
                 alt={`${product.name} dimensions and weight`}
-                className="mx-auto max-w-sm opacity-90"
+                className="trace-spec-image mx-auto max-w-sm opacity-90"
               />
             </section>
           )}
