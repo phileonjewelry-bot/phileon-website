@@ -50,19 +50,39 @@ const BoundPage = () => {
       section: null
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/4ha15kss_1000143886.webp",
-      alt: "BOUND wrist on silk",
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
+      alt: "BOUND wrist on black dress",
       section: "detail"
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/k09vug5v_1000143894.png",
-      alt: "BOUND lifestyle champagne",
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/zwzt7f6l_1000143874.webp",
+      alt: "BOUND collection lifestyle",
       section: "lifestyle"
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png",
-      alt: "BOUND angled view",
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png",
+      alt: "BOUND angled on velvet",
       section: "craft"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png",
+      alt: "BOUND back structure",
+      section: "structure"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/4ha15kss_1000143886.webp",
+      alt: "BOUND sculptural detail",
+      section: "sculptural"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp",
+      alt: "BOUND macro diamond mesh",
+      section: "macro"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/k09vug5v_1000143894.png",
+      alt: "BOUND specification shot",
+      section: "spec"
     }
   ];
 
@@ -288,15 +308,15 @@ const BoundPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          DETAIL SECTION — Silk wrist image
+          DETAIL SECTION — Wrist on black dress
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-detail">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-          <div className="aspect-square lg:aspect-auto">
+          <div className="aspect-square lg:aspect-auto overflow-hidden">
             <img
               src={media[2].src}
-              alt="BOUND on silk"
-              className="w-full h-full object-cover"
+              alt="BOUND worn elegantly"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
           </div>
           <div className="flex items-center justify-center p-12 md:p-20 lg:p-32 bg-[#0a0a0a]">
@@ -314,7 +334,7 @@ const BoundPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          LIFESTYLE SECTION — Table + champagne
+          LIFESTYLE SECTION — Collection display
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-lifestyle">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
@@ -329,26 +349,26 @@ const BoundPage = () => {
               </div>
             </div>
           </div>
-          <div className="aspect-square lg:aspect-auto order-1 lg:order-2">
+          <div className="aspect-square lg:aspect-auto order-1 lg:order-2 overflow-hidden">
             <img
               src={media[3].src}
-              alt="BOUND lifestyle"
-              className="w-full h-full object-cover"
+              alt="BOUND in collection"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          CRAFT SECTION — Angled product
+          CRAFT SECTION — Angled on velvet
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-craft">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-          <div className="aspect-square lg:aspect-auto">
+          <div className="aspect-square lg:aspect-auto overflow-hidden">
             <img
               src={media[4].src}
               alt="BOUND craft detail"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
           </div>
           <div className="flex items-center justify-center p-12 md:p-20 lg:p-32 bg-[#0a0a0a]">
@@ -366,15 +386,114 @@ const BoundPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          STRUCTURE SECTION — Back view
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="bound-structure">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+          <div className="flex items-center justify-center p-12 md:p-20 lg:p-32 bg-[#0a0a0a] order-2 lg:order-1">
+            <div className="max-w-md">
+              <h3 className="font-serif text-2xl md:text-3xl text-[#C6A25D]/80 tracking-wide font-light">
+                Architecture of intention.
+              </h3>
+              <div className="mt-8 space-y-4 text-white/40 text-base leading-relaxed">
+                <p>Every angle considered.</p>
+                <p>Every joint resolved.</p>
+              </div>
+            </div>
+          </div>
+          <div className="aspect-square lg:aspect-auto order-1 lg:order-2 overflow-hidden">
+            <img
+              src={media[5].src}
+              alt="BOUND structure"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          MACRO SECTION — Diamond mesh detail (Full width)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="bound-macro relative">
+        <div className="aspect-[16/9] lg:aspect-[21/9] w-full overflow-hidden">
+          <img
+            src={media[7].src}
+            alt="BOUND macro detail"
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-[8s] ease-out"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-12 md:p-20 text-center">
+          <h3 className="font-serif text-2xl md:text-4xl text-white/90 tracking-wide font-light">
+            The language of detail.
+          </h3>
+          <p className="text-white/40 text-base mt-4 tracking-wide">
+            Hand-set diamonds. Woven gold mesh. Generations of craft.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SCULPTURAL SECTION — Artistic angle
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="bound-sculptural py-32 md:py-48">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1">
+              <p className="text-[#C6A25D]/50 text-[10px] tracking-[0.4em] uppercase mb-6">
+                THE FORM
+              </p>
+              <h3 className="font-serif text-3xl md:text-4xl text-white/90 tracking-wide font-light">
+                Sculpture, not jewelry.
+              </h3>
+              <div className="mt-8 space-y-4 text-white/40 text-base leading-relaxed">
+                <p>The bustier silhouette reimagined as wearable architecture.</p>
+                <p>A piece that exists in three dimensions, demanding attention from every angle.</p>
+                <p>Gold mesh breathes. Diamond borders define. The wrist becomes art.</p>
+              </div>
+            </div>
+            <div className="order-1 lg:order-2 overflow-hidden rounded-sm">
+              <img
+                src={media[6].src}
+                alt="BOUND sculptural"
+                className="w-full h-auto hover:scale-105 transition-transform duration-[6s] ease-out"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
           SPEC SECTION — Clean product centered
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-spec py-32 md:py-48">
-        <div className="max-w-4xl mx-auto px-6">
+      <section className="bound-spec py-32 md:py-48 bg-[#050505]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <p className="text-[#C6A25D]/50 text-[10px] tracking-[0.4em] uppercase mb-10">
+            SPECIFICATIONS
+          </p>
           <img
-            src={media[1].src}
+            src={media[8].src}
             alt="BOUND specifications"
             className="w-full h-auto"
           />
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <p className="text-[#C6A25D] text-2xl font-serif">18K</p>
+              <p className="text-white/30 text-xs tracking-widest uppercase mt-2">Available Gold</p>
+            </div>
+            <div>
+              <p className="text-[#C6A25D] text-2xl font-serif">Mesh</p>
+              <p className="text-white/30 text-xs tracking-widest uppercase mt-2">Weave Pattern</p>
+            </div>
+            <div>
+              <p className="text-[#C6A25D] text-2xl font-serif">VS+</p>
+              <p className="text-white/30 text-xs tracking-widest uppercase mt-2">Diamond Clarity</p>
+            </div>
+            <div>
+              <p className="text-[#C6A25D] text-2xl font-serif">1</p>
+              <p className="text-white/30 text-xs tracking-widest uppercase mt-2">Size · Adjustable</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -460,11 +579,19 @@ const BoundPage = () => {
         .bound-detail,
         .bound-lifestyle,
         .bound-craft,
+        .bound-structure,
+        .bound-macro,
+        .bound-sculptural,
         .bound-spec,
         .bound-final-cta {
           opacity: 0;
           animation: fadeIn 0.8s ease-out forwards;
           animation-delay: 0.2s;
+        }
+
+        /* Macro section overlay */
+        .bound-macro {
+          position: relative;
         }
       `}</style>
     </div>

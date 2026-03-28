@@ -29,6 +29,30 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 - Wishlist hearts
 - Category and audience filtering via URL params
 
+## What's Been Implemented (December 2025 - Latest Session)
+
+### BOUND — The Bustier Bangle (Complete)
+- **Custom Editorial Product Page** - Cartier-level luxury experience (not using standard wrapper)
+- Full-screen cinematic hero with gradient overlays
+- 2-column product layout: sticky gallery left, scrolling info right
+- 9-image gallery with interactive thumbnails and desktop hover zoom
+- **Tier-based pricing system**:
+  - Foundation (10K Yellow Gold): $12,800
+  - Signature (14K Yellow Gold): $18,400
+  - Heirloom (18K Yellow Gold): $24,600
+- **Editorial scroll sections**:
+  - Story section (centered text)
+  - Detail section (wrist on black dress image)
+  - Lifestyle section (collection on glass table)
+  - Craft section (angled product on velvet)
+  - Structure section (back view of bangle)
+  - Macro section (full-width diamond mesh close-up with overlay text)
+  - Sculptural section (artistic shot with extended copy)
+  - Specifications grid (18K, Mesh, VS+, Adjustable)
+  - Final CTA with "From $12,800 CAD" and Add to Cart button
+- Route: `/products/bound`
+- File: `BoundPage.jsx`
+
 ## What's Been Implemented (March 2025)
 
 ### FORME CUFF Product (Complete)
@@ -84,19 +108,20 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 - None currently
 
 ### P1 (High Priority)
-- Add more products to Gentleman's Club collection
+- Add BOUND to Shop Grid / Homepage features
+- Verify mobile swipe interactions for BOUND gallery
 - On-ear lifestyle images for earrings
-- Add to Cart from shop cards (bypass product page)
 
 ### P2 (Medium Priority)
-- Vault page real product drops (currently placeholders)
+- Vault page real product drops (`/vault/drews-world`)
+- Add more products to Gentleman's Club collection
 - Cross-selling between products
-- File cleanup (Header.jsx redundancy check)
 
 ### P3 (Low Priority)
 - Additional product pages
 - Expand filtering options
 - Performance optimization
+- File cleanup (Header.jsx redundancy check)
 
 ## Known Issues
 - None currently blocking
