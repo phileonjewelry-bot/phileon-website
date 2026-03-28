@@ -284,9 +284,9 @@ const HomePage = () => {
         // Unified strip items - each item has image, title, and href bound together
         const stripItems = [
           { 
-            title: "TRACE", 
-            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png", 
-            href: "/products/trace" 
+            title: "MONIKA COUTURE", 
+            image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg", 
+            href: "/products/monika-couture" 
           },
           { 
             title: "TOLA II", 
@@ -309,11 +309,6 @@ const HomePage = () => {
             href: "/products/la-marva" 
           },
           { 
-            title: "BOUND", 
-            image: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png", 
-            href: "/products/bound" 
-          },
-          { 
             title: "PTP CUFF", 
             image: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg", 
             href: "/products/ptp-cuff" 
@@ -327,6 +322,11 @@ const HomePage = () => {
             title: "RHYTHM MESH", 
             image: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg", 
             href: "/products/rhythm-mesh-ring" 
+          },
+          { 
+            title: "BOUND", 
+            image: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png", 
+            href: "/products/bound" 
           }
         ];
 
