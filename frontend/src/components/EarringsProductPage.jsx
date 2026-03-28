@@ -71,35 +71,37 @@ export default function EarringsProductPage({ product }) {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen" data-testid={`${product.id}-page`}>
-      <div className="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-[1.2fr_0.8fr] gap-10">
+    <div className="bg-black text-white min-h-screen overflow-x-hidden" data-testid={`${product.id}-page`}>
+      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10">
         {/* LEFT SIDE — GALLERY */}
         <div>
           {/* HERO MEDIA */}
-          <div className="w-full aspect-square overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
-            {product.media[activeMedia].type === "video" ? (
-              <video
-                ref={videoRef}
-                src={product.media[activeMedia].src}
-                poster={product.media[activeMedia].poster}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-                onEnded={(e) => {
-                  e.currentTarget.currentTime = 0;
-                  e.currentTarget.play();
-                }}
-                className="w-full h-full object-cover scale-[1.03] transition-transform duration-[6000ms]"
-              />
-            ) : (
-              <img
-                src={product.media[activeMedia].src}
-                alt={product.media[activeMedia].alt}
-                className="w-full h-full object-contain scale-[1.03] transition-transform duration-[6000ms]"
-              />
-            )}
+          <div className="product-media-wrap w-full max-w-full overflow-hidden">
+            <div className="product-media-main w-full max-w-full aspect-square flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
+              {product.media[activeMedia].type === "video" ? (
+                <video
+                  ref={videoRef}
+                  src={product.media[activeMedia].src}
+                  poster={product.media[activeMedia].poster}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  onEnded={(e) => {
+                    e.currentTarget.currentTime = 0;
+                    e.currentTarget.play();
+                  }}
+                  className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
+                />
+              ) : (
+                <img
+                  src={product.media[activeMedia].src}
+                  alt={product.media[activeMedia].alt}
+                  className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
+                />
+              )}
+            </div>
           </div>
 
           {/* THUMBNAILS */}
