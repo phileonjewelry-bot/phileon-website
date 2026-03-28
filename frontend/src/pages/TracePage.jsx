@@ -62,6 +62,21 @@ const traceProduct = {
       type: "image",
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/n8ykgvhb_1000143764.png",
       alt: "TRACE earrings - single on dark"
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/s9no0imj_1000143769.png",
+      alt: "TRACE earrings - angled view"
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/nt7j2fwd_1000143773.png",
+      alt: "TRACE earrings - ear wire detail"
+    },
+    {
+      type: "image",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/hl61ok5r_1000143771.png",
+      alt: "TRACE earrings - bust macro detail"
     }
   ],
 
