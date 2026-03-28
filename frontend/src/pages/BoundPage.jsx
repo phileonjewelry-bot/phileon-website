@@ -45,24 +45,24 @@ const BoundPage = () => {
       section: null
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
-      alt: "BOUND editorial wrist black dress",
+      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png",
+      alt: "BOUND clean product front",
       section: null
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xrcki9ji_1000143865.png",
-      alt: "BOUND clean product front",
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
+      alt: "BOUND lifestyle wrist black outfit",
       section: "detail"
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/zwzt7f6l_1000143874.webp",
-      alt: "BOUND collection lifestyle",
-      section: "lifestyle"
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png",
+      alt: "BOUND sculptural angle",
+      section: "craft"
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png",
-      alt: "BOUND angled on velvet",
-      section: "craft"
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp",
+      alt: "BOUND macro diamond detail",
+      section: "macro"
     },
     {
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/videj0m3_1000143867.png",
@@ -70,19 +70,9 @@ const BoundPage = () => {
       section: "structure"
     },
     {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/4ha15kss_1000143886.webp",
-      alt: "BOUND sculptural detail",
-      section: "sculptural"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/fs69juit_1000143873.webp",
-      alt: "BOUND macro diamond mesh",
-      section: "macro"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/k09vug5v_1000143894.png",
-      alt: "BOUND specification shot",
-      section: "spec"
+      src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/zwzt7f6l_1000143874.webp",
+      alt: "BOUND display jewelry table",
+      section: "lifestyle"
     }
   ];
 
@@ -285,10 +275,10 @@ const BoundPage = () => {
                 <button
                   onClick={onAddToCart}
                   disabled={isAdding}
-                  className={`w-full mt-10 py-5 text-sm tracking-[0.3em] uppercase transition-all duration-300 ${
+                  className={`bound-btn w-full mt-10 py-5 text-sm tracking-[0.3em] uppercase transition-all duration-200 ${
                     isAdding
-                      ? "bg-green-600 text-white"
-                      : "bg-transparent border border-white/20 text-white/80 hover:bg-white hover:text-[#0a0a0a]"
+                      ? "bg-green-600 text-white scale-100"
+                      : "bg-transparent border border-white/20 text-white/80 hover:scale-[1.02] hover:border-[#C6A25D]/60 hover:shadow-[0_0_20px_rgba(198,162,93,0.25)] hover:text-white active:scale-[0.98]"
                   }`}
                 >
                   {isAdding ? buttonText : "ADD TO CART"}
@@ -364,7 +354,7 @@ const BoundPage = () => {
           </div>
           <div className="aspect-square lg:aspect-auto order-1 lg:order-2 overflow-hidden">
             <img
-              src={media[3].src}
+              src={media[6].src}
               alt="BOUND in collection"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
@@ -373,13 +363,13 @@ const BoundPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          CRAFT SECTION — Angled on velvet
+          CRAFT SECTION — Sculptural angle
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-craft">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <div className="aspect-square lg:aspect-auto overflow-hidden">
             <img
-              src={media[4].src}
+              src={media[3].src}
               alt="BOUND craft detail"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-[6s] ease-out"
             />
@@ -430,7 +420,7 @@ const BoundPage = () => {
       <section className="bound-macro relative">
         <div className="aspect-[16/9] lg:aspect-[21/9] w-full overflow-hidden">
           <img
-            src={media[7].src}
+            src={media[4].src}
             alt="BOUND macro detail"
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-[8s] ease-out"
           />
@@ -467,7 +457,7 @@ const BoundPage = () => {
             </div>
             <div className="order-1 lg:order-2 overflow-hidden rounded-sm">
               <img
-                src={media[6].src}
+                src={media[3].src}
                 alt="BOUND sculptural"
                 className="w-full h-auto hover:scale-105 transition-transform duration-[6s] ease-out"
               />
@@ -485,7 +475,7 @@ const BoundPage = () => {
             SPECIFICATIONS
           </p>
           <img
-            src={media[8].src}
+            src={media[1].src}
             alt="BOUND specifications"
             className="w-full h-auto"
           />
@@ -532,10 +522,10 @@ const BoundPage = () => {
           <button
             onClick={onAddToCart}
             disabled={isAdding}
-            className={`mt-10 px-16 py-5 text-sm tracking-[0.3em] uppercase transition-all duration-300 ${
+            className={`bound-btn mt-10 px-16 py-5 text-sm tracking-[0.3em] uppercase transition-all duration-200 ${
               isAdding
-                ? "bg-green-600 text-white"
-                : "bg-transparent border border-white/20 text-white/80 hover:bg-white hover:text-[#0a0a0a]"
+                ? "bg-green-600 text-white scale-100"
+                : "bg-transparent border border-white/20 text-white/80 hover:scale-[1.02] hover:border-[#C6A25D]/60 hover:shadow-[0_0_20px_rgba(198,162,93,0.25)] hover:text-white active:scale-[0.98]"
             }`}
           >
             {isAdding ? buttonText : "ADD TO CART"}
