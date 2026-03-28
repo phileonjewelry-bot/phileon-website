@@ -280,154 +280,85 @@ const HomePage = () => {
           CINEMATIC IMAGE STRIP
           Auto-scrolling discovery — clickable product links
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="cinematic-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-        
-        {/* Auto-scrolling track */}
-        <div className="cinematic-strip-track">
-          {/* First set - Mixed products, BOUND appears subtly */}
-          
-          {/* 1. TRACE Earrings - fashion-forward */}
-          <Link to="/products/trace" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
-              alt="TRACE earrings"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 2. TOLA II Gents - adds contrast */}
-          <Link to="/products/tola-ii" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
-              alt="TOLA II Gents"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 3. GALATIANS Pendant - variety */}
-          <Link to="/products/galatians-614" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
-              alt="GALATIANS pendant"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 4. FORME CUFF - sculptural */}
-          <Link to="/products/forme-cuff" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
-              alt="FORME CUFF"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 5. La Marva - elegant */}
-          <Link to="/products/la-marva" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
-              alt="La Marva"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 6. BOUND subtle appearance */}
-          <Link to="/products/bound" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
-              alt="BOUND"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 7. PTP CUFF - powerful */}
-          <Link to="/products/ptp-cuff" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
-              alt="PTP CUFF"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* 8. Annie Rose - variety */}
-          <Link to="/products/annie-rose" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png"
-              alt="Annie Rose"
-              draggable="false"
-            />
-          </Link>
-          
-          {/* Duplicate set for seamless loop */}
-          
-          <Link to="/products/trace" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png"
-              alt="TRACE earrings"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/tola-ii" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png"
-              alt="TOLA II Gents"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/galatians-614" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp"
-              alt="GALATIANS pendant"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/forme-cuff" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
-              alt="FORME CUFF"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/la-marva" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
-              alt="La Marva"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/bound" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png"
-              alt="BOUND"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/ptp-cuff" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
-              alt="PTP CUFF"
-              draggable="false"
-            />
-          </Link>
-          
-          <Link to="/products/annie-rose" className="strip-image">
-            <img
-              src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png"
-              alt="Annie Rose"
-              draggable="false"
-            />
-          </Link>
-        </div>
-      </section>
+      {(() => {
+        // Unified strip items - each item has image, title, and href bound together
+        const stripItems = [
+          { 
+            title: "TRACE", 
+            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/1owcvzg5_1000143757.png", 
+            href: "/products/trace" 
+          },
+          { 
+            title: "TOLA II", 
+            image: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png", 
+            href: "/products/tola-ii" 
+          },
+          { 
+            title: "GALATIANS 6:14", 
+            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp", 
+            href: "/products/galatians-614" 
+          },
+          { 
+            title: "FORME CUFF", 
+            image: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png", 
+            href: "/products/forme-cuff" 
+          },
+          { 
+            title: "LA MARVA", 
+            image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg", 
+            href: "/products/la-marva" 
+          },
+          { 
+            title: "BOUND", 
+            image: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png", 
+            href: "/products/bound" 
+          },
+          { 
+            title: "PTP CUFF", 
+            image: "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg", 
+            href: "/products/ptp-cuff" 
+          },
+          { 
+            title: "ANNIE ROSE", 
+            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png", 
+            href: "/products/annie-rose" 
+          },
+          { 
+            title: "RHYTHM MESH", 
+            image: "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg", 
+            href: "/products/rhythm-mesh-ring" 
+          }
+        ];
+
+        // Duplicate for seamless loop
+        const allItems = [...stripItems, ...stripItems];
+
+        return (
+          <section className="cinematic-strip-section relative py-16 md:py-24 bg-[#0a0a0a] overflow-hidden">
+            {/* Fade edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            
+            {/* Auto-scrolling track */}
+            <div className="cinematic-strip-track">
+              {allItems.map((item, index) => (
+                <Link 
+                  key={`${item.title}-${index}`} 
+                  to={item.href} 
+                  className="strip-image"
+                  data-testid={`strip-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    draggable="false"
+                  />
+                </Link>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* ═══════════════════════════════════════════════════════════════
           THE COLLECTIVE — Discovery Grid

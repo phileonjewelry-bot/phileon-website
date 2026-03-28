@@ -1915,7 +1915,7 @@ input:focus, textarea:focus, select:focus, button:focus {
   display: flex;
   gap: 24px;
   width: max-content;
-  animation: cinematicStripScroll 45s linear infinite;
+  animation: cinematicStripScroll 38s linear infinite;
   will-change: transform;
 }
 
@@ -1967,7 +1967,7 @@ input:focus, textarea:focus, select:focus, button:focus {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .cinematic-strip-track {
-    animation-duration: 35s;
+    animation-duration: 28s;
   }
   
   .strip-image {
