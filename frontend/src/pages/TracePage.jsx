@@ -100,7 +100,9 @@ Only what remains.`,
     "High polish finish",
     "Open wireframe construction",
     "French hook ear wire with jump ring connection"
-  ]
+  ],
+
+  specsImage: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/xxhobbp3_1000143831.png"
 };
 
 export default function TracePage() {

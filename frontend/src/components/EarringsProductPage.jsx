@@ -240,7 +240,7 @@ export default function EarringsProductPage({ product }) {
           </div>
 
           {/* SPECIFICATIONS */}
-          <div className="mt-14 pb-16">
+          <div className="mt-14 pb-8">
             <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
               Specifications
             </h2>
@@ -250,6 +250,17 @@ export default function EarringsProductPage({ product }) {
               ))}
             </ul>
           </div>
+
+          {/* SPECS IMAGE (optional) */}
+          {product.specsImage && (
+            <section className="mt-8 pb-16 text-center">
+              <img 
+                src={product.specsImage} 
+                alt={`${product.name} dimensions and weight`}
+                className="mx-auto max-w-sm opacity-90 rounded-lg"
+              />
+            </section>
+          )}
         </div>
       </div>
     </div>
