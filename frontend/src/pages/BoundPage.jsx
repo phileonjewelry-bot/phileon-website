@@ -16,6 +16,7 @@ const BoundPage = () => {
   const [heroLoaded, setHeroLoaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const galleryRef = useRef(null);
+  const videoRef = useRef(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
@@ -183,36 +184,28 @@ const BoundPage = () => {
       <section className="bound-hero relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
         {/* Hero video with image fallback */}
         <div className="absolute inset-0">
-          {/* Video - hidden if fails to load */}
+          {/* Fallback image - always present, fades when video loads */}
+          <img
+            src={media[0].src}
+            alt="BOUND — The Bustier Bangle"
+            className="absolute inset-0 w-full h-full object-cover"
+            onLoad={() => setHeroLoaded(true)}
+          />
+          {/* Video - layered on top */}
           <video
+            ref={videoRef}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            className="w-full h-screen object-cover"
-            onLoadedData={() => setHeroLoaded(true)}
-            onError={(e) => {
-              // Hide video element if it fails to load
-              e.target.style.display = 'none';
-              setHeroLoaded(true);
-            }}
-            poster={media[0].src}
+            className="absolute inset-0 w-full h-full object-cover z-10"
           >
             <source src="/videos/bound-hero.mp4" type="video/mp4" />
           </video>
-          {/* Fallback image - always present behind video */}
-          <div className="absolute inset-0 flex items-center justify-center -z-10">
-            <img
-              src={media[0].src}
-              alt="BOUND — The Bustier Bangle"
-              className="h-full w-auto max-w-none object-contain"
-              onLoad={() => setHeroLoaded(true)}
-            />
-          </div>
           {/* Gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50" />
+          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
+          <div className="absolute inset-0 z-20 bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50" />
         </div>
         
         {/* Hero text with staged fade-in */}
