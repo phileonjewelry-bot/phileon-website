@@ -874,7 +874,6 @@ const BoundPage = () => {
           >
             <video
               ref={modalVideoRef}
-              controls
               muted
               playsInline
               preload="auto"
