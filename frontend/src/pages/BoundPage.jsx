@@ -875,10 +875,11 @@ const BoundPage = () => {
             <video
               ref={modalVideoRef}
               controls
+              muted
               playsInline
               preload="auto"
               autoPlay
-              className="w-full h-auto max-h-[85vh] object-contain rounded-sm"
+              className="w-full h-auto max-h-[90vh] object-contain rounded-sm"
             >
               <source src="/videos/bound-hero.mp4" type="video/mp4" />
             </video>
