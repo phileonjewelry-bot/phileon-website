@@ -693,7 +693,7 @@ export const products = {
     audience: "ladies",
     subtitle: "PHILEON — OBJECT SERIES",
     tagline: "From Egypt to Santorini. Places turned into pieces.",
-    basePrice: 6500,
+    basePrice: 4800,
     
     // Pricing Configuration
     dynamicPricing: false,
@@ -704,10 +704,10 @@ export const products = {
     imageUrl: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/jphlogf7_1000144036.webp",
     
     pricing: {
-      signature: 6500,    // Silver with CZ + lab sapphires
-      foundation: 13900,  // 10K White Gold with lab diamonds + natural sapphires
-      core: 14800,        // 14K White Gold with lab diamonds + natural sapphires
-      heirloom: 17500     // 18K White Gold with lab diamonds + natural sapphires
+      signature: 4800,    // Silver with CZ + lab sapphires
+      foundation: 10800,  // 10K White Gold with lab diamonds + natural sapphires
+      core: 14000,        // 14K White Gold with lab diamonds + natural sapphires
+      heirloom: 18200     // 18K White Gold with lab diamonds + natural sapphires
     },
     
     // Tier details
