@@ -679,6 +679,75 @@ export const products = {
       signature: 18400,   // 14K Yellow Gold
       heirloom: 24600     // 18K Yellow Gold
     }
+  },
+
+  // ==========================================
+  // APEX
+  // Pyramid earrings with sapphires and diamonds
+  // Egypt to Santorini inspiration
+  // ==========================================
+  apex: {
+    name: "APEX",
+    slug: "apex",
+    category: "earrings",
+    audience: "ladies",
+    subtitle: "PHILEON — OBJECT SERIES",
+    tagline: "From Egypt to Santorini. Places turned into pieces.",
+    basePrice: 6500,
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "core",
+    
+    // Hero image
+    imageUrl: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/jphlogf7_1000144036.webp",
+    
+    pricing: {
+      signature: 6500,    // Silver with CZ + lab sapphires
+      foundation: 13900,  // 10K White Gold with lab diamonds + natural sapphires
+      core: 14800,        // 14K White Gold with lab diamonds + natural sapphires
+      heirloom: 17500     // 18K White Gold with lab diamonds + natural sapphires
+    },
+    
+    // Tier details
+    tiers: {
+      signature: {
+        name: "Signature",
+        metal: "Sterling Silver",
+        stones: "Cubic Zirconia + Lab Sapphires",
+        description: "Entry into the object. Same design, same proportions."
+      },
+      foundation: {
+        name: "Foundation",
+        metal: "10K White Gold",
+        stones: "Lab Diamonds + Natural Sapphires",
+        description: "Solid gold foundation with precious stones."
+      },
+      core: {
+        name: "Core",
+        metal: "14K White Gold",
+        stones: "Lab Diamonds + Natural Sapphires",
+        badge: "RECOMMENDED",
+        description: "Balanced weight and lasting brilliance."
+      },
+      heirloom: {
+        name: "Heirloom",
+        metal: "18K White Gold",
+        stones: "Lab Diamonds + Natural Sapphires",
+        badge: "HEIRLOOM",
+        description: "Maximum gold purity. Museum-grade finish."
+      }
+    },
+    
+    // Specs
+    specs: {
+      weight: "8.5g per earring (17g pair)",
+      dimensions: "35mm × 16mm",
+      diamonds: "120 round pavé diamonds per earring (1.0mm–1.2mm)",
+      sapphires: "4 blue sapphires per earring (3 round ~5mm, 1 oval ~7×5mm)",
+      finish: "High polish"
+    }
   }
 
 };

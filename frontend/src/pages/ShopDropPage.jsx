@@ -190,6 +190,19 @@ const CORE_PRODUCTS = [
     category: 'bracelets',
     audience: 'ladies',
   },
+  {
+    id: 'apex',
+    name: 'APEX',
+    slug: 'apex',
+    materialLine: 'Pyramid Earrings · Silver to 18K White Gold',
+    imageUrl: products.apex.imageUrl,
+    href: '/products/apex',
+    price_range: formatPrice(products.apex.basePrice, 'CAD'),
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
+  },
 ];
 
 // Additional drop products as fallback

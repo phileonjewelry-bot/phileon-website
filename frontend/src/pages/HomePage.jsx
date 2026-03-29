@@ -331,6 +331,11 @@ const HomePage = () => {
             title: "BOUND", 
             image: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/4ujxm427_1000143869.png", 
             href: "/products/bound" 
+          },
+          { 
+            title: "APEX", 
+            image: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/jphlogf7_1000144036.webp", 
+            href: "/products/apex" 
           }
         ];
 
