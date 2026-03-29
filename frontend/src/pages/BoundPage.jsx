@@ -179,9 +179,9 @@ const BoundPage = () => {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO INTRO SECTION
-          Full-screen cinematic video opener
+          Cinematic video opener - tightened to 85vh
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-hero relative w-full h-screen overflow-hidden bg-black flex items-center justify-center">
+      <section className="bound-hero relative w-full h-[85vh] overflow-hidden bg-black flex items-center justify-center">
         {/* Video - full cover */}
         <video
           ref={videoRef}
