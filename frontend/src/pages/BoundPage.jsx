@@ -181,32 +181,23 @@ const BoundPage = () => {
           HERO INTRO SECTION
           Full-screen cinematic video opener with image fallback
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-hero relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
-        {/* Hero video with image fallback */}
-        <div className="absolute inset-0">
-          {/* Fallback image - always present, fades when video loads */}
-          <img
-            src={media[0].src}
-            alt="BOUND — The Bustier Bangle"
-            className="absolute inset-0 w-full h-full object-cover"
-            onLoad={() => setHeroLoaded(true)}
-          />
-          {/* Video - layered on top */}
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="absolute inset-0 w-full h-full object-cover z-10"
-          >
-            <source src="/videos/bound-hero.mp4" type="video/mp4" />
-          </video>
-          {/* Gradient overlays */}
-          <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
-          <div className="absolute inset-0 z-20 bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50" />
-        </div>
+      <section className="bound-hero relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+        {/* Video - centered, maintains aspect ratio */}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="max-h-[85vh] w-auto object-contain"
+        >
+          <source src="/videos/bound-hero.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0a0a0a]/30 via-transparent to-[#0a0a0a]/30 pointer-events-none" />
         
         {/* Hero text with staged fade-in */}
         <div className="absolute bottom-0 left-0 right-0 pb-16 md:pb-24 lg:pb-32">
