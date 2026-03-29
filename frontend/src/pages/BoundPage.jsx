@@ -190,7 +190,7 @@ const BoundPage = () => {
           loop
           playsInline
           preload="auto"
-          className="absolute top-1/2 left-1/2 w-auto h-full min-w-full -translate-x-1/2 -translate-y-1/2 scale-[0.92] object-cover object-[center_48%]"
+          className="absolute top-1/2 left-1/2 w-auto h-full min-w-full -translate-x-1/2 -translate-y-1/2 scale-[0.88] object-cover object-[center_52%]"
         >
           <source src="/videos/bound-hero.mp4" type="video/mp4" />
         </video>
