@@ -182,7 +182,7 @@ const BoundPage = () => {
           Full-screen cinematic video opener
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-hero relative w-full h-screen overflow-hidden bg-black">
-        {/* Video - full cover centered */}
+        {/* Video - full cover centered with scale */}
         <video
           ref={videoRef}
           autoPlay
@@ -190,7 +190,7 @@ const BoundPage = () => {
           loop
           playsInline
           preload="auto"
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
+          className="absolute top-1/2 left-1/2 w-auto h-full min-w-full -translate-x-1/2 -translate-y-1/2 scale-[0.85] object-cover object-[center_40%]"
         >
           <source src="/videos/bound-hero.mp4" type="video/mp4" />
         </video>
