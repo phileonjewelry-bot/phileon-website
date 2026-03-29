@@ -8,7 +8,7 @@ import { products } from "@/data/products";
 ═══════════════════════════════════════════════════════════════ */
 
 const ApexPage = () => {
-  const [selectedTier, setSelectedTier] = useState("core"); // Default to Core (14K)
+  const [selectedTier, setSelectedTier] = useState("signature"); // Default to Signature (Silver)
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   // Get product data from products.js
@@ -117,10 +117,10 @@ const ApexPage = () => {
 
             {/* Story */}
             <div className="text-sm text-neutral-300 leading-relaxed space-y-3">
-              <p>From Egypt to Santorini. Places turned into pieces.</p>
+              <p>From Egypt to Santorini.</p>
+              <p>Places turned into pieces.</p>
               <p>I stood at the pyramids in Egypt.</p>
-              <p>I swam in the waters of Santorini.</p>
-              <p>This piece lives somewhere between those two moments.</p>
+              <p>And swam in the ocean in Santorini.</p>
               <p>Both stayed with me.</p>
               <p>So I designed this.</p>
             </div>
@@ -133,6 +133,10 @@ const ApexPage = () => {
               </p>
               <p className="text-sm text-neutral-400 mt-1">
                 {currentTier.metal} — {currentTier.stones}
+              </p>
+              <p className="text-xs text-neutral-500 mt-3">
+                Made to order<br />
+                Ships in 3–4 weeks
               </p>
             </div>
 
@@ -181,6 +185,10 @@ const ApexPage = () => {
             >
               {buttonText}
             </button>
+            
+            <p className="text-xs text-neutral-500 text-center mt-3 tracking-wide">
+              Crafted with precision. Worn with intent.
+            </p>
 
             {/* Specs */}
             <div className="mt-8 pt-8 border-t border-neutral-800">

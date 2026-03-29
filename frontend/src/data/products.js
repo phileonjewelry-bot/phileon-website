@@ -728,7 +728,7 @@ export const products = {
         name: "Core",
         metal: "14K White Gold",
         stones: "Lab Diamonds + Natural Sapphires",
-        badge: "RECOMMENDED",
+        badge: "Most Chosen",
         description: "Balanced weight and lasting brilliance."
       },
       heirloom: {
