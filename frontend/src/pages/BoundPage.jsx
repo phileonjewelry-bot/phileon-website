@@ -15,16 +15,36 @@ const BoundPage = () => {
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const [heroLoaded, setHeroLoaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [galleryVideoPlaying, setGalleryVideoPlaying] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const galleryRef = useRef(null);
   const videoRef = useRef(null);
-  const galleryVideoRef = useRef(null);
+  const modalVideoRef = useRef(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   // Get pricing from products.js
   const boundPricing = products.bound.pricing;
+
+  // Close modal and stop video
+  const closeVideoModal = () => {
+    if (modalVideoRef.current) {
+      modalVideoRef.current.pause();
+      modalVideoRef.current.currentTime = 0;
+    }
+    setIsVideoModalOpen(false);
+  };
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isVideoModalOpen) {
+        closeVideoModal();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isVideoModalOpen]);
 
   // Trigger hero load animation
   useEffect(() => {
@@ -79,7 +99,7 @@ const BoundPage = () => {
   const media = [
     {
       src: "/videos/bound-hero.mp4",
-      poster: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
+      poster: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/5j1sg8o1_1000144008.png",
       alt: "BOUND product video",
       type: "video"
     },
@@ -243,46 +263,32 @@ const BoundPage = () => {
               >
                 {/* Video item */}
                 {media[activeImage].type === 'video' ? (
-                  <>
-                    {!galleryVideoPlaying ? (
-                      <div 
-                        onClick={() => setGalleryVideoPlaying(true)} 
-                        className="relative w-full h-full cursor-pointer group"
-                      >
-                        <img
-                          src={media[activeImage].poster}
-                          alt={media[activeImage].alt}
-                          className="w-full h-full object-contain"
-                        />
-                        {/* Play button overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-black/70 group-hover:scale-110 transition-all duration-300">
-                            <svg 
-                              className="w-8 h-8 md:w-10 md:h-10 text-white ml-1" 
-                              fill="currentColor" 
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-widest uppercase">
-                          Play Video
-                        </p>
+                  <div 
+                    onClick={() => setIsVideoModalOpen(true)} 
+                    className="relative w-full h-full cursor-pointer group"
+                  >
+                    {/* Thumbnail Image */}
+                    <img
+                      src={media[activeImage].poster}
+                      alt={media[activeImage].alt}
+                      className="w-full h-full object-contain"
+                    />
+                    
+                    {/* Dark Overlay (subtle) */}
+                    <div className="absolute inset-0 bg-black/15 group-hover:bg-black/25 transition" />
+                    
+                    {/* Play Button */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center transition group-hover:scale-110">
+                        <div className="w-0 h-0 border-l-[12px] border-l-white border-y-[8px] border-y-transparent ml-1" />
                       </div>
-                    ) : (
-                      <video
-                        ref={galleryVideoRef}
-                        controls
-                        playsInline
-                        preload="auto"
-                        className="w-full h-full object-contain"
-                        onEnded={() => setGalleryVideoPlaying(false)}
-                      >
-                        <source src={media[activeImage].src} type="video/mp4" />
-                      </video>
-                    )}
-                  </>
+                    </div>
+                    
+                    {/* Hover Text */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs tracking-widest text-white/70 opacity-0 group-hover:opacity-100 transition uppercase">
+                      Play Film
+                    </div>
+                  </div>
                 ) : (
                   /* Image item */
                   <img
@@ -316,10 +322,7 @@ const BoundPage = () => {
                 {media.map((item, index) => (
                   <button
                     key={index}
-                    onClick={() => {
-                      handleImageChange(index);
-                      if (item.type !== 'video') setGalleryVideoPlaying(false);
-                    }}
+                    onClick={() => handleImageChange(index)}
                     className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 overflow-hidden rounded-sm transition-all duration-300 relative ${
                       activeImage === index
                         ? "ring-2 ring-[#C6A25D] shadow-[0_0_12px_rgba(198,162,93,0.4)] brightness-110 scale-105"
@@ -335,9 +338,7 @@ const BoundPage = () => {
                     {item.type === 'video' && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                         <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
-                          <svg className="w-3 h-3 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
+                          <div className="w-0 h-0 border-l-[6px] border-l-black border-y-[4px] border-y-transparent ml-0.5" />
                         </div>
                       </div>
                     )}
@@ -840,6 +841,55 @@ const BoundPage = () => {
           }
         }
       `}</style>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          VIDEO LIGHTBOX MODAL
+          Fullscreen dark luxury video player
+      ═══════════════════════════════════════════════════════════════ */}
+      {isVideoModalOpen && (
+        <div 
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+          onClick={closeVideoModal}
+        >
+          {/* Close button */}
+          <button
+            onClick={closeVideoModal}
+            className="absolute top-6 right-6 md:top-8 md:right-8 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 group z-10"
+            aria-label="Close video"
+          >
+            <svg 
+              className="w-5 h-5 text-white/80 group-hover:text-white transition" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Video container */}
+          <div 
+            className="relative w-full max-w-5xl mx-4 md:mx-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <video
+              ref={modalVideoRef}
+              controls
+              playsInline
+              preload="auto"
+              autoPlay
+              className="w-full h-auto max-h-[85vh] object-contain rounded-sm"
+            >
+              <source src="/videos/bound-hero.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          {/* Subtle branding */}
+          <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.3em] text-white/30 uppercase">
+            Bound — The Bustier Bangle
+          </p>
+        </div>
+      )}
     </div>
   );
 };
