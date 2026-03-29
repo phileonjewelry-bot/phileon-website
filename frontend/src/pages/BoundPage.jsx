@@ -187,10 +187,14 @@ const BoundPage = () => {
           ref={videoRef}
           autoPlay
           muted
-          loop
+          loop={true}
           playsInline
           preload="auto"
           className="w-full h-full object-cover object-[center_55%]"
+          onEnded={(e) => {
+            e.target.currentTime = 0;
+            e.target.play();
+          }}
         >
           <source src="/videos/bound-hero.mp4" type="video/mp4" />
         </video>
