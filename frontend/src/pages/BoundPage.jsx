@@ -75,18 +75,13 @@ const BoundPage = () => {
     }
   };
 
-  // Complete gallery with ALL images in correct order (video first)
+  // Complete gallery with ALL images in correct order (video first, no duplicate hero)
   const media = [
     {
       src: "/videos/bound-hero.mp4",
       poster: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
       alt: "BOUND product video",
       type: "video"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
-      alt: "BOUND hero model red carpet",
-      type: "image"
     },
     {
       src: "https://customer-assets.emergentagent.com/job_66f130cc-5570-4637-a9c3-d393428997f1/artifacts/px6jqw9c_1000143911.png",
@@ -187,25 +182,16 @@ const BoundPage = () => {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO INTRO SECTION
-          Cinematic video opener - tightened to 85vh
+          Editorial model image - tightened to 85vh
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-hero relative w-full h-[85vh] overflow-hidden bg-black flex items-center justify-center">
-        {/* Video - full cover */}
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop={true}
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover object-[center_55%]"
-          onEnded={(e) => {
-            e.target.currentTime = 0;
-            e.target.play();
-          }}
-        >
-          <source src="/videos/bound-hero.mp4" type="video/mp4" />
-        </video>
+        {/* Hero model image - red carpet editorial */}
+        <img
+          src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
+          alt="BOUND — The Bustier Bangle"
+          className="w-full h-full object-cover object-[center_35%]"
+          onLoad={() => setHeroLoaded(true)}
+        />
         
         {/* Gradient overlays */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent pointer-events-none" />
