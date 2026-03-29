@@ -178,11 +178,12 @@ const BoundPage = () => {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO INTRO SECTION
-          Full-screen cinematic video opener with motion and staged load-in
+          Full-screen cinematic video opener with image fallback
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-hero relative h-screen w-full overflow-hidden bg-[#0a0a0a]">
-        {/* Hero video with cinematic loop */}
+        {/* Hero video with image fallback */}
         <div className="absolute inset-0">
+          {/* Video - hidden if fails to load */}
           <video
             autoPlay
             muted
@@ -191,9 +192,24 @@ const BoundPage = () => {
             preload="auto"
             className="w-full h-screen object-cover"
             onLoadedData={() => setHeroLoaded(true)}
+            onError={(e) => {
+              // Hide video element if it fails to load
+              e.target.style.display = 'none';
+              setHeroLoaded(true);
+            }}
+            poster={media[0].src}
           >
             <source src="/videos/bound-hero.mp4" type="video/mp4" />
           </video>
+          {/* Fallback image - always present behind video */}
+          <div className="absolute inset-0 flex items-center justify-center -z-10">
+            <img
+              src={media[0].src}
+              alt="BOUND — The Bustier Bangle"
+              className="h-full w-auto max-w-none object-contain"
+              onLoad={() => setHeroLoaded(true)}
+            />
+          </div>
           {/* Gradient overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/50" />
