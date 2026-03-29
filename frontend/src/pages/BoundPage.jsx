@@ -179,10 +179,10 @@ const BoundPage = () => {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO INTRO SECTION
-          Full-screen cinematic video opener with image fallback
+          Full-screen cinematic video opener
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bound-hero relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
-        {/* Video - centered, maintains aspect ratio */}
+      <section className="bound-hero relative w-full h-screen overflow-hidden bg-black">
+        {/* Video - full cover centered */}
         <video
           ref={videoRef}
           autoPlay
@@ -190,7 +190,7 @@ const BoundPage = () => {
           loop
           playsInline
           preload="auto"
-          className="max-h-[85vh] w-auto object-contain"
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
         >
           <source src="/videos/bound-hero.mp4" type="video/mp4" />
         </video>
