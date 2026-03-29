@@ -15,8 +15,10 @@ const BoundPage = () => {
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const [heroLoaded, setHeroLoaded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [galleryVideoPlaying, setGalleryVideoPlaying] = useState(false);
   const galleryRef = useRef(null);
   const videoRef = useRef(null);
+  const galleryVideoRef = useRef(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
@@ -73,8 +75,14 @@ const BoundPage = () => {
     }
   };
 
-  // Complete gallery with ALL images in correct order
+  // Complete gallery with ALL images in correct order (video first)
   const media = [
+    {
+      src: "/videos/bound-hero.mp4",
+      poster: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
+      alt: "BOUND product video",
+      type: "video"
+    },
     {
       src: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png",
       alt: "BOUND hero model red carpet",
@@ -237,28 +245,73 @@ const BoundPage = () => {
             
             {/* LEFT — Gallery */}
             <div ref={galleryRef}>
-              {/* Main Image with crossfade transition */}
+              {/* Main Image/Video with crossfade transition */}
               <div 
-                className="bound-gallery-main relative aspect-square overflow-hidden bg-[#0a0a0a] rounded-sm cursor-zoom-in"
-                onMouseEnter={() => setIsZoomed(true)}
+                className="bound-gallery-main relative aspect-square overflow-hidden bg-[#0a0a0a] rounded-sm"
+                onMouseEnter={() => media[activeImage].type !== 'video' && setIsZoomed(true)}
                 onMouseLeave={() => setIsZoomed(false)}
                 onMouseMove={handleMouseMove}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
               >
-                <img
-                  src={media[activeImage].src}
-                  alt={media[activeImage].alt}
-                  className={`w-full h-full object-contain transition-all duration-300 ease-out ${
-                    isTransitioning ? 'opacity-0 scale-[1.02]' : 'opacity-100 scale-100'
-                  }`}
-                  style={{
-                    transform: isZoomed ? `scale(1.8)` : 'scale(1)',
-                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                    transition: isZoomed ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out, opacity 0.3s ease, scale 0.3s ease'
-                  }}
-                />
+                {/* Video item */}
+                {media[activeImage].type === 'video' ? (
+                  <>
+                    {!galleryVideoPlaying ? (
+                      <div 
+                        onClick={() => setGalleryVideoPlaying(true)} 
+                        className="relative w-full h-full cursor-pointer group"
+                      >
+                        <img
+                          src={media[activeImage].poster}
+                          alt={media[activeImage].alt}
+                          className="w-full h-full object-contain"
+                        />
+                        {/* Play button overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:bg-black/70 group-hover:scale-110 transition-all duration-300">
+                            <svg 
+                              className="w-8 h-8 md:w-10 md:h-10 text-white ml-1" 
+                              fill="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-xs tracking-widest uppercase">
+                          Play Video
+                        </p>
+                      </div>
+                    ) : (
+                      <video
+                        ref={galleryVideoRef}
+                        controls
+                        playsInline
+                        preload="auto"
+                        className="w-full h-full object-contain"
+                        onEnded={() => setGalleryVideoPlaying(false)}
+                      >
+                        <source src={media[activeImage].src} type="video/mp4" />
+                      </video>
+                    )}
+                  </>
+                ) : (
+                  /* Image item */
+                  <img
+                    src={media[activeImage].src}
+                    alt={media[activeImage].alt}
+                    className={`w-full h-full object-contain transition-all duration-300 ease-out cursor-zoom-in ${
+                      isTransitioning ? 'opacity-0 scale-[1.02]' : 'opacity-100 scale-100'
+                    }`}
+                    style={{
+                      transform: isZoomed ? `scale(1.8)` : 'scale(1)',
+                      transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                      transition: isZoomed ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out, opacity 0.3s ease, scale 0.3s ease'
+                    }}
+                  />
+                )}
                 {/* Mobile swipe indicator */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 lg:hidden">
                   {media.map((_, idx) => (
@@ -277,18 +330,31 @@ const BoundPage = () => {
                 {media.map((item, index) => (
                   <button
                     key={index}
-                    onClick={() => handleImageChange(index)}
-                    className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 overflow-hidden rounded-sm transition-all duration-300 ${
+                    onClick={() => {
+                      handleImageChange(index);
+                      if (item.type !== 'video') setGalleryVideoPlaying(false);
+                    }}
+                    className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 overflow-hidden rounded-sm transition-all duration-300 relative ${
                       activeImage === index
                         ? "ring-2 ring-[#C6A25D] shadow-[0_0_12px_rgba(198,162,93,0.4)] brightness-110 scale-105"
                         : "brightness-95 contrast-105 hover:brightness-110 hover:scale-105"
                     }`}
                   >
                     <img
-                      src={item.src}
+                      src={item.type === 'video' ? item.poster : item.src}
                       alt={item.alt}
                       className="w-full h-full object-cover transition-transform duration-300"
                     />
+                    {/* Play icon overlay for video thumbnail */}
+                    {item.type === 'video' && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
+                          <svg className="w-3 h-3 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
