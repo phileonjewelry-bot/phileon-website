@@ -267,13 +267,19 @@ const ApexPage = () => {
             playsInline
             preload="auto"
             onEnded={() => setModelVideoStarted(false)}
+            onTimeUpdate={(e) => {
+              const v = e.target;
+              if (v.duration > 0 && v.currentTime >= v.duration - 0.1) {
+                setModelVideoStarted(false);
+              }
+            }}
             className="w-full h-auto"
           />
 
           {!modelVideoStarted && (
             <button
               onClick={handlePlayModelVideo}
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 border border-white px-6 py-2 text-white text-sm tracking-widest bg-black/40 backdrop-blur-sm"
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 border border-white px-6 py-2 text-white text-sm tracking-widest bg-black/40 backdrop-blur-sm z-50"
             >
               PLAY
             </button>
