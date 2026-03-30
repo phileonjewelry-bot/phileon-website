@@ -63,6 +63,26 @@ const ApexPage = () => {
     {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/j2xta4cw_1000144044.png",
       alt: "APEX macro diamond detail"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/b2ms8zjn_1000144043.png",
+      alt: "APEX macro sapphire center"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/sqpchza1_1000144042.png",
+      alt: "APEX macro pavé angle"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/xy782uqf_1000144048.webp",
+      alt: "APEX flat lay with reflection"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/zoc5rl6c_3529fadd-d014-4602-99f9-c9d9bc433022-1_all_63914.jpg",
+      alt: "APEX on model front"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oakwivwy_1000144055.png",
+      alt: "APEX on model side profile"
     }
   ];
 
