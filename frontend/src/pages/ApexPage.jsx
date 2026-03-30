@@ -132,6 +132,7 @@ const ApexPage = () => {
           preload="auto"
           className="w-full h-full object-cover apex-hero-video"
           style={{ backfaceVisibility: "hidden" }}
+          onCanPlay={(e) => e.target.play()}
         />
         
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
@@ -258,7 +259,10 @@ const ApexPage = () => {
             muted
             loop
             playsInline
+            preload="auto"
             className="w-full h-auto"
+            onCanPlay={(e) => e.target.play()}
+          />
           />
         </div>
       </section>
