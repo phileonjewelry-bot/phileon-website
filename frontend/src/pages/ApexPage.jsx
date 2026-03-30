@@ -266,6 +266,7 @@ const ApexPage = () => {
             muted
             playsInline
             preload="auto"
+            onEnded={() => setModelVideoStarted(false)}
             className="w-full h-auto"
           />
 
