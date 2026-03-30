@@ -270,7 +270,7 @@ const ApexPage = () => {
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
       <div className="bg-black py-20 flex justify-center">
-        <div className="w-full max-w-2xl relative">
+        <div className="w-full max-w-2xl" style={{ position: 'relative' }}>
           <video
             ref={modelVideoRef}
             src="/videos/apex-model.mp4"
@@ -288,16 +288,34 @@ const ApexPage = () => {
             className="w-full h-auto object-contain"
           />
 
-          {showPlayButton && (
-            <div 
-              onClick={handlePlay}
-              className="absolute inset-0 flex items-center justify-center bg-black/50 cursor-pointer z-10"
-            >
-              <div className="text-white text-sm tracking-widest border border-white px-6 py-3 bg-black/60 hover:bg-white hover:text-black transition-all">
-                PLAY
-              </div>
+          {/* PLAY BUTTON - ALWAYS VISIBLE FOR TESTING */}
+          <div 
+            onClick={handlePlay}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              cursor: 'pointer',
+              zIndex: 9999
+            }}
+          >
+            <div style={{
+              color: 'white',
+              fontSize: '14px',
+              letterSpacing: '0.1em',
+              border: '1px solid white',
+              padding: '12px 24px',
+              backgroundColor: 'rgba(0,0,0,0.6)'
+            }}>
+              PLAY
             </div>
-          )}
+          </div>
         </div>
       </div>
 
