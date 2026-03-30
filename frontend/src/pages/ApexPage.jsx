@@ -279,6 +279,12 @@ const ApexPage = () => {
             playsInline
             preload="auto"
             onEnded={handleVideoEnded}
+            onTimeUpdate={(e) => {
+              const v = e.target;
+              if (v.duration > 0 && v.currentTime >= v.duration - 0.3) {
+                setShowPlayButton(true);
+              }
+            }}
             className="w-full h-auto object-contain"
           />
 
