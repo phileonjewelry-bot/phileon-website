@@ -127,20 +127,42 @@ const ApexPage = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-phileon-ivory">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO VIDEO SECTION (Full Screen)
+          HERO VIDEO SECTION (Full Screen with Text Overlay)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full h-screen bg-black flex items-center justify-center overflow-hidden relative">
+      <section className="relative w-full h-screen bg-black overflow-hidden">
+        
+        {/* HERO VIDEO */}
         <video
-          className="w-full h-full object-cover"
           src="/videos/apex.mp4"
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
+          className="w-full h-full object-cover apex-hero-video"
+          style={{ backfaceVisibility: "hidden" }}
         />
         
-        {/* Subtle overlay for luxury tone */}
-        <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+        {/* SOFT DARK OVERLAY (for readability + luxury tone) */}
+        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+        
+        {/* HERO TEXT */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-white">
+          
+          <p className="text-xs tracking-[0.35em] mb-6 opacity-70 apex-hero-text">
+            PHILEON — OBJECT SERIES
+          </p>
+          
+          <h1 className="text-4xl md:text-6xl tracking-[0.2em] mb-6 font-light apex-hero-text">
+            APEX
+          </h1>
+          
+          <p className="text-sm md:text-base opacity-80 leading-relaxed max-w-md apex-hero-text">
+            From Egypt to Santorini.<br />
+            Places turned into pieces.
+          </p>
+          
+        </div>
         
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">

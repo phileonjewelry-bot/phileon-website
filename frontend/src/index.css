@@ -85,6 +85,36 @@ img {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   APEX HERO VIDEO STYLES
+   Smooth fade-in animation + GPU acceleration
+═══════════════════════════════════════════════════════════════ */
+@keyframes apexFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes apexTextFadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apex-hero-video {
+  animation: apexFadeIn 1.5s ease;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.apex-hero-text {
+  animation: apexTextFadeIn 1.2s ease 0.5s both;
+}
+
 /* TRACE hero specific styles */
 .trace-hero {
   width: 100%;
