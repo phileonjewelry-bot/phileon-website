@@ -5,10 +5,12 @@ import { products } from "@/data/products";
 /* ═══════════════════════════════════════════════════════════════
    APEX — Pyramid Earrings
    Egypt to Santorini. Places turned into pieces.
+   Editorial Gallery Layout
 ═══════════════════════════════════════════════════════════════ */
 
 const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature"); // Default to Signature (Silver)
+  const [zoomedImage, setZoomedImage] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   // Get product data from products.js
@@ -38,55 +40,62 @@ const ApexPage = () => {
 
   const currentTier = tiers[selectedTier];
 
-  // Gallery images
-  const media = [
-    {
+  // Organized gallery sections
+  const gallery = {
+    hero: {
       src: apexProduct.imageUrl,
       alt: "APEX front-facing pair"
     },
-    {
+    luxury: {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/7dyoz6wc_1000144038.png",
-      alt: "APEX front view with reflection"
+      alt: "APEX with reflection"
     },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/4r7cqq3k_1000144050.webp",
-      alt: "APEX side profile showing clasp"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/l4z0j4ao_1000144099.png",
-      alt: "APEX back view showing setting"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oqqz6xdt_1000144049.webp",
-      alt: "APEX in-hand detail"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/j2xta4cw_1000144044.png",
-      alt: "APEX macro diamond detail"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/b2ms8zjn_1000144043.png",
-      alt: "APEX macro sapphire center"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/sqpchza1_1000144042.png",
-      alt: "APEX macro pavé angle"
-    },
-    {
+    breakdown: [
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/4r7cqq3k_1000144050.webp",
+        alt: "APEX side profile",
+        label: "Structure"
+      },
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/l4z0j4ao_1000144099.png",
+        alt: "APEX back view",
+        label: "Setting"
+      },
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oqqz6xdt_1000144049.webp",
+        alt: "APEX in-hand",
+        label: "Scale"
+      }
+    ],
+    model: [
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/zoc5rl6c_3529fadd-d014-4602-99f9-c9d9bc433022-1_all_63914.jpg",
+        alt: "APEX on model front"
+      },
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oakwivwy_1000144055.png",
+        alt: "APEX on model side"
+      }
+    ],
+    macro: [
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/j2xta4cw_1000144044.png",
+        alt: "APEX diamond pavé macro"
+      },
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/b2ms8zjn_1000144043.png",
+        alt: "APEX center sapphire macro"
+      },
+      {
+        src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/sqpchza1_1000144042.png",
+        alt: "APEX secondary pavé macro"
+      }
+    ],
+    editorial: {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/xy782uqf_1000144048.webp",
-      alt: "APEX flat lay with reflection"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/zoc5rl6c_3529fadd-d014-4602-99f9-c9d9bc433022-1_all_63914.jpg",
-      alt: "APEX on model front"
-    },
-    {
-      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oakwivwy_1000144055.png",
-      alt: "APEX on model side profile"
+      alt: "APEX flat lay editorial"
     }
-  ];
-
-  const [activeImage, setActiveImage] = useState(0);
+  };
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -94,47 +103,49 @@ const ApexPage = () => {
       name: `APEX — ${currentTier.name}`,
       price: currentTier.price,
       metal: currentTier.metal,
-      image: media[0].src,
+      image: gallery.hero.src,
       quantity: 1
     });
   };
 
+  // Zoom modal for macro images
+  const ZoomModal = ({ image, onClose }) => (
+    <div 
+      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center cursor-zoom-out"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition z-10"
+      >
+        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <img 
+        src={image.src} 
+        alt={image.alt} 
+        className="max-w-[90vw] max-h-[90vh] object-contain"
+      />
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-phileon-ivory">
-      {/* Main Product Section */}
+      
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 1 — HERO + PRODUCT INFO
+      ═══════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
         <div className="grid md:grid-cols-2 gap-12 items-start">
           
-          {/* LEFT - IMAGE */}
+          {/* LEFT - HERO IMAGE */}
           <div className="w-full">
             <img
-              src={media[activeImage].src}
-              alt={media[activeImage].alt}
+              src={gallery.hero.src}
+              alt={gallery.hero.alt}
               className="w-full h-auto object-contain"
             />
-            
-            {/* Thumbnail row (when more images available) */}
-            {media.length > 1 && (
-              <div className="flex gap-3 mt-6">
-                {media.map((item, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveImage(index)}
-                    className={`w-16 h-16 md:w-20 md:h-20 overflow-hidden rounded-sm transition-all ${
-                      activeImage === index
-                        ? "ring-2 ring-[#C6A25D]"
-                        : "opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <img
-                      src={item.src}
-                      alt={item.alt}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* RIGHT - INFO */}
@@ -263,6 +274,102 @@ const ApexPage = () => {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 2 — LUXURY SHOT
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="w-full bg-black py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <img
+            src={gallery.luxury.src}
+            alt={gallery.luxury.alt}
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 3 — PRODUCT BREAKDOWN (3-column grid)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {gallery.breakdown.map((item, index) => (
+            <div key={index} className="group">
+              <div className="bg-black overflow-hidden">
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
+                {item.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 4 — MODEL
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="w-full bg-neutral-950 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {gallery.model.map((item, index) => (
+              <div key={index} className="overflow-hidden">
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 5 — MACRO DETAIL (with zoom on hover)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <p className="text-xs tracking-[0.3em] text-neutral-500 mb-8 uppercase text-center">
+          Detail
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {gallery.macro.map((item, index) => (
+            <div 
+              key={index} 
+              className="bg-black overflow-hidden cursor-zoom-in"
+              onClick={() => setZoomedImage(item)}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-auto object-contain transition-transform duration-500 hover:scale-110"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 6 — EDITORIAL
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="w-full bg-black py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-6">
+          <img
+            src={gallery.editorial.src}
+            alt={gallery.editorial.alt}
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      </section>
+
+      {/* Zoom Modal */}
+      {zoomedImage && (
+        <ZoomModal image={zoomedImage} onClose={() => setZoomedImage(null)} />
+      )}
     </div>
   );
 };
