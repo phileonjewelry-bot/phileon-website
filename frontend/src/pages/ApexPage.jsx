@@ -261,6 +261,7 @@ const ApexPage = () => {
             playsInline
             preload="auto"
             className="w-full h-auto object-contain"
+            onEnded={(e) => { e.target.currentTime = 0; e.target.play(); }}
           />
         </div>
       </div>
