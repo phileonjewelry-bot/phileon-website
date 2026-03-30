@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -11,40 +11,7 @@ import { products } from "@/data/products";
 const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
-  const [showPlayButton, setShowPlayButton] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const modelVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-
-  // Check if video ended using interval
-  useEffect(() => {
-    if (!isPlaying) return;
-    
-    const interval = setInterval(() => {
-      const video = modelVideoRef.current;
-      if (video && video.duration > 0) {
-        if (video.ended || video.currentTime >= video.duration - 0.1) {
-          setShowPlayButton(true);
-          setIsPlaying(false);
-        }
-      }
-    }, 100);
-    
-    return () => clearInterval(interval);
-  }, [isPlaying]);
-
-  const handlePlayVideo = () => {
-    const video = modelVideoRef.current;
-    if (!video) return;
-
-    setShowPlayButton(false);
-    setIsPlaying(true);
-    video.currentTime = 0;
-    video.play().catch(() => {
-      setShowPlayButton(true);
-      setIsPlaying(false);
-    });
-  };
 
   // Get product data from products.js
   const apexProduct = products.apex;
@@ -285,24 +252,16 @@ const ApexPage = () => {
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
       <div className="bg-black py-20 flex justify-center">
-        <div className="w-full max-w-2xl relative">
+        <div className="w-full max-w-2xl">
           <video
-            ref={modelVideoRef}
             src="/videos/apex-model.mp4"
+            autoPlay
             muted
+            loop
             playsInline
             preload="auto"
             className="w-full h-auto object-contain"
           />
-
-          {showPlayButton && (
-            <button
-              onClick={handlePlayVideo}
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 border border-white px-6 py-2 text-white text-sm tracking-widest bg-black/40 backdrop-blur-sm"
-            >
-              PLAY
-            </button>
-          )}
         </div>
       </div>
 
