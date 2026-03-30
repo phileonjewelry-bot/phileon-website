@@ -11,24 +11,13 @@ import { products } from "@/data/products";
 const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
-  const [showPlayButton, setShowPlayButton] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [modelVideoStarted, setModelVideoStarted] = useState(false);
   const modelVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   
-  const handleVideoEnd = () => {
-    setShowPlayButton(true);
-    setIsPlaying(false);
-  };
-  
-  const handlePlay = () => {
-    const video = modelVideoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.play();
-      setShowPlayButton(false);
-      setIsPlaying(true);
-    }
+  const handlePlayModelVideo = () => {
+    modelVideoRef.current.play();
+    setModelVideoStarted(true);
   };
 
   // Get product data from products.js
@@ -274,17 +263,15 @@ const ApexPage = () => {
           <video
             ref={modelVideoRef}
             src="/videos/apex-model.mp4"
-            autoPlay
             muted
             playsInline
             preload="auto"
-            onEnded={handleVideoEnd}
-            className="w-full h-auto object-contain"
+            className="w-full h-auto"
           />
 
-          {showPlayButton && (
+          {!modelVideoStarted && (
             <button
-              onClick={handlePlay}
+              onClick={handlePlayModelVideo}
               className="absolute bottom-6 left-1/2 -translate-x-1/2 border border-white px-6 py-2 text-white text-sm tracking-widest bg-black/40 backdrop-blur-sm"
             >
               PLAY
