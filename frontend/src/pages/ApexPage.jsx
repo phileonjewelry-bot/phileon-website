@@ -251,7 +251,7 @@ const ApexPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bg-black py-20 flex justify-center">
+      <div className="bg-black py-20 flex justify-center">
         <div className="w-full max-w-2xl">
           <video
             src="/videos/apex-model.mp4"
@@ -260,12 +260,10 @@ const ApexPage = () => {
             loop
             playsInline
             preload="auto"
-            className="w-full h-auto"
-            onCanPlay={(e) => e.target.play()}
-          />
+            className="w-full h-auto object-contain"
           />
         </div>
-      </section>
+      </div>
 
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 6: BUY / PURCHASE SECTION
