@@ -43,11 +43,27 @@ const ApexPage = () => {
     {
       src: apexProduct.imageUrl,
       alt: "APEX front-facing pair"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/7dyoz6wc_1000144038.png",
+      alt: "APEX front view with reflection"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/4r7cqq3k_1000144050.webp",
+      alt: "APEX side profile showing clasp"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/l4z0j4ao_1000144099.png",
+      alt: "APEX back view showing setting"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oqqz6xdt_1000144049.webp",
+      alt: "APEX in-hand detail"
+    },
+    {
+      src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/j2xta4cw_1000144044.png",
+      alt: "APEX macro diamond detail"
     }
-    // Additional images can be added here:
-    // { src: "...", alt: "APEX side profile" },
-    // { src: "...", alt: "APEX macro detail" },
-    // { src: "...", alt: "APEX on model" }
   ];
 
   const [activeImage, setActiveImage] = useState(0);
