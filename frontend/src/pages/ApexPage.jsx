@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -11,44 +11,8 @@ import { products } from "@/data/products";
 const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
+  const [modelVideoEnded, setModelVideoEnded] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-  
-  // Video ref for model video autoplay/loop
-  const modelVideoRef = useRef(null);
-  
-  // HARD LOOP FIX
-  useEffect(() => {
-    const video = modelVideoRef.current;
-    if (!video) return;
-
-    // Force play (mobile safe)
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {});
-    }
-
-    // HARD LOOP using timeupdate
-    const handleTimeUpdate = () => {
-      if (video.currentTime >= video.duration - 0.05) {
-        video.currentTime = 0;
-        video.play();
-      }
-    };
-
-    // Backup: ended event
-    const handleEnded = () => {
-      video.currentTime = 0;
-      video.play();
-    };
-
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("ended", handleEnded);
-
-    return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("ended", handleEnded);
-    };
-  }, []);
 
   // Get product data from products.js
   const apexProduct = products.apex;
@@ -290,14 +254,23 @@ const ApexPage = () => {
       ═══════════════════════════════════════════════════════════════ */}
       <div className="bg-black py-20 flex justify-center">
         <div className="w-full max-w-2xl">
-          <video
-            ref={modelVideoRef}
-            src="/videos/apex-model.mp4"
-            muted
-            playsInline
-            preload="auto"
-            className="w-full h-auto object-contain"
-          />
+          {!modelVideoEnded ? (
+            <video
+              src="/videos/apex-model.mp4"
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              onEnded={() => setModelVideoEnded(true)}
+              className="w-full h-auto object-contain"
+            />
+          ) : (
+            <img
+              src={gallery.front.src}
+              alt="APEX Earrings"
+              className="w-full h-auto object-contain"
+            />
+          )}
         </div>
       </div>
 
