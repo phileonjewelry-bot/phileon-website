@@ -275,9 +275,9 @@ const ApexPage = () => {
           {modelVideoEnded && (
             <button
               onClick={handleReplay}
-              className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+              className="absolute inset-0 flex items-center justify-center bg-black/50"
             >
-              <span className="text-white text-sm tracking-widest border border-white px-6 py-2">
+              <span className="text-white text-sm tracking-widest border border-white px-6 py-3 bg-black/60 hover:bg-white hover:text-black transition-all">
                 PLAY
               </span>
             </button>
