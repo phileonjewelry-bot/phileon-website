@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -12,26 +12,38 @@ const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
   const [showPlayButton, setShowPlayButton] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const modelVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
-  const handlePlayVideo = async () => {
+  // Check if video ended using interval
+  useEffect(() => {
+    if (!isPlaying) return;
+    
+    const interval = setInterval(() => {
+      const video = modelVideoRef.current;
+      if (video && video.duration > 0) {
+        if (video.ended || video.currentTime >= video.duration - 0.1) {
+          setShowPlayButton(true);
+          setIsPlaying(false);
+        }
+      }
+    }, 100);
+    
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const handlePlayVideo = () => {
     const video = modelVideoRef.current;
     if (!video) return;
 
     setShowPlayButton(false);
-    
-    try {
-      video.currentTime = 0;
-      await video.play();
-    } catch (e) {
-      console.log("Video play failed", e);
+    setIsPlaying(true);
+    video.currentTime = 0;
+    video.play().catch(() => {
       setShowPlayButton(true);
-    }
-  };
-
-  const handleVideoEnded = () => {
-    setShowPlayButton(true);
+      setIsPlaying(false);
+    });
   };
 
   // Get product data from products.js
@@ -280,7 +292,6 @@ const ApexPage = () => {
             muted
             playsInline
             preload="auto"
-            onEnded={handleVideoEnded}
             className="w-full h-auto object-contain"
           />
 
