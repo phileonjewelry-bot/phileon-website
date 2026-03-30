@@ -332,6 +332,22 @@ const ApexPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          MODEL VIDEO SECTION
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="w-full bg-black py-16 flex justify-center">
+        <div className="w-full max-w-4xl px-6">
+          <video
+            src="/videos/apex-model.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
           PRODUCT BREAKDOWN (Side, Back, Scale)
       ═══════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
