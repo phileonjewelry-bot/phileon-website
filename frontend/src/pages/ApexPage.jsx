@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -12,7 +12,14 @@ const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
   const [modelVideoEnded, setModelVideoEnded] = useState(false);
+  const modelVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  
+  const handleReplay = () => {
+    setModelVideoEnded(false);
+    modelVideoRef.current.currentTime = 0;
+    modelVideoRef.current.play();
+  };
 
   // Get product data from products.js
   const apexProduct = products.apex;
@@ -253,23 +260,27 @@ const ApexPage = () => {
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
       <div className="bg-black py-20 flex justify-center">
-        <div className="w-full max-w-2xl">
-          {!modelVideoEnded ? (
-            <video
-              src="/videos/apex-model.mp4"
-              autoPlay
-              muted
-              playsInline
-              preload="auto"
-              onEnded={() => setModelVideoEnded(true)}
-              className="w-full h-auto object-contain"
-            />
-          ) : (
-            <img
-              src={gallery.front.src}
-              alt="APEX Earrings"
-              className="w-full h-auto object-contain"
-            />
+        <div className="w-full max-w-2xl relative">
+          <video
+            ref={modelVideoRef}
+            src="/videos/apex-model.mp4"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            onEnded={() => setModelVideoEnded(true)}
+            className="w-full h-auto object-contain"
+          />
+
+          {modelVideoEnded && (
+            <button
+              onClick={handleReplay}
+              className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+            >
+              <span className="text-white text-sm tracking-widest border border-white px-6 py-2">
+                REPLAY
+              </span>
+            </button>
           )}
         </div>
       </div>
