@@ -258,36 +258,28 @@ const ApexPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
-      <div className="bg-black py-20 flex justify-center">
-        <div style={{ width: '100%', maxWidth: '42rem', position: 'relative' }}>
-          <div 
-            onClick={() => {
-              const v = modelVideoRef.current;
-              v.currentTime = 0;
-              v.play();
-            }}
-            style={{ cursor: 'pointer' }}
-          >
-            <video
-              ref={modelVideoRef}
-              src="/videos/apex-model.mp4"
-              muted
-              playsInline
-              preload="auto"
-              style={{ width: '100%', height: 'auto', pointerEvents: 'none' }}
-            />
-          </div>
-          
-          <p style={{
-            textAlign: 'center',
-            color: '#888',
-            fontSize: '12px',
-            letterSpacing: '0.1em',
-            marginTop: '12px'
-          }}>
-            TAP TO PLAY
-          </p>
+      <div className="bg-black py-20 flex flex-col items-center">
+        <div className="w-full max-w-2xl">
+          <video
+            ref={modelVideoRef}
+            src="/videos/apex-model.mp4"
+            muted
+            playsInline
+            preload="auto"
+            className="w-full h-auto"
+          />
         </div>
+        
+        <button
+          onClick={() => {
+            const v = modelVideoRef.current;
+            v.currentTime = 0;
+            v.play();
+          }}
+          className="mt-6 border border-white px-8 py-3 text-white text-sm tracking-widest bg-transparent"
+        >
+          PLAY
+        </button>
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════
