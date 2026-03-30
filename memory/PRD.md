@@ -111,8 +111,33 @@ All product prices now pull from `/app/frontend/src/data/products.js` using `bas
   - Sculptural section (artistic shot with extended copy)
   - Specifications grid (18K, Mesh, VS+, Adjustable)
   - Final CTA with "From $12,800 CAD" and Add to Cart button
+- **Video Lightbox Modal** - Custom fullscreen video player with play button overlay on first gallery thumbnail
 - Route: `/products/bound`
 - File: `BoundPage.jsx`
+
+### APEX — Sapphire Diamond Earrings (Complete - December 28, 2025)
+- **Bespoke Editorial Product Page** - 6-section structured gallery layout
+- **Hero Section**: Two model shots side-by-side (front + profile view)
+- **Luxury Shot Section**: Two model close-ups showcasing earrings
+- **Product Breakdown (3-column)**: Structure, Setting, Scale images with labels
+- **Model Section**: Two additional model shots
+- **Macro Detail Section**: Full-width product photo with reflection effect
+- **Editorial Grid (3-column)**: Back view, front view, scale-in-hand shots
+- **Product Info Section**: 
+  - Copy: "From Egypt to Santorini. Places turned into pieces..."
+  - Brand tagline: "Crafted with precision. Worn with intent."
+- **Tier-based pricing system**:
+  - Signature (Sterling Silver — Cubic Zirconia + Lab Sapphires): $4,800
+  - Foundation (10K White Gold): $10,800
+  - Core (14K White Gold) — MOST CHOSEN: $14,000
+  - Heirloom (18K White Gold): $18,200+
+- **Specifications grid**: Weight (8.5g/17g pair), Dimensions (35mm × 16mm), Diamonds (120 round pavé 1.0mm-1.2mm), Sapphires (4 blue per earring), Finish (High polish)
+- Route: `/products/apex`
+- File: `ApexPage.jsx`
+
+### Currency Indicator (Complete - December 28, 2025)
+- Added "All prices in CAD" notice to site footer in `PublicLayout.jsx`
+- Consistent currency display across all product pages
 
 ## What's Been Implemented (March 2025)
 
@@ -169,19 +194,19 @@ All product prices now pull from `/app/frontend/src/data/products.js` using `bas
 - None currently
 
 ### P1 (High Priority)
-- Verify mobile swipe interactions for BOUND gallery
+- Mobile swipe interactions verification for BOUND and APEX galleries
 - On-ear lifestyle images for earrings
 
 ### P2 (Medium Priority)
 - Vault page real product drops (`/vault/drews-world`)
 - Add more products to Gentleman's Club collection
-- Cross-selling between products
+- Cross-selling logic between products
 
 ### P3 (Low Priority)
 - Additional product pages
 - Expand filtering options
 - Performance optimization
-- File cleanup (Header.jsx redundancy check)
+- File cleanup/refactoring (BoundPage.jsx and ApexPage.jsx are >850 lines - consider extracting Lightbox and gallery section components)
 
 ## Known Issues
 - None currently blocking
