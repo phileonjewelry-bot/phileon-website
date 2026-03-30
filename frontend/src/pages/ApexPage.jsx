@@ -16,36 +16,37 @@ const ApexPage = () => {
   // Video ref for model video autoplay/loop
   const modelVideoRef = useRef(null);
   
-  // Force autoplay and loop on model video
+  // HARD LOOP FIX
   useEffect(() => {
     const video = modelVideoRef.current;
     if (!video) return;
-    
-    video.muted = true;
-    video.loop = true;
-    
-    const playVideo = () => {
-      video.play().catch(() => {});
+
+    // Force play (mobile safe)
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+
+    // HARD LOOP using timeupdate
+    const handleTimeUpdate = () => {
+      if (video.currentTime >= video.duration - 0.05) {
+        video.currentTime = 0;
+        video.play();
+      }
     };
-    
+
+    // Backup: ended event
     const handleEnded = () => {
       video.currentTime = 0;
-      playVideo();
+      video.play();
     };
-    
-    const handleLoadedData = () => {
-      playVideo();
-    };
-    
-    video.addEventListener('ended', handleEnded);
-    video.addEventListener('loadeddata', handleLoadedData);
-    
-    // Try to play immediately
-    playVideo();
-    
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("ended", handleEnded);
+
     return () => {
-      video.removeEventListener('ended', handleEnded);
-      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("ended", handleEnded);
     };
   }, []);
 
@@ -292,10 +293,8 @@ const ApexPage = () => {
           <video
             ref={modelVideoRef}
             src="/videos/apex-model.mp4"
-            autoPlay={true}
-            muted={true}
-            loop={true}
-            playsInline={true}
+            muted
+            playsInline
             preload="auto"
             className="w-full h-auto object-contain"
           />
