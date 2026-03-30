@@ -334,14 +334,15 @@ const ApexPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           MODEL VIDEO SECTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full bg-black py-16 flex justify-center">
-        <div className="w-full max-w-4xl px-6">
+      <section className="w-full bg-black py-20 flex justify-center">
+        <div className="w-full max-w-3xl">
           <video
             src="/videos/apex-model.mp4"
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             className="w-full h-auto object-contain"
           />
         </div>
