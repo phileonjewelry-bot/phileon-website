@@ -251,18 +251,16 @@ const ApexPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
-      <div className="bg-black py-20 flex justify-center">
-        <div className="w-full max-w-2xl">
-          <video
-            src="/videos/apex-model.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="w-full h-auto object-contain"
-          />
-        </div>
+      <div className="bg-black py-20">
+        <video
+          src="/videos/apex-model.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="w-full h-auto object-cover"
+        />
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════
