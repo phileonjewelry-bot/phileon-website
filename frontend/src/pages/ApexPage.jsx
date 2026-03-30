@@ -11,13 +11,25 @@ import { products } from "@/data/products";
 const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
-  const [modelVideoStarted, setModelVideoStarted] = useState(false);
+  const [showPlayButton, setShowPlayButton] = useState(true);
   const modelVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-  
-  const handlePlayModelVideo = () => {
-    modelVideoRef.current.play();
-    setModelVideoStarted(true);
+
+  const handlePlayVideo = async () => {
+    const video = modelVideoRef.current;
+    if (!video) return;
+
+    try {
+      video.currentTime = 0;
+      await video.play();
+      setShowPlayButton(false);
+    } catch (e) {
+      console.log("Video play failed", e);
+    }
+  };
+
+  const handleVideoEnded = () => {
+    setShowPlayButton(true);
   };
 
   // Get product data from products.js
@@ -258,28 +270,27 @@ const ApexPage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
-      <div className="bg-black py-20 flex flex-col items-center">
-        <div className="w-full max-w-2xl">
+      <div className="bg-black py-20 flex justify-center">
+        <div className="w-full max-w-2xl relative">
           <video
             ref={modelVideoRef}
             src="/videos/apex-model.mp4"
             muted
             playsInline
             preload="auto"
-            className="w-full h-auto"
+            onEnded={handleVideoEnded}
+            className="w-full h-auto object-contain"
           />
+
+          {showPlayButton && (
+            <button
+              onClick={handlePlayVideo}
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 border border-white px-6 py-2 text-white text-sm tracking-widest bg-black/40 backdrop-blur-sm"
+            >
+              PLAY
+            </button>
+          )}
         </div>
-        
-        <button
-          onClick={() => {
-            const v = modelVideoRef.current;
-            v.currentTime = 0;
-            v.play();
-          }}
-          className="mt-6 border border-white px-8 py-3 text-white text-sm tracking-widest bg-transparent"
-        >
-          PLAY
-        </button>
       </div>
 
       {/* ═══════════════════════════════════════════════════════════════
