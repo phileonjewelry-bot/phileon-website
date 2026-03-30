@@ -41,32 +41,26 @@ const ApexPage = () => {
   const currentTier = tiers[selectedTier];
 
   // Product gallery - NO MODEL SHOTS
-  // Only: front, side, back, macro, scale (hand)
   const gallery = {
-    // Front view (hero product shot)
     front: {
       src: apexProduct.imageUrl,
       alt: "APEX front-facing pair"
     },
-    // Side view (structure)
     side: {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/4r7cqq3k_1000144050.webp",
       alt: "APEX side profile",
       label: "Structure"
     },
-    // Back view (setting)
     back: {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/l4z0j4ao_1000144099.png",
       alt: "APEX back view",
       label: "Setting"
     },
-    // Scale (hand shot)
     scale: {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/oqqz6xdt_1000144049.webp",
       alt: "APEX in-hand scale",
       label: "Scale"
     },
-    // Macro detail shots
     macro: [
       {
         src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/j2xta4cw_1000144044.png",
@@ -81,7 +75,6 @@ const ApexPage = () => {
         alt: "APEX secondary pavé macro"
       }
     ],
-    // Luxury reflection shot
     luxury: {
       src: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/7dyoz6wc_1000144038.png",
       alt: "APEX with reflection"
@@ -127,11 +120,9 @@ const ApexPage = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-phileon-ivory">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO VIDEO SECTION (Full Screen with Text Overlay)
+          SECTION 1: HERO VIDEO (Full Screen with Text Overlay)
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full h-screen bg-black overflow-hidden">
-        
-        {/* HERO VIDEO */}
         <video
           src="/videos/apex.mp4"
           autoPlay
@@ -143,35 +134,137 @@ const ApexPage = () => {
           style={{ backfaceVisibility: "hidden" }}
         />
         
-        {/* SOFT DARK OVERLAY (for readability + luxury tone) */}
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
         
-        {/* HERO TEXT */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-white">
-          
           <p className="text-xs tracking-[0.35em] mb-6 opacity-70 apex-hero-text">
             PHILEON — OBJECT SERIES
           </p>
-          
           <h1 className="text-4xl md:text-6xl tracking-[0.2em] mb-6 font-light apex-hero-text">
             APEX
           </h1>
-          
           <p className="text-sm md:text-base opacity-80 leading-relaxed max-w-md apex-hero-text">
             From Egypt to Santorini.<br />
             Places turned into pieces.
           </p>
-          
         </div>
         
-        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-[#C6A25D]/50 to-transparent animate-bounce" />
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          PRODUCT INFO + FRONT IMAGE
+          SECTION 2: LUXURY REFLECTION SHOT
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="w-full bg-black py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <img
+            src={gallery.luxury.src}
+            alt={gallery.luxury.alt}
+            className="w-full h-auto object-contain product-image-hd"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 3: PRODUCT BREAKDOWN (Side, Back, Scale)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="group">
+            <div className="bg-black overflow-hidden">
+              <img
+                src={gallery.side.src}
+                alt={gallery.side.alt}
+                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
+              {gallery.side.label}
+            </p>
+          </div>
+          
+          <div className="group">
+            <div className="bg-black overflow-hidden">
+              <img
+                src={gallery.back.src}
+                alt={gallery.back.alt}
+                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
+              {gallery.back.label}
+            </p>
+          </div>
+          
+          <div className="group">
+            <div className="bg-black overflow-hidden">
+              <img
+                src={gallery.scale.src}
+                alt={gallery.scale.alt}
+                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
+              {gallery.scale.label}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 4: MACRO DETAIL (with zoom on click)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <p className="text-xs tracking-[0.3em] text-neutral-500 mb-8 uppercase text-center">
+          Detail
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {gallery.macro.map((item, index) => (
+            <div 
+              key={index} 
+              className="bg-black overflow-hidden cursor-zoom-in"
+              onClick={() => setZoomedImage(item)}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 hover:scale-110"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 5: MODEL VIDEO (Right before BUY section)
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="bg-black py-20 flex justify-center">
+        <div className="w-full max-w-2xl">
+          <video
+            src="/videos/apex-model.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto"
+          />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SECTION 6: BUY / PURCHASE SECTION
       ═══════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
         <div className="grid md:grid-cols-2 gap-12 items-start">
@@ -191,18 +284,15 @@ const ApexPage = () => {
           {/* RIGHT - INFO */}
           <div className="flex flex-col gap-6">
 
-            {/* Header */}
             <div>
               <p className="text-xs tracking-[0.3em] text-neutral-400">
                 {apexProduct.subtitle}
               </p>
-
               <h1 className="text-4xl md:text-5xl font-light tracking-wide mt-2">
                 APEX
               </h1>
             </div>
 
-            {/* Story */}
             <div className="text-sm text-neutral-300 leading-relaxed space-y-3">
               <p>From Egypt to Santorini.</p>
               <p>Places turned into pieces.</p>
@@ -212,7 +302,6 @@ const ApexPage = () => {
               <p>So I designed this.</p>
             </div>
 
-            {/* Price Display */}
             <div className="mt-4">
               <p className="text-3xl md:text-4xl font-light tracking-wide">
                 ${currentTier.price.toLocaleString()}
@@ -227,7 +316,6 @@ const ApexPage = () => {
               </p>
             </div>
 
-            {/* Tier Selection */}
             <div className="mt-6">
               <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
                 Select Tier
@@ -264,7 +352,6 @@ const ApexPage = () => {
               </div>
             </div>
 
-            {/* Add to Cart */}
             <button
               onClick={onAddToCart}
               disabled={isAdding}
@@ -278,7 +365,6 @@ const ApexPage = () => {
               Crafted with precision. Worn with intent.
             </p>
 
-            {/* Specs */}
             <div className="mt-8 pt-8 border-t border-neutral-800">
               <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
                 Specifications
@@ -308,123 +394,10 @@ const ApexPage = () => {
               </div>
             </div>
 
-            {/* Shipping note */}
             <p className="text-xs text-neutral-500 mt-6">
               Complimentary insured shipping within Canada.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          LUXURY REFLECTION SHOT
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full bg-black py-16 md:py-24">
-        <div className="max-w-5xl mx-auto px-6">
-          <img
-            src={gallery.luxury.src}
-            alt={gallery.luxury.alt}
-            className="w-full h-auto object-contain product-image-hd"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          MODEL VIDEO
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="bg-black py-20 flex justify-center">
-        <div className="w-full max-w-2xl">
-          <video
-            src="/videos/apex-model.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-auto"
-          />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          PRODUCT BREAKDOWN (Side, Back, Scale)
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {/* Side */}
-          <div className="group">
-            <div className="bg-black overflow-hidden">
-              <img
-                src={gallery.side.src}
-                alt={gallery.side.alt}
-                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
-                loading="eager"
-                decoding="async"
-              />
-            </div>
-            <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
-              {gallery.side.label}
-            </p>
-          </div>
-          
-          {/* Back */}
-          <div className="group">
-            <div className="bg-black overflow-hidden">
-              <img
-                src={gallery.back.src}
-                alt={gallery.back.alt}
-                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
-                loading="eager"
-                decoding="async"
-              />
-            </div>
-            <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
-              {gallery.back.label}
-            </p>
-          </div>
-          
-          {/* Scale (Hand) */}
-          <div className="group">
-            <div className="bg-black overflow-hidden">
-              <img
-                src={gallery.scale.src}
-                alt={gallery.scale.alt}
-                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
-                loading="eager"
-                decoding="async"
-              />
-            </div>
-            <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
-              {gallery.scale.label}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          MACRO DETAIL (with zoom on click)
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
-        <p className="text-xs tracking-[0.3em] text-neutral-500 mb-8 uppercase text-center">
-          Detail
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {gallery.macro.map((item, index) => (
-            <div 
-              key={index} 
-              className="bg-black overflow-hidden cursor-zoom-in"
-              onClick={() => setZoomedImage(item)}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 hover:scale-110"
-                loading="eager"
-                decoding="async"
-              />
-            </div>
-          ))}
         </div>
       </section>
 
