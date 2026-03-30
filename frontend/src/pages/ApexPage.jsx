@@ -266,38 +266,23 @@ const ApexPage = () => {
             muted
             playsInline
             preload="auto"
-            onEnded={() => setModelVideoStarted(false)}
-            onTimeUpdate={(e) => {
-              const v = e.target;
-              if (v.duration > 0 && v.currentTime >= v.duration - 0.1) {
-                setModelVideoStarted(false);
-              }
+            onClick={() => {
+              const v = modelVideoRef.current;
+              v.currentTime = 0;
+              v.play();
             }}
-            style={{ width: '100%', height: 'auto' }}
+            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
           />
-
-          {!modelVideoStarted && (
-            <button
-              onClick={handlePlayModelVideo}
-              style={{
-                position: 'absolute',
-                bottom: '24px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                border: '1px solid white',
-                padding: '8px 24px',
-                color: 'white',
-                fontSize: '14px',
-                letterSpacing: '0.1em',
-                backgroundColor: 'rgba(0,0,0,0.4)',
-                backdropFilter: 'blur(4px)',
-                zIndex: 100,
-                cursor: 'pointer'
-              }}
-            >
-              PLAY
-            </button>
-          )}
+          
+          <p style={{
+            textAlign: 'center',
+            color: '#888',
+            fontSize: '12px',
+            letterSpacing: '0.1em',
+            marginTop: '12px'
+          }}>
+            TAP TO PLAY
+          </p>
         </div>
       </div>
 
