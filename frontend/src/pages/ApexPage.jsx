@@ -332,12 +332,9 @@ const ApexPage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          MODEL VIDEO — FINAL MOMENT
+          MODEL VIDEO
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full bg-black py-20 flex flex-col items-center justify-center">
-        <p className="text-center text-sm tracking-widest text-gray-400 mb-6">
-          IN MOTION
-        </p>
+      <section className="bg-black py-20 flex justify-center">
         <div className="w-full max-w-2xl">
           <video
             src="/videos/apex-model.mp4"
@@ -345,8 +342,7 @@ const ApexPage = () => {
             muted
             loop
             playsInline
-            preload="auto"
-            className="w-full h-auto object-contain"
+            className="w-full h-auto"
           />
         </div>
       </section>
