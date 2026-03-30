@@ -209,7 +209,10 @@ const BoundPage = () => {
         <img
           src="https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
           alt="BOUND — The Bustier Bangle"
-          className="w-full h-full object-cover object-[center_35%]"
+          className="w-full h-full object-cover object-[center_35%] product-image-hd"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
           onLoad={() => setHeroLoaded(true)}
         />
         
@@ -294,9 +297,11 @@ const BoundPage = () => {
                   <img
                     src={media[activeImage].src}
                     alt={media[activeImage].alt}
-                    className={`w-full h-full object-contain transition-all duration-300 ease-out cursor-zoom-in ${
+                    className={`w-full h-full object-contain product-image-hd transition-all duration-300 ease-out cursor-zoom-in ${
                       isTransitioning ? 'opacity-0 scale-[1.02]' : 'opacity-100 scale-100'
                     }`}
+                    loading="eager"
+                    decoding="async"
                     style={{
                       transform: isZoomed ? `scale(1.8)` : 'scale(1)',
                       transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
@@ -621,7 +626,9 @@ const BoundPage = () => {
               <img
                 src={media[4].src}
                 alt="BOUND sculptural"
-                className="w-full h-auto hover:scale-105 transition-transform duration-[6s] ease-out"
+                className="w-full h-auto product-image-hd hover:scale-105 transition-transform duration-[6s] ease-out"
+                loading="eager"
+                decoding="async"
               />
             </div>
           </div>
@@ -639,7 +646,9 @@ const BoundPage = () => {
           <img
             src={media[2].src}
             alt="BOUND specifications"
-            className="w-full h-auto"
+            className="w-full h-auto product-image-hd"
+            loading="eager"
+            decoding="async"
           />
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>

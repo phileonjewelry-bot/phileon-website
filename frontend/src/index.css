@@ -60,6 +60,31 @@ video {
   display: block;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   HIGH-RESOLUTION IMAGE RENDERING
+   Ensures product images render at true resolution without compression
+═══════════════════════════════════════════════════════════════ */
+img {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast; /* Chrome/Safari */
+}
+
+/* Product gallery images - maximum quality rendering */
+.product-image-hd {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0); /* Force GPU rendering */
+}
+
+/* Retina display support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .product-image-hd {
+    image-rendering: auto;
+  }
+}
+
 /* TRACE hero specific styles */
 .trace-hero {
   width: 100%;

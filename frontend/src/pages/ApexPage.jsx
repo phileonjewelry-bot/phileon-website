@@ -125,7 +125,9 @@ const ApexPage = () => {
       <img 
         src={image.src} 
         alt={image.alt} 
-        className="max-w-[90vw] max-h-[90vh] object-contain"
+        className="max-w-[90vw] max-h-[90vh] object-contain product-image-hd"
+        loading="eager"
+        decoding="sync"
       />
     </div>
   );
@@ -144,7 +146,10 @@ const ApexPage = () => {
             <img
               src={gallery.hero.src}
               alt={gallery.hero.alt}
-              className="w-full h-auto object-contain"
+              className="w-full h-auto object-contain product-image-hd"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
 
@@ -283,7 +288,9 @@ const ApexPage = () => {
           <img
             src={gallery.luxury.src}
             alt={gallery.luxury.alt}
-            className="w-full h-auto object-contain"
+            className="w-full h-auto object-contain product-image-hd"
+            loading="eager"
+            decoding="async"
           />
         </div>
       </section>
@@ -299,7 +306,9 @@ const ApexPage = () => {
                 <img
                   src={item.src}
                   alt={item.alt}
-                  className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
               <p className="text-xs tracking-[0.2em] text-neutral-500 mt-4 uppercase text-center">
@@ -321,7 +330,9 @@ const ApexPage = () => {
                 <img
                   src={item.src}
                   alt={item.alt}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-auto object-cover product-image-hd"
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
             ))}
@@ -346,7 +357,9 @@ const ApexPage = () => {
               <img
                 src={item.src}
                 alt={item.alt}
-                className="w-full h-auto object-contain transition-transform duration-500 hover:scale-110"
+                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 hover:scale-110"
+                loading="eager"
+                decoding="async"
               />
             </div>
           ))}
@@ -361,7 +374,9 @@ const ApexPage = () => {
           <img
             src={gallery.editorial.src}
             alt={gallery.editorial.alt}
-            className="w-full h-auto object-contain"
+            className="w-full h-auto object-contain product-image-hd"
+            loading="eager"
+            decoding="async"
           />
         </div>
       </section>
