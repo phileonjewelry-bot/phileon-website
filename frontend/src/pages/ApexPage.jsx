@@ -11,14 +11,24 @@ import { products } from "@/data/products";
 const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
-  const [modelVideoEnded, setModelVideoEnded] = useState(false);
+  const [showPlayButton, setShowPlayButton] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const modelVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   
-  const handleReplay = () => {
-    setModelVideoEnded(false);
-    modelVideoRef.current.currentTime = 0;
-    modelVideoRef.current.play();
+  const handleVideoEnd = () => {
+    setShowPlayButton(true);
+    setIsPlaying(false);
+  };
+  
+  const handlePlay = () => {
+    const video = modelVideoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      video.play();
+      setShowPlayButton(false);
+      setIsPlaying(true);
+    }
   };
 
   // Get product data from products.js
@@ -268,19 +278,25 @@ const ApexPage = () => {
             muted
             playsInline
             preload="auto"
-            onEnded={() => setModelVideoEnded(true)}
+            onEnded={handleVideoEnd}
+            onTimeUpdate={(e) => {
+              const video = e.target;
+              if (video.duration && video.currentTime >= video.duration - 0.1) {
+                handleVideoEnd();
+              }
+            }}
             className="w-full h-auto object-contain"
           />
 
-          {modelVideoEnded && (
-            <button
-              onClick={handleReplay}
-              className="absolute inset-0 flex items-center justify-center bg-black/50"
+          {showPlayButton && (
+            <div 
+              onClick={handlePlay}
+              className="absolute inset-0 flex items-center justify-center bg-black/50 cursor-pointer z-10"
             >
-              <span className="text-white text-sm tracking-widest border border-white px-6 py-3 bg-black/60 hover:bg-white hover:text-black transition-all">
+              <div className="text-white text-sm tracking-widest border border-white px-6 py-3 bg-black/60 hover:bg-white hover:text-black transition-all">
                 PLAY
-              </span>
-            </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
