@@ -19,18 +19,34 @@ const ApexPage = () => {
   // Force autoplay and loop on model video
   useEffect(() => {
     const video = modelVideoRef.current;
-    if (video) {
-      video.muted = true;
+    if (!video) return;
+    
+    video.muted = true;
+    video.loop = true;
+    
+    const playVideo = () => {
       video.play().catch(() => {});
-      
-      const handleEnded = () => {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      };
-      
-      video.addEventListener('ended', handleEnded);
-      return () => video.removeEventListener('ended', handleEnded);
-    }
+    };
+    
+    const handleEnded = () => {
+      video.currentTime = 0;
+      playVideo();
+    };
+    
+    const handleLoadedData = () => {
+      playVideo();
+    };
+    
+    video.addEventListener('ended', handleEnded);
+    video.addEventListener('loadeddata', handleLoadedData);
+    
+    // Try to play immediately
+    playVideo();
+    
+    return () => {
+      video.removeEventListener('ended', handleEnded);
+      video.removeEventListener('loadeddata', handleLoadedData);
+    };
   }, []);
 
   // Get product data from products.js
@@ -276,8 +292,10 @@ const ApexPage = () => {
           <video
             ref={modelVideoRef}
             src="/videos/apex-model.mp4"
-            muted
-            playsInline
+            autoPlay={true}
+            muted={true}
+            loop={true}
+            playsInline={true}
             preload="auto"
             className="w-full h-auto object-contain"
           />
