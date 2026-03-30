@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -12,6 +12,26 @@ const ApexPage = () => {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  
+  // Video ref for model video autoplay/loop
+  const modelVideoRef = useRef(null);
+  
+  // Force autoplay and loop on model video
+  useEffect(() => {
+    const video = modelVideoRef.current;
+    if (video) {
+      video.muted = true;
+      video.play().catch(() => {});
+      
+      const handleEnded = () => {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      };
+      
+      video.addEventListener('ended', handleEnded);
+      return () => video.removeEventListener('ended', handleEnded);
+    }
+  }, []);
 
   // Get product data from products.js
   const apexProduct = products.apex;
@@ -254,14 +274,12 @@ const ApexPage = () => {
       <div className="bg-black py-20 flex justify-center">
         <div className="w-full max-w-2xl">
           <video
+            ref={modelVideoRef}
             src="/videos/apex-model.mp4"
-            autoPlay
             muted
-            loop
             playsInline
             preload="auto"
             className="w-full h-auto object-contain"
-            onEnded={(e) => { e.target.currentTime = 0; e.target.play(); }}
           />
         </div>
       </div>
