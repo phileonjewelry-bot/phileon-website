@@ -259,7 +259,7 @@ const ApexPage = () => {
           loop
           playsInline
           preload="auto"
-          className="w-full h-auto object-cover"
+          className="w-full h-[70vh] object-cover"
         />
       </div>
 
