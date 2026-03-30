@@ -270,7 +270,7 @@ const ApexPage = () => {
           SECTION 5: MODEL VIDEO (Right before BUY section)
       ═══════════════════════════════════════════════════════════════ */}
       <div className="bg-black py-20 flex justify-center">
-        <div className="w-full max-w-2xl" style={{ position: 'relative' }}>
+        <div className="w-full max-w-2xl relative">
           <video
             ref={modelVideoRef}
             src="/videos/apex-model.mp4"
@@ -279,43 +279,17 @@ const ApexPage = () => {
             playsInline
             preload="auto"
             onEnded={handleVideoEnd}
-            onTimeUpdate={(e) => {
-              const video = e.target;
-              if (video.duration && video.currentTime >= video.duration - 0.1) {
-                handleVideoEnd();
-              }
-            }}
             className="w-full h-auto object-contain"
           />
 
-          {/* PLAY BUTTON - ALWAYS VISIBLE FOR TESTING */}
-          <div 
-            onClick={handlePlay}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              cursor: 'pointer',
-              zIndex: 9999
-            }}
-          >
-            <div style={{
-              color: 'white',
-              fontSize: '14px',
-              letterSpacing: '0.1em',
-              border: '1px solid white',
-              padding: '12px 24px',
-              backgroundColor: 'rgba(0,0,0,0.6)'
-            }}>
+          {showPlayButton && (
+            <button
+              onClick={handlePlay}
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 border border-white px-6 py-2 text-white text-sm tracking-widest bg-black/40 backdrop-blur-sm"
+            >
               PLAY
-            </div>
-          </div>
+            </button>
+          )}
         </div>
       </div>
 
