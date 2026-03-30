@@ -260,19 +260,23 @@ const ApexPage = () => {
       ═══════════════════════════════════════════════════════════════ */}
       <div className="bg-black py-20 flex justify-center">
         <div style={{ width: '100%', maxWidth: '42rem', position: 'relative' }}>
-          <video
-            ref={modelVideoRef}
-            src="/videos/apex-model.mp4"
-            muted
-            playsInline
-            preload="auto"
+          <div 
             onClick={() => {
               const v = modelVideoRef.current;
               v.currentTime = 0;
               v.play();
             }}
-            style={{ width: '100%', height: 'auto', cursor: 'pointer' }}
-          />
+            style={{ cursor: 'pointer' }}
+          >
+            <video
+              ref={modelVideoRef}
+              src="/videos/apex-model.mp4"
+              muted
+              playsInline
+              preload="auto"
+              style={{ width: '100%', height: 'auto', pointerEvents: 'none' }}
+            />
+          </div>
           
           <p style={{
             textAlign: 'center',
