@@ -19,7 +19,12 @@ const HomagePage = () => {
   const variants = product.variants;
   const tierData = product.tiers;
   const specs = product.specs;
-  const gallery = product.gallery;
+  
+  // Remove duplicate gallery items
+  const gallery = product.gallery.filter(
+    (item, index, self) =>
+      index === self.findIndex((i) => i.src === item.src)
+  );
 
   const currentVariant = variants[selectedVariant];
   const currentTier = tierData[selectedTier];
@@ -102,18 +107,18 @@ const HomagePage = () => {
       {/* ═══════════════════════════════════════════════════════════════
           GALLERY GRID
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {gallery.slice(1).map((item, index) => (
             <div 
               key={index}
-              className="bg-black overflow-hidden cursor-zoom-in group"
+              className="w-full flex justify-center bg-black overflow-hidden cursor-zoom-in group"
               onClick={() => setZoomedImage(item)}
             >
               <img
                 src={item.src}
                 alt={item.alt}
-                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
+                className="max-h-[70vh] object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
                 loading="eager"
               />
             </div>
@@ -129,12 +134,14 @@ const HomagePage = () => {
           
           {/* LEFT - MAIN IMAGE */}
           <div className="w-full">
-            <img
-              src={gallery[activeImage].src}
-              alt={gallery[activeImage].alt}
-              className="w-full h-auto object-contain product-image-hd cursor-zoom-in"
-              onClick={() => setZoomedImage(gallery[activeImage])}
-            />
+            <div className="w-full flex justify-center bg-black">
+              <img
+                src={gallery[activeImage].src}
+                alt={gallery[activeImage].alt}
+                className="w-full max-w-[700px] mx-auto object-contain product-image-hd cursor-zoom-in"
+                onClick={() => setZoomedImage(gallery[activeImage])}
+              />
+            </div>
             
             {/* Thumbnails */}
             <div className="flex gap-3 mt-6 overflow-x-auto">
@@ -142,11 +149,11 @@ const HomagePage = () => {
                 <button
                   key={index}
                   onClick={() => setActiveImage(index)}
-                  className={`w-16 h-16 flex-shrink-0 bg-black overflow-hidden border-2 transition-all ${
-                    activeImage === index ? "border-[#C6A25D]" : "border-transparent opacity-60 hover:opacity-100"
+                  className={`flex-shrink-0 overflow-hidden transition-all ${
+                    activeImage === index ? "ring-2 ring-[#C6A25D]" : "opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <img src={item.src} alt="" className="w-full h-full object-cover" />
+                  <img src={item.src} alt="" className="w-16 h-16 object-cover rounded" />
                 </button>
               ))}
             </div>
