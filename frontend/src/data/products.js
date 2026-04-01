@@ -748,6 +748,79 @@ export const products = {
       sapphires: "4 blue sapphires per earring (3 round ~5mm, 1 oval ~7×5mm)",
       finish: "High polish"
     }
+  },
+
+  // ==========================================
+  // HOMAGE
+  // Structure. Light. Memory.
+  // Fan-shaped radial earrings
+  // ==========================================
+  homage: {
+    name: "HOMAGE",
+    slug: "homage",
+    subtitle: "Earrings",
+    tagline: "Structure. Light. Memory.",
+    category: "earrings",
+    audience: "ladies",
+    currency: "CAD",
+    defaultTier: "signature",
+    
+    // Hero image
+    imageUrl: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png",
+    
+    pricing: {
+      foundation: 1800,
+      signature: 3200,
+      heirloom: 5200
+    },
+    
+    tiers: {
+      foundation: {
+        name: "Foundation",
+        metal: "925 Sterling Silver",
+        stones: "Cubic Zirconia",
+        description: "Entry into the form. Same design, same proportions."
+      },
+      signature: {
+        name: "Signature",
+        metal: "10K Gold (Yellow / White / Rose)",
+        stones: "Lab-grown diamonds",
+        badge: "Most Popular",
+        description: "Solid gold with brilliant lab-grown stones."
+      },
+      heirloom: {
+        name: "Heirloom",
+        metal: "14K / 18K Gold",
+        stones: "Natural diamonds",
+        badge: "HEIRLOOM",
+        description: "Maximum purity. Museum-grade finish."
+      }
+    },
+    
+    specs: {
+      height: "45mm",
+      width: "22mm",
+      weight: "5.5g–6.5g per pair",
+      closure: "Hook",
+      finish: "High polish + satin contrast",
+      setting: "Micro pavé radial layout"
+    },
+    
+    gallery: [
+      { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png", alt: "HOMAGE front view" },
+      { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/wy1fs7ps_1000144448.png", alt: "HOMAGE angle with PHILEON branding" },
+      { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/95yhcg9y_1000144456.png", alt: "HOMAGE white background" },
+      { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/lm6ijegv_1000144473.png", alt: "HOMAGE two-tone detail" },
+      { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ot3ftrqu_1000144441.png", alt: "HOMAGE stacked view" }
+    ],
+    
+    story: `HOMAGE is a study in structure and reflection.
+
+Each radial segment captures light differently,
+creating controlled brilliance rather than excess.
+
+The form holds tension between precision and softness —
+a sculptural expression designed to move with the wearer.`
   }
 
 };

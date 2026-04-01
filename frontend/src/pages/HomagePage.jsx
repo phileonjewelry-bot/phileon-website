@@ -1,0 +1,277 @@
+import React, { useState } from "react";
+import { useAddToCart } from "../hooks/useAddToCart";
+import { products } from "@/data/products";
+
+/* ═══════════════════════════════════════════════════════════════
+   HOMAGE — Fan Earrings
+   Structure. Light. Memory.
+═══════════════════════════════════════════════════════════════ */
+
+const HomagePage = () => {
+  const [selectedTier, setSelectedTier] = useState("signature");
+  const [activeImage, setActiveImage] = useState(0);
+  const [zoomedImage, setZoomedImage] = useState(null);
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  const product = products.homage;
+  const pricing = product.pricing;
+  const tierData = product.tiers;
+  const specs = product.specs;
+  const gallery = product.gallery;
+
+  const tiers = {
+    foundation: { ...tierData.foundation, price: pricing.foundation },
+    signature: { ...tierData.signature, price: pricing.signature },
+    heirloom: { ...tierData.heirloom, price: pricing.heirloom }
+  };
+
+  const currentTier = tiers[selectedTier];
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: `homage-${selectedTier}`,
+      name: `HOMAGE — ${currentTier.name}`,
+      price: currentTier.price,
+      metal: currentTier.metal,
+      image: product.imageUrl,
+      quantity: 1
+    });
+  };
+
+  const ZoomModal = ({ image, onClose }) => (
+    <div 
+      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center cursor-zoom-out"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition z-10"
+      >
+        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <img 
+        src={image.src} 
+        alt={image.alt} 
+        className="max-w-[90vw] max-h-[90vh] object-contain product-image-hd"
+      />
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-phileon-ivory">
+      
+      {/* ═══════════════════════════════════════════════════════════════
+          HERO SECTION
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative w-full h-screen bg-black overflow-hidden">
+        <img
+          src={gallery[0].src}
+          alt={gallery[0].alt}
+          className="w-full h-full object-contain product-image-hd"
+        />
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+        
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center">
+          <p className="text-xs tracking-[0.35em] mb-4 opacity-70">
+            PHILEON — OBJECT SERIES
+          </p>
+          <h1 className="text-4xl md:text-6xl tracking-[0.2em] mb-4 font-light">
+            HOMAGE
+          </h1>
+          <p className="text-sm md:text-base opacity-80">
+            {product.tagline}
+          </p>
+        </div>
+        
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-[#C6A25D]/50 to-transparent animate-bounce" />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          STORY SECTION
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-3xl mx-auto px-6 py-24 text-center">
+        <p className="text-sm md:text-base text-neutral-300 leading-relaxed whitespace-pre-line">
+          {product.story}
+        </p>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          GALLERY GRID
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {gallery.slice(1).map((item, index) => (
+            <div 
+              key={index}
+              className="bg-black overflow-hidden cursor-zoom-in group"
+              onClick={() => setZoomedImage(item)}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-auto object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          BUY SECTION
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          
+          {/* LEFT - MAIN IMAGE */}
+          <div className="w-full">
+            <img
+              src={gallery[activeImage].src}
+              alt={gallery[activeImage].alt}
+              className="w-full h-auto object-contain product-image-hd cursor-zoom-in"
+              onClick={() => setZoomedImage(gallery[activeImage])}
+            />
+            
+            {/* Thumbnails */}
+            <div className="flex gap-3 mt-6 overflow-x-auto">
+              {gallery.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveImage(index)}
+                  className={`w-16 h-16 flex-shrink-0 bg-black overflow-hidden border-2 transition-all ${
+                    activeImage === index ? "border-[#C6A25D]" : "border-transparent opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img src={item.src} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT - INFO */}
+          <div className="flex flex-col gap-6">
+
+            <div>
+              <p className="text-xs tracking-[0.3em] text-neutral-400">
+                {product.subtitle}
+              </p>
+              <h1 className="text-4xl md:text-5xl font-light tracking-wide mt-2">
+                {product.name}
+              </h1>
+              <p className="text-sm text-neutral-400 mt-2">{product.tagline}</p>
+            </div>
+
+            {/* Price */}
+            <div className="mt-4">
+              <p className="text-3xl md:text-4xl font-light tracking-wide">
+                ${currentTier.price.toLocaleString()}
+                <span className="text-lg text-neutral-500 ml-2">CAD</span>
+              </p>
+              <p className="text-sm text-neutral-400 mt-1">
+                {currentTier.metal} — {currentTier.stones}
+              </p>
+              <p className="text-xs text-neutral-500 mt-3">
+                Made to order<br />
+                Ships in 3–4 weeks
+              </p>
+            </div>
+
+            {/* Tier Selection */}
+            <div className="mt-6">
+              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
+                Select Tier
+              </p>
+              
+              <div className="space-y-3">
+                {Object.entries(tiers).map(([key, tier]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedTier(key)}
+                    className={`w-full text-left p-4 rounded-sm border transition-all ${
+                      selectedTier === key
+                        ? "border-[#C6A25D] bg-[#C6A25D]/10"
+                        : "border-neutral-700 hover:border-neutral-500"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="text-sm font-medium">{tier.name}</span>
+                        {tier.badge && (
+                          <span className="ml-2 text-[10px] tracking-wider text-[#C6A25D] uppercase">
+                            {tier.badge}
+                          </span>
+                        )}
+                        <p className="text-xs text-neutral-500 mt-1">{tier.metal}</p>
+                      </div>
+                      <span className="text-sm">${tier.price.toLocaleString()}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Add to Cart */}
+            <button
+              onClick={onAddToCart}
+              disabled={isAdding}
+              data-testid="homage-add-to-cart"
+              className="mt-6 w-full py-4 bg-[#C6A25D] hover:bg-[#B8944F] text-black font-medium tracking-wider uppercase text-sm transition-all disabled:opacity-50"
+            >
+              {buttonText}
+            </button>
+
+            {/* Specs */}
+            <div className="mt-8 pt-8 border-t border-neutral-800">
+              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
+                Specifications
+              </p>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-neutral-500">Height</p>
+                  <p className="text-neutral-300">{specs.height}</p>
+                </div>
+                <div>
+                  <p className="text-neutral-500">Width</p>
+                  <p className="text-neutral-300">{specs.width}</p>
+                </div>
+                <div>
+                  <p className="text-neutral-500">Weight</p>
+                  <p className="text-neutral-300">{specs.weight}</p>
+                </div>
+                <div>
+                  <p className="text-neutral-500">Closure</p>
+                  <p className="text-neutral-300">{specs.closure}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-neutral-500">Finish</p>
+                  <p className="text-neutral-300">{specs.finish}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-neutral-500">Setting</p>
+                  <p className="text-neutral-300">{specs.setting}</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-neutral-500 mt-6">
+              Complimentary insured shipping within Canada.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Zoom Modal */}
+      {zoomedImage && (
+        <ZoomModal image={zoomedImage} onClose={() => setZoomedImage(null)} />
+      )}
+    </div>
+  );
+};
+
+export default HomagePage;
