@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -8,10 +9,116 @@ import { products } from "@/data/products";
    Two variants: FULL (72 stones) and CORE (24 stones)
 ═══════════════════════════════════════════════════════════════ */
 
+// Product Carousel Component
+function ProductCarousel({ items, productName }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "center",
+    dragFree: false
+  });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
+
+  const scrollTo = useCallback(
+    (index) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi]
+  );
+
+  return (
+    <div className="w-full relative">
+      {/* Main Carousel */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {items.map((item, index) => (
+            <div
+              key={`${item.src}-${index}`}
+              className="min-w-0 flex-[0_0_100%] px-4"
+            >
+              <div className="w-full flex justify-center bg-black rounded-2xl overflow-hidden">
+                {item.type === "video" ? (
+                  <video
+                    src={item.src}
+                    poster={item.poster}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="max-h-[70vh] w-full object-contain"
+                  />
+                ) : (
+                  <img
+                    src={item.src}
+                    alt={`${productName} ${index + 1}`}
+                    className="max-h-[70vh] w-full object-contain product-image-hd"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={() => emblaApi && emblaApi.scrollPrev()}
+        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => emblaApi && emblaApi.scrollNext()}
+        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition"
+      >
+        ›
+      </button>
+
+      {/* Thumbnails */}
+      <div className="mt-4 flex justify-center gap-3 overflow-x-auto px-4">
+        {items.map((item, index) => (
+          <button
+            key={`${item.src}-thumb-${index}`}
+            onClick={() => scrollTo(index)}
+            className={`shrink-0 rounded-lg overflow-hidden border-2 transition ${
+              selectedIndex === index
+                ? "border-[#C6A25D]"
+                : "border-white/10 opacity-60 hover:opacity-100"
+            }`}
+          >
+            {item.type === "video" ? (
+              <video
+                src={item.src}
+                poster={item.poster}
+                muted
+                playsInline
+                className="w-16 h-16 object-cover"
+              />
+            ) : (
+              <img
+                src={item.src}
+                alt={`${productName} thumbnail ${index + 1}`}
+                className="w-16 h-16 object-cover"
+              />
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const HomagePage = () => {
   const [selectedVariant, setSelectedVariant] = useState("core");
   const [selectedTier, setSelectedTier] = useState("signature");
-  const [activeImage, setActiveImage] = useState(0);
   const [zoomedImage, setZoomedImage] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
@@ -72,7 +179,7 @@ const HomagePage = () => {
       <section className="relative w-full h-screen bg-black overflow-hidden">
         <img
           src={gallery[0].src}
-          alt={gallery[0].alt}
+          alt={gallery[0].alt || product.name}
           className="w-full h-full object-contain product-image-hd"
         />
         
@@ -105,57 +212,27 @@ const HomagePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          GALLERY GRID
+          GALLERY CAROUSEL
       ═══════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {gallery.slice(1).map((item, index) => (
-            <div 
-              key={index}
-              className="w-full flex justify-center bg-black overflow-hidden cursor-zoom-in group"
-              onClick={() => setZoomedImage(item)}
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="max-h-[70vh] object-contain product-image-hd transition-transform duration-500 group-hover:scale-105"
-                loading="eager"
-              />
-            </div>
-          ))}
-        </div>
+        <ProductCarousel items={gallery} productName={product.name} />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
           BUY SECTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-24">
         <div className="grid md:grid-cols-2 gap-12 items-start">
           
           {/* LEFT - MAIN IMAGE */}
           <div className="w-full">
-            <div className="w-full flex justify-center bg-black">
+            <div className="w-full flex justify-center bg-black rounded-2xl overflow-hidden">
               <img
-                src={gallery[activeImage].src}
-                alt={gallery[activeImage].alt}
+                src={gallery[0].src}
+                alt={gallery[0].alt || product.name}
                 className="w-full max-w-[700px] mx-auto object-contain product-image-hd cursor-zoom-in"
-                onClick={() => setZoomedImage(gallery[activeImage])}
+                onClick={() => setZoomedImage(gallery[0])}
               />
-            </div>
-            
-            {/* Thumbnails */}
-            <div className="flex gap-3 mt-6 overflow-x-auto">
-              {gallery.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveImage(index)}
-                  className={`flex-shrink-0 overflow-hidden transition-all ${
-                    activeImage === index ? "ring-2 ring-[#C6A25D]" : "opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  <img src={item.src} alt="" className="w-16 h-16 object-cover rounded" />
-                </button>
-              ))}
             </div>
           </div>
 
