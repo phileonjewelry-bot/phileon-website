@@ -764,6 +764,7 @@ export const products = {
     audience: "ladies",
     currency: "CAD",
     defaultTier: "signature",
+    basePrice: 1800,
     
     // Hero image
     imageUrl: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png",

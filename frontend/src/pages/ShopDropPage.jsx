@@ -203,6 +203,19 @@ const CORE_PRODUCTS = [
     category: 'earrings',
     audience: 'ladies',
   },
+  {
+    id: 'homage',
+    name: 'HOMAGE',
+    slug: 'homage',
+    materialLine: 'Fan Earrings · Silver to 18K Gold',
+    imageUrl: products.homage.imageUrl,
+    href: '/products/homage',
+    price_range: formatPrice(products.homage.basePrice, 'CAD'),
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
+  },
 ];
 
 // Additional drop products as fallback
