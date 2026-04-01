@@ -752,7 +752,7 @@ export const products = {
 
   // ==========================================
   // HOMAGE
-  // Structure. Light. Memory.
+  // The art once carried, now worn.
   // Fan-shaped radial earrings
   // ==========================================
   homage: {
@@ -763,48 +763,73 @@ export const products = {
     category: "earrings",
     audience: "ladies",
     currency: "CAD",
+    collections: ["ladies-earrings", "collective"],
+    defaultVariant: "core",
     defaultTier: "signature",
-    basePrice: 1800,
+    basePrice: 1400,
+    priceFrom: "From $1,400 CAD",
     
     // Hero image
     imageUrl: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png",
     
-    pricing: {
-      foundation: 1800,
-      signature: 3200,
-      heirloom: 5200
+    // Two variants: FULL and CORE
+    variants: {
+      full: {
+        model: "FULL",
+        label: "FULL",
+        stoneCountPerEarring: 72,
+        totalStones: 144,
+        description: "Maximum presence. Fully set.",
+        pricing: {
+          foundation: 2600,
+          signature: 4600,
+          heirloom: 6800
+        }
+      },
+      core: {
+        model: "CORE",
+        label: "CORE",
+        stoneCountPerEarring: 24,
+        totalStones: 48,
+        description: "Refined structure. Reduced weight.",
+        pricing: {
+          foundation: 1400,
+          signature: 2600,
+          heirloom: 4600
+        }
+      }
     },
     
     tiers: {
       foundation: {
         name: "Foundation",
+        label: "FOUNDATION",
         metal: "925 Sterling Silver",
-        stones: "Cubic Zirconia",
-        description: "Entry into the form. Same design, same proportions."
+        stones: "Cubic Zirconia"
       },
       signature: {
         name: "Signature",
-        metal: "10K Gold (Yellow / White / Rose)",
+        label: "SIGNATURE",
+        metal: "10K Gold",
         stones: "Lab-grown diamonds",
-        badge: "Most Popular",
-        description: "Solid gold with brilliant lab-grown stones."
+        badge: "MOST POPULAR"
       },
       heirloom: {
         name: "Heirloom",
+        label: "HEIRLOOM",
         metal: "14K / 18K Gold",
         stones: "Natural diamonds",
-        badge: "HEIRLOOM",
-        description: "Maximum purity. Museum-grade finish."
+        badge: "COLLECTOR"
       }
     },
     
     specs: {
       height: "45mm",
       width: "22mm",
-      weight: "5.5g–6.5g per pair",
+      weight: "Approx. 6g per pair",
       closure: "Hook",
       finish: "High polish + satin contrast",
-      setting: "Micro pavé radial layout"
+      setting: "Radial pavé"
     },
     
     gallery: [
@@ -815,13 +840,12 @@ export const products = {
       { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ot3ftrqu_1000144441.png", alt: "HOMAGE stacked view" }
     ],
     
-    story: `HOMAGE is a study in structure and reflection.
+    story: `The art once carried,
+now worn.
 
-Each radial segment captures light differently,
-creating controlled brilliance rather than excess.
+Not for every moment.
 
-The form holds tension between precision and softness —
-a sculptural expression designed to move with the wearer.`
+For the right one.`
   }
 
 };

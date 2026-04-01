@@ -210,7 +210,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Fan Earrings · Silver to 18K Gold',
     imageUrl: products.homage.imageUrl,
     href: '/products/homage',
-    price_range: formatPrice(products.homage.basePrice, 'CAD'),
+    price_range: 'From $1,400 CAD',
     inventory_count: 100,
     is_core: true,
     category: 'earrings',

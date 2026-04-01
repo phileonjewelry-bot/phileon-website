@@ -4,35 +4,34 @@ import { products } from "@/data/products";
 
 /* ═══════════════════════════════════════════════════════════════
    HOMAGE — Fan Earrings
-   Structure. Light. Memory.
+   The art once carried, now worn.
+   Two variants: FULL (72 stones) and CORE (24 stones)
 ═══════════════════════════════════════════════════════════════ */
 
 const HomagePage = () => {
+  const [selectedVariant, setSelectedVariant] = useState("core");
   const [selectedTier, setSelectedTier] = useState("signature");
   const [activeImage, setActiveImage] = useState(0);
   const [zoomedImage, setZoomedImage] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const product = products.homage;
-  const pricing = product.pricing;
+  const variants = product.variants;
   const tierData = product.tiers;
   const specs = product.specs;
   const gallery = product.gallery;
 
-  const tiers = {
-    foundation: { ...tierData.foundation, price: pricing.foundation },
-    signature: { ...tierData.signature, price: pricing.signature },
-    heirloom: { ...tierData.heirloom, price: pricing.heirloom }
-  };
-
-  const currentTier = tiers[selectedTier];
+  const currentVariant = variants[selectedVariant];
+  const currentTier = tierData[selectedTier];
+  const currentPrice = currentVariant.pricing[selectedTier];
 
   const onAddToCart = () => {
     handleAddToCart({
-      id: `homage-${selectedTier}`,
-      name: `HOMAGE — ${currentTier.name}`,
-      price: currentTier.price,
+      id: `homage-${selectedVariant}-${selectedTier}`,
+      name: `HOMAGE ${currentVariant.label} — ${currentTier.name}`,
+      price: currentPrice,
       metal: currentTier.metal,
+      variant: currentVariant.label,
       image: product.imageUrl,
       quantity: 1
     });
@@ -169,11 +168,14 @@ const HomagePage = () => {
             {/* Price */}
             <div className="mt-4">
               <p className="text-3xl md:text-4xl font-light tracking-wide">
-                ${currentTier.price.toLocaleString()}
+                ${currentPrice.toLocaleString()}
                 <span className="text-lg text-neutral-500 ml-2">CAD</span>
               </p>
               <p className="text-sm text-neutral-400 mt-1">
-                {currentTier.metal} — {currentTier.stones}
+                {currentVariant.label} · {currentTier.metal} — {currentTier.stones}
+              </p>
+              <p className="text-xs text-neutral-500 mt-1">
+                {currentVariant.totalStones} stones total ({currentVariant.stoneCountPerEarring} per earring)
               </p>
               <p className="text-xs text-neutral-500 mt-3">
                 Made to order<br />
@@ -181,14 +183,39 @@ const HomagePage = () => {
               </p>
             </div>
 
-            {/* Tier Selection */}
+            {/* Variant Selection */}
             <div className="mt-6">
+              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
+                Select Model
+              </p>
+              
+              <div className="grid grid-cols-2 gap-3">
+                {Object.entries(variants).map(([key, variant]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedVariant(key)}
+                    className={`text-left p-4 rounded-sm border transition-all ${
+                      selectedVariant === key
+                        ? "border-[#C6A25D] bg-[#C6A25D]/10"
+                        : "border-neutral-700 hover:border-neutral-500"
+                    }`}
+                  >
+                    <span className="text-sm font-medium tracking-wider">{variant.label}</span>
+                    <p className="text-xs text-neutral-500 mt-1">{variant.totalStones} stones</p>
+                    <p className="text-xs text-neutral-400 mt-1">{variant.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tier Selection */}
+            <div className="mt-4">
               <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
                 Select Tier
               </p>
               
               <div className="space-y-3">
-                {Object.entries(tiers).map(([key, tier]) => (
+                {Object.entries(tierData).map(([key, tier]) => (
                   <button
                     key={key}
                     onClick={() => setSelectedTier(key)}
@@ -200,7 +227,7 @@ const HomagePage = () => {
                   >
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-sm font-medium">{tier.name}</span>
+                        <span className="text-xs tracking-wider font-medium">{tier.label}</span>
                         {tier.badge && (
                           <span className="ml-2 text-[10px] tracking-wider text-[#C6A25D] uppercase">
                             {tier.badge}
@@ -208,7 +235,7 @@ const HomagePage = () => {
                         )}
                         <p className="text-xs text-neutral-500 mt-1">{tier.metal}</p>
                       </div>
-                      <span className="text-sm">${tier.price.toLocaleString()}</span>
+                      <span className="text-sm">${currentVariant.pricing[key].toLocaleString()}</span>
                     </div>
                   </button>
                 ))}
