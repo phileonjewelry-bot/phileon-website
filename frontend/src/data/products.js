@@ -784,7 +784,10 @@ export const products = {
           foundation: 2600,
           signature: 4600,
           heirloom: 6800
-        }
+        },
+        images: [
+          { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/y8zkizsg_1000144762.png", alt: "HOMAGE FULL - 144 stones" }
+        ]
       },
       core: {
         model: "CORE",
@@ -796,7 +799,10 @@ export const products = {
           foundation: 1400,
           signature: 2600,
           heirloom: 4600
-        }
+        },
+        images: [
+          { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ctsdt2t8_1000144763.png", alt: "HOMAGE CORE - 48 stones" }
+        ]
       }
     },
     

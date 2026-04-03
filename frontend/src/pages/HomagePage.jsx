@@ -240,16 +240,19 @@ const HomagePage = () => {
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-24">
         <div className="grid md:grid-cols-2 gap-12 items-start">
           
-          {/* LEFT - MAIN IMAGE */}
+          {/* LEFT - MAIN IMAGE (changes based on selected model) */}
           <div className="w-full">
             <div className="w-full flex justify-center bg-black rounded-2xl overflow-hidden">
               <img
-                src={gallery[0].src}
-                alt={gallery[0].alt || product.name}
+                src={currentVariant.images?.[0]?.src || gallery[0].src}
+                alt={currentVariant.images?.[0]?.alt || product.name}
                 className="w-full max-w-[700px] mx-auto object-contain product-image-hd cursor-zoom-in"
-                onClick={() => setZoomedImage(gallery[0])}
+                onClick={() => setZoomedImage(currentVariant.images?.[0] || gallery[0])}
               />
             </div>
+            <p className="text-center text-xs text-neutral-500 mt-4 tracking-wider">
+              {currentVariant.label} — {currentVariant.totalStones} STONES
+            </p>
           </div>
 
           {/* RIGHT - INFO */}
