@@ -115,6 +115,24 @@ img {
   animation: apexTextFadeIn 1.2s ease 0.5s both;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   GENERAL FADE IN ANIMATION
+═══════════════════════════════════════════════════════════════ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
 /* TRACE hero specific styles */
 .trace-hero {
   width: 100%;

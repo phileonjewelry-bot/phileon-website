@@ -231,17 +231,17 @@ const HomagePage = () => {
         <div className="absolute inset-0 bg-black/30" />
 
         {/* CONTENT */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 animate-fadeIn">
           
           <p className="text-[10px] md:text-xs tracking-[0.3em] text-white/70 mb-3">
             EARRINGS
           </p>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl leading-[0.95] tracking-[0.08em] text-white mb-3">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl leading-[0.95] tracking-[0.06em] text-white mb-3">
             HOMAGE
           </h1>
 
-          <p className="text-base md:text-lg text-white/75 tracking-wide">
+          <p className="text-base md:text-lg text-white/65 tracking-wide">
             {product.tagline}
           </p>
 
