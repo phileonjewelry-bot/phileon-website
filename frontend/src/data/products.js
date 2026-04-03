@@ -787,6 +787,8 @@ export const products = {
         },
         images: {
           default: { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/y8zkizsg_1000144762.png", alt: "HOMAGE FULL - 144 stones - Silver" },
+          "silver-rose-inlay": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/27ylt6jj_1000144777.png", alt: "HOMAGE FULL - 144 stones - Silver / Rose Inlay" },
+          "white-rose-inlay": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/27ylt6jj_1000144777.png", alt: "HOMAGE FULL - 144 stones - White / Rose Inlay" },
           "rose-plated-silver": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/73ih8d0q_1000144473.png", alt: "HOMAGE FULL - 144 stones - Rose Gold / White Inlay" },
           "rose-white-inlay": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/73ih8d0q_1000144473.png", alt: "HOMAGE FULL - 144 stones - Rose / White Inlay" },
           "all-rose": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/r4217a7k_1000144772.png", alt: "HOMAGE FULL - 144 stones - All Rose" }
