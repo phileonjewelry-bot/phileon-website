@@ -233,15 +233,15 @@ const HomagePage = () => {
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
           
-          <p className="text-xs tracking-[0.3em] text-white/70 mb-4">
+          <p className="text-[10px] md:text-xs tracking-[0.3em] text-white/70 mb-3">
             EARRINGS
           </p>
 
-          <h1 className="text-5xl md:text-7xl tracking-[0.12em] text-white mb-4">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl leading-[0.95] tracking-[0.08em] text-white mb-3">
             HOMAGE
           </h1>
 
-          <p className="text-sm md:text-base text-white/70 tracking-wide">
+          <p className="text-base md:text-lg text-white/75 tracking-wide">
             {product.tagline}
           </p>
 
