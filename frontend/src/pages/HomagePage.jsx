@@ -174,30 +174,42 @@ const HomagePage = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-phileon-ivory">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO SECTION
+          HERO VIDEO SECTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-screen bg-black overflow-hidden">
-        <img
-          src={gallery[0].src}
-          alt={gallery[0].alt || product.name}
-          className="w-full h-full object-contain product-image-hd"
+      <section className="relative w-full h-[100vh] overflow-hidden bg-black">
+        
+        {/* VIDEO */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/videos/homage-hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
         />
-        
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-        
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center">
-          <p className="text-xs tracking-[0.35em] mb-4 opacity-70">
-            PHILEON — OBJECT SERIES
+
+        {/* OVERLAY (subtle dark for readability) */}
+        <div className="absolute inset-0 bg-black/30" />
+
+        {/* CONTENT */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+          
+          <p className="text-xs tracking-[0.3em] text-white/70 mb-4">
+            EARRINGS
           </p>
-          <h1 className="text-4xl md:text-6xl tracking-[0.2em] mb-4 font-light">
+
+          <h1 className="text-5xl md:text-7xl tracking-[0.12em] text-white mb-4">
             HOMAGE
           </h1>
-          <p className="text-sm md:text-base opacity-80">
+
+          <p className="text-sm md:text-base text-white/70 tracking-wide">
             {product.tagline}
           </p>
+
         </div>
         
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
           <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-[#C6A25D]/50 to-transparent animate-bounce" />
         </div>
       </section>
