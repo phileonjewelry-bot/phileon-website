@@ -6,11 +6,12 @@ import { products } from "@/data/products";
 /* ═══════════════════════════════════════════════════════════════
    HOMAGE — Fan Earrings
    The art once carried, now worn.
-   Two variants: FULL (72 stones) and CORE (24 stones)
+   Two models: FULL (144 stones) and CORE (48 stones)
+   Multiple finish options
 ═══════════════════════════════════════════════════════════════ */
 
 // Product Carousel Component
-function ProductCarousel({ items, productName }) {
+function ProductCarousel({ items, productName, onSlideChange }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     align: "center",
@@ -29,10 +30,22 @@ function ProductCarousel({ items, productName }) {
     emblaApi.on("select", onSelect);
   }, [emblaApi, onSelect]);
 
+  // Reset carousel when items change
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.reInit();
+    emblaApi.scrollTo(0);
+    setSelectedIndex(0);
+  }, [items, emblaApi]);
+
   const scrollTo = useCallback(
     (index) => emblaApi && emblaApi.scrollTo(index),
     [emblaApi]
   );
+
+  if (!items || items.length === 0) {
+    return <div className="text-center text-neutral-500">No images available</div>;
+  }
 
   return (
     <div className="w-full relative">
@@ -58,7 +71,7 @@ function ProductCarousel({ items, productName }) {
                 ) : (
                   <img
                     src={item.src}
-                    alt={`${productName} ${index + 1}`}
+                    alt={item.alt || `${productName} ${index + 1}`}
                     className="max-h-[70vh] w-full object-contain product-image-hd"
                   />
                 )}
@@ -69,57 +82,63 @@ function ProductCarousel({ items, productName }) {
       </div>
 
       {/* Navigation Arrows */}
-      <button
-        onClick={() => emblaApi && emblaApi.scrollPrev()}
-        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition"
-      >
-        ‹
-      </button>
-      <button
-        onClick={() => emblaApi && emblaApi.scrollNext()}
-        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition"
-      >
-        ›
-      </button>
+      {items.length > 1 && (
+        <>
+          <button
+            onClick={() => emblaApi && emblaApi.scrollPrev()}
+            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition"
+          >
+            ‹
+          </button>
+          <button
+            onClick={() => emblaApi && emblaApi.scrollNext()}
+            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition"
+          >
+            ›
+          </button>
+        </>
+      )}
 
       {/* Thumbnails */}
-      <div className="mt-4 flex justify-center gap-3 overflow-x-auto px-4">
-        {items.map((item, index) => (
-          <button
-            key={`${item.src}-thumb-${index}`}
-            onClick={() => scrollTo(index)}
-            className={`shrink-0 rounded-lg overflow-hidden border-2 transition ${
-              selectedIndex === index
-                ? "border-[#C6A25D]"
-                : "border-white/10 opacity-60 hover:opacity-100"
-            }`}
-          >
-            {item.type === "video" ? (
-              <video
-                src={item.src}
-                poster={item.poster}
-                muted
-                playsInline
-                className="w-16 h-16 object-cover"
-              />
-            ) : (
-              <img
-                src={item.src}
-                alt={`${productName} thumbnail ${index + 1}`}
-                className="w-16 h-16 object-cover"
-              />
-            )}
-          </button>
-        ))}
-      </div>
+      {items.length > 1 && (
+        <div className="mt-4 flex justify-center gap-3 overflow-x-auto px-4">
+          {items.map((item, index) => (
+            <button
+              key={`${item.src}-thumb-${index}`}
+              onClick={() => scrollTo(index)}
+              className={`shrink-0 rounded-lg overflow-hidden border-2 transition ${
+                selectedIndex === index
+                  ? "border-[#C6A25D]"
+                  : "border-white/10 opacity-60 hover:opacity-100"
+              }`}
+            >
+              {item.type === "video" ? (
+                <video
+                  src={item.src}
+                  poster={item.poster}
+                  muted
+                  playsInline
+                  className="w-16 h-16 object-cover"
+                />
+              ) : (
+                <img
+                  src={item.src}
+                  alt={`${productName} thumbnail ${index + 1}`}
+                  className="w-16 h-16 object-cover"
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 const HomagePage = () => {
-  const [selectedVariant, setSelectedVariant] = useState("core");
-  const [selectedTier, setSelectedTier] = useState("signature");
+  const [selectedModel, setSelectedModel] = useState("core");
   const [selectedFinish, setSelectedFinish] = useState("all-silver");
+  const [selectedTier, setSelectedTier] = useState("signature");
   const [zoomedImage, setZoomedImage] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
@@ -129,13 +148,8 @@ const HomagePage = () => {
   const finishes = product.finishes;
   const specs = product.specs;
   
-  // Remove duplicate gallery items
-  const gallery = product.gallery.filter(
-    (item, index, self) =>
-      index === self.findIndex((i) => i.src === item.src)
-  );
-
-  const currentVariant = variants[selectedVariant];
+  // Get current variant based on model
+  const currentVariant = variants[selectedModel];
   const currentTier = tierData[selectedTier];
   const currentFinish = finishes.find(f => f.id === selectedFinish);
   const currentPrice = currentVariant.pricing[selectedTier];
@@ -149,16 +163,27 @@ const HomagePage = () => {
     return variantImages.default;
   };
   const currentImage = getCurrentImage();
+  
+  // Build gallery items from current selection
+  const galleryItems = [
+    { type: "image", src: currentImage.src, alt: currentImage.alt }
+  ];
+  
+  // Remove duplicate gallery items from general gallery
+  const generalGallery = product.gallery.filter(
+    (item, index, self) =>
+      index === self.findIndex((i) => i.src === item.src)
+  );
 
   const onAddToCart = () => {
     handleAddToCart({
-      id: `homage-${selectedVariant}-${selectedTier}-${selectedFinish}`,
+      id: `homage-${selectedModel}-${selectedFinish}-${selectedTier}`,
       name: `HOMAGE ${currentVariant.label} — ${currentTier.name}`,
       price: currentPrice,
       metal: currentTier.metal,
       variant: currentVariant.label,
       finish: currentFinish.label,
-      image: product.imageUrl,
+      image: currentImage.src,
       quantity: 1
     });
   };
@@ -238,194 +263,188 @@ const HomagePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          GALLERY CAROUSEL
+          INTERACTIVE GALLERY + CONFIGURATION
       ═══════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-12">
-        <ProductCarousel items={gallery} productName={product.name} />
+        
+        {/* Model Selection Buttons */}
+        <div className="flex justify-center gap-3 mb-8">
+          <button
+            onClick={() => setSelectedModel("full")}
+            className={`px-6 py-3 border text-sm tracking-wider transition-all ${
+              selectedModel === "full"
+                ? "border-white bg-white text-black"
+                : "border-white/30 text-white hover:border-white/50"
+            }`}
+          >
+            FULL — 144 STONES
+          </button>
+
+          <button
+            onClick={() => setSelectedModel("core")}
+            className={`px-6 py-3 border text-sm tracking-wider transition-all ${
+              selectedModel === "core"
+                ? "border-white bg-white text-black"
+                : "border-white/30 text-white hover:border-white/50"
+            }`}
+          >
+            CORE — 48 STONES
+          </button>
+        </div>
+
+        {/* Finish Selection */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {finishes.map((finish) => (
+            <button
+              key={finish.id}
+              onClick={() => setSelectedFinish(finish.id)}
+              className={`px-4 py-2 text-xs tracking-wider transition-all ${
+                selectedFinish === finish.id
+                  ? "ring-2 ring-[#C6A25D] bg-[#C6A25D]/10 text-white"
+                  : "text-white/60 hover:text-white"
+              }`}
+            >
+              {finish.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Product Image Display */}
+        <div className="w-full flex justify-center bg-black rounded-2xl overflow-hidden mb-4">
+          <img
+            src={currentImage.src}
+            alt={currentImage.alt}
+            className="max-h-[70vh] w-full object-contain product-image-hd cursor-zoom-in"
+            onClick={() => setZoomedImage(currentImage)}
+          />
+        </div>
+        
+        <p className="text-center text-xs text-neutral-500 tracking-wider">
+          {currentVariant.label} — {currentVariant.totalStones} STONES · {currentFinish?.label}
+        </p>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          GENERAL GALLERY CAROUSEL
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+        <p className="text-xs tracking-[0.2em] text-neutral-500 mb-8 uppercase text-center">
+          Gallery
+        </p>
+        <ProductCarousel items={generalGallery} productName={product.name} />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
           BUY SECTION
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-24">
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          
-          {/* LEFT - MAIN IMAGE (changes based on selected model and finish) */}
-          <div className="w-full">
-            <div className="w-full flex justify-center bg-black rounded-2xl overflow-hidden">
-              <img
-                src={currentImage.src}
-                alt={currentImage.alt}
-                className="w-full max-w-[700px] mx-auto object-contain product-image-hd cursor-zoom-in"
-                onClick={() => setZoomedImage(currentImage)}
-              />
-            </div>
-            <p className="text-center text-xs text-neutral-500 mt-4 tracking-wider">
-              {currentVariant.label} — {currentVariant.totalStones} STONES · {currentFinish.label}
+      <section className="max-w-3xl mx-auto px-6 md:px-12 py-12 md:py-24">
+        <div className="flex flex-col gap-6">
+
+          <div className="text-center">
+            <p className="text-xs tracking-[0.3em] text-neutral-400">
+              {product.subtitle}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-light tracking-wide mt-2">
+              {product.name}
+            </h2>
+          </div>
+
+          {/* Price */}
+          <div className="text-center mt-4">
+            <p className="text-4xl md:text-5xl font-light tracking-wide">
+              ${currentPrice.toLocaleString()}
+              <span className="text-lg text-neutral-500 ml-2">CAD</span>
+            </p>
+            <p className="text-sm text-neutral-400 mt-2">
+              {currentVariant.label} · {currentTier.metal} — {currentTier.stones}
+            </p>
+            <p className="text-xs text-neutral-500 mt-1">
+              {currentVariant.totalStones} stones · {currentFinish?.label}
             </p>
           </div>
 
-          {/* RIGHT - INFO */}
-          <div className="flex flex-col gap-6">
-
-            <div>
-              <p className="text-xs tracking-[0.3em] text-neutral-400">
-                {product.subtitle}
-              </p>
-              <h1 className="text-4xl md:text-5xl font-light tracking-wide mt-2">
-                {product.name}
-              </h1>
-              <p className="text-sm text-neutral-400 mt-2">{product.tagline}</p>
-            </div>
-
-            {/* Price */}
-            <div className="mt-4">
-              <p className="text-3xl md:text-4xl font-light tracking-wide">
-                ${currentPrice.toLocaleString()}
-                <span className="text-lg text-neutral-500 ml-2">CAD</span>
-              </p>
-              <p className="text-sm text-neutral-400 mt-1">
-                {currentVariant.label} · {currentTier.metal} — {currentTier.stones}
-              </p>
-              <p className="text-xs text-neutral-500 mt-1">
-                {currentVariant.totalStones} stones · {currentFinish.label}
-              </p>
-              <p className="text-xs text-neutral-500 mt-3">
-                Made to order<br />
-                Ships in 3–4 weeks
-              </p>
-            </div>
-
-            {/* Variant Selection */}
-            <div className="mt-6">
-              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
-                Stone Layout
-              </p>
-              
-              <div className="grid grid-cols-2 gap-3">
-                {Object.entries(variants).map(([key, variant]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedVariant(key)}
-                    className={`text-left p-4 rounded-sm border transition-all ${
-                      selectedVariant === key
-                        ? "border-[#C6A25D] bg-[#C6A25D]/10"
-                        : "border-neutral-700 hover:border-neutral-500"
-                    }`}
-                  >
-                    <span className="text-sm font-medium tracking-wider">{variant.label}</span>
-                    <p className="text-xs text-neutral-500 mt-1">{variant.totalStones} stones</p>
-                    <p className="text-xs text-neutral-400 mt-1">{variant.description}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Finish Selection */}
-            <div className="mt-6">
-              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
-                Finish
-              </p>
-              
-              <div className="grid grid-cols-2 gap-2">
-                {finishes.map((finish) => (
-                  <button
-                    key={finish.id}
-                    onClick={() => setSelectedFinish(finish.id)}
-                    className={`text-left p-3 rounded-sm border transition-all ${
-                      selectedFinish === finish.id
-                        ? "border-[#C6A25D] bg-[#C6A25D]/10"
-                        : "border-neutral-700 hover:border-neutral-500"
-                    }`}
-                  >
-                    <span className="text-xs">{finish.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Tier Selection */}
-            <div className="mt-4">
-              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
-                Select Tier
-              </p>
-              
-              <div className="space-y-3">
-                {Object.entries(tierData).map(([key, tier]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedTier(key)}
-                    className={`w-full text-left p-4 rounded-sm border transition-all ${
-                      selectedTier === key
-                        ? "border-[#C6A25D] bg-[#C6A25D]/10"
-                        : "border-neutral-700 hover:border-neutral-500"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <span className="text-xs tracking-wider font-medium">{tier.label}</span>
-                        {tier.badge && (
-                          <span className="ml-2 text-[10px] tracking-wider text-[#C6A25D] uppercase">
-                            {tier.badge}
-                          </span>
-                        )}
-                        <p className="text-xs text-neutral-500 mt-1">{tier.metal}</p>
-                      </div>
-                      <span className="text-sm">${currentVariant.pricing[key].toLocaleString()}</span>
+          {/* Tier Selection */}
+          <div className="mt-6">
+            <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase text-center">
+              Select Tier
+            </p>
+            
+            <div className="space-y-3">
+              {Object.entries(tierData).map(([key, tier]) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedTier(key)}
+                  className={`w-full text-left p-4 rounded-sm border transition-all ${
+                    selectedTier === key
+                      ? "border-[#C6A25D] bg-[#C6A25D]/10"
+                      : "border-neutral-700 hover:border-neutral-500"
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-xs tracking-wider font-medium">{tier.label}</span>
+                      {tier.badge && (
+                        <span className="ml-2 text-[10px] tracking-wider text-[#C6A25D] uppercase">
+                          {tier.badge}
+                        </span>
+                      )}
+                      <p className="text-xs text-neutral-500 mt-1">{tier.metal}</p>
                     </div>
-                  </button>
-                ))}
-              </div>
+                    <span className="text-sm">${currentVariant.pricing[key].toLocaleString()}</span>
+                  </div>
+                </button>
+              ))}
             </div>
-
-            {/* Add to Cart */}
-            <button
-              onClick={onAddToCart}
-              disabled={isAdding}
-              data-testid="homage-add-to-cart"
-              className="mt-6 w-full py-4 bg-[#C6A25D] hover:bg-[#B8944F] text-black font-medium tracking-wider uppercase text-sm transition-all disabled:opacity-50"
-            >
-              {buttonText}
-            </button>
-
-            {/* Specs */}
-            <div className="mt-8 pt-8 border-t border-neutral-800">
-              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
-                Specifications
-              </p>
-              
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-neutral-500">Height</p>
-                  <p className="text-neutral-300">{specs.height}</p>
-                </div>
-                <div>
-                  <p className="text-neutral-500">Width</p>
-                  <p className="text-neutral-300">{specs.width}</p>
-                </div>
-                <div>
-                  <p className="text-neutral-500">Weight</p>
-                  <p className="text-neutral-300">{specs.weight}</p>
-                </div>
-                <div>
-                  <p className="text-neutral-500">Closure</p>
-                  <p className="text-neutral-300">{specs.closure}</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-neutral-500">Finish</p>
-                  <p className="text-neutral-300">{specs.finish}</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-neutral-500">Setting</p>
-                  <p className="text-neutral-300">{specs.setting}</p>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-xs text-neutral-500 mt-6">
-              Complimentary insured shipping within Canada.
-            </p>
           </div>
+
+          {/* Add to Cart */}
+          <button
+            onClick={onAddToCart}
+            disabled={isAdding}
+            data-testid="homage-add-to-cart"
+            className="mt-6 w-full py-4 bg-[#C6A25D] hover:bg-[#B8944F] text-black font-medium tracking-wider uppercase text-sm transition-all disabled:opacity-50"
+          >
+            {buttonText}
+          </button>
+
+          {/* Specs */}
+          <div className="mt-8 pt-8 border-t border-neutral-800">
+            <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase text-center">
+              Specifications
+            </p>
+            
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-neutral-500">Height</p>
+                <p className="text-neutral-300">{specs.height}</p>
+              </div>
+              <div>
+                <p className="text-neutral-500">Width</p>
+                <p className="text-neutral-300">{specs.width}</p>
+              </div>
+              <div>
+                <p className="text-neutral-500">Weight</p>
+                <p className="text-neutral-300">{specs.weight}</p>
+              </div>
+              <div>
+                <p className="text-neutral-500">Closure</p>
+                <p className="text-neutral-300">{specs.closure}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-neutral-500">Finish</p>
+                <p className="text-neutral-300">{specs.finish}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-neutral-500">Setting</p>
+                <p className="text-neutral-300">{specs.setting}</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-neutral-500 mt-6 text-center">
+            Made to order · Ships in 3–4 weeks<br />
+            Complimentary insured shipping within Canada.
+          </p>
         </div>
       </section>
 
