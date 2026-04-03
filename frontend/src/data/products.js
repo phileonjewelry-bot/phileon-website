@@ -800,6 +800,18 @@ export const products = {
       }
     },
     
+    // Finish options
+    finishes: [
+      { id: "all-silver", label: "All Silver" },
+      { id: "silver-rose-plated", label: "All Silver / Rose Gold Plated" },
+      { id: "silver-rose-inlay", label: "Silver / Rose Inlay (Plated)" },
+      { id: "rose-plated-silver", label: "Rose Gold Plated / Silver" },
+      { id: "all-white", label: "All White" },
+      { id: "white-rose-inlay", label: "White / Rose Inlay" },
+      { id: "all-rose", label: "All Rose" },
+      { id: "rose-white-inlay", label: "Rose / White Inlay" }
+    ],
+    
     tiers: {
       foundation: {
         name: "Foundation",

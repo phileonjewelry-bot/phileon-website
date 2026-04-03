@@ -119,12 +119,14 @@ function ProductCarousel({ items, productName }) {
 const HomagePage = () => {
   const [selectedVariant, setSelectedVariant] = useState("core");
   const [selectedTier, setSelectedTier] = useState("signature");
+  const [selectedFinish, setSelectedFinish] = useState("all-silver");
   const [zoomedImage, setZoomedImage] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const product = products.homage;
   const variants = product.variants;
   const tierData = product.tiers;
+  const finishes = product.finishes;
   const specs = product.specs;
   
   // Remove duplicate gallery items
@@ -135,15 +137,17 @@ const HomagePage = () => {
 
   const currentVariant = variants[selectedVariant];
   const currentTier = tierData[selectedTier];
+  const currentFinish = finishes.find(f => f.id === selectedFinish);
   const currentPrice = currentVariant.pricing[selectedTier];
 
   const onAddToCart = () => {
     handleAddToCart({
-      id: `homage-${selectedVariant}-${selectedTier}`,
+      id: `homage-${selectedVariant}-${selectedTier}-${selectedFinish}`,
       name: `HOMAGE ${currentVariant.label} — ${currentTier.name}`,
       price: currentPrice,
       metal: currentTier.metal,
       variant: currentVariant.label,
+      finish: currentFinish.label,
       image: product.imageUrl,
       quantity: 1
     });
@@ -271,7 +275,7 @@ const HomagePage = () => {
                 {currentVariant.label} · {currentTier.metal} — {currentTier.stones}
               </p>
               <p className="text-xs text-neutral-500 mt-1">
-                {currentVariant.totalStones} stones total ({currentVariant.stoneCountPerEarring} per earring)
+                {currentVariant.totalStones} stones · {currentFinish.label}
               </p>
               <p className="text-xs text-neutral-500 mt-3">
                 Made to order<br />
@@ -282,7 +286,7 @@ const HomagePage = () => {
             {/* Variant Selection */}
             <div className="mt-6">
               <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
-                Select Model
+                Stone Layout
               </p>
               
               <div className="grid grid-cols-2 gap-3">
@@ -299,6 +303,29 @@ const HomagePage = () => {
                     <span className="text-sm font-medium tracking-wider">{variant.label}</span>
                     <p className="text-xs text-neutral-500 mt-1">{variant.totalStones} stones</p>
                     <p className="text-xs text-neutral-400 mt-1">{variant.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Finish Selection */}
+            <div className="mt-6">
+              <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase">
+                Finish
+              </p>
+              
+              <div className="grid grid-cols-2 gap-2">
+                {finishes.map((finish) => (
+                  <button
+                    key={finish.id}
+                    onClick={() => setSelectedFinish(finish.id)}
+                    className={`text-left p-3 rounded-sm border transition-all ${
+                      selectedFinish === finish.id
+                        ? "border-[#C6A25D] bg-[#C6A25D]/10"
+                        : "border-neutral-700 hover:border-neutral-500"
+                    }`}
+                  >
+                    <span className="text-xs">{finish.label}</span>
                   </button>
                 ))}
               </div>
