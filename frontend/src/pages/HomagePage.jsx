@@ -217,7 +217,7 @@ const HomagePage = () => {
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full h-[100vh] overflow-hidden bg-black">
         
-        {/* VIDEO */}
+        {/* VIDEO - Optimized for clarity and quality */}
         <video
           className="absolute inset-0 w-full h-full object-cover"
           src="/videos/homage-hero.mp4"
@@ -225,6 +225,22 @@ const HomagePage = () => {
           muted
           loop
           playsInline
+          preload="auto"
+          style={{
+            filter: 'contrast(1.05) brightness(1.02)',
+            imageRendering: 'auto',
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)'
+          }}
+        />
+
+        {/* Subtle vignette overlay for contrast enhancement */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%)'
+          }}
         />
 
         {/* OVERLAY (subtle dark for readability) */}
