@@ -139,6 +139,16 @@ const HomagePage = () => {
   const currentTier = tierData[selectedTier];
   const currentFinish = finishes.find(f => f.id === selectedFinish);
   const currentPrice = currentVariant.pricing[selectedTier];
+  
+  // Get the correct image based on variant and finish
+  const getCurrentImage = () => {
+    const variantImages = currentVariant.images;
+    if (variantImages[selectedFinish]) {
+      return variantImages[selectedFinish];
+    }
+    return variantImages.default;
+  };
+  const currentImage = getCurrentImage();
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -240,18 +250,18 @@ const HomagePage = () => {
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-24">
         <div className="grid md:grid-cols-2 gap-12 items-start">
           
-          {/* LEFT - MAIN IMAGE (changes based on selected model) */}
+          {/* LEFT - MAIN IMAGE (changes based on selected model and finish) */}
           <div className="w-full">
             <div className="w-full flex justify-center bg-black rounded-2xl overflow-hidden">
               <img
-                src={currentVariant.images?.[0]?.src || gallery[0].src}
-                alt={currentVariant.images?.[0]?.alt || product.name}
+                src={currentImage.src}
+                alt={currentImage.alt}
                 className="w-full max-w-[700px] mx-auto object-contain product-image-hd cursor-zoom-in"
-                onClick={() => setZoomedImage(currentVariant.images?.[0] || gallery[0])}
+                onClick={() => setZoomedImage(currentImage)}
               />
             </div>
             <p className="text-center text-xs text-neutral-500 mt-4 tracking-wider">
-              {currentVariant.label} — {currentVariant.totalStones} STONES
+              {currentVariant.label} — {currentVariant.totalStones} STONES · {currentFinish.label}
             </p>
           </div>
 

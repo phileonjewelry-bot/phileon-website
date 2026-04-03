@@ -785,9 +785,12 @@ export const products = {
           signature: 4600,
           heirloom: 6800
         },
-        images: [
-          { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/y8zkizsg_1000144762.png", alt: "HOMAGE FULL - 144 stones" }
-        ]
+        images: {
+          default: { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/y8zkizsg_1000144762.png", alt: "HOMAGE FULL - 144 stones - Silver" },
+          "rose-plated-silver": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/73ih8d0q_1000144473.png", alt: "HOMAGE FULL - 144 stones - Rose Gold / White Inlay" },
+          "rose-white-inlay": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/73ih8d0q_1000144473.png", alt: "HOMAGE FULL - 144 stones - Rose / White Inlay" },
+          "all-rose": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/73ih8d0q_1000144473.png", alt: "HOMAGE FULL - 144 stones - All Rose" }
+        }
       },
       core: {
         model: "CORE",
@@ -800,9 +803,12 @@ export const products = {
           signature: 2600,
           heirloom: 4600
         },
-        images: [
-          { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ctsdt2t8_1000144763.png", alt: "HOMAGE CORE - 48 stones" }
-        ]
+        images: {
+          default: { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ctsdt2t8_1000144763.png", alt: "HOMAGE CORE - 48 stones - Silver" },
+          "rose-plated-silver": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/1i9m2092_1000144500.png", alt: "HOMAGE CORE - 48 stones - Rose Gold / White Inlay" },
+          "rose-white-inlay": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/1i9m2092_1000144500.png", alt: "HOMAGE CORE - 48 stones - Rose / White Inlay" },
+          "all-rose": { src: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/1i9m2092_1000144500.png", alt: "HOMAGE CORE - 48 stones - All Rose" }
+        }
       }
     },
     
