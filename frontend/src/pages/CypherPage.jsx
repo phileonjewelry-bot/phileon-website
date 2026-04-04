@@ -11,17 +11,41 @@ import { products } from "@/data/products";
 export default function CypherPage() {
   const product = products.cypher;
   const [selectedTier, setSelectedTier] = useState("signature");
+  const [selectedSize, setSelectedSize] = useState("");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
 
+  // Reordered gallery:
+  // 1. Toronto hero (full-bleed)
+  // 2. Black angle
+  // 3. Finger shot (was position 8)
+  // 4. Macro diamond
+  // 5. Macro emerald
+  // 6. Glove shot (after macros)
+  // 7. White background (moved down)
+  // 8. Box shot
+  // 9. Ring silk
+  const reorderedGallery = [
+    product.gallery[0], // Toronto hero
+    product.gallery[1], // Black angle
+    product.gallery[7], // Finger shot (moved up to position 3)
+    product.gallery[3], // Macro diamond
+    product.gallery[4], // Macro emerald
+    product.gallery[6], // Glove shot (after macros)
+    product.gallery[2], // White background (moved to position 7)
+    product.gallery[5], // Box shot
+    product.gallery[8], // Ring silk
+  ];
+
   const onAddToCart = () => {
     handleAddToCart({
-      id: `cypher-${selectedTier}`,
-      name: `CYPHER — ${currentTier.name}`,
+      id: `cypher-${selectedTier}-${selectedSize}`,
+      name: `CYPHER — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
       price: currentPrice,
       metal: currentTier.metal,
+      size: selectedSize,
       image: product.gallery[0].src,
       quantity: 1
     });
@@ -32,24 +56,37 @@ export default function CypherPage() {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO SECTION - Full Screen with Toronto Skyline
+          Ring raised 10-15%, enhanced typography
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden bg-black">
         <img
           src={product.gallery[0].src}
           alt="CYPHER hero"
           className="absolute inset-0 w-full h-full object-cover product-image-hd"
-          style={{ filter: "brightness(0.9)" }}
+          style={{ 
+            filter: "brightness(0.85)",
+            objectPosition: "center 40%", // Raise the ring ~10-15%
+          }}
         />
-        <div className="absolute inset-0 bg-black/35" />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/40" />
+        {/* Slight blur on background behind text */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.3) 70%)"
+          }}
+        />
+        
         <div className="relative z-10 text-center px-6">
           <h1 
-            className="text-5xl md:text-7xl tracking-[0.08em] font-light"
+            className="text-6xl md:text-8xl tracking-[0.04em] font-light"
             style={{ animation: "fadeInUp 1s ease-out 0.3s both" }}
           >
             CYPHER
           </h1>
           <p 
-            className="mt-3 text-base md:text-lg text-white/75"
+            className="mt-4 text-base md:text-lg text-white/90"
             style={{ animation: "fadeInUp 1s ease-out 0.5s both" }}
           >
             {product.tagline}
@@ -69,10 +106,10 @@ export default function CypherPage() {
         
         {/* LEFT - Scrolling Gallery */}
         <div className="space-y-4">
-          {product.gallery.map((item, index) => (
+          {reorderedGallery.map((item, index) => (
             <div 
               key={`${item.alt}-${index}`} 
-              className="bg-black rounded-2xl overflow-hidden"
+              className={`bg-black overflow-hidden ${index === 0 ? "" : "rounded-2xl"}`}
             >
               <img
                 src={item.src}
@@ -92,14 +129,16 @@ export default function CypherPage() {
           <p className="text-xs tracking-[0.28em] text-white/60 mb-3">
             {product.subtitle}
           </p>
-          <h2 className="text-4xl md:text-5xl tracking-[0.06em] font-light">
+          <h2 className="text-4xl md:text-5xl tracking-[0.04em] font-light">
             {product.name}
           </h2>
-          <p className="mt-3 text-white/75">{product.tagline}</p>
+          <p className="mt-3 text-white/85">{product.tagline}</p>
 
           {/* Tier Selection */}
           <div className="mt-8">
-            <p className="text-sm tracking-[0.2em] text-white/60 mb-3">TIER</p>
+            <label className="block text-xs tracking-widest text-neutral-400 mb-3">
+              TIER
+            </label>
             <div className="space-y-3">
               {Object.entries(product.tiers).map(([key, tier]) => (
                 <button
@@ -135,6 +174,35 @@ export default function CypherPage() {
             </div>
           </div>
 
+          {/* SIZE SELECTOR */}
+          <div className="mt-6">
+            <label className="block text-xs tracking-widest text-neutral-400 mb-3">
+              SIZE
+            </label>
+
+            <select
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+              data-testid="cypher-size-select"
+              className="w-full bg-black border border-neutral-700 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-neutral-500"
+            >
+              <option value="">Select size</option>
+
+              {/* Gents sizes 6–12 with half sizes */}
+              {[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12].map(size => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+
+              <option value="custom">Custom size (above 12)</option>
+            </select>
+
+            {selectedSize === "custom" && (
+              <p className="text-xs text-neutral-400 mt-2">
+                Our team will contact you after purchase to confirm sizing.
+              </p>
+            )}
+          </div>
+
           {/* CTA Button */}
           <div className="mt-8">
             <button 
@@ -157,12 +225,12 @@ export default function CypherPage() {
           <div className="mt-10">
             <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">STRUCTURE</h3>
             <ul className="space-y-2 text-white/80">
-              <li>{product.specs.weight}</li>
-              <li>{product.specs.centerStones}</li>
-              <li>{product.specs.cluster}</li>
-              <li>{product.specs.pave}</li>
-              <li>{product.specs.band}</li>
-              <li>{product.specs.finish}</li>
+              <li>Approx. 18–22g depending on size</li>
+              <li>Dual emerald cabochons</li>
+              <li>9-stone princess-cut diamond cluster</li>
+              <li>Multi-density yellow sapphire pavé field</li>
+              <li>Signature rhythm mesh band</li>
+              <li>High-polish white gold construction</li>
             </ul>
           </div>
 
@@ -181,6 +249,21 @@ export default function CypherPage() {
           {/* Shipping */}
           <p className="mt-8 text-xs text-white/50">
             {product.shipping}
+          </p>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          CLOSING STATEMENT
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-20 bg-black">
+        <div className="mt-16 text-center max-w-xl mx-auto px-6">
+          <p className="text-lg md:text-xl leading-relaxed text-white">
+            Keep your finger in CYPHER.
+          </p>
+
+          <p className="text-sm tracking-widest text-neutral-400 mt-4">
+            It defines presence.
           </p>
         </div>
       </section>
