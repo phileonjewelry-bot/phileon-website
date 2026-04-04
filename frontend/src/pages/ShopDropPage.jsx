@@ -216,6 +216,19 @@ const CORE_PRODUCTS = [
     category: 'earrings',
     audience: 'ladies',
   },
+  {
+    id: 'cypher',
+    name: 'CYPHER',
+    slug: 'cypher',
+    materialLine: 'Drama on your finger.',
+    imageUrl: products.cypher.gallery[0].src,
+    href: '/products/cypher',
+    price_range: 'From $4,400 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: 'gentlemens-club',
+  },
 ];
 
 // Additional drop products as fallback

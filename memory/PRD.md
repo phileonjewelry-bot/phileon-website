@@ -61,6 +61,13 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 | Finger shot | On-hand lifestyle |
 | Ring silk | Ring on white silk fabric |
 
+**CYPHER Shop Integration:**
+- Added to CORE_PRODUCTS in `ShopDropPage.jsx`
+- Displays in: gents-rings (`/shop?category=rings&audience=gentlemens-club`)
+- Added to "The Collective" menu in `PhileonMenu.jsx`
+- Card displays: CYPHER / Drama on your finger. / From $4,400 CAD
+- Links to: `/products/cypher`
+
 ### Cinematic Strip Fix (Complete - December 28, 2025)
 **Fixed click mapping and removed hover pause**
 

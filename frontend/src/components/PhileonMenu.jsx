@@ -29,6 +29,7 @@ const menuCategories = [
       { name: 'La Marva', path: '/products/la-marva' },
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
       { name: 'Rhythm Mesh™ Ring', path: '/products/rhythm-mesh-ring' },
+      { name: 'CYPHER', path: '/products/cypher' },
     ]
   },
 ];
