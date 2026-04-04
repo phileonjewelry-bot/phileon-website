@@ -879,6 +879,84 @@ now worn.
 Not for every moment.
 
 For the right one.`
+  },
+
+  // ==========================================
+  // CYPHER
+  // Men's statement ring with emeralds, yellow sapphires, and princess-cut diamonds
+  // Bold luxury for the Gentleman's Club collection
+  // ==========================================
+  cypher: {
+    name: "CYPHER",
+    slug: "cypher",
+    category: "rings",
+    audience: "gentlemens-club",
+    subtitle: "PHILEON — STATEMENT SERIES",
+    tagline: "Decode the Moment.",
+    description: "CYPHER is where precision meets presence. A circular canvas of yellow sapphires frames two Colombian emerald cabochons and a cluster of princess-cut diamonds. The twisted rope band flows into structure — controlled chaos with intention.",
+    basePrice: 8400,
+    
+    // Hero image for shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/eo70jcdb_1000144968.png",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+    
+    // Tier-based pricing
+    pricing: {
+      foundation: 8400,
+      signature: 12800,
+      heirloom: 18600
+    },
+    
+    tiers: {
+      foundation: {
+        name: "Foundation",
+        metal: "10K White Gold",
+        stones: "Lab Sapphires + Lab Emeralds + CZ Diamonds",
+        badge: "",
+        description: "Entry into the cipher. Same design, same impact."
+      },
+      signature: {
+        name: "Signature",
+        metal: "14K White Gold",
+        stones: "Natural Yellow Sapphires + Natural Emeralds + Lab Diamonds",
+        badge: "MOST CHOSEN",
+        description: "The statement tier. Natural color stones with lab-grown brilliance."
+      },
+      heirloom: {
+        name: "Heirloom",
+        metal: "18K White Gold",
+        stones: "Natural Yellow Sapphires + Colombian Emeralds + Natural Diamonds",
+        badge: "COLLECTOR",
+        description: "Maximum presence. Museum-grade materials. Built to last generations."
+      }
+    },
+    
+    // Specs
+    specs: {
+      weight: "Approx. 22g (varies by tier)",
+      topDimensions: "25mm diameter face",
+      bandWidth: "Twisted rope, 4mm",
+      emeralds: "2 cabochon-cut Colombian emeralds (~1.2ct total)",
+      sapphires: "~80 round yellow sapphires (pavé set)",
+      diamonds: "9 princess-cut diamonds (invisible set, ~0.9ct total)",
+      finish: "High polish with textured rope band"
+    },
+    
+    // Gallery media
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/eo70jcdb_1000144968.png",
+      lifestyle: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/fvt6nsns_1000144990.png",
+      white: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/od7vt2j0_1000144988.png",
+      macroEmeralds: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/waq6e0d8_1000144984.png",
+      macroDiamonds: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/krjduain_1000144981.png"
+    },
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
