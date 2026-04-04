@@ -34,32 +34,32 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 ### CYPHER Men's Statement Ring Page (Complete - December 29, 2025)
 **New Flagship Product Page for Gentleman's Club Collection**
 
-- **Created `CypherPage.jsx`**: Full bespoke editorial page with 6 sections:
-  1. Hero section with fullscreen product image + text overlay + vignette
-  2. Lifestyle cityscape shot (Toronto skyline)
-  3. Product story section
-  4. White background product shot
-  5. Macro detail section (2-up grid with zoom on click)
-  6. Purchase section with tier selection
+- **Created `CypherPage.jsx`**: Full bespoke editorial page with:
+  - Fullscreen hero with Toronto skyline image
+  - 2-column layout: scrolling gallery (left) + sticky sidebar (right)
+  - 9-image gallery including macro shots, lifestyle, box shot, glove shot, finger shot, silk shot
+  - Rounded tier selection pills with inverted selection state
+  - "CLAIM YOURS" CTA button
 
-- **Added to `products.js`**: Complete CYPHER product schema with:
-  - Three pricing tiers: Foundation ($8,400), Signature ($12,800), Heirloom ($18,600)
-  - Detailed specifications (emeralds, sapphires, diamonds)
-  - 5 gallery images (hero, lifestyle, white, macroEmeralds, macroDiamonds)
+- **Updated `products.js`** with complete CYPHER schema:
+  - Three pricing tiers: Foundation ($4,400), Signature ($7,200), Heirloom ($10,800)
+  - Tagline: "Drama on your finger."
+  - Full gallery of 9 images
+  - Specifications: Rhythm mesh band, dual emerald cabochons, 9-stone princess diamond cluster
+  - Story/Craft/Closing copy sections
 
-- **Added route**: `/products/cypher` in `App.js`
-
-**CYPHER Specifications:**
-| Spec | Value |
-|------|-------|
-| Category | Rings |
-| Audience | Gentleman's Club |
-| Weight | ~22g |
-| Face | 25mm diameter |
-| Band | Twisted rope, 4mm |
-| Emeralds | 2 cabochon-cut Colombian (~1.2ct) |
-| Sapphires | ~80 round yellow sapphires (pavé) |
-| Diamonds | 9 princess-cut (invisible set, ~0.9ct) |
+**CYPHER Gallery Images:**
+| Image | Description |
+|-------|-------------|
+| Toronto hero | Ring with CN Tower skyline |
+| Black angle | Close-up on black |
+| Front white | Studio shot on white |
+| Macro diamond | Princess-cut cluster detail |
+| Macro emerald | Cabochon emeralds detail |
+| Box shot | Ring in velvet jewelry box |
+| Glove shot | Craftsman polishing |
+| Finger shot | On-hand lifestyle |
+| Ring silk | Ring on white silk fabric |
 
 ### Cinematic Strip Fix (Complete - December 28, 2025)
 **Fixed click mapping and removed hover pause**
@@ -123,7 +123,7 @@ All product prices now pull from `/app/frontend/src/data/products.js` using `bas
 | TRACE | $900 | CAD |
 | APEX | $4,800 | CAD |
 | HOMAGE | $1,400 | CAD |
-| CYPHER | $8,400 | CAD |
+| CYPHER | $4,400 | CAD |
 
 ### BOUND — The Bustier Bangle (Complete)
 - **Custom Editorial Product Page** - Cartier-level luxury experience (not using standard wrapper)
