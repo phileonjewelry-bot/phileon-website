@@ -959,16 +959,17 @@ Every stone placed with intent.`,
     closing: `Not worn.
 Claimed.`,
     
-    // Gallery media - all 9 images
+    // Gallery media - VIDEO + IMAGES
+    heroVideo: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ynnmu3mi_VIDEO_b9adff2b-fdf3-48c9-b88b-a3b16690a828.mp4",
     gallery: [
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/fvt6nsns_1000144990.png", alt: "Toronto hero" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/eo70jcdb_1000144968.png", alt: "Black angle" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/od7vt2j0_1000144988.png", alt: "Front white" },
+      { type: "video", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ynnmu3mi_VIDEO_b9adff2b-fdf3-48c9-b88b-a3b16690a828.mp4", alt: "CYPHER hero video" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/9kgcwx4j_1000145085.png", alt: "Angled black" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/gsx17hv1_1000145084.png", alt: "Front black" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ug3fwnn7_1000144949.png", alt: "Finger shot" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/krjduain_1000144981.png", alt: "Macro diamond" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/waq6e0d8_1000144984.png", alt: "Macro emerald" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/tvh92fpy_1000144991.png", alt: "Box shot" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sle5xnfp_1000144951.webp", alt: "Glove shot" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ug3fwnn7_1000144949.png", alt: "Finger shot" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wj7ctw8v_1000144950.webp", alt: "Ring silk" }
     ],
     

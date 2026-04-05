@@ -5,7 +5,7 @@ import { products } from "@/data/products";
 /* ═══════════════════════════════════════════════════════════════
    CYPHER — Men's Statement Ring
    Drama on your finger.
-   Emeralds, Yellow Sapphires, Princess-Cut Diamonds
+   VIDEO HERO + IRONCLAD GALLERY STRUCTURE
 ═══════════════════════════════════════════════════════════════ */
 
 export default function CypherPage() {
@@ -17,27 +17,8 @@ export default function CypherPage() {
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
 
-  // CYPHER GALLERY ORDER (9 IMAGES — FINAL)
-  // 1. toronto-hero (Establish identity — cinematic entry)
-  // 2. cypher-black-angled (Power shot — depth, gold reflections, dominance)
-  // 3. cypher-clean-white (Clarity — full product read, customer confidence)
-  // 4. cypher-finger (Scale + lifestyle — "this is how it sits")
-  // 5. cypher-macro-diamonds (Craft focus — princess cluster detail)
-  // 6. cypher-macro-emerald (Color + material richness — emerald cabochons)
-  // 7. cypher-box (Luxury context — ownership moment)
-  // 8. cypher-glove (Craftsmanship — handling, finishing, care)
-  // 9. cypher-silk (Soft landing — elegance, final impression)
-  const reorderedGallery = [
-    product.gallery[0], // 1. Toronto hero
-    product.gallery[1], // 2. Black angled
-    product.gallery[2], // 3. Clean white
-    product.gallery[7], // 4. Finger shot
-    product.gallery[3], // 5. Macro diamonds
-    product.gallery[4], // 6. Macro emerald
-    product.gallery[5], // 7. Box shot
-    product.gallery[6], // 8. Glove shot
-    product.gallery[8], // 9. Silk
-  ];
+  // Gallery uses product.gallery directly (already in correct order)
+  const gallery = product.gallery;
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -46,7 +27,7 @@ export default function CypherPage() {
       price: currentPrice,
       metal: currentTier.metal,
       size: selectedSize,
-      image: product.gallery[0].src,
+      image: product.gallery[1].src, // Use angled black for cart
       quantity: 1
     });
   };
@@ -55,29 +36,36 @@ export default function CypherPage() {
     <div className="min-h-screen bg-black text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO SECTION - Full Screen with Toronto Skyline
-          Ring raised 10-15%, enhanced typography
+          HERO SECTION - FULLSCREEN VIDEO
+          Autoplay, Muted, Loop, PlaysInline, No Controls
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden bg-black">
-        <img
-          src={product.gallery[0].src}
-          alt="CYPHER hero"
-          className="absolute inset-0 w-full h-full object-cover product-image-hd"
+        {/* Hero Video */}
+        <video
+          src={product.heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
           style={{ 
-            filter: "brightness(0.85)",
-            objectPosition: "center 40%", // Raise the ring ~10-15%
-          }}
-        />
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/40" />
-        {/* Slight blur on background behind text */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.3) 70%)"
+            filter: "brightness(0.85) contrast(1.05)",
           }}
         />
         
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/35" />
+        
+        {/* Vignette effect */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.4) 100%)"
+          }}
+        />
+        
+        {/* Hero text overlay - centered */}
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 translate-y-[-5%]">
           <h1 
             className="text-6xl md:text-8xl tracking-[0.04em] font-light"
@@ -106,18 +94,30 @@ export default function CypherPage() {
         
         {/* LEFT - Scrolling Gallery */}
         <div className="space-y-4">
-          {reorderedGallery.map((item, index) => (
+          {gallery.map((item, index) => (
             <div 
-              key={`${item.alt}-${index}`} 
+              key={`gallery-${index}`} 
               className={`bg-black overflow-hidden ${index === 0 ? "" : "rounded-2xl"}`}
             >
-              <img
-                src={item.src}
-                alt={`${product.name} - ${item.alt}`}
-                className="w-full h-auto object-contain product-image-hd"
-                loading={index < 3 ? "eager" : "lazy"}
-                decoding="async"
-              />
+              {item.type === "video" ? (
+                <video
+                  src={item.src}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="w-full h-auto object-cover"
+                />
+              ) : (
+                <img
+                  src={item.src}
+                  alt={`${product.name} - ${item.alt}`}
+                  className="w-full h-auto object-contain product-image-hd"
+                  loading={index < 3 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              )}
             </div>
           ))}
         </div>
