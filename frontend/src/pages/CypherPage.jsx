@@ -17,26 +17,26 @@ export default function CypherPage() {
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
 
-  // Reordered gallery:
-  // 1. Toronto hero (full-bleed)
-  // 2. Black angle
-  // 3. Finger shot (was position 8)
-  // 4. Macro diamond
-  // 5. Macro emerald
-  // 6. Glove shot (after macros)
-  // 7. White background (moved down)
-  // 8. Box shot
-  // 9. Ring silk
+  // CYPHER GALLERY ORDER (9 IMAGES — FINAL)
+  // 1. toronto-hero (Establish identity — cinematic entry)
+  // 2. cypher-black-angled (Power shot — depth, gold reflections, dominance)
+  // 3. cypher-clean-white (Clarity — full product read, customer confidence)
+  // 4. cypher-finger (Scale + lifestyle — "this is how it sits")
+  // 5. cypher-macro-diamonds (Craft focus — princess cluster detail)
+  // 6. cypher-macro-emerald (Color + material richness — emerald cabochons)
+  // 7. cypher-box (Luxury context — ownership moment)
+  // 8. cypher-glove (Craftsmanship — handling, finishing, care)
+  // 9. cypher-silk (Soft landing — elegance, final impression)
   const reorderedGallery = [
-    product.gallery[0], // Toronto hero
-    product.gallery[1], // Black angle
-    product.gallery[7], // Finger shot (moved up to position 3)
-    product.gallery[3], // Macro diamond
-    product.gallery[4], // Macro emerald
-    product.gallery[6], // Glove shot (after macros)
-    product.gallery[2], // White background (moved to position 7)
-    product.gallery[5], // Box shot
-    product.gallery[8], // Ring silk
+    product.gallery[0], // 1. Toronto hero
+    product.gallery[1], // 2. Black angled
+    product.gallery[2], // 3. Clean white
+    product.gallery[7], // 4. Finger shot
+    product.gallery[3], // 5. Macro diamonds
+    product.gallery[4], // 6. Macro emerald
+    product.gallery[5], // 7. Box shot
+    product.gallery[6], // 8. Glove shot
+    product.gallery[8], // 9. Silk
   ];
 
   const onAddToCart = () => {
