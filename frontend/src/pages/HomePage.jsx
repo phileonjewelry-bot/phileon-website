@@ -298,6 +298,11 @@ const HomePage = () => {
             href: "/products/tola-ii" 
           },
           { 
+            title: "CYPHER", 
+            image: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/eo70jcdb_1000144968.png", 
+            href: "/products/cypher" 
+          },
+          { 
             title: "GALATIANS 6:14", 
             image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/qotxl9is_1000143699.webp", 
             href: "/products/galatians-614" 
@@ -336,6 +341,11 @@ const HomePage = () => {
             title: "APEX", 
             image: "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/jphlogf7_1000144036.webp", 
             href: "/products/apex" 
+          },
+          { 
+            title: "HOMAGE", 
+            image: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png", 
+            href: "/products/homage" 
           }
         ];
 
