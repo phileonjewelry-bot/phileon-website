@@ -36,54 +36,33 @@ export default function CypherPage() {
     <div className="min-h-screen bg-black text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO SECTION - FULLSCREEN VIDEO
-          Autoplay, Muted, Loop, PlaysInline, No Controls
+          HERO SECTION - CONTROLLED HEIGHT VIDEO
+          65vh mobile / 75vh desktop
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-[100vh] flex items-center justify-center overflow-hidden bg-black">
+      <section className="relative w-full h-[65vh] md:h-[75vh] overflow-hidden">
         {/* Hero Video */}
         <video
-          src={product.heroVideo}
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ 
-            filter: "brightness(0.85) contrast(1.05)",
-          }}
-        />
+          className="absolute inset-0 w-full h-full object-cover object-center scale-[1.1]"
+        >
+          <source src={product.heroVideo} type="video/mp4" />
+        </video>
         
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/35" />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/40" />
         
-        {/* Vignette effect */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.4) 100%)"
-          }}
-        />
-        
-        {/* Hero text overlay - centered */}
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 translate-y-[-5%]">
-          <h1 
-            className="text-6xl md:text-8xl tracking-[0.04em] font-light"
-            style={{ animation: "fadeInUp 1s ease-out 0.3s both" }}
-          >
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+          <h1 className="text-white text-4xl md:text-6xl tracking-[0.2em]">
             CYPHER
           </h1>
-          <p 
-            className="text-sm md:text-base text-neutral-300 mt-4"
-            style={{ animation: "fadeInUp 1s ease-out 0.5s both" }}
-          >
-            {product.tagline}
+          <p className="text-white/80 mt-4 text-sm md:text-base">
+            Keep your finger in CYPHER.<br />
+            It defines presence.
           </p>
-        </div>
-        
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-white/40 to-transparent animate-bounce" />
         </div>
       </section>
 
