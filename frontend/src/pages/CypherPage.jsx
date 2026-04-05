@@ -92,32 +92,20 @@ export default function CypherPage() {
       ═══════════════════════════════════════════════════════════════ */}
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-16 grid md:grid-cols-2 gap-12">
         
-        {/* LEFT - Scrolling Gallery */}
+        {/* LEFT - Scrolling Gallery (IMAGES ONLY) */}
         <div className="space-y-4">
           {gallery.map((item, index) => (
             <div 
               key={`gallery-${index}`} 
               className={`bg-black overflow-hidden ${index === 0 ? "" : "rounded-2xl"}`}
             >
-              {item.type === "video" ? (
-                <video
-                  src={item.src}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                  className="w-full h-auto object-cover"
-                />
-              ) : (
-                <img
-                  src={item.src}
-                  alt={`${product.name} - ${item.alt}`}
-                  className="w-full h-auto object-contain product-image-hd"
-                  loading={index < 3 ? "eager" : "lazy"}
-                  decoding="async"
-                />
-              )}
+              <img
+                src={item.src}
+                alt={`${product.name} - ${item.alt}`}
+                className="w-full h-auto object-contain product-image-hd"
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
+              />
             </div>
           ))}
         </div>
