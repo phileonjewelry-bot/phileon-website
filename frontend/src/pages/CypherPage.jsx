@@ -78,7 +78,7 @@ export default function CypherPage() {
           }}
         />
         
-        <div className="relative z-10 text-center px-6">
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 translate-y-[-5%]">
           <h1 
             className="text-6xl md:text-8xl tracking-[0.04em] font-light"
             style={{ animation: "fadeInUp 1s ease-out 0.3s both" }}
@@ -86,7 +86,7 @@ export default function CypherPage() {
             CYPHER
           </h1>
           <p 
-            className="mt-4 text-base md:text-lg text-white/90"
+            className="text-sm md:text-base text-neutral-300 mt-4"
             style={{ animation: "fadeInUp 1s ease-out 0.5s both" }}
           >
             {product.tagline}
@@ -176,31 +176,36 @@ export default function CypherPage() {
 
           {/* SIZE SELECTOR */}
           <div className="mt-6">
-            <label className="block text-xs tracking-widest text-neutral-400 mb-3">
+            <p className="text-xs tracking-widest text-neutral-400 mb-3">
               SIZE
-            </label>
+            </p>
 
             <select
               value={selectedSize}
               onChange={(e) => setSelectedSize(e.target.value)}
               data-testid="cypher-size-select"
-              className="w-full bg-black border border-neutral-700 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-neutral-500"
+              className="w-full bg-black border border-neutral-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white"
             >
-              <option value="">Select size</option>
+              <option value="" disabled>Select your size</option>
 
-              {/* Gents sizes 6–12 with half sizes */}
-              {[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12].map(size => (
-                <option key={size} value={size}>{size}</option>
-              ))}
+              {/* Standard Gents Sizes */}
+              <option value="6">6</option>
+              <option value="6.5">6.5</option>
+              <option value="7">7</option>
+              <option value="7.5">7.5</option>
+              <option value="8">8</option>
+              <option value="8.5">8.5</option>
+              <option value="9">9</option>
+              <option value="9.5">9.5</option>
+              <option value="10">10</option>
+              <option value="10.5">10.5</option>
+              <option value="11">11</option>
+              <option value="11.5">11.5</option>
+              <option value="12">12</option>
 
-              <option value="custom">Custom size (above 12)</option>
+              {/* Custom */}
+              <option value="custom">Custom Size (Contact)</option>
             </select>
-
-            {selectedSize === "custom" && (
-              <p className="text-xs text-neutral-400 mt-2">
-                Our team will contact you after purchase to confirm sizing.
-              </p>
-            )}
           </div>
 
           {/* CTA Button */}
