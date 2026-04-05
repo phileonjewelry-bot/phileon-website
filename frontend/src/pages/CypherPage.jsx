@@ -66,6 +66,9 @@ export default function CypherPage() {
         </div>
       </section>
 
+      {/* Spacer */}
+      <div className="h-12 md:h-16" />
+
       {/* ═══════════════════════════════════════════════════════════════
           MAIN CONTENT - Scrolling Gallery + Sticky Sidebar
       ═══════════════════════════════════════════════════════════════ */}
