@@ -221,13 +221,15 @@ const CORE_PRODUCTS = [
     name: 'CYPHER',
     slug: 'cypher',
     materialLine: 'Drama on your finger.',
-    imageUrl: products.cypher.gallery[0].src,
+    imageUrl: products.cypher.gallery[0].src, // Toronto hero
+    hoverImage: products.cypher.gallery[1].src, // Black angle
     href: '/products/cypher',
     price_range: 'From $4,400 CAD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',
     audience: 'gentlemens-club',
+    featured: true,
   },
 ];
 
@@ -622,6 +624,7 @@ const ShopDropPage = () => {
                   {/* NATIVE ANCHOR TAG - Full card clickable */}
                   <a 
                     href={productUrl}
+                    className="group"
                     style={{
                       display: 'block',
                       textDecoration: 'none',
@@ -636,18 +639,30 @@ const ShopDropPage = () => {
                       overflow: 'hidden',
                       background: '#111',
                     }}>
+                      {/* Primary Image */}
                       <img 
                         src={cardImage} 
                         alt={product.name}
                         loading="lazy"
+                        className={`w-full h-full object-cover transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
                           filter: isSoldOut ? 'grayscale(1)' : 'none',
                         }}
                         draggable="false"
                       />
+                      {/* Hover Image (if exists) */}
+                      {product.hoverImage && (
+                        <img 
+                          src={product.hoverImage} 
+                          alt={`${product.name} alternate view`}
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{
+                            filter: isSoldOut ? 'grayscale(1)' : 'none',
+                          }}
+                          draggable="false"
+                        />
+                      )}
                     </div>
                     
                     <div style={{ padding: '16px 0' }}>
