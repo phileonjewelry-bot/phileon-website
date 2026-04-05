@@ -221,7 +221,7 @@ const CORE_PRODUCTS = [
     name: 'CYPHER',
     slug: 'cypher',
     materialLine: 'Drama on your finger.',
-    imageUrl: products.cypher.gallery[0].src, // Toronto hero
+    imageUrl: products.cypher.gallery[2].src, // Clean white front-facing shot
     hoverImage: products.cypher.gallery[1].src, // Black angle
     href: '/products/cypher',
     price_range: 'From $4,400 CAD',
