@@ -54,8 +54,13 @@ export default function MorsoPage() {
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
           
           {/* Brand */}
-          <div className="text-white/70 tracking-[0.35em] text-xs md:text-sm mb-4">
+          <div className="text-white/70 tracking-[0.35em] text-xs md:text-sm mb-2">
             PHILEON
+          </div>
+          
+          {/* Category */}
+          <div className="text-white/50 tracking-[0.25em] text-[10px] md:text-xs mb-6">
+            COLLECTIVE — GENTS
           </div>
           
           {/* Name */}
@@ -66,6 +71,11 @@ export default function MorsoPage() {
           {/* Subline */}
           <p className="text-white/70 mt-3 text-sm md:text-base tracking-[0.08em]">
             The Bite of the King
+          </p>
+          
+          {/* Spec line */}
+          <p className="text-white/50 mt-4 text-xs tracking-[0.12em]">
+            14mm Sculpted Gold Form · 256 Lab-Grown Diamonds
           </p>
           
         </div>
