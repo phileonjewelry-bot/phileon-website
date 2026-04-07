@@ -37,6 +37,7 @@ import BoundPage from "@/pages/BoundPage";
 import ApexPage from "@/pages/ApexPage";
 import HomagePage from "@/pages/HomagePage";
 import CypherPage from "@/pages/CypherPage";
+import MorsoPage from "@/pages/MorsoPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -101,6 +102,7 @@ function App() {
             <Route path="/products/apex" element={<ApexPage />} />
             <Route path="/products/homage" element={<HomagePage />} />
             <Route path="/products/cypher" element={<CypherPage />} />
+            <Route path="/products/morso" element={<MorsoPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />

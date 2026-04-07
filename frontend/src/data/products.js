@@ -991,6 +991,110 @@ Claimed.`,
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // IL MORSO DEL RE
+  // "The Bite of the King" - Grillz-inspired statement ring
+  // Yellow gold with diamond pavé teeth motif
+  // ==========================================
+  morso: {
+    name: "IL MORSO DEL RE",
+    slug: "morso",
+    category: "rings",
+    audience: "gentlemens-club",
+    collections: ["rings", "collective", "gentlemens-club"],
+    subtitle: "RING",
+    tagline: "The Bite of the King.",
+    priceFrom: "From $5,200 CAD",
+    basePrice: 5200,
+    
+    // Hero image for shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/1to4q64f_1000145276.png",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+    
+    // Tier-based pricing
+    pricing: {
+      foundation: 5200,
+      signature: 8400,
+      heirloom: 12800
+    },
+    
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        sublabel: "Entry",
+        name: "Foundation",
+        metal: "10K Yellow Gold",
+        stones: "Cubic zirconia pavé",
+        badge: ""
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K Yellow Gold",
+        stones: "Lab diamond pavé",
+        badge: "MOST POPULAR"
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K Yellow Gold",
+        stones: "Natural VS diamond pavé",
+        badge: "COLLECTOR"
+      }
+    },
+    
+    // Specs
+    specs: {
+      weight: "Approx. 24–28g depending on size",
+      design: "Double-row grillz motif",
+      diamonds: "Full pavé on each tooth (~2.5ct total)",
+      band: "Wide comfort-fit band",
+      finish: "High-polish yellow gold"
+    },
+    
+    // Story copy
+    story: `Yellow gold structure.
+Diamond-encrusted teeth.
+Double-row grillz motif.
+Statement without words.`,
+    
+    craft: `Every tooth hand-set.
+Every diamond placed with precision.`,
+    
+    closing: `Not worn.
+Crowned.`,
+    
+    // Gallery media - IMAGES ONLY
+    // 1. front_reflection (authority)
+    // 2. angled_warm (emotional)
+    // 3. front_black (clarity)
+    // 4. macro_diamond (precision)
+    // 5. three_quarter (context)
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/v0p4yi5r_1000145269.jpg", alt: "Front reflection" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/lq8adcpf_1000145384.png", alt: "Angled warm" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/1to4q64f_1000145276.png", alt: "Front black" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/o4669mvn_1000145279.png", alt: "Macro diamond" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/omoiq628_1000145385.png", alt: "Three quarter" }
+    ],
+    
+    // Size profile
+    sizeProfile: {
+      type: "ring",
+      min: 6,
+      max: 12,
+      halfSizes: true,
+      customAbove: 12
+    },
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
