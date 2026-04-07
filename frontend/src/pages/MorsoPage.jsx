@@ -222,14 +222,46 @@ export default function MorsoPage() {
 
           {/* Craft */}
           <div className="mt-10">
-            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">CRAFT</h3>
-            <p className="text-white/80 leading-7 whitespace-pre-line">{product.craft}</p>
+            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-6">CRAFT</h3>
+            
+            <div className="space-y-8">
+              {/* 01 Hand-Set */}
+              <div>
+                <div className="flex items-baseline gap-4 mb-2">
+                  <span className="text-white/40 text-xs">01</span>
+                  <span className="text-white/90 text-sm tracking-[0.15em]">HAND-SET</span>
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed pl-8">
+                  Every tooth is set individually.<br />
+                  No machines. No shortcuts.<br />
+                  Only hand.
+                </p>
+              </div>
+              
+              {/* 02 Precision */}
+              <div>
+                <div className="flex items-baseline gap-4 mb-2">
+                  <span className="text-white/40 text-xs">02</span>
+                  <span className="text-white/90 text-sm tracking-[0.15em]">PRECISION</span>
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed pl-8">
+                  256 lab-grown diamonds.<br />
+                  Each placed with intention.<br />
+                  Zero compromise.
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Final Word */}
-          <div className="mt-10">
-            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">FINAL WORD</h3>
-            <p className="text-white/80 leading-7 whitespace-pre-line">{product.closing}</p>
+          <div className="mt-10 pt-8 border-t border-white/10">
+            <p className="text-white/80 leading-7">
+              Not worn.<br />
+              Crowned.
+            </p>
+            <p className="text-white/50 text-xs tracking-[0.2em] mt-6">
+              IL MORSO DEL RE ✦ ONE OF ONE
+            </p>
           </div>
 
           {/* Shipping */}
