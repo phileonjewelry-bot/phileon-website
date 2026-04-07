@@ -1064,25 +1064,25 @@ Every diamond placed with precision.`,
 Crowned.`,
     
     // Gallery media - IMAGES ONLY
-    // 1. front_reflection (authority)
-    // 2. angled_warm (emotional)
-    // 3. front_black (clarity)
-    // 4. macro_diamond (precision)
-    // 5. three_quarter (context)
-    // 6. hand_hold (scale)
-    // 7. on_finger (lifestyle)
-    // 8. full_hand (lifestyle)
-    // 9. interior (structure)
+    // 1. front_reflection (Authority - HOOK)
+    // 2. angled_warm (Emotion - PULL)
+    // 3. front_black (Clarity - CONFIRM)
+    // 4. three_quarter (Form - UNDERSTAND)
+    // 5. macro_diamond (Detail - TRUST)
+    // 6. hand_hold (Scale - REALITY)
+    // 7. on_finger (Wear - CONTEXT)
+    // 8. full_hand (Presence - IMPACT)
+    // 9. interior (Construction - CLOSURE)
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/v0p4yi5r_1000145269.jpg", alt: "Front reflection" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/lq8adcpf_1000145384.png", alt: "Angled warm" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/1to4q64f_1000145276.png", alt: "Front black" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/o4669mvn_1000145279.png", alt: "Macro diamond" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/es0bpegd_1000145385.png", alt: "Three quarter" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/o4669mvn_1000145279.png", alt: "Macro diamond" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/bdcqijmx_1000145296.png", alt: "Hand hold" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/nunosao8_1000145306.png", alt: "On finger" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/5g9jnk9q_1000145367.png", alt: "Full hand" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7v4c11rj_1000145274.jpg", alt: "Interior view" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7v4c11rj_1000145274.jpg", alt: "Interior" }
     ],
     
     // Size profile
