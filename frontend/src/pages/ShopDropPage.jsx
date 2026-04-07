@@ -231,6 +231,21 @@ const CORE_PRODUCTS = [
     audience: 'gentlemens-club',
     featured: true,
   },
+  {
+    id: 'morso',
+    name: 'IL MORSO DEL RE',
+    slug: 'morso',
+    materialLine: 'The Bite of the King.',
+    imageUrl: products.morso.gallery[2].src, // Front black
+    hoverImage: products.morso.gallery[1].src, // Angled warm
+    href: '/products/morso',
+    price_range: 'From $6,800 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: 'gentlemens-club',
+    featured: true,
+  },
 ];
 
 // Additional drop products as fallback

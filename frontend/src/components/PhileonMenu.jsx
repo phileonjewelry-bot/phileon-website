@@ -30,6 +30,7 @@ const menuCategories = [
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
       { name: 'Rhythm Mesh™ Ring', path: '/products/rhythm-mesh-ring' },
       { name: 'CYPHER', path: '/products/cypher' },
+      { name: 'IL MORSO DEL RE', path: '/products/morso' },
     ]
   },
 ];

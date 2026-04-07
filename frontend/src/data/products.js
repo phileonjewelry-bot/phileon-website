@@ -1006,8 +1006,8 @@ Claimed.`,
     collections: ["rings", "collective", "gentlemens-club"],
     subtitle: "RING",
     tagline: "The Bite of the King.",
-    priceFrom: "From $5,200 CAD",
-    basePrice: 5200,
+    priceFrom: "From $6,800 CAD",
+    basePrice: 6800,
     
     // Hero image for shop cards
     imageUrl: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/1to4q64f_1000145276.png",
@@ -1017,11 +1017,10 @@ Claimed.`,
     currency: "CAD",
     defaultTier: "signature",
     
-    // Tier-based pricing
+    // Tier-based pricing (2 tiers only)
     pricing: {
-      foundation: 5200,
-      signature: 8400,
-      heirloom: 12800
+      foundation: 6800,
+      signature: 9800
     },
     
     tiers: {
@@ -1029,33 +1028,27 @@ Claimed.`,
         label: "FOUNDATION",
         sublabel: "Entry",
         name: "Foundation",
-        metal: "10K Yellow Gold",
-        stones: "Cubic zirconia pavé",
+        metal: "10K Gold",
+        stones: "Lab-Grown Diamonds",
         badge: ""
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K Yellow Gold",
-        stones: "Lab diamond pavé",
+        metal: "14K Gold",
+        stones: "Lab-Grown Diamonds",
         badge: "MOST POPULAR"
-      },
-      heirloom: {
-        label: "HEIRLOOM",
-        name: "Heirloom",
-        metal: "18K Yellow Gold",
-        stones: "Natural VS diamond pavé",
-        badge: "COLLECTOR"
       }
     },
     
     // Specs
     specs: {
-      weight: "Approx. 24–28g depending on size",
-      design: "Double-row grillz motif",
-      diamonds: "Full pavé on each tooth (~2.5ct total)",
-      band: "Wide comfort-fit band",
-      finish: "High-polish yellow gold"
+      diamonds: "Set with 256 Round Brilliant Lab-Grown Diamonds",
+      caratWeight: "Total Diamond Weight: 2.50 Carats",
+      width: "Width: 14mm",
+      weight: "Weight: 28.5 Grams",
+      material: "Material: Solid Gold",
+      note: "Specifications may vary slightly by size."
     },
     
     // Story copy

@@ -346,6 +346,11 @@ const HomePage = () => {
             title: "HOMAGE", 
             image: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png", 
             href: "/products/homage" 
+          },
+          { 
+            title: "IL MORSO DEL RE", 
+            image: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/lq8adcpf_1000145384.png", 
+            href: "/products/morso" 
           }
         ];
 

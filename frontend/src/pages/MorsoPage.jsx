@@ -201,12 +201,13 @@ export default function MorsoPage() {
           <div className="mt-10">
             <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">STRUCTURE</h3>
             <ul className="space-y-2 text-white/80">
-              <li>{product.specs.weight}</li>
-              <li>{product.specs.design}</li>
               <li>{product.specs.diamonds}</li>
-              <li>{product.specs.band}</li>
-              <li>{product.specs.finish}</li>
+              <li>{product.specs.caratWeight}</li>
+              <li>{product.specs.width}</li>
+              <li>{product.specs.weight}</li>
+              <li>{product.specs.material}</li>
             </ul>
+            <p className="text-white/50 text-xs mt-4">{product.specs.note}</p>
           </div>
 
           {/* Craft */}
