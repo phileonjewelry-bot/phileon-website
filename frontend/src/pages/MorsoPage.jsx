@@ -60,22 +60,22 @@ export default function MorsoPage() {
           <div className="w-full max-w-[320px] md:max-w-[560px]">
             
             {/* BRAND */}
-            <p className="text-white/50 tracking-[0.38em] text-[9px] md:text-[10px] leading-none mb-3">
+            <p className="text-white/45 tracking-[0.42em] text-[9px] md:text-[10px] leading-none mb-2">
               PHILEON
             </p>
             
             {/* COLLECTION */}
-            <p className="text-white/40 tracking-[0.28em] text-[9px] md:text-[10px] leading-none mb-3">
+            <p className="text-white/35 tracking-[0.28em] text-[9px] md:text-[10px] leading-none mb-4">
               COLLECTIVE — GENTS
             </p>
             
             {/* TITLE */}
-            <h1 className="text-white font-serif text-[27px] md:text-[46px] tracking-[0.11em] md:tracking-[0.16em] leading-[1.06] md:leading-[1.18] max-w-[11ch]">
+            <h1 className="text-white font-serif text-[27px] md:text-[46px] tracking-[0.11em] md:tracking-[0.16em] leading-[1.04] md:leading-[1.18] max-w-[10.5ch]">
               IL MORSO DEL RE
             </h1>
             
             {/* TAGLINE */}
-            <p className="text-white/[0.68] mt-4 text-[13px] md:text-[16px] tracking-[0.04em] md:tracking-[0.06em] leading-[1.25]">
+            <p className="text-white/[0.62] mt-4 text-[13px] md:text-[16px] tracking-[0.04em] md:tracking-[0.06em] leading-[1.25]">
               The Bite of the King
             </p>
             
