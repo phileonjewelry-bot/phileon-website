@@ -36,13 +36,13 @@ export default function MorsoPage() {
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO — IL MORSO DEL RE
-          Full height video hero with fadeIn animation
+          Bottom-left aligned text with gradient overlay
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[100vh] overflow-hidden bg-black">
+      <section className="relative w-full h-[70vh] md:h-[75vh] overflow-hidden bg-black">
         
         {/* VIDEO */}
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           src={product.heroVideo}
           autoPlay
           muted
@@ -52,31 +52,35 @@ export default function MorsoPage() {
           poster={product.gallery[0].src}
         />
         
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Stronger gradient instead of flat overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
         
-        {/* CONTENT */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 animate-[fadeIn_1.2s_ease-out]">
+        {/* CONTENT - Bottom left aligned */}
+        <div className="relative z-10 flex flex-col justify-end h-full px-6 pb-16 md:pb-24 animate-[fadeInUp_1s_ease-out]">
           
-          {/* BRAND */}
-          <p className="text-white/60 tracking-[0.45em] text-[10px] mb-5">
-            PHILEON
-          </p>
-          
-          {/* COLLECTION */}
-          <p className="text-white/50 tracking-[0.3em] text-[10px] mb-3">
-            COLLECTIVE — GENTS
-          </p>
-          
-          {/* TITLE */}
-          <h1 className="text-white font-serif tracking-[0.18em] text-[42px] md:text-[64px] leading-tight">
-            IL MORSO DEL RE
-          </h1>
-          
-          {/* TAGLINE */}
-          <p className="text-white/70 mt-4 text-[14px] md:text-[18px] tracking-[0.08em]">
-            The Bite of the King
-          </p>
+          <div className="max-w-[520px]">
+            
+            {/* BRAND */}
+            <p className="text-white/50 tracking-[0.4em] text-[10px] mb-3">
+              PHILEON
+            </p>
+            
+            {/* COLLECTION */}
+            <p className="text-white/40 tracking-[0.3em] text-[10px] mb-2">
+              COLLECTIVE — GENTS
+            </p>
+            
+            {/* TITLE */}
+            <h1 className="text-white font-serif tracking-[0.16em] text-[28px] md:text-[46px] leading-[1.2]">
+              IL MORSO DEL RE
+            </h1>
+            
+            {/* TAGLINE */}
+            <p className="text-white/65 mt-3 text-[13px] md:text-[16px] tracking-[0.06em]">
+              The Bite of the King
+            </p>
+            
+          </div>
           
         </div>
       </section>
@@ -289,14 +293,14 @@ export default function MorsoPage() {
 
       {/* Animation keyframes */}
       <style>{`
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(12px) scale(0.98);
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
           }
         }
       `}</style>
