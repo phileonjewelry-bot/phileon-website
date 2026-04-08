@@ -35,47 +35,47 @@ export default function MorsoPage() {
     <div className="min-h-screen bg-black text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO SECTION - Static Image (Video placeholder)
-          Using front_black image until hero video is provided
+          HERO — IL MORSO DEL RE
+          Full height video hero with fadeIn animation
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[65vh] md:h-[75vh] overflow-hidden">
+      <section className="relative w-full h-[100vh] overflow-hidden bg-black">
         
-        {/* Hero Image (replace with video when available) */}
-        <img
-          src={product.gallery[2].src}
-          alt="IL MORSO DEL RE hero"
-          className="absolute inset-0 w-full h-full object-cover object-[50%_40%] scale-[1.1]"
+        {/* VIDEO */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src={product.heroVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={product.gallery[0].src}
         />
         
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/45" />
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-black/40" />
         
-        {/* Hero text */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+        {/* CONTENT */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 animate-[fadeIn_1.2s_ease-out]">
           
-          {/* Brand */}
-          <div className="text-white/70 tracking-[0.35em] text-xs md:text-sm mb-2">
+          {/* BRAND */}
+          <p className="text-white/60 tracking-[0.45em] text-[10px] mb-5">
             PHILEON
-          </div>
+          </p>
           
-          {/* Category */}
-          <div className="text-white/50 tracking-[0.25em] text-[10px] md:text-xs mb-6">
+          {/* COLLECTION */}
+          <p className="text-white/50 tracking-[0.3em] text-[10px] mb-3">
             COLLECTIVE — GENTS
-          </div>
+          </p>
           
-          {/* Name */}
-          <h1 className="text-white font-serif tracking-[0.18em] text-3xl md:text-5xl leading-tight">
+          {/* TITLE */}
+          <h1 className="text-white font-serif tracking-[0.18em] text-[42px] md:text-[64px] leading-tight">
             IL MORSO DEL RE
           </h1>
           
-          {/* Subline */}
-          <p className="text-white/70 mt-3 text-sm md:text-base tracking-[0.08em]">
+          {/* TAGLINE */}
+          <p className="text-white/70 mt-4 text-[14px] md:text-[18px] tracking-[0.08em]">
             The Bite of the King
-          </p>
-          
-          {/* Spec line */}
-          <p className="text-white/50 mt-4 text-xs tracking-[0.12em]">
-            14mm Sculpted Gold Form · 256 Lab-Grown Diamonds
           </p>
           
         </div>
@@ -287,6 +287,19 @@ export default function MorsoPage() {
         </div>
       </section>
 
+      {/* Animation keyframes */}
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }

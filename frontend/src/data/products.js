@@ -1063,6 +1063,9 @@ Every diamond placed with precision.`,
     closing: `Not worn.
 Crowned.`,
     
+    // Hero video
+    heroVideo: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ccwj01h1_VIDEO_2607eeb0-ad14-4d1f-b415-41bb1bd728f8.mp4",
+    
     // Gallery media - IMAGES ONLY
     // 1. front_reflection (Authority - HOOK)
     // 2. angled_warm (Emotion - PULL)
