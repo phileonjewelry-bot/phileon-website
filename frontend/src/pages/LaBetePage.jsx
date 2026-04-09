@@ -117,41 +117,34 @@ export default function LaBetePage() {
           </h2>
           <p className="mt-3 text-white/85">{product.tagline}</p>
 
-          {/* Tier Selection */}
+          {/* Tier Selection - 3 Column Grid */}
           <div className="mt-8">
-            <label className="block text-xs tracking-widest text-neutral-400 mb-3">
+            <label className="block text-xs tracking-widest text-neutral-400 mb-4">
               TIER
             </label>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(product.tiers).map(([key, tier]) => (
                 <button
                   key={key}
                   onClick={() => setSelectedTier(key)}
                   data-testid={`labete-tier-${key}`}
-                  className={`w-full text-left border rounded-xl px-4 py-4 transition-all duration-200 ${
+                  className={`border rounded-2xl p-5 text-left transition-all relative ${
                     selectedTier === key
-                      ? "border-white bg-white text-black"
-                      : "border-white/15 bg-transparent text-white hover:border-white/30"
+                      ? "border-white bg-white/5"
+                      : "border-white/10 hover:border-white/30"
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm tracking-wide">{tier.label}</div>
-                      <div className={`${selectedTier === key ? "text-black/70" : "text-white/60"} text-xs mt-1`}>
-                        {tier.metal} · {tier.stones}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      {tier.badge && (
-                        <div className={`text-[10px] tracking-[0.18em] mb-1 ${selectedTier === key ? "text-black/70" : "text-white/50"}`}>
-                          {tier.badge}
-                        </div>
-                      )}
-                      <div className="text-lg">
-                        ${product.pricing[key].toLocaleString()} CAD
-                      </div>
-                    </div>
-                  </div>
+                  {tier.badge && (
+                    <span className="absolute top-3 right-3 text-[9px] tracking-[0.15em] text-white/50">
+                      {tier.badge}
+                    </span>
+                  )}
+                  <p className="text-xs tracking-[0.25em] opacity-50 mb-2">{tier.label}</p>
+                  <p className="text-sm opacity-70 mb-4">
+                    {tier.metal}<br />
+                    {tier.stones}
+                  </p>
+                  <p className="text-xl">${product.pricing[key].toLocaleString()}</p>
                 </button>
               ))}
             </div>
