@@ -12,6 +12,8 @@ export default function LaBetePage() {
   const product = products.labete;
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentPrice = product.pricing[selectedTier];
@@ -26,53 +28,51 @@ export default function LaBetePage() {
       price: currentPrice,
       metal: currentTier.metal,
       size: selectedSize,
+      quantity: quantity,
       image: product.gallery[0].src,
-      quantity: 1
     });
   };
+
+  // Filter out hidden tiers (silver)
+  const visibleTiers = Object.entries(product.tiers).filter(([key, tier]) => !tier.hiddenFromHero);
 
   return (
     <div className="min-h-screen bg-black text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
           HERO — TRIBUTE: LA BÊTE
-          Bottom-left aligned text with gradient overlay
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[68vh] md:h-[75vh] overflow-hidden bg-black">
-        
-        {/* Hero Image (Showroom shot with Bugatti) */}
+      <section className="relative w-full h-[55vh] md:h-[70vh] overflow-hidden">
         <img
           src={product.gallery[0].src}
           alt="TRIBUTE: LA BÊTE hero"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+        <div className="absolute inset-0 bg-black/40" />
         
         {/* CONTENT - Bottom left aligned */}
-        <div className="relative z-10 flex flex-col justify-end h-full px-[6vw] pb-14 md:pb-24 animate-[fadeInUp_1s_ease-out]">
+        <div className="relative z-10 flex flex-col justify-end h-full px-[6vw] pb-12 md:pb-20 animate-[fadeInUp_1s_ease-out]">
           <div className="w-full max-w-[520px]">
             
-            {/* BRAND */}
             <p className="text-white/60 tracking-[0.35em] text-[10px] leading-none mb-3">
               PHILEON
             </p>
             
-            {/* COLLECTION */}
             <p className="text-white/50 tracking-[0.25em] text-[10px] leading-none mb-4">
               COLLECTIVE — GENTS
             </p>
             
-            {/* TITLE */}
-            <h1 className="text-white font-serif text-[clamp(2.8rem,5vw,4.2rem)] tracking-[-0.02em] leading-[1.05] mb-3">
+            <h1 className="text-white font-serif text-[clamp(2.4rem,5vw,3.8rem)] tracking-[-0.01em] leading-[1.08] mb-3">
               TRIBUTE: LA BÊTE
             </h1>
             
-            {/* TAGLINE */}
-            <p className="text-white/75 text-[clamp(1rem,1.4vw,1.2rem)] leading-[1.4]">
+            <p className="text-white/75 text-[clamp(0.9rem,1.3vw,1.1rem)] leading-[1.5] mb-4">
               Born in the showroom.<br />
               Built for the hand.
+            </p>
+            
+            <p className="text-white/50 text-sm tracking-[0.1em]">
+              From $7,400 CAD
             </p>
             
           </div>
@@ -80,52 +80,94 @@ export default function LaBetePage() {
       </section>
 
       {/* Spacer */}
-      <div className="h-12 md:h-16" />
+      <div className="h-10 md:h-14" />
 
       {/* ═══════════════════════════════════════════════════════════════
-          MAIN CONTENT - Scrolling Gallery + Sticky Sidebar
+          MAIN CONTENT - Gallery + Purchase Panel
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-16 grid md:grid-cols-2 gap-12">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 grid md:grid-cols-2 gap-10 md:gap-16">
         
-        {/* LEFT - Scrolling Gallery (IMAGES ONLY) */}
-        <div className="space-y-4">
-          {gallery.map((item, index) => (
-            <div 
-              key={`gallery-${index}`} 
-              className={`bg-black overflow-hidden ${index === 0 ? "" : "rounded-2xl"}`}
-            >
+        {/* LEFT - Desktop Gallery with Thumbnails */}
+        <div className="flex flex-col md:flex-row gap-4">
+          
+          {/* Vertical Thumbnails (Desktop) */}
+          <div className="hidden md:flex flex-col gap-3 w-20">
+            {gallery.map((item, index) => (
+              <button
+                key={`thumb-${index}`}
+                onClick={() => setActiveImage(index)}
+                onMouseEnter={() => setActiveImage(index)}
+                className={`
+                  aspect-square rounded-lg overflow-hidden transition-all duration-200
+                  ${activeImage === index 
+                    ? "opacity-100 ring-2 ring-white/60" 
+                    : "opacity-40 hover:opacity-70 ring-1 ring-white/10"}
+                `}
+              >
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
+          
+          {/* Main Image */}
+          <div className="flex-1">
+            <div className="aspect-square rounded-2xl overflow-hidden bg-black group">
               <img
-                src={item.src}
-                alt={`${product.name} - ${item.alt}`}
-                className="w-full h-auto object-contain product-image-hd"
-                loading={index < 3 ? "eager" : "lazy"}
-                decoding="async"
+                src={gallery[activeImage].src}
+                alt={gallery[activeImage].alt}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
               />
             </div>
-          ))}
+            
+            {/* Mobile Thumbnails (Horizontal) */}
+            <div className="flex md:hidden gap-2 mt-4 overflow-x-auto pb-2">
+              {gallery.map((item, index) => (
+                <button
+                  key={`mobile-thumb-${index}`}
+                  onClick={() => setActiveImage(index)}
+                  className={`
+                    flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition-all duration-200
+                    ${activeImage === index 
+                      ? "opacity-100 ring-2 ring-white/60" 
+                      : "opacity-40 ring-1 ring-white/10"}
+                  `}
+                >
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* RIGHT - Sticky Info Panel */}
-        <div className="md:sticky md:top-24 h-fit">
+        {/* RIGHT - Purchase Panel */}
+        <div className="md:sticky md:top-20 h-fit">
           
           {/* Category & Title */}
           <p className="text-xs tracking-[0.28em] text-white/60 mb-3">
-            {product.subtitle}
+            RING
           </p>
-          <h2 className="text-4xl md:text-5xl tracking-[0.04em] font-light">
+          <h2 className="text-4xl md:text-5xl tracking-[0.02em] font-light mb-2">
             LA BÊTE
           </h2>
-          <p className="mt-3 text-white/85">{product.tagline}</p>
+          <p className="text-white/75 mb-6">{product.tagline}</p>
 
-          {/* Tier Selection - 4 Tier Grid */}
-          <div className="mt-8">
+          {/* Tier Selection */}
+          <div className="mb-6">
             <p className="text-xs tracking-[0.25em] opacity-50 mb-4">
               SELECT CONFIGURATION
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(product.tiers)
-                .filter(([key, tier]) => !tier.hiddenFromHero)
-                .map(([key, tier]) => {
+            <div className="space-y-3">
+              {visibleTiers.map(([key, tier]) => {
                 const isActive = selectedTier === key;
                 
                 return (
@@ -134,81 +176,53 @@ export default function LaBetePage() {
                     onClick={() => setSelectedTier(key)}
                     data-testid={`labete-tier-${key}`}
                     className={`
-                      relative cursor-pointer rounded-2xl p-5 transition-all duration-200
+                      relative cursor-pointer rounded-xl p-4 transition-all duration-200
                       ${isActive 
-                        ? "border border-white bg-white/[0.04] scale-[1.02] translate-y-[-2px]" 
-                        : "border border-white/10 hover:border-white/30"}
+                        ? "border border-white bg-white/[0.04]" 
+                        : "border border-white/10 hover:border-white/25"}
                     `}
                   >
-                    {/* MOST POPULAR TAG */}
-                    {tier.badge && (
-                      <span className="absolute top-3 right-3 text-[9px] tracking-[0.15em] bg-white text-black px-2 py-1 rounded-full">
-                        {tier.badge}
-                      </span>
-                    )}
-                    
-                    {/* TITLE */}
-                    <p className={`text-xs tracking-[0.25em] mb-2 ${isActive ? "opacity-90" : "opacity-50"}`}>
-                      {tier.label}
-                    </p>
-                    
-                    {/* DESCRIPTION */}
-                    <p className={`text-sm whitespace-pre-line mb-3 ${isActive ? "opacity-80" : "opacity-60"}`}>
-                      {tier.metal} · {tier.stones}
-                    </p>
-                    
-                    {/* TIER DESCRIPTION */}
-                    {tier.description && (
-                      <p className={`text-xs mb-4 ${isActive ? "opacity-60" : "opacity-40"}`}>
-                        {tier.description}
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className={`text-xs tracking-[0.2em] ${isActive ? "opacity-90" : "opacity-50"}`}>
+                            {tier.label}
+                          </p>
+                          {tier.badge && (
+                            <span className="text-[9px] tracking-[0.12em] bg-white text-black px-2 py-0.5 rounded-full">
+                              {tier.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className={`text-sm mb-1 ${isActive ? "opacity-80" : "opacity-55"}`}>
+                          {tier.metal} · {tier.stones}
+                        </p>
+                        {tier.description && (
+                          <p className={`text-xs ${isActive ? "opacity-55" : "opacity-35"}`}>
+                            {tier.description}
+                          </p>
+                        )}
+                      </div>
+                      <p className={`text-lg ml-4 ${isActive ? "text-white" : "opacity-70"}`}>
+                        ${product.pricing[key].toLocaleString()} CAD
                       </p>
-                    )}
-                    
-                    {/* PRICE */}
-                    <p className={`text-xl ${isActive ? "text-white" : "opacity-80"}`}>
-                      ${product.pricing[key].toLocaleString()} CAD
-                    </p>
+                    </div>
                   </div>
                 );
               })}
             </div>
-            
-            {/* Silver tier - shown separately */}
-            {product.tiers.silver && (
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div
-                  onClick={() => setSelectedTier('silver')}
-                  data-testid="labete-tier-silver"
-                  className={`
-                    relative cursor-pointer rounded-xl p-4 transition-all duration-200
-                    ${selectedTier === 'silver'
-                      ? "border border-white/50 bg-white/[0.02]" 
-                      : "border border-white/5 hover:border-white/20"}
-                  `}
-                >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-xs tracking-[0.25em] opacity-40 mb-1">SILVER</p>
-                      <p className="text-sm opacity-50">{product.tiers.silver.metal} · {product.tiers.silver.stones}</p>
-                    </div>
-                    <p className="text-lg opacity-60">${product.pricing.silver.toLocaleString()} CAD</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* SIZE SELECTOR */}
-          <div className="mt-6">
-            <p className="text-xs tracking-widest text-neutral-400 mb-3">
+          <div className="mb-4">
+            <p className="text-xs tracking-[0.25em] opacity-50 mb-3">
               SIZE
             </p>
-
             <select
               value={selectedSize}
               onChange={(e) => setSelectedSize(e.target.value)}
               data-testid="labete-size-select"
-              className="w-full bg-black border border-neutral-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white"
+              className="w-full bg-black border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/50 transition-colors"
             >
               <option value="" disabled>Select your size</option>
               <option value="6">6</option>
@@ -228,83 +242,91 @@ export default function LaBetePage() {
             </select>
           </div>
 
-          {/* CTA Button */}
-          <div className="mt-8">
-            <button 
-              onClick={onAddToCart}
-              disabled={isAdding}
-              data-testid="labete-add-to-cart"
-              className="w-full bg-white text-black rounded-xl py-4 tracking-[0.12em] text-sm font-medium hover:bg-white/90 transition-colors disabled:opacity-50"
-            >
-              {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED!" : "CLAIM YOURS"}
-            </button>
-          </div>
-
-          {/* Composition */}
-          <div className="mt-10">
-            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">COMPOSITION</h3>
-            <p className="text-white/80 leading-7 whitespace-pre-line">{product.story}</p>
-          </div>
-
-          {/* Structure / Specs */}
-          <div className="mt-10">
-            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">STRUCTURE</h3>
-            <ul className="space-y-2 text-white/80">
-              <li>{product.specs.diamonds}</li>
-              <li>{product.specs.caratWeight}</li>
-              <li>{product.specs.width}</li>
-              <li>{product.specs.weight}</li>
-              <li>{product.specs.material}</li>
-            </ul>
-            <p className="text-white/50 text-xs mt-4">{product.specs.note}</p>
-          </div>
-
-          {/* Craft */}
-          <div className="mt-10">
-            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-6">CRAFT</h3>
-            
-            <div className="space-y-8">
-              {/* 01 Precision */}
-              <div>
-                <div className="flex items-baseline gap-4 mb-2">
-                  <span className="text-white/40 text-xs">01</span>
-                  <span className="text-white/90 text-sm tracking-[0.15em]">PRECISION</span>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed pl-8">
-                  380+ diamonds.<br />
-                  Each placed with automotive precision.<br />
-                  Zero tolerance.
-                </p>
-              </div>
-              
-              {/* 02 Form */}
-              <div>
-                <div className="flex items-baseline gap-4 mb-2">
-                  <span className="text-white/40 text-xs">02</span>
-                  <span className="text-white/90 text-sm tracking-[0.15em]">FORM</span>
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed pl-8">
-                  Horseshoe grille.<br />
-                  Sculpted curves.<br />
-                  Built like the machine that inspired it.
-                </p>
-              </div>
+          {/* QUANTITY SELECTOR */}
+          <div className="mb-6">
+            <p className="text-xs tracking-[0.25em] opacity-50 mb-3">
+              QUANTITY
+            </p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="w-10 h-10 rounded-lg border border-white/15 flex items-center justify-center hover:border-white/30 transition-colors"
+              >
+                −
+              </button>
+              <span className="text-lg w-8 text-center">{quantity}</span>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="w-10 h-10 rounded-lg border border-white/15 flex items-center justify-center hover:border-white/30 transition-colors"
+              >
+                +
+              </button>
             </div>
           </div>
 
-          {/* Final Word */}
-          <div className="mt-10 pt-8 border-t border-white/10">
-            <p className="text-white/80 leading-7">
-              Not worn.<br />
-              Driven.
-            </p>
-            <p className="text-white/50 text-xs tracking-[0.2em] mt-6">
-              TRIBUTE: LA BÊTE ✦ ONE OF ONE
-            </p>
+          {/* CTA Button */}
+          <button 
+            onClick={onAddToCart}
+            disabled={isAdding || !selectedSize}
+            data-testid="labete-add-to-cart"
+            className="w-full bg-white text-black rounded-xl py-4 tracking-[0.12em] text-sm font-medium hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+          >
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED!" : "CLAIM YOURS"}
+          </button>
+
+          {/* Order Info */}
+          <div className="space-y-2 text-xs text-white/45">
+            <p>Made to order. Please allow production time.</p>
+            <p>Crafted to order in your selected configuration.</p>
+            <p>Limited production. Built in small numbers.</p>
+            <p>Final delivery timing confirmed after order review.</p>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-white/10 my-8" />
+
+          {/* CRAFT Section */}
+          <div>
+            <h3 className="text-sm tracking-[0.2em] text-white/60 mb-6">CRAFT</h3>
+            
+            <div className="space-y-6">
+              {/* 01 FORMED */}
+              <div>
+                <div className="flex items-baseline gap-4 mb-2">
+                  <span className="text-white/35 text-xs">01</span>
+                  <span className="text-white/85 text-sm tracking-[0.15em]">FORMED</span>
+                </div>
+                <p className="text-white/60 text-sm leading-relaxed pl-8">
+                  The grille is recast as a ring. Every curve kept deliberate. Every surface built to read with force.
+                </p>
+              </div>
+              
+              {/* 02 SET */}
+              <div>
+                <div className="flex items-baseline gap-4 mb-2">
+                  <span className="text-white/35 text-xs">02</span>
+                  <span className="text-white/85 text-sm tracking-[0.15em]">SET</span>
+                </div>
+                <p className="text-white/60 text-sm leading-relaxed pl-8">
+                  Stone by stone, the face is tightened into a controlled field of light. Precision first. Excess, disciplined.
+                </p>
+              </div>
+            </div>
+            
+            {/* Poetic transition */}
+            <div className="mt-8 pt-6 border-t border-white/5">
+              <p className="text-white/50 text-sm leading-relaxed italic">
+                Chrome becomes gold.<br />
+                Carbon becomes stone.
+              </p>
+              <p className="text-white/70 text-sm mt-4">
+                The grille becomes TRIBUTE.
+              </p>
+            </div>
           </div>
 
           {/* Shipping */}
-          <p className="mt-8 text-xs text-white/50">
+          <p className="mt-8 text-xs text-white/40">
             {product.shipping}
           </p>
         </div>
@@ -313,15 +335,11 @@ export default function LaBetePage() {
       {/* ═══════════════════════════════════════════════════════════════
           CLOSING STATEMENT
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-20 bg-black">
-        <div className="mt-16 text-center max-w-xl mx-auto px-6">
-          <p className="text-lg md:text-xl leading-relaxed text-white">
-            The showroom is temporary.<br />
-            The ring is forever.
-          </p>
-
-          <p className="text-sm tracking-widest text-neutral-400 mt-4">
-            LA BÊTE
+      <section className="py-24 bg-black">
+        <div className="text-center max-w-xl mx-auto px-6">
+          <p className="text-xl md:text-2xl leading-relaxed text-white font-light">
+            Not driven.<br />
+            Worn.
           </p>
         </div>
       </section>
