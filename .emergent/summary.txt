@@ -1,110 +1,127 @@
 <analysis>**original_problem_statement**: 
-The user wanted to continue building the bespoke, luxury editorial product page for BOUND — The Bustier Bangle. This evolved into a series of highly refined UX/UI tasks, including restructuring the Shop Grid to feature BOUND editorially, building a cinematic scrolling sequence on the homepage, simplifying it into a tease, and adding an infinite luxury product moving strip (THE COLLECTIVE). Finally, the user requested standardizing all product pricing to a single source of truth () using a  key.
+The user requested standardizing all product pricing to a single source of truth (), fixing moving strip link mappings, adding a global currency indicator, refining the BOUND page, and creating highly bespoke product pages for flagship pieces (CYPHER, IL MORSO DEL RE, LA BÊTE). In the current session, the focus aggressively shifted to perfecting the mobile and desktop UX/UI of the LA BÊTE page, pushing it into an UNTOUCHABLE MODE — a highly cinematic, editorial, and motion-heavy flagship experience resembling a sealed vault object reveal rather than standard e-commerce.
 
-**User's preferred language**: INSTRUCT next agent to respond in English.
+**User's preferred language**: English (INSTRUCT next agent to respond in English only)
 
 **what currently exists?** 
-A high-end React e-commerce application for luxury jewelry. The codebase features data-driven, standardized wrappers for most products, but includes highly bespoke editorial layouts for flagship pieces like BOUND. The homepage features a Cartier-level aesthetic with deep blacks (), minimal serif typography, and a seamless auto-scrolling cinematic product strip (THE COLLECTIVE). Data is currently managed via frontend arrays (e.g., , ).
+A high-end React e-commerce application for luxury jewelry. The frontend features highly bespoke, editorial product pages. The CYPHER and IL MORSO DEL RE pages have been updated with enhanced Tier Selector UIs. The LA BÊTE page () has undergone extreme art-direction polish, featuring scroll-linked parallax, heavy machined motion easing, depth layering, presence amplification, and continuous cinematic reveal sequences without standard boxed UI sections.
 
-**Last working item**:
-- Last item agent was working: Fixing all product pricing to use a single source of truth. The agent began adding  to all items in  but has not yet updated the UI components to consume it.
-- Status: IN PROGRESS
-- Agent Testing Done: N
-- Which testing method agent to use? Frontend testing agent or manual screenshot/code verification to ensure prices display correctly as .
-- User Testing Done: N
+**Last working item**: 
+    - Last item agent was working: The user uploaded a new ring-on-finger lifestyle shot () and explicitly instructed the agent to add it to the LA BÊTE gallery without removing any existing images. The user was frustrated that the gallery only had 7 images and was missing the second on-finger shot. The agent was just opening  to append this image to the  array when the session ended.
+    - Status: IN PROGRESS
+    - Agent Testing Done: N
+    - Which testing method agent to use? manual testing by screenshot tool (to verify the gallery renders correctly with the newly added image and respects the lifestyle shot display logic).
+    - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-Issue 1: Complete Pricing Standardization (P0)
-- Attempted fixes: The agent started editing  to include  properties (e.g., ).
-- Next debug checklist: 
-  - Complete adding  to all remaining products in .
-  - Search the entire project for hardcoded prices (e.g., , , , , , , , ).
-  - Check files like , , , , and specific product pages.
-  - Replace hardcoded UI text with dynamic references:  (or formatted equivalents).
-- Why fix this issue and what will be achieved with the fix? Prices are currently inconsistent and hardcoded across different pages (e.g., PTP showing ,050 vs ,800). This centralizes the pricing logic.
-- Status: IN PROGRESS
-- Is recurring issue? N
-- Should Test frontend/backend/both after fix? Frontend (Screenshot tool to verify UI renders dynamic prices correctly).
-- Blocked on other issue: None.
+  Issue 1: Add missing ring-on-finger image to LA BÊTE gallery (P0)
+     - Attempted fixes: The agent viewed  but did not yet modify the array.
+     - Next debug checklist: 
+        - Open .
+        - Append the newly uploaded image URL () to the  array.
+        - **DO NOT** delete any of the existing 7 images.
+        - Ensure the new image has the appropriate metadata (e.g., , , ).
+        - Take a screenshot of the LA BÊTE gallery to verify both on-finger shots are now present and the array contains 8 images.
+     - Why fix this issue and what will be achieved with the fix? Satisfies the user's explicit command to restore the missing gallery image without breaking the rest of the array.
+     - Status: IN PROGRESS
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Frontend (Screenshot tool).
+     - Blocked on other issue: None.
 
 **In progress Task List**:
-*None distinct from Issue 1.*
+  Task 1: Finalize LA BÊTE Gallery Array
+     - Where to resume: Modify  to include the uploaded image URL () as an additional lifestyle/context shot.
+     - What will be achieved with this? Completes the image asset requirements for the LA BÊTE flagship ring.
+     - Status: IN PROGRESS
+     - Should Test frontend/backend/both after fix? Frontend.
+     - Blocked on something: None.
 
 **Upcoming and Future Tasks**
-Upcoming Tasks:
-- (P2) Populate the  page with real, exclusive product drops (carried over from previous session backlog).
+    Upcoming Tasks:
+    - (P2) Populate the  page with real, exclusive product drops.
+
+    Future Tasks:
+    - (P3) Mobile swipe interactions verification for all galleries (CYPHER, HOMAGE, LA BÊTE, APEX, BOUND).
+    - (P3) Implement cross-selling logic between products.
+    - (P3) Add hover images to older flagship products (HOMAGE, APEX, BOUND, etc.) in the shop grid to match the new CYPHER hover card behavior.
 
 **Completed work in this session**
-- Built out the complete  bespoke editorial layout with 9 mapped images, cinematic framing, typography refinements, and custom interactions. (DONE)
-- Updated  to use the red-carpet model image for BOUND. (DONE)
-- Restructured  Ladies > Bracelets layout to feature BOUND as a prominent top editorial card with a standard grid below. (DONE)
-- Refactored  BOUND section into a clean, minimal Tease Section. (DONE)
-- Created a seamless, infinite auto-scrolling product strip (THE COLLECTIVE) on  with hover-pause, soft shadows, opacity hierarchy, and edge fades. (DONE)
-- Fixed incorrect La Marva images across the app. (DONE)
+- Verified LA BÊTE page refinements from previous fork (DONE)
+- Applied enhanced Tier Selector UI (subtle transparent backgrounds, pill badges) to CYPHER and IL MORSO DEL RE pages (DONE)
+- Fixed LA BÊTE mobile layout: single-column, properly centered, removed horizontal flex pushing it off-center (DONE)
+- Set LA BÊTE collection card on  to use the cinematic showroom Bugatti image instead of a tight product crop (DONE)
+- Implemented dual-display treatments for LA BÊTE gallery: Product shots (, larger visual fill) vs. Lifestyle shots (, taller containers) (DONE)
+- Set LA BÊTE mobile gallery to default to the clean front shot (index 1) upon loading (DONE)
+- Completely refactored  into UNTOUCHABLE MODE with extreme art direction: continuous cinematic reveal (WORLD -> DESCENT -> REVEAL -> INSPECTION), heavy scroll physics, gradient fade overlaps, presence amplification (brightness/contrast lifts), and instrument panel thumbnails (DONE)
 
 **Earlier issues found/mentioned but not fixed**
-- None found. 
+- None actively broken, but pending backlog UI consistency items (Task 3, 4, 5) remain.
 
 **Known issue recurrence from previous fork**
-- Issue recurrence in previous fork: Testing environment instability () during  usage, specifically when trying to scroll down heavy pages.
-- Recurrence count: Occurred twice this session.
-- Status: RESOLVED manually by retrying or evaluating specific scroll positions.
+  - Issue recurrence in previous fork: Playwright automation headless browser cannot natively play video files (renders as black boxes or throws timeouts).
+  - Recurrence count: Multiple
+  - Status: RESOLVED (Ignored for automated testing). Do not waste context debugging video playback.
 
 **Code Architecture**
-basePrice
+
 
 **Key Technical Concepts**
-- **Cinematic CSS Animations**: Heavy use of infinite linear scrolling ( on duplicated arrays) and hover states ().
-- **Data-Driven Architecture**: Moving away from hardcoded data in components to centralized . 
-- **Bespoke vs Standard Layouts**: The application mixes strictly mapped data wrapper pages (Rings, Pendants) with completely custom editorial pages (BOUND).
+- **Cinematic Motion & Easing**: Use of  for heavy, restrained, machined movement.
+- **Editorial Layouts**: Complete removal of boxed UI sections for LA BÊTE. Reliance on deep negative margins (), gradient fades (), and drop shadows to create a suspended in void effect.
+- **Micro-Interactions**: Hover states on desktop act as surgical instrument panels (inactive dimming, instant active response without soft transitions).
 
 **key DB schema**
-- N/A. All product data is currently handled via frontend objects/arrays ().
+  - N/A. Handled via frontend objects ().
 
 **changes in tech stack**
-- None.
+  - None.
 
-**All files of reference**
-- : Needs to be finalized with  properties.
-- : Needs hardcoded prices removed.
-- : Needs hardcoded prices removed.
-- : Contains the newly refined strip animations.
+**All files of reference** 
+  -  (Updated heavily, needs one more image appended)
+  -  (Heavily modified art direction)
+  -  (Updated)
+  -  (Updated)
+  -  (Updated)
 
-**Areas that need refactoring**:
-- Scattered hardcoded pricing values across components. This is currently being addressed.
+**Areas that need refactoring**: 
+  -  is >1200 lines. 
+  - The bespoke product pages still contain duplicated Tier Selector code.
 
 **key api endpoints**
-- N/A
+  - N/A
 
-**Critical Info for New Agent**
-- **PRICING RULES**: The user explicitly requested removing ALL hardcoded prices (1050, 1250, 1500, 2000, etc.) from product pages, components, cards, and sliders. The UI must dynamically display  by reading from .
-- **AESTHETIC RULES**: Do not alter the styling or timing of THE COLLECTIVE moving strip on the homepage (38s linear loop, paused on hover, gradient edges). It is exactly how the user wants it.
-- **BOUND ASSETS**: The BOUND page is meant to be a standalone, highly emotional editorial experience. Do not add standard e-commerce features to it unless explicitly asked.
+**Critical Info for New Agent** 
+- **DO NOT TOUCH  ART DIRECTION**: The user spent the entire session painstakingly refining the exact CSS for the LA BÊTE page to achieve a sealed vault object reveal. This includes specific , ,  values, 150ms delays on titles, and opacity levels on thumbnails. Do not clean up or reset this file under any circumstances unless explicitly requested.
+- **Gallery Dual-Treatment**: The  logic currently renders product shots differently from lifestyle shots based on specific array indices. When you append the new image to , ensure you test how it renders on mobile. Since it is a ring on finger shot, it should ideally trigger the lifestyle treatment (, ).
 
-**documents and test reports created in this job**
-- None.
+**documents and test reports created in this job** 
+  -  (Updated)
 
-**Last 10 User Messages and any pending HUMAN messages**
-1. User requested clicking functionality and product route mapping for the moving strip.
-2. User corrected the link mappings (unified objects) and requested adjusting strip speed to 38s.
-3. User provided the exact array order for .
-4. User requested luxury refinements for the strip (seamless infinite loop, subtle BOUND emphasis, soft shadows, hover pause, edge fades, opacity hierarchy).
-5. User noted the La Marva image was incorrect and uploaded the correct reference.
-6. User requested fixing all product pricing to use a single source of truth ( with ), replacing all hardcoded values site-wide.
-- *Pending Human Action*: None. The agent must immediately resume the pricing standardization task.
+**Last 10 User Messages and any pending HUMAN messages** 
+ 1. User requested LA BÊTE hero-to-gallery transition to feel cinematic with a strong bottom fade. (Completed)
+ 2. User activated UNTOUCHABLE MODE, demanding scroll physics, atmosphere darkening, and glass/metal reactions. (Completed)
+ 3. User requested a HARD ART-DIRECTION pass: WORLD -> DESCENT -> REVEAL -> INSPECTION. No boxed containers, instrument panel thumbnails. (Completed)
+ 4. User requested the FINAL CINEMA PASS: Object presence amplification, tension in descent, micro depth layering. (Completed)
+ 5. User asked to Add the other ring on finger pic.
+ 6. Agent verified assets but asked user for clarification on which image.
+ 7. User uploaded  and expressed frustration: There are only 7 pics in the gallery and only one on finger shot stop taking pics out.
+ - *Pending Human Action*: None. Agent must immediately insert the uploaded image URL into the  array in  without touching the other 7 images.
 
 **Project Health Check:**
-- Broken: Hardcoded prices currently contradict each other (e.g., PTP showing ,050 vs ,800).
-- Mocked: Pricing logic currently relies heavily on hardcoded string values instead of dynamic variables.
+- Broken: None.
+- Mocked: None.
 
-**3rd Party Integrations**
-- : Used for UI icons.
+**3rd Party Integrations** 
+ - Stripe (Payments) — requires User API Key.
 
 **Testing status**
-- Testing agent used after significant changes: NO (Screenshot tool heavily relied upon for layout verification).
-- Troubleshoot agent used after agent stuck in loop: NO
-- Test files created: None
-- Known regressions: None.
+  - Testing agent used after significant changes: NO (Screenshot tool utilized heavily due to highly specific visual feedback loops).
+  - Troubleshoot agent used after agent stuck in loop: NO
+  - Test files created: []
+  - Known regressions: []
+
+**Credentials to test flow:**
+  - N/A
 
 **What agent forgot to execute**
-- The agent began adding  to  but didn't finish defining it for every product, nor did they start the global find-and-replace to strip hardcoded prices out of , , and other components. You must complete this sweep immediately.</analysis>
+  - The agent did not append the final uploaded image () to the gallery before the context limit cut off the session. This is the immediate P0 task.</analysis>

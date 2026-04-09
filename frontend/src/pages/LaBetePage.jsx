@@ -203,18 +203,18 @@ export default function LaBetePage() {
             {/* Thumbnail strip - quiet, intelligent */}
             <div 
               className={`
-                flex justify-center gap-1 mb-5
+                flex gap-1 mb-5 overflow-x-auto flex-nowrap justify-start px-2
                 transition-all duration-600
                 ${galleryLocked ? "opacity-100" : "opacity-0"}
               `}
               style={{ transitionDelay: "50ms" }}
             >
-              {gallery.slice(0, 7).map((item, index) => (
+              {gallery.map((item, index) => (
                 <button
                   key={`mthumb-${index}`}
                   onClick={() => handleImageChange(index)}
                   className={`
-                    w-[38px] h-[38px] rounded-sm overflow-hidden
+                    w-[38px] h-[38px] flex-shrink-0 rounded-sm overflow-hidden
                     transition-all duration-150
                     ${activeImage === index 
                       ? "opacity-75 ring-[0.5px] ring-white/35" 
