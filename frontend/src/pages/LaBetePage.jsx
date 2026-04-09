@@ -93,7 +93,7 @@ export default function LaBetePage() {
             const isLifestyleShot = [0, 6, 7, 8].includes(activeImage);
             
             return isLifestyleShot ? (
-              // LIFESTYLE TREATMENT - larger, more immersive
+              // LIFESTYLE TREATMENT - full frame, immersive
               <div className="w-full bg-[#0a0a0a] rounded-[14px] overflow-hidden h-[42vh]">
                 <img
                   src={gallery[activeImage].src}
@@ -102,12 +102,12 @@ export default function LaBetePage() {
                 />
               </div>
             ) : (
-              // PRODUCT TREATMENT - framed, scaled up for presence
-              <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-2 overflow-hidden h-[34vh]">
+              // PRODUCT TREATMENT - fuller presence, minimal negative space
+              <div className="w-full bg-[#0a0a0a] rounded-[14px] overflow-hidden h-[38vh]">
                 <img
                   src={gallery[activeImage].src}
                   alt={gallery[activeImage].alt || ""}
-                  className="max-w-full h-full object-contain scale-[1.05]"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
             );
