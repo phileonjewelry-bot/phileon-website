@@ -31,6 +31,7 @@ const menuCategories = [
       { name: 'Rhythm Mesh™ Ring', path: '/products/rhythm-mesh-ring' },
       { name: 'CYPHER', path: '/products/cypher' },
       { name: 'IL MORSO DEL RE', path: '/products/morso' },
+      { name: 'LA BÊTE', path: '/products/labete' },
     ]
   },
 ];

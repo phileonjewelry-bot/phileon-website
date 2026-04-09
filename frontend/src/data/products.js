@@ -1099,6 +1099,103 @@ Crowned.`,
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // TRIBUTE: LA BÊTE
+  // "The Beast" - Bugatti-inspired white gold ring
+  // Full diamond pavé with horseshoe grille motif
+  // ==========================================
+  labete: {
+    name: "TRIBUTE: LA BÊTE",
+    slug: "labete",
+    category: "rings",
+    audience: "gentlemens-club",
+    collections: ["rings", "collective", "gentlemens-club"],
+    subtitle: "RING",
+    tagline: "Born in the showroom. Built for the hand.",
+    priceFrom: "From $7,400 CAD",
+    basePrice: 7400,
+    
+    // Hero image for shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+    
+    // Tier-based pricing
+    pricing: {
+      foundation: 7400,
+      signature: 11200
+    },
+    
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        sublabel: "Entry",
+        name: "Foundation",
+        metal: "10K White Gold",
+        stones: "Lab-Grown Diamonds",
+        badge: ""
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K White Gold",
+        stones: "Lab-Grown Diamonds",
+        badge: "MOST POPULAR"
+      }
+    },
+    
+    // Specs
+    specs: {
+      diamonds: "Set with 380+ Round Brilliant Lab-Grown Diamonds",
+      caratWeight: "Total Diamond Weight: 3.20 Carats",
+      width: "Width: 16mm",
+      weight: "Weight: 32g",
+      material: "Material: Solid White Gold",
+      note: "Specifications may vary slightly by size."
+    },
+    
+    // Story copy
+    story: `White gold structure.
+Full diamond pavé.
+Horseshoe grille motif.
+Automotive precision.`,
+    
+    craft: `Every curve considered.
+Every diamond placed with intention.`,
+    
+    closing: `Not worn.
+Driven.`,
+    
+    // Gallery media - IMAGES ONLY
+    // 1. showroom (Authority - HOOK)
+    // 2. front_black (Clarity - CONFIRM)
+    // 3. three_quarter (Form - UNDERSTAND)
+    // 4. angle (Detail - TRUST)
+    // 5. macro (Precision - CLOSURE)
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png", alt: "Showroom" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", alt: "Front black" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mc3l4ayn_1000145539.png", alt: "Three quarter" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6hwqsfvx_1000145559.png", alt: "Angle" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/brg12apy_1000145543.png", alt: "Macro diamond" }
+    ],
+    
+    // Size profile
+    sizeProfile: {
+      type: "ring",
+      min: 6,
+      max: 12,
+      halfSizes: true,
+      customAbove: 12
+    },
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

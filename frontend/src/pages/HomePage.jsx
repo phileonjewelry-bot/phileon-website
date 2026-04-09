@@ -351,6 +351,11 @@ const HomePage = () => {
             title: "IL MORSO DEL RE", 
             image: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/lq8adcpf_1000145384.png", 
             href: "/products/morso" 
+          },
+          { 
+            title: "LA BÊTE", 
+            image: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", 
+            href: "/products/labete" 
           }
         ];
 

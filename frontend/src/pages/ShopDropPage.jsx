@@ -246,6 +246,21 @@ const CORE_PRODUCTS = [
     audience: 'gentlemens-club',
     featured: true,
   },
+  {
+    id: 'labete',
+    name: 'TRIBUTE: LA BÊTE',
+    slug: 'labete',
+    materialLine: 'Born in the showroom.',
+    imageUrl: products.labete.gallery[1].src, // Front black
+    hoverImage: products.labete.gallery[2].src, // Three quarter
+    href: '/products/labete',
+    price_range: 'From $7,400 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: 'gentlemens-club',
+    featured: true,
+  },
 ];
 
 // Additional drop products as fallback
