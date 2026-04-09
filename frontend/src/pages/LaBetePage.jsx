@@ -42,7 +42,7 @@ export default function LaBetePage() {
       {/* ═══════════════════════════════════════════════════════════════
           HERO — TRIBUTE: LA BÊTE
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[55vh] md:h-[70vh] overflow-hidden">
+      <section className="relative w-full h-[42vh] md:h-[70vh] overflow-hidden">
         <img
           src={product.heroImage}
           alt="TRIBUTE: LA BÊTE hero"
@@ -51,27 +51,27 @@ export default function LaBetePage() {
         <div className="absolute inset-0 bg-black/40" />
         
         {/* CONTENT - Bottom left aligned */}
-        <div className="relative z-10 flex flex-col justify-end h-full px-[6vw] pb-12 md:pb-20 animate-[fadeInUp_1s_ease-out]">
+        <div className="relative z-10 flex flex-col justify-end h-full px-[6vw] pb-8 md:pb-20 animate-[fadeInUp_1s_ease-out]">
           <div className="w-full max-w-[520px]">
             
-            <p className="text-white/60 tracking-[0.35em] text-[10px] leading-none mb-3">
+            <p className="text-white/60 tracking-[0.35em] text-[10px] leading-none mb-2">
               PHILEON
             </p>
             
-            <p className="text-white/50 tracking-[0.25em] text-[10px] leading-none mb-4">
+            <p className="text-white/50 tracking-[0.25em] text-[10px] leading-none mb-3">
               COLLECTIVE — GENTS
             </p>
             
-            <h1 className="text-white font-serif text-[clamp(2.4rem,5vw,3.8rem)] tracking-[-0.01em] leading-[1.08] mb-3">
+            <h1 className="text-white font-serif text-[clamp(2rem,5vw,3.8rem)] tracking-[-0.01em] leading-[1.08] mb-2">
               TRIBUTE: LA BÊTE
             </h1>
             
-            <p className="text-white/75 text-[clamp(0.9rem,1.3vw,1.1rem)] leading-[1.5] mb-4">
+            <p className="text-white/75 text-[clamp(0.85rem,1.3vw,1.1rem)] leading-[1.4] mb-3">
               Born in the showroom.<br />
               Built for the hand.
             </p>
             
-            <p className="text-white/50 text-sm tracking-[0.1em]">
+            <p className="text-white/50 text-xs md:text-sm tracking-[0.1em]">
               From $7,400 CAD
             </p>
             
@@ -79,33 +79,33 @@ export default function LaBetePage() {
         </div>
       </section>
 
-      {/* Spacer */}
-      <div className="h-10 md:h-14" />
+      {/* Spacer - smaller on mobile */}
+      <div className="h-4 md:h-14" />
 
       {/* ═══════════════════════════════════════════════════════════════
-          GALLERY - Full width on mobile, left column on desktop
+          GALLERY - Mobile only (separate from desktop grid)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full px-4 md:hidden py-4">
+      <section className="w-full px-4 md:hidden py-2">
         <div className="flex flex-col items-center">
           {/* Main Image */}
-          <div className="w-full max-w-[520px] h-[32vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
+          <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-3 overflow-hidden h-[28vh]">
             <img
               src={gallery[activeImage].src}
               alt={gallery[activeImage].alt || ""}
-              className="w-full h-full object-cover object-center rounded-[12px]"
+              className="max-w-full max-h-full object-contain rounded-[12px]"
             />
           </div>
           
-          {/* Thumbnails */}
-          <div className="w-full mt-3 overflow-x-auto flex gap-2 px-2 justify-center">
+          {/* Thumbnails - compact */}
+          <div className="w-full mt-2 overflow-x-auto flex gap-1.5 justify-center">
             {gallery.map((item, index) => (
               <button
                 key={`thumb-mobile-${index}`}
                 onClick={() => setActiveImage(index)}
                 className={`
-                  flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden transition-all duration-200
+                  flex-shrink-0 w-10 h-10 rounded-md overflow-hidden transition-all duration-200
                   ${activeImage === index 
-                    ? "opacity-100 ring-2 ring-white/60" 
+                    ? "opacity-100 ring-1.5 ring-white/60" 
                     : "opacity-40 ring-1 ring-white/10"}
                 `}
               >
