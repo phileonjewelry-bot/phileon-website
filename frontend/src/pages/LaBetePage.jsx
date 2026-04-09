@@ -85,10 +85,10 @@ export default function LaBetePage() {
       {/* ═══════════════════════════════════════════════════════════════
           GALLERY - Full width on mobile, left column on desktop
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full px-4 md:hidden py-8">
+      <section className="w-full px-4 md:hidden py-4">
         <div className="flex flex-col items-center">
           {/* Main Image */}
-          <div className="w-full max-w-[520px] h-[38vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
+          <div className="w-full max-w-[520px] h-[32vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
             <img
               src={gallery[activeImage].src}
               alt={gallery[activeImage].alt || ""}
@@ -97,13 +97,13 @@ export default function LaBetePage() {
           </div>
           
           {/* Thumbnails */}
-          <div className="w-full mt-4 overflow-x-auto flex gap-3 px-2 justify-center">
+          <div className="w-full mt-3 overflow-x-auto flex gap-2 px-2 justify-center">
             {gallery.map((item, index) => (
               <button
                 key={`thumb-mobile-${index}`}
                 onClick={() => setActiveImage(index)}
                 className={`
-                  flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden transition-all duration-200
+                  flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden transition-all duration-200
                   ${activeImage === index 
                     ? "opacity-100 ring-2 ring-white/60" 
                     : "opacity-40 ring-1 ring-white/10"}
