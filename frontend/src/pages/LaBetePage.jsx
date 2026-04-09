@@ -40,18 +40,20 @@ export default function LaBetePage() {
     <div className="min-h-screen bg-black text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO — TRIBUTE: LA BÊTE
+          HERO — TRIBUTE: LA BÊTE — Cinematic World Entry
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[42vh] md:h-[70vh] overflow-hidden">
+      <section className="relative w-full h-[50vh] md:h-[75vh] overflow-hidden">
         <img
           src={product.heroImage}
           alt="TRIBUTE: LA BÊTE hero"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/40" />
         
-        {/* CONTENT - Bottom left aligned */}
-        <div className="relative z-10 flex flex-col justify-end h-full px-[6vw] pb-8 md:pb-20 animate-[fadeInUp_1s_ease-out]">
+        {/* Subtle overall darkening for text readability */}
+        <div className="absolute inset-0 bg-black/30" />
+        
+        {/* CONTENT - Bottom left aligned, above the fade */}
+        <div className="relative z-10 flex flex-col justify-end h-full px-[6vw] pb-32 md:pb-44 animate-[fadeInUp_1s_ease-out]">
           <div className="w-full max-w-[520px]">
             
             <p className="text-white/60 tracking-[0.35em] text-[10px] leading-none mb-2">
@@ -78,35 +80,35 @@ export default function LaBetePage() {
           </div>
         </div>
         
-        {/* Gradient fade to gallery */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-black pointer-events-none" />
+        {/* Strong cinematic fade — hero dissolves into black */}
+        <div className="absolute bottom-0 left-0 w-full h-40 md:h-56 bg-gradient-to-b from-transparent via-black/40 to-black pointer-events-none" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          GALLERY - Mobile (overlaps hero with negative margin)
+          GALLERY — Floating Object Reveal (emerges from darkness)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative z-10 -mt-20 md:hidden">
+      <section className="relative z-10 -mt-28 md:-mt-40 md:hidden">
         <div className="mx-auto w-full max-w-[520px] px-4">
-          {/* Main Image */}
-          <div className="w-full h-[34vh] flex items-center justify-center overflow-hidden">
+          {/* Main Image — no container, floating on black */}
+          <div className="w-full h-[36vh] flex items-center justify-center">
             <img
               src={gallery[activeImage].src}
               alt={gallery[activeImage].alt || ""}
-              className="max-w-full max-h-full object-contain scale-[1.02]"
+              className="max-w-full max-h-full object-contain scale-[1.05] drop-shadow-2xl"
             />
           </div>
           
-          {/* Thumbnails */}
-          <div className="w-full mt-2 overflow-x-auto flex gap-1.5 justify-center">
+          {/* Thumbnails — subtle, secondary */}
+          <div className="w-full mt-4 overflow-x-auto flex gap-2 justify-center opacity-70">
             {gallery.map((item, index) => (
               <button
                 key={`thumb-mobile-${index}`}
                 onClick={() => setActiveImage(index)}
                 className={`
-                  flex-shrink-0 w-10 h-10 rounded-md overflow-hidden transition-all duration-200
+                  flex-shrink-0 w-11 h-11 rounded-md overflow-hidden transition-all duration-300
                   ${activeImage === index 
-                    ? "opacity-100 ring-1.5 ring-white/60" 
-                    : "opacity-40 ring-1 ring-white/10"}
+                    ? "opacity-100 ring-1 ring-white/50 scale-105" 
+                    : "opacity-50 hover:opacity-70"}
                 `}
               >
                 <img
