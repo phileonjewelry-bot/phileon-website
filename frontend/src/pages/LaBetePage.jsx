@@ -88,11 +88,11 @@ export default function LaBetePage() {
       <section className="w-full px-4 md:hidden py-2">
         <div className="flex flex-col items-center">
           {/* Main Image */}
-          <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-3 overflow-hidden h-[28vh]">
+          <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-2 overflow-hidden h-[34vh]">
             <img
               src={gallery[activeImage].src}
               alt={gallery[activeImage].alt || ""}
-              className="max-w-full max-h-full object-contain rounded-[12px]"
+              className="max-w-full max-h-full object-contain"
             />
           </div>
           

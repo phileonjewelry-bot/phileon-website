@@ -1122,10 +1122,10 @@ Crowned.`,
     priceFrom: "From $7,400 CAD",
     basePrice: 7400,
     
-    // Hero image for shop cards
-    imageUrl: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png",
+    // Collection/grid card image (showroom - hook/world-building)
+    imageUrl: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png",
     
-    // Hero image for product page (can be cinematic/asymmetric)
+    // Hero image for product page (cinematic showroom)
     heroImage: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png",
     
     // Pricing Configuration

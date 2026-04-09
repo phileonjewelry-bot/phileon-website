@@ -251,8 +251,8 @@ const CORE_PRODUCTS = [
     name: 'TRIBUTE: LA BÊTE',
     slug: 'labete',
     materialLine: 'Born in the showroom.',
-    imageUrl: products.labete.gallery[1].src, // Front black
-    hoverImage: products.labete.gallery[2].src, // Three quarter
+    imageUrl: products.labete.imageUrl, // Showroom image (hook/world-building)
+    hoverImage: products.labete.gallery[1].src, // Clean front shot on hover
     href: '/products/labete',
     price_range: 'From $7,400 CAD',
     inventory_count: 100,
