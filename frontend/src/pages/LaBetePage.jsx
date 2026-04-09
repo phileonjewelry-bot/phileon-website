@@ -44,7 +44,7 @@ export default function LaBetePage() {
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full h-[55vh] md:h-[70vh] overflow-hidden">
         <img
-          src={product.gallery[0].src}
+          src={product.heroImage}
           alt="TRIBUTE: LA BÊTE hero"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
@@ -92,11 +92,11 @@ export default function LaBetePage() {
           
           {/* Main Image - Centered */}
           <div className="w-full">
-            <div className="mx-auto w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
+            <div className="mx-auto w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-4 md:p-6 overflow-hidden">
               <img
                 src={gallery[activeImage].src}
                 alt={gallery[activeImage].alt || ""}
-                className="w-full h-full object-cover object-center rounded-[12px]"
+                className="max-w-full max-h-full object-contain rounded-[12px]"
               />
             </div>
           </div>
