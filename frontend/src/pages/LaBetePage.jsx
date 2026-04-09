@@ -79,22 +79,39 @@ export default function LaBetePage() {
         </div>
       </section>
 
-      {/* Spacer - smaller on mobile */}
-      <div className="h-4 md:h-14" />
+      {/* Spacer - minimal on mobile */}
+      <div className="h-1 md:h-14" />
 
       {/* ═══════════════════════════════════════════════════════════════
           GALLERY - Mobile only (separate from desktop grid)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full px-4 md:hidden py-2">
+      <section className="w-full px-4 md:hidden py-1">
         <div className="flex flex-col items-center">
-          {/* Main Image */}
-          <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-2 overflow-hidden h-[34vh]">
-            <img
-              src={gallery[activeImage].src}
-              alt={gallery[activeImage].alt || ""}
-              className="max-w-full max-h-full object-contain"
-            />
-          </div>
+          {/* Main Image - Two treatments based on image type */}
+          {(() => {
+            // Lifestyle/context shots: showroom(0), hand(6), fist(7), box(8)
+            const isLifestyleShot = [0, 6, 7, 8].includes(activeImage);
+            
+            return isLifestyleShot ? (
+              // LIFESTYLE TREATMENT - larger, more immersive
+              <div className="w-full bg-[#0a0a0a] rounded-[14px] overflow-hidden h-[42vh]">
+                <img
+                  src={gallery[activeImage].src}
+                  alt={gallery[activeImage].alt || ""}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+            ) : (
+              // PRODUCT TREATMENT - framed, contained
+              <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-2 overflow-hidden h-[32vh]">
+                <img
+                  src={gallery[activeImage].src}
+                  alt={gallery[activeImage].alt || ""}
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+            );
+          })()}
           
           {/* Thumbnails - compact */}
           <div className="w-full mt-2 overflow-x-auto flex gap-1.5 justify-center">
