@@ -1188,7 +1188,7 @@ Driven.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png", alt: "Undercarriage" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/vsia8rex_1000145544.png", alt: "Macro" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wvvb9qff_1000145550.png", alt: "Fist" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sra4wm62_1000145596.png", alt: "Box black" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7z0biff7_1000145603.png", alt: "Box black" }
     ],
     
     // Size profile
