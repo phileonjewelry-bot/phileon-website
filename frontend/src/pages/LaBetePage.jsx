@@ -92,11 +92,11 @@ export default function LaBetePage() {
           
           {/* Main Image - Centered */}
           <div className="w-full">
-            <div className="mx-auto w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-4 md:p-6 overflow-hidden">
+            <div className="mx-auto w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
               <img
                 src={gallery[activeImage].src}
                 alt={gallery[activeImage].alt || ""}
-                className="max-w-full max-h-full object-contain rounded-[12px]"
+                className="w-full h-full object-cover object-center rounded-[12px]"
               />
             </div>
           </div>
