@@ -1213,7 +1213,7 @@ Driven.`,
     // 8. fist (IMPACT)
     // 9. box_black (OWNERSHIP)
     gallery: [
-      { type: "image", src: "https://static.prod-images.emergentagent.com/jobs/f5f99e21-5104-439c-96b9-543eaba47da6/images/d5eb23f914d6ceb397f39ff8474215afd31e19fde89b55b57fff53b829b8d87e.png", alt: "LA BÊTE showroom hero", intent: "HOOK" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png", alt: "LA BÊTE showroom hero", intent: "HOOK" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", alt: "LA BÊTE front view", intent: "CLARITY" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mc3l4ayn_1000145539.png", alt: "LA BÊTE three quarter angle", intent: "FORM" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/h2x7mhvv_1000145601.png", alt: "LA BÊTE side profile", intent: "STRUCTURE" },
