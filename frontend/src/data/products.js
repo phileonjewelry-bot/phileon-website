@@ -1171,32 +1171,24 @@ Every diamond placed with intention.`,
     closing: `Not worn.
 Driven.`,
     
-    // Gallery media - IMAGES ONLY
-    // 1. showroom (Authority - HOOK)
-    // 2. front_black (Clarity - CONFIRM)
-    // 3. three_quarter (Form - UNDERSTAND)
-    // 4. angle (Detail)
-    // 5. macro (Precision - TRUST)
-    // 6. fist (Power - IMPACT)
-    // 7. hand (Lifestyle - CONTEXT)
-    // 8. interior (Construction)
-    // 9. macro_detail (Craft)
-    // 10. box (Ownership - CLOSURE)
+    // Gallery media - IMAGES ONLY (8 total - FINAL ORDER)
+    // 1. showroom (Hook – Bugatti authority)
+    // 2. front_black (Clean front – clarity)
+    // 3. three_quarter (Form – silhouette)
+    // 4. side_angle (Design – vents / profile)
+    // 5. undercarriage (Engineering – interior)
+    // 6. macro (Precision – grille detail)
+    // 7. fist (Impact – power shot)
+    // 8. box_black (Closure – ownership FINAL)
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png", alt: "Showroom" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", alt: "Front black" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mc3l4ayn_1000145539.png", alt: "Three quarter" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6hwqsfvx_1000145559.png", alt: "Angle" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/brg12apy_1000145543.png", alt: "Macro diamond" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/vsia8rex_1000145544.png", alt: "Macro grille" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wvvb9qff_1000145550.png", alt: "Fist" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/pi0196eb_1000145565.png", alt: "Hand" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png", alt: "Interior" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/gjgztxep_1000145521.png", alt: "Macro detail" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sra4wm62_1000145596.png", alt: "Box" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/xlvnx5e0_1000145598.png", alt: "Studio front" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/h2x7mhvv_1000145601.png", alt: "Side angle" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mvyeltrt_1000145600.png", alt: "Front velvet" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png", alt: "Undercarriage" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/vsia8rex_1000145544.png", alt: "Macro" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wvvb9qff_1000145550.png", alt: "Fist" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sra4wm62_1000145596.png", alt: "Box black" }
     ],
     
     // Size profile
