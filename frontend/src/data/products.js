@@ -1192,7 +1192,10 @@ Driven.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/pi0196eb_1000145565.png", alt: "Hand" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png", alt: "Interior" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/gjgztxep_1000145521.png", alt: "Macro detail" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sra4wm62_1000145596.png", alt: "Box" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sra4wm62_1000145596.png", alt: "Box" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/xlvnx5e0_1000145598.png", alt: "Studio front" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/h2x7mhvv_1000145601.png", alt: "Side angle" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mvyeltrt_1000145600.png", alt: "Front velvet" }
     ],
     
     // Size profile
