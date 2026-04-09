@@ -77,43 +77,26 @@ export default function LaBetePage() {
             
           </div>
         </div>
+        
+        {/* Gradient fade to gallery */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-black pointer-events-none" />
       </section>
 
-      {/* Spacer - minimal on mobile */}
-      <div className="h-1 md:h-14" />
-
       {/* ═══════════════════════════════════════════════════════════════
-          GALLERY - Mobile only (separate from desktop grid)
+          GALLERY - Mobile (overlaps hero with negative margin)
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="w-full px-4 md:hidden py-1">
-        <div className="flex flex-col items-center">
-          {/* Main Image - Two treatments based on image type */}
-          {(() => {
-            // Lifestyle/context shots: showroom(0), hand(6), fist(7), box(8)
-            const isLifestyleShot = [0, 6, 7, 8].includes(activeImage);
-            
-            return isLifestyleShot ? (
-              // LIFESTYLE TREATMENT - full frame, immersive
-              <div className="w-full bg-[#0a0a0a] rounded-[14px] overflow-hidden h-[42vh]">
-                <img
-                  src={gallery[activeImage].src}
-                  alt={gallery[activeImage].alt || ""}
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-            ) : (
-              // PRODUCT TREATMENT - fuller presence, minimal negative space
-              <div className="w-full bg-[#0a0a0a] rounded-[14px] overflow-hidden h-[38vh]">
-                <img
-                  src={gallery[activeImage].src}
-                  alt={gallery[activeImage].alt || ""}
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-            );
-          })()}
+      <section className="relative z-10 -mt-20 md:hidden">
+        <div className="mx-auto w-full max-w-[520px] px-4">
+          {/* Main Image */}
+          <div className="w-full h-[34vh] flex items-center justify-center overflow-hidden">
+            <img
+              src={gallery[activeImage].src}
+              alt={gallery[activeImage].alt || ""}
+              className="max-w-full max-h-full object-contain scale-[1.02]"
+            />
+          </div>
           
-          {/* Thumbnails - compact */}
+          {/* Thumbnails */}
           <div className="w-full mt-2 overflow-x-auto flex gap-1.5 justify-center">
             {gallery.map((item, index) => (
               <button
