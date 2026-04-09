@@ -1125,27 +1125,50 @@ Crowned.`,
     currency: "CAD",
     defaultTier: "signature",
     
-    // Tier-based pricing
+    // Tier-based pricing (4 tiers)
     pricing: {
+      silver: 3200,
       foundation: 7400,
-      signature: 11200
+      signature: 11200,
+      heirloom: 15800
     },
     
     tiers: {
+      silver: {
+        label: "SILVER",
+        sublabel: "Entry",
+        name: "Silver",
+        metal: "Sterling Silver",
+        stones: "Cubic stones",
+        badge: "",
+        description: "Entry interpretation of LA BÊTE.",
+        hiddenFromHero: true
+      },
       foundation: {
         label: "FOUNDATION",
         sublabel: "Entry",
         name: "Foundation",
-        metal: "10K White Gold",
-        stones: "Lab-Grown Diamonds",
-        badge: ""
+        metal: "10K Gold",
+        stones: "Precision-set stones",
+        badge: "",
+        description: "The entry into LA BÊTE. Solid gold. Full presence."
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K White Gold",
-        stones: "Lab-Grown Diamonds",
-        badge: "MOST POPULAR"
+        metal: "14K Gold",
+        stones: "Lab-grown diamonds",
+        badge: "MOST POPULAR",
+        description: "Balance of strength and brilliance. The definitive expression.",
+        defaultSelected: true
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K Gold",
+        stones: "Natural diamonds",
+        badge: "",
+        description: "Collector level. Maximum density. Maximum legacy."
       }
     },
     
@@ -1171,24 +1194,26 @@ Every diamond placed with intention.`,
     closing: `Not worn.
 Driven.`,
     
-    // Gallery media - IMAGES ONLY (8 total - FINAL ORDER)
-    // 1. showroom (Hook – Bugatti authority)
-    // 2. front_black (Clean front – clarity)
-    // 3. three_quarter (Form – silhouette)
-    // 4. side_angle (Design – vents / profile)
-    // 5. undercarriage (Engineering – interior)
-    // 6. macro (Precision – grille detail)
-    // 7. fist (Impact – power shot)
-    // 8. box_black (Closure – ownership FINAL)
+    // Gallery media - IMAGES ONLY (9 total - FINAL ORDER)
+    // 1. showroom (HOOK)
+    // 2. front_black (CLARITY)
+    // 3. three_quarter (FORM)
+    // 4. side_profile (STRUCTURE)
+    // 5. macro_clean (TRUST)
+    // 6. interior (CRAFT)
+    // 7. hand_relaxed (CONTEXT)
+    // 8. fist (IMPACT)
+    // 9. box_black (OWNERSHIP)
     gallery: [
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png", alt: "Showroom" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", alt: "Front black" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mc3l4ayn_1000145539.png", alt: "Three quarter" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/h2x7mhvv_1000145601.png", alt: "Side angle" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png", alt: "Undercarriage" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/vsia8rex_1000145544.png", alt: "Macro" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wvvb9qff_1000145550.png", alt: "Fist" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7z0biff7_1000145603.png", alt: "Box black" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png", alt: "LA BÊTE showroom hero", intent: "HOOK" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", alt: "LA BÊTE front view", intent: "CLARITY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mc3l4ayn_1000145539.png", alt: "LA BÊTE three quarter angle", intent: "FORM" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/h2x7mhvv_1000145601.png", alt: "LA BÊTE side profile", intent: "STRUCTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/vsia8rex_1000145544.png", alt: "LA BÊTE diamond macro detail", intent: "TRUST" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png", alt: "LA BÊTE interior construction", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/pi0196eb_1000145565.png", alt: "LA BÊTE worn on hand", intent: "CONTEXT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wvvb9qff_1000145550.png", alt: "LA BÊTE power shot", intent: "IMPACT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7z0biff7_1000145603.png", alt: "LA BÊTE in presentation box", intent: "OWNERSHIP" }
     ],
     
     // Size profile

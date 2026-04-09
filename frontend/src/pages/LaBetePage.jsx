@@ -117,13 +117,15 @@ export default function LaBetePage() {
           </h2>
           <p className="mt-3 text-white/85">{product.tagline}</p>
 
-          {/* Tier Selection - 3 Column Grid */}
+          {/* Tier Selection - 4 Tier Grid */}
           <div className="mt-8">
             <p className="text-xs tracking-[0.25em] opacity-50 mb-4">
               SELECT CONFIGURATION
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(product.tiers).map(([key, tier]) => {
+              {Object.entries(product.tiers)
+                .filter(([key, tier]) => !tier.hiddenFromHero)
+                .map(([key, tier]) => {
                 const isActive = selectedTier === key;
                 
                 return (
@@ -151,18 +153,49 @@ export default function LaBetePage() {
                     </p>
                     
                     {/* DESCRIPTION */}
-                    <p className={`text-sm whitespace-pre-line mb-4 ${isActive ? "opacity-80" : "opacity-60"}`}>
-                      {tier.metal}{"\n"}{tier.stones}
+                    <p className={`text-sm whitespace-pre-line mb-3 ${isActive ? "opacity-80" : "opacity-60"}`}>
+                      {tier.metal} · {tier.stones}
                     </p>
+                    
+                    {/* TIER DESCRIPTION */}
+                    {tier.description && (
+                      <p className={`text-xs mb-4 ${isActive ? "opacity-60" : "opacity-40"}`}>
+                        {tier.description}
+                      </p>
+                    )}
                     
                     {/* PRICE */}
                     <p className={`text-xl ${isActive ? "text-white" : "opacity-80"}`}>
-                      ${product.pricing[key].toLocaleString()}
+                      ${product.pricing[key].toLocaleString()} CAD
                     </p>
                   </div>
                 );
               })}
             </div>
+            
+            {/* Silver tier - shown separately */}
+            {product.tiers.silver && (
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div
+                  onClick={() => setSelectedTier('silver')}
+                  data-testid="labete-tier-silver"
+                  className={`
+                    relative cursor-pointer rounded-xl p-4 transition-all duration-200
+                    ${selectedTier === 'silver'
+                      ? "border border-white/50 bg-white/[0.02]" 
+                      : "border border-white/5 hover:border-white/20"}
+                  `}
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-xs tracking-[0.25em] opacity-40 mb-1">SILVER</p>
+                      <p className="text-sm opacity-50">{product.tiers.silver.metal} · {product.tiers.silver.stones}</p>
+                    </div>
+                    <p className="text-lg opacity-60">${product.pricing.silver.toLocaleString()} CAD</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* SIZE SELECTOR */}
