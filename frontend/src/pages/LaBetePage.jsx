@@ -116,11 +116,11 @@ export default function LaBetePage() {
           
           {/* Main Image */}
           <div className="flex-1">
-            <div className="aspect-square bg-[#0a0a0a] rounded-[16px] flex items-center justify-center group">
+            <div className="w-full h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-4 md:p-6 overflow-hidden">
               <img
                 src={gallery[activeImage].src}
-                alt={gallery[activeImage].alt}
-                className="max-h-full max-w-full object-contain rounded-[12px] transition-transform duration-500 group-hover:scale-[1.06]"
+                alt={gallery[activeImage].alt || ""}
+                className="max-w-full max-h-full object-contain rounded-[12px]"
               />
             </div>
             
