@@ -88,54 +88,29 @@ export default function LaBetePage() {
       <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 grid md:grid-cols-2 gap-10 md:gap-16">
         
         {/* LEFT - Gallery */}
-        <div className="flex flex-col gap-4">
+        <div className="w-full flex flex-col items-center">
           
-          {/* Main Image - Centered */}
-          <div className="w-full">
-            <div className="mx-auto w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
-              <img
-                src={gallery[activeImage].src}
-                alt={gallery[activeImage].alt || ""}
-                className="w-full h-full object-cover object-center rounded-[12px]"
-              />
-            </div>
+          {/* Main Image */}
+          <div className="w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
+            <img
+              src={gallery[activeImage].src}
+              alt={gallery[activeImage].alt || ""}
+              className="w-full h-full object-cover object-center rounded-[12px]"
+            />
           </div>
           
-          {/* Thumbnails (Desktop - Horizontal below main image) */}
-          <div className="hidden md:flex gap-3 justify-center">
+          {/* Thumbnails */}
+          <div className="w-full mt-4 overflow-x-auto flex gap-3 px-2 justify-center">
             {gallery.map((item, index) => (
               <button
                 key={`thumb-${index}`}
                 onClick={() => setActiveImage(index)}
                 onMouseEnter={() => setActiveImage(index)}
                 className={`
-                  w-16 h-16 rounded-lg overflow-hidden transition-all duration-200
+                  flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-lg overflow-hidden transition-all duration-200
                   ${activeImage === index 
                     ? "opacity-100 ring-2 ring-white/60" 
                     : "opacity-40 hover:opacity-70 ring-1 ring-white/10"}
-                `}
-              >
-                <img
-                  src={item.src}
-                  alt={item.alt}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </button>
-            ))}
-          </div>
-          
-          {/* Thumbnails (Mobile - Horizontal scrollable) */}
-          <div className="flex md:hidden gap-2 overflow-x-auto pb-2 justify-start">
-            {gallery.map((item, index) => (
-              <button
-                key={`mobile-thumb-${index}`}
-                onClick={() => setActiveImage(index)}
-                className={`
-                  flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition-all duration-200
-                  ${activeImage === index 
-                    ? "opacity-100 ring-2 ring-white/60" 
-                    : "opacity-40 ring-1 ring-white/10"}
                 `}
               >
                 <img
