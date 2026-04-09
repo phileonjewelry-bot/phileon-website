@@ -919,21 +919,24 @@ For the right one.`
         name: "Foundation",
         metal: "10K White Gold",
         stones: "Cubic / lower-grade stones",
-        badge: ""
+        badge: "",
+        description: "The entry into CYPHER. Bold form. Full presence."
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
         metal: "14K White Gold",
         stones: "Lab / mid-grade natural mix",
-        badge: "MOST POPULAR"
+        badge: "MOST POPULAR",
+        description: "The definitive expression. Balanced brilliance."
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
         metal: "18K White Gold",
         stones: "Natural stones (upgraded quality)",
-        badge: "COLLECTOR"
+        badge: "COLLECTOR",
+        description: "Collector level. Maximum density. Maximum legacy."
       }
     },
     
@@ -1030,14 +1033,16 @@ Claimed.`,
         name: "Foundation",
         metal: "10K Gold",
         stones: "Lab-Grown Diamonds",
-        badge: ""
+        badge: "",
+        description: "The entry into IL MORSO. Solid gold. Full bite."
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
         metal: "14K Gold",
         stones: "Lab-Grown Diamonds",
-        badge: "MOST POPULAR"
+        badge: "MOST POPULAR",
+        description: "The king's choice. Maximum presence. Maximum statement."
       }
     },
     

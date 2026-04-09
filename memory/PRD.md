@@ -29,7 +29,35 @@ Build a sophisticated luxury jewelry e-commerce website for PHILEON brand featur
 - Wishlist hearts
 - Category and audience filtering via URL params
 
-## What's Been Implemented (December 2025 - Latest Session)
+## What's Been Implemented (April 2026 - Latest Session)
+
+### Enhanced Tier Selector UI (Complete - April 9, 2026)
+**UI Consistency Applied to CYPHER and IL MORSO DEL RE Pages**
+
+Applied the refined LA BÊTE tier selector design to both pages:
+- "SELECT CONFIGURATION" label (matches LA BÊTE)
+- Subtle transparent background when active (`bg-white/[0.04]`)
+- "MOST POPULAR" and "COLLECTOR" badges with pill styling
+- Description text for each tier
+- Proper opacity transitions for active/inactive states
+
+**Updated Files:**
+- `CypherPage.jsx` - Enhanced tier selector
+- `MorsoPage.jsx` - Enhanced tier selector
+- `products.js` - Added tier descriptions for CYPHER and MORSO
+
+### TRIBUTE: LA BÊTE Page Refinements (Verified - April 9, 2026)
+**Final Implementation Verified:**
+- Desktop vertical thumbnail gallery (hover-to-swap)
+- Square aspect ratio main image
+- Subtle zoom (1.06 scale) on hover
+- Updated purchase panel microcopy
+- CRAFT section with numbered formatting
+- Closing statement: "Not driven. Worn."
+- Mobile 55vh hero height
+- Mobile horizontal thumbnails
+
+## What's Been Implemented (December 2025 - January 2026)
 
 ### CYPHER Men's Statement Ring Page (Complete - December 29, 2025)
 **New Flagship Product Page for Gentleman's Club Collection**

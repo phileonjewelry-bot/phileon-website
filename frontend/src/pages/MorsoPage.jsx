@@ -123,41 +123,53 @@ export default function MorsoPage() {
 
           {/* Tier Selection */}
           <div className="mt-8">
-            <label className="block text-xs tracking-widest text-neutral-400 mb-3">
-              TIER
-            </label>
+            <p className="text-xs tracking-[0.25em] opacity-50 mb-4">
+              SELECT CONFIGURATION
+            </p>
             <div className="space-y-3">
-              {Object.entries(product.tiers).map(([key, tier]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedTier(key)}
-                  data-testid={`morso-tier-${key}`}
-                  className={`w-full text-left border rounded-xl px-4 py-4 transition-all duration-200 ${
-                    selectedTier === key
-                      ? "border-white bg-white text-black"
-                      : "border-white/15 bg-transparent text-white hover:border-white/30"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm tracking-wide">{tier.label}</div>
-                      <div className={`${selectedTier === key ? "text-black/70" : "text-white/60"} text-xs mt-1`}>
-                        {tier.metal} · {tier.stones}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      {tier.badge && (
-                        <div className={`text-[10px] tracking-[0.18em] mb-1 ${selectedTier === key ? "text-black/70" : "text-white/50"}`}>
-                          {tier.badge}
+              {Object.entries(product.tiers).map(([key, tier]) => {
+                const isActive = selectedTier === key;
+                
+                return (
+                  <div
+                    key={key}
+                    onClick={() => setSelectedTier(key)}
+                    data-testid={`morso-tier-${key}`}
+                    className={`
+                      relative cursor-pointer rounded-xl p-4 transition-all duration-200
+                      ${isActive 
+                        ? "border border-white bg-white/[0.04]" 
+                        : "border border-white/10 hover:border-white/25"}
+                    `}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className={`text-xs tracking-[0.2em] ${isActive ? "opacity-90" : "opacity-50"}`}>
+                            {tier.label}
+                          </p>
+                          {tier.badge && (
+                            <span className="text-[9px] tracking-[0.12em] bg-white text-black px-2 py-0.5 rounded-full">
+                              {tier.badge}
+                            </span>
+                          )}
                         </div>
-                      )}
-                      <div className="text-lg">
-                        ${product.pricing[key].toLocaleString()} CAD
+                        <p className={`text-sm mb-1 ${isActive ? "opacity-80" : "opacity-55"}`}>
+                          {tier.metal} · {tier.stones}
+                        </p>
+                        {tier.description && (
+                          <p className={`text-xs ${isActive ? "opacity-55" : "opacity-35"}`}>
+                            {tier.description}
+                          </p>
+                        )}
                       </div>
+                      <p className={`text-lg ml-4 ${isActive ? "text-white" : "opacity-70"}`}>
+                        ${product.pricing[key].toLocaleString()} CAD
+                      </p>
                     </div>
                   </div>
-                </button>
-              ))}
+                );
+              })}
             </div>
           </div>
 
