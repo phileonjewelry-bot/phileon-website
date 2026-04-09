@@ -119,34 +119,49 @@ export default function LaBetePage() {
 
           {/* Tier Selection - 3 Column Grid */}
           <div className="mt-8">
-            <label className="block text-xs tracking-widest text-neutral-400 mb-4">
-              TIER
-            </label>
+            <p className="text-xs tracking-[0.25em] opacity-50 mb-4">
+              SELECT CONFIGURATION
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.entries(product.tiers).map(([key, tier]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedTier(key)}
-                  data-testid={`labete-tier-${key}`}
-                  className={`border rounded-2xl p-5 text-left transition-all relative ${
-                    selectedTier === key
-                      ? "border-white bg-white/5"
-                      : "border-white/10 hover:border-white/30"
-                  }`}
-                >
-                  {tier.badge && (
-                    <span className="absolute top-3 right-3 text-[9px] tracking-[0.15em] text-white/50">
-                      {tier.badge}
-                    </span>
-                  )}
-                  <p className="text-xs tracking-[0.25em] opacity-50 mb-2">{tier.label}</p>
-                  <p className="text-sm opacity-70 mb-4">
-                    {tier.metal}<br />
-                    {tier.stones}
-                  </p>
-                  <p className="text-xl">${product.pricing[key].toLocaleString()}</p>
-                </button>
-              ))}
+              {Object.entries(product.tiers).map(([key, tier]) => {
+                const isActive = selectedTier === key;
+                
+                return (
+                  <div
+                    key={key}
+                    onClick={() => setSelectedTier(key)}
+                    data-testid={`labete-tier-${key}`}
+                    className={`
+                      relative cursor-pointer rounded-2xl p-5 transition-all duration-200
+                      ${isActive 
+                        ? "border border-white bg-white/[0.04] scale-[1.02] translate-y-[-2px]" 
+                        : "border border-white/10 hover:border-white/30"}
+                    `}
+                  >
+                    {/* MOST POPULAR TAG */}
+                    {tier.badge && (
+                      <span className="absolute top-3 right-3 text-[9px] tracking-[0.15em] bg-white text-black px-2 py-1 rounded-full">
+                        {tier.badge}
+                      </span>
+                    )}
+                    
+                    {/* TITLE */}
+                    <p className={`text-xs tracking-[0.25em] mb-2 ${isActive ? "opacity-90" : "opacity-50"}`}>
+                      {tier.label}
+                    </p>
+                    
+                    {/* DESCRIPTION */}
+                    <p className={`text-sm whitespace-pre-line mb-4 ${isActive ? "opacity-80" : "opacity-60"}`}>
+                      {tier.metal}{"\n"}{tier.stones}
+                    </p>
+                    
+                    {/* PRICE */}
+                    <p className={`text-xl ${isActive ? "text-white" : "opacity-80"}`}>
+                      ${product.pricing[key].toLocaleString()}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
