@@ -13,7 +13,7 @@ export default function LaBetePage() {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(0);
+  const [activeImage, setActiveImage] = useState(1); // Default to clean front shot (index 1)
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentPrice = product.pricing[selectedTier];
