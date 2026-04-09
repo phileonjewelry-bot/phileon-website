@@ -102,12 +102,12 @@ export default function LaBetePage() {
                 />
               </div>
             ) : (
-              // PRODUCT TREATMENT - framed, contained
-              <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-2 overflow-hidden h-[32vh]">
+              // PRODUCT TREATMENT - framed, scaled up for presence
+              <div className="w-full bg-[#0a0a0a] rounded-[16px] flex items-center justify-center p-2 overflow-hidden h-[34vh]">
                 <img
                   src={gallery[activeImage].src}
                   alt={gallery[activeImage].alt || ""}
-                  className="max-w-full max-h-full object-contain"
+                  className="max-w-full h-full object-contain scale-[1.05]"
                 />
               </div>
             );
