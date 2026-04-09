@@ -83,15 +83,12 @@ export default function LaBetePage() {
       <div className="h-10 md:h-14" />
 
       {/* ═══════════════════════════════════════════════════════════════
-          MAIN CONTENT - Gallery + Purchase Panel
+          GALLERY - Full width on mobile, left column on desktop
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12 grid md:grid-cols-2 gap-10 md:gap-16">
-        
-        {/* LEFT - Gallery */}
-        <div className="w-full flex flex-col items-center">
-          
+      <section className="w-full px-4 md:hidden py-8">
+        <div className="flex flex-col items-center">
           {/* Main Image */}
-          <div className="w-full max-w-[520px] h-[38vh] md:h-[50vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
+          <div className="w-full max-w-[520px] h-[38vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
             <img
               src={gallery[activeImage].src}
               alt={gallery[activeImage].alt || ""}
@@ -103,11 +100,53 @@ export default function LaBetePage() {
           <div className="w-full mt-4 overflow-x-auto flex gap-3 px-2 justify-center">
             {gallery.map((item, index) => (
               <button
-                key={`thumb-${index}`}
+                key={`thumb-mobile-${index}`}
+                onClick={() => setActiveImage(index)}
+                className={`
+                  flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden transition-all duration-200
+                  ${activeImage === index 
+                    ? "opacity-100 ring-2 ring-white/60" 
+                    : "opacity-40 ring-1 ring-white/10"}
+                `}
+              >
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          MAIN CONTENT - Desktop: Gallery + Purchase Panel side by side
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-12 grid md:grid-cols-2 gap-10 md:gap-16">
+        
+        {/* LEFT - Gallery (Desktop only) */}
+        <div className="hidden md:flex flex-col items-center">
+          
+          {/* Main Image */}
+          <div className="w-full max-w-[520px] h-[50vh] bg-[#0a0a0a] rounded-[16px] overflow-hidden">
+            <img
+              src={gallery[activeImage].src}
+              alt={gallery[activeImage].alt || ""}
+              className="w-full h-full object-cover object-center rounded-[12px]"
+            />
+          </div>
+          
+          {/* Thumbnails */}
+          <div className="w-full mt-4 overflow-x-auto flex gap-3 px-2 justify-center">
+            {gallery.map((item, index) => (
+              <button
+                key={`thumb-desktop-${index}`}
                 onClick={() => setActiveImage(index)}
                 onMouseEnter={() => setActiveImage(index)}
                 className={`
-                  flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-lg overflow-hidden transition-all duration-200
+                  flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition-all duration-200
                   ${activeImage === index 
                     ? "opacity-100 ring-2 ring-white/60" 
                     : "opacity-40 hover:opacity-70 ring-1 ring-white/10"}
