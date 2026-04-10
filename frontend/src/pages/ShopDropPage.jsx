@@ -261,6 +261,21 @@ const CORE_PRODUCTS = [
     audience: 'gentlemens-club',
     featured: true,
   },
+  {
+    id: 'blessed',
+    name: 'BLESSED',
+    slug: 'blessed',
+    materialLine: 'Word Made Metal.',
+    imageUrl: products.blessed.imageUrl,
+    hoverImage: products.blessed.gallery[1].src, // Angle shot on hover
+    href: '/products/blessed',
+    price_range: 'From $X,XXX CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['gentlemens-club', 'ladies', 'collective'], // Multi-category
+    featured: true,
+  },
 ];
 
 // Additional drop products as fallback
@@ -343,23 +358,34 @@ const ShopDropPage = () => {
     // If category or audience filter is active, only show products that have those fields defined
     const hasFilters = categoryParam || audienceParam;
     
-    // Filter by category if specified
+    // Filter by category if specified (supports both string and array)
     if (categoryParam) {
       // Exclude products without a category when filter is active
       if (!product.category) return false;
-      if (product.category !== categoryParam) return false;
+      // Support array categories (e.g., ["gents", "ladies", "collective"])
+      if (Array.isArray(product.category)) {
+        if (!product.category.includes(categoryParam)) return false;
+      } else {
+        if (product.category !== categoryParam) return false;
+      }
     }
 
-    // Filter by audience if specified
+    // Filter by audience if specified (supports both string and array)
     if (audienceParam) {
       // Exclude products without an audience when filter is active
       if (!product.audience) return false;
-      // Allow unisex products to show in both ladies and gentlemens-club collections
-      if (product.audience === 'unisex') {
-        // Unisex shows in ladies and gentlemens-club, but not in other specific filters
-        if (audienceParam !== 'ladies' && audienceParam !== 'gentlemens-club') return false;
-      } else if (product.audience !== audienceParam) {
-        return false;
+      
+      // Support array audiences
+      if (Array.isArray(product.audience)) {
+        if (!product.audience.includes(audienceParam)) return false;
+      } else {
+        // Allow unisex products to show in both ladies and gentlemens-club collections
+        if (product.audience === 'unisex') {
+          // Unisex shows in ladies and gentlemens-club, but not in other specific filters
+          if (audienceParam !== 'ladies' && audienceParam !== 'gentlemens-club') return false;
+        } else if (product.audience !== audienceParam) {
+          return false;
+        }
       }
     }
 

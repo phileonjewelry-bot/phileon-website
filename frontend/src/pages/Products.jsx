@@ -20,7 +20,12 @@ const Products = () => {
 
   let filteredProducts = selectedCategory === 'all'
     ? products
-    : products.filter(p => p.category === selectedCategory);
+    : products.filter(p => {
+        if (Array.isArray(p.category)) {
+          return p.category.includes(selectedCategory);
+        }
+        return p.category === selectedCategory;
+      });
 
   if (sortBy === 'price-low') {
     filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
