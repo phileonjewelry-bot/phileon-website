@@ -39,6 +39,7 @@ import HomagePage from "@/pages/HomagePage";
 import CypherPage from "@/pages/CypherPage";
 import MorsoPage from "@/pages/MorsoPage";
 import LaBetePage from "@/pages/LaBetePage";
+import BlessedPage from "@/pages/BlessedPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -105,6 +106,9 @@ function App() {
             <Route path="/products/cypher" element={<CypherPage />} />
             <Route path="/products/morso" element={<MorsoPage />} />
             <Route path="/products/labete" element={<LaBetePage />} />
+            <Route path="/products/blessed" element={<BlessedPage />} />
+            <Route path="/shop/labete" element={<LaBetePage />} />
+            <Route path="/shop/blessed" element={<BlessedPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/custom-design" element={<CustomDesignPage />} />
             <Route path="/ring-try-on" element={<RingTryOnPage />} />

@@ -1235,6 +1235,123 @@ Driven.`,
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // BLESSED — DEUTERONOMY 28:3
+  // "Word Made Metal" - Woven gold scripture ring
+  // Collective piece (gender-neutral)
+  // ==========================================
+  blessed: {
+    name: "BLESSED",
+    slug: "blessed",
+    category: "rings",
+    audience: "collective",
+    collections: ["rings", "collective"],
+    subtitle: "DEUTERONOMY 28:3",
+    tagline: "Word Made Metal.",
+    priceFrom: "From $X,XXX CAD",
+    basePrice: 0, // Placeholder
+    
+    // Hero image for shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+    
+    // Tier-based pricing (placeholders)
+    pricing: {
+      foundation: 0,
+      signature: 0,
+      heirloom: 0
+    },
+    
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K Gold",
+        stones: "Woven form",
+        badge: "",
+        description: "The entry into BLESSED. Solid gold. Full weave."
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K Gold",
+        stones: "Refined weave",
+        badge: "MOST POPULAR",
+        description: "The definitive expression. Balanced weight and density."
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K Gold",
+        stones: "Full density weave",
+        badge: "",
+        description: "Collector level. Maximum density. Maximum legacy."
+      }
+    },
+    
+    // Story copy
+    story: `Before it became a ring, it was a promise.
+
+Cast in gold with two distinct weaves —
+a tight mesh band and a heavy rope braid that builds each letter from the metal up.
+
+Every detail preserved.
+Every strand accountable.
+
+The same ring.
+The same standard.
+Every time.`,
+    
+    verse: `Blessed shall you be in the city,
+and blessed shall you be in the field.`,
+    
+    craft: [
+      {
+        number: "01",
+        title: "WOVEN",
+        description: "Gold is treated like thread. Each strand interlocks to form structure, not surface."
+      },
+      {
+        number: "02",
+        title: "CONTINUOUS",
+        description: "The form does not begin or end. It moves as one — unbroken, intentional."
+      }
+    ],
+    
+    closing: `Not decoration.
+Covenant.`,
+    
+    // Gallery media - IMAGES ONLY
+    // 1. front (identity)
+    // 2. angle (signature)
+    // 3. editorial (clean - dark fabric)
+    // 4. side (structure)
+    // 5. back (detail)
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg", alt: "BLESSED front view", intent: "IDENTITY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/11mc2nl9_1000145880.png", alt: "BLESSED angle view", intent: "SIGNATURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mzbxk33m_1000145877.png", alt: "BLESSED editorial", intent: "CLEAN" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j183z9v_1000145876.png", alt: "BLESSED side view", intent: "STRUCTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7bx00mvt_1000145878.png", alt: "BLESSED back view", intent: "DETAIL" }
+    ],
+    
+    // Size profile
+    sizeProfile: {
+      type: "ring",
+      min: 4,
+      max: 12,
+      halfSizes: true,
+      customAbove: 12
+    },
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
