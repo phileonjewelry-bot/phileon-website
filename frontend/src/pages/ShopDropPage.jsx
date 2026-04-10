@@ -593,9 +593,14 @@ const ShopDropPage = () => {
                     >
                       <div style={{
                         position: 'relative',
-                        aspectRatio: '4/5',
+                        aspectRatio: product.category === 'earrings' ? 'auto' : '4/5',
+                        minHeight: product.category === 'earrings' ? '300px' : 'auto',
+                        maxHeight: product.category === 'earrings' ? '80vh' : 'none',
                         overflow: 'hidden',
-                        background: '#111',
+                        background: product.category === 'earrings' ? '#fff' : '#111',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}>
                         <img 
                           src={cardImage} 
@@ -603,8 +608,8 @@ const ShopDropPage = () => {
                           loading="lazy"
                           style={{
                             width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
+                            height: product.category === 'earrings' ? 'auto' : '100%',
+                            objectFit: product.category === 'earrings' ? 'contain' : 'cover',
                             filter: isSoldOut ? 'grayscale(1)' : 'none',
                           }}
                           draggable="false"
@@ -691,17 +696,25 @@ const ShopDropPage = () => {
                   >
                     <div style={{
                       position: 'relative',
-                      aspectRatio: '4/5',
+                      aspectRatio: product.category === 'earrings' ? 'auto' : '4/5',
+                      minHeight: product.category === 'earrings' ? '300px' : 'auto',
+                      maxHeight: product.category === 'earrings' ? '80vh' : 'none',
                       overflow: 'hidden',
-                      background: '#111',
+                      background: product.category === 'earrings' ? '#fff' : '#111',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}>
                       {/* Primary Image */}
                       <img 
                         src={cardImage} 
                         alt={product.name}
                         loading="lazy"
-                        className={`w-full h-full object-cover transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
+                        className={`transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
                         style={{
+                          width: '100%',
+                          height: product.category === 'earrings' ? 'auto' : '100%',
+                          objectFit: product.category === 'earrings' ? 'contain' : 'cover',
                           filter: isSoldOut ? 'grayscale(1)' : 'none',
                         }}
                         draggable="false"
