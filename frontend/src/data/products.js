@@ -1333,28 +1333,34 @@ Covenant.`,
     // 3. editorial (clean - dark fabric)
     // 4. side (structure)
     // 5. back (detail)
-    // 6. hand holding - female (lifestyle)
-    // 7. on finger - female (context)
-    // 8. macro weave (craft detail)
-    // 9. arch lettering (typography)
-    // 10. box (ownership)
-    // 11. on finger - male (context)
-    // 12. bible (meaning)
-    // 13. editorial face (campaign)
+    // LUXURY EDITORIAL SEQUENCE (LOCKED)
+    // 1. HERO (object) - clean front product
+    // 2. SECONDARY HERO (presence) - best angle
+    // 3. HUMAN ENTRY (wearability) - strongest hand shot
+    // 4. BALANCE (collective) - opposite energy hand
+    // 5. INTIMACY (closer human) - holding/detail
+    // 6. CRAFT MACRO 1 (craftsmanship) - weave detail
+    // 7. CRAFT MACRO 2 (abstract) - texture
+    // 8. ARCHITECTURE (form) - structural angle
+    // 9. TRUST (interior) - inner band
+    // 10. MEANING (context) - bible
+    // 11. OWNERSHIP (box) - retail-ready
+    // 12. CAMPAIGN (brand) - editorial/attitude
+    // 13. OPTIONAL (residual) - extra editorial
     gallery: [
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg", alt: "BLESSED front view", intent: "IDENTITY" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/11mc2nl9_1000145880.png", alt: "BLESSED angle view", intent: "SIGNATURE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mzbxk33m_1000145877.png", alt: "BLESSED editorial", intent: "CLEAN" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j183z9v_1000145876.png", alt: "BLESSED side view", intent: "STRUCTURE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/npft298a_1000145899.png", alt: "BLESSED interior construction", intent: "INTERIOR" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/opsqs7w5_1000145895.png", alt: "BLESSED hand holding", intent: "LIFESTYLE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xwsea8c_1000145892.png", alt: "BLESSED on finger female", intent: "CONTEXT" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rnpdum9t_1000145893.png", alt: "BLESSED weave macro", intent: "CRAFT" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b86n5xq7_1000145900.png", alt: "BLESSED arch lettering", intent: "TYPOGRAPHY" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/uzkhjgjn_1000145898.png", alt: "BLESSED in box", intent: "OWNERSHIP" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/fj8mqlmr_1000145897.png", alt: "BLESSED on finger male", intent: "CONTEXT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg", alt: "BLESSED front view", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/11mc2nl9_1000145880.png", alt: "BLESSED angle view", intent: "SECONDARY_HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xwsea8c_1000145892.png", alt: "BLESSED on finger female", intent: "HUMAN_ENTRY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/fj8mqlmr_1000145897.png", alt: "BLESSED on finger male", intent: "BALANCE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/opsqs7w5_1000145895.png", alt: "BLESSED hand holding", intent: "INTIMACY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rnpdum9t_1000145893.png", alt: "BLESSED weave macro", intent: "CRAFT_MACRO_1" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b86n5xq7_1000145900.png", alt: "BLESSED arch lettering", intent: "CRAFT_MACRO_2" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j183z9v_1000145876.png", alt: "BLESSED side view", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/npft298a_1000145899.png", alt: "BLESSED interior construction", intent: "TRUST" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5xr9wsl4_1000145894.png", alt: "BLESSED on bible", intent: "MEANING" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3yi78vya_1000145890.png", alt: "BLESSED editorial face", intent: "CAMPAIGN" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/uzkhjgjn_1000145898.png", alt: "BLESSED in box", intent: "OWNERSHIP" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3yi78vya_1000145890.png", alt: "BLESSED editorial face", intent: "CAMPAIGN" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mzbxk33m_1000145877.png", alt: "BLESSED editorial dark", intent: "OPTIONAL" }
     ],
     
     // Size profile
