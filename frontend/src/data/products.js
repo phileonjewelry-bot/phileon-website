@@ -1333,12 +1333,22 @@ Covenant.`,
     // 3. editorial (clean - dark fabric)
     // 4. side (structure)
     // 5. back (detail)
+    // 6. hand holding - female (lifestyle)
+    // 7. on finger - female (context)
+    // 8. macro weave (craft detail)
+    // 9. arch lettering (typography)
+    // 10. interior (construction)
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg", alt: "BLESSED front view", intent: "IDENTITY" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/11mc2nl9_1000145880.png", alt: "BLESSED angle view", intent: "SIGNATURE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mzbxk33m_1000145877.png", alt: "BLESSED editorial", intent: "CLEAN" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j183z9v_1000145876.png", alt: "BLESSED side view", intent: "STRUCTURE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7bx00mvt_1000145878.png", alt: "BLESSED back view", intent: "DETAIL" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7bx00mvt_1000145878.png", alt: "BLESSED back view", intent: "DETAIL" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/opsqs7w5_1000145895.png", alt: "BLESSED hand holding", intent: "LIFESTYLE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xwsea8c_1000145892.png", alt: "BLESSED on finger", intent: "CONTEXT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rnpdum9t_1000145893.png", alt: "BLESSED weave macro", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b86n5xq7_1000145900.png", alt: "BLESSED arch lettering", intent: "TYPOGRAPHY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/npft298a_1000145899.png", alt: "BLESSED interior construction", intent: "INTERIOR" }
     ],
     
     // Size profile
