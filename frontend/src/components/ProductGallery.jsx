@@ -14,12 +14,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
  * - Only active slide video plays
  */
 
-function ProductGallery({ items = [], initialSlide = 0 }) {
+function ProductGallery({ items = [], initialSlide = 0, productType = "ring" }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "start", startIndex: initialSlide });
   const [selectedIndex, setSelectedIndex] = useState(initialSlide);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const videoRefs = useRef([]);
+
+  // Determine aspect ratio based on product type
+  const isEarrings = productType === "earrings";
+  const containerClass = isEarrings 
+    ? "w-full h-[500px] md:h-[700px] lg:h-[800px]" // Taller for earrings
+    : "w-full h-[400px] md:h-[600px] lg:h-[700px]"; // Standard for rings
+  const objectFitClass = isEarrings ? "object-contain" : "object-cover";
 
   // Update selected index when initialSlide prop changes
   useEffect(() => {
@@ -125,7 +132,7 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
                 {item.type === "video" ? (
                   <video
                     ref={(el) => (videoRefs.current[index] = el)}
-                    className={`w-full h-[400px] md:h-[600px] lg:h-[700px] bg-black ${
+                    className={`${containerClass} bg-black ${
                       item.objectFit === "contain" ? "object-contain" : "object-cover"
                     }`}
                     autoPlay
@@ -143,7 +150,7 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
                   </video>
                 ) : (
                   <div
-                    className="relative w-full h-[400px] md:h-[600px] lg:h-[700px] overflow-hidden cursor-zoom-in"
+                    className={`relative ${containerClass} overflow-hidden ${isEarrings ? '' : 'cursor-zoom-in'} flex items-center justify-center ${isEarrings ? 'bg-white' : ''}`}
                     onMouseMove={handleMouseMove}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
@@ -151,9 +158,9 @@ function ProductGallery({ items = [], initialSlide = 0 }) {
                     <img
                       src={item.src}
                       alt={item.alt || `Product view ${index + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-300"
+                      className={`w-full h-full ${objectFitClass} transition-transform duration-300`}
                       style={
-                        isZoomed && index === selectedIndex
+                        isZoomed && index === selectedIndex && !isEarrings
                           ? {
                               transform: "scale(2)",
                               transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,

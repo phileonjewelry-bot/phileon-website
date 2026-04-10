@@ -106,7 +106,7 @@ export default function RosariaPage() {
 
       {/* Product Layout with Gallery + Purchase Panel */}
       <ProductLayout
-        gallery={<ProductGallery items={galleryItems} />}
+        gallery={<ProductGallery items={galleryItems} productType="earrings" />}
         productInfo={
           <>
             <ProductInfoSection
