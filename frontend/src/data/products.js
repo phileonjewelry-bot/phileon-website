@@ -176,6 +176,12 @@ export const products = {
     tagline: "A playful couture design created to capture the spirit of fashion, movement, and confidence.",
     basePrice: 1250,
     
+    // Hero image for carousel and shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg",
+    images: {
+      hero: "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg"
+    },
+    
     // Pricing Configuration
     dynamicPricing: false, // Fixed pricing, no gold adjustments
     
