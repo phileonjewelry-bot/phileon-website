@@ -285,7 +285,7 @@ const HomePage = () => {
           Auto-scrolling discovery — clickable product links
       ═══════════════════════════════════════════════════════════════ */}
       {(() => {
-        // Unified strip items - each item has image, title, and href bound together
+        // Unified strip items - ALL products from products.js
         const stripItems = [
           { 
             title: "MONIKA COUTURE", 
@@ -356,6 +356,31 @@ const HomePage = () => {
             title: "LA BÊTE", 
             image: "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/p6cpotus_1000145540.png", 
             href: "/products/labete" 
+          },
+          { 
+            title: "ALEJANDRA HEELS", 
+            image: products.alejandraHeels?.images?.hero || "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/alejandra-hero.jpg", 
+            href: "/products/alejandra-heels" 
+          },
+          { 
+            title: "BLESSED", 
+            image: products.blessed?.imageUrl || products.blessed?.gallery?.[0]?.src, 
+            href: "/products/blessed" 
+          },
+          { 
+            title: "ROSARIA", 
+            image: products.rosaria?.images?.hero, 
+            href: "/products/rosaria" 
+          },
+          { 
+            title: "DÉSIR CORSET", 
+            image: products.desirCorset?.images?.hero, 
+            href: "/products/desir-corset" 
+          },
+          { 
+            title: "TRACE", 
+            image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/7tyc41kp_1000143768.png", 
+            href: "/products/trace" 
           }
         ];
 
