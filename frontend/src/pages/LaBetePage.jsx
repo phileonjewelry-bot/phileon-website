@@ -83,9 +83,9 @@ export default function LaBetePage() {
       {/* ═══════════════════════════════════════════════════════════════
           WORLD — The environment. Already exists before you arrive.
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[52vh] md:h-[78vh] overflow-hidden">
+      <section className="relative w-full h-[52vh] md:h-[70vh] overflow-hidden">
         
-        {/* Hero - dissolves as you descend */}
+        {/* Hero Video - dissolves as you descend */}
         <div 
           className="absolute inset-0 will-change-transform"
           style={{ 
@@ -93,16 +93,20 @@ export default function LaBetePage() {
             opacity: heroFade
           }}
         >
-          <img
-            src={product.heroImage}
-            alt="TRIBUTE: LA BÊTE"
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={product.heroImage}
             className="absolute inset-0 w-full h-full object-cover object-center"
-          />
+          >
+            <source src="/videos/labete-hero.mp4" type="video/mp4" />
+          </video>
         </div>
         
-        {/* Atmospheric depth */}
-        <div className="absolute inset-0 bg-black/15" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_35%,rgba(0,0,0,0.55)_100%)]" />
+        {/* Subtle gradient overlay - preserves showroom brightness */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none" />
         
         {/* Title - part of the world */}
         <div 
@@ -124,8 +128,8 @@ export default function LaBetePage() {
           </div>
         </div>
         
-        {/* The dissolution - 60% of hero height fades to black */}
-        <div className="absolute bottom-0 left-0 w-full h-[60%] bg-gradient-to-b from-transparent via-black/65 to-black pointer-events-none" />
+        {/* The dissolution - bottom fade to black */}
+        <div className="absolute bottom-0 left-0 w-full h-[50%] bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none" />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
