@@ -269,7 +269,7 @@ const CORE_PRODUCTS = [
     imageUrl: products.blessed.imageUrl,
     hoverImage: products.blessed.gallery[1].src, // Angle shot on hover
     href: '/products/blessed',
-    price_range: 'From $X,XXX CAD',
+    price_range: 'From $880 CAD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',

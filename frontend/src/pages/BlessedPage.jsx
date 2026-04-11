@@ -81,7 +81,7 @@ export default function BlessedPage() {
             You don't wear the verse... you wear the result.
           </p>
           <p className="text-white/30 text-[13px]">
-            From $X,XXX CAD
+            From $880 CAD
           </p>
         </div>
       </section>
@@ -177,7 +177,7 @@ export default function BlessedPage() {
                           </p>
                         </div>
                         <p className={`text-[13px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                          $X,XXX
+                          ${product.pricing[key].toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -357,7 +357,7 @@ export default function BlessedPage() {
                             )}
                           </div>
                           <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                            $X,XXX CAD
+                            ${product.pricing[key].toLocaleString()} CAD
                           </p>
                         </div>
                       </div>

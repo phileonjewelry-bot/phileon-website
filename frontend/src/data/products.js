@@ -1256,8 +1256,8 @@ Driven.`,
     collections: ["rings", "collective", "gentlemens-club", "ladies"],
     subtitle: "DEUTERONOMY 28:3",
     tagline: "Word Made Metal.",
-    priceFrom: "From $X,XXX CAD",
-    basePrice: 0, // Placeholder
+    priceFrom: "From $880 CAD",
+    basePrice: 880,
     
     // Hero image for shop cards
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg",
@@ -1267,34 +1267,34 @@ Driven.`,
     currency: "CAD",
     defaultTier: "signature",
     
-    // Tier-based pricing (placeholders)
+    // Tier-based pricing (CAD)
     pricing: {
-      foundation: 0,
-      signature: 0,
-      heirloom: 0
+      foundation: 880,
+      signature: 5200,
+      heirloom: 6800
     },
     
     tiers: {
       foundation: {
         label: "FOUNDATION",
         name: "Foundation",
-        metal: "10K Gold",
+        metal: "Gold Plated Sterling Silver",
         stones: "Woven form",
         badge: "",
-        description: "The entry into BLESSED. Solid gold. Full weave."
+        description: "The entry into BLESSED. Premium plated finish. Full weave."
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K Gold",
+        metal: "14K Yellow Gold",
         stones: "Refined weave",
         badge: "MOST POPULAR",
-        description: "The definitive expression. Balanced weight and density."
+        description: "The definitive expression. Solid gold. Balanced weight."
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
-        metal: "18K Gold",
+        metal: "18K Yellow Gold",
         stones: "Full density weave",
         badge: "",
         description: "Collector level. Maximum density. Maximum legacy."
