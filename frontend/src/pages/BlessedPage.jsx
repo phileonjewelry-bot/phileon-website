@@ -92,74 +92,80 @@ export default function BlessedPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO — Word Made Metal
+          HERO — Cinematic Full-Viewport Video with Credits Overlay
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative pt-20 pb-8 md:pt-28 md:pb-12">
-        <div className="max-w-[1100px] mx-auto px-5 md:px-8">
+      <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
+
+        {/* VIDEO LAYER */}
+        <div className="absolute inset-0 z-0">
+          {/* Primary Video (Human + Product) */}
+          <video
+            ref={primaryVideoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={gallery[0]?.src}
+            className={`
+              w-full h-full object-cover
+              transition-opacity duration-700 ease-out
+              ${activeVideo === 'primary' ? 'opacity-100' : 'opacity-0 absolute inset-0'}
+            `}
+          >
+            <source src={HERO_VIDEOS.primary} type="video/mp4" />
+          </video>
           
-          {/* Label */}
-          <p className="text-[9px] tracking-[0.4em] text-amber-500/60 mb-3">
-            COLLECTIVE PIECE
-          </p>
-          
-          {/* Title Block */}
-          <p className="text-[10px] tracking-[0.35em] text-white/30 mb-2">
-            WORD MADE METAL
-          </p>
-          <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-serif text-white/90 tracking-[-0.01em] leading-[1.1] mb-2">
-            BLESSED
-          </h1>
-          <p className="text-[13px] md:text-[14px] text-white/40 tracking-wide mb-4">
-            DEUTERONOMY 28:3
-          </p>
-          <p className="text-white/50 text-[14px] md:text-[15px] leading-relaxed max-w-[400px] mb-3">
-            You don't wear the verse... you wear the result.
-          </p>
-          <p className="text-white/30 text-[13px]">
-            From $880 CAD
-          </p>
+          {/* Secondary Video (Product-only) - Lazy loaded */}
+          <video
+            ref={secondaryVideoRef}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={gallery[0]?.src}
+            onLoadedData={() => setSecondaryLoaded(true)}
+            className={`
+              absolute inset-0 w-full h-full object-cover
+              transition-opacity duration-700 ease-out
+              ${activeVideo === 'secondary' && secondaryLoaded ? 'opacity-100' : 'opacity-0'}
+            `}
+          >
+            <source src={HERO_VIDEOS.secondary} type="video/mp4" />
+          </video>
+
+          {/* DARK OVERLAY (for readability) */}
+          <div className="absolute inset-0 bg-black/40" />
         </div>
-        
-        {/* Hero Video Section */}
-        <div className="mt-10 md:mt-16 max-w-[900px] mx-auto px-5 md:px-8">
-          <div className="relative aspect-[16/9] md:aspect-[2/1] rounded-lg overflow-hidden bg-black">
-            {/* Primary Video (Human + Product) */}
-            <video
-              ref={primaryVideoRef}
-              autoPlay
-              muted
-              loop
-              playsInline
-              poster={gallery[0]?.src}
-              className={`
-                absolute inset-0 w-full h-full object-cover
-                transition-opacity duration-700 ease-out
-                ${activeVideo === 'primary' ? 'opacity-100 z-10' : 'opacity-0 z-0'}
-              `}
-            >
-              <source src={HERO_VIDEOS.primary} type="video/mp4" />
-            </video>
-            
-            {/* Secondary Video (Product-only) - Lazy loaded */}
-            <video
-              ref={secondaryVideoRef}
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={gallery[0]?.src}
-              onLoadedData={() => setSecondaryLoaded(true)}
-              className={`
-                absolute inset-0 w-full h-full object-cover
-                transition-opacity duration-700 ease-out
-                ${activeVideo === 'secondary' && secondaryLoaded ? 'opacity-100 z-10' : 'opacity-0 z-0'}
-              `}
-            >
-              <source src={HERO_VIDEOS.secondary} type="video/mp4" />
-            </video>
-            
-            {/* Subtle vignette overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none z-20" />
+
+        {/* TEXT OVERLAY (CREDITS STYLE) */}
+        <div className="relative z-10 h-full flex items-end">
+          <div className="px-6 pb-10 md:pb-16 max-w-xl">
+
+            <p className="text-[10px] tracking-[0.25em] text-amber-500 mb-3">
+              COLLECTIVE PIECE
+            </p>
+
+            <p className="text-sm tracking-[0.2em] text-white/60 mb-4">
+              WORD MADE METAL
+            </p>
+
+            <h1 className="text-4xl md:text-6xl font-serif text-white mb-4">
+              BLESSED
+            </h1>
+
+            <p className="text-white/70 text-sm mb-2">
+              DEUTERONOMY 28:3
+            </p>
+
+            <p className="text-white/80 text-sm md:text-base mb-4">
+              You don't wear the verse... you wear the result.
+            </p>
+
+            <p className="text-amber-500 text-lg font-medium">
+              From $880 CAD
+            </p>
+
           </div>
         </div>
       </section>
