@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -11,6 +11,12 @@ import { products } from "@/data/products";
    The verse becomes the ring.
 ═══════════════════════════════════════════════════════════════ */
 
+// Hero video URLs
+const HERO_VIDEOS = {
+  primary: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8mh5jbyb_VIDEO_398c4647-aa45-4a23-a38b-7563f10405db.mp4", // Human + Product
+  secondary: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9bziac3p_VIDEO_02370714-7685-4aa0-a520-708e6a501478.mp4" // Product-only
+};
+
 export default function BlessedPage() {
   const product = products.blessed;
   const [selectedTier, setSelectedTier] = useState("signature");
@@ -20,9 +26,38 @@ export default function BlessedPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hoveredThumb, setHoveredThumb] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  
+  // Hero video rotation state
+  const [activeVideo, setActiveVideo] = useState('primary');
+  const [secondaryLoaded, setSecondaryLoaded] = useState(false);
+  const primaryVideoRef = useRef(null);
+  const secondaryVideoRef = useRef(null);
 
   const currentTier = product.tiers[selectedTier];
   const gallery = product.gallery;
+
+  // Video rotation effect - swap every 7 seconds
+  useEffect(() => {
+    const rotationInterval = setInterval(() => {
+      setActiveVideo(prev => prev === 'primary' ? 'secondary' : 'primary');
+    }, 7000);
+    
+    return () => clearInterval(rotationInterval);
+  }, []);
+
+  // Handle video playback on swap
+  useEffect(() => {
+    const activeRef = activeVideo === 'primary' ? primaryVideoRef : secondaryVideoRef;
+    const inactiveRef = activeVideo === 'primary' ? secondaryVideoRef : primaryVideoRef;
+    
+    if (activeRef.current) {
+      activeRef.current.currentTime = 0;
+      activeRef.current.play().catch(() => {});
+    }
+    if (inactiveRef.current) {
+      inactiveRef.current.pause();
+    }
+  }, [activeVideo]);
 
   // Image transition handler
   const handleImageChange = useCallback((newIndex) => {
@@ -83,6 +118,49 @@ export default function BlessedPage() {
           <p className="text-white/30 text-[13px]">
             From $880 CAD
           </p>
+        </div>
+        
+        {/* Hero Video Section */}
+        <div className="mt-10 md:mt-16 max-w-[900px] mx-auto px-5 md:px-8">
+          <div className="relative aspect-[16/9] md:aspect-[2/1] rounded-lg overflow-hidden bg-black">
+            {/* Primary Video (Human + Product) */}
+            <video
+              ref={primaryVideoRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={gallery[0]?.src}
+              className={`
+                absolute inset-0 w-full h-full object-cover
+                transition-opacity duration-700 ease-out
+                ${activeVideo === 'primary' ? 'opacity-100 z-10' : 'opacity-0 z-0'}
+              `}
+            >
+              <source src={HERO_VIDEOS.primary} type="video/mp4" />
+            </video>
+            
+            {/* Secondary Video (Product-only) - Lazy loaded */}
+            <video
+              ref={secondaryVideoRef}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={gallery[0]?.src}
+              onLoadedData={() => setSecondaryLoaded(true)}
+              className={`
+                absolute inset-0 w-full h-full object-cover
+                transition-opacity duration-700 ease-out
+                ${activeVideo === 'secondary' && secondaryLoaded ? 'opacity-100 z-10' : 'opacity-0 z-0'}
+              `}
+            >
+              <source src={HERO_VIDEOS.secondary} type="video/mp4" />
+            </video>
+            
+            {/* Subtle vignette overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none z-20" />
+          </div>
         </div>
       </section>
 
