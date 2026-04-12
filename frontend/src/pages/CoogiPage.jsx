@@ -207,6 +207,9 @@ export default function CoogiPage() {
                     <p>Purple Sapphires: ~160</p>
                     <p>Pink Sapphires: ~120</p>
                   </div>
+                  <p className="text-white/25 text-[9px] mt-3 italic">
+                    Pavé-set across the upper three-quarter surface, leaving the interior clean for comfort and structure.
+                  </p>
                 </div>
               </div>
               

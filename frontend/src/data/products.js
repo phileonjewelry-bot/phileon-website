@@ -1427,17 +1427,17 @@ Covenant.`,
         label: "SIGNATURE",
         name: "Signature",
         metal: "14K Gold (Yellow or White)",
-        stones: "Lab Stones · ~820",
+        stones: "Lab-Grown Stones · ~820",
         badge: "MOST POPULAR",
-        description: "Balanced density. Lab-created sapphires. Estimated 28g."
+        description: "Balanced density. Lab-grown sapphires. Estimated 28g."
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
         metal: "18K Gold (Yellow or White)",
-        stones: "Natural Stones · ~820",
+        stones: "Natural Gemstones · ~820",
         badge: "COLLECTOR",
-        description: "Natural sapphires. Maximum density. Estimated 34g."
+        description: "Natural gemstones. Maximum density. Estimated 34g."
       }
     },
     
