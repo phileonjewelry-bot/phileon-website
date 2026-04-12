@@ -53,7 +53,7 @@ export default function CoogiPage() {
       ═══════════════════════════════════════════════════════ */}
       <section className="w-full">
         <div className="w-full max-w-[900px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[12px] bg-black">
+          <div className="relative w-full overflow-hidden rounded-[14px] bg-black">
             <video
               ref={heroRef}
               autoPlay
@@ -61,7 +61,7 @@ export default function CoogiPage() {
               loop
               playsInline
               poster={product.imageUrl}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="w-full aspect-[4/5] md:aspect-[5/4] object-cover"
             >
               <source src={COOGI_HERO_VIDEO} type="video/mp4" />
             </video>
@@ -86,21 +86,20 @@ export default function CoogiPage() {
           2. THUMBNAIL GALLERY — Image browser
              Selected image shows in main viewer above thumbs
       ═══════════════════════════════════════════════════════ */}
-      <section className="w-full mt-4 md:mt-6">
-        <div className="max-w-[700px] mx-auto px-3 md:px-5">
+      <section className="w-full mt-5 md:mt-6">
+        <div className="max-w-[420px] md:max-w-[520px] mx-auto px-3 md:px-5">
 
           {/* Selected image viewer */}
-          <div className="relative aspect-square w-full max-w-[500px] mx-auto overflow-hidden rounded-[10px] bg-black mb-2">
+          <div className="w-full overflow-hidden rounded-[10px] bg-black mb-2">
             <img
               src={gallery[activeThumb].src}
               alt={gallery[activeThumb].alt || ""}
-              className={`w-full h-full object-contain transition-opacity duration-250 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
+              className={`w-full aspect-square object-contain transition-opacity duration-250 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
             />
           </div>
 
           {/* Thumbnail strip */}
-          <div className="max-w-[500px] mx-auto">
-            <div className="flex gap-[5px] overflow-x-auto pb-1 scrollbar-hide">
+          <div className="flex gap-[5px] overflow-x-auto pb-1 scrollbar-hide">
               {gallery.map((item, index) => (
                 <button
                   key={`t-${index}`}
@@ -117,7 +116,6 @@ export default function CoogiPage() {
                 </button>
               ))}
             </div>
-          </div>
         </div>
       </section>
 
