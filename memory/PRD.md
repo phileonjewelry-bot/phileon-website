@@ -9,11 +9,11 @@ High-end luxury jewelry e-commerce with bespoke cinematic product pages, editori
 - **Data**: `/app/frontend/src/data/products.js`
 
 ## Recently Completed (April 12, 2026)
-- **COOGI I page global scale correction**: Hero 55vh/65vh, gallery max-w-[400px] with padding, thumbnails 28px (from 44px), tightened all vertical spacing, closing section reduced
-- **Homepage hero**: Reduced from h-screen to h-[50vh] md:h-[65vh]
-- **Homepage category tiles**: 3-col grid, h-[80px]/h-[110px], tight padding
-- **COOGI I gallery video**: CDN hero video as first gallery item
-- **LA BETE gallery video**: Local hero video as first gallery item
+- **COOGI I video playback**: Single-active-media state via useEffect — hero pauses when gallery video plays, gallery pauses on image selection. No overlap.
+- **COOGI I media container**: Hero + gallery wrapped in max-w-[520px]/[720px] centered container. Hero has rounded-[10px]. Gallery uses object-contain.
+- **COOGI I thumbnails**: 48px with 6px gap, ring-[0.5px] highlight. Video thumbnail uses poster image instead of video element.
+- **Homepage hero**: h-[50vh]/h-[65vh]
+- **Homepage tiles**: 3-col, h-[80px]/h-[110px]
 
 ## Backlog
 - P2: Populate `/vault/drews-world` with exclusive drops

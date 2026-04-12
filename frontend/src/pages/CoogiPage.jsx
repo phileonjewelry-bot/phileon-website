@@ -1,18 +1,9 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
 // COOGI I hero video URL
 const COOGI_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ifs9jtbk_VIDEO_98d0aec8-1ca7-4b07-9e13-c0bb3baa740b.mp4";
-
-/* ═══════════════════════════════════════════════════════════════
-   COOGI I — Tribute Series
-   
-   CHAOS, DISCIPLINED.
-   
-   Multi-stone pavé composition
-   Structure disguised as chaos
-═══════════════════════════════════════════════════════════════ */
 
 export default function CoogiPage() {
   const product = products.coogiI;
@@ -25,13 +16,37 @@ export default function CoogiPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentTier = product.tiers[selectedTier];
+  const heroVideoRef = useRef(null);
   const galleryVideoRef = useRef(null);
-  
+
   // Hero video as FIRST gallery item, then all product images
   const gallery = [
     { type: "video", src: COOGI_HERO_VIDEO, poster: product.imageUrl, alt: "COOGI I hero video" },
     ...product.gallery
   ];
+
+  // ── SINGLE ACTIVE MEDIA STATE ──
+  // When gallery selection changes, pause ALL videos, then play only the active one
+  useEffect(() => {
+    // Pause hero
+    if (heroVideoRef.current) {
+      heroVideoRef.current.pause();
+    }
+    // Pause gallery video
+    if (galleryVideoRef.current) {
+      galleryVideoRef.current.pause();
+    }
+
+    // If active item is the video (index 0), play only the gallery video
+    if (activeImage === 0 && galleryVideoRef.current) {
+      galleryVideoRef.current.currentTime = 0;
+      galleryVideoRef.current.play().catch(() => {});
+    }
+    // If active item is NOT the video, resume hero as ambient background
+    if (activeImage !== 0 && heroVideoRef.current) {
+      heroVideoRef.current.play().catch(() => {});
+    }
+  }, [activeImage]);
 
   // Image transition handler
   const handleImageChange = useCallback((newIndex) => {
@@ -66,55 +81,38 @@ export default function CoogiPage() {
     <div className="min-h-screen bg-black text-white">
       
       {/* ═══════════════════════════════════════════════════════════════
-          HERO — Cinematic Full-Viewport
+          HERO — Constrained cinematic preview
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[55vh] md:h-[65vh] overflow-hidden bg-black">
+      <section className="relative w-full bg-black">
+        <div className="max-w-[520px] md:max-w-[720px] mx-auto px-4 pt-4 md:pt-6">
+          <div className="relative h-[55vh] md:h-[65vh] overflow-hidden rounded-[10px]">
+            {/* HERO VIDEO */}
+            <video
+              ref={heroVideoRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={product.imageUrl}
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              style={{ filter: "brightness(0.9) contrast(1.05)" }}
+            >
+              <source src={COOGI_HERO_VIDEO} type="video/mp4" />
+            </video>
+            {/* DARK OVERLAY */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent rounded-[10px]" />
 
-        {/* HERO VIDEO */}
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={product.imageUrl}
-            className="w-full h-full object-cover object-center"
-            style={{ filter: "brightness(0.9) contrast(1.05)" }}
-          >
-            <source src={COOGI_HERO_VIDEO} type="video/mp4" />
-          </video>
-          {/* DARK OVERLAY */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-        </div>
-
-        {/* TEXT OVERLAY (CREDITS STYLE) */}
-        <div className="relative z-10 h-full flex items-end">
-          <div className="px-6 pb-8 md:pb-12 max-w-xl">
-
-            <p className="text-[9px] tracking-[0.25em] text-violet-400 mb-2">
-              TRIBUTE SERIES
-            </p>
-
-            <p className="text-xs tracking-[0.2em] text-white/60 mb-3">
-              PATTERN MADE POWER
-            </p>
-
-            <h1 className="text-3xl md:text-5xl font-serif text-white mb-3">
-              COOGI I
-            </h1>
-
-            <p className="text-white/70 text-xs mb-1.5">
-              {product.tagline}
-            </p>
-
-            <p className="text-white/80 text-xs md:text-sm mb-3">
-              Structure disguised as chaos. Every stone placed with intent.
-            </p>
-
-            <p className="text-violet-400 text-base font-medium">
-              From ${product.pricing.foundation.toLocaleString()} CAD
-            </p>
-
+            {/* TEXT OVERLAY */}
+            <div className="absolute inset-0 z-10 flex items-end">
+              <div className="px-5 pb-6 md:pb-8">
+                <p className="text-[9px] tracking-[0.25em] text-violet-400 mb-1.5">TRIBUTE SERIES</p>
+                <p className="text-[10px] tracking-[0.2em] text-white/60 mb-2">PATTERN MADE POWER</p>
+                <h1 className="text-2xl md:text-4xl font-serif text-white mb-2">COOGI I</h1>
+                <p className="text-white/70 text-[11px] mb-1">{product.tagline}</p>
+                <p className="text-white/80 text-[11px] md:text-xs mb-2">Structure disguised as chaos. Every stone placed with intent.</p>
+                <p className="text-violet-400 text-sm font-medium">From ${product.pricing.foundation.toLocaleString()} CAD</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -122,20 +120,18 @@ export default function CoogiPage() {
       {/* ═══════════════════════════════════════════════════════════════
           MAIN CONTENT — Gallery + Configuration
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-6 md:py-10">
-        <div className="max-w-[960px] mx-auto px-6 md:px-10">
+      <section className="py-5 md:py-8">
+        <div className="max-w-[520px] md:max-w-[720px] mx-auto px-4 md:px-6">
           
-          {/* Desktop Layout */}
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+          <div className="grid md:grid-cols-2 gap-5 md:gap-6">
             
-            {/* Left: Gallery - Tighter, more refined */}
-            <div className="max-w-[400px] mx-auto md:mx-0">
+            {/* Left: Gallery — constrained */}
+            <div>
               {/* Main Image/Video */}
-              <div className="relative aspect-square mb-2 bg-black rounded overflow-hidden">
+              <div className="relative aspect-square mb-1.5 bg-black rounded-lg overflow-hidden">
                 {gallery[activeImage]?.type === "video" ? (
                   <video
                     ref={galleryVideoRef}
-                    autoPlay
                     muted
                     loop
                     playsInline
@@ -166,8 +162,8 @@ export default function CoogiPage() {
                 )}
               </div>
               
-              {/* Thumbnails */}
-              <div className="flex gap-1 overflow-x-auto pb-1">
+              {/* Thumbnails — 48px, tight gap */}
+              <div className="flex gap-[6px] overflow-x-auto pb-1">
                 {gallery.map((item, index) => {
                   const isActive = activeImage === index;
                   const isHovered = hoveredThumb === index;
@@ -183,7 +179,7 @@ export default function CoogiPage() {
                       }}
                       onMouseLeave={() => setHoveredThumb(null)}
                       className={`
-                        w-7 h-7 flex-shrink-0 rounded-[2px] overflow-hidden
+                        w-[48px] h-[48px] flex-shrink-0 rounded-[3px] overflow-hidden
                         transition-all duration-150
                         ${isActive 
                           ? "ring-[0.5px] ring-violet-500/50 opacity-100" 
@@ -194,9 +190,7 @@ export default function CoogiPage() {
                     >
                       {item.type === "video" ? (
                         <div className="relative w-full h-full bg-black">
-                          <video muted playsInline preload="metadata" poster={item.poster} className="w-full h-full object-cover pointer-events-none">
-                            <source src={item.src} type="video/mp4" />
-                          </video>
+                          <img src={item.poster} alt="" className="w-full h-full object-cover" />
                           <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
                             <div className="w-4 h-4 rounded-full bg-white/80 flex items-center justify-center">
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-2 h-2 text-black ml-px">
@@ -206,12 +200,7 @@ export default function CoogiPage() {
                           </div>
                         </div>
                       ) : (
-                        <img 
-                          src={item.src} 
-                          alt="" 
-                          className="w-full h-full object-cover" 
-                          loading="lazy"
-                        />
+                        <img src={item.src} alt="" className="w-full h-full object-cover" loading="lazy" />
                       )}
                     </button>
                   );
@@ -222,7 +211,6 @@ export default function CoogiPage() {
             {/* Right: Product Info */}
             <div className="pt-0">
               
-              {/* Product Description */}
               <div className="mb-5">
                 <p className="text-[8px] tracking-[0.35em] text-violet-400/60 mb-3">TRIBUTE SERIES</p>
                 <div className="text-white/50 text-[12px] leading-[1.7] whitespace-pre-line mb-4">
@@ -230,7 +218,6 @@ export default function CoogiPage() {
                 </div>
               </div>
 
-              {/* Specifications - Clean text block */}
               <div className="mb-5">
                 <p className="text-[8px] tracking-[0.35em] text-white/25 mb-4">SPECIFICATIONS</p>
                 <div className="text-[11px] text-white/40 leading-relaxed space-y-1">
@@ -247,7 +234,7 @@ export default function CoogiPage() {
                 <div className="mt-4 pt-4 border-t border-white/[0.04]">
                   <p className="text-white/25 text-[9px] mb-2">Stone Composition</p>
                   <p className="text-white/40 text-[11px] leading-relaxed mb-3">
-                    A complex pavé composition of over 700 hand-set gemstones, arranged in a continuous flowing pattern:
+                    A complex pav&#233; composition of over 700 hand-set gemstones, arranged in a continuous flowing pattern:
                   </p>
                   <div className="text-[10px] text-white/35 leading-relaxed space-y-0.5">
                     <p>White Diamonds</p>
@@ -263,7 +250,6 @@ export default function CoogiPage() {
                 </div>
               </div>
               
-              {/* Configuration */}
               <div className="mb-4">
                 <p className="text-[8px] tracking-[0.35em] text-white/20 mb-2">SELECT CONFIGURATION</p>
                 <div className="space-y-1.5">
@@ -312,7 +298,6 @@ export default function CoogiPage() {
                 </div>
               </div>
 
-              {/* Size & Qty */}
               <div className="flex gap-2.5 mb-4">
                 <div className="flex-1">
                   <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">SIZE</p>
@@ -321,7 +306,7 @@ export default function CoogiPage() {
                     onChange={(e) => setSelectedSize(e.target.value)}
                     className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-violet-500/30 transition-colors"
                   >
-                    <option value="" disabled className="bg-black">Select size (6–12)</option>
+                    <option value="" disabled className="bg-black">Select size (6-12)</option>
                     {sizeOptions.map(s => (
                       <option key={s} value={s} className="bg-black">{s}</option>
                     ))}
@@ -331,14 +316,13 @@ export default function CoogiPage() {
                 <div className="w-24">
                   <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">QTY</p>
                   <div className="flex items-center border border-white/8 rounded-md h-[36px]">
-                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">−</button>
+                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">-</button>
                     <span className="flex-1 text-center text-[11px] text-white/55">{quantity}</span>
                     <button onClick={() => setQuantity(quantity + 1)} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">+</button>
                   </div>
                 </div>
               </div>
 
-              {/* Add to Cart */}
               <button 
                 onClick={onAddToCart}
                 disabled={isAdding || !selectedSize}
@@ -351,7 +335,6 @@ export default function CoogiPage() {
                 Made to order · Limited production · Tribute Series
               </p>
 
-              {/* Features */}
               <div className="border-t border-white/[0.04] pt-5">
                 <p className="text-[8px] tracking-[0.35em] text-white/20 mb-3">FEATURES</p>
                 <ul className="space-y-1.5">
@@ -368,9 +351,7 @@ export default function CoogiPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          CLOSING — The Seal
-      ═══════════════════════════════════════════════════════════════ */}
+      {/* CLOSING */}
       <section className="py-10 md:py-16 border-t border-white/[0.03]">
         <div className="text-center max-w-[420px] mx-auto px-5">
           <p className="text-[13px] md:text-[14px] text-white/40 leading-relaxed mb-4">
@@ -378,12 +359,11 @@ export default function CoogiPage() {
             Expression — under control.
           </p>
           <p className="text-[9px] tracking-[0.3em] text-violet-400/50">
-            COOGI I ✦ TRIBUTE SERIES
+            COOGI I — TRIBUTE SERIES
           </p>
         </div>
       </section>
 
-      {/* Custom styles */}
       <style>{`
         .duration-400 { transition-duration: 400ms; }
       `}</style>
