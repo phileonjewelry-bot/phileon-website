@@ -608,14 +608,15 @@ const ShopDropPage = () => {
                     >
                       <div style={{
                         position: 'relative',
-                        aspectRatio: product.category === 'earrings' ? 'auto' : '4/5',
+                        aspectRatio: product.category === 'earrings' ? 'auto' : '1/1',
                         minHeight: product.category === 'earrings' ? '300px' : 'auto',
                         maxHeight: product.category === 'earrings' ? '80vh' : 'none',
                         overflow: 'hidden',
-                        background: product.category === 'earrings' ? '#fff' : '#111',
+                        background: product.category === 'earrings' ? '#fff' : '#0a0a0a',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        padding: product.category === 'rings' ? '16px' : '0',
                       }}>
                         <img 
                           src={cardImage} 
@@ -623,15 +624,15 @@ const ShopDropPage = () => {
                           loading="lazy"
                           style={{
                             width: '100%',
-                            height: product.category === 'earrings' ? 'auto' : '100%',
-                            objectFit: product.category === 'earrings' ? 'contain' : 'cover',
+                            height: '100%',
+                            objectFit: 'contain',
                             filter: isSoldOut ? 'grayscale(1)' : 'none',
                           }}
                           draggable="false"
                         />
                       </div>
                       
-                      <div style={{ padding: '16px 0' }}>
+                      <div style={{ padding: '12px 0 8px' }}>
                         <h3 className="shop-drop__card-name">{product.name}</h3>
                         <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                         {product.price_range && (
@@ -711,14 +712,15 @@ const ShopDropPage = () => {
                   >
                     <div style={{
                       position: 'relative',
-                      aspectRatio: product.category === 'earrings' ? 'auto' : '4/5',
+                      aspectRatio: product.category === 'earrings' ? 'auto' : '1/1',
                       minHeight: product.category === 'earrings' ? '300px' : 'auto',
                       maxHeight: product.category === 'earrings' ? '80vh' : 'none',
                       overflow: 'hidden',
-                      background: product.category === 'earrings' ? '#fff' : '#111',
+                      background: product.category === 'earrings' ? '#fff' : '#0a0a0a',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      padding: product.category === 'rings' ? '16px' : '0',
                     }}>
                       {/* Primary Image */}
                       <img 
@@ -728,8 +730,8 @@ const ShopDropPage = () => {
                         className={`transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
                         style={{
                           width: '100%',
-                          height: product.category === 'earrings' ? 'auto' : '100%',
-                          objectFit: product.category === 'earrings' ? 'contain' : 'cover',
+                          height: '100%',
+                          objectFit: 'contain',
                           filter: isSoldOut ? 'grayscale(1)' : 'none',
                         }}
                         draggable="false"
@@ -740,16 +742,20 @@ const ShopDropPage = () => {
                           src={product.hoverImage} 
                           alt={`${product.name} alternate view`}
                           loading="lazy"
-                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
                             filter: isSoldOut ? 'grayscale(1)' : 'none',
+                            padding: product.category === 'rings' ? '16px' : '0',
                           }}
                           draggable="false"
                         />
                       )}
                     </div>
                     
-                    <div style={{ padding: '16px 0' }}>
+                    <div style={{ padding: '12px 0 8px' }}>
                       <h3 className="shop-drop__card-name">{product.name}</h3>
                       <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                       {product.price_range && (
