@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 
@@ -9,39 +9,22 @@ export default function CoogiPage() {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-  const videoRef = useRef(null);
+  const heroRef = useRef(null);
 
   const currentTier = product.tiers[selectedTier];
 
-  // Single unified gallery: video first, then all images
-  const gallery = [
-    { type: "video", src: COOGI_HERO_VIDEO, poster: product.imageUrl, alt: "COOGI I hero video" },
-    ...product.gallery
-  ];
-
-  const activeMedia = gallery[activeIndex];
-
-  // Single video control — only one video element exists, pause/play on change
-  useEffect(() => {
-    if (videoRef.current) {
-      if (activeMedia?.type === "video") {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {});
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  }, [activeIndex, activeMedia?.type]);
+  // Gallery = IMAGES ONLY from products.js (hero video is separate)
+  const gallery = product.gallery;
 
   const handleSelect = useCallback((index) => {
-    if (index === activeIndex || isTransitioning) return;
+    if (index === activeThumb || isTransitioning) return;
     setIsTransitioning(true);
-    setActiveIndex(index);
-    setTimeout(() => setIsTransitioning(false), 300);
-  }, [activeIndex, isTransitioning]);
+    setActiveThumb(index);
+    setTimeout(() => setIsTransitioning(false), 250);
+  }, [activeThumb, isTransitioning]);
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -51,7 +34,7 @@ export default function CoogiPage() {
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,
-      image: product.gallery[0].src,
+      image: gallery[0].src,
     });
   };
 
@@ -64,88 +47,89 @@ export default function CoogiPage() {
   return (
     <div className="min-h-screen bg-black text-white">
 
-      {/* ═══════════════════════════════════════════════════════════════
-          UNIFIED MEDIA — Single viewer, no duplicate videos
-      ═══════════════════════════════════════════════════════════════ */}
-      <div className="w-full pt-2 md:pt-4">
+      {/* ═══════════════════════════════════════════════════════
+          1. HERO VIDEO — Cinematic editorial intro
+             Always plays. Separate from gallery. Text overlay.
+      ═══════════════════════════════════════════════════════ */}
+      <section className="w-full">
+        <div className="w-full max-w-[900px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[12px] bg-black">
+            <video
+              ref={heroRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={product.imageUrl}
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src={COOGI_HERO_VIDEO} type="video/mp4" />
+            </video>
 
-        {/* MAIN MEDIA — full width feel */}
-        <div className="w-full max-w-[900px] mx-auto px-3 md:px-6">
-          <div className="aspect-square w-full overflow-hidden rounded-[12px] bg-black">
-            {activeMedia.type === "video" ? (
-              <video
-                ref={videoRef}
-                key={activeMedia.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                poster={activeMedia.poster}
-                className={`w-full h-full object-cover transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
-              >
-                <source src={activeMedia.src} type="video/mp4" />
-              </video>
-            ) : (
-              <img
-                src={activeMedia.src}
-                alt={activeMedia.alt || ""}
-                className={`w-full h-full object-cover transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
-              />
-            )}
+            {/* Gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+            {/* Credits overlay — lower left */}
+            <div className="absolute bottom-0 left-0 z-10 px-5 pb-5 md:px-7 md:pb-7">
+              <p className="text-[8px] md:text-[9px] tracking-[0.3em] text-violet-400/80 mb-1">TRIBUTE SERIES</p>
+              <h1 className="text-2xl md:text-4xl font-serif text-white leading-none mb-1.5">COOGI I</h1>
+              <p className="text-white/55 text-[10px] md:text-[11px]">{product.tagline}</p>
+              <p className="text-violet-400/90 text-[11px] md:text-xs mt-2 font-medium">
+                From ${product.pricing.foundation.toLocaleString()} CAD
+              </p>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* THUMBNAILS — controlled width */}
-        <div className="mt-3 max-w-[600px] mx-auto px-3">
-          <div className="flex gap-[5px] overflow-x-auto pb-1 scrollbar-hide">
-            {gallery.map((item, index) => {
-              const isActive = activeIndex === index;
-              return (
+      {/* ═══════════════════════════════════════════════════════
+          2. THUMBNAIL GALLERY — Image browser
+             Selected image shows in main viewer above thumbs
+      ═══════════════════════════════════════════════════════ */}
+      <section className="w-full mt-4 md:mt-6">
+        <div className="max-w-[700px] mx-auto px-3 md:px-5">
+
+          {/* Selected image viewer */}
+          <div className="relative aspect-square w-full max-w-[500px] mx-auto overflow-hidden rounded-[10px] bg-black mb-2">
+            <img
+              src={gallery[activeThumb].src}
+              alt={gallery[activeThumb].alt || ""}
+              className={`w-full h-full object-contain transition-opacity duration-250 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
+            />
+          </div>
+
+          {/* Thumbnail strip */}
+          <div className="max-w-[500px] mx-auto">
+            <div className="flex gap-[5px] overflow-x-auto pb-1 scrollbar-hide">
+              {gallery.map((item, index) => (
                 <button
                   key={`t-${index}`}
                   onClick={() => handleSelect(index)}
                   className={`
-                    w-[44px] h-[44px] md:w-[52px] md:h-[52px] flex-shrink-0 rounded-[4px] overflow-hidden
+                    w-[44px] h-[44px] md:w-[50px] md:h-[50px] flex-shrink-0 rounded-[3px] overflow-hidden
                     transition-all duration-150
-                    ${isActive
+                    ${activeThumb === index
                       ? "ring-1 ring-violet-500/60 opacity-100"
-                      : "opacity-35 hover:opacity-70"}
+                      : "opacity-30 hover:opacity-65"}
                   `}
                 >
-                  {item.type === "video" ? (
-                    <div className="relative w-full h-full bg-black">
-                      <img src={item.poster} alt="" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <div className="w-4 h-4 rounded-full bg-white/80 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-2 h-2 text-black ml-px"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <img src={item.src} alt="" className="w-full h-full object-cover" loading="lazy" />
-                  )}
+                  <img src={item.src} alt="" className="w-full h-full object-cover" loading="lazy" />
                 </button>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          PRODUCT INFO — Below media
-      ═══════════════════════════════════════════════════════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          3. PRODUCT DETAILS — Below media stack
+      ═══════════════════════════════════════════════════════ */}
       <section className="py-6 md:py-10">
-        <div className="max-w-[600px] mx-auto px-5 md:px-8">
-
-          {/* Title block */}
-          <div className="mb-6">
-            <p className="text-[8px] tracking-[0.35em] text-violet-400/60 mb-2">TRIBUTE SERIES</p>
-            <h2 className="text-xl md:text-2xl font-serif text-white/90 mb-1">COOGI I</h2>
-            <p className="text-white/50 text-[11px]">{product.tagline}</p>
-          </div>
+        <div className="max-w-[560px] mx-auto px-5 md:px-8">
 
           {/* Story */}
           <div className="mb-6">
+            <p className="text-[8px] tracking-[0.35em] text-violet-400/60 mb-3">TRIBUTE SERIES</p>
             <div className="text-white/45 text-[12px] leading-[1.7] whitespace-pre-line">
               {product.story}
             </div>
@@ -159,13 +143,15 @@ export default function CoogiPage() {
               <p>Band Thickness: 5 mm</p>
               <p>Profile: Tapered architectural signet</p>
             </div>
-            <div className="mt-3 text-[11px] text-white/40 leading-relaxed space-y-1">
+            <div className="mt-3 text-[11px] text-white/40 space-y-1">
               <p className="text-white/25 text-[9px] mb-1.5">Est. Weight (Size 10)</p>
-              <p>10K Gold: 15 g &middot; 14K Gold: 17 g &middot; 18K Gold: 19 g</p>
+              <p>10K: 15 g &middot; 14K: 17 g &middot; 18K: 19 g</p>
             </div>
             <div className="mt-3 pt-3 border-t border-white/[0.04]">
               <p className="text-white/25 text-[9px] mb-1.5">Stone Composition (~700 stones)</p>
-              <p className="text-white/35 text-[10px]">White Diamonds &middot; Blue Sapphires &middot; Yellow Sapphires &middot; Red Rubies &middot; Orange Citrine &middot; Purple Amethyst</p>
+              <p className="text-white/35 text-[10px]">
+                White Diamonds &middot; Blue Sapphires &middot; Yellow Sapphires &middot; Red Rubies &middot; Orange Citrine &middot; Purple Amethyst
+              </p>
             </div>
           </div>
 
@@ -179,17 +165,23 @@ export default function CoogiPage() {
                   <div
                     key={key}
                     onClick={() => setSelectedTier(key)}
-                    className={`cursor-pointer rounded-md px-3 py-2 transition-all duration-200 ${isActive ? "bg-white/[0.02] border border-violet-500/30" : "border border-white/[0.04] hover:border-white/8"}`}
+                    className={`cursor-pointer rounded-md px-3 py-2 transition-all duration-200 ${
+                      isActive ? "bg-white/[0.02] border border-violet-500/30" : "border border-white/[0.04] hover:border-white/8"
+                    }`}
                   >
                     <div className="flex justify-between items-center">
                       <div>
                         <div className="flex items-center gap-2 mb-0.5">
                           <p className={`text-[10px] tracking-[0.15em] ${isActive ? "text-white/65" : "text-white/30"}`}>{tier.label}</p>
-                          {tier.badge && <span className="text-[7px] tracking-[0.1em] bg-violet-500/90 text-white px-1.5 py-0.5 rounded-full">{tier.badge}</span>}
+                          {tier.badge && (
+                            <span className="text-[7px] tracking-[0.1em] bg-violet-500/90 text-white px-1.5 py-0.5 rounded-full">{tier.badge}</span>
+                          )}
                         </div>
                         <p className={`text-[11px] ${isActive ? "text-white/40" : "text-white/18"}`}>{tier.metal} &middot; {tier.stones}</p>
                       </div>
-                      <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>${product.pricing[key].toLocaleString()} CAD</p>
+                      <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
+                        ${product.pricing[key].toLocaleString()} CAD
+                      </p>
                     </div>
                   </div>
                 );
@@ -204,7 +196,7 @@ export default function CoogiPage() {
               <select
                 value={selectedSize}
                 onChange={(e) => setSelectedSize(e.target.value)}
-                className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-violet-500/30 transition-colors"
+                className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-violet-500/30"
               >
                 <option value="" disabled className="bg-black">Select size (6-12)</option>
                 {sizeOptions.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
@@ -214,9 +206,9 @@ export default function CoogiPage() {
             <div className="w-24">
               <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">QTY</p>
               <div className="flex items-center border border-white/8 rounded-md h-[36px]">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">-</button>
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 text-white/30 hover:text-white/50 text-sm">-</button>
                 <span className="flex-1 text-center text-[11px] text-white/55">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">+</button>
+                <button onClick={() => setQuantity(quantity + 1)} className="px-2.5 text-white/30 hover:text-white/50 text-sm">+</button>
               </div>
             </div>
           </div>
