@@ -134,7 +134,7 @@ const HomePage = () => {
       <DropReveal isActive={showDropReveal} targetPath="/shop-drop" dropText="DROP 001" />
 
       {/* Cinematic Hero Section */}
-      <section className="relative h-screen w-full overflow-hidden bg-black">
+      <section className="relative h-[50vh] md:h-[65vh] w-full overflow-hidden bg-black">
         {/* Hero Background Video */}
         <div className="absolute inset-0 h-full w-full">
           <video
@@ -186,7 +186,7 @@ const HomePage = () => {
           PTP CUFF FEATURE SECTION
           Product-dominant with subtle text overlay
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-28 md:py-36 lg:py-44 bg-phileon-black">
+      <section className="py-16 md:py-20 lg:py-28 bg-phileon-black">
         <div className="max-w-5xl mx-auto px-4 md:px-8">
           <ScrollReveal>
             {/* Product Hero - Dominant Visual */}
@@ -284,14 +284,14 @@ const HomePage = () => {
           CATEGORY IDENTITY — 3-TILE SECTION
           Clean, curated category navigation
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-6 md:py-10 bg-[#0a0a0a]">
+      <section className="py-4 md:py-6 bg-[#0a0a0a]">
         <div className="max-w-5xl mx-auto px-5 md:px-10">
-          <div className="grid grid-cols-3 gap-2 md:gap-3">
+          <div className="grid grid-cols-3 gap-1.5 md:gap-2">
             
             {/* GENTS RINGS */}
             <ScrollReveal delay={0}>
               <Link to="/shop?audience=gentlemens-club&category=rings" className="group block" data-testid="category-tile-gents">
-                <div className="h-[120px] md:h-[160px] overflow-hidden bg-[#111] relative">
+                <div className="h-[80px] md:h-[110px] overflow-hidden bg-[#111] relative">
                   <img
                     src={products.coogiI?.imageUrl || products.cypher?.gallery?.[0]?.src}
                     alt="Gents Rings"
@@ -313,7 +313,7 @@ const HomePage = () => {
             {/* LADIES RINGS */}
             <ScrollReveal delay={100}>
               <Link to="/shop?audience=ladies&category=rings" className="group block" data-testid="category-tile-ladies">
-                <div className="h-[120px] md:h-[160px] overflow-hidden bg-[#111] relative">
+                <div className="h-[80px] md:h-[110px] overflow-hidden bg-[#111] relative">
                   <img
                     src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
                     alt="Ladies Rings"
@@ -335,7 +335,7 @@ const HomePage = () => {
             {/* COLLECTIVE */}
             <ScrollReveal delay={200}>
               <Link to="/shop?audience=collective" className="group block" data-testid="category-tile-collective">
-                <div className="h-[120px] md:h-[160px] overflow-hidden bg-[#111] relative">
+                <div className="h-[80px] md:h-[110px] overflow-hidden bg-[#111] relative">
                   <img
                     src={products.blessed?.imageUrl}
                     alt="Collective"
