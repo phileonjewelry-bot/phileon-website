@@ -1419,25 +1419,25 @@ Covenant.`,
         label: "FOUNDATION",
         name: "Foundation",
         metal: "10K White Gold",
-        stones: "Multi-stone pavé · ~820 stones",
+        stones: "~820 stones",
         badge: "",
-        description: "The entry into COOGI I. Full pavé composition. Estimated 24g."
+        description: "Full pavé composition. Estimated 24g."
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
         metal: "14K White Gold",
-        stones: "Multi-stone pavé · ~820 stones",
+        stones: "Lab Stones · ~820",
         badge: "MOST POPULAR",
-        description: "The definitive expression. Balanced density. Estimated 28g."
+        description: "Balanced density. Lab-created sapphires. Estimated 28g."
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
         metal: "18K White Gold",
-        stones: "Multi-stone pavé · ~820 stones",
-        badge: "",
-        description: "Collector level. Maximum density. Estimated 34g."
+        stones: "Natural Stones · ~820",
+        badge: "COLLECTOR",
+        description: "Natural sapphires. Maximum density. Estimated 34g."
       }
     },
     

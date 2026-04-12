@@ -182,29 +182,31 @@ export default function CoogiPage() {
                 </div>
               </div>
 
-              {/* Specifications */}
-              <div className="mb-8 p-4 bg-white/[0.02] rounded-lg border border-white/[0.05]">
-                <p className="text-[8px] tracking-[0.35em] text-white/25 mb-3">SPECIFICATIONS</p>
-                <div className="grid grid-cols-3 gap-4 text-[11px]">
-                  <div>
-                    <p className="text-white/30 mb-1">Top Width</p>
-                    <p className="text-white/60">{product.specifications.topWidth}</p>
-                  </div>
-                  <div>
-                    <p className="text-white/30 mb-1">Band Width</p>
-                    <p className="text-white/60">{product.specifications.bandWidth}</p>
-                  </div>
-                  <div>
-                    <p className="text-white/30 mb-1">Thickness</p>
-                    <p className="text-white/60">{product.specifications.thickness}</p>
-                  </div>
+              {/* Specifications - Clean text block */}
+              <div className="mb-8">
+                <p className="text-[8px] tracking-[0.35em] text-white/25 mb-4">SPECIFICATIONS</p>
+                <div className="text-[11px] text-white/40 leading-relaxed space-y-1">
+                  <p>Top Width: 22 mm</p>
+                  <p>Band Width: 9 mm</p>
+                  <p>Thickness: 5 mm</p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-white/[0.05]">
-                  <p className="text-white/30 text-[10px] mb-1">Total Stones</p>
-                  <p className="text-violet-400/80 text-[13px]">~{product.specifications.stones.total} stones</p>
-                  <p className="text-white/25 text-[9px] mt-1">
-                    White Diamonds · Blue · Yellow · Orange · Purple · Pink Sapphires
-                  </p>
+                <div className="mt-4 text-[11px] text-white/40 leading-relaxed space-y-1">
+                  <p className="text-white/25 text-[9px] mb-2">Est. Weight (Size 10)</p>
+                  <p>10K Gold: 24 g</p>
+                  <p>14K Gold: 28 g</p>
+                  <p>18K Gold: 34 g</p>
+                </div>
+                <div className="mt-4 pt-4 border-t border-white/[0.04]">
+                  <p className="text-white/25 text-[9px] mb-2">Stone Composition</p>
+                  <p className="text-violet-400/70 text-[12px] mb-2">~820 total stones</p>
+                  <div className="text-[10px] text-white/35 leading-relaxed space-y-0.5">
+                    <p>White Diamonds: 26</p>
+                    <p>Blue Sapphires: ~200</p>
+                    <p>Yellow Sapphires: ~170</p>
+                    <p>Orange Sapphires: ~140</p>
+                    <p>Purple Sapphires: ~160</p>
+                    <p>Pink Sapphires: ~120</p>
+                  </div>
                 </div>
               </div>
               
