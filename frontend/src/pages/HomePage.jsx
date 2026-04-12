@@ -284,25 +284,25 @@ const HomePage = () => {
           CATEGORY IDENTITY — 3-TILE SECTION
           Clean, curated category navigation
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-8 md:py-12 bg-[#0a0a0a]">
+      <section className="py-6 md:py-10 bg-[#0a0a0a]">
         <div className="max-w-5xl mx-auto px-5 md:px-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="grid grid-cols-3 gap-2 md:gap-3">
             
             {/* GENTS RINGS */}
             <ScrollReveal delay={0}>
               <Link to="/shop?audience=gentlemens-club&category=rings" className="group block" data-testid="category-tile-gents">
-                <div className="aspect-[5/2] overflow-hidden bg-[#111] relative">
+                <div className="h-[120px] md:h-[160px] overflow-hidden bg-[#111] relative">
                   <img
                     src={products.coogiI?.imageUrl || products.cypher?.gallery?.[0]?.src}
                     alt="Gents Rings"
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
-                    <h3 className="font-serif text-sm md:text-base tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-2.5 md:p-3">
+                    <h3 className="font-serif text-[11px] md:text-sm tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
                       GENTS RINGS
                     </h3>
-                    <p className="text-white/45 text-[9px] md:text-[10px] mt-0.5 tracking-wide">
+                    <p className="text-white/45 text-[8px] md:text-[9px] mt-0.5 tracking-wide hidden md:block">
                       Structure. Weight. Presence.
                     </p>
                   </div>
@@ -313,18 +313,18 @@ const HomePage = () => {
             {/* LADIES RINGS */}
             <ScrollReveal delay={100}>
               <Link to="/shop?audience=ladies&category=rings" className="group block" data-testid="category-tile-ladies">
-                <div className="aspect-[5/2] overflow-hidden bg-[#111] relative">
+                <div className="h-[120px] md:h-[160px] overflow-hidden bg-[#111] relative">
                   <img
                     src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
                     alt="Ladies Rings"
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
-                    <h3 className="font-serif text-sm md:text-base tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-2.5 md:p-3">
+                    <h3 className="font-serif text-[11px] md:text-sm tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
                       LADIES RINGS
                     </h3>
-                    <p className="text-white/45 text-[9px] md:text-[10px] mt-0.5 tracking-wide">
+                    <p className="text-white/45 text-[8px] md:text-[9px] mt-0.5 tracking-wide hidden md:block">
                       Refined form. Effortless movement.
                     </p>
                   </div>
@@ -335,18 +335,18 @@ const HomePage = () => {
             {/* COLLECTIVE */}
             <ScrollReveal delay={200}>
               <Link to="/shop?audience=collective" className="group block" data-testid="category-tile-collective">
-                <div className="aspect-[5/2] overflow-hidden bg-[#111] relative">
+                <div className="h-[120px] md:h-[160px] overflow-hidden bg-[#111] relative">
                   <img
                     src={products.blessed?.imageUrl}
                     alt="Collective"
                     className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
-                    <h3 className="font-serif text-sm md:text-base tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-2.5 md:p-3">
+                    <h3 className="font-serif text-[11px] md:text-sm tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
                       COLLECTIVE
                     </h3>
-                    <p className="text-white/45 text-[9px] md:text-[10px] mt-0.5 tracking-wide">
+                    <p className="text-white/45 text-[8px] md:text-[9px] mt-0.5 tracking-wide hidden md:block">
                       Editorial pieces beyond category.
                     </p>
                   </div>
