@@ -186,26 +186,27 @@ export default function CoogiPage() {
               <div className="mb-8">
                 <p className="text-[8px] tracking-[0.35em] text-white/25 mb-4">SPECIFICATIONS</p>
                 <div className="text-[11px] text-white/40 leading-relaxed space-y-1">
-                  <p>Top Width: 22 mm</p>
-                  <p>Band Width: 9 mm</p>
-                  <p>Thickness: 5 mm</p>
+                  <p>Top Width: 18 mm</p>
+                  <p>Band Thickness: 5 mm</p>
+                  <p>Profile: Tapered architectural signet</p>
+                  <p>Finish: High polish with pavé setting</p>
                 </div>
                 <div className="mt-4 text-[11px] text-white/40 leading-relaxed space-y-1">
                   <p className="text-white/25 text-[9px] mb-2">Est. Weight (Size 10)</p>
-                  <p>10K Gold: 24 g</p>
-                  <p>14K Gold: 28 g</p>
-                  <p>18K Gold: 34 g</p>
+                  <p>10K Gold: 14–16 g</p>
+                  <p>14K Gold: 16–18 g</p>
+                  <p>18K Gold: 18–20 g</p>
                 </div>
                 <div className="mt-4 pt-4 border-t border-white/[0.04]">
                   <p className="text-white/25 text-[9px] mb-2">Stone Composition</p>
-                  <p className="text-violet-400/70 text-[12px] mb-2">~820 total stones</p>
+                  <p className="text-violet-400/70 text-[12px] mb-2">~700 total stones</p>
                   <div className="text-[10px] text-white/35 leading-relaxed space-y-0.5">
-                    <p>White Diamonds: 26</p>
-                    <p>Blue Sapphires: ~200</p>
-                    <p>Yellow Sapphires: ~170</p>
-                    <p>Orange Sapphires: ~140</p>
-                    <p>Purple Sapphires: ~160</p>
-                    <p>Pink Sapphires: ~120</p>
+                    <p>White Diamonds: 26 (center channel only)</p>
+                    <p>Blue Sapphires: ~90–110</p>
+                    <p>Yellow Sapphires: ~80–100</p>
+                    <p>Orange Sapphires / Citrine: ~70–90</p>
+                    <p>Purple Sapphires / Amethyst: ~60–80</p>
+                    <p>Pink Sapphires: ~40–60</p>
                   </div>
                   <p className="text-white/25 text-[9px] mt-3 italic">
                     Pavé-set across the upper three-quarter surface, leaving the interior clean for comfort and structure.

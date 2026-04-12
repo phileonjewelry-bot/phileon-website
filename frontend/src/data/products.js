@@ -1419,25 +1419,25 @@ Covenant.`,
         label: "FOUNDATION",
         name: "Foundation",
         metal: "10K Gold (Yellow or White)",
-        stones: "~820 stones",
+        stones: "~700 stones",
         badge: "",
-        description: "Full pavé composition. Estimated 24g."
+        description: "Full pavé composition. Estimated 14–16g."
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
         metal: "14K Gold (Yellow or White)",
-        stones: "Lab-Grown Stones · ~820",
+        stones: "Lab-Grown Stones · ~700",
         badge: "MOST POPULAR",
-        description: "Balanced density. Lab-grown sapphires. Estimated 28g."
+        description: "Balanced density. Lab-grown sapphires. Estimated 16–18g."
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
         metal: "18K Gold (Yellow or White)",
-        stones: "Natural Gemstones · ~820",
+        stones: "Natural Gemstones · ~700",
         badge: "COLLECTOR",
-        description: "Natural gemstones. Maximum density. Estimated 34g."
+        description: "Natural gemstones. Maximum density. Estimated 18–20g."
       }
     },
     
@@ -1459,22 +1459,23 @@ This is expression — under control.`,
     
     // Specifications
     specifications: {
-      topWidth: "22 mm",
-      bandWidth: "9 mm",
-      thickness: "5 mm",
+      topWidth: "18 mm",
+      bandThickness: "5 mm",
+      profile: "Tapered architectural signet",
+      finish: "High polish with pavé setting",
       weights: {
-        "10K": "24 g",
-        "14K": "28 g",
-        "18K": "34 g"
+        "10K": "14–16 g",
+        "14K": "16–18 g",
+        "18K": "18–20 g"
       },
       stones: {
-        whiteDiamonds: 26,
-        blueSapphires: 200,
-        yellowSapphires: 170,
-        orangeSapphires: 140,
-        purpleSapphires: 160,
-        pinkSapphires: 120,
-        total: 820
+        whiteDiamonds: "26 (center channel only)",
+        blueSapphires: "~90–110",
+        yellowSapphires: "~80–100",
+        orangeSapphires: "~70–90",
+        purpleSapphires: "~60–80",
+        pinkSapphires: "~40–60",
+        total: "~700"
       }
     },
     
