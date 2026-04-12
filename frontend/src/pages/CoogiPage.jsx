@@ -52,7 +52,7 @@ export default function CoogiPage() {
              Always plays. Separate from gallery. Text overlay.
       ═══════════════════════════════════════════════════════ */}
       <section className="w-full">
-        <div className="w-full max-w-[700px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
+        <div className="w-full max-w-[640px] mx-auto px-4 pt-2 md:pt-4">
           <div className="relative overflow-hidden rounded-[14px]">
             <video
               ref={heroRef}
@@ -61,7 +61,7 @@ export default function CoogiPage() {
               loop
               playsInline
               poster={product.imageUrl}
-              className="w-full aspect-[4/5] object-cover"
+              className="w-full aspect-[3/4] object-cover"
             >
               <source src={COOGI_HERO_VIDEO} type="video/mp4" />
             </video>
@@ -69,17 +69,17 @@ export default function CoogiPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
 
-            <div className="absolute left-5 bottom-8 md:left-8 md:bottom-10 z-10">
-              <div className="text-[11px] tracking-[0.35em] text-white/75 uppercase mb-3">
+            <div className="absolute left-5 bottom-7 z-10">
+              <div className="text-[10px] tracking-[0.35em] text-white/70 uppercase mb-2">
                 Tribute Series
               </div>
-              <h1 className="text-4xl md:text-5xl text-white leading-none mb-2">
+              <h1 className="text-3xl text-white leading-none mb-1">
                 COOGI I
               </h1>
-              <p className="text-white/85 text-base mb-2">
+              <p className="text-white/80 text-sm mb-1">
                 {product.tagline}
               </p>
-              <p className="text-white/70 text-sm">
+              <p className="text-white/65 text-xs">
                 From ${product.pricing.foundation.toLocaleString()} CAD
               </p>
             </div>
