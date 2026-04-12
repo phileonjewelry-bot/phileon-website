@@ -1,6 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+
+// COOGI I hero video URL
+const COOGI_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ifs9jtbk_VIDEO_98d0aec8-1ca7-4b07-9e13-c0bb3baa740b.mp4";
 
 /* ═══════════════════════════════════════════════════════════════
    COOGI I — Tribute Series
@@ -22,7 +25,13 @@ export default function CoogiPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentTier = product.tiers[selectedTier];
-  const gallery = product.gallery;
+  const galleryVideoRef = useRef(null);
+  
+  // Hero video as FIRST gallery item, then all product images
+  const gallery = [
+    { type: "video", src: COOGI_HERO_VIDEO, poster: product.imageUrl, alt: "COOGI I hero video" },
+    ...product.gallery
+  ];
 
   // Image transition handler
   const handleImageChange = useCallback((newIndex) => {
@@ -61,14 +70,19 @@ export default function CoogiPage() {
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
 
-        {/* HERO IMAGE */}
+        {/* HERO VIDEO */}
         <div className="absolute inset-0 z-0">
-          <img
-            src={gallery[0]?.src}
-            alt={gallery[0]?.alt}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={product.imageUrl}
             className="w-full h-full object-cover object-center"
             style={{ filter: "brightness(0.9) contrast(1.05)" }}
-          />
+          >
+            <source src={COOGI_HERO_VIDEO} type="video/mp4" />
+          </video>
           {/* DARK OVERLAY */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
         </div>
@@ -116,21 +130,40 @@ export default function CoogiPage() {
             
             {/* Left: Gallery - Tighter, more refined */}
             <div className="max-w-[480px] mx-auto md:mx-0">
-              {/* Main Image */}
+              {/* Main Image/Video */}
               <div className="relative aspect-square mb-3 bg-black rounded overflow-hidden">
-                <img
-                  src={gallery[activeImage].src}
-                  alt={gallery[activeImage].alt || ""}
-                  className={`
-                    w-full h-full object-contain
-                    transition-all duration-400
-                    ${isTransitioning ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"}
-                  `}
-                  style={{ 
-                    transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                    filter: "brightness(1.02) contrast(1.01)"
-                  }}
-                />
+                {gallery[activeImage]?.type === "video" ? (
+                  <video
+                    ref={galleryVideoRef}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    poster={gallery[activeImage].poster}
+                    className={`
+                      w-full h-full object-cover
+                      transition-all duration-400
+                      ${isTransitioning ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"}
+                    `}
+                    style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                  >
+                    <source src={gallery[activeImage].src} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    src={gallery[activeImage].src}
+                    alt={gallery[activeImage].alt || ""}
+                    className={`
+                      w-full h-full object-contain
+                      transition-all duration-400
+                      ${isTransitioning ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"}
+                    `}
+                    style={{ 
+                      transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                      filter: "brightness(1.02) contrast(1.01)"
+                    }}
+                  />
+                )}
               </div>
               
               {/* Thumbnails - Smaller, neater */}
@@ -159,12 +192,27 @@ export default function CoogiPage() {
                             : "opacity-40 hover:opacity-80"}
                       `}
                     >
-                      <img 
-                        src={item.src} 
-                        alt="" 
-                        className="w-full h-full object-cover" 
-                        loading="lazy"
-                      />
+                      {item.type === "video" ? (
+                        <div className="relative w-full h-full bg-black">
+                          <video muted playsInline preload="metadata" poster={item.poster} className="w-full h-full object-cover pointer-events-none">
+                            <source src={item.src} type="video/mp4" />
+                          </video>
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+                            <div className="w-4 h-4 rounded-full bg-white/80 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-2 h-2 text-black ml-px">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <img 
+                          src={item.src} 
+                          alt="" 
+                          className="w-full h-full object-cover" 
+                          loading="lazy"
+                        />
+                      )}
                     </button>
                   );
                 })}
