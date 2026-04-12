@@ -52,7 +52,7 @@ export default function CoogiPage() {
              Always plays. Separate from gallery. Text overlay.
       ═══════════════════════════════════════════════════════ */}
       <section className="w-full">
-        <div className="w-full max-w-[600px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
+        <div className="w-full max-w-[560px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
           <div className="relative w-full overflow-hidden rounded-[14px] bg-black">
             <video
               ref={heroRef}
