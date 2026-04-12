@@ -52,7 +52,7 @@ export default function CoogiPage() {
              Always plays. Separate from gallery. Text overlay.
       ═══════════════════════════════════════════════════════ */}
       <section className="w-full">
-        <div className="w-full max-w-[900px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
+        <div className="w-full max-w-[760px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
           <div className="relative w-full overflow-hidden rounded-[14px] bg-black">
             <video
               ref={heroRef}
@@ -61,7 +61,7 @@ export default function CoogiPage() {
               loop
               playsInline
               poster={product.imageUrl}
-              className="w-full aspect-[4/5] md:aspect-[5/4] object-cover"
+              className="w-full aspect-[5/6] md:aspect-[4/5] object-cover"
             >
               <source src={COOGI_HERO_VIDEO} type="video/mp4" />
             </video>
@@ -86,7 +86,7 @@ export default function CoogiPage() {
           2. THUMBNAIL GALLERY — Image browser
              Selected image shows in main viewer above thumbs
       ═══════════════════════════════════════════════════════ */}
-      <section className="w-full mt-5 md:mt-6">
+      <section className="w-full mt-3 md:mt-4">
         <div className="max-w-[420px] md:max-w-[520px] mx-auto px-3 md:px-5">
 
           {/* Selected image viewer */}
