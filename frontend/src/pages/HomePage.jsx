@@ -133,47 +133,27 @@ const HomePage = () => {
       {/* Drop Reveal Animation */}
       <DropReveal isActive={showDropReveal} targetPath="/shop-drop" dropText="DROP 001" />
 
-      {/* Cinematic Hero Section */}
-      <section className="relative h-screen w-full overflow-hidden bg-black">
-        {/* Hero Background Video */}
-        <div className="absolute inset-0 h-full w-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover"
-          >
-            <source src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/a8omotqb_phileon-opener.mp4" type="video/mp4" />
-          </video>
-        </div>
+      {/* Cinematic Video Hero */}
+      <section className="relative w-full h-screen overflow-hidden bg-black">
         
-        {/* Cinematic Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80"></div>
+        {/* Full-screen Video Background */}
+        <video
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ifs9jtbk_VIDEO_98d0aec8-1ca7-4b07-9e13-c0bb3baa740b.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
 
-        {/* Hero Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-8">
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-[0.12em] text-phileon-ivory mb-6 leading-[1.3] md:leading-[1.35]">
-            Not jewelry.<br />Identity.
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-black/40" />
+
+        {/* Hero Content - Centered PHILEON */}
+        <div className="relative z-10 flex items-center justify-center h-full text-center">
+          <h1 className="text-white text-4xl md:text-6xl tracking-[0.2em] font-light">
+            PHILEON
           </h1>
-          <p className="text-xl md:text-2xl text-phileon-ivory-muted tracking-wide mb-12 max-w-2xl">
-            Precious forms designed to hold attention.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-5">
-            <Link 
-              to="/shop" 
-              className="px-10 py-4 bg-phileon-gold text-phileon-black text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:brightness-110"
-            >
-              View Collection
-            </Link>
-            <Link 
-              to="/products/la-marva" 
-              className="px-10 py-4 border border-phileon-gold text-phileon-gold text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:bg-phileon-gold/10 hover:brightness-110"
-            >
-              Discover La Marva
-            </Link>
-          </div>
         </div>
 
         {/* Scroll indicator */}
