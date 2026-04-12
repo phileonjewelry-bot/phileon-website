@@ -198,7 +198,9 @@ export default function CoogiPage() {
                 </div>
                 <div className="mt-4 pt-4 border-t border-white/[0.04]">
                   <p className="text-white/25 text-[9px] mb-2">Stone Composition</p>
-                  <p className="text-violet-400/70 text-[12px] mb-2">~700 total stones</p>
+                  <p className="text-white/40 text-[11px] leading-relaxed mb-3">
+                    A complex pavé composition of over 700 hand-set gemstones, arranged in a continuous flowing pattern:
+                  </p>
                   <div className="text-[10px] text-white/35 leading-relaxed space-y-0.5">
                     <p>White Diamonds</p>
                     <p>Blue Sapphires</p>
@@ -208,7 +210,7 @@ export default function CoogiPage() {
                     <p>Purple Amethyst</p>
                   </div>
                   <p className="text-white/25 text-[9px] mt-3 italic">
-                    Pavé-set across the upper three-quarter surface, leaving the interior clean for comfort and structure.
+                    Each stone is individually set to follow the natural movement of the design.
                   </p>
                 </div>
               </div>

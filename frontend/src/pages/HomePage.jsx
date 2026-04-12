@@ -243,7 +243,7 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          BOUND TEASE SECTION
+          BOUND HERO SECTION
           Single image, minimal text, creates curiosity
       ═══════════════════════════════════════════════════════════════ */}
       <section className="bound-tease relative min-h-screen bg-[#0a0a0a] overflow-hidden">
@@ -278,6 +278,128 @@ const HomePage = () => {
             </div>
           </div>
         </Link>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          CATEGORY IDENTITY — 3-TILE SECTION
+          Clean, curated category navigation
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-32 bg-[#0a0a0a]">
+        <div className="max-w-6xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            
+            {/* GENTS RINGS */}
+            <ScrollReveal delay={0}>
+              <Link to="/shop?audience=gentlemens-club&category=rings" className="group block">
+                <div className="aspect-[4/5] overflow-hidden bg-[#111] relative">
+                  <img
+                    src={products.coogiI?.imageUrl || products.cypher?.gallery?.[0]?.src}
+                    alt="Gents Rings"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                    <h3 className="font-serif text-xl md:text-2xl tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
+                      GENTS RINGS
+                    </h3>
+                    <p className="text-white/50 text-xs md:text-sm mt-2 tracking-wide">
+                      Structure. Weight. Presence.
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            {/* LADIES RINGS */}
+            <ScrollReveal delay={150}>
+              <Link to="/shop?audience=ladies&category=rings" className="group block">
+                <div className="aspect-[4/5] overflow-hidden bg-[#111] relative">
+                  <img
+                    src={products.rosaria?.images?.hero || products.annieRose?.imageUrl}
+                    alt="Ladies Rings"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                    <h3 className="font-serif text-xl md:text-2xl tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
+                      LADIES RINGS
+                    </h3>
+                    <p className="text-white/50 text-xs md:text-sm mt-2 tracking-wide">
+                      Refined form. Effortless movement.
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            {/* COLLECTIVE */}
+            <ScrollReveal delay={300}>
+              <Link to="/shop?audience=collective" className="group block">
+                <div className="aspect-[4/5] overflow-hidden bg-[#111] relative">
+                  <img
+                    src={products.blessed?.imageUrl}
+                    alt="Collective"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                    <h3 className="font-serif text-xl md:text-2xl tracking-wide text-white group-hover:text-phileon-gold transition-colors duration-300">
+                      COLLECTIVE
+                    </h3>
+                    <p className="text-white/50 text-xs md:text-sm mt-2 tracking-wide">
+                      Editorial pieces beyond category.
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          COOGI I FEATURED SECTION
+          A surface in motion. Composed entirely by hand.
+      ═══════════════════════════════════════════════════════════════ */}
+      <section className="py-24 md:py-36 bg-black">
+        <div className="max-w-5xl mx-auto px-6 md:px-12">
+          <ScrollReveal>
+            <Link to="/products/coogi-i" className="group block">
+              <div className="relative aspect-[16/10] md:aspect-[2/1] overflow-hidden bg-[#0a0a0a]">
+                <img
+                  src={products.coogiI?.gallery?.[0]?.src || products.coogiI?.imageUrl}
+                  alt="COOGI I"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              </div>
+            </Link>
+          </ScrollReveal>
+          
+          <ScrollReveal delay={200}>
+            <div className="mt-10 md:mt-14 text-center">
+              <p className="text-violet-400/60 text-[10px] tracking-[0.4em] uppercase mb-4">
+                TRIBUTE SERIES
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.02em] text-white/90 mb-4">
+                COOGI I
+              </h2>
+              <p className="text-white/50 text-base md:text-lg tracking-wide max-w-md mx-auto leading-relaxed">
+                A surface in motion.<br />
+                Composed entirely by hand.
+              </p>
+              <div className="mt-10">
+                <Link 
+                  to="/products/coogi-i"
+                  className="inline-block px-10 py-4 border border-violet-500/50 text-violet-400 text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:border-violet-400 hover:bg-violet-500/10"
+                >
+                  Explore COOGI I
+                </Link>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
