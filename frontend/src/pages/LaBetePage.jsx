@@ -16,10 +16,11 @@ export default function LaBetePage() {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hoveredThumb, setHoveredThumb] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const galleryVideoRef = useRef(null);
 
   // Perception control
   const [scrollY, setScrollY] = useState(0);
@@ -28,7 +29,12 @@ export default function LaBetePage() {
 
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
-  const gallery = product.gallery;
+  
+  // Hero video as FIRST gallery item, followed by all product images
+  const gallery = [
+    { type: "video", src: "/videos/labete-hero.mp4", poster: product.heroImage, alt: "LA BÊTE hero video" },
+    ...product.gallery
+  ];
 
   // Heavy, deliberate image transition - instant switch feel
   const handleImageChange = useCallback((newIndex) => {
@@ -66,8 +72,7 @@ export default function LaBetePage() {
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,
-      image: product.gallery[0].src,
-    });
+      image: product.gallery[0].src,    });
   };
 
   const visibleTiers = Object.entries(product.tiers).filter(([key, tier]) => !tier.hiddenFromHero);
@@ -159,27 +164,46 @@ export default function LaBetePage() {
               {/* Depth layer - dead black behind object */}
               <div className="absolute inset-0 bg-black" />
               
-              {/* The object itself */}
-              <img
-                src={gallery[activeImage].src}
-                alt={gallery[activeImage].alt || ""}
-                className={`
-                  relative z-10 max-w-[94%] max-h-full object-contain
-                  transition-all duration-500
-                  ${isTransitioning 
-                    ? "opacity-0 scale-[0.97]" 
-                    : "opacity-100 scale-100"}
-                `}
-                style={{ 
-                  transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                  filter: isTransitioning 
-                    ? "brightness(0.95) contrast(1)" 
-                    : "brightness(1.03) contrast(1.02) drop-shadow(0 35px 70px rgba(0,0,0,0.85))"
-                }}
-              />
+              {/* The object itself - video or image */}
+              {gallery[activeImage]?.type === "video" ? (
+                <video
+                  ref={galleryVideoRef}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster={gallery[activeImage].poster}
+                  className={`
+                    relative z-10 w-full h-full object-cover
+                    transition-all duration-500
+                    ${isTransitioning 
+                      ? "opacity-0 scale-[0.97]" 
+                      : "opacity-100 scale-100"}
+                  `}
+                  style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                >
+                  <source src={gallery[activeImage].src} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  src={gallery[activeImage].src}
+                  alt={gallery[activeImage].alt || ""}
+                  className={`
+                    relative z-10 max-w-[94%] max-h-full object-contain
+                    transition-all duration-500
+                    ${isTransitioning 
+                      ? "opacity-0 scale-[0.97]" 
+                      : "opacity-100 scale-100"}
+                  `}
+                  style={{ 
+                    transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                    filter: isTransitioning 
+                      ? "brightness(0.95) contrast(1)" 
+                      : "brightness(1.03) contrast(1.02) drop-shadow(0 35px 70px rgba(0,0,0,0.85))"
+                  }}
+                />
+              )}
             </div>
-            
-            {/* Instrument panel - switches, not images */}
             <div 
               className={`
                 flex justify-center gap-[5px] mt-2 mb-6
@@ -225,7 +249,22 @@ export default function LaBetePage() {
                       : "opacity-20"}
                   `}
                 >
-                  <img src={item.src} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  {item.type === "video" ? (
+                    <div className="relative w-full h-full bg-black">
+                      <video muted playsInline preload="metadata" poster={item.poster} className="w-full h-full object-cover pointer-events-none">
+                        <source src={item.src} type="video/mp4" />
+                      </video>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+                        <div className="w-4 h-4 rounded-full bg-white/80 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-2 h-2 text-black ml-px">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <img src={item.src} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  )}
                 </button>
               ))}
             </div>
@@ -360,27 +399,45 @@ export default function LaBetePage() {
                 {/* Depth: dead black */}
                 <div className="absolute inset-0 bg-black" />
                 
-                {/* Object with presence amplification */}
-                <img
-                  src={gallery[activeImage].src}
-                  alt={gallery[activeImage].alt || ""}
-                  className={`
-                    relative z-10 max-w-[88%] max-h-full object-contain
-                    transition-all duration-500
-                    ${isTransitioning 
-                      ? "opacity-0 scale-[0.97]" 
-                      : "opacity-100 scale-100"}
-                  `}
-                  style={{ 
-                    transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                    filter: isTransitioning 
-                      ? "brightness(0.96) contrast(1)" 
-                      : "brightness(1.025) contrast(1.015) drop-shadow(0 45px 90px rgba(0,0,0,0.8))"
-                  }}
-                />
+                {/* Object with presence amplification - video or image */}
+                {gallery[activeImage]?.type === "video" ? (
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    poster={gallery[activeImage].poster}
+                    className={`
+                      relative z-10 w-full h-full object-cover
+                      transition-all duration-500
+                      ${isTransitioning 
+                        ? "opacity-0 scale-[0.97]" 
+                        : "opacity-100 scale-100"}
+                    `}
+                    style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
+                  >
+                    <source src={gallery[activeImage].src} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    src={gallery[activeImage].src}
+                    alt={gallery[activeImage].alt || ""}
+                    className={`
+                      relative z-10 max-w-[88%] max-h-full object-contain
+                      transition-all duration-500
+                      ${isTransitioning 
+                        ? "opacity-0 scale-[0.97]" 
+                        : "opacity-100 scale-100"}
+                    `}
+                    style={{ 
+                      transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                      filter: isTransitioning 
+                        ? "brightness(0.96) contrast(1)" 
+                        : "brightness(1.025) contrast(1.015) drop-shadow(0 45px 90px rgba(0,0,0,0.8))"
+                    }}
+                  />
+                )}
               </div>
-              
-              {/* Instrument panel - intelligent response */}
               <div className="flex justify-center gap-1.5">
                 {gallery.map((item, index) => {
                   const isActive = activeImage === index;
@@ -406,15 +463,30 @@ export default function LaBetePage() {
                             : "opacity-18 hover:opacity-45"}
                       `}
                     >
-                      <img 
-                        src={item.src} 
-                        alt="" 
-                        className="w-full h-full object-cover" 
-                        loading="lazy"
-                        style={{
-                          filter: isActive || isHovered ? "brightness(1.05)" : "brightness(0.9)"
-                        }}
-                      />
+                      {item.type === "video" ? (
+                        <div className="relative w-full h-full bg-black">
+                          <video muted playsInline preload="metadata" poster={item.poster} className="w-full h-full object-cover pointer-events-none">
+                            <source src={item.src} type="video/mp4" />
+                          </video>
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+                            <div className="w-4 h-4 rounded-full bg-white/80 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-2 h-2 text-black ml-px">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <img 
+                          src={item.src} 
+                          alt="" 
+                          className="w-full h-full object-cover" 
+                          loading="lazy"
+                          style={{
+                            filter: isActive || isHovered ? "brightness(1.05)" : "brightness(0.9)"
+                          }}
+                        />
+                      )}
                     </button>
                   );
                 })}
