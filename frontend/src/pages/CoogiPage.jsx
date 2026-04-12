@@ -68,7 +68,7 @@ export default function CoogiPage() {
       {/* ═══════════════════════════════════════════════════════════════
           HERO — Cinematic Full-Viewport
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden bg-black">
+      <section className="relative w-full h-[55vh] md:h-[65vh] overflow-hidden bg-black">
 
         {/* HERO VIDEO */}
         <div className="absolute inset-0 z-0">
@@ -89,29 +89,29 @@ export default function CoogiPage() {
 
         {/* TEXT OVERLAY (CREDITS STYLE) */}
         <div className="relative z-10 h-full flex items-end">
-          <div className="px-6 pb-10 md:pb-16 max-w-xl">
+          <div className="px-6 pb-8 md:pb-12 max-w-xl">
 
-            <p className="text-[10px] tracking-[0.25em] text-violet-400 mb-3">
+            <p className="text-[9px] tracking-[0.25em] text-violet-400 mb-2">
               TRIBUTE SERIES
             </p>
 
-            <p className="text-sm tracking-[0.2em] text-white/60 mb-4">
+            <p className="text-xs tracking-[0.2em] text-white/60 mb-3">
               PATTERN MADE POWER
             </p>
 
-            <h1 className="text-4xl md:text-6xl font-serif text-white mb-4">
+            <h1 className="text-3xl md:text-5xl font-serif text-white mb-3">
               COOGI I
             </h1>
 
-            <p className="text-white/70 text-sm mb-2">
+            <p className="text-white/70 text-xs mb-1.5">
               {product.tagline}
             </p>
 
-            <p className="text-white/80 text-sm md:text-base mb-4">
+            <p className="text-white/80 text-xs md:text-sm mb-3">
               Structure disguised as chaos. Every stone placed with intent.
             </p>
 
-            <p className="text-violet-400 text-lg font-medium">
+            <p className="text-violet-400 text-base font-medium">
               From ${product.pricing.foundation.toLocaleString()} CAD
             </p>
 
@@ -122,16 +122,16 @@ export default function CoogiPage() {
       {/* ═══════════════════════════════════════════════════════════════
           MAIN CONTENT — Gallery + Configuration
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-12 md:py-16">
-        <div className="max-w-[1100px] mx-auto px-5 md:px-8">
+      <section className="py-6 md:py-10">
+        <div className="max-w-[960px] mx-auto px-6 md:px-10">
           
           {/* Desktop Layout */}
-          <div className="grid md:grid-cols-2 gap-8 md:gap-10">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             
             {/* Left: Gallery - Tighter, more refined */}
-            <div className="max-w-[480px] mx-auto md:mx-0">
+            <div className="max-w-[400px] mx-auto md:mx-0">
               {/* Main Image/Video */}
-              <div className="relative aspect-square mb-3 bg-black rounded overflow-hidden">
+              <div className="relative aspect-square mb-2 bg-black rounded overflow-hidden">
                 {gallery[activeImage]?.type === "video" ? (
                   <video
                     ref={galleryVideoRef}
@@ -166,8 +166,8 @@ export default function CoogiPage() {
                 )}
               </div>
               
-              {/* Thumbnails - Smaller, neater */}
-              <div className="flex gap-1.5 overflow-x-auto pb-1">
+              {/* Thumbnails */}
+              <div className="flex gap-1 overflow-x-auto pb-1">
                 {gallery.map((item, index) => {
                   const isActive = activeImage === index;
                   const isHovered = hoveredThumb === index;
@@ -183,10 +183,10 @@ export default function CoogiPage() {
                       }}
                       onMouseLeave={() => setHoveredThumb(null)}
                       className={`
-                        w-11 h-11 flex-shrink-0 rounded-sm overflow-hidden
+                        w-7 h-7 flex-shrink-0 rounded-[2px] overflow-hidden
                         transition-all duration-150
                         ${isActive 
-                          ? "ring-1 ring-violet-500/50 opacity-100" 
+                          ? "ring-[0.5px] ring-violet-500/50 opacity-100" 
                           : shouldDim 
                             ? "opacity-20" 
                             : "opacity-40 hover:opacity-80"}
@@ -220,18 +220,18 @@ export default function CoogiPage() {
             </div>
 
             {/* Right: Product Info */}
-            <div className="pt-2">
+            <div className="pt-0">
               
               {/* Product Description */}
-              <div className="mb-8">
-                <p className="text-[9px] tracking-[0.35em] text-violet-400/60 mb-4">TRIBUTE SERIES</p>
-                <div className="text-white/50 text-[13px] leading-[1.8] whitespace-pre-line mb-6">
+              <div className="mb-5">
+                <p className="text-[8px] tracking-[0.35em] text-violet-400/60 mb-3">TRIBUTE SERIES</p>
+                <div className="text-white/50 text-[12px] leading-[1.7] whitespace-pre-line mb-4">
                   {product.story}
                 </div>
               </div>
 
               {/* Specifications - Clean text block */}
-              <div className="mb-8">
+              <div className="mb-5">
                 <p className="text-[8px] tracking-[0.35em] text-white/25 mb-4">SPECIFICATIONS</p>
                 <div className="text-[11px] text-white/40 leading-relaxed space-y-1">
                   <p>Top Width: 18 mm</p>
@@ -264,9 +264,9 @@ export default function CoogiPage() {
               </div>
               
               {/* Configuration */}
-              <div className="mb-6">
-                <p className="text-[8px] tracking-[0.35em] text-white/20 mb-3">SELECT CONFIGURATION</p>
-                <div className="space-y-2">
+              <div className="mb-4">
+                <p className="text-[8px] tracking-[0.35em] text-white/20 mb-2">SELECT CONFIGURATION</p>
+                <div className="space-y-1.5">
                   {Object.entries(product.tiers).map(([key, tier]) => {
                     const isActive = selectedTier === key;
                     return (
@@ -274,7 +274,7 @@ export default function CoogiPage() {
                         key={key}
                         onClick={() => setSelectedTier(key)}
                         className={`
-                          cursor-pointer rounded-lg px-4 py-3
+                          cursor-pointer rounded-md px-3 py-2
                           transition-all duration-200
                           ${isActive 
                             ? "bg-white/[0.02] border border-violet-500/30" 
@@ -313,27 +313,27 @@ export default function CoogiPage() {
               </div>
 
               {/* Size & Qty */}
-              <div className="flex gap-3 mb-5">
+              <div className="flex gap-2.5 mb-4">
                 <div className="flex-1">
-                  <p className="text-[8px] tracking-[0.35em] text-white/20 mb-2">SIZE</p>
+                  <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">SIZE</p>
                   <select
                     value={selectedSize}
                     onChange={(e) => setSelectedSize(e.target.value)}
-                    className="w-full bg-transparent border border-white/8 rounded-lg px-3 py-2.5 text-[12px] text-white/55 focus:outline-none focus:border-violet-500/30 transition-colors"
+                    className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-violet-500/30 transition-colors"
                   >
-                    <option value="" disabled className="bg-black">Select your size (6–12)</option>
+                    <option value="" disabled className="bg-black">Select size (6–12)</option>
                     {sizeOptions.map(s => (
                       <option key={s} value={s} className="bg-black">{s}</option>
                     ))}
                   </select>
-                  <p className="text-[9px] text-white/20 mt-1.5">Half sizes available · Custom sizing above 12</p>
+                  <p className="text-[8px] text-white/20 mt-1">Half sizes · Custom above 12</p>
                 </div>
-                <div className="w-28">
-                  <p className="text-[8px] tracking-[0.35em] text-white/20 mb-2">QTY</p>
-                  <div className="flex items-center border border-white/8 rounded-lg h-[42px]">
-                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 text-white/30 hover:text-white/50 transition-colors">−</button>
-                    <span className="flex-1 text-center text-[12px] text-white/55">{quantity}</span>
-                    <button onClick={() => setQuantity(quantity + 1)} className="px-3 text-white/30 hover:text-white/50 transition-colors">+</button>
+                <div className="w-24">
+                  <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">QTY</p>
+                  <div className="flex items-center border border-white/8 rounded-md h-[36px]">
+                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">−</button>
+                    <span className="flex-1 text-center text-[11px] text-white/55">{quantity}</span>
+                    <button onClick={() => setQuantity(quantity + 1)} className="px-2.5 text-white/30 hover:text-white/50 transition-colors text-sm">+</button>
                   </div>
                 </div>
               </div>
@@ -342,19 +342,19 @@ export default function CoogiPage() {
               <button 
                 onClick={onAddToCart}
                 disabled={isAdding || !selectedSize}
-                className="w-full bg-violet-600 text-white rounded-lg py-3.5 text-[10px] tracking-[0.2em] font-medium hover:bg-violet-500 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 mb-4"
+                className="w-full bg-violet-600 text-white rounded-md py-3 text-[10px] tracking-[0.2em] font-medium hover:bg-violet-500 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 mb-3"
               >
                 {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "CLAIM YOURS"}
               </button>
 
-              <p className="text-[9px] text-white/18 mb-10">
+              <p className="text-[8px] text-white/18 mb-6">
                 Made to order · Limited production · Tribute Series
               </p>
 
               {/* Features */}
-              <div className="border-t border-white/[0.04] pt-8">
-                <p className="text-[9px] tracking-[0.35em] text-white/20 mb-5">FEATURES</p>
-                <ul className="space-y-2">
+              <div className="border-t border-white/[0.04] pt-5">
+                <p className="text-[8px] tracking-[0.35em] text-white/20 mb-3">FEATURES</p>
+                <ul className="space-y-1.5">
                   {product.features.map((feature, idx) => (
                     <li key={idx} className="flex items-center gap-2 text-[11px] text-white/35">
                       <span className="w-1 h-1 rounded-full bg-violet-500/50" />
@@ -371,13 +371,13 @@ export default function CoogiPage() {
       {/* ═══════════════════════════════════════════════════════════════
           CLOSING — The Seal
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-16 md:py-24 border-t border-white/[0.03]">
-        <div className="text-center max-w-[500px] mx-auto px-5">
-          <p className="text-[14px] md:text-[16px] text-white/40 leading-relaxed mb-6">
+      <section className="py-10 md:py-16 border-t border-white/[0.03]">
+        <div className="text-center max-w-[420px] mx-auto px-5">
+          <p className="text-[13px] md:text-[14px] text-white/40 leading-relaxed mb-4">
             Not pattern for the sake of pattern.<br />
             Expression — under control.
           </p>
-          <p className="text-[10px] tracking-[0.3em] text-violet-400/50">
+          <p className="text-[9px] tracking-[0.3em] text-violet-400/50">
             COOGI I ✦ TRIBUTE SERIES
           </p>
         </div>
