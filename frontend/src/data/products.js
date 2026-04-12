@@ -1418,7 +1418,7 @@ Covenant.`,
       foundation: {
         label: "FOUNDATION",
         name: "Foundation",
-        metal: "10K White Gold",
+        metal: "10K Gold (Yellow or White)",
         stones: "~820 stones",
         badge: "",
         description: "Full pavé composition. Estimated 24g."
@@ -1426,7 +1426,7 @@ Covenant.`,
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K White Gold",
+        metal: "14K Gold (Yellow or White)",
         stones: "Lab Stones · ~820",
         badge: "MOST POPULAR",
         description: "Balanced density. Lab-created sapphires. Estimated 28g."
@@ -1434,7 +1434,7 @@ Covenant.`,
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
-        metal: "18K White Gold",
+        metal: "18K Gold (Yellow or White)",
         stones: "Natural Stones · ~820",
         badge: "COLLECTOR",
         description: "Natural sapphires. Maximum density. Estimated 34g."
