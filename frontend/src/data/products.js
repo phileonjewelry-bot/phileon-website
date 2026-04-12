@@ -1421,7 +1421,7 @@ Covenant.`,
         metal: "10K Gold (Yellow or White)",
         stones: "~700 stones",
         badge: "",
-        description: "Full pavé composition. Estimated 14–16g."
+        description: "Full pavé composition. Estimated 15g."
       },
       signature: {
         label: "SIGNATURE",
@@ -1429,7 +1429,7 @@ Covenant.`,
         metal: "14K Gold (Yellow or White)",
         stones: "Lab-Grown Stones · ~700",
         badge: "MOST POPULAR",
-        description: "Balanced density. Lab-grown sapphires. Estimated 16–18g."
+        description: "Balanced density. Lab-grown sapphires. Estimated 17g."
       },
       heirloom: {
         label: "HEIRLOOM",
@@ -1437,7 +1437,7 @@ Covenant.`,
         metal: "18K Gold (Yellow or White)",
         stones: "Natural Gemstones · ~700",
         badge: "COLLECTOR",
-        description: "Natural gemstones. Maximum density. Estimated 18–20g."
+        description: "Natural gemstones. Maximum density. Estimated 19g."
       }
     },
     
@@ -1462,19 +1462,14 @@ This is expression — under control.`,
       topWidth: "18 mm",
       bandThickness: "5 mm",
       profile: "Tapered architectural signet",
-      finish: "High polish with pavé setting",
       weights: {
-        "10K": "14–16 g",
-        "14K": "16–18 g",
-        "18K": "18–20 g"
+        "10K": "15 g",
+        "14K": "17 g",
+        "18K": "19 g"
       },
       stones: {
-        whiteDiamonds: "26 (center channel only)",
-        blueSapphires: "~90–110",
-        yellowSapphires: "~80–100",
-        orangeSapphires: "~70–90",
-        purpleSapphires: "~60–80",
-        pinkSapphires: "~40–60",
+        whiteDiamonds: 26,
+        coloredStones: "Blue, Yellow, Orange, Purple, and Pink Sapphires",
         total: "~700"
       }
     },
