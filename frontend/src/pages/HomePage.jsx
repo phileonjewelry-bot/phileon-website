@@ -133,21 +133,11 @@ const HomePage = () => {
       {/* Drop Reveal Animation */}
       <DropReveal isActive={showDropReveal} targetPath="/shop-drop" dropText="DROP 001" />
 
-      {/* Cinematic Video Hero */}
+      {/* Hero Section */}
       <section className="relative w-full h-screen overflow-hidden bg-black">
         
-        {/* Full-screen Video Background */}
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ifs9jtbk_VIDEO_98d0aec8-1ca7-4b07-9e13-c0bb3baa740b.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-        />
-
-        {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Dark background */}
+        <div className="absolute inset-0 bg-black" />
 
         {/* Hero Content - Centered PHILEON */}
         <div className="relative z-10 flex items-center justify-center h-full text-center">
