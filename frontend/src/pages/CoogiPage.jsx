@@ -108,16 +108,16 @@ export default function CoogiPage() {
       {/* ═══════════════════════════════════════════════════════════════
           MAIN CONTENT — Gallery + Configuration
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-[1200px] mx-auto px-5 md:px-8">
+      <section className="py-12 md:py-16">
+        <div className="max-w-[1100px] mx-auto px-5 md:px-8">
           
           {/* Desktop Layout */}
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10">
             
-            {/* Left: Gallery */}
-            <div>
+            {/* Left: Gallery - Tighter, more refined */}
+            <div className="max-w-[480px] mx-auto md:mx-0">
               {/* Main Image */}
-              <div className="relative aspect-square mb-4 bg-black rounded-lg overflow-hidden">
+              <div className="relative aspect-square mb-3 bg-black rounded overflow-hidden">
                 <img
                   src={gallery[activeImage].src}
                   alt={gallery[activeImage].alt || ""}
@@ -133,8 +133,8 @@ export default function CoogiPage() {
                 />
               </div>
               
-              {/* Thumbnails */}
-              <div className="flex gap-2 overflow-x-auto pb-2">
+              {/* Thumbnails - Smaller, neater */}
+              <div className="flex gap-1.5 overflow-x-auto pb-1">
                 {gallery.map((item, index) => {
                   const isActive = activeImage === index;
                   const isHovered = hoveredThumb === index;
@@ -150,7 +150,7 @@ export default function CoogiPage() {
                       }}
                       onMouseLeave={() => setHoveredThumb(null)}
                       className={`
-                        w-16 h-16 flex-shrink-0 rounded overflow-hidden
+                        w-11 h-11 flex-shrink-0 rounded-sm overflow-hidden
                         transition-all duration-150
                         ${isActive 
                           ? "ring-1 ring-violet-500/50 opacity-100" 

@@ -315,7 +315,7 @@ const HomePage = () => {
               <Link to="/shop?audience=ladies&category=rings" className="group block">
                 <div className="aspect-[4/5] overflow-hidden bg-[#111] relative">
                   <img
-                    src={products.rosaria?.images?.hero || products.annieRose?.imageUrl}
+                    src="https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
                     alt="Ladies Rings"
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
@@ -355,50 +355,6 @@ const HomePage = () => {
             </ScrollReveal>
 
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          COOGI I FEATURED SECTION
-          A surface in motion. Composed entirely by hand.
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="py-24 md:py-36 bg-black">
-        <div className="max-w-5xl mx-auto px-6 md:px-12">
-          <ScrollReveal>
-            <Link to="/products/coogi-i" className="group block">
-              <div className="relative aspect-[16/10] md:aspect-[2/1] overflow-hidden bg-[#0a0a0a]">
-                <img
-                  src={products.coogiI?.gallery?.[0]?.src || products.coogiI?.imageUrl}
-                  alt="COOGI I"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              </div>
-            </Link>
-          </ScrollReveal>
-          
-          <ScrollReveal delay={200}>
-            <div className="mt-10 md:mt-14 text-center">
-              <p className="text-violet-400/60 text-[10px] tracking-[0.4em] uppercase mb-4">
-                TRIBUTE SERIES
-              </p>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl tracking-[0.02em] text-white/90 mb-4">
-                COOGI I
-              </h2>
-              <p className="text-white/50 text-base md:text-lg tracking-wide max-w-md mx-auto leading-relaxed">
-                A surface in motion.<br />
-                Composed entirely by hand.
-              </p>
-              <div className="mt-10">
-                <Link 
-                  to="/products/coogi-i"
-                  className="inline-block px-10 py-4 border border-violet-500/50 text-violet-400 text-xs tracking-[0.2em] uppercase font-medium transition-all duration-300 hover:border-violet-400 hover:bg-violet-500/10"
-                >
-                  Explore COOGI I
-                </Link>
-              </div>
-            </div>
-          </ScrollReveal>
         </div>
       </section>
 
