@@ -85,7 +85,7 @@ export default function CoogiPage() {
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full bg-black">
         <div className="max-w-[520px] md:max-w-[720px] mx-auto px-4 pt-4 md:pt-6">
-          <div className="relative h-[35vh] md:h-[45vh] overflow-hidden rounded-[10px]">
+          <div className="relative h-[28vh] md:h-[38vh] overflow-hidden rounded-[10px]">
             {/* HERO VIDEO */}
             <video
               ref={heroVideoRef}
@@ -128,7 +128,7 @@ export default function CoogiPage() {
             {/* Left: Gallery — constrained */}
             <div>
               {/* Main Image/Video */}
-              <div className="relative aspect-[4/3] mb-1.5 bg-black rounded-lg overflow-hidden max-h-[280px] md:max-h-[340px]">
+              <div className="relative aspect-[4/3] mb-1.5 bg-black rounded-lg overflow-hidden max-h-[220px] md:max-h-[300px]">
                 {gallery[activeImage]?.type === "video" ? (
                   <video
                     ref={galleryVideoRef}
@@ -162,8 +162,8 @@ export default function CoogiPage() {
                 )}
               </div>
               
-              {/* Thumbnails — 48px, tight gap */}
-              <div className="flex gap-[6px] overflow-x-auto pb-1">
+              {/* Thumbnails */}
+              <div className="flex gap-[4px] overflow-x-auto pb-1 scrollbar-hide">
                 {gallery.map((item, index) => {
                   const isActive = activeImage === index;
                   const isHovered = hoveredThumb === index;
@@ -179,7 +179,7 @@ export default function CoogiPage() {
                       }}
                       onMouseLeave={() => setHoveredThumb(null)}
                       className={`
-                        w-[48px] h-[48px] flex-shrink-0 rounded-[3px] overflow-hidden
+                        w-[28px] h-[28px] md:w-[40px] md:h-[40px] flex-shrink-0 rounded-[2px] overflow-hidden
                         transition-all duration-150
                         ${isActive 
                           ? "ring-[0.5px] ring-violet-500/50 opacity-100" 
@@ -366,6 +366,8 @@ export default function CoogiPage() {
 
       <style>{`
         .duration-400 { transition-duration: 400ms; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );
