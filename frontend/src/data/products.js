@@ -1380,6 +1380,135 @@ Covenant.`,
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // COOGI I — Tribute Series
+  // "Chaos, disciplined."
+  // Multi-stone pavé composition
+  // ==========================================
+  coogiI: {
+    name: "COOGI I",
+    slug: "coogi-i",
+    category: "rings",
+    audience: "gentlemens-club",
+    collections: ["rings", "gentlemens-club", "tribute-series"],
+    collection: "Tribute Series",
+    subtitle: "Pattern made power.",
+    tagline: "Chaos, disciplined.",
+    priceFrom: "From $12,800 CAD",
+    basePrice: 12800,
+    
+    // Hero image for shop cards
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cvsbyxpn_1000146038.png",
+    
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+    
+    // Tier-based pricing (CAD)
+    pricing: {
+      foundation: 12800,
+      signature: 18400,
+      heirloom: 24600
+    },
+    
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K White Gold",
+        stones: "Multi-stone pavé · ~820 stones",
+        badge: "",
+        description: "The entry into COOGI I. Full pavé composition. Estimated 24g."
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K White Gold",
+        stones: "Multi-stone pavé · ~820 stones",
+        badge: "MOST POPULAR",
+        description: "The definitive expression. Balanced density. Estimated 28g."
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K White Gold",
+        stones: "Multi-stone pavé · ~820 stones",
+        badge: "",
+        description: "Collector level. Maximum density. Estimated 34g."
+      }
+    },
+    
+    // Product description
+    description: `A controlled eruption of color and structure. Inspired by COOGI's unapologetic identity, refined through PHILEON discipline. Every stone placed with intent. Every curve engineered. Chaos, resolved.`,
+    
+    // Story copy
+    story: `COOGI I is not pattern for the sake of pattern.
+
+It is structure disguised as chaos.
+
+Every stone is placed with intention.
+Every division creates order.
+
+What appears loud is calculated.
+What appears free is engineered.
+
+This is expression — under control.`,
+    
+    // Specifications
+    specifications: {
+      topWidth: "22 mm",
+      bandWidth: "9 mm",
+      thickness: "5 mm",
+      weights: {
+        "10K": "24 g",
+        "14K": "28 g",
+        "18K": "34 g"
+      },
+      stones: {
+        whiteDiamonds: 26,
+        blueSapphires: 200,
+        yellowSapphires: 170,
+        orangeSapphires: 140,
+        purpleSapphires: 160,
+        pinkSapphires: 120,
+        total: 820
+      }
+    },
+    
+    // Features
+    features: [
+      "Multi-stone pavé composition",
+      "Architectural segmented structure",
+      "Full-surface gemstone setting",
+      "High-polish interior comfort fit",
+      "Tribute Series execution"
+    ],
+    
+    // LUXURY EDITORIAL SEQUENCE GALLERY
+    // 1. HERO - 2. SECONDARY HERO - 3. MACRO - 4. ARCHITECTURE - 5. TRUST
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cvsbyxpn_1000146038.png", alt: "COOGI I front view with reflection", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z4vp2nhf_1000146046.png", alt: "COOGI I angled moody lighting", intent: "SECONDARY_HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jac8uhki_1000146049.png", alt: "COOGI I gemstone detail macro", intent: "CRAFT_MACRO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7qxrfifl_1000146034.png", alt: "COOGI I structural side angle", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2sgdq1bu_1000146036.png", alt: "COOGI I interior PHILEON engraving", intent: "TRUST" }
+    ],
+    
+    // Size profile
+    sizeProfile: {
+      type: "ring",
+      audience: "gents",
+      min: 6,
+      max: 12,
+      halfSizes: true,
+      customAbove: 12
+    },
+    
+    // Shipping info
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

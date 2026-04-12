@@ -276,6 +276,21 @@ const CORE_PRODUCTS = [
     audience: ['gentlemens-club', 'ladies', 'collective'], // Multi-category
     featured: true,
   },
+  {
+    id: 'coogi-i',
+    name: 'COOGI I',
+    slug: 'coogi-i',
+    materialLine: 'Chaos, disciplined.',
+    imageUrl: products.coogiI.imageUrl,
+    hoverImage: products.coogiI.gallery[1]?.src,
+    href: '/products/coogi-i',
+    price_range: 'From $12,800 CAD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: 'gentlemens-club',
+    featured: true,
+  },
 ];
 
 // Additional drop products as fallback

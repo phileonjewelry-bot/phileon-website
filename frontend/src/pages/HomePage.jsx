@@ -381,6 +381,11 @@ const HomePage = () => {
             title: "TRACE", 
             image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/7tyc41kp_1000143768.png", 
             href: "/products/trace" 
+          },
+          { 
+            title: "COOGI I", 
+            image: products.coogiI?.imageUrl, 
+            href: "/products/coogi-i" 
           }
         ];
 
