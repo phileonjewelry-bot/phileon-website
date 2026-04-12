@@ -200,9 +200,12 @@ export default function CoogiPage() {
                   <p className="text-white/25 text-[9px] mb-2">Stone Composition</p>
                   <p className="text-violet-400/70 text-[12px] mb-2">~700 total stones</p>
                   <div className="text-[10px] text-white/35 leading-relaxed space-y-0.5">
-                    <p>White Diamonds: 26</p>
-                    <p className="mt-1.5">Colored Stones:</p>
-                    <p>Blue, Yellow, Orange, Purple, and Pink Sapphires</p>
+                    <p>White Diamonds</p>
+                    <p>Blue Sapphires</p>
+                    <p>Yellow Sapphires</p>
+                    <p>Red Rubies</p>
+                    <p>Orange Citrine</p>
+                    <p>Purple Amethyst</p>
                   </div>
                   <p className="text-white/25 text-[9px] mt-3 italic">
                     Pavé-set across the upper three-quarter surface, leaving the interior clean for comfort and structure.
