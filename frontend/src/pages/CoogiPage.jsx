@@ -85,7 +85,7 @@ export default function CoogiPage() {
       ═══════════════════════════════════════════════════════════════ */}
       <section className="relative w-full bg-black">
         <div className="max-w-[520px] md:max-w-[720px] mx-auto px-4 pt-4 md:pt-6">
-          <div className="relative h-[55vh] md:h-[65vh] overflow-hidden rounded-[10px]">
+          <div className="relative h-[35vh] md:h-[45vh] overflow-hidden rounded-[10px]">
             {/* HERO VIDEO */}
             <video
               ref={heroVideoRef}
@@ -128,7 +128,7 @@ export default function CoogiPage() {
             {/* Left: Gallery — constrained */}
             <div>
               {/* Main Image/Video */}
-              <div className="relative aspect-square mb-1.5 bg-black rounded-lg overflow-hidden">
+              <div className="relative aspect-[4/3] mb-1.5 bg-black rounded-lg overflow-hidden max-h-[280px] md:max-h-[340px]">
                 {gallery[activeImage]?.type === "video" ? (
                   <video
                     ref={galleryVideoRef}
