@@ -52,8 +52,8 @@ export default function CoogiPage() {
              Always plays. Separate from gallery. Text overlay.
       ═══════════════════════════════════════════════════════ */}
       <section className="w-full">
-        <div className="w-full max-w-[560px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
-          <div className="relative w-full overflow-hidden rounded-[14px] bg-black">
+        <div className="w-full max-w-[720px] mx-auto px-3 md:px-5 pt-2 md:pt-4">
+          <div className="relative overflow-hidden rounded-[14px]">
             <video
               ref={heroRef}
               autoPlay
@@ -61,20 +61,25 @@ export default function CoogiPage() {
               loop
               playsInline
               poster={product.imageUrl}
-              className="w-full aspect-[6/5] md:aspect-[3/2] object-cover"
+              className="w-full aspect-[4/5] object-cover"
             >
               <source src={COOGI_HERO_VIDEO} type="video/mp4" />
             </video>
 
-            {/* Gradient for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
 
-            {/* Credits overlay — lower left */}
-            <div className="absolute bottom-0 left-0 z-10 px-5 pb-5 md:px-7 md:pb-7">
-              <p className="text-[8px] md:text-[9px] tracking-[0.3em] text-violet-400/80 mb-1">TRIBUTE SERIES</p>
-              <h1 className="text-2xl md:text-4xl font-serif text-white leading-none mb-1.5">COOGI I</h1>
-              <p className="text-white/55 text-[10px] md:text-[11px]">{product.tagline}</p>
-              <p className="text-violet-400/90 text-[11px] md:text-xs mt-2 font-medium">
+            <div className="absolute left-5 bottom-8 md:left-8 md:bottom-10 z-10">
+              <div className="text-[11px] tracking-[0.35em] text-white/75 uppercase mb-3">
+                Tribute Series
+              </div>
+              <h1 className="text-4xl md:text-5xl text-white leading-none mb-2">
+                COOGI I
+              </h1>
+              <p className="text-white/85 text-base mb-2">
+                {product.tagline}
+              </p>
+              <p className="text-white/70 text-sm">
                 From ${product.pricing.foundation.toLocaleString()} CAD
               </p>
             </div>
