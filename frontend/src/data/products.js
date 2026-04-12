@@ -1488,13 +1488,18 @@ This is expression — under control.`,
     ],
     
     // LUXURY EDITORIAL SEQUENCE GALLERY
-    // 1. HERO - 2. SECONDARY HERO - 3. MACRO - 4. ARCHITECTURE - 5. TRUST
+    // 1. HERO - 2. SECONDARY HERO - 3. HUMAN ENTRY - 4. BALANCE - 5. CRAFT MACRO - 6. ARCHITECTURE - 7. ALTERNATE ANGLE - 8. GOLD VERSION - 9. TRUST - 10. TRUST ALT
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cvsbyxpn_1000146038.png", alt: "COOGI I front view with reflection", intent: "HERO" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z4vp2nhf_1000146046.png", alt: "COOGI I angled moody lighting", intent: "SECONDARY_HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ffbp4ebg_1000146062.png", alt: "COOGI I on hand female", intent: "HUMAN_ENTRY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/uej19zsp_1000146061.png", alt: "COOGI I on hand male", intent: "BALANCE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jac8uhki_1000146049.png", alt: "COOGI I gemstone detail macro", intent: "CRAFT_MACRO" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7qxrfifl_1000146034.png", alt: "COOGI I structural side angle", intent: "ARCHITECTURE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2sgdq1bu_1000146036.png", alt: "COOGI I interior PHILEON engraving", intent: "TRUST" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/zybvbxgq_1000146047.png", alt: "COOGI I diamond divider detail", intent: "CRAFT_DETAIL" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wfn0w8cl_1000146045.png", alt: "COOGI I gold version hero", intent: "GOLD_VERSION" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2sgdq1bu_1000146036.png", alt: "COOGI I interior PHILEON engraving", intent: "TRUST" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rjndiqvb_1000146042.png", alt: "COOGI I gold interior engraving", intent: "TRUST_ALT" }
     ],
     
     // Size profile
