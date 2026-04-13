@@ -53,7 +53,7 @@ export default function CoogiPage() {
       ═══════════════════════════════════════════════════════ */}
       <section className="w-full">
         <div className="w-full max-w-[640px] mx-auto px-4 pt-2 md:pt-4">
-          <div className="relative overflow-hidden rounded-[14px]">
+          <div className="relative overflow-hidden rounded-[14px] bg-black">
             <video
               ref={heroRef}
               autoPlay
@@ -61,7 +61,7 @@ export default function CoogiPage() {
               loop
               playsInline
               poster={product.imageUrl}
-              className="w-full aspect-[3/4] object-cover"
+              className="w-full aspect-[3/4] object-cover scale-[0.85]"
             >
               <source src={COOGI_HERO_VIDEO} type="video/mp4" />
             </video>
