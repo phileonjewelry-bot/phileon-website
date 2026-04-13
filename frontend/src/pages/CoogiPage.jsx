@@ -60,8 +60,9 @@ export default function CoogiPage() {
               muted
               loop
               playsInline
-              poster={product.imageUrl}
-              className="w-full aspect-[3/4] object-cover scale-[0.85]"
+              preload="auto"
+              poster="/images/coogi-hero-poster.jpg"
+              className="w-full aspect-[3/4] object-cover scale-[0.85] translate-x-[4%] -translate-y-[2%] contrast-[1.05] brightness-[0.98]"
             >
               <source src={COOGI_HERO_VIDEO} type="video/mp4" />
             </video>
