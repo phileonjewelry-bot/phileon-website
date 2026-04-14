@@ -32,6 +32,8 @@ const menuCategories = [
       { name: 'CYPHER', path: '/products/cypher' },
       { name: 'IL MORSO DEL RE', path: '/products/morso' },
       { name: 'LA BÊTE', path: '/products/labete' },
+      { name: 'THE BAMBURGH', path: '/products/the-bamburgh' },
+      { name: 'LADY BAMBURGH', path: '/products/lady-bamburgh' },
     ]
   },
 ];
@@ -188,6 +190,15 @@ const PhileonMenu = ({ isOpen, onClose }) => {
             )}
           </div>
         ))}
+
+        {/* Bamburgh Circle */}
+        <Link
+          to="/bamburgh-circle"
+          onClick={handleLinkClick}
+          className="block text-white text-[18px] tracking-wide py-3"
+        >
+          Bamburgh Circle
+        </Link>
 
         {/* Contact */}
         <Link
