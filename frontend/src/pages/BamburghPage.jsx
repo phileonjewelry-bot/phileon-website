@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import PhileonCarousel from "@/components/PhileonCarousel";
 
 const BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png";
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
@@ -117,6 +118,11 @@ export default function BamburghPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════════════════
+          COLLECTION CAROUSEL
+      ═══════════════════════════════════════════════════════ */}
+      <PhileonCarousel />
 
       {/* ═══════════════════════════════════════════════════════
           3. PRODUCT DETAILS
