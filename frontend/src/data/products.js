@@ -1589,6 +1589,87 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // LADY BAMBURGH
+  // Signature Series — Ladies
+  // Two-tone rose gold & white gold, round brilliant centers
+  // ==========================================
+  ladyBamburgh: {
+    name: "LADY BAMBURGH",
+    slug: "lady-bamburgh",
+    category: "rings",
+    audience: ["ladies", "collective"],
+    collections: ["rings", "ladies", "collective", "signature-series"],
+    collection: "Signature Series",
+    subtitle: "Command, in form.",
+    tagline: "Command, in form.",
+    priceFrom: "From $7,800 CAD",
+    basePrice: 7800,
+
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png",
+
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+
+    pricing: {
+      foundation: 7800,
+      signature: 11400,
+      heirloom: 16800
+    },
+
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K Two-Tone Gold",
+        stones: "Lab-grown diamonds",
+        badge: "",
+        description: "Entry into the Lady Bamburgh. Solid two-tone gold."
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K Two-Tone Gold",
+        stones: "Natural black & white diamonds",
+        badge: "MOST POPULAR",
+        description: "The definitive expression. Round brilliant centers."
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K Two-Tone Gold",
+        stones: "Natural diamonds, filigree hand-finished",
+        badge: "",
+        description: "Collector level. Maximum brilliance. Maximum legacy."
+      }
+    },
+
+    story: `Presence without announcement.\n\nRound brilliant centers framed in gold, balanced by the same black and white contrast as the Bamburgh.\n\nDifferent in form. Identical in weight.\n\nDesigned to be worn apart.\nMeant to be understood together.`,
+
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "HERO" }
+    ],
+
+    features: [
+      "Two-tone rose gold & white gold construction",
+      "Round brilliant center diamonds",
+      "Black & white diamond borders",
+      "Hand-finished filigree accents",
+      "Made to order in Canada"
+    ],
+
+    sizeProfile: {
+      type: "ring",
+      min: 5,
+      max: 10,
+      halfSizes: true,
+      customAbove: 10
+    },
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

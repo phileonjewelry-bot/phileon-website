@@ -4,8 +4,8 @@ import { products } from "@/data/products";
 
 const carouselItems = [
   { name: "COOGI I", slug: "coogi-i", image: products.coogiI?.imageUrl },
-  { name: "THE BAMBURGH", slug: "bamburgh", image: products.bamburgh?.imageUrl },
-  { name: "LADY BAMBURGH", slug: "bamburgh", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png" },
+  { name: "THE BAMBURGH", slug: "the-bamburgh", image: products.bamburgh?.imageUrl },
+  { name: "LADY BAMBURGH", slug: "lady-bamburgh", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png" },
   { name: "LA MARVA", slug: "la-marva", image: products.laMarva?.imageUrl },
   { name: "CYPHER", slug: "cypher", image: products.cypher?.imageUrl },
   { name: "BOUND", slug: "bound", image: products.bound?.imageUrl },

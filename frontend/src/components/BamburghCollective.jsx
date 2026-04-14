@@ -4,8 +4,8 @@ const BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e73
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
 
 const items = [
-  { name: "THE BAMBURGH", image: BAMBURGH_IMG, href: "/products/bamburgh" },
-  { name: "LADY BAMBURGH", image: LADY_BAMBURGH_IMG, href: "/products/bamburgh" },
+  { name: "THE BAMBURGH", image: BAMBURGH_IMG, href: "/products/the-bamburgh" },
+  { name: "LADY BAMBURGH", image: LADY_BAMBURGH_IMG, href: "/products/lady-bamburgh" },
 ];
 
 export default function BamburghCollective() {
