@@ -10,29 +10,28 @@ export default function BamburghCirclePage() {
     <div className="w-full bg-black text-white">
 
       {/* HERO */}
-      <section className="w-full flex justify-center py-20">
-        <div className="relative w-full max-w-[900px] px-4">
-          <img
-            src={BAMBURGH_PAIR}
-            alt="Bamburgh Circle"
-            className="w-full aspect-[4/5] object-cover rounded-[14px]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-[14px]" />
-          <div className="absolute left-6 bottom-10 md:left-12 md:bottom-14 max-w-[60%]">
-            <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase mb-3">
-              Bamburgh Circle
-            </p>
-            <h1 className="text-3xl md:text-5xl leading-[1.05] mb-4">
-              BAMBURGH
-            </h1>
-            <p className="text-white/80 text-sm md:text-base leading-relaxed">
-              For the ones who made it.<br />
-              And the ones who made them better.
-            </p>
-            <p className="mt-4 text-white/70 text-sm tracking-wide">
-              Enter Bamburgh &rarr;
-            </p>
-          </div>
+      <section className="relative w-full h-[90vh] overflow-hidden">
+        <img
+          src={BAMBURGH_PAIR}
+          alt="Bamburgh Circle"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: "center 20%" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute left-6 bottom-10 md:left-12 md:bottom-14 max-w-[60%]">
+          <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase mb-3">
+            Bamburgh Circle
+          </p>
+          <h1 className="text-3xl md:text-5xl leading-[1.05] mb-4">
+            BAMBURGH
+          </h1>
+          <p className="text-white/80 text-sm md:text-base leading-relaxed">
+            For the ones who made it.<br />
+            And the ones who made them better.
+          </p>
+          <p className="mt-4 text-white/70 text-sm tracking-wide">
+            Enter Bamburgh &rarr;
+          </p>
         </div>
       </section>
 
