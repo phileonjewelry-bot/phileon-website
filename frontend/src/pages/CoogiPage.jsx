@@ -51,29 +51,30 @@ export default function CoogiPage() {
           1. HERO VIDEO — Cinematic editorial intro
              Always plays. Separate from gallery. Text overlay.
       ═══════════════════════════════════════════════════════ */}
-      <section className="w-full">
-        <div className="w-full max-w-[640px] mx-auto px-4 pt-2 md:pt-4">
-          <div className="relative overflow-hidden rounded-[14px] bg-black">
+      <section className="w-full py-4 md:py-6 bg-black flex justify-center">
+        <div className="w-full max-w-[640px] px-4">
+          <div className="relative w-full aspect-[4/5] rounded-[14px] overflow-hidden bg-gradient-to-b from-[#1a1a1a] to-black flex items-center justify-center">
+
             <img
               src="/images/coogi-hero-ultra.jpg"
               alt="COOGI I Ring"
-              className="w-full h-full object-cover"
+              className="w-[70%] object-contain"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
 
-            <div className="absolute left-5 bottom-8 md:left-8 md:bottom-10 z-10">
-              <div className="text-[10px] tracking-[0.35em] text-white/70 uppercase mb-2">
+            <div className="absolute left-6 bottom-8 md:left-10 md:bottom-10 max-w-[60%] z-10">
+              <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase mb-3">
                 Tribute Series
-              </div>
-              <h1 className="text-3xl md:text-5xl text-white leading-none mb-1">
+              </p>
+              <h1 className="text-3xl md:text-5xl text-white leading-none mb-2">
                 COOGI I
               </h1>
-              <p className="text-white/80 text-sm mb-1">
+              <p className="text-white/80 text-sm md:text-base mb-2 leading-relaxed">
                 {product.tagline}
               </p>
-              <p className="text-white/65 text-xs">
+              <p className="text-white/60 text-xs">
                 From ${product.pricing.foundation.toLocaleString()} CAD
               </p>
             </div>
