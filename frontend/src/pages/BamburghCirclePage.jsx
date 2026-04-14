@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import BamburghCollective from "@/components/BamburghCollective";
 
 const BAMBURGH_PAIR = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o7aw7ju4_1000146386.png";
 const BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png";
@@ -63,41 +64,7 @@ export default function BamburghCirclePage() {
       </section>
 
       {/* PRODUCTS */}
-      <section className="max-w-[1000px] mx-auto px-6 py-20 grid md:grid-cols-2 gap-10">
-
-        <Link to="/products/bamburgh" className="group">
-          <div className="relative rounded-[14px] overflow-hidden bg-[#0a0a0a]">
-            <img
-              src={BAMBURGH_IMG}
-              alt="The Bamburgh"
-              className="w-full aspect-square object-cover group-hover:scale-[1.03] transition duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-6 left-6">
-              <p className="text-sm tracking-wide">THE BAMBURGH</p>
-              <p className="text-white/70 text-sm mt-1">A monument, not jewelry.</p>
-              <p className="mt-2 text-white/60 text-xs">Enter &rarr;</p>
-            </div>
-          </div>
-        </Link>
-
-        <Link to="/products/bamburgh" className="group">
-          <div className="relative rounded-[14px] overflow-hidden bg-[#0a0a0a]">
-            <img
-              src={LADY_BAMBURGH_IMG}
-              alt="Lady Bamburgh"
-              className="w-full aspect-square object-cover group-hover:scale-[1.03] transition duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-6 left-6">
-              <p className="text-sm tracking-wide">LADY BAMBURGH</p>
-              <p className="text-white/70 text-sm mt-1">Command, in form.</p>
-              <p className="mt-2 text-white/60 text-xs">Enter &rarr;</p>
-            </div>
-          </div>
-        </Link>
-
-      </section>
+      <BamburghCollective />
 
       {/* EXIT */}
       <section className="text-center py-24">
