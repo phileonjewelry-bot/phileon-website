@@ -1515,6 +1515,80 @@ This is expression — under control.`,
     
     // Shipping info
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // THE BAMBURGH & LADY BAMBURGH
+  // Signature Series — His & Hers pair
+  // Two-tone rose gold & white gold with black & white diamonds
+  // ==========================================
+  bamburgh: {
+    name: "THE BAMBURGH & LADY BAMBURGH",
+    slug: "bamburgh",
+    category: "rings",
+    audience: ["gentlemens-club", "ladies", "collective"],
+    collections: ["rings", "gentlemens-club", "ladies", "collective", "signature-series"],
+    collection: "Signature Series",
+    subtitle: "His & Hers",
+    tagline: "For the ones who made it. And the ones who made them better.",
+    priceFrom: "From $8,400 CAD",
+    basePrice: 8400,
+
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png",
+
+    dynamicPricing: false,
+    currency: "CAD",
+    defaultTier: "signature",
+
+    pricing: {
+      foundation: 8400,
+      signature: 12800,
+      heirloom: 18400
+    },
+
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K Two-Tone Gold",
+        stones: "Lab-grown diamonds",
+        badge: "",
+        description: "Entry into the Bamburgh. Solid two-tone gold."
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K Two-Tone Gold",
+        stones: "Natural black & white diamonds",
+        badge: "MOST POPULAR",
+        description: "The definitive expression. Balanced weight and brilliance."
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K Two-Tone Gold",
+        stones: "Natural diamonds, filigree hand-finished",
+        badge: "",
+        description: "Collector level. Maximum density. Maximum legacy."
+      }
+    },
+
+    story: `Two rings. One intention.\n\nThe Bamburgh is authority — rose gold structure, black diamond borders, white diamond clusters locked into geometric form.\n\nLady Bamburgh is presence — round brilliant centers framed in gold, balanced by the same black and white contrast.\n\nDifferent in form. Identical in weight.\n\nDesigned to be worn apart.\nMeant to be understood together.`,
+
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png", alt: "The Bamburgh — front view", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "SECONDARY_HERO" }
+    ],
+
+    sizeProfile: {
+      type: "ring",
+      min: 6,
+      max: 12,
+      halfSizes: true,
+      customAbove: 12
+    },
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
