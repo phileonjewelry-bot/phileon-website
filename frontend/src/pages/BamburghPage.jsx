@@ -57,7 +57,7 @@ export default function BamburghPage() {
           <div className="relative w-full aspect-[4/5] rounded-[14px] overflow-hidden bg-gradient-to-b from-[#1a1a1a] to-black flex items-center justify-center">
 
             <img
-              src={BAMBURGH_IMG}
+              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o7aw7ju4_1000146386.png"
               alt="Bamburgh & Lady Bamburgh"
               className="w-[70%] object-contain"
             />
@@ -65,18 +65,18 @@ export default function BamburghPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
 
-            <div className="absolute left-6 bottom-8 md:left-10 md:bottom-10 max-w-[60%] z-10">
+            <div className="absolute left-6 bottom-10 md:left-12 md:bottom-14 max-w-[45%] z-10">
               <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase mb-3">
                 Signature Series
               </p>
-              <h1 className="text-3xl md:text-5xl text-white leading-none mb-3">
-                THE BAMBURGH &amp; LADY BAMBURGH
+              <h1 className="text-3xl md:text-5xl text-white leading-[1.05] mb-4">
+                THE BAMBURGH &amp; <br /> LADY BAMBURGH
               </h1>
-              <p className="text-white/80 text-sm md:text-base mb-3 leading-relaxed">
+              <p className="text-white/80 text-sm md:text-base mb-5 leading-relaxed">
                 For the ones who made it.<br />
                 And the ones who made them better.
               </p>
-              <p className="text-white/60 text-xs md:text-sm">
+              <p className="text-white/60 text-xs tracking-[0.2em]">
                 PHILEON
               </p>
             </div>
