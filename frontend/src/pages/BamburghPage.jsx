@@ -17,9 +17,7 @@ export default function BamburghPage() {
 
   const currentTier = product.tiers[selectedTier];
 
-  const gallery = [
-    { src: BAMBURGH_IMG, alt: "The Bamburgh — front view" },
-  ];
+  const gallery = product.gallery;
 
   const handleSelect = useCallback((index) => {
     if (index === activeThumb || isTransitioning) return;
@@ -145,7 +143,10 @@ export default function BamburghPage() {
             <div className="text-[11px] text-white/40 leading-relaxed space-y-1">
               <p>Profile: Dual-stone architectural signet</p>
               <p>Metal: Two-tone rose gold &amp; white gold</p>
-              <p>Stones: Black &amp; white diamonds, filigree accents</p>
+              <p>Gold Weight: 18 grams</p>
+              <p>White Diamonds: 83 stones</p>
+              <p>Black Diamonds: 75 stones</p>
+              <p>Total Stones: 158</p>
             </div>
           </div>
 

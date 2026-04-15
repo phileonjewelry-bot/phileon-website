@@ -1531,8 +1531,8 @@ This is expression — under control.`,
     collection: "Signature Series",
     subtitle: "His & Hers",
     tagline: "For the ones who made it. And the ones who made them better.",
-    priceFrom: "From $8,400 CAD",
-    basePrice: 8400,
+    priceFrom: "From $8,200 CAD",
+    basePrice: 8200,
 
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png",
 
@@ -1541,43 +1541,56 @@ This is expression — under control.`,
     defaultTier: "signature",
 
     pricing: {
-      foundation: 8400,
-      signature: 12800,
-      heirloom: 18400
+      foundation: 8200,
+      signature: 9600,
+      heirloom: 11000
     },
 
     tiers: {
       foundation: {
         label: "FOUNDATION",
         name: "Foundation",
-        metal: "10K Two-Tone Gold",
-        stones: "Lab-grown diamonds",
+        metal: "14K Gold",
+        stones: "White diamonds, black diamonds",
         badge: "",
-        description: "Entry into the Bamburgh. Solid two-tone gold."
+        description: "14K gold, white diamonds, black diamonds"
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K Two-Tone Gold",
-        stones: "Natural black & white diamonds",
+        metal: "14K Gold",
+        stones: "Upgraded diamond quality",
         badge: "MOST POPULAR",
-        description: "The definitive expression. Balanced weight and brilliance."
+        description: "14K gold, upgraded diamond quality"
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
-        metal: "18K Two-Tone Gold",
-        stones: "Natural diamonds, filigree hand-finished",
+        metal: "18K Gold",
+        stones: "Premium diamond selection",
         badge: "",
-        description: "Collector level. Maximum density. Maximum legacy."
+        description: "18K gold, premium diamond selection"
       }
     },
 
-    story: `Two rings. One intention.\n\nThe Bamburgh is authority — rose gold structure, black diamond borders, white diamond clusters locked into geometric form.\n\nLady Bamburgh is presence — round brilliant centers framed in gold, balanced by the same black and white contrast.\n\nDifferent in form. Identical in weight.\n\nDesigned to be worn apart.\nMeant to be understood together.`,
+    story: `The Bamburgh is not jewelry. It is a monument. Built from discipline, pressure, and purpose — a reflection of legacy forged, not given.`,
+
+    features: [
+      "Two-tone rose gold & white gold construction",
+      "83 white diamonds, 75 black diamonds — 158 total stones",
+      "18 grams gold weight",
+      "Hand-finished filigree side panels",
+      "Made to order in Canada"
+    ],
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png", alt: "The Bamburgh — front view", intent: "HERO" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "SECONDARY_HERO" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/v23no28z_1000146363.png", alt: "The Bamburgh — three quarter view with reflection", intent: "SECONDARY_HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ccqo2yvg_1000146367.png", alt: "The Bamburgh — angled top view", intent: "BALANCE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f48bt147_1000146368.png", alt: "The Bamburgh — side profile filigree detail", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1nx3wfi3_1000146365.webp", alt: "The Bamburgh — macro diamond pavé detail", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/k6wi1bme_1000146364.png", alt: "The Bamburgh — macro stone composition", intent: "INTIMACY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "CAMPAIGN" }
     ],
 
     sizeProfile: {
