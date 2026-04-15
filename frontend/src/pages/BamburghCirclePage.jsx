@@ -10,28 +10,30 @@ export default function BamburghCirclePage() {
     <div className="w-full bg-black text-white">
 
       {/* HERO */}
-      <section className="relative w-full h-[90vh] overflow-hidden">
+      <section className="relative h-[90vh] w-full overflow-hidden bg-black">
         <img
-          src={BAMBURGH_PAIR}
-          alt="Bamburgh Circle"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: "center 20%" }}
+          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f48bt147_1000146368.png"
+          alt="Bamburgh Ring"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="absolute left-6 bottom-10 md:left-12 md:bottom-14 max-w-[60%]">
-          <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase mb-3">
-            Bamburgh Circle
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute bottom-0 left-0 w-full px-6 pb-12 md:px-12 md:pb-16">
+          <p className="text-white/70 tracking-[0.25em] text-xs mb-3">
+            BAMBURGH CIRCLE
           </p>
-          <h1 className="text-3xl md:text-5xl leading-[1.05] mb-4">
+          <h1 className="text-white text-4xl md:text-6xl font-serif mb-4">
             BAMBURGH
           </h1>
-          <p className="text-white/80 text-sm md:text-base leading-relaxed">
+          <p className="text-white/80 text-lg md:text-xl max-w-md leading-relaxed mb-6">
             For the ones who made it.<br />
             And the ones who made them better.
           </p>
-          <p className="mt-4 text-white/70 text-sm tracking-wide">
+          <Link
+            to="/products/the-bamburgh"
+            className="inline-flex items-center text-white text-sm tracking-wide hover:opacity-70 transition"
+          >
             Enter Bamburgh &rarr;
-          </p>
+          </Link>
         </div>
       </section>
 
