@@ -14,23 +14,24 @@ export default function BamburghCirclePage() {
         <img
           src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f48bt147_1000146368.png"
           alt="Bamburgh Ring"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: "center 35%" }}
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
         <div className="absolute bottom-0 left-0 w-full px-6 pb-12 md:px-12 md:pb-16">
-          <p className="text-white/70 tracking-[0.25em] text-xs mb-3">
+          <p className="text-white/60 tracking-[0.35em] text-[11px] mb-3">
             BAMBURGH CIRCLE
           </p>
-          <h1 className="text-white text-4xl md:text-6xl font-serif mb-4">
+          <h1 className="text-white text-4xl md:text-6xl font-serif tracking-wide mb-4">
             BAMBURGH
           </h1>
-          <p className="text-white/80 text-lg md:text-xl max-w-md leading-relaxed mb-6">
+          <p className="text-white/80 text-base md:text-lg max-w-md leading-relaxed mb-6">
             For the ones who made it.<br />
             And the ones who made them better.
           </p>
           <Link
             to="/products/the-bamburgh"
-            className="inline-flex items-center text-white text-sm tracking-wide hover:opacity-70 transition"
+            className="inline-flex items-center text-white text-sm tracking-wide border-b border-white/30 pb-1 hover:opacity-70 transition"
           >
             Enter Bamburgh &rarr;
           </Link>
