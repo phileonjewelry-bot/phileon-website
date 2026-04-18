@@ -1664,7 +1664,12 @@ This is expression — under control.`,
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "HERO" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xqahe33_1000146811.png", alt: "Lady Bamburgh — angled three quarter view", intent: "SECONDARY_HERO" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xqahe33_1000146811.png", alt: "Lady Bamburgh — angled three quarter view", intent: "SECONDARY_HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/962wnvzo_1000146814.png", alt: "Lady Bamburgh — top angled view dark background", intent: "BALANCE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q7ony9fy_1000146886.png", alt: "Lady Bamburgh — front face with reflection", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/6pt83lbe_1000146893.png", alt: "Lady Bamburgh — side profile with filigree", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ee7htup6_1000146894.png", alt: "Lady Bamburgh — macro diamond detail", intent: "INTIMACY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/0c75y383_1000146901.png", alt: "Lady Bamburgh — on hand lifestyle shot", intent: "HUMAN_ENTRY" }
     ],
 
     features: [
