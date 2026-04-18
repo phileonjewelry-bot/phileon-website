@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import PhileonCarousel from "@/components/PhileonCarousel";
@@ -36,30 +37,30 @@ export default function LadyBamburghPage() {
     <div className="min-h-screen bg-black text-white">
 
       {/* HERO */}
-      <section className="w-full py-6 md:py-10 bg-black flex justify-center">
-        <div className="w-full max-w-[640px] px-4">
-          <div className="relative w-full aspect-[4/5] rounded-[14px] overflow-hidden bg-gradient-to-b from-[#1a1a1a] to-black flex items-center justify-center">
-            <img
-              src={LADY_BAMBURGH_IMG}
-              alt="Lady Bamburgh"
-              className="w-[70%] object-contain"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
-            <div className="absolute left-6 bottom-10 md:left-12 md:bottom-14 max-w-[45%] z-10">
-              <p className="text-[10px] tracking-[0.35em] text-white/60 uppercase mb-3">
-                Signature Series
-              </p>
-              <h1 className="text-3xl md:text-5xl text-white leading-[1.05] mb-4">
-                LADY BAMBURGH
-              </h1>
-              <p className="text-white/80 text-sm md:text-base mb-5 leading-relaxed">
-                Command, in form.
-              </p>
-              <p className="text-white/60 text-xs tracking-[0.2em]">
-                PHILEON
-              </p>
-            </div>
+      <section className="relative w-full h-[90vh] overflow-hidden bg-black">
+        <img
+          src={LADY_BAMBURGH_IMG}
+          alt="Lady Bamburgh Ring"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/70" />
+        <div className="relative z-10 h-full flex items-end px-6 md:px-16 pb-14">
+          <div className="max-w-xl">
+            <p className="text-xs tracking-[0.35em] text-white/60 mb-3">
+              PHILEON
+            </p>
+            <h1 className="text-4xl md:text-6xl font-serif tracking-wide text-white mb-4">
+              LADY BAMBURGH
+            </h1>
+            <p className="text-white/75 text-base md:text-lg leading-relaxed mb-8">
+              Presence without permission. Built for the woman who doesn&rsquo;t wait to be seen.
+            </p>
+            <Link
+              to="/products/lady-bamburgh"
+              className="inline-block px-8 py-4 text-black text-sm tracking-wide font-medium rounded-md bg-[#D4AF37] hover:bg-[#C19B2E] transition-all duration-300"
+            >
+              Enter Bamburgh &rarr;
+            </Link>
           </div>
         </div>
       </section>
