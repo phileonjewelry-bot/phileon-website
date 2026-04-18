@@ -1663,7 +1663,8 @@ This is expression — under control.`,
     story: `Presence without announcement.\n\nRound brilliant centers framed in gold, balanced by the same black and white contrast as the Bamburgh.\n\nDifferent in form. Identical in weight.\n\nDesigned to be worn apart.\nMeant to be understood together.`,
 
     gallery: [
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "HERO" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xqahe33_1000146811.png", alt: "Lady Bamburgh — angled three quarter view", intent: "SECONDARY_HERO" }
     ],
 
     features: [
