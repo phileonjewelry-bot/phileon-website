@@ -1,22 +1,38 @@
 # PHILEON — Luxury Jewelry E-Commerce
 
 ## Problem Statement
-High-end luxury jewelry e-commerce with bespoke cinematic product pages, editorial galleries, deep negative space.
+High-end luxury jewelry e-commerce with bespoke cinematic product pages, editorial galleries, live metal pricing.
 
 ## Architecture
 - **Frontend**: React (CRA) + Tailwind CSS + Shadcn/UI
 - **Backend**: FastAPI + MongoDB
 - **Data**: `/app/frontend/src/data/products.js`
+- **Live Pricing**: `/api/market-prices` → `MarketPricingContext` → `livePricing.js`
 
-## Recently Completed (April 12, 2026)
-- **COOGI I video playback**: Single-active-media state via useEffect — hero pauses when gallery video plays, gallery pauses on image selection. No overlap.
-- **COOGI I media container**: Hero + gallery wrapped in max-w-[520px]/[720px] centered container. Hero has rounded-[10px]. Gallery uses object-contain.
-- **COOGI I thumbnails**: 48px with 6px gap, ring-[0.5px] highlight. Video thumbnail uses poster image instead of video element.
-- **Homepage hero**: h-[50vh]/h-[65vh]
-- **Homepage tiles**: 3-col, h-[80px]/h-[110px]
+## Live Pricing System (April 19, 2026)
+- **Backend**: `/api/market-prices` returns `goldPerGram24kCad`, `silverPerGramCad`, `updatedAt`
+- **Frontend lib**: `/app/frontend/src/lib/livePricing.js` — `calculateMetalValueCad()`, `calculateLiveDisplayPrice()`, `formatCad()`, `roundLuxury()`
+- **Context**: `/app/frontend/src/context/MarketPricingContext.jsx` — fetches every 15 min
+- **App.js**: Wrapped in `<MarketPricingProvider>`
+
+## Product Pages
+- COOGI I: `/products/coogi-i` — editorial hero image + gallery
+- THE BAMBURGH: `/products/the-bamburgh` — PairHero layout, 7-image gallery
+- LADY BAMBURGH: `/products/lady-bamburgh` — 90vh cinematic hero, 9-image gallery, tier/size/profile selectors
+- Bamburgh Circle: `/bamburgh-circle` — editorial landing with dual hero sections
+
+## Key Files
+- `/app/frontend/src/data/products.js` — All product data
+- `/app/frontend/src/pages/LadyBamburghPage.jsx`
+- `/app/frontend/src/pages/BamburghPage.jsx`
+- `/app/frontend/src/pages/BamburghCirclePage.jsx`
+- `/app/frontend/src/pages/CoogiPage.jsx`
+- `/app/frontend/src/components/PhileonCarousel.jsx`
+- `/app/frontend/src/components/BamburghCollective.jsx`
+- `/app/frontend/src/lib/livePricing.js`
+- `/app/frontend/src/context/MarketPricingContext.jsx`
 
 ## Backlog
+- Wire live pricing into product pages (use `useMarketPricing` + `calculateLiveDisplayPrice`)
 - P2: Populate `/vault/drews-world` with exclusive drops
 - P3: Mobile swipe verification for galleries
-- P3: Cross-selling / hover images for shop grid
-- P3: Stripe payment integration

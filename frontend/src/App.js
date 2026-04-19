@@ -67,6 +67,7 @@ import AdminLayout from "@/components/layout/AdminLayout";
 // Context Providers
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { MarketPricingProvider } from "@/context/MarketPricingContext";
 
 // Components
 import CartDrawer from "@/components/CartDrawer";
@@ -74,6 +75,7 @@ import CartDrawer from "@/components/CartDrawer";
 function App() {
   return (
     <div className="min-h-screen bg-phileon-black">
+      <MarketPricingProvider>
       <CartProvider>
         <WishlistProvider>
           <BrowserRouter>
@@ -153,6 +155,7 @@ function App() {
       </BrowserRouter>
       </WishlistProvider>
     </CartProvider>
+    </MarketPricingProvider>
     <Toaster 
       position="bottom-right" 
       toastOptions={{

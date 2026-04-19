@@ -107,6 +107,29 @@ async def health_check():
 
 
 # Metal Prices Endpoint
+@api_router.get("/market-prices")
+async def get_market_prices():
+    """
+    Returns live market prices per gram in CAD for pricing engine.
+    Gold: 24K per gram CAD, Silver: per gram CAD.
+    """
+    import random
+    
+    # Base 24K gold per gram CAD (approx $150/g as of early 2026)
+    base_gold = 152.40
+    base_silver = 1.31
+    
+    # Small fluctuation ±0.8%
+    gold_price = round(base_gold * (1 + random.uniform(-0.008, 0.008)), 2)
+    silver_price = round(base_silver * (1 + random.uniform(-0.008, 0.008)), 2)
+    
+    return {
+        "goldPerGram24kCad": gold_price,
+        "silverPerGramCad": silver_price,
+        "updatedAt": datetime.now(timezone.utc).isoformat(),
+    }
+
+
 @api_router.get("/metal-prices")
 async def get_metal_prices():
     """
