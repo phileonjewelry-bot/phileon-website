@@ -35,8 +35,9 @@ export default function CoogiPage() {
       id: `coogi-i-${selectedTier}-${selectedSize}`,
       name: `COOGI I — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
       price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
+      productKey: "coogiI",
+      tierKey: selectedTier,
       metal: currentTier.metal,
-      size: selectedSize,
       quantity: quantity,
       image: gallery[0].src,
     });

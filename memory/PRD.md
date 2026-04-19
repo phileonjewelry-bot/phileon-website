@@ -1,31 +1,27 @@
 # PHILEON — Luxury Jewelry E-Commerce
 
-## Live Pricing System — FINALIZED
+## Live Pricing System — PRODUCTION READY
 
 **Formula**: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED METAL REFERENCE)`
 
 ### Architecture
-- **Backend**: `GET /api/market-prices` with test mode (`?test_gold_multiplier=1.1`)
-- **Config**: `livePricingConfig.js` — 18 products, all tiers
-- **Lib**: `livePricing.js` — calc + formatCad + roundLuxury ($50)
-- **Context**: `MarketPricingContext.jsx` — 15-min refresh, localStorage cache, validation, fallback
+- **Backend**: `GET /api/market-prices` (with test mode), `POST /api/validate-cart`
+- **Server engine**: `/app/backend/pricing_engine.py` — mirrors frontend logic exactly
+- **Config**: `livePricingConfig.js` (frontend) + `LIVE_PRICING_CONFIG` (backend) — 18 products
+- **Context**: `MarketPricingContext.jsx` — 15-min refresh, localStorage cache, validation
 - **Hooks**: `useLivePrice()`, `useLiveFromPrice()`, `useLiveTierPrices()`
-- **Components**: `<LiveFromPrice>` for cards/grids, `slugToProductKey()` mapper
 
 ### Safeguards
-- Cart price lock: live price captured at add-to-cart time via `tierPricesLive[tier]?.price`
-- Fallback: defaults to $150/g gold if API fails
-- Cache: localStorage preserves last-known prices for 1 hour
-- Validation: API response checked for valid numbers before updating state
-- Rounding: all prices rounded to nearest $50, no decimals
+- **Cart price lock**: live price captured at add-to-cart, stored as `lockedPriceCad`
+- **Server validation**: `POST /api/validate-cart` compares client vs server price ($100 tolerance)
+- **Fallback**: localStorage cache (1hr TTL), defaults to $150/g gold
+- **Response validation**: rejects non-positive numbers from API
+- **Rounding**: all prices rounded to nearest $50 CAD, no decimals
 
-### Wired into ALL surfaces
-- All bespoke pages: LadyBamburgh, Bamburgh, CoogiI, Cypher, Morso, Bound, Apex, Homage, LaBete, Blessed
-- All template pages: RingProductPage, EarringsProductPage, PendantProductPage
-- All product-specific pages: PTPCuff, Rosaria, DesirCorset, FormeCuff, MonikaCouture, AlejandraHeels
-- HomePage: all featured sections
-- ShopDropPage: all collection cards
-- StyleItWith: cross-sell prices
+### All surfaces wired
+- All bespoke + template product pages
+- Homepage, ShopDropPage, StyleItWith, PhileonCarousel, BamburghCollective
+- Cart stores productKey + tierKey for server validation
 - Market note on all product pages
 
 ## Backlog

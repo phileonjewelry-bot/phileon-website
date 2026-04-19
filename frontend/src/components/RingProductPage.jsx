@@ -69,6 +69,8 @@ export default function RingProductPage({ product }) {
       name: product.name,
       image: heroImage,
       price: tierPricesLive[selectedTier]?.price || currentTier.price,
+      productKey: productKey,
+      tierKey: selectedTier,
       slug: product.id,
       materials: [currentTier.metal],
       size: sizeLabel

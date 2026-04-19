@@ -136,6 +136,52 @@ async def get_market_prices(test_gold_multiplier: float = None):
     }
 
 
+# ============ CART VALIDATION ============
+from pydantic import BaseModel
+from typing import List as TypeList
+
+class CartLineItem(BaseModel):
+    product_key: str  # e.g. "ladyBamburgh"
+    tier_key: str     # e.g. "signature"
+    client_price: float  # price shown to client at add-to-cart time
+    quantity: int = 1
+
+class CartValidationRequest(BaseModel):
+    items: TypeList[CartLineItem]
+
+@api_router.post("/validate-cart")
+async def validate_cart(request: CartValidationRequest):
+    """
+    Validates that cart line item prices match server-computed live prices.
+    Called before checkout to prevent price manipulation.
+    Tolerance: $100 CAD to account for rounding + market movement.
+    """
+    from pricing_engine import validate_line_item_price, get_current_market, compute_live_price
+    
+    results = []
+    all_valid = True
+    
+    for item in request.items:
+        validation = validate_line_item_price(
+            product_key=item.product_key,
+            tier_key=item.tier_key,
+            client_price=item.client_price,
+        )
+        results.append({
+            "product_key": item.product_key,
+            "tier_key": item.tier_key,
+            **validation,
+        })
+        if not validation["valid"]:
+            all_valid = False
+    
+    return {
+        "valid": all_valid,
+        "items": results,
+        "message": "Cart validated" if all_valid else "Price mismatch detected. Please refresh your cart.",
+    }
+
+
 @api_router.get("/metal-prices")
 async def get_metal_prices():
     """

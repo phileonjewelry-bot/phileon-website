@@ -37,10 +37,12 @@ export const CartProvider = ({ children }) => {
       product_id: product.id,
       name: product.name,
       image: product.images?.[0] || product.image,
-      unit_amount_cents: Math.round((product.price || 0) * 100), // Convert to cents
+      unit_amount_cents: Math.round((product.price || 0) * 100),
+      lockedPriceCad: product.price || 0,
+      productKey: product.productKey || null,
+      tierKey: product.tierKey || null,
       qty: quantity,
       variant,
-      // Additional fields for display
       slug: product.slug,
       materials: product.materials
     };
@@ -52,17 +54,14 @@ export const CartProvider = ({ children }) => {
       );
       
       if (existingIndex >= 0) {
-        // Update existing item quantity
         const updatedItems = [...prevItems];
         updatedItems[existingIndex].qty += quantity;
         return updatedItems;
       } else {
-        // Add new item
         return [...prevItems, newItem];
       }
     });
     
-    // Open drawer when item added
     setIsOpen(true);
   };
 
@@ -71,7 +70,6 @@ export const CartProvider = ({ children }) => {
       removeFromCart(productId, variant);
       return;
     }
-    
     setItems(prevItems => 
       prevItems.map(item => 
         item.product_id === productId && 
@@ -91,33 +89,51 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  const clearCart = () => {
-    setItems([]);
-  };
+  const clearCart = () => setItems([]);
 
-  const getTotalItems = () => {
-    return items.reduce((total, item) => total + item.qty, 0);
-  };
+  const getTotalItems = () => items.reduce((total, item) => total + item.qty, 0);
 
-  const getTotalAmount = () => {
-    return items.reduce((total, item) => total + (item.unit_amount_cents * item.qty), 0);
-  };
+  const getTotalAmount = () => items.reduce((total, item) => total + (item.unit_amount_cents * item.qty), 0);
 
-  const getFormattedTotal = () => {
-    return (getTotalAmount() / 100).toFixed(2);
-  };
+  const getFormattedTotal = () => (getTotalAmount() / 100).toFixed(2);
 
-  // Convert cart items to format expected by Stripe checkout session
   const getCheckoutItems = () => {
     return items.map(item => ({
-      product_id: item.product_id, // Include for inventory validation
+      product_id: item.product_id,
       name: item.name,
       description: item.materials?.join(' · ') || '',
-      price: item.unit_amount_cents / 100, // Convert back to dollars
+      price: item.unit_amount_cents / 100,
       quantity: item.qty,
-      qty: item.qty, // Support both quantity and qty
+      qty: item.qty,
       images: item.image ? [item.image] : []
     }));
+  };
+
+  // Validate cart prices against server before checkout
+  const validateCart = async () => {
+    const API_URL = process.env.REACT_APP_BACKEND_URL || "";
+    const validationItems = items
+      .filter(item => item.productKey && item.tierKey)
+      .map(item => ({
+        product_key: item.productKey,
+        tier_key: item.tierKey,
+        client_price: item.lockedPriceCad,
+        quantity: item.qty,
+      }));
+
+    if (validationItems.length === 0) return { valid: true, message: "No items to validate" };
+
+    try {
+      const res = await fetch(`${API_URL}/api/validate-cart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: validationItems }),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error("Cart validation failed:", error);
+      return { valid: true, message: "Validation skipped (offline)" };
+    }
   };
 
   const value = {
@@ -130,6 +146,7 @@ export const CartProvider = ({ children }) => {
     getTotalAmount,
     getFormattedTotal,
     getCheckoutItems,
+    validateCart,
     isOpen,
     setIsOpen
   };

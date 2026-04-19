@@ -33,6 +33,8 @@ export default function LadyBamburghPage() {
       id: `lady-bamburgh-${selectedTier}-${selectedSize}`,
       name: `Lady Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
       price: tierPricesLive[selectedTier]?.price || product.pricing[selectedTier],
+      productKey: "ladyBamburgh",
+      tierKey: selectedTier,
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,

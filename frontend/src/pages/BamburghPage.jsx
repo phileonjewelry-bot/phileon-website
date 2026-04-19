@@ -34,8 +34,9 @@ export default function BamburghPage() {
       id: `bamburgh-${selectedTier}-${selectedSize}`,
       name: `Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
       price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
+      productKey: "bamburgh",
+      tierKey: selectedTier,
       metal: currentTier.metal,
-      size: selectedSize,
       quantity: quantity,
       image: BAMBURGH_IMG,
     });

@@ -59,6 +59,8 @@ export default function EarringsProductPage({ product }) {
       name: product.name,
       image: heroImage,
       price: tierPricesLive[selectedTier]?.price || currentTier.price,
+      productKey: productKey,
+      tierKey: selectedTier,
       slug: product.id,
       materials: [currentTier.metal]
     }, 1, `${currentTier.name} · ${currentTier.metal}`);
