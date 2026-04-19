@@ -1664,9 +1664,8 @@ This is expression — under control.`,
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "HERO" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/962wnvzo_1000146814.png", alt: "Lady Bamburgh — top angled view dark background", intent: "BALANCE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q7ony9fy_1000146886.png", alt: "Lady Bamburgh — front face with reflection", intent: "ARCHITECTURE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/6pt83lbe_1000146893.png", alt: "Lady Bamburgh — side profile with filigree", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pe9iwhc7_1000147023.png", alt: "Lady Bamburgh — three quarter angled dark", intent: "SECONDARY_HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cb4smiy2_ultra-realistic-3-4-angle-macro-product-_lSqxihLTSiW-Luh5r1owmw_8dIGE8gVR7GOSHzetGRX6Q_cover_hd.png", alt: "Lady Bamburgh — three quarter filigree side", intent: "BALANCE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/nstuifus_1000146995.png", alt: "Lady Bamburgh — macro diamond centers detail", intent: "INTIMACY" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9wkvhexa_1000147014.png", alt: "Lady Bamburgh — three quarter dark moody", intent: "TRUST" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2b4y3bxf_1000147020.png", alt: "Lady Bamburgh — on hand lifestyle bokeh", intent: "HUMAN_ENTRY" },
