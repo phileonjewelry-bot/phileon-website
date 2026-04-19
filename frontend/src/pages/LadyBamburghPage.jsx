@@ -106,8 +106,6 @@ export default function LadyBamburghPage() {
         </div>
       </section>
 
-      <PhileonCarousel />
-
       {/* PRODUCT DETAILS */}
       <section className="py-6 md:py-10">
         <div className="max-w-[560px] mx-auto px-5 md:px-8">
