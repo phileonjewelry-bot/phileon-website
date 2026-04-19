@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import PhileonCarousel from "@/components/PhileonCarousel";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png";
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
@@ -18,6 +19,8 @@ export default function BamburghPage() {
   const currentTier = product.tiers[selectedTier];
 
   const gallery = product.gallery;
+  const tierPrices = useLiveTierPrices("bamburgh");
+  const { formatted: ctaPrice, price: ctaPriceNum } = useLivePrice("bamburgh", selectedTier, product.pricing[selectedTier]);
 
   const handleSelect = useCallback((index) => {
     if (index === activeThumb || isTransitioning) return;
@@ -172,7 +175,7 @@ export default function BamburghPage() {
                         <p className={`text-[11px] ${isActive ? "text-white/40" : "text-white/18"}`}>{tier.metal} &middot; {tier.stones}</p>
                       </div>
                       <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                        ${product.pricing[key].toLocaleString()} CAD
+                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
                       </p>
                     </div>
                   </div>
@@ -209,10 +212,11 @@ export default function BamburghPage() {
             disabled={isAdding || !selectedSize}
             className="w-full bg-white text-black rounded-md py-3 text-[10px] tracking-[0.2em] font-medium hover:bg-white/90 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 mb-3"
           >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "CLAIM YOURS"}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
           </button>
 
-          <p className="text-[8px] text-white/18 mb-6">Made to order &middot; Limited production &middot; Signature Series</p>
+          <p className="text-[8px] text-white/18 mb-4">Made to order &middot; Limited production &middot; Signature Series</p>
+          <p className="text-[8px] text-white/15 text-center">Price adjusts automatically with the live precious metals market.</p>
         </div>
       </section>
 

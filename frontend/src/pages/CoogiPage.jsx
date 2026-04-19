@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const COOGI_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ifs9jtbk_VIDEO_98d0aec8-1ca7-4b07-9e13-c0bb3baa740b.mp4";
 
@@ -15,6 +16,9 @@ export default function CoogiPage() {
   const heroRef = useRef(null);
 
   const currentTier = product.tiers[selectedTier];
+  const tierPrices = useLiveTierPrices("coogiI");
+  const { formatted: ctaPrice } = useLivePrice("coogiI", selectedTier, product.pricing[selectedTier]);
+  const { formatted: fromPrice } = useLivePrice("coogiI", "foundation", product.pricing.foundation);
 
   // Gallery = IMAGES ONLY from products.js (hero video is separate)
   const gallery = product.gallery;
@@ -74,7 +78,7 @@ export default function CoogiPage() {
                 {product.tagline}
               </p>
               <p className="text-white/65 text-xs">
-                From ${product.pricing.foundation.toLocaleString()} CAD
+                From {fromPrice} CAD
               </p>
             </div>
           </div>
@@ -177,7 +181,7 @@ export default function CoogiPage() {
                         <p className={`text-[11px] ${isActive ? "text-white/40" : "text-white/18"}`}>{tier.metal} &middot; {tier.stones}</p>
                       </div>
                       <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                        ${product.pricing[key].toLocaleString()} CAD
+                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
                       </p>
                     </div>
                   </div>
@@ -216,10 +220,11 @@ export default function CoogiPage() {
             disabled={isAdding || !selectedSize}
             className="w-full bg-violet-600 text-white rounded-md py-3 text-[10px] tracking-[0.2em] font-medium hover:bg-violet-500 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 mb-3"
           >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "CLAIM YOURS"}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
           </button>
 
-          <p className="text-[8px] text-white/18 mb-6">Made to order &middot; Limited production &middot; Tribute Series</p>
+          <p className="text-[8px] text-white/18 mb-4">Made to order &middot; Limited production &middot; Tribute Series</p>
+          <p className="text-[8px] text-white/15 text-center mb-6">Price adjusts automatically with the live precious metals market.</p>
 
           {/* Features */}
           <div className="border-t border-white/[0.04] pt-5">

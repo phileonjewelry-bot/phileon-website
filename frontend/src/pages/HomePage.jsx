@@ -6,6 +6,7 @@ import DropReveal from '@/components/DropReveal';
 import LaMarvaFlagship from '@/components/LaMarvaFlagship';
 import { products } from '@/data/products';
 
+import { LiveFromPrice } from '@/components/LiveFromPrice';
 // Helper to format price from products.js basePrice
 const formatPrice = (basePrice) => `From $${basePrice.toLocaleString()}`;
 
@@ -534,7 +535,7 @@ const HomePage = () => {
                     FORME CUFF
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Shaped by the Curve</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">{formatPrice(products.formeCuff.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2"><LiveFromPrice slug="forme-cuff" fallback={formatPrice(products.formeCuff.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -584,7 +585,7 @@ const HomePage = () => {
                     PTP CUFF
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Power To The People</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">{formatPrice(products.ptpCuff.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2"><LiveFromPrice slug="ptp-cuff" fallback={formatPrice(products.ptpCuff.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -648,7 +649,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Signature Ring · Dynamic Pricing
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.laMarva.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2"><LiveFromPrice slug="la-marva" fallback={formatPrice(products.laMarva.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -679,7 +680,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Lab & Natural Diamonds
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.annieRose.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2"><LiveFromPrice slug="annie-rose" fallback={formatPrice(products.annieRose.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -710,7 +711,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Statement Earrings · Silver & Gold
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.monikaCouture.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2"><LiveFromPrice slug="monika-couture" fallback={formatPrice(products.monikaCouture.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>
@@ -741,7 +742,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Statement Earrings · Sculptural Design
                   </p>
-                  <p className="text-sm text-phileon-gold/80 mt-2">{formatPrice(products.alejandraHeels.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/80 mt-2"><LiveFromPrice slug="alejandra-heels" fallback={formatPrice(products.alejandraHeels.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>

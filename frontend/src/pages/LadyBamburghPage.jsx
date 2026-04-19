@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
-import PhileonCarousel from "@/components/PhileonCarousel";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
 
@@ -18,6 +18,8 @@ export default function LadyBamburghPage() {
 
   const currentTier = product.tiers[selectedTier];
   const gallery = product.gallery;
+  const tierPrices = useLiveTierPrices("ladyBamburgh");
+  const { formatted: ctaPrice } = useLivePrice("ladyBamburgh", selectedTier, product.pricing[selectedTier]);
 
   const handleSelect = useCallback((index) => {
     if (index === activeThumb || isTransitioning) return;
@@ -136,9 +138,9 @@ export default function LadyBamburghPage() {
               onChange={(e) => setSelectedTier(e.target.value)}
               className="mt-2 w-full border border-neutral-700 bg-black text-white p-3"
             >
-              <option value="signature">Signature — ${product.pricing.signature.toLocaleString()} CAD (Most Popular)</option>
-              <option value="foundation">Foundation — ${product.pricing.foundation.toLocaleString()} CAD</option>
-              <option value="heirloom">Heirloom — ${product.pricing.heirloom.toLocaleString()} CAD (Collector)</option>
+              <option value="signature">Signature — {tierPrices.signature?.formatted || `$${product.pricing.signature.toLocaleString()}`} CAD (Most Popular)</option>
+              <option value="foundation">Foundation — {tierPrices.foundation?.formatted || `$${product.pricing.foundation.toLocaleString()}`} CAD</option>
+              <option value="heirloom">Heirloom — {tierPrices.heirloom?.formatted || `$${product.pricing.heirloom.toLocaleString()}`} CAD (Collector)</option>
             </select>
             <p className="text-xs text-gray-500 mt-2">
               {product.tiers[selectedTier].description}
@@ -186,12 +188,15 @@ export default function LadyBamburghPage() {
             disabled={isAdding || !selectedSize}
             className="w-full bg-[#D4AF37] text-black py-4 tracking-widest text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
           >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — $${product.pricing[selectedTier].toLocaleString()} CAD`}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
           </button>
 
           {/* PRODUCTION NOTE */}
           <p className="text-xs text-gray-500 text-center">
             Made to order &bull; 3–4 weeks &bull; Complimentary insured shipping within Canada
+          </p>
+          <p className="text-[9px] text-gray-600 text-center mt-1">
+            Price adjusts automatically with the live precious metals market.
           </p>
 
         </div>

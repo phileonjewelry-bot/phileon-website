@@ -7,32 +7,32 @@ High-end luxury jewelry e-commerce with bespoke cinematic product pages, editori
 - **Frontend**: React (CRA) + Tailwind CSS + Shadcn/UI
 - **Backend**: FastAPI + MongoDB
 - **Data**: `/app/frontend/src/data/products.js`
-- **Live Pricing**: `/api/market-prices` → `MarketPricingContext` → `livePricing.js`
+- **Live Pricing**: `/api/market-prices` → `MarketPricingContext` → `livePricing.js` → `useLivePrice` hooks
 
 ## Live Pricing System (April 19, 2026)
-- **Backend**: `/api/market-prices` returns `goldPerGram24kCad`, `silverPerGramCad`, `updatedAt`
-- **Frontend lib**: `/app/frontend/src/lib/livePricing.js` — `calculateMetalValueCad()`, `calculateLiveDisplayPrice()`, `formatCad()`, `roundLuxury()`
+**Formula**: DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED METAL REFERENCE)
+
+- **Backend**: `GET /api/market-prices` → `goldPerGram24kCad`, `silverPerGramCad`, `updatedAt`
+- **Config**: `/app/frontend/src/data/livePricingConfig.js` — per-product per-tier locked prices, metal types, weights, reference values
+- **Lib**: `/app/frontend/src/lib/livePricing.js` — `calculateMetalValueCad()`, `calculateLiveDisplayPrice()`, `formatCad()`, `roundLuxury()`
 - **Context**: `/app/frontend/src/context/MarketPricingContext.jsx` — fetches every 15 min
-- **App.js**: Wrapped in `<MarketPricingProvider>`
+- **Hooks**: `/app/frontend/src/hooks/useLivePrice.js` — `useLivePrice()`, `useLiveFromPrice()`, `useLiveTierPrices()`
+- **Component**: `/app/frontend/src/components/LiveFromPrice.jsx` — drop-in for any "From $X" label
+
+### Wired into:
+- Lady Bamburgh page (tier dropdown + CTA)
+- Bamburgh page (tier cards + CTA)
+- COOGI I page (hero from price + tier cards + CTA)
+- Cypher page (tier cards)
+- Morso page (tier cards)
+- HomePage (all featured product prices)
+- ShopDropPage (all collection card prices)
 
 ## Product Pages
-- COOGI I: `/products/coogi-i` — editorial hero image + gallery
-- THE BAMBURGH: `/products/the-bamburgh` — PairHero layout, 7-image gallery
-- LADY BAMBURGH: `/products/lady-bamburgh` — 90vh cinematic hero, 9-image gallery, tier/size/profile selectors
-- Bamburgh Circle: `/bamburgh-circle` — editorial landing with dual hero sections
-
-## Key Files
-- `/app/frontend/src/data/products.js` — All product data
-- `/app/frontend/src/pages/LadyBamburghPage.jsx`
-- `/app/frontend/src/pages/BamburghPage.jsx`
-- `/app/frontend/src/pages/BamburghCirclePage.jsx`
-- `/app/frontend/src/pages/CoogiPage.jsx`
-- `/app/frontend/src/components/PhileonCarousel.jsx`
-- `/app/frontend/src/components/BamburghCollective.jsx`
-- `/app/frontend/src/lib/livePricing.js`
-- `/app/frontend/src/context/MarketPricingContext.jsx`
+- COOGI I, THE BAMBURGH, LADY BAMBURGH, Bamburgh Circle
+- All legacy pages (La Marva, Annie Rose, Cypher, Morso, etc.)
 
 ## Backlog
-- Wire live pricing into product pages (use `useMarketPricing` + `calculateLiveDisplayPrice`)
+- Wire remaining legacy pages (Bound, Apex, Homage, La Bete) to live tier pricing hooks
 - P2: Populate `/vault/drews-world` with exclusive drops
 - P3: Mobile swipe verification for galleries

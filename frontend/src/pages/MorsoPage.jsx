@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    IL MORSO DEL RE — "The Bite of the King"
@@ -16,6 +17,8 @@ export default function MorsoPage() {
 
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
+  const tierPrices = useLiveTierPrices("morso");
+  const { formatted: ctaPrice } = useLivePrice("morso", selectedTier, currentPrice);
 
   const gallery = product.gallery;
 
@@ -164,7 +167,7 @@ export default function MorsoPage() {
                         )}
                       </div>
                       <p className={`text-lg ml-4 ${isActive ? "text-white" : "opacity-70"}`}>
-                        ${product.pricing[key].toLocaleString()} CAD
+                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
                       </p>
                     </div>
                   </div>

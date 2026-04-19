@@ -6,6 +6,7 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import StockBadge from '@/components/StockBadge';
 import { Button } from '@/components/ui/button';
 import { products } from '@/data/products';
+import { LiveFromPrice } from '@/components/LiveFromPrice';
 import '../styles/shop-drop.css';
 
 // Helper to format price from products.js basePrice
@@ -514,7 +515,7 @@ const ShopDropPage = () => {
                             engineered to move with the body, yet command the eye.
                           </p>
                           <p className="text-[#C6A25D] text-2xl mt-6 tracking-wide">
-                            {product.price_range}
+                            <LiveFromPrice slug={product.slug} fallback={product.price_range} />
                           </p>
                           <div className="mt-8">
                             <span className="inline-block px-8 py-3 border border-white/20 text-white/80 text-sm tracking-[0.2em] uppercase transition-all duration-300 group-hover:border-[#C6A25D]/60 group-hover:shadow-[0_0_20px_rgba(198,162,93,0.15)]">
@@ -636,7 +637,7 @@ const ShopDropPage = () => {
                         <h3 className="shop-drop__card-name">{product.name}</h3>
                         <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                         {product.price_range && (
-                          <p className="shop-drop__card-price">{product.price_range}</p>
+                          <p className="shop-drop__card-price"><LiveFromPrice slug={product.slug} fallback={product.price_range} /></p>
                         )}
                       </div>
                     </a>

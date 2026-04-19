@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    CYPHER — Men's Statement Ring
@@ -16,6 +17,8 @@ export default function CypherPage() {
 
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
+  const tierPrices = useLiveTierPrices("cypher");
+  const { formatted: ctaPrice } = useLivePrice("cypher", selectedTier, currentPrice);
 
   // Gallery uses product.gallery directly (already in correct order)
   const gallery = product.gallery;
@@ -147,7 +150,7 @@ export default function CypherPage() {
                         )}
                       </div>
                       <p className={`text-lg ml-4 ${isActive ? "text-white" : "opacity-70"}`}>
-                        ${product.pricing[key].toLocaleString()} CAD
+                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
                       </p>
                     </div>
                   </div>
