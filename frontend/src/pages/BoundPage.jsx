@@ -408,7 +408,7 @@ const BoundPage = () => {
                             <p className="text-white/30 text-xs mt-1">{tier.metal}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[#C6A25D] text-xl">{tierPrices[tierKey]?.formatted || `$${tier.price.toLocaleString()}`}</p>
+                            <p className="text-[#C6A25D] text-xl">{tierPrices[key]?.formatted || `$${tier.price.toLocaleString()}`}</p>
                             {tier.badge && (
                               <span className="text-[9px] tracking-[0.2em] text-[#C6A25D]/60 uppercase">
                                 {tier.badge}

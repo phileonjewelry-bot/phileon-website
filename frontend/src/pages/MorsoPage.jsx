@@ -51,6 +51,7 @@ export default function MorsoPage() {
           muted
           loop
           playsInline
+          poster={product.imageUrl}
           preload="auto"
           poster={product.gallery[0].src}
         />

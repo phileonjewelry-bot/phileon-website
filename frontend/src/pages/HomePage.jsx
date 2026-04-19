@@ -143,6 +143,7 @@ const HomePage = () => {
             muted
             loop
             playsInline
+            poster={products.laMarva?.imageUrl}
             className="absolute inset-0 h-full w-full object-cover"
           >
             <source src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/a8omotqb_phileon-opener.mp4" type="video/mp4" />
@@ -208,6 +209,7 @@ const HomePage = () => {
                     playsInline
                     preload="metadata"
                     disablePictureInPicture
+                    poster={products.ptpCuff?.imageUrl}
                     className="w-full h-auto object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
                   >
                     <source src="https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/4idyl7t2_PTPCuff2.mp4" type="video/mp4" />

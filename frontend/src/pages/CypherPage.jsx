@@ -49,6 +49,7 @@ export default function CypherPage() {
           muted
           loop
           playsInline
+          poster={product.imageUrl}
           className="absolute inset-0 w-full h-full object-cover object-center scale-[1.1]"
         >
           <source src={product.heroVideo} type="video/mp4" />

@@ -222,6 +222,7 @@ const FormeCuffPage = () => {
             loop
             playsInline
             controls={false}
+            poster={formeCuffProduct?.imageUrl}
             className="w-full max-w-5xl rounded-lg"
           >
             <source src="/videos/forme-cuff.mp4" type="video/mp4" />

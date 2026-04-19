@@ -227,6 +227,7 @@ const HomagePage = () => {
           muted
           loop
           playsInline
+          poster={product.imageUrl || product.heroImage}
           preload="auto"
           style={{
             filter: 'contrast(1.05) brightness(1.02)',

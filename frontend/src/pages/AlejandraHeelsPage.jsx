@@ -175,7 +175,7 @@ const AlejandraHeelsPage = () => {
       
       {/* 1. HERO VIDEO */}
       <section className="alejandra-hero">
-        <video autoPlay muted loop playsInline className="alejandra-hero-video">
+        <video autoPlay muted loop playsInline poster={alejandraProduct?.imageUrl} className="alejandra-hero-video">
           <source 
             src="https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/7vzfuct9_phileon_video_web_compressed-2.mp4" 
             type="video/mp4" 

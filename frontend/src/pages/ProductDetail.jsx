@@ -94,6 +94,7 @@ const ProductDetail = () => {
                   autoPlay
                   loop
                   muted
+                  poster={product.imageUrl}
                 />
               )}
               {product.bestseller && (

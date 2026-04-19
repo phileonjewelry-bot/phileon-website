@@ -133,6 +133,7 @@ const ApexPage = () => {
           loop
           playsInline
           preload="auto"
+          poster={apexProduct.imageUrl}
           className="w-full h-full object-cover apex-hero-video"
           style={{ backfaceVisibility: "hidden" }}
           onCanPlay={(e) => e.target.play()}
@@ -262,6 +263,7 @@ const ApexPage = () => {
           loop
           playsInline
           preload="auto"
+          poster={apexProduct.imageUrl}
           className="w-full h-[70vh] object-cover"
         />
       </div>
