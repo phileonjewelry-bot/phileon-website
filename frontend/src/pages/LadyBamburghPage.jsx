@@ -10,6 +10,7 @@ export default function LadyBamburghPage() {
   const product = products.ladyBamburgh;
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
+  const [sizeProfile, setSizeProfile] = useState("ladies");
   const [quantity, setQuantity] = useState(1);
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -108,92 +109,90 @@ export default function LadyBamburghPage() {
 
       {/* PRODUCT DETAILS */}
       <section className="py-6 md:py-10">
-        <div className="max-w-[560px] mx-auto px-5 md:px-8">
+        <div className="max-w-[560px] mx-auto px-5 md:px-8 space-y-6">
 
-          <div className="mb-6">
-            <p className="text-[8px] tracking-[0.35em] text-white/50 mb-2">SIGNATURE SERIES</p>
-            <h2 className="text-xl md:text-2xl font-serif text-white/90 mb-1">LADY BAMBURGH</h2>
-            <p className="text-white/50 text-[11px]">{product.tagline}</p>
+          {/* TITLE */}
+          <div>
+            <h1 className="text-3xl tracking-[0.2em] font-serif text-white">
+              LADY BAMBURGH
+            </h1>
+            <p className="text-sm text-white/50 mt-2">
+              Presence without permission.
+            </p>
           </div>
 
-          <div className="mb-6">
-            <div className="text-white/45 text-[12px] leading-[1.7] whitespace-pre-line">
-              {product.story}
-            </div>
+          {/* STORY */}
+          <div className="text-white/45 text-[12px] leading-[1.7] whitespace-pre-line">
+            {product.story}
           </div>
 
-          <div className="mb-6">
-            <p className="text-[8px] tracking-[0.35em] text-white/25 mb-3">SPECIFICATIONS</p>
-            <div className="text-[11px] text-white/40 leading-relaxed space-y-1">
-              <p>Profile: Round brilliant dual-center signet</p>
-              <p>Metal: Two-tone rose gold &amp; white gold</p>
-              <p>Stones: Round brilliant diamonds, black diamond borders</p>
-            </div>
+          {/* TIER SELECT */}
+          <div>
+            <label className="text-xs tracking-widest text-white/40">
+              SELECT TIER
+            </label>
+            <select
+              value={selectedTier}
+              onChange={(e) => setSelectedTier(e.target.value)}
+              className="mt-2 w-full bg-transparent border border-white/10 rounded-md p-3 text-[12px] text-white/70 focus:outline-none focus:border-white/25"
+            >
+              <option value="signature" className="bg-black">Signature — ${product.pricing.signature.toLocaleString()} CAD (Most Popular)</option>
+              <option value="foundation" className="bg-black">Foundation — ${product.pricing.foundation.toLocaleString()} CAD</option>
+              <option value="heirloom" className="bg-black">Heirloom — ${product.pricing.heirloom.toLocaleString()} CAD (Collector)</option>
+            </select>
+            <p className="text-[10px] text-white/30 mt-2">
+              {product.tiers[selectedTier].description}
+            </p>
           </div>
 
-          <div className="mb-4">
-            <p className="text-[8px] tracking-[0.35em] text-white/20 mb-2">SELECT CONFIGURATION</p>
-            <div className="space-y-1.5">
-              {Object.entries(product.tiers).map(([key, tier]) => {
-                const isActive = selectedTier === key;
-                return (
-                  <div
-                    key={key}
-                    onClick={() => setSelectedTier(key)}
-                    className={`cursor-pointer rounded-md px-3 py-2 transition-all duration-200 ${
-                      isActive ? "bg-white/[0.02] border border-white/20" : "border border-white/[0.04] hover:border-white/8"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <p className={`text-[10px] tracking-[0.15em] ${isActive ? "text-white/65" : "text-white/30"}`}>{tier.label}</p>
-                          {tier.badge && <span className="text-[7px] tracking-[0.1em] bg-white/90 text-black px-1.5 py-0.5 rounded-full">{tier.badge}</span>}
-                        </div>
-                        <p className={`text-[11px] ${isActive ? "text-white/40" : "text-white/18"}`}>{tier.metal} &middot; {tier.stones}</p>
-                      </div>
-                      <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                        ${product.pricing[key].toLocaleString()} CAD
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* SIZE PROFILE */}
+          <div>
+            <label className="text-xs tracking-widest text-white/40">
+              SIZE PROFILE
+            </label>
+            <select
+              value={sizeProfile}
+              onChange={(e) => { setSizeProfile(e.target.value); setSelectedSize(""); }}
+              className="mt-2 w-full bg-transparent border border-white/10 rounded-md p-3 text-[12px] text-white/70 focus:outline-none focus:border-white/25"
+            >
+              <option value="ladies" className="bg-black">Ladies (4–9)</option>
+              <option value="gents" className="bg-black">Gents (6–12)</option>
+            </select>
           </div>
 
-          <div className="flex gap-2.5 mb-4">
-            <div className="flex-1">
-              <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">SIZE</p>
-              <select
-                value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value)}
-                className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-white/20"
-              >
-                <option value="" disabled className="bg-black">Select size (5-10)</option>
-                {sizeOptions.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
-              </select>
-              <p className="text-[8px] text-white/20 mt-1">Half sizes &middot; Custom above 10</p>
-            </div>
-            <div className="w-24">
-              <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">QTY</p>
-              <div className="flex items-center border border-white/8 rounded-md h-[36px]">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-2.5 text-white/30 hover:text-white/50 text-sm">-</button>
-                <span className="flex-1 text-center text-[11px] text-white/55">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="px-2.5 text-white/30 hover:text-white/50 text-sm">+</button>
-              </div>
-            </div>
+          {/* RING SIZE */}
+          <div>
+            <label className="text-xs tracking-widest text-white/40">
+              RING SIZE
+            </label>
+            <input
+              type="number"
+              step="0.5"
+              min={sizeProfile === "ladies" ? "4" : "6"}
+              max={sizeProfile === "ladies" ? "9" : "12"}
+              placeholder={sizeProfile === "ladies" ? "Enter size (e.g. 7.5)" : "Enter size (e.g. 10)"}
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+              className="mt-2 w-full bg-transparent border border-white/10 rounded-md p-3 text-[12px] text-white/70 focus:outline-none focus:border-white/25 placeholder:text-white/25"
+            />
+            <p className="text-[10px] text-white/30 mt-2">
+              Sizes above 12 are custom and will be confirmed after purchase.
+            </p>
           </div>
 
+          {/* CTA */}
           <button
             onClick={onAddToCart}
             disabled={isAdding || !selectedSize}
-            className="w-full bg-white text-black rounded-md py-3 text-[10px] tracking-[0.2em] font-medium hover:bg-white/90 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 mb-3"
+            className="w-full bg-[#D4AF37] text-black rounded-md py-4 text-sm tracking-wide font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
           >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "CLAIM YOURS"}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — $${product.pricing[selectedTier].toLocaleString()} CAD`}
           </button>
 
-          <p className="text-[8px] text-white/18 mb-6">Made to order &middot; Limited production &middot; Signature Series</p>
+          <p className="text-[9px] text-white/20 text-center">
+            Made to order &middot; Limited production &middot; Signature Series
+          </p>
+
         </div>
       </section>
 
