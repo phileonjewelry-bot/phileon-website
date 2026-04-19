@@ -88,23 +88,37 @@ export default function LadyBamburghPage() {
         </div>
       </section>
 
-      {/* SIGNATURE SERIES EDITORIAL */}
+      {/* SPACING — HERO → EDITORIAL TENSION */}
+      <section className="h-[12vh] md:h-[16vh] bg-black" />
+
+      {/* SIGNATURE SERIES EDITORIAL BLOCK */}
       <section className="px-6 md:px-12 py-20 md:py-28 bg-black text-white border-t border-white/10">
         <div className="max-w-[900px] mx-auto">
-          <p className="text-[11px] tracking-[0.35em] text-white/45 uppercase mb-5">
-            Signature Series
-          </p>
+          <div className="opacity-0 translate-y-6 animate-[fadeUp_0.8s_ease-out_forwards]">
+            <p className="text-[11px] tracking-[0.35em] text-white/45 uppercase mb-5">
+              Signature Series
+            </p>
 
-          <h2 className="text-3xl md:text-5xl font-serif leading-[1.08] max-w-[760px] mb-8">
-            Lady Bamburgh is built to hold attention without asking for it.
-          </h2>
+            <h2 className="text-3xl md:text-5xl font-serif leading-[1.08] max-w-[760px] mb-8">
+              Lady Bamburgh is built to hold attention without asking for it.
+            </h2>
 
-          <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-[680px]">
-            Dual center stones. Black depth. Gold authority. Every surface is designed
-            to feel controlled, exact, and unapologetically present.
-          </p>
+            <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-[680px]">
+              Dual center stones. Black depth. Gold authority. Every surface is designed
+              to feel controlled, exact, and unapologetically present.
+            </p>
+
+            {/* MICRO SCROLL CUE */}
+            <p className="text-[10px] tracking-[0.3em] text-white/40 mt-10">
+              DISCOVER THE DETAILS ↓
+            </p>
+          </div>
         </div>
       </section>
+
+      {/* TOP GRADIENT OVERLAY FOR GALLERY */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-transparent pointer-events-none z-10" />
 
       {/* GALLERY */}
       <section className="w-full mt-2 md:mt-4">
@@ -136,6 +150,7 @@ export default function LadyBamburghPage() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* PRODUCT DETAILS */}
       <section className="py-6 md:py-10">
@@ -243,6 +258,12 @@ export default function LadyBamburghPage() {
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
       `}</style>
     </div>
   );
