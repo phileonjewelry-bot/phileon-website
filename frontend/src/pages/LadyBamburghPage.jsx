@@ -5,6 +5,8 @@ import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
+const LADY_BAMBURGH_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gjr06mge_hf_20260419_224240_b1b530d9-43a4-4ed4-b0d0-16f3cc8b1826.mp4";
+const LADY_BAMBURGH_HERO_POSTER = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9wkvhexa_1000147014.png";
 
 export default function LadyBamburghPage() {
   const product = products.ladyBamburgh;
@@ -53,10 +55,16 @@ export default function LadyBamburghPage() {
 
       {/* HERO */}
       <section className="relative w-full h-[90vh] overflow-hidden bg-black">
-        <img
-          src={LADY_BAMBURGH_IMG}
-          alt="Lady Bamburgh Ring"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02]"
+        <video
+          src={LADY_BAMBURGH_HERO_VIDEO}
+          poster={LADY_BAMBURGH_HERO_POSTER}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          data-testid="lady-bamburgh-hero-video"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/70" />
         <div className="relative z-10 h-full flex items-end px-6 md:px-16 pb-14">

@@ -1,173 +1,420 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
-
-// ============================================================
-// VAULT — /vault/drews-world
-// ------------------------------------------------------------
-// Exclusive drop environment. Fixed pricing — DOES NOT use the
-// sitewide live metal pricing system. Items added from here
-// bypass /api/validate-cart because they have no productKey /
-// tierKey (see CartContext.validateCart filter).
-// ============================================================
-
-// Cinematic hero video — uploaded by user (Lady Bamburgh reveal)
-const VAULT_HERO_VIDEO =
-  'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gjr06mge_hf_20260419_224240_b1b530d9-43a4-4ed4-b0d0-16f3cc8b1826.mp4';
-
-// Poster fallback — prevents headless black-frame screenshots
-const VAULT_HERO_POSTER =
-  'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9wkvhexa_1000147014.png';
-
-// Fixed Vault product — no live pricing, no tierKey, no productKey
-const VAULT_LADY_BAMBURGH = {
-  id: 'vault-lady-bamburgh-01',
-  name: 'LADY BAMBURGH — VAULT EDITION',
-  slug: 'vault-lady-bamburgh',
-  price: 14800,
-  image: VAULT_HERO_POSTER,
-  images: [VAULT_HERO_POSTER],
-  materials: ['18K Gold', 'Natural Diamonds', 'Vault Edition'],
-  // NO productKey / NO tierKey — bypasses live-price validation by design
-  vaultExclusive: true,
-};
+import { ArrowLeft } from 'lucide-react';
 
 const VaultPage = () => {
-  const { addToCart } = useCart();
-  const [added, setAdded] = useState(false);
+  // Placeholder exclusive drops
+  const exclusiveDrops = [
+    { id: 1, name: 'Coming Soon', status: 'unreleased' },
+    { id: 2, name: 'Coming Soon', status: 'unreleased' },
+    { id: 3, name: 'Coming Soon', status: 'unreleased' },
+  ];
 
-  const handleAddToBag = () => {
-    addToCart(VAULT_LADY_BAMBURGH, 1);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2400);
-  };
+  // Hero image URL
+  const heroImageUrl = "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/pj7qgxix_1000141809.png";
 
   return (
-    <div className="min-h-screen bg-black text-white" data-testid="vault-page">
-      {/* Back to Shop */}
-      <Link
-        to="/"
-        className="fixed top-20 left-6 z-20 flex items-center gap-2 text-[11px] tracking-[0.3em] text-white/50 hover:text-[#D4AF37] transition-colors"
-        data-testid="vault-back-btn"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>BACK TO SHOP</span>
+    <div className="vault-page" data-testid="vault-page">
+      {/* Back Navigation */}
+      <Link to="/" className="vault-back-btn" data-testid="vault-back-btn">
+        <ArrowLeft className="w-5 h-5" />
+        <span>Back to Shop</span>
       </Link>
 
-      {/* ============ CINEMATIC HERO ============ */}
-      <section
-        className="relative w-full h-[90vh] overflow-hidden bg-black"
-        data-testid="vault-hero"
-      >
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          src={VAULT_HERO_VIDEO}
-          poster={VAULT_HERO_POSTER}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          data-testid="vault-hero-video"
-        />
-
-        {/* Cinematic gradient — deep blacks top & bottom, breathing light in center */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/30 to-black/85" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40" />
-
-        {/* Vault Exclusive Label */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-10">
-          <span
-            className="text-[10px] tracking-[0.5em] text-[#D4AF37]/80 border border-[#D4AF37]/40 px-4 py-2"
-            data-testid="vault-exclusive-label"
-          >
-            VAULT EXCLUSIVE · LIMITED RELEASE
-          </span>
+      {/* Animated Hero Header */}
+      <section className="vault-hero">
+        <div className="vault-hero-glow" />
+        <div className="vault-hero-image-container">
+          <img 
+            src={heroImageUrl} 
+            alt="PHILEON X Drew's World" 
+            className="vault-hero-image"
+          />
+          <div className="vault-hero-shimmer" />
         </div>
-
-        {/* Content — centered editorial */}
-        <div className="absolute inset-0 flex items-end justify-center pb-20 px-6 text-center">
-          <div className="max-w-xl">
-            <p className="text-[11px] tracking-[0.4em] text-white/60 mb-3" data-testid="vault-eyebrow">
-              PHILEON
-            </p>
-
-            <h1
-              className="text-4xl md:text-6xl text-white tracking-wide mb-5"
-              style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400 }}
-              data-testid="vault-title"
-            >
-              LADY BAMBURGH
-            </h1>
-
-            <p className="text-white/75 italic text-base md:text-lg mb-10" data-testid="vault-tagline">
-              Presence without permission.
-            </p>
-
-            <button
-              onClick={handleAddToBag}
-              disabled={added}
-              className="px-10 py-4 bg-[#D4AF37] hover:bg-[#E4BF47] disabled:bg-[#2a8a3a] text-black text-[12px] tracking-[0.25em] font-medium transition-all duration-300 inline-flex items-center gap-3"
-              data-testid="vault-add-to-bag-btn"
-            >
-              {added ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  ADDED TO BAG
-                </>
-              ) : (
-                <>ADD TO BAG — $14,800 CAD</>
-              )}
-            </button>
-          </div>
+        <div className="vault-hero-particles">
+          {[...Array(20)].map((_, i) => (
+            <div 
+              key={i} 
+              className="vault-particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${3 + Math.random() * 4}s`
+              }}
+            />
+          ))}
         </div>
       </section>
 
-      {/* ============ EDITORIAL STATEMENT ============ */}
-      <section className="max-w-2xl mx-auto px-6 py-32 text-center" data-testid="vault-statement">
-        <p className="text-[10px] tracking-[0.4em] text-[#D4AF37]/50 mb-8">THE VAULT</p>
-        <p
-          className="text-xl md:text-2xl text-white/80 leading-relaxed italic"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          Not a collection. A release. <br />
-          Priced once. Held forever.
-        </p>
-        <div className="w-12 h-px bg-[#D4AF37]/40 mx-auto mt-10" />
-      </section>
+      {/* Vault Header Text */}
+      <header className="vault-header">
+        <p className="vault-eyebrow">SECRET ACCESS</p>
+        <h1 className="vault-title">THE PHILEON VAULT</h1>
+        <div className="vault-divider" />
+        <p className="vault-tagline">Exclusive drops live here.</p>
+      </header>
 
-      {/* ============ SPECIFICATIONS ============ */}
-      <section className="max-w-3xl mx-auto px-6 pb-32" data-testid="vault-specs">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <p className="text-[9px] tracking-[0.35em] text-white/30 mb-2">METAL</p>
-            <p className="text-[13px] tracking-[0.15em] text-white/80">18K GOLD</p>
-          </div>
-          <div>
-            <p className="text-[9px] tracking-[0.35em] text-white/30 mb-2">STONES</p>
-            <p className="text-[13px] tracking-[0.15em] text-white/80">NATURAL DIAMONDS</p>
-          </div>
-          <div>
-            <p className="text-[9px] tracking-[0.35em] text-white/30 mb-2">EDITION</p>
-            <p className="text-[13px] tracking-[0.15em] text-white/80">VAULT — FIXED PRICE</p>
-          </div>
-          <div>
-            <p className="text-[9px] tracking-[0.35em] text-white/30 mb-2">SHIPPING</p>
-            <p className="text-[13px] tracking-[0.15em] text-white/80">WORLDWIDE</p>
-          </div>
+      {/* Exclusive Drops Section */}
+      <section className="vault-drops-section">
+        <h2 className="vault-section-title">Exclusive Drops</h2>
+        
+        <div className="vault-drops-grid">
+          {exclusiveDrops.map((drop) => (
+            <div key={drop.id} className="vault-drop-card">
+              <div className="vault-drop-inner">
+                <div className="vault-drop-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                  </svg>
+                </div>
+                <p className="vault-drop-name">{drop.name}</p>
+                <span className="vault-drop-badge">UNRELEASED</span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ============ CLOSING ============ */}
-      <footer className="text-center pb-20 px-6" data-testid="vault-footer">
-        <p className="text-[10px] tracking-[0.3em] text-[#D4AF37]/50 mb-3">
-          DREW&apos;S WORLD
-        </p>
-        <p className="text-white/30 text-xs italic">
+      {/* Footer Message */}
+      <footer className="vault-footer">
+        <p className="vault-footer-text">
           Reserved for those who seek what others overlook.
         </p>
+        <p className="vault-footer-sub">
+          Check back for exclusive releases.
+        </p>
       </footer>
+
+      <style>{`
+        .vault-page {
+          min-height: 100vh;
+          background: #000;
+          color: #fff;
+          padding-bottom: 60px;
+          overflow-x: hidden;
+        }
+
+        .vault-back-btn {
+          position: fixed;
+          top: 80px;
+          left: 24px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: rgba(199, 162, 75, 0.7);
+          font-size: 12px;
+          letter-spacing: 0.1em;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          z-index: 10;
+        }
+
+        .vault-back-btn:hover {
+          color: #C7A24B;
+        }
+
+        /* ========== ANIMATED HERO ========== */
+        .vault-hero {
+          position: relative;
+          width: 100%;
+          padding-top: 60px;
+          margin-bottom: 40px;
+          overflow: hidden;
+        }
+
+        .vault-hero-glow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 120%;
+          height: 120%;
+          background: radial-gradient(
+            ellipse at center,
+            rgba(199, 162, 75, 0.15) 0%,
+            rgba(199, 162, 75, 0.05) 40%,
+            transparent 70%
+          );
+          animation: glowPulse 4s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        @keyframes glowPulse {
+          0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+          50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .vault-hero-image-container {
+          position: relative;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 20px;
+        }
+
+        .vault-hero-image {
+          width: 100%;
+          height: auto;
+          display: block;
+          animation: heroFloat 6s ease-in-out infinite, heroReveal 1s ease-out;
+          filter: drop-shadow(0 0 30px rgba(199, 162, 75, 0.3));
+        }
+
+        @keyframes heroFloat {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-8px) scale(1.01); }
+        }
+
+        @keyframes heroReveal {
+          from { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.95);
+            filter: blur(10px) drop-shadow(0 0 30px rgba(199, 162, 75, 0.3));
+          }
+          to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+            filter: blur(0) drop-shadow(0 0 30px rgba(199, 162, 75, 0.3));
+          }
+        }
+
+        .vault-hero-shimmer {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+          );
+          animation: shimmerMove 4s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        @keyframes shimmerMove {
+          0%, 100% { left: -100%; }
+          50% { left: 150%; }
+        }
+
+        .vault-hero-particles {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+
+        .vault-particle {
+          position: absolute;
+          bottom: -10px;
+          width: 4px;
+          height: 4px;
+          background: rgba(199, 162, 75, 0.6);
+          border-radius: 50%;
+          animation: particleRise linear infinite;
+          box-shadow: 0 0 6px rgba(199, 162, 75, 0.8);
+        }
+
+        @keyframes particleRise {
+          0% { 
+            transform: translateY(0) scale(1);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% { 
+            transform: translateY(-400px) scale(0);
+            opacity: 0;
+          }
+        }
+
+        /* ========== VAULT HEADER ========== */
+        .vault-header {
+          text-align: center;
+          max-width: 600px;
+          margin: 0 auto 80px;
+          padding: 0 24px;
+          animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .vault-eyebrow {
+          font-size: 10px;
+          letter-spacing: 0.4em;
+          color: rgba(199, 162, 75, 0.6);
+          margin-bottom: 16px;
+          text-transform: uppercase;
+        }
+
+        .vault-title {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(28px, 7vw, 48px);
+          font-weight: 400;
+          letter-spacing: 0.12em;
+          color: #C7A24B;
+          margin-bottom: 24px;
+          line-height: 1.1;
+        }
+
+        .vault-divider {
+          width: 60px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(199, 162, 75, 0.5), transparent);
+          margin: 0 auto 24px;
+        }
+
+        .vault-tagline {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.4);
+          font-style: italic;
+        }
+
+        /* ========== DROPS SECTION ========== */
+        .vault-drops-section {
+          max-width: 900px;
+          margin: 0 auto 80px;
+          padding: 0 24px;
+          animation: fadeInUp 0.6s ease-out 0.5s both;
+        }
+
+        .vault-section-title {
+          font-size: 11px;
+          letter-spacing: 0.35em;
+          color: rgba(199, 162, 75, 0.5);
+          text-transform: uppercase;
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .vault-drops-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 24px;
+        }
+
+        .vault-drop-card {
+          aspect-ratio: 1;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(199, 162, 75, 0.12);
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          cursor: default;
+        }
+
+        .vault-drop-card:hover {
+          border-color: rgba(199, 162, 75, 0.25);
+          background: rgba(199, 162, 75, 0.03);
+          transform: translateY(-4px);
+        }
+
+        .vault-drop-inner {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 32px;
+          text-align: center;
+        }
+
+        .vault-drop-icon {
+          width: 56px;
+          height: 56px;
+          margin-bottom: 20px;
+          color: rgba(199, 162, 75, 0.25);
+        }
+
+        .vault-drop-icon svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .vault-drop-name {
+          font-size: 14px;
+          letter-spacing: 0.15em;
+          color: rgba(255, 255, 255, 0.6);
+          margin-bottom: 12px;
+          text-transform: uppercase;
+        }
+
+        .vault-drop-badge {
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          color: rgba(199, 162, 75, 0.5);
+          padding: 6px 12px;
+          border: 1px solid rgba(199, 162, 75, 0.2);
+          border-radius: 2px;
+        }
+
+        /* ========== FOOTER ========== */
+        .vault-footer {
+          text-align: center;
+          padding: 40px 24px 60px;
+          animation: fadeInUp 0.6s ease-out 0.7s both;
+        }
+
+        .vault-footer-text {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.3);
+          font-style: italic;
+          margin-bottom: 12px;
+        }
+
+        .vault-footer-sub {
+          font-size: 11px;
+          letter-spacing: 0.15em;
+          color: rgba(199, 162, 75, 0.4);
+          text-transform: uppercase;
+        }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 640px) {
+          .vault-back-btn {
+            top: 70px;
+            left: 16px;
+          }
+
+          .vault-hero {
+            padding-top: 50px;
+            margin-bottom: 24px;
+          }
+
+          .vault-hero-image-container {
+            padding: 0 12px;
+          }
+
+          .vault-header {
+            margin-bottom: 60px;
+          }
+
+          .vault-drops-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+
+          .vault-drop-card {
+            aspect-ratio: auto;
+            min-height: 180px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

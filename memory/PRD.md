@@ -25,14 +25,11 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 ### Bug Fix
 - BoundPage: `tierKey` → `key` variable name fix in tier price rendering
 
-## Vault — /vault/drews-world — COMPLETED (Feb 2026)
-- Cinematic full-bleed video hero (user-provided Lady Bamburgh reveal mp4)
-- Poster fallback for headless/slow-load
-- Fixed pricing: LADY BAMBURGH — VAULT EDITION at **$14,800 CAD** (no live-pricing delta)
-- `productKey: null` + `tierKey: null` on cart item → **bypasses `/api/validate-cart`** by design (see `CartContext.validateCart` filter)
-- "VAULT EXCLUSIVE · LIMITED RELEASE" label + editorial statement + specs row
-- Add-to-Bag wired; cart drawer confirmed working
-- File: `/app/frontend/src/pages/VaultPage.jsx` (fully rewritten, Tailwind)
+## Vault — /vault/drews-world — REVERTED TO PLACEHOLDER (Feb 2026)
+- User decided cinematic video belongs on **Lady Bamburgh hero**, not the Vault
+- `VaultPage.jsx` restored to the "Coming Soon" placeholder state
+- Lady Bamburgh hero `<img>` replaced with `<video>` (user-provided cinematic mp4 + poster fallback) in `LadyBamburghPage.jsx`
+- Existing editorial overlay preserved (PHILEON eyebrow, serif title, tagline, "Enter Bamburgh →" CTA)
 
 ## Backlog
 - P3: Additional Vault drops as user supplies artifacts
