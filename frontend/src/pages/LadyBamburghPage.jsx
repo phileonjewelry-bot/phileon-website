@@ -11,9 +11,19 @@ export default function LadyBamburghPage() {
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [activeThumb, setActiveThumb] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentTier = product.tiers[selectedTier];
+  const gallery = product.gallery;
+
+  const handleSelect = useCallback((index) => {
+    if (index === activeThumb || isTransitioning) return;
+    setIsTransitioning(true);
+    setActiveThumb(index);
+    setTimeout(() => setIsTransitioning(false), 250);
+  }, [activeThumb, isTransitioning]);
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -70,10 +80,28 @@ export default function LadyBamburghPage() {
         <div className="max-w-[420px] md:max-w-[520px] mx-auto px-3 md:px-5">
           <div className="w-full overflow-hidden rounded-[10px] bg-black mb-2">
             <img
-              src={LADY_BAMBURGH_IMG}
-              alt="Lady Bamburgh — front view"
-              className="w-full aspect-square object-contain"
+              src={gallery[activeThumb].src}
+              alt={gallery[activeThumb].alt}
+              className={`w-full aspect-square object-contain transition-opacity duration-250 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
             />
+          </div>
+
+          <div className="flex gap-[5px] overflow-x-auto pb-1 scrollbar-hide">
+            {gallery.map((item, index) => (
+              <button
+                key={`t-${index}`}
+                onClick={() => handleSelect(index)}
+                className={`
+                  w-[44px] h-[44px] md:w-[50px] md:h-[50px] flex-shrink-0 rounded-[3px] overflow-hidden
+                  transition-all duration-150
+                  ${activeThumb === index
+                    ? "ring-1 ring-white/40 opacity-100"
+                    : "opacity-30 hover:opacity-65"}
+                `}
+              >
+                <img src={item.src} alt="" className="w-full h-full object-cover" loading="lazy" />
+              </button>
+            ))}
           </div>
         </div>
       </section>
