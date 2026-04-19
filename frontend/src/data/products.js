@@ -1630,7 +1630,7 @@ This is expression — under control.`,
     pricing: {
       foundation: 7800,
       signature: 11400,
-      heirloom: 16800
+      heirloom: 14800
     },
 
     tiers: {
