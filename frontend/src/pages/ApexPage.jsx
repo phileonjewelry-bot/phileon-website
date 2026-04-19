@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    APEX — Pyramid Earrings
@@ -39,6 +40,8 @@ const ApexPage = () => {
   };
 
   const currentTier = tiers[selectedTier];
+  const tierPricesLive = useLiveTierPrices("apex");
+  const { formatted: ctaPrice } = useLivePrice("apex", selectedTier, currentTier.price);
 
   // Product gallery - NO MODEL SHOTS
   const gallery = {
@@ -304,7 +307,7 @@ const ApexPage = () => {
 
             <div className="mt-4">
               <p className="text-3xl md:text-4xl font-light tracking-wide">
-                ${currentTier.price.toLocaleString()}
+                {tierPricesLive[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`}
                 <span className="text-lg text-neutral-500 ml-2">CAD</span>
               </p>
               <p className="text-sm text-neutral-400 mt-1">
@@ -343,7 +346,7 @@ const ApexPage = () => {
                         <p className="text-xs text-neutral-500 mt-1">{tier.metal}</p>
                       </div>
                       <span className="text-sm">
-                        ${tier.price.toLocaleString()}
+                        {tierPricesLive[key]?.formatted || `$${tier.price.toLocaleString()}`}
                         {key === 'heirloom' && '+'}
                       </span>
                     </div>
@@ -363,6 +366,9 @@ const ApexPage = () => {
             
             <p className="text-xs text-neutral-500 text-center mt-3 tracking-wide">
               Crafted with precision. Worn with intent.
+            </p>
+            <p className="text-[9px] text-neutral-600 text-center mt-1">
+              Price adjusts automatically with the live precious metals market.
             </p>
 
             <div className="mt-8 pt-8 border-t border-neutral-800">

@@ -2,11 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { products } from '@/data/products';
-
+import { useLiveTierPrices } from '@/hooks/useLivePrice';
 const AlejandraHeelsPage = () => {
   // Get pricing from products.js
   const alejandraProduct = products.alejandraHeels;
   const pricing = alejandraProduct.pricing;
+  const tierPricesLive = useLiveTierPrices("alejandraHeels");
 
   // ========== SHARED GALLERY IMAGES (all metals use the same set) ==========
   // Structure: Video (if exists) -> Primary image -> Secondary images
@@ -153,6 +154,9 @@ const AlejandraHeelsPage = () => {
 
   // Format price
   const formatPrice = (price, currency) => {
+    if (tierPricesLive.default) {
+      return tierPricesLive.default.formatted;
+    }
     return new Intl.NumberFormat('en-CA', {
       style: 'currency',
       currency: currency,

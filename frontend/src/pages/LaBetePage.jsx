@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    TRIBUTE: LA BÊTE — "The Beast"
@@ -29,6 +30,8 @@ export default function LaBetePage() {
 
   const currentPrice = product.pricing[selectedTier];
   const currentTier = product.tiers[selectedTier];
+  const tierPricesLive = useLiveTierPrices("labete");
+  const { formatted: ctaPrice } = useLivePrice("labete", selectedTier, currentPrice);
   
   // Hero video as FIRST gallery item, followed by all product images
   const gallery = [
@@ -323,7 +326,7 @@ export default function LaBetePage() {
                           </p>
                         </div>
                         <p className={`text-[13px] ${isActive ? "text-white/75" : "text-white/35"}`}>
-                          ${product.pricing[key].toLocaleString()}
+                          {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`}
                         </p>
                       </div>
                     </div>
@@ -382,6 +385,9 @@ export default function LaBetePage() {
               ${titleReady ? "opacity-100" : "opacity-0"}
             `} style={{ transitionDelay: "200ms" }}>
               Made to order · Limited production
+            </p>
+            <p className="text-[8px] text-white/12" style={{ transitionDelay: "250ms" }}>
+              Price adjusts automatically with the live precious metals market.
             </p>
           </div>
         </div>
@@ -537,7 +543,7 @@ export default function LaBetePage() {
                           )}
                         </div>
                         <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                          ${product.pricing[key].toLocaleString()} CAD
+                          {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
                         </p>
                       </div>
                     </div>

@@ -8,10 +8,12 @@ import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 import { useAddToCart } from "../hooks/useAddToCart";
 import StyleItWith from "../components/StyleItWith";
+import { useLiveTierPrices } from "../hooks/useLivePrice";
 
 export default function RosariaPage() {
   const product = products.rosaria;
   const { isAdding, handleAddToCart, buttonText, buttonClass } = useAddToCart();
+  const tierPricesLive = useLiveTierPrices("rosaria");
   
   // State for selected material - default to 14K Rose Gold
   const [selectedMaterial, setSelectedMaterial] = useState(product.materials[1]);
@@ -21,8 +23,11 @@ export default function RosariaPage() {
     setSelectedMaterial(material);
   };
 
-  // Format price with currency
-  const formatPrice = (price, currency = "CAD") => {
+  // Format price with currency — uses live pricing if available
+  const formatPrice = (price, currency = "CAD", pricingKey) => {
+    if (pricingKey && tierPricesLive[pricingKey]) {
+      return `${tierPricesLive[pricingKey].formatted} ${currency}`;
+    }
     return `$${price.toLocaleString()} ${currency}`;
   };
 
@@ -156,7 +161,7 @@ export default function RosariaPage() {
                             "font-medium",
                             isSelected ? "text-[#C6A24A]" : "text-white"
                           ].join(" ")}>
-                            {formatPrice(material.price, material.currency)}
+                            {formatPrice(material.price, material.currency, material.pricingKey)}
                           </p>
                         </div>
                       </div>

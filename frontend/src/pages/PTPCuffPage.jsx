@@ -7,10 +7,12 @@ import ProductLayout, {
 import { useAddToCart } from "../hooks/useAddToCart";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
+import { useLiveTierPrices } from "../hooks/useLivePrice";
 
 export default function PTPCuffPage() {
   const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
   const product = products.ptpCuff;
+  const tierPricesLive = useLiveTierPrices("ptpCuff");
   
   // Edition options with positioning text
   const editionOptions = product.tiers.map((tier) => ({
@@ -18,7 +20,7 @@ export default function PTPCuffPage() {
     material: tier.material,
     materialDetail: tier.materialDetail,
     positioning: tier.positioning,
-    price: product.pricing[tier.pricingKey],
+    price: tierPricesLive[tier.pricingKey]?.price || product.pricing[tier.pricingKey],
     tag: tier.tag,
     highlight: tier.highlight,
     pricingKey: tier.pricingKey

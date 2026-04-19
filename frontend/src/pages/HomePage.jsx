@@ -560,7 +560,7 @@ const HomePage = () => {
                     LA MARVA
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-2">Statement Ring</p>
-                  <p className="text-sm text-phileon-gold/70 mt-2">{formatPrice(products.laMarva.basePrice)}</p>
+                  <p className="text-sm text-phileon-gold/70 mt-2"><LiveFromPrice slug="la-marva" fallback={formatPrice(products.laMarva.basePrice)} /></p>
                 </div>
               </Link>
             </ScrollReveal>

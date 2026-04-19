@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    BLESSED — DEUTERONOMY 28:3
@@ -34,6 +35,7 @@ export default function BlessedPage() {
   const secondaryVideoRef = useRef(null);
 
   const currentTier = product.tiers[selectedTier];
+  const tierPricesLive = useLiveTierPrices("blessed");
   const gallery = product.gallery;
 
   // Video rotation effect - swap every 7 seconds
@@ -261,7 +263,7 @@ export default function BlessedPage() {
                           </p>
                         </div>
                         <p className={`text-[13px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                          ${product.pricing[key].toLocaleString()}
+                          {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`}
                         </p>
                       </div>
                     </div>
@@ -305,9 +307,10 @@ export default function BlessedPage() {
               {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "CLAIM YOURS"}
             </button>
 
-            <p className="text-[9px] text-white/20 text-center mb-10">
+            <p className="text-[9px] text-white/20 text-center mb-2">
               Made to order · Limited production
             </p>
+            <p className="text-[8px] text-white/12 text-center mb-10">Price adjusts automatically with the live precious metals market.</p>
             
             {/* Craft Section */}
             <div className="border-t border-white/[0.05] pt-8 mb-10">
@@ -441,7 +444,7 @@ export default function BlessedPage() {
                             )}
                           </div>
                           <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                            ${product.pricing[key].toLocaleString()} CAD
+                            {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
                           </p>
                         </div>
                       </div>
@@ -485,9 +488,10 @@ export default function BlessedPage() {
                 {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "CLAIM YOURS"}
               </button>
 
-              <p className="text-[9px] text-white/18 mb-10">
+              <p className="text-[9px] text-white/18 mb-2">
                 Made to order · Limited production
               </p>
+              <p className="text-[8px] text-white/12 mb-10">Price adjusts automatically with the live precious metals market.</p>
 
               {/* Craft Section */}
               <div className="border-t border-white/[0.04] pt-8">

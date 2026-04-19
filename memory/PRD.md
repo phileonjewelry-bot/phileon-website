@@ -1,38 +1,29 @@
 # PHILEON — Luxury Jewelry E-Commerce
 
-## Problem Statement
-High-end luxury jewelry e-commerce with bespoke cinematic product pages, editorial galleries, live metal pricing.
+## Live Pricing System — COMPLETE
 
-## Architecture
-- **Frontend**: React (CRA) + Tailwind CSS + Shadcn/UI
-- **Backend**: FastAPI + MongoDB
-- **Data**: `/app/frontend/src/data/products.js`
-- **Live Pricing**: `/api/market-prices` → `MarketPricingContext` → `livePricing.js` → `useLivePrice` hooks
+**Formula**: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED METAL REFERENCE)`
 
-## Live Pricing System (April 19, 2026)
-**Formula**: DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED METAL REFERENCE)
+### Architecture
+- **Backend**: `GET /api/market-prices` → gold/silver per gram CAD
+- **Config**: `livePricingConfig.js` — 18 products × all tiers
+- **Lib**: `livePricing.js` — calc functions + luxury rounding to $50
+- **Context**: `MarketPricingContext.jsx` — fetches every 15 min
+- **Hooks**: `useLivePrice()`, `useLiveFromPrice()`, `useLiveTierPrices()`
+- **Component**: `<LiveFromPrice slug="..." />` for cards/grids
 
-- **Backend**: `GET /api/market-prices` → `goldPerGram24kCad`, `silverPerGramCad`, `updatedAt`
-- **Config**: `/app/frontend/src/data/livePricingConfig.js` — per-product per-tier locked prices, metal types, weights, reference values
-- **Lib**: `/app/frontend/src/lib/livePricing.js` — `calculateMetalValueCad()`, `calculateLiveDisplayPrice()`, `formatCad()`, `roundLuxury()`
-- **Context**: `/app/frontend/src/context/MarketPricingContext.jsx` — fetches every 15 min
-- **Hooks**: `/app/frontend/src/hooks/useLivePrice.js` — `useLivePrice()`, `useLiveFromPrice()`, `useLiveTierPrices()`
-- **Component**: `/app/frontend/src/components/LiveFromPrice.jsx` — drop-in for any "From $X" label
-
-### Wired into:
-- Lady Bamburgh page (tier dropdown + CTA)
-- Bamburgh page (tier cards + CTA)
-- COOGI I page (hero from price + tier cards + CTA)
-- Cypher page (tier cards)
-- Morso page (tier cards)
-- HomePage (all featured product prices)
-- ShopDropPage (all collection card prices)
-
-## Product Pages
-- COOGI I, THE BAMBURGH, LADY BAMBURGH, Bamburgh Circle
-- All legacy pages (La Marva, Annie Rose, Cypher, Morso, etc.)
+### Wired into ALL surfaces:
+- Lady Bamburgh, Bamburgh, COOGI I — tier dropdowns + CTA
+- Cypher, Morso — tier cards
+- Bound, Apex, Homage — tier selections + price displays
+- La Bete, Blessed — mobile + desktop tier prices
+- PTP Cuff, Rosaria, Desir Corset — edition/material selectors
+- Monika Couture — metal option prices
+- Alejandra Heels, Forme Cuff — formatPrice with live fallback
+- HomePage — all featured product "From $X" prices
+- ShopDropPage — all collection card prices
+- Market note on all product pages
 
 ## Backlog
-- Wire remaining legacy pages (Bound, Apex, Homage, La Bete) to live tier pricing hooks
 - P2: Populate `/vault/drews-world` with exclusive drops
 - P3: Mobile swipe verification for galleries

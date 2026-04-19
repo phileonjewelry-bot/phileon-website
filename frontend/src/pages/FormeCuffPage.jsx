@@ -2,10 +2,11 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { products } from '@/data/products';
-
+import { useLiveTierPrices } from '@/hooks/useLivePrice';
 const FormeCuffPage = () => {
   // Get pricing from products.js
   const formeCuffProduct = products.formeCuff;
+  const tierPricesLive = useLiveTierPrices("formeCuff");
   const productSolidGold = formeCuffProduct.metalOptions.solidGold;
   const productPlated = formeCuffProduct.metalOptions.platedSilver;
 
@@ -176,7 +177,10 @@ const FormeCuffPage = () => {
   }, [yellowGoldGallery, roseGoldGallery]);
 
   // Format price
-  const formatPrice = (price, currency) => {
+  const formatPrice = (price, currency, pricingKey) => {
+    if (pricingKey && tierPricesLive[pricingKey]) {
+      return tierPricesLive[pricingKey].formatted;
+    }
     return new Intl.NumberFormat('en-CA', {
       style: 'currency',
       currency: currency,

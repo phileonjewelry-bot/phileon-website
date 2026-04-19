@@ -5,11 +5,13 @@ import ProductLayout, {
 } from "../components/ProductLayout";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
+import { useLiveTierPrices } from "../hooks/useLivePrice";
 import { useAddToCart } from "../hooks/useAddToCart";
 import StyleItWith from "../components/StyleItWith";
 
 export default function DesirCorsetPage() {
   const product = products.desirCorset;
+  const tierPricesLive = useLiveTierPrices("desirCorset");
   const { isAdding, handleAddToCart, buttonText, buttonClass } = useAddToCart();
   
   // State for selected option - default to Pendant Only
@@ -21,7 +23,10 @@ export default function DesirCorsetPage() {
   };
 
   // Format price with currency
-  const formatPrice = (price, currency = "CAD") => {
+  const formatPrice = (price, currency = "CAD", pricingKey) => {
+    if (pricingKey && tierPricesLive[pricingKey]) {
+      return `${tierPricesLive[pricingKey].formatted} ${currency}`;
+    }
     return `$${price.toLocaleString()} ${currency}`;
   };
 
@@ -175,7 +180,7 @@ export default function DesirCorsetPage() {
                             "font-medium",
                             isSelected ? "text-[#C6A24A]" : "text-white"
                           ].join(" ")}>
-                            {formatPrice(option.price, option.currency)}
+                            {formatPrice(option.price, option.currency, option.pricingKey)}
                           </p>
                         </div>
                       </div>

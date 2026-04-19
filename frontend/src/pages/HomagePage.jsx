@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    HOMAGE — Fan Earrings
@@ -153,6 +154,7 @@ const HomagePage = () => {
   const currentTier = tierData[selectedTier];
   const currentFinish = finishes.find(f => f.id === selectedFinish);
   const currentPrice = currentVariant.pricing[selectedTier];
+  const tierPricesLive = useLiveTierPrices("homage");
   
   // Get the correct image based on variant and finish
   const getCurrentImage = () => {
@@ -368,7 +370,7 @@ const HomagePage = () => {
           {/* Price */}
           <div className="text-center mt-4">
             <p className="text-4xl md:text-5xl font-light tracking-wide">
-              ${currentPrice.toLocaleString()}
+              {tierPricesLive[selectedTier]?.formatted || `$${currentPrice.toLocaleString()}`}
               <span className="text-lg text-neutral-500 ml-2">CAD</span>
             </p>
             <p className="text-sm text-neutral-400 mt-2">
@@ -406,7 +408,7 @@ const HomagePage = () => {
                       )}
                       <p className="text-xs text-neutral-500 mt-1">{tier.metal}</p>
                     </div>
-                    <span className="text-sm">${currentVariant.pricing[key].toLocaleString()}</span>
+                    <span className="text-sm">{tierPricesLive[key]?.formatted || `$${currentVariant.pricing[key].toLocaleString()}`}</span>
                   </div>
                 </button>
               ))}
@@ -422,9 +424,12 @@ const HomagePage = () => {
           >
             {buttonText}
           </button>
+          <p className="text-[9px] text-neutral-600 text-center mt-2">
+            Price adjusts automatically with the live precious metals market.
+          </p>
+          <div className="mt-8 pt-8 border-t border-neutral-800">
 
           {/* Specs */}
-          <div className="mt-8 pt-8 border-t border-neutral-800">
             <p className="text-xs tracking-[0.2em] text-neutral-500 mb-4 uppercase text-center">
               Specifications
             </p>

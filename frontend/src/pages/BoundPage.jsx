@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
+import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /* ═══════════════════════════════════════════════════════════════
    BOUND — THE BUSTIER BANGLE
@@ -25,6 +26,8 @@ const BoundPage = () => {
 
   // Get pricing from products.js
   const boundPricing = products.bound.pricing;
+  const tierPrices = useLiveTierPrices("bound");
+  const { formatted: ctaPrice } = useLivePrice("bound", selectedTier, boundPricing[selectedTier]);
 
   // Close modal and stop video
   const closeVideoModal = () => {
@@ -376,7 +379,7 @@ const BoundPage = () => {
                 </div>
 
                 <div className="text-[#C6A25D] text-4xl mt-8 tracking-wide font-light">
-                  ${currentTier.price.toLocaleString()} <span className="text-lg text-white/30">CAD</span>
+                  {tierPrices[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`} <span className="text-lg text-white/30">CAD</span>
                 </div>
 
                 <p className="text-white/50 text-sm mt-2">
@@ -405,7 +408,7 @@ const BoundPage = () => {
                             <p className="text-white/30 text-xs mt-1">{tier.metal}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[#C6A25D] text-xl">${tier.price.toLocaleString()}</p>
+                            <p className="text-[#C6A25D] text-xl">{tierPrices[tierKey]?.formatted || `$${tier.price.toLocaleString()}`}</p>
                             {tier.badge && (
                               <span className="text-[9px] tracking-[0.2em] text-[#C6A25D]/60 uppercase">
                                 {tier.badge}
@@ -454,6 +457,7 @@ const BoundPage = () => {
                 <div className="mt-6 space-y-1 text-center">
                   <p className="text-white/30 text-xs tracking-wide">Sold as a single piece</p>
                   <p className="text-white/20 text-xs">Complimentary insured shipping within Canada</p>
+                  <p className="text-white/15 text-[9px] mt-1">Price adjusts automatically with the live precious metals market.</p>
                 </div>
               </div>
             </div>
@@ -687,7 +691,7 @@ const BoundPage = () => {
           </p>
 
           <div className="text-[#C6A25D] text-3xl mt-10 tracking-wide font-light">
-            From ${tiers.foundation.price.toLocaleString()} CAD
+            From {tierPrices.foundation?.formatted || `$${tiers.foundation.price.toLocaleString()}`} CAD
           </div>
 
           <button

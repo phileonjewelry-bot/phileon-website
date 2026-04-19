@@ -2,8 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ProductGallery from '../components/ProductGallery';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { products } from '../data/products';
-
+import { useLiveTierPrices } from '../hooks/useLivePrice';
 const MonikaCouturePage = () => {
+  const tierPricesLive = useLiveTierPrices("monikaCouture");
   // ========== GALLERY ITEMS (Video first, then images) ==========
   const galleryItems = useMemo(() => [
     {
@@ -58,7 +59,7 @@ const MonikaCouturePage = () => {
       id: 'silver',
       name: 'Sterling Silver',
       category: 'Silver',
-      price: products.monikaCouture.pricing.silver,
+      price: tierPricesLive.silver?.price || products.monikaCouture.pricing.silver,
       currency: 'CAD',
       swatchColor: '#C0C0C0',
       galleryType: 'silver',
@@ -67,7 +68,7 @@ const MonikaCouturePage = () => {
       id: 'white-10k',
       name: '10K White Gold',
       category: '10K Gold',
-      price: products.monikaCouture.pricing.white10k,
+      price: tierPricesLive.white10k?.price || products.monikaCouture.pricing.white10k,
       currency: 'CAD',
       swatchColor: '#F5F5F0',
       galleryType: 'white',
@@ -76,7 +77,7 @@ const MonikaCouturePage = () => {
       id: 'rose-10k',
       name: '10K Rose Gold',
       category: '10K Gold',
-      price: products.monikaCouture.pricing.rose10k,
+      price: tierPricesLive.rose10k?.price || products.monikaCouture.pricing.rose10k,
       currency: 'CAD',
       swatchColor: '#B76E79',
       galleryType: 'rose',
@@ -85,12 +86,12 @@ const MonikaCouturePage = () => {
       id: 'yellow-10k',
       name: '10K Yellow Gold',
       category: '10K Gold',
-      price: products.monikaCouture.pricing.yellow10k,
+      price: tierPricesLive.yellow10k?.price || products.monikaCouture.pricing.yellow10k,
       currency: 'CAD',
       swatchColor: '#D4AF37',
       galleryType: 'yellow',
     },
-  ], []);
+  ], [tierPricesLive]);
 
   // State
   const [selectedMetalId, setSelectedMetalId] = useState('silver');
