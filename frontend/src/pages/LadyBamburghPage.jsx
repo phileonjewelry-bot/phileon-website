@@ -116,7 +116,7 @@ export default function LadyBamburghPage() {
             <h1 className="text-3xl tracking-[0.2em] font-serif text-white">
               LADY BAMBURGH
             </h1>
-            <p className="text-sm text-white/50 mt-2">
+            <p className="text-sm text-gray-400 mt-2">
               Presence without permission.
             </p>
           </div>
@@ -126,43 +126,43 @@ export default function LadyBamburghPage() {
             {product.story}
           </div>
 
-          {/* TIER SELECT */}
+          {/* TIER SELECTOR */}
           <div>
-            <label className="text-xs tracking-widest text-white/40">
+            <label className="text-xs tracking-widest text-gray-500">
               SELECT TIER
             </label>
             <select
               value={selectedTier}
               onChange={(e) => setSelectedTier(e.target.value)}
-              className="mt-2 w-full bg-transparent border border-white/10 rounded-md p-3 text-[12px] text-white/70 focus:outline-none focus:border-white/25"
+              className="mt-2 w-full border border-neutral-700 bg-black text-white p-3"
             >
-              <option value="signature" className="bg-black">Signature — ${product.pricing.signature.toLocaleString()} CAD (Most Popular)</option>
-              <option value="foundation" className="bg-black">Foundation — ${product.pricing.foundation.toLocaleString()} CAD</option>
-              <option value="heirloom" className="bg-black">Heirloom — ${product.pricing.heirloom.toLocaleString()} CAD (Collector)</option>
+              <option value="signature">Signature — ${product.pricing.signature.toLocaleString()} CAD (Most Popular)</option>
+              <option value="foundation">Foundation — ${product.pricing.foundation.toLocaleString()} CAD</option>
+              <option value="heirloom">Heirloom — ${product.pricing.heirloom.toLocaleString()} CAD (Collector)</option>
             </select>
-            <p className="text-[10px] text-white/30 mt-2">
+            <p className="text-xs text-gray-500 mt-2">
               {product.tiers[selectedTier].description}
             </p>
           </div>
 
           {/* SIZE PROFILE */}
           <div>
-            <label className="text-xs tracking-widest text-white/40">
+            <label className="text-xs tracking-widest text-gray-500">
               SIZE PROFILE
             </label>
             <select
               value={sizeProfile}
               onChange={(e) => { setSizeProfile(e.target.value); setSelectedSize(""); }}
-              className="mt-2 w-full bg-transparent border border-white/10 rounded-md p-3 text-[12px] text-white/70 focus:outline-none focus:border-white/25"
+              className="mt-2 w-full border border-neutral-700 bg-black text-white p-3"
             >
-              <option value="ladies" className="bg-black">Ladies (4–9)</option>
-              <option value="gents" className="bg-black">Gents (6–12)</option>
+              <option value="ladies">Ladies (4–9)</option>
+              <option value="gents">Gents (6–12)</option>
             </select>
           </div>
 
           {/* RING SIZE */}
           <div>
-            <label className="text-xs tracking-widest text-white/40">
+            <label className="text-xs tracking-widest text-gray-500">
               RING SIZE
             </label>
             <input
@@ -170,13 +170,13 @@ export default function LadyBamburghPage() {
               step="0.5"
               min={sizeProfile === "ladies" ? "4" : "6"}
               max={sizeProfile === "ladies" ? "9" : "12"}
-              placeholder={sizeProfile === "ladies" ? "Enter size (e.g. 7.5)" : "Enter size (e.g. 10)"}
+              placeholder="Enter size (e.g. 7.5)"
               value={selectedSize}
               onChange={(e) => setSelectedSize(e.target.value)}
-              className="mt-2 w-full bg-transparent border border-white/10 rounded-md p-3 text-[12px] text-white/70 focus:outline-none focus:border-white/25 placeholder:text-white/25"
+              className="mt-2 w-full border border-neutral-700 bg-black text-white p-3 placeholder:text-gray-600"
             />
-            <p className="text-[10px] text-white/30 mt-2">
-              Sizes above 12 are custom and will be confirmed after purchase.
+            <p className="text-xs text-gray-500 mt-2">
+              Sizes above 12 are custom.
             </p>
           </div>
 
@@ -184,13 +184,14 @@ export default function LadyBamburghPage() {
           <button
             onClick={onAddToCart}
             disabled={isAdding || !selectedSize}
-            className="w-full bg-[#D4AF37] text-black rounded-md py-4 text-sm tracking-wide font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
+            className="w-full bg-[#D4AF37] text-black py-4 tracking-widest text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
           >
             {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — $${product.pricing[selectedTier].toLocaleString()} CAD`}
           </button>
 
-          <p className="text-[9px] text-white/20 text-center">
-            Made to order &middot; Limited production &middot; Signature Series
+          {/* PRODUCTION NOTE */}
+          <p className="text-xs text-gray-500 text-center">
+            Made to order &bull; 3–4 weeks &bull; Complimentary insured shipping within Canada
           </p>
 
         </div>
