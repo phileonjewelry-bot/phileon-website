@@ -33,7 +33,7 @@ export default function BamburghPage() {
     handleAddToCart({
       id: `bamburgh-${selectedTier}-${selectedSize}`,
       name: `Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: product.pricing[selectedTier],
+      price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,

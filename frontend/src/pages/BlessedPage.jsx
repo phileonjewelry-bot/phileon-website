@@ -75,7 +75,7 @@ export default function BlessedPage() {
     handleAddToCart({
       id: `blessed-${selectedTier}-${selectedSize}`,
       name: `BLESSED — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: product.pricing[selectedTier],
+      price: tierPricesLive[selectedTier]?.price || product.pricing[selectedTier],
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,

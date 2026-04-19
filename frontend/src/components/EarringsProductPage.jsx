@@ -7,10 +7,14 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { useLiveTierPrices } from "../hooks/useLivePrice";
+import { slugToProductKey } from "../components/LiveFromPrice";
 
 export default function EarringsProductPage({ product }) {
   const videoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const productKey = slugToProductKey(product.slug) || product.slug;
+  const tierPricesLive = useLiveTierPrices(productKey);
 
   const [activeMedia, setActiveMedia] = useState(0);
   const [selectedTier, setSelectedTier] = useState(
@@ -54,7 +58,7 @@ export default function EarringsProductPage({ product }) {
       id: `${product.id}-${selectedTier}`,
       name: product.name,
       image: heroImage,
-      price: currentTier.price,
+      price: tierPricesLive[selectedTier]?.price || currentTier.price,
       slug: product.id,
       materials: [currentTier.metal]
     }, 1, `${currentTier.name} · ${currentTier.metal}`);
@@ -161,7 +165,7 @@ export default function EarringsProductPage({ product }) {
           )}
 
           <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
-            ${currentTier.price.toLocaleString()}
+            {tierPricesLive[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`}
           </div>
 
           <p className="text-sm text-white/70 mb-2">
@@ -193,7 +197,7 @@ export default function EarringsProductPage({ product }) {
                         {tier.metal}
                       </div>
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
-                        ${tier.price.toLocaleString()}
+                        {tierPricesLive[key]?.formatted || `$${tier.price.toLocaleString()}`}
                       </div>
                     </div>
 

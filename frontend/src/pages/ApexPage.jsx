@@ -88,7 +88,7 @@ const ApexPage = () => {
     handleAddToCart({
       id: `apex-${selectedTier}`,
       name: `APEX — ${currentTier.name}`,
-      price: currentTier.price,
+      price: tierPricesLive[selectedTier]?.price || currentTier.price,
       metal: currentTier.metal,
       image: gallery.front.src,
       quantity: 1

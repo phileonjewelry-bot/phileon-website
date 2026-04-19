@@ -194,7 +194,7 @@ const BoundPage = () => {
       id: `bound-bustier-bangle-${selectedTier}`,
       name: "BOUND — The Bustier Bangle",
       image: media[0].src,
-      price: currentTier.price,
+      price: tierPrices[selectedTier]?.price || currentTier.price,
       slug: "bound",
       materials: [currentTier.metal]
     }, 1, `${currentTier.name} · ${currentTier.metal}`);

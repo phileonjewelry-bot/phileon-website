@@ -108,10 +108,11 @@ async def health_check():
 
 # Metal Prices Endpoint
 @api_router.get("/market-prices")
-async def get_market_prices():
+async def get_market_prices(test_gold_multiplier: float = None):
     """
     Returns live market prices per gram in CAD for pricing engine.
     Gold: 24K per gram CAD, Silver: per gram CAD.
+    Optional: ?test_gold_multiplier=1.1 to simulate 10% gold increase for testing.
     """
     import random
     
@@ -119,9 +120,14 @@ async def get_market_prices():
     base_gold = 152.40
     base_silver = 1.31
     
-    # Small fluctuation ±0.8%
-    gold_price = round(base_gold * (1 + random.uniform(-0.008, 0.008)), 2)
-    silver_price = round(base_silver * (1 + random.uniform(-0.008, 0.008)), 2)
+    # Apply test multiplier if provided (for validation only)
+    if test_gold_multiplier and 0.5 <= test_gold_multiplier <= 2.0:
+        gold_price = round(base_gold * test_gold_multiplier, 2)
+        silver_price = round(base_silver * test_gold_multiplier, 2)
+    else:
+        # Small fluctuation ±0.8%
+        gold_price = round(base_gold * (1 + random.uniform(-0.008, 0.008)), 2)
+        silver_price = round(base_silver * (1 + random.uniform(-0.008, 0.008)), 2)
     
     return {
         "goldPerGram24kCad": gold_price,

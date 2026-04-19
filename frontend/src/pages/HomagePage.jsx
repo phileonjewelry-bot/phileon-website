@@ -181,7 +181,7 @@ const HomagePage = () => {
     handleAddToCart({
       id: `homage-${selectedModel}-${selectedFinish}-${selectedTier}`,
       name: `HOMAGE ${currentVariant.label} — ${currentTier.name}`,
-      price: currentPrice,
+      price: tierPricesLive[selectedTier]?.price || currentPrice,
       metal: currentTier.metal,
       variant: currentVariant.label,
       finish: currentFinish.label,

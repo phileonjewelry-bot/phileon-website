@@ -71,7 +71,7 @@ export default function LaBetePage() {
     handleAddToCart({
       id: `labete-${selectedTier}-${selectedSize}`,
       name: `LA BÊTE — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: currentPrice,
+      price: tierPricesLive[selectedTier]?.price || currentPrice,
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,

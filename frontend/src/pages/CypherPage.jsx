@@ -27,7 +27,7 @@ export default function CypherPage() {
     handleAddToCart({
       id: `cypher-${selectedTier}-${selectedSize}`,
       name: `CYPHER — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: currentPrice,
+      price: tierPrices[selectedTier]?.price || currentPrice,
       metal: currentTier.metal,
       size: selectedSize,
       image: product.gallery[1].src, // Use angled black for cart

@@ -26,7 +26,7 @@ export default function MorsoPage() {
     handleAddToCart({
       id: `morso-${selectedTier}-${selectedSize}`,
       name: `IL MORSO DEL RE — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: currentPrice,
+      price: tierPrices[selectedTier]?.price || currentPrice,
       metal: currentTier.metal,
       size: selectedSize,
       image: product.gallery[0].src,

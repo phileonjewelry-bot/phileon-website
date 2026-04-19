@@ -2,12 +2,37 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const MarketPricingContext = createContext(null);
 
+const FALLBACK_MARKET = {
+  goldPerGram24kCad: 150,
+  silverPerGramCad: 1.25,
+  updatedAt: null,
+};
+
+const CACHE_KEY = "phileon_market_prices";
+
+function getCachedMarket() {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      // Only use cache if less than 1 hour old
+      if (parsed.updatedAt) {
+        const age = Date.now() - new Date(parsed.updatedAt).getTime();
+        if (age < 60 * 60 * 1000) return parsed;
+      }
+    }
+  } catch (e) { /* ignore */ }
+  return FALLBACK_MARKET;
+}
+
+function setCachedMarket(market) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(market));
+  } catch (e) { /* ignore */ }
+}
+
 export function MarketPricingProvider({ children }) {
-  const [market, setMarket] = useState({
-    goldPerGram24kCad: 150,
-    silverPerGramCad: 1.25,
-    updatedAt: null,
-  });
+  const [market, setMarket] = useState(getCachedMarket);
 
   useEffect(() => {
     let isMounted = true;
@@ -16,15 +41,25 @@ export function MarketPricingProvider({ children }) {
     async function fetchMarketPrices() {
       try {
         const res = await fetch(`${API_URL}/api/market-prices`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+
+        // Validate the response has valid numbers
+        if (typeof data.goldPerGram24kCad !== "number" || data.goldPerGram24kCad <= 0) throw new Error("Invalid gold price");
+        if (typeof data.silverPerGramCad !== "number" || data.silverPerGramCad <= 0) throw new Error("Invalid silver price");
+
         if (!isMounted) return;
-        setMarket({
+
+        const newMarket = {
           goldPerGram24kCad: data.goldPerGram24kCad,
           silverPerGramCad: data.silverPerGramCad,
           updatedAt: data.updatedAt,
-        });
+        };
+        setMarket(newMarket);
+        setCachedMarket(newMarket);
       } catch (error) {
-        console.error("Market price fetch failed:", error);
+        console.error("Market price fetch failed, using cached/fallback:", error);
+        // State preserves the last good value automatically
       }
     }
 

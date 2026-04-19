@@ -6,10 +6,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ringSizeProfiles } from "../data/ringSizes";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { useLiveTierPrices } from "../hooks/useLivePrice";
+import { slugToProductKey } from "../components/LiveFromPrice";
 
 export default function RingProductPage({ product }) {
   const videoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const productKey = slugToProductKey(product.slug) || product.slug;
+  const tierPricesLive = useLiveTierPrices(productKey);
 
   const [activeMedia, setActiveMedia] = useState(0);
   const [selectedTier, setSelectedTier] = useState(
@@ -64,7 +68,7 @@ export default function RingProductPage({ product }) {
       id: `${product.id}-${selectedTier}-${selectedSize === "custom" ? customSize : selectedSize}`,
       name: product.name,
       image: heroImage,
-      price: currentTier.price,
+      price: tierPricesLive[selectedTier]?.price || currentTier.price,
       slug: product.id,
       materials: [currentTier.metal],
       size: sizeLabel
@@ -155,7 +159,7 @@ export default function RingProductPage({ product }) {
           </p>
 
           <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
-            ${currentTier.price.toLocaleString()}
+            {tierPricesLive[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`}
           </div>
 
           <p className="text-sm text-[#b5b5b5] mb-8 leading-relaxed">
@@ -187,7 +191,7 @@ export default function RingProductPage({ product }) {
                         {tier.metal}
                       </div>
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
-                        ${tier.price.toLocaleString()}
+                        {tierPricesLive[key]?.formatted || `$${tier.price.toLocaleString()}`}
                       </div>
                     </div>
 

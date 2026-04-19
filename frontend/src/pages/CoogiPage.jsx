@@ -34,7 +34,7 @@ export default function CoogiPage() {
     handleAddToCart({
       id: `coogi-i-${selectedTier}-${selectedSize}`,
       name: `COOGI I — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: product.pricing[selectedTier],
+      price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,

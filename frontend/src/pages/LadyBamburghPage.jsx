@@ -32,7 +32,7 @@ export default function LadyBamburghPage() {
     handleAddToCart({
       id: `lady-bamburgh-${selectedTier}-${selectedSize}`,
       name: `Lady Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: product.pricing[selectedTier],
+      price: tierPricesLive[selectedTier]?.price || product.pricing[selectedTier],
       metal: currentTier.metal,
       size: selectedSize,
       quantity: quantity,

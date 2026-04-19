@@ -3,13 +3,9 @@ import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { products } from '@/data/products';
+import { LiveFromPrice } from '@/components/LiveFromPrice';
 
-// Helper to format price from products.js basePrice
-const formatPrice = (basePrice, currency = 'CAD') => {
-  return `From $${basePrice.toLocaleString()} ${currency}`;
-};
-
-// Styling suggestions data - can be expanded for different products
+// Styling suggestions data
 export const STYLE_SUGGESTIONS = {
   'desir-corset': [
     {
@@ -19,18 +15,18 @@ export const STYLE_SUGGESTIONS = {
       materialLine: 'Earrings · 10K & 14K Rose Gold',
       imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/uxgms0ee_1000098068.jpg',
       href: '/products/rosaria',
-      price: formatPrice(products.rosaria.basePrice),
+      fallbackPrice: `From $${products.rosaria.basePrice.toLocaleString()} CAD`,
     }
   ],
   'rosaria': [
     {
       id: 'desir-corset',
-      name: 'Désir Corset Pendant',
+      name: 'Desir Corset Pendant',
       slug: 'desir-corset',
       materialLine: 'Pendant · 10K Rose Gold',
       imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/sxr71rsz_1000141578.jpg',
       href: '/products/desir-corset',
-      price: formatPrice(products.desirCorset.basePrice),
+      fallbackPrice: `From $${products.desirCorset.basePrice.toLocaleString()} CAD`,
     }
   ]
 };
@@ -60,7 +56,6 @@ const StyleItWith = ({ productId }) => {
               className="group relative bg-white/5 rounded-lg overflow-hidden transition-all duration-300 hover:bg-white/10"
             >
               <div className="relative">
-                {/* Wishlist Heart Button */}
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -83,8 +78,6 @@ const StyleItWith = ({ productId }) => {
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    
-                    {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                       <span className="text-white text-sm tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 px-4 py-2 rounded-full">
                         View Product
@@ -100,7 +93,7 @@ const StyleItWith = ({ productId }) => {
                       {product.materialLine}
                     </p>
                     <p className="text-[#C6A24A] font-medium">
-                      {product.price}
+                      <LiveFromPrice slug={product.slug} fallback={product.fallbackPrice} />
                     </p>
                   </div>
                 </Link>
