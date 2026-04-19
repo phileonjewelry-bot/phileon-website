@@ -88,6 +88,24 @@ export default function LadyBamburghPage() {
         </div>
       </section>
 
+      {/* SIGNATURE SERIES EDITORIAL */}
+      <section className="px-6 md:px-12 py-20 md:py-28 bg-black text-white border-t border-white/10">
+        <div className="max-w-[900px] mx-auto">
+          <p className="text-[11px] tracking-[0.35em] text-white/45 uppercase mb-5">
+            Signature Series
+          </p>
+
+          <h2 className="text-3xl md:text-5xl font-serif leading-[1.08] max-w-[760px] mb-8">
+            Lady Bamburgh is built to hold attention without asking for it.
+          </h2>
+
+          <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-[680px]">
+            Dual center stones. Black depth. Gold authority. Every surface is designed
+            to feel controlled, exact, and unapologetically present.
+          </p>
+        </div>
+      </section>
+
       {/* GALLERY */}
       <section className="w-full mt-2 md:mt-4">
         <div className="max-w-[420px] md:max-w-[520px] mx-auto px-3 md:px-5">
