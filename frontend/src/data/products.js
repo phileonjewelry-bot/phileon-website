@@ -1669,7 +1669,9 @@ This is expression — under control.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/nstuifus_1000146995.png", alt: "Lady Bamburgh — macro diamond centers detail", intent: "INTIMACY" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9wkvhexa_1000147014.png", alt: "Lady Bamburgh — three quarter dark moody", intent: "TRUST" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2b4y3bxf_1000147020.png", alt: "Lady Bamburgh — on hand lifestyle bokeh", intent: "HUMAN_ENTRY" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/na9exni8_1000146993.png", alt: "Lady Bamburgh — in ring box presentation", intent: "OWNERSHIP" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/na9exni8_1000146993.png", alt: "Lady Bamburgh — in ring box presentation", intent: "OWNERSHIP" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/0z67imtp_introduce-subtle-micro-reflection-variat_YBjs3cIdSPydnzrUdv6LhQ_T1VVaQpJQw6FGCHCla3Xog_cover_hd.png", alt: "Lady Bamburgh — front elevated with band visible", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xxka96h8_ultra-realistic-macro-refinement-pass-of_3gYXM17JQ0Gi-NSCit0jvQ_o4WeSSWAThuidtWPU5mKig_hd.png", alt: "Lady Bamburgh — ultra macro diamond brilliance", intent: "CRAFT" }
     ],
 
     features: [
