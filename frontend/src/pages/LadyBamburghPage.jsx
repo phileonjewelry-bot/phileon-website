@@ -34,7 +34,7 @@ export default function LadyBamburghPage() {
     handleAddToCart({
       id: `lady-bamburgh-${selectedTier}-${selectedSize}`,
       name: `Lady Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
-      price: tierPricesLive[selectedTier]?.price || product.pricing[selectedTier],
+      price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
       productKey: "ladyBamburgh",
       tierKey: selectedTier,
       metal: currentTier.metal,
@@ -173,32 +173,56 @@ export default function LadyBamburghPage() {
 
           {/* TIER SELECTOR */}
           <div>
-            <label className="text-xs tracking-widest text-gray-500">
+            <label className="text-xs tracking-widest text-white/45">
               SELECT TIER
             </label>
-            <select
-              value={selectedTier}
-              onChange={(e) => setSelectedTier(e.target.value)}
-              className="mt-2 w-full border border-neutral-700 bg-black text-white p-3"
-            >
-              <option value="signature">Signature — {tierPrices.signature?.formatted || `$${product.pricing.signature.toLocaleString()}`} CAD (Most Popular)</option>
-              <option value="foundation">Foundation — {tierPrices.foundation?.formatted || `$${product.pricing.foundation.toLocaleString()}`} CAD</option>
-              <option value="heirloom">Heirloom — {tierPrices.heirloom?.formatted || `$${product.pricing.heirloom.toLocaleString()}`} CAD (Collector)</option>
-            </select>
-            <p className="text-xs text-gray-500 mt-2">
-              {product.tiers[selectedTier].description}
-            </p>
+
+            <div className="mt-3 space-y-3">
+              {[
+                { key: "signature",  label: "Signature",  note: "Most Popular" },
+                { key: "foundation", label: "Foundation", note: null },
+                { key: "heirloom",   label: "Heirloom",   note: "Collector" },
+              ].map(({ key, label, note }) => {
+                const isSelected = selectedTier === key;
+                const priceStr = tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedTier(key)}
+                    data-testid={`tier-${key}-btn`}
+                    className={`w-full text-left p-4 transition border ${
+                      isSelected
+                        ? "border-[#D4AF37] bg-[#D4AF37]/10"
+                        : "border-white/10 hover:border-white/30"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className={isSelected ? "text-white tracking-wide" : "text-white/80"}>
+                        {label}
+                      </span>
+                      <span className={isSelected ? "text-white" : "text-white/80"}>
+                        {priceStr} CAD
+                      </span>
+                    </div>
+                    {note && (
+                      <p className="text-[11px] text-white/60 mt-1">{note}</p>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* SIZE PROFILE */}
           <div>
-            <label className="text-xs tracking-widest text-gray-500">
+            <label className="text-xs tracking-widest text-white/45">
               SIZE PROFILE
             </label>
             <select
               value={sizeProfile}
               onChange={(e) => { setSizeProfile(e.target.value); setSelectedSize(""); }}
-              className="mt-2 w-full border border-neutral-700 bg-black text-white p-3"
+              className="mt-2 w-full border border-white/10 bg-black text-white p-4"
             >
               <option value="ladies">Ladies (4–9)</option>
               <option value="gents">Gents (6–12)</option>
@@ -207,20 +231,20 @@ export default function LadyBamburghPage() {
 
           {/* RING SIZE */}
           <div>
-            <label className="text-xs tracking-widest text-gray-500">
+            <label className="text-xs tracking-widest text-white/45">
               RING SIZE
             </label>
             <input
               type="number"
               step="0.5"
-              min={sizeProfile === "ladies" ? "4" : "6"}
-              max={sizeProfile === "ladies" ? "9" : "12"}
+              min="4"
+              max="12"
               placeholder="Enter size (e.g. 7.5)"
               value={selectedSize}
               onChange={(e) => setSelectedSize(e.target.value)}
-              className="mt-2 w-full border border-neutral-700 bg-black text-white p-3 placeholder:text-gray-600"
+              className="mt-2 w-full border border-white/10 bg-black text-white p-4 placeholder:text-white/30"
             />
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-white/45 mt-2">
               Sizes above 12 are custom.
             </p>
           </div>
@@ -229,17 +253,15 @@ export default function LadyBamburghPage() {
           <button
             onClick={onAddToCart}
             disabled={isAdding || !selectedSize}
-            className="w-full bg-[#D4AF37] text-black py-4 tracking-widest text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
+            data-testid="lady-bamburgh-add-to-bag-btn"
+            className="w-full bg-[#D4AF37] text-black py-4 tracking-[0.2em] text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
           >
             {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
           </button>
 
-          {/* PRODUCTION NOTE */}
-          <p className="text-xs text-gray-500 text-center">
-            Made to order &bull; 3–4 weeks &bull; Complimentary insured shipping within Canada
-          </p>
-          <p className="text-[9px] text-gray-600 text-center mt-1">
-            Price adjusts automatically with the live precious metals market.
+          {/* TRUST LINE */}
+          <p className="text-xs text-white/45 text-center">
+            Made to order • 3–4 weeks • Complimentary insured shipping
           </p>
 
         </div>

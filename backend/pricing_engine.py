@@ -124,9 +124,9 @@ LIVE_PRICING_CONFIG = {
         "heirloom":   {"lockedBasePriceCad": 11000, "metalType": "18K", "weightGrams": 18, "lockedMetalReferenceCad": 2025},
     },
     "ladyBamburgh": {
-        "foundation": {"lockedBasePriceCad": 7800,  "metalType": "14K", "weightGrams": 12, "lockedMetalReferenceCad": 1050},
-        "signature":  {"lockedBasePriceCad": 11400, "metalType": "14K", "weightGrams": 14.5, "lockedMetalReferenceCad": 1269},
-        "heirloom":   {"lockedBasePriceCad": 14800, "metalType": "18K", "weightGrams": 15, "lockedMetalReferenceCad": 1688},
+        "foundation": {"lockedBasePriceCad": 11400, "metalType": "14K", "weightGrams": 12, "lockedMetalReferenceCad": 1050},
+        "signature":  {"lockedBasePriceCad": 14800, "metalType": "14K", "weightGrams": 14.5, "lockedMetalReferenceCad": 1269},
+        "heirloom":   {"lockedBasePriceCad": 18800, "metalType": "18K", "weightGrams": 15, "lockedMetalReferenceCad": 1688},
     },
 }
 

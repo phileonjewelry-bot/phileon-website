@@ -1618,8 +1618,8 @@ This is expression — under control.`,
     collection: "Signature Series",
     subtitle: "Command, in form.",
     tagline: "Command, in form.",
-    priceFrom: "From $7,800 CAD",
-    basePrice: 7800,
+    priceFrom: "From $11,400 CAD",
+    basePrice: 11400,
 
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png",
 
@@ -1628,9 +1628,9 @@ This is expression — under control.`,
     defaultTier: "signature",
 
     pricing: {
-      foundation: 7800,
-      signature: 11400,
-      heirloom: 14800
+      foundation: 11400,
+      signature: 14800,
+      heirloom: 18800
     },
 
     tiers: {
