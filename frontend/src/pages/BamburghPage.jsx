@@ -59,8 +59,8 @@ export default function BamburghPage() {
           <div className="relative w-full aspect-[4/5] rounded-[14px] overflow-hidden bg-gradient-to-b from-[#1a1a1a] to-black flex items-center justify-center">
 
             <img
-              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o7aw7ju4_1000146386.png"
-              alt="Bamburgh & Lady Bamburgh"
+              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4x0w8nrs_1000147060.png"
+              alt="The Bamburgh"
               className="w-[70%] object-contain"
             />
 
