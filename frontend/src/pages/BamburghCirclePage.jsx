@@ -12,7 +12,7 @@ export default function BamburghCirclePage() {
       {/* HERO */}
       <section className="relative h-[90vh] w-full overflow-hidden bg-black">
         <img
-          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f48bt147_1000146368.png"
+          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4x0w8nrs_1000147060.png"
           alt="Bamburgh Ring"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: "center 35%" }}
