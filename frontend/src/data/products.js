@@ -1589,8 +1589,7 @@ This is expression — under control.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ccqo2yvg_1000146367.png", alt: "The Bamburgh — angled top view", intent: "BALANCE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f48bt147_1000146368.png", alt: "The Bamburgh — side profile filigree detail", intent: "ARCHITECTURE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1nx3wfi3_1000146365.webp", alt: "The Bamburgh — macro diamond pavé detail", intent: "CRAFT" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/k6wi1bme_1000146364.png", alt: "The Bamburgh — macro stone composition", intent: "INTIMACY" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png", alt: "Lady Bamburgh — front view", intent: "CAMPAIGN" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/k6wi1bme_1000146364.png", alt: "The Bamburgh — macro stone composition", intent: "INTIMACY" }
     ],
 
     sizeProfile: {
