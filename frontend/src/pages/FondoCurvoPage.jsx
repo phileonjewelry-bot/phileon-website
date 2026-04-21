@@ -42,19 +42,21 @@ export default function FondoCurvoPage() {
             PHILEON
           </p>
 
-          <h1
-            className="font-serif text-4xl md:text-6xl tracking-wide mb-6"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            FONDO CURVO
-          </h1>
+          <div className="text-center mt-6">
+            <h1
+              className="font-serif text-4xl md:text-6xl tracking-wide"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              FONDO CURVO
+            </h1>
 
-          <p className="text-neutral-300 text-sm md:text-base mb-8">
-            For those who know.
-          </p>
+            <p className="text-neutral-400 text-sm md:text-base mt-4 max-w-md mx-auto leading-relaxed">
+              Says everything to those who see it. Says nothing to those who don&rsquo;t.
+            </p>
+          </div>
 
           <button
-            className="bg-[#C6A646] text-black px-8 py-4 text-sm tracking-wide hover:bg-[#D4AF37] transition-colors"
+            className="mt-10 bg-[#C6A646] text-black px-8 py-4 text-sm tracking-wide hover:bg-[#D4AF37] transition-colors"
             data-testid="fondo-curvo-enter-btn"
           >
             ENTER
