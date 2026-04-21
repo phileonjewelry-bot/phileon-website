@@ -45,6 +45,7 @@ import BamburghPage from "@/pages/BamburghPage";
 import BamburghCirclePage from "@/pages/BamburghCirclePage";
 import LadyBamburghPage from "@/pages/LadyBamburghPage";
 import DrapePage from "@/pages/DrapePage";
+import FondoCurvoPage from "@/pages/FondoCurvoPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -120,6 +121,7 @@ function App() {
             <Route path="/products/lady-bamburgh" element={<LadyBamburghPage />} />
             <Route path="/bamburgh-circle" element={<BamburghCirclePage />} />
             <Route path="/products/drape" element={<DrapePage />} />
+            <Route path="/products/fondo-curvo" element={<FondoCurvoPage />} />
             <Route path="/shop/labete" element={<LaBetePage />} />
             <Route path="/shop/blessed" element={<BlessedPage />} />
             <Route path="/shop/coogi-i" element={<CoogiPage />} />
