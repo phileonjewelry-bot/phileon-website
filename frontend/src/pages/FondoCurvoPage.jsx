@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 // Replace with the final hero asset when ready
-const FONDO_CURVO_HERO = "";
+const FONDO_CURVO_HERO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qig3s1in_1000147255.png";
 
 export default function FondoCurvoPage() {
   return (
