@@ -75,10 +75,10 @@ export default function FondoCurvoPage() {
         className="w-full h-screen bg-black relative overflow-hidden flex items-center justify-center"
         data-testid="fondo-curvo-page"
       >
-        {/* VIDEO WRAPPER */}
-        <div className="w-[85%] md:w-[60%] max-w-[900px]">
+        {/* VIDEO WRAPPER — full width on mobile, contained on desktop */}
+        <div className="w-full md:w-[60%] md:max-w-[900px]">
           <video
-            className="w-full h-auto object-contain rounded-[10px]"
+            className="w-full h-auto object-contain md:rounded-[10px]"
             src={FONDO_CURVO_HERO_VIDEO}
             poster={FONDO_CURVO_HERO_POSTER}
             autoPlay
@@ -99,10 +99,7 @@ export default function FondoCurvoPage() {
             PHILEON
           </p>
 
-          <h1
-            className="text-white font-serif text-4xl md:text-6xl tracking-wide mb-4"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          <h1 className="text-white font-serif text-4xl md:text-6xl tracking-wide mb-4 whitespace-nowrap">
             FONDO CURVO
           </h1>
 
