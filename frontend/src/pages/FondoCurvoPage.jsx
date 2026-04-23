@@ -31,13 +31,26 @@ export default function FondoCurvoPage() {
   }, [activeThumb, isTransitioning]);
 
   const onAddToCart = () => {
+    const tier = product.tiers[selectedMetal];
+    const livePriceCad = ctaPriceNum || product.pricing[selectedMetal];
+    const tierConfig = {
+      silver:  { metalType: "925", weightGrams: 12.5 },
+      gold10k: { metalType: "10K", weightGrams: 12.5 },
+    }[selectedMetal];
+
     handleAddToCart({
       id: `fondo-curvo-${selectedMetal}`,
-      name: `Fondo Curvo — ${product.tiers[selectedMetal].name}`,
-      price: ctaPriceNum || product.pricing[selectedMetal],
+      name: `Fondo Curvo — ${tier.name}`,
+      price: livePriceCad,
       productKey: "fondoCurvo",
       tierKey: selectedMetal,
-      metal: product.tiers[selectedMetal].metal,
+      // Explicit fields for Fondo Curvo spec
+      metalKey: selectedMetal,
+      metalLabel: tier.name,
+      metalType: tierConfig.metalType,
+      weightGrams: tierConfig.weightGrams,
+      lockedPriceCad: livePriceCad,
+      metal: tier.metal,
       quantity: 1,
       image: FONDO_CURVO_HERO,
     });
