@@ -1690,6 +1690,28 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // FONDO CURVO
+  // Ladies Earrings — Black onyx + pavé diamonds
+  // ==========================================
+  fondoCurvo: {
+    name: "FONDO CURVO",
+    slug: "fondo-curvo",
+    category: "earrings",
+    audience: "ladies",
+    subtitle: "Earrings",
+    categoryType: "Earrings",
+    tagline: "Says everything to those who see it. Says nothing to those who don't.",
+    collections: ["ladies-earrings", "collective"],
+    currency: "CAD",
+    priceFrom: "Price on Request",
+    basePrice: 0,
+    dynamicPricing: false,
+    pricingPending: true,
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/l43g78jv_1000147430.png",
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

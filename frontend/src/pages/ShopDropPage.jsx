@@ -292,6 +292,19 @@ const CORE_PRODUCTS = [
     audience: ['gentlemens-club', 'ladies', 'collective'],
     featured: true,
   },
+  {
+    id: 'fondo-curvo',
+    name: 'Fondo Curvo',
+    slug: 'fondo-curvo',
+    materialLine: 'Statement Earrings · Black Onyx & Pavé Diamonds',
+    imageUrl: products.fondoCurvo.imageUrl,
+    href: '/products/fondo-curvo',
+    price_range: 'Price on Request',
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: 'ladies',
+  },
 ];
 
 // Additional drop products as fallback
