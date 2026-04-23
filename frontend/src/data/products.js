@@ -1716,7 +1716,11 @@ This is expression — under control.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/biqvi79f_1000147448.jpg", alt: "Fondo Curvo — three-quarter on dark silk", intent: "CAMPAIGN" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mokhgmfq_1000147444.png", alt: "Fondo Curvo — studio front on near-black", intent: "ARCHITECTURE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/05gfllx4_1000147257.png", alt: "Fondo Curvo — macro top swirl detail", intent: "CRAFT" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/vqnumpky_1000147438.png", alt: "Fondo Curvo — ultra macro spiral", intent: "INTIMACY" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/vqnumpky_1000147438.png", alt: "Fondo Curvo — ultra macro spiral", intent: "INTIMACY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1asv31lw_1000147323.jpg", alt: "Fondo Curvo — side profile full length", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xsx4gpod_1000147445.png", alt: "Fondo Curvo — macro head with diamond studs", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/erfkp6qf_1000147260.jpg", alt: "Fondo Curvo — ultra macro diamond ribbon pavé", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dihq2qgl_1000147311.png", alt: "Fondo Curvo — bottom spiral twist detail", intent: "INTIMACY" }
     ],
     shipping: "Complimentary insured shipping within Canada."
   }
