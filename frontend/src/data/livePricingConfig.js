@@ -163,6 +163,10 @@ const livePricingConfig = {
     signature:  { lockedBasePriceCad: 14800, metalType: "14K", weightGrams: 14.5, lockedMetalReferenceCad: 1269 },
     heirloom:   { lockedBasePriceCad: 18800, metalType: "18K", weightGrams: 15, lockedMetalReferenceCad: 1688 },
   },
+  fondoCurvo: {
+    silver:  { lockedBasePriceCad: 2950, metalType: "925", weightGrams: 12.5, lockedMetalReferenceCad: 14 },
+    gold10k: { lockedBasePriceCad: 5400, metalType: "10K", weightGrams: 12.5, lockedMetalReferenceCad: 781 },
+  },
 };
 
 export default livePricingConfig;

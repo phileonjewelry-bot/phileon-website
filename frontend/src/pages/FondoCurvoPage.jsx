@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { products } from '@/data/products';
+import { useAddToCart } from '../hooks/useAddToCart';
+import { useLivePrice, useLiveTierPrices } from '@/hooks/useLivePrice';
 
 const FONDO_CURVO_HERO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png";
 
@@ -11,6 +13,15 @@ export default function FondoCurvoPage() {
 
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [selectedMetal, setSelectedMetal] = useState("silver");
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  const tierPrices = useLiveTierPrices("fondoCurvo");
+  const { formatted: ctaPrice, price: ctaPriceNum } = useLivePrice(
+    "fondoCurvo",
+    selectedMetal,
+    product.pricing[selectedMetal]
+  );
 
   const handleSelect = useCallback((index) => {
     if (index === activeThumb || isTransitioning) return;
@@ -18,6 +29,19 @@ export default function FondoCurvoPage() {
     setActiveThumb(index);
     setTimeout(() => setIsTransitioning(false), 250);
   }, [activeThumb, isTransitioning]);
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: `fondo-curvo-${selectedMetal}`,
+      name: `Fondo Curvo — ${product.tiers[selectedMetal].name}`,
+      price: ctaPriceNum || product.pricing[selectedMetal],
+      productKey: "fondoCurvo",
+      tierKey: selectedMetal,
+      metal: product.tiers[selectedMetal].metal,
+      quantity: 1,
+      image: FONDO_CURVO_HERO,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -91,8 +115,91 @@ export default function FondoCurvoPage() {
         </div>
       </section>
 
+      {/* PRODUCT DETAILS */}
+      <section className="py-10 md:py-14">
+        <div className="max-w-[560px] mx-auto px-5 md:px-8 space-y-6 text-white">
+          {/* TITLE */}
+          <div>
+            <h1
+              className="font-serif text-3xl md:text-4xl tracking-wide"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              FONDO CURVO
+            </h1>
+            <p className="text-white/60 text-sm mt-1">
+              Curved base
+            </p>
+          </div>
+
+          {/* METAL SELECTOR */}
+          <div>
+            <label className="text-xs tracking-widest text-white/45">
+              METAL
+            </label>
+
+            <div className="mt-3 space-y-3">
+              {[
+                { key: "silver",  label: "Silver" },
+                { key: "gold10k", label: "10K Gold" },
+              ].map(({ key, label }) => {
+                const isSelected = selectedMetal === key;
+                const priceStr = tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedMetal(key)}
+                    data-testid={`fondo-curvo-metal-${key}-btn`}
+                    className={`w-full text-left p-4 border transition ${
+                      isSelected
+                        ? "border-[#D4AF37] bg-[#D4AF37]/10"
+                        : "border-white/10 hover:border-white/30"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span>{label}</span>
+                      <span>{priceStr} CAD</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* SPECS */}
+          <div>
+            <p className="text-xs tracking-widest text-white/45 mb-2">
+              DETAILS
+            </p>
+            <p className="text-white/80 text-sm leading-relaxed">
+              {product.specs}
+            </p>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={onAddToCart}
+            disabled={isAdding}
+            data-testid="fondo-curvo-add-to-bag-btn"
+            className="w-full bg-[#D4AF37] text-black py-4 tracking-[0.2em] text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          >
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
+          </button>
+
+          {/* MARKET NOTE */}
+          <p className="text-[10px] text-white/35 text-center">
+            Price adjusts automatically with the live precious metals market.
+          </p>
+
+          {/* MADE TO ORDER */}
+          <p className="text-xs text-white/45 text-center">
+            Made to order • 3–4 weeks • Complimentary insured shipping within Canada
+          </p>
+        </div>
+      </section>
+
       {/* CLOSING */}
-      <section className="py-14 md:py-20 border-t border-white/[0.03] mt-8">
+      <section className="py-14 md:py-20 border-t border-white/[0.03]">
         <div className="text-center max-w-[420px] mx-auto px-5">
           <p className="text-[13px] text-white/40 leading-relaxed italic mb-3">
             Black onyx. Pavé diamonds. White gold.
