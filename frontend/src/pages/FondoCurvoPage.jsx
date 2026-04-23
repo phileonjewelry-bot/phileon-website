@@ -211,14 +211,33 @@ export default function FondoCurvoPage() {
         </div>
       </section>
 
-      {/* SPECIFICATIONS */}
-      <section className="px-5 md:px-8 mt-16 md:mt-20" data-testid="fondo-curvo-specs-poster">
-        <div className="max-w-[900px] mx-auto">
-          <h3 className="text-[12px] tracking-[0.25em] text-neutral-500 mb-6">
-            SPECIFICATIONS
-          </h3>
+      {/* DETAIL · CRAFT · STRUCTURE · SPECIFICATIONS */}
+      <section className="mt-16 md:mt-24" data-testid="fondo-curvo-editorial">
+        <div className="max-w-[900px] mx-auto px-6 md:px-0 space-y-14">
 
-          <div className="w-full">
+          <div>
+            <p className="text-[12px] tracking-[0.25em] text-neutral-500 mb-4">DETAIL</p>
+            <p className="text-[15px] md:text-[16px] leading-7 text-neutral-200 max-w-[720px]">
+              Fondo Curvo is built on contrast &mdash; black enamel against pav&eacute;-set brilliance, shaped into a continuous, controlled line.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[12px] tracking-[0.25em] text-neutral-500 mb-4">CRAFT</p>
+            <p className="text-[15px] md:text-[16px] leading-7 text-neutral-200 max-w-[720px]">
+              128 diamonds are set across a sculptural form, balancing precision with flow. Every surface is intentional.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[12px] tracking-[0.25em] text-neutral-500 mb-4">STRUCTURE</p>
+            <p className="text-[15px] md:text-[16px] leading-7 text-neutral-200 max-w-[720px]">
+              45mm drop. 18mm width. The form tapers through the descent, creating length without excess.
+            </p>
+          </div>
+
+          <div>
+            <p className="text-[12px] tracking-[0.25em] text-neutral-500 mb-6">SPECIFICATIONS</p>
             <img
               src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wav6v8ma_1000147490.png"
               alt="Fondo Curvo specifications"
@@ -226,6 +245,7 @@ export default function FondoCurvoPage() {
               loading="lazy"
             />
           </div>
+
         </div>
       </section>
 
