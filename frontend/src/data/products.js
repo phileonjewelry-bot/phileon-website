@@ -1711,6 +1711,13 @@ This is expression — under control.`,
     dynamicPricing: false,
     pricingPending: true,
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/l43g78jv_1000147430.png",
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/l43g78jv_1000147430.png", alt: "Fondo Curvo — front pair on black", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/biqvi79f_1000147448.jpg", alt: "Fondo Curvo — three-quarter on dark silk", intent: "CAMPAIGN" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mokhgmfq_1000147444.png", alt: "Fondo Curvo — studio front on near-black", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/05gfllx4_1000147257.png", alt: "Fondo Curvo — macro top swirl detail", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/vqnumpky_1000147438.png", alt: "Fondo Curvo — ultra macro spiral", intent: "INTIMACY" }
+    ],
     shipping: "Complimentary insured shipping within Canada."
   }
 
