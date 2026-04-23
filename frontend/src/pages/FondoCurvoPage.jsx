@@ -72,7 +72,7 @@ export default function FondoCurvoPage() {
 
       {/* FONDO CURVO — HERO */}
       <section
-        className="w-full h-screen bg-black relative overflow-hidden flex items-center justify-center"
+        className="w-screen h-[78vh] md:h-[88vh] bg-black relative overflow-hidden -mx-4 md:mx-0 flex items-center justify-center"
         data-testid="fondo-curvo-page"
       >
         {/* VIDEO WRAPPER — full width on mobile, contained on desktop */}
