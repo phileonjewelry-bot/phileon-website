@@ -211,6 +211,24 @@ export default function FondoCurvoPage() {
         </div>
       </section>
 
+      {/* SPECIFICATIONS */}
+      <section className="px-5 md:px-8 mt-16 md:mt-20" data-testid="fondo-curvo-specs-poster">
+        <div className="max-w-[900px] mx-auto">
+          <h3 className="text-[12px] tracking-[0.25em] text-neutral-500 mb-6">
+            SPECIFICATIONS
+          </h3>
+
+          <div className="w-full">
+            <img
+              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wav6v8ma_1000147490.png"
+              alt="Fondo Curvo specifications"
+              className="w-full h-auto object-contain rounded-[8px]"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* CLOSING */}
       <section className="py-14 md:py-20 border-t border-white/[0.03]">
         <div className="text-center max-w-[420px] mx-auto px-5">
