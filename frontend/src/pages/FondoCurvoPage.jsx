@@ -5,7 +5,9 @@ import { products } from '@/data/products';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { useLivePrice, useLiveTierPrices } from '@/hooks/useLivePrice';
 
-const FONDO_CURVO_HERO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png";
+const FONDO_CURVO_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c9wp52og_hf_20260423_204409_1bed0295-382d-413f-b10d-aaba1fb29825.mp4";
+const FONDO_CURVO_HERO_POSTER = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png";
+const FONDO_CURVO_HERO = FONDO_CURVO_HERO_POSTER;
 
 export default function FondoCurvoPage() {
   const product = products.fondoCurvo;
@@ -70,27 +72,39 @@ export default function FondoCurvoPage() {
 
       {/* FONDO CURVO — HERO */}
       <section
-        className="relative w-full h-[90vh] bg-black flex items-center justify-center overflow-hidden"
+        className="w-full h-screen bg-black relative overflow-hidden"
         data-testid="fondo-curvo-page"
       >
-        <img
-          src={FONDO_CURVO_HERO}
-          alt="Phileon Fondo Curvo Earrings"
-          className="w-full h-full object-contain"
+        {/* VIDEO */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src={FONDO_CURVO_HERO_VIDEO}
+          poster={FONDO_CURVO_HERO_POSTER}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          data-testid="fondo-curvo-hero-video"
         />
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/10 via-transparent to-black/40" />
 
-        <div className="absolute bottom-10 md:bottom-14 left-1/2 -translate-x-1/2 text-center px-6 z-10">
-          <p className="text-[11px] tracking-[0.4em] text-white/50 mb-3">
+        {/* DARK OVERLAY */}
+        <div className="absolute inset-0 bg-black/40" />
+
+        {/* CONTENT */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+          <p className="text-white/50 text-xs tracking-[0.35em] mb-4">
             PHILEON
           </p>
+
           <h1
-            className="text-white text-2xl md:text-3xl tracking-[0.25em] font-light"
+            className="text-white font-serif text-4xl md:text-6xl tracking-wide mb-4"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             FONDO CURVO
           </h1>
-          <p className="text-white/60 text-xs md:text-sm mt-3 max-w-[520px] mx-auto leading-relaxed">
+
+          <p className="text-white/70 text-sm md:text-base max-w-md">
             Says everything to those who see it. Says nothing to those who don&rsquo;t.
           </p>
         </div>
