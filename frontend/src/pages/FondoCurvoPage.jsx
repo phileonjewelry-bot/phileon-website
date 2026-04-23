@@ -72,27 +72,29 @@ export default function FondoCurvoPage() {
 
       {/* FONDO CURVO — HERO */}
       <section
-        className="w-full h-screen bg-black relative overflow-hidden"
+        className="w-full h-screen bg-black relative overflow-hidden flex items-center justify-center"
         data-testid="fondo-curvo-page"
       >
-        {/* VIDEO */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          src={FONDO_CURVO_HERO_VIDEO}
-          poster={FONDO_CURVO_HERO_POSTER}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          data-testid="fondo-curvo-hero-video"
-        />
+        {/* VIDEO WRAPPER */}
+        <div className="w-[85%] md:w-[60%] max-w-[900px]">
+          <video
+            className="w-full h-auto object-contain rounded-[10px]"
+            src={FONDO_CURVO_HERO_VIDEO}
+            poster={FONDO_CURVO_HERO_POSTER}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            data-testid="fondo-curvo-hero-video"
+          />
+        </div>
 
-        {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-black/40" />
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
 
-        {/* CONTENT */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+        {/* TEXT */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
           <p className="text-white/50 text-xs tracking-[0.35em] mb-4">
             PHILEON
           </p>
@@ -105,7 +107,9 @@ export default function FondoCurvoPage() {
           </h1>
 
           <p className="text-white/70 text-sm md:text-base max-w-md">
-            Says everything to those who see it. Says nothing to those who don&rsquo;t.
+            Says everything to those who see it.
+            <br />
+            Says nothing to those who don&rsquo;t.
           </p>
         </div>
       </section>
