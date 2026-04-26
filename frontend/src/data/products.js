@@ -1719,7 +1719,7 @@ This is expression — under control.`,
       silver:  { label: "SILVER",   name: "Silver",   metal: "925 Sterling Silver", stones: "128 pavé diamonds" },
       gold10k: { label: "10K GOLD", name: "10K Gold", metal: "10K White Gold",      stones: "128 pavé diamonds" },
     },
-    specs: "128 Diamonds • 45mm Drop • 18mm Width • 12.5g",
+    specs: "400 Diamonds • 45mm Drop • 18mm Width • 12.5g",
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png",
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png", alt: "Fondo Curvo — diorama shadowbox presentation", intent: "HERO" },
