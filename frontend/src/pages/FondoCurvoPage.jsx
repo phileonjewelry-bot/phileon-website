@@ -67,7 +67,7 @@ export default function FondoCurvoPage() {
       >
         {/* VIDEO */}
         <video
-          className="absolute inset-0 w-full h-full object-cover scale-[0.9] md:scale-[0.82]"
+          className="absolute inset-0 w-full h-full object-cover scale-[0.81] md:scale-[0.74]"
           style={{ objectPosition: "center 35%" }}
           src={FONDO_CURVO_HERO_VIDEO}
           poster={FONDO_CURVO_HERO_POSTER}
@@ -94,15 +94,15 @@ export default function FondoCurvoPage() {
 
         {/* CONTENT */}
         <div className="absolute inset-0 flex flex-col items-center justify-center -translate-y-4 text-center px-6 pointer-events-none">
-          <p className="text-white/60 text-[11px] tracking-[0.4em] mb-3">
+          <p className="text-white/60 text-[10px] tracking-[0.4em] mb-3">
             PHILEON
           </p>
 
-          <h1 className="text-white font-serif text-[40px] md:text-[68px] leading-[0.95] tracking-[0.06em] mb-2 whitespace-nowrap">
+          <h1 className="text-white font-serif text-[36px] md:text-[61px] leading-[0.95] tracking-[0.06em] mb-2 whitespace-nowrap">
             FONDO CURVO
           </h1>
 
-          <p className="text-white/70 text-[14px] md:text-[16px] leading-relaxed max-w-[340px]">
+          <p className="text-white/70 text-[13px] md:text-[14px] leading-relaxed max-w-[306px]">
             Says everything to those who see it.<br />
             Says nothing to those who don&rsquo;t.
           </p>
