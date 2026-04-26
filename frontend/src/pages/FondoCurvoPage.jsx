@@ -238,7 +238,7 @@ export default function FondoCurvoPage() {
           <div>
             <p className="text-[12px] tracking-[0.25em] text-neutral-500 mb-4">CRAFT</p>
             <p className="text-[15px] md:text-[16px] leading-7 text-neutral-200 max-w-[720px]">
-              128 diamonds are set across a sculptural form, balancing precision with flow. Every surface is intentional.
+              400 diamonds are set across a sculptural form, balancing precision with flow. Every surface is intentional.
             </p>
           </div>
 
