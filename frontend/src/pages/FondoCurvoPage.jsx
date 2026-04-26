@@ -60,59 +60,57 @@ export default function FondoCurvoPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Back to Earrings */}
-      <Link
-        to="/shop?category=earrings&audience=ladies"
-        className="fixed top-20 left-6 z-20 flex items-center gap-2 text-[11px] tracking-[0.3em] text-white/50 hover:text-[#D4AF37] transition-colors"
-        data-testid="fondo-curvo-back-btn"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>BACK TO EARRINGS</span>
-      </Link>
-
       {/* FONDO CURVO — HERO */}
       <section
-        className="w-screen h-[78vh] md:h-[88vh] bg-black relative overflow-hidden -mx-4 md:mx-0 flex items-center justify-center"
+        className="w-screen h-[78vh] md:h-[88vh] bg-black relative overflow-hidden -mx-4 md:mx-0"
         data-testid="fondo-curvo-page"
       >
-        {/* VIDEO WRAPPER — full width on mobile, contained on desktop */}
-        <div className="w-full md:w-[60%] md:max-w-[900px]">
-          <video
-            className="w-full h-auto object-contain md:rounded-[10px]"
-            src={FONDO_CURVO_HERO_VIDEO}
-            poster={FONDO_CURVO_HERO_POSTER}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            data-testid="fondo-curvo-hero-video"
-          />
-        </div>
+        {/* VIDEO */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover scale-[0.9] md:scale-[0.82]"
+          style={{ objectPosition: "center 35%" }}
+          src={FONDO_CURVO_HERO_VIDEO}
+          poster={FONDO_CURVO_HERO_POSTER}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          data-testid="fondo-curvo-hero-video"
+        />
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-black/35" />
 
-        {/* TEXT */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
-          <p className="text-white/50 text-xs tracking-[0.35em] mb-4">
+        {/* BACK LINK (LOCKED TO HERO) */}
+        <Link
+          to="/shop?category=earrings&audience=ladies"
+          className="absolute top-6 left-6 z-20 text-white/50 text-xs tracking-[0.3em] hover:text-[#D4AF37] transition-colors flex items-center gap-2"
+          data-testid="fondo-curvo-back-btn"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>BACK TO EARRINGS</span>
+        </Link>
+
+        {/* CONTENT */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center -translate-y-4 text-center px-6 pointer-events-none">
+          <p className="text-white/60 text-[11px] tracking-[0.4em] mb-3">
             PHILEON
           </p>
 
-          <h1 className="text-white font-serif text-4xl md:text-6xl tracking-wide mb-4 whitespace-nowrap">
+          <h1 className="text-white font-serif text-[40px] md:text-[68px] leading-[0.95] tracking-[0.06em] mb-2 whitespace-nowrap">
             FONDO CURVO
           </h1>
 
-          <p className="text-white/70 text-sm md:text-base max-w-md">
-            Says everything to those who see it.
-            <br />
+          <p className="text-white/70 text-[14px] md:text-[16px] leading-relaxed max-w-[340px]">
+            Says everything to those who see it.<br />
             Says nothing to those who don&rsquo;t.
           </p>
         </div>
       </section>
 
       {/* GALLERY */}
-      <section className="w-full mt-2 md:mt-4" data-testid="fondo-curvo-gallery">
+      <section className="w-full -mt-16 md:-mt-20 pt-4 md:pt-6" data-testid="fondo-curvo-gallery">
         <div className="max-w-[520px] md:max-w-[620px] mx-auto px-3 md:px-5">
           <div className="w-full overflow-hidden rounded-[10px] bg-black mb-2">
             <img
