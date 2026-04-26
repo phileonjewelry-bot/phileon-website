@@ -252,7 +252,7 @@ export default function FondoCurvoPage() {
           <div>
             <p className="text-[12px] tracking-[0.25em] text-neutral-500 mb-6">SPECIFICATIONS</p>
             <img
-              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wav6v8ma_1000147490.png"
+              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/np0k142t_1000147730.png"
               alt="Fondo Curvo specifications"
               className="w-full h-auto object-contain rounded-[8px]"
               loading="lazy"
