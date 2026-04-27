@@ -94,7 +94,7 @@ export default function CorinthiansPage() {
           </p>
 
           <h1
-            className="text-white font-serif text-[34px] md:text-[60px] leading-[1.05] tracking-[0.05em] mb-5 whitespace-nowrap"
+            className="text-white font-serif leading-[0.95] tracking-[0.04em] mb-5 product-hero-title text-center mx-auto"
             data-testid="corinthians-title"
           >
             1 CORINTHIANS 15:14
@@ -305,6 +305,36 @@ export default function CorinthiansPage() {
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .product-hero-title {
+          font-size: clamp(2.4rem, 11vw, 3.75rem);
+          line-height: 0.95;
+          max-width: calc(100vw - 32px);
+          overflow-wrap: normal;
+          white-space: normal;
+          text-align: center;
+          margin-left: auto;
+          margin-right: auto;
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        @media (min-width: 768px) {
+          .product-hero-title {
+            font-size: 60px;
+            line-height: 1.05;
+            letter-spacing: 0.05em;
+            padding-left: 0;
+            padding-right: 0;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .product-hero-title {
+            font-size: clamp(1.85rem, 9vw, 2.6rem);
+            letter-spacing: -0.01em;
+          }
+        }
       `}</style>
     </div>
   );
