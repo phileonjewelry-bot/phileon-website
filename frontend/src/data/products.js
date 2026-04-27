@@ -1810,6 +1810,8 @@ This is expression — under control.`,
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png", alt: "1 Corinthians 15:14 — front view, three crosses on domed pavé", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/iguoeyhd_1000147761.png", alt: "1 Corinthians 15:14 — finished ring vertical orientation on dark surface", intent: "CAMPAIGN" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hl1zphud_1000147799.png", alt: "1 Corinthians 15:14 — on hand, lifestyle wear", intent: "HUMAN_ENTRY" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mg9a9we1_1000147795.png", alt: "1 Corinthians 15:14 — three quarter angle with band", intent: "ARCHITECTURE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wv3ccfdc_1000147794.png", alt: "1 Corinthians 15:14 — angled top with crosses and band", intent: "BALANCE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kwyao8nf_1000147796.png", alt: "1 Corinthians 15:14 — macro center pink cross", intent: "INTIMACY" },
