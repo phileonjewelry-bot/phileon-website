@@ -305,6 +305,19 @@ const CORE_PRODUCTS = [
     category: 'earrings',
     audience: 'ladies',
   },
+  {
+    id: 'corinthians-15-14',
+    name: '1 Corinthians 15:14',
+    slug: 'corinthians-15-14',
+    materialLine: 'Sacred Collection · 10K / 14K / 18K White Gold',
+    imageUrl: products.corinthians1514.imageUrl,
+    href: '/products/corinthians-15-14',
+    price_range: formatPrice(products.corinthians1514.basePrice, 'CAD'),
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: 'ladies',
+  },
 ];
 
 // Additional drop products as fallback

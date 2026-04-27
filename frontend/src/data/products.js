@@ -1736,6 +1736,95 @@ This is expression — under control.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dihq2qgl_1000147311.png", alt: "Fondo Curvo — bottom spiral twist detail", intent: "INTIMACY" }
     ],
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // 1 CORINTHIANS 15:14
+  // Sacred Collection — Ladies Ring
+  // Domed pavé head with three crosses (white / pink / white)
+  // ==========================================
+  corinthians1514: {
+    name: "1 CORINTHIANS 15:14",
+    slug: "corinthians-15-14",
+    category: "rings",
+    audience: "ladies",
+    subtitle: "Sacred Collection",
+    categoryType: "Ring",
+    tagline: "This is not ornament alone. This is doctrine carried in form.",
+    collections: ["ladies-rings", "sacred-collection", "collective"],
+    collection: "Sacred Collection",
+    currency: "CAD",
+    priceFrom: "From $4,200 CAD",
+    basePrice: 4200,
+    dynamicPricing: true,
+    pricingPending: false,
+    defaultTier: "signature",
+
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png",
+
+    pricing: {
+      foundation: 4200,
+      signature: 5900,
+      heirloom: 8800,
+    },
+
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K White Gold",
+        stones: "Black & white diamonds, pink sapphires, multicolor sapphire channel",
+        badge: "",
+        description: "Entry into the Sacred Collection. Solid 10K white gold.",
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K White Gold",
+        stones: "Black & white diamonds, pink sapphires, multicolor sapphire channel",
+        badge: "MOST POPULAR",
+        description: "The definitive expression. Hand-set 14K white gold.",
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K White Gold",
+        stones: "Black & white diamonds, pink sapphires, multicolor sapphire channel",
+        badge: "",
+        description: "Collector level. Maximum density. 18K white gold.",
+      },
+    },
+
+    specs: "400 Diamonds • Black diamonds · white diamonds · pink sapphires · multicolor sapphire channel",
+
+    story: `If Christ has not been raised,\nour preaching is useless\nand so is your faith.\n\n— 1 Corinthians 15:14\n\nA domed field of black pavé holds three crosses.\n\nTwo remain in white. The center rises in pink.\n\nIt is not balanced. It is intentional.\n\nThe center is not equal. It is everything.`,
+
+    direction: {
+      detail:
+        "A domed field of black pavé holds three crosses. Two remain in white. The center rises in pink.",
+      craft:
+        "It is not balanced. It is intentional. Every stone is set deliberately, every contrast is doctrine.",
+      structure:
+        "The center is not equal. It is everything. A multicolor sapphire channel ribbons the dome, set into a substantial white gold band.",
+    },
+
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png", alt: "1 Corinthians 15:14 — front view, three crosses on domed pavé", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mg9a9we1_1000147795.png", alt: "1 Corinthians 15:14 — three quarter angle with band", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wv3ccfdc_1000147794.png", alt: "1 Corinthians 15:14 — angled top with crosses and band", intent: "BALANCE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kwyao8nf_1000147796.png", alt: "1 Corinthians 15:14 — macro center pink cross", intent: "INTIMACY" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/npl9kn7j_1000147793.png", alt: "1 Corinthians 15:14 — macro multicolor sapphire channel", intent: "CRAFT" }
+    ],
+
+    sizeProfile: {
+      type: "ring",
+      min: 4,
+      max: 10,
+      halfSizes: true,
+      customAbove: 10,
+    },
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
