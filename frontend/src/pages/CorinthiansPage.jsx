@@ -7,6 +7,8 @@ import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png";
+const HERO_VIDEO =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5bkyr76b_hf_20260428_024215_192e7b41-9b63-43db-ae2f-0556be1f3cb6.mp4";
 
 export default function CorinthiansPage() {
   const product = products.corinthians1514;
@@ -67,11 +69,17 @@ export default function CorinthiansPage() {
         className="w-screen h-[78vh] md:h-[88vh] bg-black relative overflow-hidden -mx-4 md:mx-0"
         data-testid="corinthians-hero"
       >
-        <img
-          src={HERO_IMG}
-          alt="1 Corinthians 15:14"
+        <video
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: "center 40%" }}
+          src={HERO_VIDEO}
+          poster={HERO_IMG}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          data-testid="corinthians-hero-video"
         />
 
         {/* Overlay */}
