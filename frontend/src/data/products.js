@@ -1828,6 +1828,41 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // DRAPE
+  // Sculptural Pendant — Rose Gold Corset on Hanger
+  // ==========================================
+  drape: {
+    name: "DRAPE",
+    slug: "drape",
+    category: "pendants",
+    audience: "ladies",
+    subtitle: "Sculptural Pendant",
+    categoryType: "Pendant",
+    tagline: "Form in motion.",
+    collections: ["ladies-pendants", "editorial"],
+    currency: "CAD",
+    priceFrom: "Coming Soon",
+    basePrice: 0,
+    dynamicPricing: false,
+    pricingPending: true,
+
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wbw4wgvu_1000147936.png",
+
+    description:
+      "DRAPE is a study in movement and tension — sculpted lines wrapped in rose gold, traced in pavé. A corset suspended on its hanger, designed to follow the body, not sit on it.",
+
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wbw4wgvu_1000147936.png", alt: "Drape — front view, full piece on pavé hanger", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tf3tuzp5_1000147940.png", alt: "Drape — full silhouette, suspended", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/12kne70r_1000147935.png", alt: "Drape — three quarter angle, corset profile", intent: "MOVEMENT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/bp6a0gd9_1000147934.png", alt: "Drape — macro pavé hanger and bail", intent: "CRAFT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kgiqf7lv_1000147941.png", alt: "Drape — macro hanger with corset wires", intent: "INTIMACY" }
+    ],
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
