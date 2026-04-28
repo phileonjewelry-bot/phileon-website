@@ -14,6 +14,52 @@ const formatPrice = (basePrice, currency = 'CAD') => {
   return `From $${basePrice.toLocaleString()}${currency !== 'USD' ? ` ${currency}` : ''}`;
 };
 
+// SHOP COLLECTION ASSIGNMENT
+// Maps each product slug to one of: 'sacred' | 'signature' | 'editorial' | 'collective'
+// Used by the top-of-page chip filter and the grouped section layout.
+// Pieces tagged audience='collective' (multi-audience cross-cut) primarily live in COLLECTIVE.
+const SHOP_COLLECTION_MAP = {
+  // SACRED — scripture/faith driven
+  'galatians-614': 'sacred',
+  'corinthians-15-14': 'sacred',
+
+  // SIGNATURE — flagship craft / heirloom / single-audience couture
+  'la-marva': 'signature',
+  'annie-rose': 'signature',
+  'lady-bamburgh': 'signature',
+  'cypher': 'signature',
+  'morso': 'signature',
+  'labete': 'signature',
+  'tola-ii': 'signature',
+
+  // EDITORIAL — sculptural / object-driven / fashion-forward
+  'rosaria': 'editorial',
+  'desir-corset': 'editorial',
+  'apex': 'editorial',
+  'homage': 'editorial',
+  'trace': 'editorial',
+  'monika-couture': 'editorial',
+  'alejandra-heels': 'editorial',
+  'fondo-curvo': 'editorial',
+  'bound': 'editorial',
+  'forme-cuff': 'editorial',
+  'ptp-cuff': 'editorial',
+  'rhythm-mesh-ring': 'editorial',
+
+  // COLLECTIVE — multi-audience pieces (his + hers + collective)
+  'coogi-i': 'collective',
+  'blessed': 'collective',
+  'the-bamburgh': 'collective',
+  'bamburgh': 'collective',
+};
+
+const SHOP_COLLECTIONS = [
+  { key: 'sacred',     label: 'Sacred Collection' },
+  { key: 'signature',  label: 'Signature' },
+  { key: 'editorial',  label: 'Editorial' },
+  { key: 'collective', label: 'Collective' },
+];
+
 // Core collection products - Always shown first
 // Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
 const CORE_PRODUCTS = [
@@ -352,7 +398,7 @@ const DROP_PRODUCTS = [
 ];
 
 const ShopDropPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [hideSoldOut, setHideSoldOut] = useState(false); // DEFAULT OFF for hype
@@ -361,6 +407,15 @@ const ShopDropPage = () => {
   // Get filter params from URL
   const categoryParam = searchParams.get('category');
   const audienceParam = searchParams.get('audience');
+  const collectionParam = searchParams.get('collection'); // 'sacred' | 'signature' | 'editorial' | 'collective' | null = All
+
+  const setCollection = (key) => {
+    const next = new URLSearchParams(searchParams);
+    if (key) next.set('collection', key);
+    else next.delete('collection');
+    setSearchParams(next, { replace: true });
+    setVisibleProducts([]);
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -431,8 +486,23 @@ const ShopDropPage = () => {
       }
     }
 
+    // Filter by shop collection if specified (sacred / signature / editorial / collective)
+    if (collectionParam) {
+      const productCollection = SHOP_COLLECTION_MAP[product.slug];
+      if (productCollection !== collectionParam) return false;
+    }
+
     return true;
   });
+
+  // Group filtered products by their shop collection (used when no specific chip is active)
+  const groupedByCollection = SHOP_COLLECTIONS.reduce((acc, { key }) => {
+    acc[key] = filteredProducts.filter(p => SHOP_COLLECTION_MAP[p.slug] === key);
+    return acc;
+  }, {});
+
+  // Determine if grouped sections should render (only on the "All" view with no category/audience filter active)
+  const showGroupedSections = !collectionParam && !categoryParam && !audienceParam;
 
   // Stagger product reveal
   useEffect(() => {
@@ -460,6 +530,42 @@ const ShopDropPage = () => {
             months of development and reflects our commitment to exceptional craftsmanship.
           </p>
           <div className="shop-drop__hero-line" />
+        </div>
+      </section>
+
+      {/* COLLECTION CHIPS — Sacred / Signature / Editorial / Collective */}
+      <section className="mb-6 mt-2" data-testid="shop-collection-chips">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <h2 className="text-white text-xl tracking-[0.2em] uppercase font-light">SHOP</h2>
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
+              <button
+                onClick={() => setCollection(null)}
+                data-testid="shop-chip-all"
+                className={`px-4 py-2 text-[11px] tracking-[0.25em] uppercase border transition-all ${
+                  !collectionParam
+                    ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-white'
+                    : 'border-white/10 text-white/60 hover:border-white/30 hover:text-white'
+                }`}
+              >
+                All
+              </button>
+              {SHOP_COLLECTIONS.map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setCollection(key)}
+                  data-testid={`shop-chip-${key}`}
+                  className={`px-4 py-2 text-[11px] tracking-[0.25em] uppercase border transition-all ${
+                    collectionParam === key
+                      ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-white'
+                      : 'border-white/10 text-white/60 hover:border-white/30 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -674,126 +780,122 @@ const ShopDropPage = () => {
           </>
         ) : (
           /* Standard Grid for other categories */
-          <div className="shop-drop__grid">
-            {filteredProducts.map((product, index) => {
-              const inventoryCount = product.inventory_count || product.stock || 0;
-              const isSoldOut = inventoryCount === 0;
-              const productUrl = product.href || `/products/${product.slug}`;
-              
-              // Determine card image based on audience filter
-              const cardImage = 
-                product.audienceImages?.[audienceParam] ||
-                product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
-                product.lifestyleImages?.[audienceParam] ||
-                product.lifestyleImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
-                product.images?.[0] || 
-                product.imageUrl || 
-                'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
-              
-              return (
-                <div 
-                  key={product.id}
-                  className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
-                  style={{ 
-                    position: 'relative',
-                    transitionDelay: `${index * 80}ms` 
-                  }}
-                >
-                  {/* Wishlist - Outside the link */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggle(product.id);
-                    }}
-                    style={{
-                      position: 'absolute',
-                      top: '12px',
-                      right: '12px',
-                      zIndex: 100,
-                      padding: '8px',
-                      background: 'rgba(0, 0, 0, 0.4)',
-                      border: 'none',
-                      borderRadius: '50%',
-                      color: 'white',
-                      cursor: 'pointer',
-                    }}
-                    title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                  >
-                    <Heart 
-                      className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} 
-                    />
-                  </button>
+          (() => {
+            // Reusable card grid renderer
+            const renderGrid = (productList, sectionIdx = 0) => (
+              <div className="shop-drop__grid">
+                {productList.map((product, index) => {
+                  const globalIndex = sectionIdx * 100 + index;
+                  const inventoryCount = product.inventory_count || product.stock || 0;
+                  const isSoldOut = inventoryCount === 0;
+                  const productUrl = product.href || `/products/${product.slug}`;
 
-                  {/* NATIVE ANCHOR TAG - Full card clickable */}
-                  <a 
-                    href={productUrl}
-                    className="group"
-                    style={{
-                      display: 'block',
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      cursor: 'pointer',
-                    }}
-                    data-testid={`product-card-${product.slug}`}
-                  >
-                    <div style={{
-                      position: 'relative',
-                      aspectRatio: product.category === 'earrings' ? 'auto' : '1/1',
-                      minHeight: product.category === 'earrings' ? '300px' : 'auto',
-                      maxHeight: product.category === 'earrings' ? '80vh' : 'none',
-                      overflow: 'hidden',
-                      background: product.category === 'earrings' ? '#fff' : '#0a0a0a',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: product.category === 'rings' ? '16px' : '0',
-                    }}>
-                      {/* Primary Image */}
-                      <img 
-                        src={cardImage} 
-                        alt={product.name}
-                        loading="lazy"
-                        className={`transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
+                  const cardImage =
+                    product.audienceImages?.[audienceParam] ||
+                    product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
+                    product.lifestyleImages?.[audienceParam] ||
+                    product.lifestyleImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
+                    product.images?.[0] ||
+                    product.imageUrl ||
+                    'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
+
+                  return (
+                    <div
+                      key={product.id}
+                      className={`shop-drop__card-wrapper ${visibleProducts.includes(globalIndex) ? 'is-visible' : ''}`}
+                      style={{ position: 'relative', transitionDelay: `${index * 80}ms` }}
+                    >
+                      <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(product.id); }}
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain',
-                          filter: isSoldOut ? 'grayscale(1)' : 'none',
+                          position: 'absolute', top: '12px', right: '12px', zIndex: 100,
+                          padding: '8px', background: 'rgba(0, 0, 0, 0.4)', border: 'none',
+                          borderRadius: '50%', color: 'white', cursor: 'pointer',
                         }}
-                        draggable="false"
-                      />
-                      {/* Hover Image (if exists) */}
-                      {product.hoverImage && (
-                        <img 
-                          src={product.hoverImage} 
-                          alt={`${product.name} alternate view`}
-                          loading="lazy"
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                            filter: isSoldOut ? 'grayscale(1)' : 'none',
-                            padding: product.category === 'rings' ? '16px' : '0',
-                          }}
-                          draggable="false"
-                        />
-                      )}
+                        title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                      >
+                        <Heart className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} />
+                      </button>
+
+                      <a
+                        href={productUrl}
+                        className="group"
+                        style={{ display: 'block', textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+                        data-testid={`product-card-${product.slug}`}
+                      >
+                        <div style={{
+                          position: 'relative',
+                          aspectRatio: product.category === 'earrings' ? 'auto' : '1/1',
+                          minHeight: product.category === 'earrings' ? '300px' : 'auto',
+                          maxHeight: product.category === 'earrings' ? '80vh' : 'none',
+                          overflow: 'hidden',
+                          background: product.category === 'earrings' ? '#fff' : '#0a0a0a',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          padding: product.category === 'rings' ? '16px' : '0',
+                        }}>
+                          <img
+                            src={cardImage}
+                            alt={product.name}
+                            loading="lazy"
+                            className={`transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: isSoldOut ? 'grayscale(1)' : 'none' }}
+                            draggable="false"
+                          />
+                          {product.hoverImage && (
+                            <img
+                              src={product.hoverImage}
+                              alt={`${product.name} alternate view`}
+                              loading="lazy"
+                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                              style={{
+                                width: '100%', height: '100%', objectFit: 'contain',
+                                filter: isSoldOut ? 'grayscale(1)' : 'none',
+                                padding: product.category === 'rings' ? '16px' : '0',
+                              }}
+                              draggable="false"
+                            />
+                          )}
+                        </div>
+                        <div style={{ padding: '12px 0 8px' }}>
+                          <h3 className="shop-drop__card-name">{product.name}</h3>
+                          <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                          {product.price_range && (
+                            <p className="shop-drop__card-price">{product.price_range}</p>
+                          )}
+                        </div>
+                      </a>
                     </div>
-                    
-                    <div style={{ padding: '12px 0 8px' }}>
-                      <h3 className="shop-drop__card-name">{product.name}</h3>
-                      <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
-                      {product.price_range && (
-                        <p className="shop-drop__card-price">{product.price_range}</p>
-                      )}
-                    </div>
-                  </a>
+                  );
+                })}
+              </div>
+            );
+
+            // GROUPED LAYOUT — only when "All" chip + no other filter active
+            if (showGroupedSections) {
+              return (
+                <div className="space-y-16">
+                  {SHOP_COLLECTIONS.map(({ key, label }, sectionIdx) => {
+                    const items = groupedByCollection[key] || [];
+                    if (items.length === 0) return null;
+                    return (
+                      <div key={key} data-testid={`shop-section-${key}`}>
+                        <div className="max-w-7xl mx-auto px-6 mb-6">
+                          <h2 className="text-white text-lg tracking-[0.35em] uppercase font-light">
+                            {label}
+                          </h2>
+                          <div className="w-12 h-px bg-[#D4AF37]/30 mt-3" />
+                        </div>
+                        {renderGrid(items, sectionIdx)}
+                      </div>
+                    );
+                  })}
                 </div>
               );
-            })}
-          </div>
+            }
+
+            // SINGLE GRID — chip selected, or category/audience filter active
+            return renderGrid(filteredProducts);
+          })()
         )}
       </section>
     </div>
