@@ -51,6 +51,7 @@ const SHOP_COLLECTION_MAP = {
   'blessed': 'collective',
   'the-bamburgh': 'collective',
   'bamburgh': 'collective',
+  'drape': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -363,6 +364,23 @@ const CORE_PRODUCTS = [
     is_core: true,
     category: 'rings',
     audience: 'ladies',
+  },
+  {
+    id: 'drape',
+    name: 'DRAPE',
+    slug: 'drape',
+    materialLine: 'Sculptural Pendant · Rose Gold & Pavé',
+    imageUrl: products.drape.imageUrl,
+    hoverImage: products.drape.onBodyImage,
+    href: '/products/drape',
+    price_range: 'Coming Soon',
+    inventory_count: 100,
+    is_core: true,
+    category: 'pendants',
+    audience: ['ladies', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 1,
   },
 ];
 
@@ -837,7 +855,7 @@ const ShopDropPage = () => {
                             src={cardImage}
                             alt={product.name}
                             loading="lazy"
-                            className={`transition-opacity duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}
+                            className={`transition-all ease-out ${product.slug === 'drape' ? 'duration-500 group-hover:scale-[1.04] group-hover:opacity-0' : `duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}`}
                             style={{ width: '100%', height: '100%', objectFit: 'contain', filter: isSoldOut ? 'grayscale(1)' : 'none' }}
                             draggable="false"
                           />
@@ -846,7 +864,7 @@ const ShopDropPage = () => {
                               src={product.hoverImage}
                               alt={`${product.name} alternate view`}
                               loading="lazy"
-                              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                              className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-all ease-out ${product.slug === 'drape' ? 'duration-500 group-hover:scale-[1.04]' : 'duration-300'}`}
                               style={{
                                 width: '100%', height: '100%', objectFit: 'contain',
                                 filter: isSoldOut ? 'grayscale(1)' : 'none',
@@ -854,6 +872,21 @@ const ShopDropPage = () => {
                               }}
                               draggable="false"
                             />
+                          )}
+
+                          {/* DRAPE — "SEE IT WORN" hover overlay */}
+                          {product.slug === 'drape' && (
+                            <div
+                              className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                              style={{
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.55), transparent)',
+                                padding: '12px 16px 14px',
+                              }}
+                            >
+                              <p className="text-white text-[10px] tracking-[0.3em] text-center uppercase">
+                                See it worn
+                              </p>
+                            </div>
                           )}
                         </div>
                         <div style={{ padding: '12px 0 8px' }}>
