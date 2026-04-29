@@ -161,6 +161,18 @@ export default function DrapePage() {
         </div>
       </section>
 
+      {/* DRAPE — SPEC IMAGE */}
+      <section className="mt-20 mb-10 flex justify-center px-6 md:px-12" data-testid="drape-specs">
+        <div className="w-full max-w-[520px]">
+          <img
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/6aphx9ww_1000148055.png"
+            alt="DRAPE specifications — diamond count, dimensions, and weight"
+            className="w-full h-auto object-contain opacity-90 hover:opacity-100 transition duration-500"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="pb-20 px-6 md:px-12">
         <div className="max-w-xl mx-auto text-center">
