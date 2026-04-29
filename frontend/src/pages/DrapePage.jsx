@@ -89,13 +89,81 @@ export default function DrapePage() {
         </div>
       </section>
 
-      {/* DESCRIPTION + CTA */}
-      <section className="py-16 md:py-20 px-6 md:px-12">
-        <div className="max-w-xl mx-auto text-center">
-          <p className="text-neutral-400 text-sm md:text-base leading-relaxed mb-10">
-            {product.description}
-          </p>
+      {/* DRAPE — PRODUCT COPY */}
+      <section className="py-16 md:py-24 px-6 md:px-12" data-testid="drape-copy">
+        <div className="max-w-[720px] mx-auto space-y-10 text-white">
 
+          {/* Title */}
+          <div>
+            <h1 className="text-2xl tracking-wide font-serif">DRAPE</h1>
+          </div>
+
+          {/* Intro */}
+          <div className="space-y-4 text-sm leading-relaxed text-white/85">
+            <p>Rose gold drawn into line.</p>
+            <p>Eighty-five diamonds set along the hanger &mdash; the only addition it takes.</p>
+            <p>Everything below is left open.</p>
+
+            <p className="pt-2">Each curve holds its place.</p>
+            <p>Each line meets where it should.</p>
+
+            <p className="pt-2">Not inspired by clothing.</p>
+            <p>Worn the same way.</p>
+          </div>
+
+          {/* Composition */}
+          <div>
+            <h2 className="text-xs tracking-[0.25em] mb-3 text-white/60">COMPOSITION</h2>
+            <p className="text-sm leading-relaxed text-white/85">
+              18k rose gold.<br />
+              85 round brilliant diamonds.<br />
+              Open framework.
+            </p>
+          </div>
+
+          {/* Build */}
+          <div>
+            <h2 className="text-xs tracking-[0.25em] mb-3 text-white/60">BUILD</h2>
+            <p className="text-sm leading-relaxed text-white/85">
+              A corset reduced to line.<br />
+              The bust, the waist, the fall &mdash; held in gold tubing.<br />
+              Set from a pav&eacute; hanger that carries the piece.
+            </p>
+          </div>
+
+          {/* Craft */}
+          <div>
+            <h2 className="text-xs tracking-[0.25em] mb-3 text-white/60">CRAFT</h2>
+            <p className="text-sm leading-relaxed text-white/85">
+              Nothing filled.<br />
+              Nothing added.<br />
+              <br />
+              What&rsquo;s left open does the work.<br />
+              The outline carries it.
+            </p>
+          </div>
+
+          {/* Final Word */}
+          <div>
+            <h2 className="text-xs tracking-[0.25em] mb-3 text-white/60">FINAL WORD</h2>
+            <p className="text-sm leading-relaxed text-white/85">
+              Worn by those who don&rsquo;t need everything closed.
+            </p>
+          </div>
+
+          {/* Grab Phrase */}
+          <div className="pt-6">
+            <p className="text-sm italic text-center text-white/70">
+              &ldquo;The dress left. The bones remain.&rdquo;
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="pb-20 px-6 md:px-12">
+        <div className="max-w-xl mx-auto text-center">
           <button
             disabled
             className="bg-[#C6A646] text-black px-8 py-4 text-sm tracking-wide opacity-50 cursor-not-allowed"
