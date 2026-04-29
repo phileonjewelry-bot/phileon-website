@@ -201,7 +201,7 @@ export default function DrapePage() {
           </p>
           <p className="text-sm mt-1 text-white/85">
             Pair with a{' '}
-            <Link to="/shop?category=chains" className="underline cursor-pointer hover:text-[#D4AF37] transition-colors">
+            <Link to="/collections/chains-coming-soon" className="underline cursor-pointer hover:text-[#D4AF37] transition-colors">
               Phileon chain
             </Link>
           </p>
