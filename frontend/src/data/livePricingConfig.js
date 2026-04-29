@@ -172,6 +172,12 @@ const livePricingConfig = {
     signature:  { lockedBasePriceCad: 5900, metalType: "14K", weightGrams: 17, lockedMetalReferenceCad: 1488 },
     heirloom:   { lockedBasePriceCad: 8800, metalType: "18K", weightGrams: 18, lockedMetalReferenceCad: 2025 },
   },
+  drape: {
+    silver:     { lockedBasePriceCad: 1950, metalType: "925", weightGrams: 12.5, lockedMetalReferenceCad: 14 },
+    foundation: { lockedBasePriceCad: 5200, metalType: "10K", weightGrams: 12.5, lockedMetalReferenceCad: 781 },
+    signature:  { lockedBasePriceCad: 6800, metalType: "14K", weightGrams: 12.5, lockedMetalReferenceCad: 1094 },
+    heirloom:   { lockedBasePriceCad: 9200, metalType: "18K", weightGrams: 12.5, lockedMetalReferenceCad: 1406 },
+  },
 };
 
 export default livePricingConfig;
