@@ -32,31 +32,48 @@ export default function DrapePage() {
         <span>BACK TO PENDANTS</span>
       </Link>
 
-      {/* DRAPE — Editorial Block */}
+      {/* DRAPE — HERO VIDEO */}
       <section
-        className="w-full bg-black text-white py-16 md:py-20 px-6 md:px-12"
+        className="w-screen h-[78vh] md:h-[88vh] bg-black relative overflow-hidden -mx-4 md:mx-0"
         data-testid="drape-page"
       >
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Eyebrow */}
-          <p className="text-xs tracking-[0.35em] text-neutral-400 mb-6">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wbw4wgvu_1000147936.png"
+          className="absolute inset-0 w-full h-full object-cover"
+          data-testid="drape-hero-video"
+        >
+          <source
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5d5g7hva_hf_20260429_191631_a9154a64-6473-47f0-91cf-0064e27933f5.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10 pointer-events-none">
+          <p className="text-white/55 text-[10px] tracking-[0.4em] mb-3">
             PHILEON
           </p>
 
-          {/* Title */}
-          <h1 className="font-serif text-4xl md:text-6xl tracking-wide mb-6">
+          <h1 className="text-white font-serif text-[40px] md:text-[68px] leading-[0.95] tracking-[0.06em] mb-3">
             DRAPE
           </h1>
 
-          {/* Statement */}
-          <p className="text-neutral-300 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-12">
+          <p className="text-white/70 text-[14px] md:text-[16px] italic">
             {product.tagline}
           </p>
         </div>
       </section>
 
       {/* GALLERY */}
-      <section className="w-full" data-testid="drape-gallery">
+      <section className="w-full -mt-12 md:-mt-16 pt-4 md:pt-6" data-testid="drape-gallery">
         <div className="max-w-[520px] md:max-w-[640px] mx-auto px-3 md:px-5">
           <div className="w-full overflow-hidden rounded-[10px] bg-black mb-2">
             <img
