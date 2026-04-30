@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import SizeGuideModal from "@/components/SizeGuideModal";
 
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
 const LADY_BAMBURGH_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gjr06mge_hf_20260419_224240_b1b530d9-43a4-4ed4-b0d0-16f3cc8b1826.mp4";
@@ -16,6 +17,7 @@ export default function LadyBamburghPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentTier = product.tiers[selectedTier];
@@ -247,6 +249,17 @@ export default function LadyBamburghPage() {
             <p className="text-xs text-white/45 mt-2">
               Sizes above 12 are custom.
             </p>
+            <p className="text-xs text-white/45 mt-1">
+              Need help?{' '}
+              <button
+                type="button"
+                onClick={() => setSizeGuideOpen(true)}
+                data-testid="lady-bamburgh-size-guide-btn"
+                className="underline hover:text-[#D4AF37] transition-colors"
+              >
+                View our size guide.
+              </button>
+            </p>
           </div>
 
           {/* CTA */}
@@ -287,6 +300,8 @@ export default function LadyBamburghPage() {
           }
         }
       `}</style>
+
+      <SizeGuideModal open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
     </div>
   );
 }

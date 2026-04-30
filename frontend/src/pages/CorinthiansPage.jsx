@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import SizeGuideModal from "@/components/SizeGuideModal";
 
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png";
@@ -16,6 +17,7 @@ export default function CorinthiansPage() {
   const [selectedSize, setSelectedSize] = useState("");
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentTier = product.tiers[selectedTier];
@@ -236,6 +238,17 @@ export default function CorinthiansPage() {
               ))}
             </select>
             <p className="text-xs text-white/45 mt-2">Sizes above 10 are custom.</p>
+            <p className="text-xs text-white/45 mt-1">
+              Need help?{' '}
+              <button
+                type="button"
+                onClick={() => setSizeGuideOpen(true)}
+                data-testid="corinthians-size-guide-btn"
+                className="underline hover:text-[#D4AF37] transition-colors"
+              >
+                View our size guide.
+              </button>
+            </p>
           </div>
 
           {/* Details */}
@@ -344,6 +357,8 @@ export default function CorinthiansPage() {
           }
         }
       `}</style>
+
+      <SizeGuideModal open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
     </div>
   );
 }

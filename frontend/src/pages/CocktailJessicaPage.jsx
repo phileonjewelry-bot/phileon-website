@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { products } from "@/data/products";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLivePrice } from "@/hooks/useLivePrice";
+import SizeGuideModal from "@/components/SizeGuideModal";
 
 // Scroll-reveal helper — subtle fade up as each section enters the viewport
 const Reveal = ({ children, delay = 0, className = "" }) => {
@@ -47,6 +48,7 @@ export default function CocktailJessicaPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
   const [sizeError, setSizeError] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const { formatted: ctaPrice, price: ctaPriceNum } = useLivePrice(
@@ -290,9 +292,14 @@ export default function CocktailJessicaPage() {
               </select>
               <p className="text-xs text-[var(--cj-cream)]/50 mt-2 cj-body">
                 Need help?{' '}
-                <Link to="/size-guide" className="underline hover:text-[#c7a870] transition-colors">
+                <button
+                  type="button"
+                  onClick={() => setSizeGuideOpen(true)}
+                  data-testid="cocktail-jessica-size-guide-btn"
+                  className="underline hover:text-[#c7a870] transition-colors cursor-pointer"
+                >
                   View our size guide.
-                </Link>
+                </button>
               </p>
             </div>
           </Reveal>
@@ -419,6 +426,9 @@ export default function CocktailJessicaPage() {
           </div>
         </Reveal>
       </section>
+
+      {/* Size Guide Modal */}
+      <SizeGuideModal open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} />
     </div>
   );
 }
