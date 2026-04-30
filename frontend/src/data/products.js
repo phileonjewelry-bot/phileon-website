@@ -1938,9 +1938,16 @@ This is expression — under control.`,
     dynamicPricing: true,
     pricingPending: false,
     defaultTier: "signature",
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 2,
+    showInHomepageCarousel: true,
 
     imageUrl:
       "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png",
+    // Hover reveal image for shop card (clean product shot on cream)
+    hoverImage:
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/84gb9vxf_1000148149.png",
 
     pricing: {
       silver:     1450,
@@ -1990,13 +1997,15 @@ This is expression — under control.`,
 
     specs: "Tri-colour gold • Sapphire, coloured stones, diamonds • Mixed setting",
 
-    // Gallery — real product photography
+    // Gallery — real product photography (7 slots)
     gallery: [
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png", alt: "Le Cocktail de Jessica — hero, tri-colour bands with sapphire centerpiece", intent: "HERO" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h0rmqpqm_1000148139.png", alt: "Le Cocktail de Jessica — three-quarter angle, full composition", intent: "CLEAN" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/m3929xbd_1000148138.png", alt: "Le Cocktail de Jessica — reverse angle, band geometry", intent: "ANGLE" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8wfuz0yl_1000148154.png", alt: "Le Cocktail de Jessica — macro, sapphire and stone detail", intent: "MACRO" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/www6zbc8_1000148150.png", alt: "Le Cocktail de Jessica — on cream leather cushion", intent: "LIFESTYLE" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png", alt: "Le Cocktail de Jessica — hero, ring on cream cushion", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/84gb9vxf_1000148149.png", alt: "Le Cocktail de Jessica — clean product on cream", intent: "PRODUCT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b226smnl_1000148156.png", alt: "Le Cocktail de Jessica — architectural view, three bands from below", intent: "ARCHITECTURE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h0rmqpqm_1000148139.png", alt: "Le Cocktail de Jessica — three-quarter angle", intent: "ANGLE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/m3929xbd_1000148138.png", alt: "Le Cocktail de Jessica — reverse angle, band geometry", intent: "MOVEMENT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8wfuz0yl_1000148154.png", alt: "Le Cocktail de Jessica — macro detail", intent: "MACRO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/www6zbc8_1000148150.png", alt: "Le Cocktail de Jessica — on cream leather cushion, lifestyle", intent: "LIFESTYLE" }
     ],
 
     // Image break (full-width editorial)

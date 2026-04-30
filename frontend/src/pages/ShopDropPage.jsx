@@ -389,12 +389,16 @@ const CORE_PRODUCTS = [
     slug: 'le-cocktail-de-jessica',
     materialLine: 'Cocktail Ring · Tri-Colour Gold · Mixed Stones',
     imageUrl: products.cocktailJessica.imageUrl,
+    hoverImage: products.cocktailJessica.hoverImage,
     href: '/products/le-cocktail-de-jessica',
     price_range: formatPrice(products.cocktailJessica.basePrice, 'CAD'),
     inventory_count: 100,
     is_core: true,
     category: 'rings',
     audience: ['ladies', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 2,
   },
 ];
 
@@ -869,7 +873,7 @@ const ShopDropPage = () => {
                             src={cardImage}
                             alt={product.name}
                             loading="lazy"
-                            className={`transition-all ease-out ${product.slug === 'drape' ? 'duration-500 group-hover:scale-[1.04] group-hover:opacity-0' : `duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}`}
+                            className={`transition-all ease-out ${(product.slug === 'drape' || product.slug === 'le-cocktail-de-jessica') ? 'duration-500 group-hover:scale-[1.04] group-hover:opacity-0' : `duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}`}
                             style={{ width: '100%', height: '100%', objectFit: 'contain', filter: isSoldOut ? 'grayscale(1)' : 'none' }}
                             draggable="false"
                           />
@@ -878,7 +882,7 @@ const ShopDropPage = () => {
                               src={product.hoverImage}
                               alt={`${product.name} alternate view`}
                               loading="lazy"
-                              className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-all ease-out ${product.slug === 'drape' ? 'duration-500 group-hover:scale-[1.04]' : 'duration-300'}`}
+                              className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-all ease-out ${(product.slug === 'drape' || product.slug === 'le-cocktail-de-jessica') ? 'duration-500 group-hover:scale-[1.04]' : 'duration-300'}`}
                               style={{
                                 width: '100%', height: '100%', objectFit: 'contain',
                                 filter: isSoldOut ? 'grayscale(1)' : 'none',
@@ -899,6 +903,21 @@ const ShopDropPage = () => {
                             >
                               <p className="text-white text-[10px] tracking-[0.3em] text-center uppercase">
                                 See it worn
+                              </p>
+                            </div>
+                          )}
+
+                          {/* LE COCKTAIL DE JESSICA — "EXPRESSION IN MOTION" hover overlay */}
+                          {product.slug === 'le-cocktail-de-jessica' && (
+                            <div
+                              className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                              style={{
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.60), transparent)',
+                                padding: '12px 16px 14px',
+                              }}
+                            >
+                              <p className="text-white text-[10px] tracking-[0.3em] text-center uppercase">
+                                Expression in motion
                               </p>
                             </div>
                           )}

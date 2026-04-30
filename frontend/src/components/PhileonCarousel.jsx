@@ -4,6 +4,7 @@ import { products } from "@/data/products";
 
 const carouselItems = [
   { name: "DRAPE", slug: "drape", image: products.drape?.imageUrl, tagline: "The dress left. The bones remain." },
+  { name: "LE COCKTAIL DE JESSICA", slug: "le-cocktail-de-jessica", image: products.cocktailJessica?.imageUrl, tagline: "In rest." },
   { name: "COOGI I", slug: "coogi-i", image: products.coogiI?.imageUrl },
   { name: "THE BAMBURGH", slug: "the-bamburgh", image: products.bamburgh?.imageUrl },
   { name: "LADY BAMBURGH", slug: "lady-bamburgh", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png" },

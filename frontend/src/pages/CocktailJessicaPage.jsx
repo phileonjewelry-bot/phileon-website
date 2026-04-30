@@ -164,20 +164,24 @@ export default function CocktailJessicaPage() {
         <div className="relative flex items-center justify-center px-8 md:px-16 py-14 md:py-0 bg-[var(--cj-warm-dark)]">
           <Reveal>
             <div className="max-w-[440px]">
-              <p className="cj-label mb-5">PHILEON</p>
               <h1
-                className="cj-head text-white text-[28px] md:text-[40px] leading-[1.1] mb-6"
+                className="cj-head text-white text-[28px] md:text-[32px] mb-2"
+                style={{ letterSpacing: "0.2em" }}
                 data-testid="cocktail-jessica-title"
               >
-                LE COCKTAIL
-                <br />
-                DE JESSICA
+                PHILEON
               </h1>
+              <h2
+                className="text-white font-serif text-[34px] md:text-[42px] leading-[1.1] mb-4"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              >
+                LE COCKTAIL DE JESSICA
+              </h2>
               <p
-                className="cj-body-italic text-[19px] md:text-[22px] text-[var(--cj-cream)]/85 leading-snug"
+                className="cj-body-italic text-[18px] md:text-[20px] text-[var(--cj-cream)]/80"
                 data-testid="cocktail-jessica-tagline"
               >
-                {product.tagline}
+                In rest.
               </p>
             </div>
           </Reveal>
