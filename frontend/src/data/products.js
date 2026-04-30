@@ -1940,7 +1940,7 @@ This is expression — under control.`,
     defaultTier: "signature",
 
     imageUrl:
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80",
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png",
 
     pricing: {
       silver:     1450,
@@ -1990,19 +1990,18 @@ This is expression — under control.`,
 
     specs: "Tri-colour gold • Sapphire, coloured stones, diamonds • Mixed setting",
 
-    // Gallery placeholders — swap later when assets arrive
+    // Gallery — real product photography
     gallery: [
-      { type: "image", src: "https://images.unsplash.com/photo-1535632066274-86ca0b3f9d2a?auto=format&fit=crop&w=900&q=80", alt: "Le Cocktail de Jessica — hero gloved hand (placeholder)", intent: "HERO" },
-      { type: "image", src: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=900&q=80", alt: "Le Cocktail de Jessica — clean product on white (placeholder)", intent: "CLEAN" },
-      { type: "image", src: "https://images.unsplash.com/photo-1603561596112-db542d9b6b42?auto=format&fit=crop&w=900&q=80", alt: "Le Cocktail de Jessica — angle shot (placeholder)", intent: "ANGLE" },
-      { type: "image", src: "https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=900&q=80", alt: "Le Cocktail de Jessica — macro detail (placeholder)", intent: "MACRO" },
-      { type: "image", src: "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&w=900&q=80", alt: "Le Cocktail de Jessica — on-hand lifestyle (placeholder)", intent: "LIFESTYLE" },
-      { type: "image", src: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80", alt: "Le Cocktail de Jessica — second angle (placeholder)", intent: "ANGLE_2" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png", alt: "Le Cocktail de Jessica — hero, tri-colour bands with sapphire centerpiece", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h0rmqpqm_1000148139.png", alt: "Le Cocktail de Jessica — three-quarter angle, full composition", intent: "CLEAN" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/m3929xbd_1000148138.png", alt: "Le Cocktail de Jessica — reverse angle, band geometry", intent: "ANGLE" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8wfuz0yl_1000148154.png", alt: "Le Cocktail de Jessica — macro, sapphire and stone detail", intent: "MACRO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/www6zbc8_1000148150.png", alt: "Le Cocktail de Jessica — on cream leather cushion", intent: "LIFESTYLE" }
     ],
 
-    // Image break (full-width editorial placeholder)
+    // Image break (full-width editorial)
     imageBreak:
-      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1600&q=80",
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/www6zbc8_1000148150.png",
 
     sizeProfile: {
       type: "ring",
