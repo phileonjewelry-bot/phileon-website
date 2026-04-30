@@ -45,6 +45,7 @@ const SHOP_COLLECTION_MAP = {
   'forme-cuff': 'editorial',
   'ptp-cuff': 'editorial',
   'rhythm-mesh-ring': 'editorial',
+  'le-cocktail-de-jessica': 'editorial',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',
@@ -381,6 +382,19 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 1,
+  },
+  {
+    id: 'le-cocktail-de-jessica',
+    name: 'Le Cocktail de Jessica',
+    slug: 'le-cocktail-de-jessica',
+    materialLine: 'Cocktail Ring · Tri-Colour Gold · Mixed Stones',
+    imageUrl: products.cocktailJessica.imageUrl,
+    href: '/products/le-cocktail-de-jessica',
+    price_range: formatPrice(products.cocktailJessica.basePrice, 'CAD'),
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['ladies', 'collective'],
   },
 ];
 

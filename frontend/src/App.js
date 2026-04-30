@@ -48,6 +48,7 @@ import DrapePage from "@/pages/DrapePage";
 import FondoCurvoPage from "@/pages/FondoCurvoPage";
 import CorinthiansPage from "@/pages/CorinthiansPage";
 import ChainsComingSoonPage from "@/pages/ChainsComingSoonPage";
+import CocktailJessicaPage from "@/pages/CocktailJessicaPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -126,6 +127,7 @@ function App() {
             <Route path="/products/fondo-curvo" element={<FondoCurvoPage />} />
             <Route path="/products/corinthians-15-14" element={<CorinthiansPage />} />
             <Route path="/collections/chains-coming-soon" element={<ChainsComingSoonPage />} />
+            <Route path="/products/le-cocktail-de-jessica" element={<CocktailJessicaPage />} />
             <Route path="/shop/labete" element={<LaBetePage />} />
             <Route path="/shop/blessed" element={<BlessedPage />} />
             <Route path="/shop/coogi-i" element={<CoogiPage />} />

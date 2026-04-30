@@ -143,6 +143,12 @@ LIVE_PRICING_CONFIG = {
         "signature":  {"lockedBasePriceCad": 6800, "metalType": "14K", "weightGrams": 12.5, "lockedMetalReferenceCad": 1094},
         "heirloom":   {"lockedBasePriceCad": 9200, "metalType": "18K", "weightGrams": 12.5, "lockedMetalReferenceCad": 1406},
     },
+    "cocktailJessica": {
+        "silver":     {"lockedBasePriceCad": 1450, "metalType": "925", "weightGrams": 11, "lockedMetalReferenceCad": 13},
+        "foundation": {"lockedBasePriceCad": 3200, "metalType": "10K", "weightGrams": 11, "lockedMetalReferenceCad": 687},
+        "signature":  {"lockedBasePriceCad": 4800, "metalType": "14K", "weightGrams": 11, "lockedMetalReferenceCad": 963},
+        "heirloom":   {"lockedBasePriceCad": 6800, "metalType": "18K", "weightGrams": 11, "lockedMetalReferenceCad": 1238},
+    },
 }
 
 
