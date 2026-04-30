@@ -369,6 +369,16 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           { 
+            title: "DRAPE", 
+            image: products.drape?.imageUrl, 
+            href: "/products/drape" 
+          },
+          { 
+            title: "LE COCKTAIL DE JESSICA", 
+            image: products.cocktailJessica?.imageUrl, 
+            href: "/products/le-cocktail-de-jessica" 
+          },
+          { 
             title: "MONIKA COUTURE", 
             image: "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg", 
             href: "/products/monika-couture" 
