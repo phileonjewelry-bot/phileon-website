@@ -1933,11 +1933,11 @@ This is expression — under control.`,
     tagline: "Composed in colour.",
     collections: ["ladies-rings", "editorial", "collective"],
     currency: "CAD",
-    priceFrom: "From $1,450 CAD",
-    basePrice: 1450,
+    priceFrom: "$8,500 CAD",
+    basePrice: 8500,
     dynamicPricing: true,
     pricingPending: false,
-    defaultTier: "signature",
+    defaultTier: "standard",
     isFeatured: true,
     isNew: true,
     displayOrder: 2,
@@ -1945,57 +1945,32 @@ This is expression — under control.`,
 
     imageUrl:
       "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png",
-    // Hover reveal image for shop card (clean product shot on cream)
     hoverImage:
       "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/84gb9vxf_1000148149.png",
 
     pricing: {
-      silver:     1450,
-      foundation: 3200,
-      signature:  4800,
-      heirloom:   6800,
+      standard: 8500,
     },
 
     tiers: {
-      silver: {
-        label: "ENTRY",
-        name: "Sterling Silver · Rose Gold Plated",
-        metal: "925 Sterling Silver",
-        finish: "Rose Gold Plated",
-        stones: "Mixed Stones",
-        badge: "ENTRY",
-        description: "Sterling silver with rose gold plating. Mixed stones.",
-      },
-      foundation: {
-        label: "FOUNDATION",
-        name: "Foundation — 10K Gold · Mixed Stones",
+      standard: {
+        label: "STANDARD",
+        name: "Standard",
         metal: "10K Tri-Colour Gold",
-        finish: "Solid 10K tri-colour construction",
-        stones: "Mixed Stones",
-        badge: "",
-        description: "Solid 10K tri-colour gold construction. Mixed stones.",
-      },
-      signature: {
-        label: "SIGNATURE",
-        name: "Signature — 14K Gold · Mixed Stones",
-        metal: "14K Tri-Colour Gold",
-        finish: "Solid 14K tri-colour construction",
-        stones: "Mixed Stones",
-        badge: "MOST POPULAR",
-        description: "Solid 14K tri-colour gold construction. Mixed stones.",
-      },
-      heirloom: {
-        label: "HEIRLOOM",
-        name: "Heirloom — 18K Gold · Natural Stones",
-        metal: "18K Tri-Colour Gold",
-        finish: "Solid 18K tri-colour construction",
         stones: "Natural Stones",
-        badge: "COLLECTOR",
-        description: "Solid 18K tri-colour gold construction. Natural stones.",
+        description: "Made to order · 3–4 weeks · Complimentary insured shipping",
       },
     },
 
-    specs: "Tri-colour gold • Sapphire, coloured stones, diamonds • Mixed setting",
+    specs: "Tri-colour gold · ~18.5 grams · ~3.90 carats total · 10K gold · Natural stones",
+
+    composition: {
+      metal: "Tri-colour gold",
+      weightGrams: "~18.5 grams",
+      caratsTotal: "~3.90 carats total",
+      price: "$8,500 CAD",
+      details: "10K gold · Natural stones",
+    },
 
     // Gallery — real product photography (7 slots)
     gallery: [

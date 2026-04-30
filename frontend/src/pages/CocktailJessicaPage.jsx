@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { products } from "@/data/products";
 import { useAddToCart } from "../hooks/useAddToCart";
-import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import { useLivePrice } from "@/hooks/useLivePrice";
 
 // Scroll-reveal helper — subtle fade up as each section enters the viewport
 const Reveal = ({ children, delay = 0, className = "" }) => {
@@ -45,14 +45,14 @@ export default function CocktailJessicaPage() {
 
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [selectedTier, setSelectedTier] = useState(product.defaultTier || "signature");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [sizeError, setSizeError] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
-  const tierPrices = useLiveTierPrices("cocktailJessica");
   const { formatted: ctaPrice, price: ctaPriceNum } = useLivePrice(
     "cocktailJessica",
-    selectedTier,
-    product.pricing[selectedTier]
+    "standard",
+    product.pricing.standard
   );
 
   const handleSelect = useCallback(
@@ -66,29 +66,34 @@ export default function CocktailJessicaPage() {
   );
 
   const onAddToCart = () => {
-    const tier = product.tiers[selectedTier];
-    const livePriceCad = ctaPriceNum || product.pricing[selectedTier];
+    if (!selectedSize) {
+      setSizeError(true);
+      alert("Please select a ring size");
+      return;
+    }
+    setSizeError(false);
+    const tier = product.tiers.standard;
+    const livePriceCad = ctaPriceNum || product.pricing.standard;
     handleAddToCart({
-      id: `cocktail-jessica-${selectedTier}`,
-      name: `Le Cocktail de Jessica — ${tier.name}`,
+      id: `cocktail-jessica-standard-${selectedSize}`,
+      name: `Le Cocktail de Jessica (Size ${selectedSize})`,
       price: livePriceCad,
       productKey: "cocktailJessica",
-      tierKey: selectedTier,
+      tierKey: "standard",
       metal: tier.metal,
-      finish: tier.finish,
       stones: tier.stones,
+      size: selectedSize,
       lockedPriceCad: livePriceCad,
       quantity: 1,
       image: product.imageUrl,
     });
   };
 
-  const tierOrder = [
-    { key: "silver",     label: "Sterling Silver · Rose Gold Plated", note: "Entry" },
-    { key: "foundation", label: "Foundation — 10K Gold · Mixed Stones", note: null },
-    { key: "signature",  label: "Signature — 14K Gold · Mixed Stones", note: "Most Popular" },
-    { key: "heirloom",   label: "Heirloom — 18K Gold · Natural Stones", note: "Collector" },
-  ];
+  const sizeOptions = [];
+  for (let i = 4; i <= 9; i++) {
+    sizeOptions.push(i.toString());
+    if (i < 9) sizeOptions.push(`${i}.5`);
+  }
 
   return (
     <div className="min-h-screen cocktail-jessica-theme">
@@ -172,17 +177,17 @@ export default function CocktailJessicaPage() {
                 PHILEON
               </h1>
               <h2
-                className="text-white font-serif text-[34px] md:text-[42px] leading-[1.1] mb-4"
+                className="text-white font-serif text-[34px] md:text-[42px] leading-[1.1] mb-6"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
                 LE COCKTAIL DE JESSICA
               </h2>
-              <p
-                className="cj-body-italic text-[18px] md:text-[20px] text-[var(--cj-cream)]/80"
-                data-testid="cocktail-jessica-tagline"
-              >
-                In rest.
-              </p>
+              <div className="cj-body text-[17px] md:text-[19px] leading-[1.55] text-[var(--cj-cream)]/85 space-y-3" data-testid="cocktail-jessica-tagline">
+                <p>Colours, painted. Cast in gold.</p>
+                <p>A palette of her own.</p>
+                <p className="pt-2 cj-body-italic">Not a story. An argument.</p>
+                <p className="pt-1">She colors outside every line.</p>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -242,51 +247,53 @@ export default function CocktailJessicaPage() {
           </Reveal>
 
           <Reveal delay={80}>
-            <div>
-              <label className="cj-label">METAL</label>
+            <div data-testid="cocktail-jessica-composition">
+              <label className="cj-label">COMPOSITION</label>
 
-              <div className="mt-3 space-y-3">
-                {tierOrder.map(({ key, label, note }) => {
-                  const isSelected = selectedTier === key;
-                  const priceStr =
-                    tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`;
-                  return (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => setSelectedTier(key)}
-                      data-testid={`cocktail-jessica-tier-${key}-btn`}
-                      className={`w-full text-left p-4 transition border cj-body ${
-                        isSelected
-                          ? "border-[#c7a870] bg-[#c7a870]/10"
-                          : "border-white/10 hover:border-white/30"
-                      }`}
-                    >
-                      <div className="flex justify-between items-start gap-4">
-                        <span
-                          className={`text-[17px] leading-snug ${
-                            isSelected ? "text-white" : "text-[var(--cj-cream)]/80"
-                          }`}
-                        >
-                          {label}
-                        </span>
-                        <span
-                          className={`text-[17px] whitespace-nowrap ${
-                            isSelected ? "text-white" : "text-[var(--cj-cream)]/80"
-                          }`}
-                        >
-                          {priceStr} CAD
-                        </span>
-                      </div>
-                      {note && (
-                        <p className="text-[11px] text-[var(--cj-cream)]/55 mt-1 tracking-wider uppercase">
-                          {note}
-                        </p>
-                      )}
-                    </button>
-                  );
-                })}
+              <div className="mt-4 cj-body text-[17px] text-[var(--cj-cream)]/90 leading-[1.65] space-y-1">
+                <p>{product.composition.metal}</p>
+                <p>{product.composition.weightGrams}</p>
+                <p>{product.composition.caratsTotal}</p>
               </div>
+
+              <div className="mt-6 flex items-baseline justify-between pb-4 border-b border-white/10">
+                <span className="cj-body text-[var(--cj-cream)]/70 text-[14px]">Price</span>
+                <span className="cj-head text-white text-[22px] tracking-wide" data-testid="cocktail-jessica-price">
+                  {ctaPrice} CAD
+                </span>
+              </div>
+
+              <p className="cj-body text-[13px] text-[var(--cj-cream)]/60 mt-4 leading-relaxed">
+                {product.composition.details}<br />
+                Made to order · 3–4 weeks<br />
+                Complimentary insured shipping
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={120}>
+            <div data-testid="cocktail-jessica-size-block">
+              <label className="cj-label">SIZE</label>
+              <select
+                value={selectedSize}
+                onChange={(e) => { setSelectedSize(e.target.value); setSizeError(false); }}
+                data-testid="cocktail-jessica-size-select"
+                className={`mt-3 w-full px-4 py-3 text-[15px] cj-body bg-transparent text-white focus:outline-none transition-colors ${
+                  sizeError ? "border border-red-400/60" : "border border-white/20 focus:border-[#c7a870]"
+                }`}
+              >
+                <option value="" disabled className="bg-[#1a1410]">Select size</option>
+                {sizeOptions.map((s) => (
+                  <option key={s} value={s} className="bg-[#1a1410]">{s}</option>
+                ))}
+                <option value="custom" className="bg-[#1a1410]">Custom Size</option>
+              </select>
+              <p className="text-xs text-[var(--cj-cream)]/50 mt-2 cj-body">
+                Need help?{' '}
+                <Link to="/size-guide" className="underline hover:text-[#c7a870] transition-colors">
+                  View our size guide.
+                </Link>
+              </p>
             </div>
           </Reveal>
 
@@ -304,16 +311,8 @@ export default function CocktailJessicaPage() {
                 : `ADD TO BAG — ${ctaPrice} CAD`}
             </button>
 
-            <p className="cj-body text-[13px] text-[var(--cj-cream)]/50 mt-3">
-              {product.tiers[selectedTier].description}
-            </p>
-
             <p className="text-[10px] text-[var(--cj-cream)]/35 text-center pt-4 cj-body">
               Price adjusts automatically with the live precious metals market.
-            </p>
-
-            <p className="text-xs text-[var(--cj-cream)]/45 text-center cj-body">
-              Made to order • 3–4 weeks • Complimentary insured shipping within Canada
             </p>
           </Reveal>
         </div>
