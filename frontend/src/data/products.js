@@ -2034,22 +2034,22 @@ This is expression — under control.`,
       foundation: {
         label: "FOUNDATION",
         name: "Foundation",
-        metal: "925 Silver · Black Rhodium",
+        metal: "925 Silver · Black Enamel",
         stones: "High-Impact Stones",
         badge: "",
-        description: "925 silver, black rhodium finish. High-impact stones.",
+        description: "925 silver with black enamel. High-impact stones.",
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "10K Gold · Black Rhodium",
+        metal: "10K Gold · Black Enamel",
         stones: "Lab Diamonds",
         badge: "MOST POPULAR",
-        description: "10K gold, black rhodium finish. Lab diamonds.",
+        description: "10K gold with black enamel. Lab diamonds.",
       },
     },
 
-    specs: "Pavé crown band · Black rhodium finish · Wide band",
+    specs: "Pavé crown band · Black enamel · Wide band",
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png", alt: "Prise de Couronne — pavé crown band", intent: "HERO" },

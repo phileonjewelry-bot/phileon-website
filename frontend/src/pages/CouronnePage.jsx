@@ -288,7 +288,7 @@ export default function CouronnePage() {
             className="space-y-2.5 text-[14px] leading-relaxed text-white/80"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            <li>925 silver or 10K gold, black rhodium finish.</li>
+            <li>925 silver or 10K gold, with black enamel.</li>
             <li>Black enamel field.</li>
             <li>Black diamond pavé.</li>
             <li>Five bezel-set white diamond crown points.</li>
@@ -340,8 +340,8 @@ export default function CouronnePage() {
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             <p>
-              Black enamel beneath the stone field gives the darkness depth no
-              finish can replicate.
+              Black enamel sits beneath the stone field, giving the darkness
+              depth no metal finish can replicate.
             </p>
             <p>
               Black pavé absorbs the light.
