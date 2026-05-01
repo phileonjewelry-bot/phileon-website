@@ -153,16 +153,27 @@ export default function CocktailJessicaPage() {
         data-testid="cocktail-jessica-hero"
       >
         <video
-          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/iy56nc32_XiaoYing_Video_1777600131919_HD.mp4"
+          ref={(el) => {
+            if (el) {
+              el.onended = () => {
+                el.currentTime = 0;
+                el.play();
+              };
+            }
+          }}
           poster={gallery[0]?.src}
           autoPlay
           muted
-          loop
           playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
           data-testid="cocktail-jessica-hero-video"
-        />
+        >
+          <source
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/iy56nc32_XiaoYing_Video_1777600131919_HD.mp4"
+            type="video/mp4"
+          />
+        </video>
 
         {/* Gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent pointer-events-none" />
