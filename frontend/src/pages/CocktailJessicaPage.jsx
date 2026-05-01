@@ -156,10 +156,10 @@ export default function CocktailJessicaPage() {
           src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/iy56nc32_XiaoYing_Video_1777600131919_HD.mp4"
           poster={gallery[0]?.src}
           autoPlay
-          loop
           muted
+          loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
           data-testid="cocktail-jessica-hero-video"
         />
