@@ -149,7 +149,7 @@ export default function CocktailJessicaPage() {
 
       {/* HERO — full-bleed video */}
       <section
-        className="relative w-full h-[85vh] sm:h-[90vh] overflow-hidden"
+        className="relative w-full h-[88vh] overflow-hidden"
         data-testid="cocktail-jessica-hero"
       >
         <video
@@ -164,25 +164,25 @@ export default function CocktailJessicaPage() {
           data-testid="cocktail-jessica-hero-video"
         />
 
-        {/* Gradient (stronger on mobile for readability) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
+        {/* Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent pointer-events-none" />
 
         {/* Text */}
-        <div className="absolute bottom-10 md:bottom-16 left-1/2 -translate-x-1/2 text-center text-white px-5 w-full max-w-[90%] md:max-w-[640px]">
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-center text-white px-6 w-full max-w-[620px]">
           <Reveal>
-            <p className="text-[10px] md:text-xs tracking-[0.35em] mb-2 opacity-90 cj-head" data-testid="cocktail-jessica-title">
+            <p className="text-[11px] tracking-[0.35em] mb-2 opacity-90 cj-head" data-testid="cocktail-jessica-title">
               PHILEON
             </p>
 
             <h1
-              className="font-serif text-2xl md:text-5xl leading-tight mb-4 md:mb-6"
+              className="font-serif text-[28px] sm:text-[42px] leading-tight mb-5"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               LE COCKTAIL DE JESSICA
             </h1>
 
             <div
-              className="cj-body text-[12px] md:text-base leading-relaxed space-y-1.5 md:space-y-2 opacity-90"
+              className="cj-body text-[13px] sm:text-[15px] leading-relaxed space-y-2 opacity-90"
               data-testid="cocktail-jessica-tagline"
             >
               <p>Colours, painted. Cast in gold.</p>
