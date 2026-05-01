@@ -165,7 +165,7 @@ export default function BlessedPage() {
             </p>
 
             <p className="text-amber-500 text-lg font-medium">
-              From $880 CAD
+              {product.priceFrom}
             </p>
 
           </div>

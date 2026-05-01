@@ -26,7 +26,7 @@ async def _load_product(product_id: str):
         # First try by ObjectId for MongoDB documents with ObjectId _id
         try:
             return await db.products.find_one({"_id": ObjectId(product_id)})
-        except:
+        except Exception:
             # Fallback to string ID lookup for products with string IDs
             return await db.products.find_one({"id": product_id})
     except Exception:
