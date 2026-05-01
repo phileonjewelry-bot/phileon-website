@@ -2061,7 +2061,7 @@ This is expression — under control.`,
     specs: "Pavé crown band · Black & white diamonds · Blackened gold",
 
     gallery: [
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e6uigdlz_1000148265.png", alt: "Prise de Couronne — pavé crown band", intent: "HERO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png", alt: "Prise de Couronne — pavé crown band", intent: "HERO" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xkmsgrlo_1000148292.png", alt: "Prise de Couronne — three-quarter angle", intent: "ANGLE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/01qfiair_1000148278.png", alt: "Prise de Couronne — side profile", intent: "SIDE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ql06bws0_1000148294.png", alt: "Prise de Couronne — alternate angle", intent: "ANGLE" },

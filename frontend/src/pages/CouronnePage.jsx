@@ -7,7 +7,7 @@ import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 import SizeGuideModal from "@/components/SizeGuideModal";
 
 const HERO_IMG =
-  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e6uigdlz_1000148265.png";
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png";
 
 export default function CouronnePage() {
   const product = products.priseDeCouronne;
