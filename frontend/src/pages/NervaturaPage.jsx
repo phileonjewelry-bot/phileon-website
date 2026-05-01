@@ -150,23 +150,17 @@ export default function NervaturaPage() {
             PHILEON
           </p>
           <h1
-            className="nervatura-cinzel text-4xl md:text-6xl text-white mb-6"
+            className="nervatura-cinzel text-4xl md:text-6xl text-white mb-3"
             style={{ letterSpacing: "0.18em" }}
             data-testid="nervatura-title"
           >
             NERVATURA
           </h1>
           <p
-            className="nervatura-cinzel text-[10px] md:text-[11px] tracking-[0.4em] text-white/65 mb-6"
+            className="nervatura-cormorant italic text-base md:text-lg text-white/75"
             data-testid="nervatura-subline"
           >
-            STRUCTURE IN MOTION
-          </p>
-          <p
-            className="nervatura-cormorant italic text-base md:text-lg text-white/80"
-            data-testid="nervatura-tagline"
-          >
-            "The line carries the form."
+            Status has a structure.
           </p>
         </div>
       </section>
