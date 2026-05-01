@@ -1,88 +1,113 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 
-const SIZE_DIAGRAM =
-  'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/l43g78jv_1000147430.png';
-// Placeholder — swap with /images/phileon-size-diagram.jpg once uploaded
+// Single user-provided reference photo — used for both Step 1 and Step 2
+// until dedicated ring-size-wrap.jpg and ring-size-measure.jpg are uploaded.
+const SIZE_PHOTO =
+  'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/18v679um_1000148270.png';
+
+const STEP_WRAP_IMG = SIZE_PHOTO;
+const STEP_MEASURE_IMG = SIZE_PHOTO;
 
 export function SizeGuideContent({ showLogo = true }) {
   return (
-    <div className="space-y-10">
+    <div>
+      {/* Title */}
       {showLogo && (
-        <div className="text-center">
+        <div className="text-center mb-10 md:mb-12">
           <p
-            className="text-[11px] tracking-[0.4em]"
-            style={{ color: 'rgba(60, 44, 31, 0.55)' }}
+            className="text-[10px] tracking-[0.4em] mb-2"
+            style={{ color: 'rgba(60, 44, 31, 0.7)' }}
           >
             PHILEON
           </p>
-          <h2
-            className="font-serif text-2xl md:text-3xl tracking-wide mt-3"
+          <h1
+            className="font-serif text-2xl md:text-3xl tracking-wide"
             style={{
               fontFamily: "'Playfair Display', serif",
               color: '#2c1f14',
             }}
           >
             RING SIZE GUIDE
-          </h2>
+          </h1>
         </div>
       )}
 
-      {/* Diagram image */}
-      <div className="w-full flex justify-center">
+      {/* STEP 1 */}
+      <div className="mb-12 text-center">
+        <p
+          className="text-[11px] tracking-[0.3em] mb-5"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          STEP 1
+        </p>
         <img
-          src={SIZE_DIAGRAM}
-          alt="Phileon ring size diagram"
-          className="max-h-[180px] md:max-h-[220px] w-auto object-contain opacity-90"
+          src={STEP_WRAP_IMG}
+          alt="Wrap paper around the base of your finger"
+          className="w-full max-w-[320px] mx-auto mb-6 rounded-sm"
           loading="lazy"
+          data-testid="size-guide-step1-img"
         />
+        <p
+          className="text-sm leading-relaxed max-w-[360px] mx-auto"
+          style={{ color: '#3c2c1f' }}
+        >
+          Wrap a strip of paper or ribbon around the base of your finger.
+          <br />
+          Mark where the ends meet.
+        </p>
+      </div>
+
+      {/* STEP 2 */}
+      <div className="mb-12 text-center">
+        <p
+          className="text-[11px] tracking-[0.3em] mb-5"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          STEP 2
+        </p>
+        <img
+          src={STEP_MEASURE_IMG}
+          alt="Measure the strip in millimeters"
+          className="w-full max-w-[320px] mx-auto mb-6 rounded-sm"
+          loading="lazy"
+          data-testid="size-guide-step2-img"
+        />
+        <p
+          className="text-sm leading-relaxed max-w-[360px] mx-auto"
+          style={{ color: '#3c2c1f' }}
+        >
+          Measure the length in millimeters.
+          <br />
+          Match this measurement to your size.
+        </p>
       </div>
 
       {/* Size Ranges */}
-      <div>
-        <p
-          className="text-[10px] tracking-[0.3em] mb-3 font-medium"
-          style={{ color: 'rgba(60, 44, 31, 0.6)' }}
-        >
-          SIZE RANGES
+      <div
+        className="text-center pt-8 space-y-3"
+        style={{ borderTop: '1px solid rgba(60, 44, 31, 0.18)' }}
+      >
+        <p className="text-sm" style={{ color: '#3c2c1f' }}>
+          Ladies — Sizes 4–9 (half sizes)
         </p>
-        <div className="space-y-1.5 text-sm leading-relaxed" style={{ color: '#3c2c1f' }}>
-          <p>Ladies — Sizes 4–9 (half sizes)</p>
-          <p>Gents — Sizes 6–12 (half sizes)</p>
-          <p>Custom — Available on request</p>
-        </div>
+        <p className="text-sm" style={{ color: '#3c2c1f' }}>
+          Gents — Sizes 6–12 (half sizes)
+        </p>
+        <p className="text-sm" style={{ color: '#3c2c1f' }}>
+          Custom — Available on request
+        </p>
       </div>
 
-      {/* Instructions */}
-      <div>
-        <p
-          className="text-[10px] tracking-[0.3em] mb-3 font-medium"
-          style={{ color: 'rgba(60, 44, 31, 0.6)' }}
-        >
-          HOW TO MEASURE
-        </p>
-        <div className="space-y-4 text-sm leading-relaxed" style={{ color: '#3c2c1f' }}>
-          <p>
-            Measure your finger at the end of the day.
-            <br />
-            Avoid measuring when hands are cold or warm.
-          </p>
-          <p>
-            Wrap a strip of paper or ribbon around the base of your finger.
-            <br />
-            Mark where the ends meet.
-          </p>
-          <p>
-            Measure the length in millimeters.
-            <br />
-            Match this measurement to your size.
-          </p>
-          <p>
-            If between sizes, choose the larger.
-            <br />
-            Wider rings should be worn slightly looser for comfort.
-          </p>
-        </div>
+      {/* Notes */}
+      <div
+        className="mt-10 text-center text-xs leading-relaxed space-y-1.5"
+        style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+      >
+        <p>Measure your finger at the end of the day.</p>
+        <p>Avoid measuring when hands are cold or warm.</p>
+        <p>If between sizes, choose the larger.</p>
+        <p>Wider rings should be worn slightly looser for comfort.</p>
       </div>
     </div>
   );
@@ -121,8 +146,8 @@ export default function SizeGuideModal({ open, onClose }) {
       {/* Panel */}
       <div
         className={`
-          relative z-10 w-full md:max-w-[520px] md:w-[520px]
-          max-h-[90vh] md:max-h-[85vh]
+          relative z-10 w-full md:max-w-[560px] md:w-[560px]
+          max-h-[92vh] md:max-h-[88vh]
           overflow-y-auto
           md:rounded-[10px]
           shadow-2xl

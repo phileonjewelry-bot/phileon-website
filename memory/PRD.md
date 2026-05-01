@@ -31,7 +31,23 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 - Lady Bamburgh hero `<img>` replaced with `<video>` (user-provided cinematic mp4 + poster fallback) in `LadyBamburghPage.jsx`
 - Existing editorial overlay preserved (PHILEON eyebrow, serif title, tagline, "Enter Bamburgh →" CTA)
 
+## Size Guide Modal — REDESIGNED (Feb 2026)
+- `/app/frontend/src/components/SizeGuideModal.jsx` rewritten to a clean 2-step visual layout:
+  - PHILEON label + "RING SIZE GUIDE" serif title
+  - STEP 1 (wrap paper around finger) with image
+  - STEP 2 (measure in mm) with image
+  - Size ranges block (Ladies / Gents / Custom) on a subtle divider
+  - Notes footer
+- Both step images currently use a single user-provided reference photo (hand + paper strip + ruler) via `SIZE_PHOTO` constant. TODO: swap in dedicated `ring-size-wrap.jpg` and `ring-size-measure.jpg` when provided.
+- Modal behavior preserved: centered desktop / bottom sheet mobile, click-outside + Escape close, scroll lock.
+- `/size-guide` standalone page reuses `SizeGuideContent` so both surfaces stay in sync.
+- Wired (no changes needed) on: LadyBamburghPage, CorinthiansPage, CocktailJessicaPage, CouronnePage.
+
 ## Backlog
+- P1: Real tier prices for PRISE DE COURONNE (currently placeholders: $11,400 / $14,800 / $18,800). Must update `products.js`, `livePricingConfig.js`, `pricing_engine.py`, `CouronnePage.jsx`.
+- P2: Upload dedicated Step 1 ("wrap") image for the Size Guide Modal.
+- P2: Vault Exclusive Drops (/vault/drews-world) fixed-price drop environment.
+- P3: Build out Chains category (currently routes to Coming Soon).
 - P3: Additional Vault drops as user supplies artifacts
 - P3: Additional gallery images for newer products
 - P3: Cross-sell/hover images for shop grid (match CYPHER hover behavior)
