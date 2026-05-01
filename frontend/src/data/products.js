@@ -2012,8 +2012,8 @@ This is expression — under control.`,
     tagline: "The crown was never given. It was taken.",
     collections: ["gents-rings", "signature", "collective"],
     currency: "CAD",
-    priceFrom: "From $11,400 CAD",
-    basePrice: 11400,
+    priceFrom: "From $2,800 CAD",
+    basePrice: 2800,
     dynamicPricing: true,
     pricingPending: false,
     defaultTier: "signature",
@@ -2023,42 +2023,33 @@ This is expression — under control.`,
     showInHomepageCarousel: true,
 
     imageUrl:
-      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e6uigdlz_1000148265.png",
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png",
 
     pricing: {
-      foundation: 11400,
-      signature:  14800,
-      heirloom:   18800,
+      foundation: 2800,
+      signature:  6200,
     },
 
     tiers: {
       foundation: {
         label: "FOUNDATION",
         name: "Foundation",
-        metal: "10K Gold · Blackened Finish",
-        stones: "Black & white diamonds",
+        metal: "925 Silver · Black Rhodium",
+        stones: "High-Impact Stones",
         badge: "",
-        description: "Solid 10K gold, blackened finish.",
+        description: "925 silver, black rhodium finish. High-impact stones.",
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K Gold · Blackened Finish",
-        stones: "Black & white diamonds",
+        metal: "10K Gold · Black Rhodium",
+        stones: "Lab Diamonds",
         badge: "MOST POPULAR",
-        description: "Solid 14K gold, blackened finish.",
-      },
-      heirloom: {
-        label: "HEIRLOOM",
-        name: "Heirloom",
-        metal: "18K Gold · Blackened Finish",
-        stones: "Natural black & white diamonds",
-        badge: "COLLECTOR",
-        description: "Solid 18K gold, blackened finish. Natural diamonds.",
+        description: "10K gold, black rhodium finish. Lab diamonds.",
       },
     },
 
-    specs: "Pavé crown band · Black & white diamonds · Blackened gold",
+    specs: "Pavé crown band · Black rhodium finish · Wide band",
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png", alt: "Prise de Couronne — pavé crown band", intent: "HERO" },

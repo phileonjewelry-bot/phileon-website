@@ -177,7 +177,6 @@ export default function CouronnePage() {
               {[
                 { key: "signature",  label: "Signature",  note: "Most Popular" },
                 { key: "foundation", label: "Foundation", note: null },
-                { key: "heirloom",   label: "Heirloom",   note: "Collector" },
               ].map(({ key, label, note }) => {
                 const isSelected = selectedTier === key;
                 const priceStr =
@@ -279,7 +278,7 @@ export default function CouronnePage() {
             className="space-y-2.5 text-[14px] leading-relaxed text-white/80"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            <li>10K, 14K, or 18K gold, blackened finish.</li>
+            <li>925 silver or 10K gold, black rhodium finish.</li>
             <li>Black enamel field.</li>
             <li>Black diamond pavé.</li>
             <li>Five bezel-set white diamond crown points.</li>
