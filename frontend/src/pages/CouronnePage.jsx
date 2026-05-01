@@ -272,7 +272,7 @@ export default function CouronnePage() {
             className="space-y-2.5 text-[14px] leading-relaxed text-white/80"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            <li>10K gold, blackened finish.</li>
+            <li>10K, 14K, or 18K gold, blackened finish.</li>
             <li>Black enamel field.</li>
             <li>Black diamond pavé.</li>
             <li>Five bezel-set white diamond crown points.</li>

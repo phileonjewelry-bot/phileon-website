@@ -2035,30 +2035,30 @@ This is expression — under control.`,
       foundation: {
         label: "FOUNDATION",
         name: "Foundation",
-        metal: "10K White Gold",
+        metal: "10K Gold · Blackened Finish",
         stones: "Black & white diamonds",
         badge: "",
-        description: "Solid 10K white gold construction.",
+        description: "Solid 10K gold, blackened finish.",
       },
       signature: {
         label: "SIGNATURE",
         name: "Signature",
-        metal: "14K White Gold",
+        metal: "14K Gold · Blackened Finish",
         stones: "Black & white diamonds",
         badge: "MOST POPULAR",
-        description: "Solid 14K white gold construction.",
+        description: "Solid 14K gold, blackened finish.",
       },
       heirloom: {
         label: "HEIRLOOM",
         name: "Heirloom",
-        metal: "18K White Gold",
+        metal: "18K Gold · Blackened Finish",
         stones: "Natural black & white diamonds",
         badge: "COLLECTOR",
-        description: "Solid 18K white gold construction. Natural diamonds.",
+        description: "Solid 18K gold, blackened finish. Natural diamonds.",
       },
     },
 
-    specs: "Pavé crown band · Black & white diamonds · White gold",
+    specs: "Pavé crown band · Black & white diamonds · Blackened gold",
 
     gallery: [
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e6uigdlz_1000148265.png", alt: "Prise de Couronne — pavé crown band", intent: "HERO" }
