@@ -147,49 +147,48 @@ export default function CocktailJessicaPage() {
         <span>BACK TO RINGS</span>
       </Link>
 
-      {/* HERO — split layout (image left, text right on desktop; stacked on mobile) */}
+      {/* HERO — full-bleed video */}
       <section
-        className="w-full grid grid-cols-1 md:grid-cols-2 min-h-[78vh] md:min-h-[88vh]"
+        className="relative w-full h-[90vh] overflow-hidden"
         data-testid="cocktail-jessica-hero"
       >
-        {/* Image side — soft beige studio */}
-        <div
-          className="relative flex items-center justify-center min-h-[55vh] md:min-h-[88vh]"
-          style={{
-            background:
-              "linear-gradient(135deg, #d9cab6 0%, #c8b79e 60%, #b7a187 100%)",
-          }}
-        >
-          <img
-            src={gallery[0]?.src}
-            alt="Le Cocktail de Jessica"
-            className="w-[70%] md:w-[75%] max-h-[70vh] object-contain"
-          />
-        </div>
+        <video
+          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/iy56nc32_XiaoYing_Video_1777600131919_HD.mp4"
+          poster={gallery[0]?.src}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover"
+          data-testid="cocktail-jessica-hero-video"
+        />
 
-        {/* Text side */}
-        <div className="relative flex items-center justify-center px-8 md:px-16 py-14 md:py-0 bg-[var(--cj-warm-dark)]">
+        {/* Dark gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+
+        {/* Text */}
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center text-white px-6 max-w-[640px]">
           <Reveal>
-            <div className="max-w-[440px]">
-              <h1
-                className="cj-head text-white text-[28px] md:text-[32px] mb-2"
-                style={{ letterSpacing: "0.2em" }}
-                data-testid="cocktail-jessica-title"
-              >
-                PHILEON
-              </h1>
-              <h2
-                className="text-white font-serif text-[34px] md:text-[42px] leading-[1.1] mb-6"
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
-              >
-                LE COCKTAIL DE JESSICA
-              </h2>
-              <div className="cj-body text-[17px] md:text-[19px] leading-[1.55] text-[var(--cj-cream)]/85 space-y-3" data-testid="cocktail-jessica-tagline">
-                <p>Colours, painted. Cast in gold.</p>
-                <p>A palette of her own.</p>
-                <p className="pt-2 cj-body-italic">Not a story. An argument.</p>
-                <p className="pt-1">She colors outside every line.</p>
-              </div>
+            <p className="text-xs tracking-[0.3em] mb-2 cj-head" data-testid="cocktail-jessica-title">
+              PHILEON
+            </p>
+
+            <h1
+              className="font-serif text-4xl md:text-5xl leading-tight mb-6"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              LE COCKTAIL DE JESSICA
+            </h1>
+
+            <div
+              className="cj-body text-sm md:text-base leading-relaxed space-y-2 opacity-90"
+              data-testid="cocktail-jessica-tagline"
+            >
+              <p>Colours, painted. Cast in gold.</p>
+              <p>A palette of her own.</p>
+              <p className="italic">Not a story. An argument.</p>
+              <p>She colors outside every line.</p>
             </div>
           </Reveal>
         </div>
