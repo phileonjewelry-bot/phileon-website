@@ -71,8 +71,12 @@ export default function CouronnePage() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           poster={HERO_IMG}
+          onEnded={(e) => {
+            e.currentTarget.currentTime = 0;
+            e.currentTarget.play().catch(() => {});
+          }}
           data-testid="couronne-hero-video-el"
         >
           <source
