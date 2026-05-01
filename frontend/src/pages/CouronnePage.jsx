@@ -65,11 +65,21 @@ export default function CouronnePage() {
         className="relative w-full h-[92vh] overflow-hidden bg-black"
         data-testid="couronne-hero"
       >
-        <img
-          src={HERO_IMG}
-          alt="Prise de Couronne ring"
-          className="absolute inset-0 w-full h-full object-contain"
-        />
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={HERO_IMG}
+          data-testid="couronne-hero-video-el"
+        >
+          <source
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cuar4red_XiaoYing_Video_1777617586081_HD.mp4"
+            type="video/mp4"
+          />
+        </video>
 
         {/* Subtle vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40 pointer-events-none" />
@@ -153,32 +163,6 @@ export default function CouronnePage() {
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* PRISE DE COURONNE — HERO VIDEO */}
-      <section className="w-full bg-black py-10 md:py-14" data-testid="couronne-hero-video">
-        <div className="w-full flex justify-center px-3 md:px-5">
-          <div className="w-full max-w-[720px] relative">
-            <video
-              className="w-full h-auto object-contain"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={HERO_IMG}
-              data-testid="couronne-hero-video-el"
-            >
-              <source
-                src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cuar4red_XiaoYing_Video_1777617586081_HD.mp4"
-                type="video/mp4"
-              />
-            </video>
-
-            {/* subtle depth gradient (very light) */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20" />
-          </div>
         </div>
       </section>
 
@@ -379,7 +363,7 @@ export default function CouronnePage() {
           </p>
           <div className="w-full flex justify-center">
             <img
-              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yvsvukw1_1000148336.png"
+              src="/images/prise-de-couronne-specifications.png"
               alt="Prise de Couronne ring specifications diagram"
               className="w-full max-w-[720px] h-auto object-contain"
               loading="lazy"
