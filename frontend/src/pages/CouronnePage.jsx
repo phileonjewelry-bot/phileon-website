@@ -342,6 +342,26 @@ export default function CouronnePage() {
         </div>
       </section>
 
+      {/* SPECIFICATIONS */}
+      <section
+        className="py-20 md:py-28 border-t border-white/[0.04]"
+        data-testid="couronne-specifications"
+      >
+        <div className="max-w-[760px] mx-auto px-5 md:px-8 text-center">
+          <p className="text-[10px] tracking-[0.4em] text-white/45 mb-10">
+            SPECIFICATIONS
+          </p>
+          <div className="w-full flex justify-center">
+            <img
+              src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yvsvukw1_1000148336.png"
+              alt="Prise de Couronne ring specifications diagram"
+              className="w-full max-w-[720px] h-auto object-contain"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* FINAL WORD */}
       <section
         className="py-24 md:py-32 border-t border-white/[0.04]"
