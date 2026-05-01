@@ -259,18 +259,104 @@ export default function CouronnePage() {
         </div>
       </section>
 
-      {/* CLOSING */}
-      <section className="py-16 md:py-24 border-t border-white/[0.04]">
-        <div className="text-center max-w-[520px] mx-auto px-5">
-          <p
-            className="font-serif italic text-[15px] text-white/55 leading-relaxed"
+      {/* COMPOSITION */}
+      <section
+        className="py-20 md:py-28 border-t border-white/[0.04]"
+        data-testid="couronne-composition"
+      >
+        <div className="max-w-[520px] mx-auto px-5 md:px-8 text-center">
+          <p className="text-[10px] tracking-[0.4em] text-white/45 mb-8">
+            COMPOSITION
+          </p>
+          <ul
+            className="space-y-2.5 text-[14px] leading-relaxed text-white/80"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            The crown was never given.
-            <br />
-            It was taken.
+            <li>10K gold, blackened finish.</li>
+            <li>Black enamel field.</li>
+            <li>Black diamond pavé.</li>
+            <li>Five bezel-set white diamond crown points.</li>
+            <li>Micro-pavé white diamond crown body.</li>
+            <li>Wide band.</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* DETAIL */}
+      <section
+        className="py-20 md:py-28 border-t border-white/[0.04]"
+        data-testid="couronne-detail"
+      >
+        <div className="max-w-[560px] mx-auto px-5 md:px-8 text-center">
+          <p className="text-[10px] tracking-[0.4em] text-white/45 mb-8">
+            DETAIL
           </p>
-          <p className="text-[9px] tracking-[0.3em] text-white/45 mt-6">
+          <div
+            className="space-y-7 font-serif italic text-[16px] md:text-[17px] leading-[1.8] text-white/75"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            <p>A field of black holds the crown in white.</p>
+            <p>
+              The band is wide by design.
+              <br />
+              Commanding. Unignorable.
+            </p>
+            <p>
+              The crown does not sit on top.
+              <br />
+              It breaks through.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CRAFT */}
+      <section
+        className="py-20 md:py-28 border-t border-white/[0.04]"
+        data-testid="couronne-craft"
+      >
+        <div className="max-w-[560px] mx-auto px-5 md:px-8 text-center">
+          <p className="text-[10px] tracking-[0.4em] text-white/45 mb-8">
+            CRAFT
+          </p>
+          <div
+            className="space-y-7 font-serif italic text-[16px] md:text-[17px] leading-[1.8] text-white/75"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            <p>
+              Black enamel beneath the stone field gives the darkness depth no
+              finish can replicate.
+            </p>
+            <p>
+              Black pavé absorbs the light.
+              <br />
+              White diamonds return it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL WORD */}
+      <section
+        className="py-24 md:py-32 border-t border-white/[0.04]"
+        data-testid="couronne-final-word"
+      >
+        <div className="max-w-[520px] mx-auto px-5 md:px-8 text-center">
+          <p className="text-[10px] tracking-[0.4em] text-white/45 mb-10">
+            FINAL WORD
+          </p>
+          <div
+            className="space-y-6 font-serif italic text-[17px] md:text-[19px] leading-[1.8] text-white/85"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            <p>
+              Some wear a crown.
+              <br />
+              Some take one.
+            </p>
+            <p>Prise de Couronne was made for the latter.</p>
+          </div>
+          <p className="text-[9px] tracking-[0.3em] text-white/35 mt-14">
             PRISE DE COURONNE — PHILEON
           </p>
         </div>

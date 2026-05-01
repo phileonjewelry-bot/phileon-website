@@ -31,6 +31,11 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 - Lady Bamburgh hero `<img>` replaced with `<video>` (user-provided cinematic mp4 + poster fallback) in `LadyBamburghPage.jsx`
 - Existing editorial overlay preserved (PHILEON eyebrow, serif title, tagline, "Enter Bamburgh →" CTA)
 
+## PRISE DE COURONNE — Editorial Copy Added (Feb 2026)
+- Added 4 editorial sections to `/app/frontend/src/pages/CouronnePage.jsx` below the purchase block: **COMPOSITION** (bulleted material spec), **DETAIL** (3 italic prose blocks), **CRAFT** (2 italic prose blocks), **FINAL WORD** (replaces previous closing tagline).
+- ⚠️ **Copy vs tier conflict**: editorial COMPOSITION says "10K gold, blackened finish" as THE material, but purchase tiers are 10K/14K/18K **white gold**. Pending user clarification (see Backlog).
+- Page route: `/products/prise-de-couronne`
+
 ## Size Guide Modal — REDESIGNED (Feb 2026)
 - `/app/frontend/src/components/SizeGuideModal.jsx` rewritten to a clean 2-step visual layout:
   - PHILEON label + "RING SIZE GUIDE" serif title
