@@ -94,12 +94,19 @@ export default function CouronnePage() {
           </p>
 
           <h1
-            className="font-serif text-5xl md:text-6xl leading-tight tracking-[-0.02em] mb-4"
+            className="font-serif text-5xl md:text-6xl leading-tight tracking-[-0.02em] mb-2"
             style={{ fontFamily: "'Playfair Display', serif" }}
             data-testid="couronne-title"
           >
             PRISE DE COURONNE
           </h1>
+
+          <p
+            className="text-[10px] md:text-[11px] tracking-[0.35em] uppercase opacity-55 mb-5"
+            data-testid="couronne-translation"
+          >
+            Taking of the Crown
+          </p>
 
           <p
             className="font-serif italic text-sm opacity-90"

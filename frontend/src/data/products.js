@@ -2066,7 +2066,8 @@ This is expression — under control.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/01qfiair_1000148278.png", alt: "Prise de Couronne — side profile", intent: "SIDE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ql06bws0_1000148294.png", alt: "Prise de Couronne — alternate angle", intent: "ANGLE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d1dv4hty_1000148306.png", alt: "Prise de Couronne — detail", intent: "DETAIL" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7povm3wv_1000148305.png", alt: "Prise de Couronne — crown macro", intent: "MACRO" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7povm3wv_1000148305.png", alt: "Prise de Couronne — crown macro", intent: "MACRO" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/zl21l19o_1000148314.png", alt: "Prise de Couronne — worn on the hand", intent: "WORN" }
     ],
 
     sizeProfile: {
