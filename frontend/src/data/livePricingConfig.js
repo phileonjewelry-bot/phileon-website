@@ -181,6 +181,11 @@ const livePricingConfig = {
   cocktailJessica: {
     standard: { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 18.5, lockedMetalReferenceCad: 1156 },
   },
+  priseDeCouronne: {
+    foundation: { lockedBasePriceCad: 11400, metalType: "10K", weightGrams: 18, lockedMetalReferenceCad: 1125 },
+    signature:  { lockedBasePriceCad: 14800, metalType: "14K", weightGrams: 20, lockedMetalReferenceCad: 1750 },
+    heirloom:   { lockedBasePriceCad: 18800, metalType: "18K", weightGrams: 22, lockedMetalReferenceCad: 2475 },
+  },
 };
 
 export default livePricingConfig;

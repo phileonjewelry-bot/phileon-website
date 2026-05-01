@@ -31,6 +31,7 @@ const SHOP_COLLECTION_MAP = {
   'morso': 'signature',
   'labete': 'signature',
   'tola-ii': 'signature',
+  'prise-de-couronne': 'signature',
 
   // EDITORIAL — sculptural / object-driven / fashion-forward
   'rosaria': 'editorial',
@@ -399,6 +400,22 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 2,
+  },
+  {
+    id: 'prise-de-couronne',
+    name: 'Prise de Couronne',
+    slug: 'prise-de-couronne',
+    materialLine: 'Signature Ring · Pavé Crown Band · White Gold',
+    imageUrl: products.priseDeCouronne.imageUrl,
+    href: '/products/prise-de-couronne',
+    price_range: formatPrice(products.priseDeCouronne.basePrice, 'CAD'),
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['gentlemens-club', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 3,
   },
 ];
 

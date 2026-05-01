@@ -1996,6 +1996,83 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // PRISE DE COURONNE
+  // Gents Ring — Pavé crown band
+  // ==========================================
+  priseDeCouronne: {
+    name: "PRISE DE COURONNE",
+    slug: "prise-de-couronne",
+    category: "rings",
+    audience: ["gentlemens-club", "collective"],
+    subtitle: "Signature Ring",
+    categoryType: "Ring",
+    tagline: "The crown was never given. It was taken.",
+    collections: ["gents-rings", "signature", "collective"],
+    currency: "CAD",
+    priceFrom: "From $11,400 CAD",
+    basePrice: 11400,
+    dynamicPricing: true,
+    pricingPending: false,
+    defaultTier: "signature",
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 3,
+    showInHomepageCarousel: true,
+
+    imageUrl:
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e6uigdlz_1000148265.png",
+
+    pricing: {
+      foundation: 11400,
+      signature:  14800,
+      heirloom:   18800,
+    },
+
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K White Gold",
+        stones: "Black & white diamonds",
+        badge: "",
+        description: "Solid 10K white gold construction.",
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K White Gold",
+        stones: "Black & white diamonds",
+        badge: "MOST POPULAR",
+        description: "Solid 14K white gold construction.",
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K White Gold",
+        stones: "Natural black & white diamonds",
+        badge: "COLLECTOR",
+        description: "Solid 18K white gold construction. Natural diamonds.",
+      },
+    },
+
+    specs: "Pavé crown band · Black & white diamonds · White gold",
+
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e6uigdlz_1000148265.png", alt: "Prise de Couronne — pavé crown band", intent: "HERO" }
+    ],
+
+    sizeProfile: {
+      type: "ring",
+      min: 6,
+      max: 12,
+      halfSizes: true,
+      customAbove: 12,
+    },
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
