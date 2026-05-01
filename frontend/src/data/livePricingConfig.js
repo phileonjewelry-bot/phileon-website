@@ -185,6 +185,11 @@ const livePricingConfig = {
     foundation: { lockedBasePriceCad: 2800, metalType: "925", weightGrams: 22, lockedMetalReferenceCad: 25 },
     signature:  { lockedBasePriceCad: 6200, metalType: "10K", weightGrams: 22, lockedMetalReferenceCad: 1375 },
   },
+  nervatura: {
+    foundation: { lockedBasePriceCad: 1200, metalType: "10K", weightGrams: 16, lockedMetalReferenceCad: 1000 },
+    signature:  { lockedBasePriceCad: 1800, metalType: "14K", weightGrams: 16, lockedMetalReferenceCad: 1400 },
+    heirloom:   { lockedBasePriceCad: 2600, metalType: "18K", weightGrams: 16, lockedMetalReferenceCad: 1800 },
+  },
 };
 
 export default livePricingConfig;

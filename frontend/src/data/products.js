@@ -2084,6 +2084,73 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // THE PHILEON NERVATURA
+  // Architectural drop earrings — structural, controlled
+  // ==========================================
+  nervatura: {
+    name: "THE PHILEON NERVATURA",
+    slug: "nervatura",
+    category: "earrings",
+    audience: ["ladies", "collective"],
+    subtitle: "Architectural Drop Earrings",
+    categoryType: "Earrings",
+    shopMaterialLine: "Architectural Drop Earrings · 10K / 14K / 18K Gold",
+    tagline: "The line carries the form.",
+    collections: ["ladies-earrings", "editorial", "collective"],
+    currency: "CAD",
+    priceFrom: "$1,200 CAD",
+    basePrice: 1200,
+    dynamicPricing: true,
+    pricingPending: false,
+    defaultTier: "signature",
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 4,
+    showInHomepageCarousel: false,
+
+    imageUrl:
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg",
+
+    pricing: {
+      foundation: 1200,
+      signature:  1800,
+      heirloom:   2600,
+    },
+
+    tiers: {
+      foundation: {
+        label: "FOUNDATION",
+        name: "Foundation",
+        metal: "10K Gold",
+        badge: "",
+        description: "10K gold. Architectural form, structural mesh.",
+      },
+      signature: {
+        label: "SIGNATURE",
+        name: "Signature",
+        metal: "14K Gold",
+        badge: "MOST POPULAR",
+        description: "14K gold. Greater material density, identical form.",
+      },
+      heirloom: {
+        label: "HEIRLOOM",
+        name: "Heirloom",
+        metal: "18K Gold",
+        badge: "COLLECTOR",
+        description: "18K gold. Maximum richness, lasting permanence.",
+      },
+    },
+
+    specs: "Architectural drop earrings · Structural mesh · 10K / 14K / 18K Gold",
+
+    gallery: [
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg", alt: "The Phileon Nervatura — architectural drop earrings", intent: "HERO" }
+    ],
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

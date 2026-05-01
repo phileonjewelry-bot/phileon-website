@@ -22,7 +22,6 @@ const SHOP_COLLECTION_MAP = {
   // SACRED — scripture/faith driven
   'galatians-614': 'sacred',
   'corinthians-15-14': 'sacred',
-
   // SIGNATURE — flagship craft / heirloom / single-audience couture
   'la-marva': 'signature',
   'annie-rose': 'signature',
@@ -47,6 +46,7 @@ const SHOP_COLLECTION_MAP = {
   'ptp-cuff': 'editorial',
   'rhythm-mesh-ring': 'editorial',
   'le-cocktail-de-jessica': 'editorial',
+  'nervatura': 'editorial',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',
@@ -416,6 +416,22 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 3,
+  },
+  {
+    id: 'nervatura',
+    name: 'The Phileon Nervatura',
+    slug: 'nervatura',
+    materialLine: products.nervatura.shopMaterialLine,
+    imageUrl: products.nervatura.imageUrl,
+    href: '/products/nervatura',
+    price_range: products.nervatura.priceFrom,
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: ['ladies', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 4,
   },
 ];
 

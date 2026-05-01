@@ -51,6 +51,7 @@ import ChainsComingSoonPage from "@/pages/ChainsComingSoonPage";
 import CocktailJessicaPage from "@/pages/CocktailJessicaPage";
 import SizeGuidePage from "@/pages/SizeGuidePage";
 import CouronnePage from "@/pages/CouronnePage";
+import NervaturaPage from "@/pages/NervaturaPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -132,6 +133,7 @@ function App() {
             <Route path="/products/le-cocktail-de-jessica" element={<CocktailJessicaPage />} />
             <Route path="/size-guide" element={<SizeGuidePage />} />
             <Route path="/products/prise-de-couronne" element={<CouronnePage />} />
+            <Route path="/products/nervatura" element={<NervaturaPage />} />
             <Route path="/shop/labete" element={<LaBetePage />} />
             <Route path="/shop/blessed" element={<BlessedPage />} />
             <Route path="/shop/coogi-i" element={<CoogiPage />} />
