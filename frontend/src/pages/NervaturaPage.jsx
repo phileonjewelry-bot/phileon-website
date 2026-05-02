@@ -46,9 +46,22 @@ const EDITORIAL_SECTIONS = [
 ];
 
 const SPECIFICATIONS = [
-  { label: "ORIGIN", body: "Digitally modeled. Cast. Hand-finished." },
-  { label: "METAL", body: "Available in 10K / 14K / 18K Gold" },
-  { label: "CONSTRUCTION", body: "Segmented structural mesh with continuous curvature" },
+  {
+    label: "ORIGIN",
+    lines: ["Digitally modeled.", "Cast.", "Hand-finished."],
+  },
+  {
+    label: "METAL",
+    lines: ["10K / 14K / 18K Gold.", "Made to order."],
+  },
+  {
+    label: "CONSTRUCTION",
+    lines: [
+      "Segmented structural mesh.",
+      "Continuous curvature.",
+      "Lightweight wear.",
+    ],
+  },
 ];
 
 // Lightweight scroll-fade-in (no external lib)
@@ -331,23 +344,44 @@ export default function NervaturaPage() {
 
       {/* ─── 9. SPECIFICATIONS ─────────────────────────────────────── */}
       <section
-        className="w-full py-20 md:py-28 border-t border-white/[0.06]"
+        className="w-full py-20 md:py-28"
         data-testid="nervatura-specifications"
       >
         <div className="max-w-[1080px] mx-auto px-6 md:px-10">
           <FadeInOnScroll>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+            {/* Section title */}
+            <p
+              className="nervatura-cinzel text-[11px] tracking-[0.4em] text-center text-white/55 mb-14"
+              data-testid="nervatura-spec-section-title"
+            >
+              SPECIFICATIONS
+            </p>
+
+            {/* 3-col grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-16">
               {SPECIFICATIONS.map((spec, i) => (
-                <div key={spec.label} className="text-center md:text-left">
+                <div
+                  key={spec.label}
+                  className="text-center md:text-left"
+                  data-testid={`nervatura-spec-col-${i}`}
+                >
+                  {/* Soft champagne divider */}
+                  <div
+                    aria-hidden
+                    className="h-px w-12 mx-auto md:mx-0 mb-5"
+                    style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }}
+                  />
                   <p
-                    className="nervatura-cinzel text-[11px] tracking-[0.35em] text-[#D4AF37]/85 mb-5"
+                    className="nervatura-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-5"
                     data-testid={`nervatura-spec-label-${i}`}
                   >
                     {spec.label}
                   </p>
-                  <p className="nervatura-cormorant text-[17px] md:text-[18px] leading-[1.6] text-white/75">
-                    {spec.body}
-                  </p>
+                  <div className="nervatura-cormorant text-[17px] md:text-[18px] leading-[1.6] text-white/70 space-y-1.5">
+                    {spec.lines.map((ln, li) => (
+                      <p key={li}>{ln}</p>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -374,7 +408,7 @@ export default function NervaturaPage() {
 
       {/* ─── 11. PURCHASE BLOCK ────────────────────────────────────── */}
       <section className="w-full py-16 md:py-24" data-testid="nervatura-purchase">
-        <div className="max-w-[640px] mx-auto px-6 md:px-8 text-center space-y-10">
+        <div className="max-w-[960px] mx-auto px-6 md:px-8 text-center space-y-10">
           <div>
             <h2
               className="nervatura-cinzel text-2xl md:text-3xl text-white"
@@ -388,52 +422,105 @@ export default function NervaturaPage() {
             </p>
           </div>
 
-          {/* Karat selector */}
+          {/* Tier cards — Cartier style */}
           <div>
-            <p className="nervatura-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-4">
-              KARAT
+            <p className="nervatura-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-6">
+              SELECT YOUR TIER
             </p>
-            <div className="inline-flex border border-white/15">
-              {tierOrder.map(({ key, short }, idx) => {
-                const isSelected = selectedTier === key;
+
+            <div
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 text-left"
+              data-testid="nervatura-tier-cards"
+            >
+              {tierOrder.map(({ key }) => {
                 const tier = product.tiers[key];
+                const isSelected = selectedTier === key;
+                const livePriceFormatted = tierPrices[key]?.formatted;
+                const basePriceFormatted = `$${product.pricing[key].toLocaleString("en-CA")} CAD`;
+
                 return (
                   <button
                     key={key}
                     type="button"
                     onClick={() => setSelectedTier(key)}
                     data-testid={`nervatura-tier-${key}-btn`}
-                    className={`
-                      relative px-7 md:px-10 py-4 transition-colors duration-300
-                      nervatura-cinzel text-[12px] tracking-[0.25em]
-                      ${idx > 0 ? "border-l border-white/15" : ""}
-                      ${isSelected
-                        ? "bg-[#D4AF37] text-black"
-                        : "text-white/70 hover:text-white hover:bg-white/[0.04]"}
-                    `}
+                    aria-pressed={isSelected}
                     aria-label={`${tier.name} — ${tier.metal}`}
+                    className={`
+                      relative rounded-2xl border bg-transparent
+                      transition-all duration-500 ease-out
+                      px-5 md:px-6 py-6 md:py-7
+                      text-left w-full
+                      ${isSelected
+                        ? "border-[#C6A86B] bg-[#C6A86B]/[0.06] shadow-[inset_0_0_0_1px_rgba(198,168,107,0.18)]"
+                        : "border-white/20 hover:border-[#C6A86B] hover:bg-[#C6A86B]/[0.04]"}
+                    `}
                   >
-                    {short}
+                    {/* Badge */}
+                    {tier.badge ? (
+                      <span
+                        className="
+                          absolute top-4 right-4
+                          bg-black text-white uppercase
+                          tracking-[0.18em] rounded-full
+                          text-[9px] px-2 py-1
+                        "
+                      >
+                        {tier.badge}
+                      </span>
+                    ) : null}
+
+                    {/* Name */}
+                    <p
+                      className={`
+                        nervatura-cinzel text-[14px] md:text-[15px] tracking-[0.22em]
+                        transition-colors duration-500 ease-out
+                        ${isSelected ? "text-white" : "text-white/80"}
+                      `}
+                    >
+                      {tier.name.toUpperCase()}
+                    </p>
+
+                    {/* Metal */}
+                    <p
+                      className={`
+                        nervatura-cormorant text-sm mt-1
+                        transition-colors duration-500 ease-out
+                        ${isSelected ? "text-white/80" : "text-white/55"}
+                      `}
+                    >
+                      {tier.metal}
+                    </p>
+
+                    {/* Descriptor */}
+                    <p
+                      className={`
+                        nervatura-cormorant italic text-[15px] mt-4
+                        transition-colors duration-500 ease-out
+                        ${isSelected ? "text-white/80" : "text-white/55"}
+                      `}
+                    >
+                      {tier.description}
+                    </p>
+
+                    {/* Price */}
+                    <p
+                      className={`
+                        nervatura-cinzel text-[16px] md:text-[17px] mt-5
+                        tracking-[0.05em]
+                        transition-colors duration-500 ease-out
+                        ${isSelected ? "text-white" : "text-white/70"}
+                      `}
+                    >
+                      {livePriceFormatted ? `${livePriceFormatted} CAD` : basePriceFormatted}
+                    </p>
                   </button>
                 );
               })}
             </div>
-
-            {/* Tier label + price summary */}
-            <div className="mt-5 space-y-1">
-              <p className="nervatura-cinzel text-[10px] tracking-[0.35em] text-white/55">
-                {product.tiers[selectedTier].name.toUpperCase()}
-                {product.tiers[selectedTier].badge
-                  ? ` · ${product.tiers[selectedTier].badge}`
-                  : ""}
-              </p>
-              <p className="nervatura-cormorant text-sm text-white/45">
-                {product.tiers[selectedTier].metal}
-              </p>
-            </div>
           </div>
 
-          {/* Live price */}
+          {/* Live price (selected) */}
           <div>
             <p
               className="nervatura-cinzel text-3xl md:text-4xl text-white"
