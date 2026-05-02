@@ -22,29 +22,6 @@ const IMG_FULL_PRODUCT =
 const IMG_PACKAGING =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d05l53mk_1000148507.png"; // black velvet box
 
-const EDITORIAL_SECTIONS = [
-  {
-    title: "COMPOSITION",
-    body: "A study in controlled curvature. Each segment follows a deliberate path, creating rhythm without repetition.",
-  },
-  {
-    title: "STRUCTURE",
-    body: "The form is held through tension and continuity. Nothing decorative. Every line contributes to the whole.",
-  },
-  {
-    title: "SURFACE",
-    body: "A mesh articulation that captures light in motion. Precision detailing across every plane.",
-  },
-  {
-    title: "WEIGHT",
-    body: "Engineered for presence without burden. The piece holds visually, but wears lightly.",
-  },
-  {
-    title: "FINAL WORD",
-    body: "Form is not imposed. It is resolved.",
-  },
-];
-
 const SPECIFICATIONS = [
   {
     label: "ORIGIN",
@@ -209,205 +186,8 @@ export default function NervaturaPage() {
         </div>
       </section>
 
-      {/* ─── 2. TRANSITION SPACE ───────────────────────────────────── */}
-      <div className="h-[120px] md:h-[160px]" />
-
-      {/* ─── 3. EDITORIAL BLOCK ────────────────────────────────────── */}
-      <section
-        className="relative w-full px-6 md:px-10 pb-24 md:pb-32"
-        data-testid="nervatura-editorial"
-      >
-        <div className="max-w-[960px] mx-auto relative">
-          {/* Vertical gold divider */}
-          <div
-            aria-hidden
-            className="hidden md:block absolute top-0 bottom-0 w-px"
-            style={{
-              left: "calc(33% + 24px)",
-              background:
-                "linear-gradient(to bottom, transparent 0%, rgba(212,175,55,0.45) 12%, rgba(212,175,55,0.45) 88%, transparent 100%)",
-            }}
-          />
-
-          <div className="space-y-16 md:space-y-20">
-            {EDITORIAL_SECTIONS.map((section, i) => (
-              <FadeInOnScroll key={section.title} delay={i * 60}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-12">
-                  <div className="md:col-span-1">
-                    <h3
-                      className="nervatura-cinzel text-[12px] md:text-[13px] text-white/85"
-                      style={{ letterSpacing: "0.32em" }}
-                      data-testid={`nervatura-editorial-title-${i}`}
-                    >
-                      {section.title}
-                    </h3>
-                  </div>
-                  <div className="md:col-span-2">
-                    <p
-                      className="nervatura-cormorant text-[18px] md:text-[20px] leading-[1.65] text-white/75"
-                      data-testid={`nervatura-editorial-body-${i}`}
-                    >
-                      {section.body}
-                    </p>
-                  </div>
-                </div>
-              </FadeInOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 4. PRIMARY LIFESTYLE IMAGE ────────────────────────────── */}
-      <section
-        className="w-full bg-black pt-4 pb-24 md:pb-32"
-        data-testid="nervatura-primary-lifestyle"
-      >
-        <div className="w-full flex justify-center px-3 md:px-6">
-          <FadeInOnScroll className="w-full max-w-[960px]">
-            <img
-              src={IMG_PRIMARY_LIFESTYLE}
-              alt="The Phileon Nervatura — front-facing campaign portrait"
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 5. SECONDARY LIFESTYLE ────────────────────────────────── */}
-      <section
-        className="w-full bg-black pb-24 md:pb-32"
-        data-testid="nervatura-secondary-lifestyle"
-      >
-        <div className="w-full flex justify-center px-3 md:px-6">
-          <FadeInOnScroll className="w-full max-w-[880px]">
-            <img
-              src={IMG_SECONDARY_LIFESTYLE}
-              alt="The Phileon Nervatura — angled portrait"
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 6. PROFILE / STRUCTURE SHOT ───────────────────────────── */}
-      <section
-        className="w-full bg-black pb-24 md:pb-32"
-        data-testid="nervatura-profile-structure"
-      >
-        <div className="w-full flex justify-center px-3 md:px-6">
-          <FadeInOnScroll className="w-full max-w-[820px]">
-            <img
-              src={IMG_PROFILE_STRUCTURE}
-              alt="The Phileon Nervatura — full drop length, structural silhouette"
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 7. CRAFT / MACRO DETAIL ───────────────────────────────── */}
-      <section
-        className="w-full bg-black pb-24 md:pb-32"
-        data-testid="nervatura-craft-macro"
-      >
-        <div className="w-full flex justify-center px-3 md:px-6">
-          <FadeInOnScroll className="w-full max-w-[820px]">
-            <img
-              src={IMG_CRAFT_MACRO}
-              alt="The Phileon Nervatura — close-up mesh detail"
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 8. FULL PRODUCT IMAGE ─────────────────────────────────── */}
-      <section
-        className="w-full bg-black pb-24 md:pb-32"
-        data-testid="nervatura-full-product"
-      >
-        <div className="w-full flex justify-center px-3 md:px-6">
-          <FadeInOnScroll className="w-full max-w-[820px]">
-            <img
-              src={IMG_FULL_PRODUCT}
-              alt="The Phileon Nervatura — full pair on clean surface"
-              className="w-full h-auto object-contain"
-              loading="lazy"
-            />
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 9. SPECIFICATIONS ─────────────────────────────────────── */}
-      <section
-        className="w-full py-20 md:py-28"
-        data-testid="nervatura-specifications"
-      >
-        <div className="max-w-[1080px] mx-auto px-6 md:px-10">
-          <FadeInOnScroll>
-            {/* Section title */}
-            <p
-              className="nervatura-cinzel text-[11px] tracking-[0.4em] text-center text-white/55 mb-14"
-              data-testid="nervatura-spec-section-title"
-            >
-              SPECIFICATIONS
-            </p>
-
-            {/* 3-col grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-16">
-              {SPECIFICATIONS.map((spec, i) => (
-                <div
-                  key={spec.label}
-                  className="text-center md:text-left"
-                  data-testid={`nervatura-spec-col-${i}`}
-                >
-                  {/* Soft champagne divider */}
-                  <div
-                    aria-hidden
-                    className="h-px w-12 mx-auto md:mx-0 mb-5"
-                    style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }}
-                  />
-                  <p
-                    className="nervatura-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-5"
-                    data-testid={`nervatura-spec-label-${i}`}
-                  >
-                    {spec.label}
-                  </p>
-                  <div className="nervatura-cormorant text-[17px] md:text-[18px] leading-[1.6] text-white/70 space-y-1.5">
-                    {spec.lines.map((ln, li) => (
-                      <p key={li}>{ln}</p>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 10. PACKAGING / OWNERSHIP IMAGE ───────────────────────── */}
-      <section
-        className="w-full bg-black py-20 md:py-28"
-        data-testid="nervatura-packaging"
-      >
-        <div className="w-full flex justify-center px-3 md:px-6">
-          <FadeInOnScroll className="w-full max-w-[780px]">
-            <img
-              src={IMG_PACKAGING}
-              alt="The Phileon Nervatura — in the presentation box"
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
-          </FadeInOnScroll>
-        </div>
-      </section>
-
-      {/* ─── 11. PURCHASE BLOCK ────────────────────────────────────── */}
-      <section className="w-full py-16 md:py-24" data-testid="nervatura-purchase">
+      {/* ─── 2. PURCHASE BLOCK (directly under hero) ───────────────── */}
+      <section className="w-full py-14 md:py-20" data-testid="nervatura-purchase">
         <div className="max-w-[960px] mx-auto px-6 md:px-8 text-center space-y-10">
           <div>
             <h2
@@ -456,21 +236,12 @@ export default function NervaturaPage() {
                         : "border-white/20 hover:border-[#C6A86B] hover:bg-[#C6A86B]/[0.04]"}
                     `}
                   >
-                    {/* Badge */}
                     {tier.badge ? (
-                      <span
-                        className="
-                          absolute top-4 right-4
-                          bg-black text-white uppercase
-                          tracking-[0.18em] rounded-full
-                          text-[9px] px-2 py-1
-                        "
-                      >
+                      <span className="absolute top-4 right-4 bg-black text-white uppercase tracking-[0.18em] rounded-full text-[9px] px-2 py-1">
                         {tier.badge}
                       </span>
                     ) : null}
 
-                    {/* Name */}
                     <p
                       className={`
                         nervatura-cinzel text-[14px] md:text-[15px] tracking-[0.22em]
@@ -481,7 +252,6 @@ export default function NervaturaPage() {
                       {tier.name.toUpperCase()}
                     </p>
 
-                    {/* Metal */}
                     <p
                       className={`
                         nervatura-cormorant text-sm mt-1
@@ -492,7 +262,6 @@ export default function NervaturaPage() {
                       {tier.metal}
                     </p>
 
-                    {/* Descriptor */}
                     <p
                       className={`
                         nervatura-cormorant italic text-[15px] mt-4
@@ -503,11 +272,9 @@ export default function NervaturaPage() {
                       {tier.description}
                     </p>
 
-                    {/* Price */}
                     <p
                       className={`
-                        nervatura-cinzel text-[16px] md:text-[17px] mt-5
-                        tracking-[0.05em]
+                        nervatura-cinzel text-[16px] md:text-[17px] mt-5 tracking-[0.05em]
                         transition-colors duration-500 ease-out
                         ${isSelected ? "text-white" : "text-white/70"}
                       `}
@@ -538,29 +305,156 @@ export default function NervaturaPage() {
           <button
             onClick={onAcquire}
             disabled={isAdding}
-            data-testid="nervatura-acquire-btn"
+            data-testid="nervatura-add-to-cart-btn"
             className="
               nervatura-cinzel inline-block px-14 py-5
-              bg-transparent border border-[#D4AF37] text-[#D4AF37]
-              tracking-[0.4em] text-[12px]
-              hover:bg-[#D4AF37] hover:text-black
+              bg-transparent border border-[#C6A86B] text-[#C6A86B]
+              tracking-[0.3em] text-[12px]
+              hover:bg-[#C6A86B] hover:text-black
               disabled:opacity-40 disabled:cursor-not-allowed
               transition-colors duration-500
             "
           >
-            {isAdding ? "ACQUIRING..." : buttonText === "Added!" ? "ACQUIRED" : "ACQUIRE"}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
           </button>
 
-          {/* Trust line */}
           <p className="nervatura-cormorant text-sm text-white/45 italic">
             Made to order · 3–4 weeks · Complimentary insured shipping
           </p>
         </div>
       </section>
 
-      {/* ─── 6. SPECIFICATIONS ─── REMOVED (moved up to section 9) ─── */}
+      {/* ─── 3. HORIZONTAL GALLERY ─────────────────────────────────── */}
+      <section
+        className="w-full bg-black py-8 md:py-12"
+        data-testid="nervatura-gallery"
+      >
+        <div
+          className="
+            flex overflow-x-auto gap-3 md:gap-4 px-4 md:px-10 pb-4
+            snap-x snap-mandatory
+            scrollbar-thin
+          "
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "rgba(198,168,107,0.4) transparent",
+          }}
+        >
+          {[
+            IMG_PRIMARY_LIFESTYLE,
+            IMG_SECONDARY_LIFESTYLE,
+            IMG_PROFILE_STRUCTURE,
+            IMG_CRAFT_MACRO,
+            IMG_FULL_PRODUCT,
+            "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png",
+          ].map((src, i) => (
+            <div
+              key={src}
+              className="
+                relative flex-shrink-0
+                snap-center
+                w-[78vw] sm:w-[52vw] md:w-[32vw] lg:w-[26vw]
+                aspect-[3/4]
+                bg-black overflow-hidden
+              "
+              data-testid={`nervatura-gallery-item-${i}`}
+            >
+              <img
+                src={src}
+                alt={`The Phileon Nervatura — view ${i + 1}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
 
-      {/* ─── 12. FINAL STATEMENT ────────────────────────────────────── */}
+      {/* ─── 4. COMPACT EDITORIAL ──────────────────────────────────── */}
+      <section
+        className="w-full py-16 md:py-20"
+        data-testid="nervatura-editorial"
+      >
+        <div className="max-w-[640px] mx-auto px-6 text-center">
+          <FadeInOnScroll>
+            <p
+              className="nervatura-cormorant italic text-xl md:text-2xl text-white/80 leading-[1.6]"
+              data-testid="nervatura-editorial-line-1"
+            >
+              Controlled curvature. Continuous structure.
+            </p>
+            <p
+              className="nervatura-cormorant italic text-lg md:text-xl text-white/55 leading-[1.6] mt-4"
+              data-testid="nervatura-editorial-line-2"
+            >
+              Form is not imposed. It is resolved.
+            </p>
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 5. SPECIFICATIONS (compact) ───────────────────────────── */}
+      <section
+        className="w-full py-16 md:py-20"
+        data-testid="nervatura-specifications"
+      >
+        <div className="max-w-[1080px] mx-auto px-6 md:px-10">
+          <FadeInOnScroll>
+            <p
+              className="nervatura-cinzel text-[11px] tracking-[0.4em] text-center text-white/55 mb-10"
+              data-testid="nervatura-spec-section-title"
+            >
+              SPECIFICATIONS
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+              {SPECIFICATIONS.map((spec, i) => (
+                <div
+                  key={spec.label}
+                  className="text-center md:text-left"
+                  data-testid={`nervatura-spec-col-${i}`}
+                >
+                  <div
+                    aria-hidden
+                    className="h-px w-10 mx-auto md:mx-0 mb-4"
+                    style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }}
+                  />
+                  <p
+                    className="nervatura-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4"
+                    data-testid={`nervatura-spec-label-${i}`}
+                  >
+                    {spec.label}
+                  </p>
+                  <div className="nervatura-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
+                    {spec.lines.map((ln, li) => (
+                      <p key={li}>{ln}</p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 6. PACKAGING (optional) ───────────────────────────────── */}
+      <section
+        className="w-full bg-black py-16 md:py-20"
+        data-testid="nervatura-packaging"
+      >
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[720px]">
+            <img
+              src={IMG_PACKAGING}
+              alt="The Phileon Nervatura — in the presentation box"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 7. FINAL STATEMENT ────────────────────────────────────── */}
       <section
         className="w-full py-32 md:py-44 border-t border-white/[0.04]"
         data-testid="nervatura-final-statement"
