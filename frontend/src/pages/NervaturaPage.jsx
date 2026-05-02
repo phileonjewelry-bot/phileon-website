@@ -134,7 +134,7 @@ export default function NervaturaPage() {
           loop
           playsInline
           preload="auto"
-          poster="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png"
+          poster="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg"
           onEnded={(e) => {
             e.currentTarget.currentTime = 0;
             e.currentTarget.play().catch(() => {});
@@ -142,7 +142,7 @@ export default function NervaturaPage() {
           data-testid="nervatura-hero-video-el"
         >
           <source
-            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c1o4fupk_XiaoYing_Video_1777699475543_1080HD.mp4"
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/r9udxjr3_XiaoYing_Video_1777699475543_1080HD.mp4"
             type="video/mp4"
           />
         </video>
