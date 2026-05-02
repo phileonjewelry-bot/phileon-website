@@ -147,8 +147,8 @@ export default function NervaturaPage() {
           />
         </video>
 
-        {/* Subtle dual gradient (top + bottom) for text readability */}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/25 via-black/10 to-black/35" />
+        {/* Bottom gradient for text readability */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/40 to-transparent" />
 
         {/* Back link */}
         <Link
@@ -177,7 +177,8 @@ export default function NervaturaPage() {
               NERVATURA
             </h1>
             <p
-              className="nervatura-cormorant italic text-base md:text-lg text-white/75 mt-5"
+              className="text-white italic tracking-wide text-sm mt-4"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
               data-testid="nervatura-subline"
             >
               Status has a structure.
