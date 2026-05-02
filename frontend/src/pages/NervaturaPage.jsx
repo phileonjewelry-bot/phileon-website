@@ -340,16 +340,9 @@ export default function NervaturaPage() {
             scrollbarColor: "rgba(198,168,107,0.4) transparent",
           }}
         >
-          {[
-            IMG_PRIMARY_LIFESTYLE,
-            IMG_SECONDARY_LIFESTYLE,
-            IMG_PROFILE_STRUCTURE,
-            IMG_CRAFT_MACRO,
-            IMG_FULL_PRODUCT,
-            "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png",
-          ].map((src, i) => (
+          {(product.gallery || []).map((img, i) => (
             <div
-              key={src}
+              key={img.src}
               className="
                 relative flex-shrink-0
                 snap-center
@@ -360,8 +353,8 @@ export default function NervaturaPage() {
               data-testid={`nervatura-gallery-item-${i}`}
             >
               <img
-                src={src}
-                alt={`The Phileon Nervatura — view ${i + 1}`}
+                src={img.src}
+                alt={img.alt || `The Phileon Nervatura — view ${i + 1}`}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
