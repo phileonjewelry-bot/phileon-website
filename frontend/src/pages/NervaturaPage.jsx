@@ -77,6 +77,10 @@ function FadeInOnScroll({ children, delay = 0, className = "" }) {
 
 export default function NervaturaPage() {
   const product = products.nervatura;
+  const gallery = product.gallery || [];
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const activeImage = gallery[galleryIndex] || gallery[0] || { src: HERO_IMG, alt: product.name };
+
   const [selectedTier, setSelectedTier] = useState(product.defaultTier || "signature");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
@@ -213,21 +217,59 @@ export default function NervaturaPage() {
         </div>
       </section>
 
-      {/* ─── 4. PRODUCT BREAK ──────────────────────────────────────── */}
+      {/* ─── 4. GALLERY ────────────────────────────────────────────── */}
       <section
         className="w-full bg-black py-20 md:py-28"
-        data-testid="nervatura-product-break"
+        data-testid="nervatura-gallery"
       >
-        <div className="max-w-[640px] mx-auto px-5 md:px-8">
+        <div className="max-w-[760px] mx-auto px-5 md:px-8">
           <FadeInOnScroll>
-            <div className="w-full overflow-hidden bg-black">
+            {/* Main image */}
+            <div
+              className="w-full bg-black overflow-hidden mb-6"
+              data-testid="nervatura-gallery-main"
+            >
               <img
-                src={HERO_IMG}
-                alt="The Phileon Nervatura"
-                className="w-full h-auto object-contain"
+                key={activeImage.src}
+                src={activeImage.src}
+                alt={activeImage.alt}
+                className="w-full h-auto object-contain transition-opacity duration-500"
+                style={{ maxHeight: "78vh" }}
                 loading="lazy"
               />
             </div>
+
+            {/* Thumbnails */}
+            {gallery.length > 1 && (
+              <div className="flex items-center justify-center gap-3 md:gap-4 flex-wrap">
+                {gallery.map((img, i) => {
+                  const isActive = i === galleryIndex;
+                  return (
+                    <button
+                      key={img.src}
+                      type="button"
+                      onClick={() => setGalleryIndex(i)}
+                      data-testid={`nervatura-thumb-${i}`}
+                      aria-label={`View ${img.alt}`}
+                      className={`
+                        relative w-16 h-16 md:w-20 md:h-20 overflow-hidden
+                        transition-all duration-300
+                        ${isActive
+                          ? "ring-1 ring-[#D4AF37] opacity-100"
+                          : "opacity-50 hover:opacity-90"}
+                      `}
+                    >
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </FadeInOnScroll>
         </div>
       </section>
