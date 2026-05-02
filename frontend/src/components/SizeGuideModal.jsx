@@ -1,13 +1,9 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 
-// Single user-provided reference photo — used for both Step 1 and Step 2
-// until dedicated ring-size-wrap.jpg and ring-size-measure.jpg are uploaded.
-const SIZE_PHOTO =
-  'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/18v679um_1000148270.png';
-
-const STEP_WRAP_IMG = SIZE_PHOTO;
-const STEP_MEASURE_IMG = SIZE_PHOTO;
+// Dedicated step images (generated to match the luxury warm-neutral aesthetic)
+const STEP_WRAP_IMG = "/images/ring-size-wrap.jpg";
+const STEP_MEASURE_IMG = "/images/ring-size-measure.jpg";
 
 export function SizeGuideContent({ showLogo = true }) {
   return (
