@@ -123,17 +123,31 @@ export default function NervaturaPage() {
 
       {/* ─── 1. HERO ───────────────────────────────────────────────── */}
       <section
-        className="relative w-full h-[92vh] overflow-hidden bg-black"
+        className="relative w-full h-[92vh] bg-black overflow-hidden"
         data-testid="nervatura-hero"
       >
-        <img
-          src={HERO_IMG}
-          alt="The Phileon Nervatura — architectural drop earrings"
+        <video
           className="absolute inset-0 w-full h-full object-cover"
-        />
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png"
+          onEnded={(e) => {
+            e.currentTarget.currentTime = 0;
+            e.currentTarget.play().catch(() => {});
+          }}
+          data-testid="nervatura-hero-video-el"
+        >
+          <source
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c1o4fupk_XiaoYing_Video_1777699475543_1080HD.mp4"
+            type="video/mp4"
+          />
+        </video>
 
-        {/* Subtle dual gradient (top + bottom) */}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/55 via-transparent to-black/65" />
+        {/* Subtle dual gradient (top + bottom) for text readability */}
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/25 via-black/10 to-black/35" />
 
         {/* Back link */}
         <Link
@@ -146,26 +160,28 @@ export default function NervaturaPage() {
         </Link>
 
         {/* Centered overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-          <p
-            className="nervatura-cinzel text-[10px] md:text-[11px] tracking-[0.5em] text-white/85 mb-5"
-            data-testid="nervatura-eyebrow"
-          >
-            PHILEON
-          </p>
-          <h1
-            className="nervatura-cinzel text-4xl md:text-6xl text-white mb-3"
-            style={{ letterSpacing: "0.18em" }}
-            data-testid="nervatura-title"
-          >
-            NERVATURA
-          </h1>
-          <p
-            className="nervatura-cormorant italic text-base md:text-lg text-white/75"
-            data-testid="nervatura-subline"
-          >
-            Status has a structure.
-          </p>
+        <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
+          <div>
+            <p
+              className="nervatura-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5"
+              data-testid="nervatura-eyebrow"
+            >
+              PHILEON
+            </p>
+            <h1
+              className="nervatura-cinzel text-4xl md:text-6xl text-white"
+              style={{ letterSpacing: "0.12em" }}
+              data-testid="nervatura-title"
+            >
+              NERVATURA
+            </h1>
+            <p
+              className="nervatura-cormorant italic text-base md:text-lg text-white/75 mt-5"
+              data-testid="nervatura-subline"
+            >
+              Status has a structure.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -410,7 +426,7 @@ export default function NervaturaPage() {
               className="nervatura-cormorant italic text-3xl md:text-5xl text-white/85 leading-[1.4]"
               data-testid="nervatura-final-line"
             >
-              "Structure, resolved."
+              "Built, not made."
             </p>
             <p className="nervatura-cinzel text-[10px] tracking-[0.4em] text-white/30 mt-12">
               THE PHILEON NERVATURA
