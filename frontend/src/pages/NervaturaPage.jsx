@@ -8,6 +8,20 @@ import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg";
 
+// Image atlas for the editorial progression (sections 4–10)
+const IMG_PRIMARY_LIFESTYLE =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7mytqo56_1000148497.png"; // front-facing campaign
+const IMG_SECONDARY_LIFESTYLE =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kun0nd6x_1000148492.png"; // softer, slight smile
+const IMG_PROFILE_STRUCTURE =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mllm098y_1000148444.png"; // ¾ angle pair — full drop length
+const IMG_CRAFT_MACRO =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mng5l3vy_1000148443.png"; // close-up mesh
+const IMG_FULL_PRODUCT =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg"; // clean flat-lay
+const IMG_PACKAGING =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d05l53mk_1000148507.png"; // black velvet box
+
 const EDITORIAL_SECTIONS = [
   {
     title: "COMPOSITION",
@@ -77,9 +91,6 @@ function FadeInOnScroll({ children, delay = 0, className = "" }) {
 
 export default function NervaturaPage() {
   const product = products.nervatura;
-  const gallery = product.gallery || [];
-  const [galleryIndex, setGalleryIndex] = useState(0);
-  const activeImage = gallery[galleryIndex] || gallery[0] || { src: HERO_IMG, alt: product.name };
 
   const [selectedTier, setSelectedTier] = useState(product.defaultTier || "signature");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
@@ -233,64 +244,135 @@ export default function NervaturaPage() {
         </div>
       </section>
 
-      {/* ─── 4. GALLERY ────────────────────────────────────────────── */}
+      {/* ─── 4. PRIMARY LIFESTYLE IMAGE ────────────────────────────── */}
       <section
-        className="w-full bg-black py-20 md:py-28"
-        data-testid="nervatura-gallery"
+        className="w-full bg-black pt-4 pb-24 md:pb-32"
+        data-testid="nervatura-primary-lifestyle"
       >
-        <div className="max-w-[760px] mx-auto px-5 md:px-8">
-          <FadeInOnScroll>
-            {/* Main image */}
-            <div
-              className="w-full bg-black overflow-hidden mb-6"
-              data-testid="nervatura-gallery-main"
-            >
-              <img
-                key={activeImage.src}
-                src={activeImage.src}
-                alt={activeImage.alt}
-                className="w-full h-auto object-contain transition-opacity duration-500"
-                style={{ maxHeight: "78vh" }}
-                loading="lazy"
-              />
-            </div>
-
-            {/* Thumbnails */}
-            {gallery.length > 1 && (
-              <div className="flex items-center justify-center gap-3 md:gap-4 flex-wrap">
-                {gallery.map((img, i) => {
-                  const isActive = i === galleryIndex;
-                  return (
-                    <button
-                      key={img.src}
-                      type="button"
-                      onClick={() => setGalleryIndex(i)}
-                      data-testid={`nervatura-thumb-${i}`}
-                      aria-label={`View ${img.alt}`}
-                      className={`
-                        relative w-16 h-16 md:w-20 md:h-20 overflow-hidden
-                        transition-all duration-300
-                        ${isActive
-                          ? "ring-1 ring-[#D4AF37] opacity-100"
-                          : "opacity-50 hover:opacity-90"}
-                      `}
-                    >
-                      <img
-                        src={img.src}
-                        alt={img.alt}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[960px]">
+            <img
+              src={IMG_PRIMARY_LIFESTYLE}
+              alt="The Phileon Nervatura — front-facing campaign portrait"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
           </FadeInOnScroll>
         </div>
       </section>
 
-      {/* ─── 5. PURCHASE BLOCK ─────────────────────────────────────── */}
+      {/* ─── 5. SECONDARY LIFESTYLE ────────────────────────────────── */}
+      <section
+        className="w-full bg-black pb-24 md:pb-32"
+        data-testid="nervatura-secondary-lifestyle"
+      >
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[880px]">
+            <img
+              src={IMG_SECONDARY_LIFESTYLE}
+              alt="The Phileon Nervatura — angled portrait"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 6. PROFILE / STRUCTURE SHOT ───────────────────────────── */}
+      <section
+        className="w-full bg-black pb-24 md:pb-32"
+        data-testid="nervatura-profile-structure"
+      >
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[820px]">
+            <img
+              src={IMG_PROFILE_STRUCTURE}
+              alt="The Phileon Nervatura — full drop length, structural silhouette"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 7. CRAFT / MACRO DETAIL ───────────────────────────────── */}
+      <section
+        className="w-full bg-black pb-24 md:pb-32"
+        data-testid="nervatura-craft-macro"
+      >
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[820px]">
+            <img
+              src={IMG_CRAFT_MACRO}
+              alt="The Phileon Nervatura — close-up mesh detail"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 8. FULL PRODUCT IMAGE ─────────────────────────────────── */}
+      <section
+        className="w-full bg-black pb-24 md:pb-32"
+        data-testid="nervatura-full-product"
+      >
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[820px]">
+            <img
+              src={IMG_FULL_PRODUCT}
+              alt="The Phileon Nervatura — full pair on clean surface"
+              className="w-full h-auto object-contain"
+              loading="lazy"
+            />
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 9. SPECIFICATIONS ─────────────────────────────────────── */}
+      <section
+        className="w-full py-20 md:py-28 border-t border-white/[0.06]"
+        data-testid="nervatura-specifications"
+      >
+        <div className="max-w-[1080px] mx-auto px-6 md:px-10">
+          <FadeInOnScroll>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+              {SPECIFICATIONS.map((spec, i) => (
+                <div key={spec.label} className="text-center md:text-left">
+                  <p
+                    className="nervatura-cinzel text-[11px] tracking-[0.35em] text-[#D4AF37]/85 mb-5"
+                    data-testid={`nervatura-spec-label-${i}`}
+                  >
+                    {spec.label}
+                  </p>
+                  <p className="nervatura-cormorant text-[17px] md:text-[18px] leading-[1.6] text-white/75">
+                    {spec.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 10. PACKAGING / OWNERSHIP IMAGE ───────────────────────── */}
+      <section
+        className="w-full bg-black py-20 md:py-28"
+        data-testid="nervatura-packaging"
+      >
+        <div className="w-full flex justify-center px-3 md:px-6">
+          <FadeInOnScroll className="w-full max-w-[780px]">
+            <img
+              src={IMG_PACKAGING}
+              alt="The Phileon Nervatura — in the presentation box"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
+          </FadeInOnScroll>
+        </div>
+      </section>
+
+      {/* ─── 11. PURCHASE BLOCK ────────────────────────────────────── */}
       <section className="w-full py-16 md:py-24" data-testid="nervatura-purchase">
         <div className="max-w-[640px] mx-auto px-6 md:px-8 text-center space-y-10">
           <div>
@@ -389,33 +471,9 @@ export default function NervaturaPage() {
         </div>
       </section>
 
-      {/* ─── 6. SPECIFICATIONS ─────────────────────────────────────── */}
-      <section
-        className="w-full py-20 md:py-28 border-t border-white/[0.06]"
-        data-testid="nervatura-specifications"
-      >
-        <div className="max-w-[1080px] mx-auto px-6 md:px-10">
-          <FadeInOnScroll>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-              {SPECIFICATIONS.map((spec, i) => (
-                <div key={spec.label} className="text-center md:text-left">
-                  <p
-                    className="nervatura-cinzel text-[11px] tracking-[0.35em] text-[#D4AF37]/85 mb-5"
-                    data-testid={`nervatura-spec-label-${i}`}
-                  >
-                    {spec.label}
-                  </p>
-                  <p className="nervatura-cormorant text-[17px] md:text-[18px] leading-[1.6] text-white/75">
-                    {spec.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </FadeInOnScroll>
-        </div>
-      </section>
+      {/* ─── 6. SPECIFICATIONS ─── REMOVED (moved up to section 9) ─── */}
 
-      {/* ─── 7. FINAL STATEMENT ────────────────────────────────────── */}
+      {/* ─── 12. FINAL STATEMENT ────────────────────────────────────── */}
       <section
         className="w-full py-32 md:py-44 border-t border-white/[0.04]"
         data-testid="nervatura-final-statement"
