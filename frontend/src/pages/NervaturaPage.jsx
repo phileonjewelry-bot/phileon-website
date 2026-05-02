@@ -81,9 +81,61 @@ function FadeInOnScroll({ children, delay = 0, className = "" }) {
 
 export default function NervaturaPage() {
   const product = products.nervatura;
+  const heroVideoRef = useRef(null);
 
   const [selectedTier, setSelectedTier] = useState(product.defaultTier || "signature");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  // Belt-and-suspenders loop watcher for the hero video.
+  // Some browsers (especially Safari/iOS, and Chrome under certain HW codec paths)
+  // can stall on the loop boundary when the native `loop` attribute alone is used.
+  // We force-restart playback both on `ended` (handled inline on the element) and
+  // proactively just before the duration boundary via `timeupdate`.
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+
+    const onTimeUpdate = () => {
+      if (!isFinite(v.duration) || v.duration === 0) return;
+      // Restart slightly before the absolute end to avoid the stall window.
+      if (v.duration - v.currentTime < 0.15) {
+        v.currentTime = 0;
+        const p = v.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      }
+    };
+
+    const onEnded = () => {
+      v.currentTime = 0;
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+
+    const onPause = () => {
+      // If the page is still visible and the video paused unexpectedly (loop
+      // boundary stall), kick it back into play.
+      if (!document.hidden && !v.ended) {
+        const p = v.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      }
+    };
+
+    v.addEventListener("timeupdate", onTimeUpdate);
+    v.addEventListener("ended", onEnded);
+    v.addEventListener("pause", onPause);
+    // Try to start playback immediately on mount (covers cases where autoplay
+    // didn't fire because the element was off-screen during initial layout).
+    const initialPlay = v.play();
+    if (initialPlay && typeof initialPlay.catch === "function") {
+      initialPlay.catch(() => {});
+    }
+
+    return () => {
+      v.removeEventListener("timeupdate", onTimeUpdate);
+      v.removeEventListener("ended", onEnded);
+      v.removeEventListener("pause", onPause);
+    };
+  }, []);
 
   const tierPrices = useLiveTierPrices("nervatura");
   const { formatted: ctaPrice, price: ctaPriceNum } = useLivePrice(
@@ -128,7 +180,10 @@ export default function NervaturaPage() {
         data-testid="nervatura-hero"
       >
         <video
+          key="nervatura-hero-video"
+          ref={heroVideoRef}
           className="absolute inset-0 w-full h-full object-cover"
+          src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/r9udxjr3_XiaoYing_Video_1777699475543_1080HD.mp4"
           autoPlay
           muted
           loop
@@ -140,12 +195,8 @@ export default function NervaturaPage() {
             e.currentTarget.play().catch(() => {});
           }}
           data-testid="nervatura-hero-video-el"
-        >
-          <source
-            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/r9udxjr3_XiaoYing_Video_1777699475543_1080HD.mp4"
-            type="video/mp4"
-          />
-        </video>
+        />
+
 
         {/* Bottom gradient for text readability */}
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/40 to-transparent" />
