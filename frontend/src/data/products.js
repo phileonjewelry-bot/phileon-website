@@ -2152,7 +2152,8 @@ This is expression — under control.`,
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mllm098y_1000148444.png", alt: "Nervatura — three-quarter angle", intent: "ANGLE" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kun0nd6x_1000148492.png", alt: "Nervatura — worn on the model", intent: "WORN" },
       { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7mytqo56_1000148497.png", alt: "Nervatura — editorial close-up", intent: "EDITORIAL" },
-      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png", alt: "Nervatura — close portrait", intent: "PORTRAIT" }
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png", alt: "Nervatura — close portrait", intent: "PORTRAIT" },
+      { type: "image", src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d05l53mk_1000148507.png", alt: "Nervatura — in the PHILEON presentation box", intent: "PRESENTATION" }
     ],
 
     shipping: "Complimentary insured shipping within Canada."
