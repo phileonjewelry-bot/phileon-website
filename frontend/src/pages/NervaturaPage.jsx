@@ -186,7 +186,46 @@ export default function NervaturaPage() {
         </div>
       </section>
 
-      {/* ─── 2. PURCHASE BLOCK (directly under hero) ───────────────── */}
+      {/* ─── 2. HORIZONTAL GALLERY ─────────────────────────────────── */}
+      <section
+        className="w-full bg-black py-8 md:py-12"
+        data-testid="nervatura-gallery"
+      >
+        <div
+          className="
+            flex overflow-x-auto gap-3 md:gap-4 px-4 md:px-10 pb-4
+            snap-x snap-mandatory
+            scrollbar-thin
+          "
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "rgba(198,168,107,0.4) transparent",
+          }}
+        >
+          {(product.gallery || []).map((img, i) => (
+            <div
+              key={img.src}
+              className="
+                relative flex-shrink-0
+                snap-center
+                w-[78vw] sm:w-[52vw] md:w-[32vw] lg:w-[26vw]
+                aspect-[3/4]
+                bg-black overflow-hidden
+              "
+              data-testid={`nervatura-gallery-item-${i}`}
+            >
+              <img
+                src={img.src}
+                alt={img.alt || `The Phileon Nervatura — view ${i + 1}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── 3. PURCHASE BLOCK ─────────────────────────────────────── */}
       <section className="w-full py-14 md:py-20" data-testid="nervatura-purchase">
         <div className="max-w-[960px] mx-auto px-6 md:px-8 text-center space-y-10">
           <div>
@@ -321,45 +360,6 @@ export default function NervaturaPage() {
           <p className="nervatura-cormorant text-sm text-white/45 italic">
             Made to order · 3–4 weeks · Complimentary insured shipping
           </p>
-        </div>
-      </section>
-
-      {/* ─── 3. HORIZONTAL GALLERY ─────────────────────────────────── */}
-      <section
-        className="w-full bg-black py-8 md:py-12"
-        data-testid="nervatura-gallery"
-      >
-        <div
-          className="
-            flex overflow-x-auto gap-3 md:gap-4 px-4 md:px-10 pb-4
-            snap-x snap-mandatory
-            scrollbar-thin
-          "
-          style={{
-            scrollbarWidth: "thin",
-            scrollbarColor: "rgba(198,168,107,0.4) transparent",
-          }}
-        >
-          {(product.gallery || []).map((img, i) => (
-            <div
-              key={img.src}
-              className="
-                relative flex-shrink-0
-                snap-center
-                w-[78vw] sm:w-[52vw] md:w-[32vw] lg:w-[26vw]
-                aspect-[3/4]
-                bg-black overflow-hidden
-              "
-              data-testid={`nervatura-gallery-item-${i}`}
-            >
-              <img
-                src={img.src}
-                alt={img.alt || `The Phileon Nervatura — view ${i + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
         </div>
       </section>
 
