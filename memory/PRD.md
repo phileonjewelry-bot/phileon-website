@@ -48,6 +48,12 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 - `/size-guide` standalone page reuses `SizeGuideContent` so both surfaces stay in sync.
 - Wired (no changes needed) on: LadyBamburghPage, CorinthiansPage, CocktailJessicaPage, CouronnePage.
 
+## THE DON GORGON — Crossfade Hardened (Feb 2026)
+- `DonGorgonPage.jsx` HOME↔AWAY variant crossfade uses inline `style={{ transition: "opacity 450ms ease-out" }}` on both hero layers AND gallery slot-0 layers (and subsequent gallery images).
+- Replaced Tailwind `duration-[450ms]` arbitrary classes (were computing to 0.15s due to JIT cache) with inline style — all four image layers now verified at `opacity 0.45s ease-out`.
+- Rule codified: for luxury crossfades use inline style, never Tailwind arbitrary timing classes.
+- Asset status: page still uses the 2 uploaded images (1 HOME + 1 AWAY) as fallbacks. Pending user uploads: 6 more variant images + hero video (`/videos/the-don-gorgon.mp4`).
+
 ## Backlog
 - P1: Real tier prices for PRISE DE COURONNE (currently placeholders: $11,400 / $14,800 / $18,800). Must update `products.js`, `livePricingConfig.js`, `pricing_engine.py`, `CouronnePage.jsx`.
 - P2: Upload dedicated Step 1 ("wrap") image for the Size Guide Modal.

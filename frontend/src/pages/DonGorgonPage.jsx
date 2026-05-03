@@ -416,7 +416,8 @@ export default function DonGorgonPage() {
               src={product.gallery.home[0]?.src}
               alt={product.gallery.home[0]?.alt || "The Don Gorgon — HOME"}
               data-testid="don-gorgon-gallery-img-home"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[450ms] ease-out ${
+              style={{ transition: "opacity 450ms ease-out" }}
+              className={`absolute inset-0 w-full h-full object-cover ${
                 variant === "home" ? "opacity-100" : "opacity-0"
               }`}
               loading="lazy"
@@ -425,7 +426,8 @@ export default function DonGorgonPage() {
               src={product.gallery.away[0]?.src}
               alt={product.gallery.away[0]?.alt || "The Don Gorgon — AWAY"}
               data-testid="don-gorgon-gallery-img-away"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[450ms] ease-out ${
+              style={{ transition: "opacity 450ms ease-out" }}
+              className={`absolute inset-0 w-full h-full object-cover ${
                 variant === "away" ? "opacity-100" : "opacity-0"
               }`}
               loading="lazy"
@@ -446,7 +448,8 @@ export default function DonGorgonPage() {
               <img
                 src={img.src}
                 alt={img.alt || `The Don Gorgon — ${variantObj.name} view ${i + 2}`}
-                className="w-full h-full object-cover transition-opacity duration-[450ms] ease-out"
+                style={{ transition: "opacity 450ms ease-out" }}
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
             </div>
