@@ -48,6 +48,13 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 - `/size-guide` standalone page reuses `SizeGuideContent` so both surfaces stay in sync.
 - Wired (no changes needed) on: LadyBamburghPage, CorinthiansPage, CocktailJessicaPage, CouronnePage.
 
+## THE DON GORGON — AWAY Gallery Wired + AWAY Default (Feb 2026)
+- Default variant switched to **AWAY** (`products.js` → `theDonGorgon.defaultSelection.variant = "away"`). Page now opens on the white pavé state.
+- Wired user-provided 5 new AWAY images + kept the original = **6-slot AWAY gallery** (rhythm: macro ruby rail → centered dome → 3/4 editorial → box closeup → macro front → studio). HOME still uses fallback (1 photo + "coming soon" helper).
+- Hero poster swapped to the new editorial AWAY macro (`5q24m209_1000148728.png`) — still waiting on `/videos/the-don-gorgon.mp4`.
+- **Pricing matrix confirmed**: current implementation (base tier + $300 HOME adjustment) evaluates identically to user's explicit table (AWAY silver $2,800 / HOME $3,100; AWAY gold F/S/H $6,800 / $9,200 / $14,500; HOME gold F/S/H $7,100 / $9,500 / $14,800). Verified live: AWAY gold foundation = $6,800, HOME = $7,100.
+- Crossfade hardened earlier in session (inline `transition: opacity 450ms ease-out` on all 4 layers — hero HOME/AWAY + gallery slot-0 HOME/AWAY).
+
 ## THE DON GORGON — Crossfade Hardened (Feb 2026)
 - `DonGorgonPage.jsx` HOME↔AWAY variant crossfade uses inline `style={{ transition: "opacity 450ms ease-out" }}` on both hero layers AND gallery slot-0 layers (and subsequent gallery images).
 - Replaced Tailwind `duration-[450ms]` arbitrary classes (were computing to 0.15s due to JIT cache) with inline style — all four image layers now verified at `opacity 0.45s ease-out`.
