@@ -48,7 +48,13 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 - `/size-guide` standalone page reuses `SizeGuideContent` so both surfaces stay in sync.
 - Wired (no changes needed) on: LadyBamburghPage, CorinthiansPage, CocktailJessicaPage, CouronnePage.
 
-## THE DON GORGON — AWAY Gallery Wired + AWAY Default (Feb 2026)
+## THE DON GORGON — Full HOME Image Set Generated via Nano Banana (Feb 2026)
+- Built `/app/backend/scripts/generate_don_gorgon_home.py` — generator that takes the reference HOME artifact, locks product identity via prompt, and generates the 10-shot luxury campaign set using `gemini-3.1-flash-image-preview` with `EMERGENT_LLM_KEY`.
+- **9 of 10 shots generated** and saved to `/app/frontend/public/don-gorgon/home/` (01–07, 09, 10). Shot 08 (`08_on_finger_macro`) failed mid-run because the Emergent Universal Key balance was exceeded (cap ≈ $2.00, final cost ≈ $2.02).
+- HOME gallery in `products.js` rewired to a 9-slot editorial rhythm: 3/4 HERO → clean front → low-architectural → on-finger → macro ruby → macro pavé → box moment → carousel → top-down. HOME↔AWAY slot-0 crossfade remains twinned (both 3/4 cream-cushion shots).
+- Script is re-runnable (skips existing files) — once the user tops up the Universal Key, running `python -m scripts.generate_don_gorgon_home` from `/app/backend` will fill in shot 08.
+
+## THE DON GORGON — AWAY Gallery 7-Slot Rhythm (Feb 2026)
 - Default variant switched to **AWAY** (`products.js` → `theDonGorgon.defaultSelection.variant = "away"`). Page now opens on the white pavé state.
 - Wired user-provided 5 new AWAY images + kept the original = **6-slot AWAY gallery** (rhythm: macro ruby rail → centered dome → 3/4 editorial → box closeup → macro front → studio). HOME still uses fallback (1 photo + "coming soon" helper).
 - Hero poster swapped to the new editorial AWAY macro (`5q24m209_1000148728.png`) — still waiting on `/videos/the-don-gorgon.mp4`.

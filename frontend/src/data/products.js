@@ -2235,7 +2235,15 @@ This is expression — under control.`,
     // Per-variant gallery — AWAY fully populated (6 photos), HOME pending additional shots
     gallery: {
       home: [
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/62xv6x0s_1000147741.png", alt: "The Don Gorgon — HOME (black pavé)" },
+        { src: "/don-gorgon/home/01_hero.png",            alt: "The Don Gorgon — HOME (3/4 hero, black pavé)" },
+        { src: "/don-gorgon/home/02_front.png",           alt: "The Don Gorgon — HOME (clean product, cream cushion)" },
+        { src: "/don-gorgon/home/04_low_front.png",       alt: "The Don Gorgon — HOME (alternate angle, architectural)" },
+        { src: "/don-gorgon/home/07_on_finger_hero.png",  alt: "The Don Gorgon — HOME (on-finger)" },
+        { src: "/don-gorgon/home/05_macro_ruby.png",      alt: "The Don Gorgon — HOME (macro, ruby rail)" },
+        { src: "/don-gorgon/home/06_macro_pave.png",      alt: "The Don Gorgon — HOME (macro, black pavé texture)" },
+        { src: "/don-gorgon/home/09_box_moment.png",      alt: "The Don Gorgon — HOME (ownership / box)" },
+        { src: "/don-gorgon/home/10_carousel.png",        alt: "The Don Gorgon — HOME (editorial carousel)" },
+        { src: "/don-gorgon/home/03_topdown.png",         alt: "The Don Gorgon — HOME (top-down)" },
       ],
       away: [
         { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dvsar5to_1000148718.png", alt: "The Don Gorgon — AWAY (3/4 hero, white pavé)" },
