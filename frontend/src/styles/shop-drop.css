@@ -197,3 +197,32 @@
     transform: none;
   }
 }
+
+/* =========================
+   THE DON GORGON — luxury product-card hover (desktop only).
+   Slow image push. No bounce, no glow. Scoped by data-testid so no other
+   product cards are affected.
+   ========================= */
+[data-testid="product-card-the-don-gorgon"] img {
+  transition:
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, filter;
+}
+
+@media (hover: hover) {
+  [data-testid="product-card-the-don-gorgon"]:hover img {
+    transform: scale(1.045);
+    filter: brightness(1.04) contrast(1.04) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-testid="product-card-the-don-gorgon"] img {
+    transition: none !important;
+  }
+  [data-testid="product-card-the-don-gorgon"]:hover img {
+    transform: none !important;
+    filter: none !important;
+  }
+}
