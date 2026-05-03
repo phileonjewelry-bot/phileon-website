@@ -2239,6 +2239,7 @@ This is expression — under control.`,
       ],
       away: [
         { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5q24m209_1000148728.png", alt: "The Don Gorgon — AWAY (white pavé, three-quarter)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tvyum380_1000148750.png", alt: "The Don Gorgon — AWAY (worn, hand)" },
         { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/djgex5cm_1000148722.png", alt: "The Don Gorgon — AWAY (white pavé, editorial)" },
         { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dvsar5to_1000148718.png", alt: "The Don Gorgon — AWAY (white pavé, box)" },
         { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9vimli6r_1000148724.png", alt: "The Don Gorgon — AWAY (white pavé, macro front)" },
