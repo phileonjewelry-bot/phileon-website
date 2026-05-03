@@ -155,6 +155,16 @@ LIVE_PRICING_CONFIG = {
         "signature":  {"lockedBasePriceCad": 1800, "metalType": "14K", "weightGrams": 16, "lockedMetalReferenceCad": 1400},
         "heirloom":   {"lockedBasePriceCad": 2600, "metalType": "18K", "weightGrams": 16, "lockedMetalReferenceCad": 1800},
     },
+    "theDonGorgon": {
+        "silver_foundation_home": {"lockedBasePriceCad": 3100, "metalType": "925", "weightGrams": 14, "lockedMetalReferenceCad": 18},
+        "silver_foundation_away": {"lockedBasePriceCad": 2800, "metalType": "925", "weightGrams": 14, "lockedMetalReferenceCad": 18},
+        "gold_foundation_home":   {"lockedBasePriceCad": 7100, "metalType": "10K", "weightGrams": 14, "lockedMetalReferenceCad": 875},
+        "gold_foundation_away":   {"lockedBasePriceCad": 6800, "metalType": "10K", "weightGrams": 14, "lockedMetalReferenceCad": 875},
+        "gold_signature_home":    {"lockedBasePriceCad": 9500, "metalType": "14K", "weightGrams": 14, "lockedMetalReferenceCad": 1225},
+        "gold_signature_away":    {"lockedBasePriceCad": 9200, "metalType": "14K", "weightGrams": 14, "lockedMetalReferenceCad": 1225},
+        "gold_heirloom_home":     {"lockedBasePriceCad": 14800, "metalType": "18K", "weightGrams": 14, "lockedMetalReferenceCad": 1575},
+        "gold_heirloom_away":     {"lockedBasePriceCad": 14500, "metalType": "18K", "weightGrams": 14, "lockedMetalReferenceCad": 1575},
+    },
 }
 
 

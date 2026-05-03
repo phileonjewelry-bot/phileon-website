@@ -19,6 +19,9 @@ const formatPrice = (basePrice, currency = 'CAD') => {
 // Used by the top-of-page chip filter and the grouped section layout.
 // Pieces tagged audience='collective' (multi-audience cross-cut) primarily live in COLLECTIVE.
 const SHOP_COLLECTION_MAP = {
+  // SIGNATURE — gentlemen's flagship pieces
+  'the-don-gorgon': 'signature',
+
   // SACRED — scripture/faith driven
   'galatians-614': 'sacred',
   'corinthians-15-14': 'sacred',
@@ -432,6 +435,22 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 4,
+  },
+  {
+    id: 'the-don-gorgon',
+    name: 'The Don Gorgon',
+    slug: 'the-don-gorgon',
+    materialLine: products.theDonGorgon.shopMaterialLine,
+    imageUrl: products.theDonGorgon.imageUrl,
+    href: '/products/the-don-gorgon',
+    price_range: products.theDonGorgon.priceFrom,
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['gentlemens-club', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 5,
   },
 ];
 

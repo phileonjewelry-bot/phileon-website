@@ -2156,6 +2156,112 @@ This is expression — under control.`,
     ],
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // THE DON GORGON
+  // Dual-state ring (HOME black / AWAY white pavé), ruby rail
+  // Multi-metal (Silver / Gold) with tiered pricing on Gold only
+  // ==========================================
+  theDonGorgon: {
+    name: "THE DON GORGON",
+    slug: "the-don-gorgon",
+    category: "rings",
+    audience: ["gentlemens-club", "collective"],
+    subtitle: "Dual-State Ring",
+    categoryType: "Ring",
+    shopMaterialLine: "Dual-State Ring · Black / White Pavé · Ruby Rail",
+    tagline: "Two sides of the same authority.",
+    collections: ["gentlemens-club", "collective"],
+    currency: "CAD",
+    priceFrom: "From $2,800 CAD",
+    basePrice: 2800,
+    dynamicPricing: true,
+    pricingPending: false,
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 5,
+    showInHomepageCarousel: true,
+
+    // Default product card image (white/AWAY for shop grid — clean product image, no split visual per spec)
+    imageUrl:
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8en7jk9g_1000147731.png",
+
+    // Two colorways
+    variants: {
+      home: {
+        key: "home",
+        name: "HOME",
+        label: "Black",
+        description: "Authority, held.",
+        adjustment: 300,
+      },
+      away: {
+        key: "away",
+        name: "AWAY",
+        label: "White",
+        description: "Control, expressed.",
+        adjustment: 0,
+      },
+    },
+
+    // Metal × Tier matrix
+    metals: {
+      silver: {
+        key: "silver",
+        name: "Silver (White Series)",
+        note: "White Series — entry without compromise.",
+        tiers: {
+          foundation: { key: "foundation", name: "Foundation", price: 2800, description: "Entry expression. Nothing removed." },
+        },
+      },
+      gold: {
+        key: "gold",
+        name: "Gold",
+        tiers: {
+          foundation: { key: "foundation", name: "Foundation", price: 6800, description: "The full expression. Nothing removed." },
+          signature:  { key: "signature",  name: "Signature",  price: 9200, description: "Elevated weight and tone." },
+          heirloom:   { key: "heirloom",   name: "Heirloom",   price: 14500, description: "Maximum density. Lasting." },
+        },
+      },
+    },
+
+    defaultSelection: {
+      variant: "home",
+      metal: "gold",
+      tier: "foundation",
+    },
+
+    // Per-variant gallery — only 1 photo per variant uploaded so far
+    gallery: {
+      home: [
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/62xv6x0s_1000147741.png", alt: "The Don Gorgon — HOME (black pavé)" },
+      ],
+      away: [
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8en7jk9g_1000147731.png", alt: "The Don Gorgon — AWAY (white pavé)" },
+      ],
+    },
+
+    // Hero — until /videos/the-don-gorgon.mp4 is uploaded, page falls back to the HOME image
+    hero: {
+      videoSrc: null,
+      poster: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/62xv6x0s_1000147741.png",
+    },
+
+    heroText: {
+      eyebrow: "PHILEON",
+      title: "THE DON GORGON",
+      subline: "Two sides of the same authority.",
+    },
+
+    microCopy: {
+      silver: "White Series — entry without compromise.",
+      foundation: "The full expression. Nothing removed.",
+    },
+
+    specs: "3/4 pavé structure · 12-stone ruby rail · Multi-metal · Dual-state",
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
