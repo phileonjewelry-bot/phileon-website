@@ -131,11 +131,27 @@ export default function DonGorgonPage() {
             data-testid="don-gorgon-hero-video-el"
           />
         ) : (
-          <img
-            src={product.hero.poster}
-            alt="The Don Gorgon"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          <>
+            {/* Crossfade: two layered images — HOME (black) + AWAY (white) */}
+            <img
+              src={product.gallery.home[0]?.src}
+              alt="The Don Gorgon — HOME (black pavé)"
+              data-testid="don-gorgon-hero-img-home"
+              style={{ transition: "opacity 450ms ease-out" }}
+              className={`absolute inset-0 w-full h-full object-cover ${
+                variant === "home" ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            <img
+              src={product.gallery.away[0]?.src}
+              alt="The Don Gorgon — AWAY (white pavé)"
+              data-testid="don-gorgon-hero-img-away"
+              style={{ transition: "opacity 450ms ease-out" }}
+              className={`absolute inset-0 w-full h-full object-cover ${
+                variant === "away" ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </>
         )}
 
         {/* Bottom gradient for text readability */}
@@ -372,7 +388,7 @@ export default function DonGorgonPage() {
         </div>
       </section>
 
-      {/* ─── 3. GALLERY (per-variant) ──────────────────────────────── */}
+      {/* ─── 3. GALLERY (per-variant with crossfade on first slot) ── */}
       <section
         className="w-full bg-black py-8 md:py-12"
         data-testid="don-gorgon-gallery"
@@ -387,26 +403,56 @@ export default function DonGorgonPage() {
             scrollbarColor: "rgba(198,168,107,0.4) transparent",
           }}
         >
-          {variantGallery.map((img, i) => (
+          {/* First slot: layered HOME + AWAY with opacity crossfade */}
+          <div
+            className="
+              relative flex-shrink-0 snap-center
+              w-[78vw] sm:w-[52vw] md:w-[36vw] lg:w-[30vw]
+              aspect-square bg-black overflow-hidden
+            "
+            data-testid="don-gorgon-gallery-item-0"
+          >
+            <img
+              src={product.gallery.home[0]?.src}
+              alt={product.gallery.home[0]?.alt || "The Don Gorgon — HOME"}
+              data-testid="don-gorgon-gallery-img-home"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[450ms] ease-out ${
+                variant === "home" ? "opacity-100" : "opacity-0"
+              }`}
+              loading="lazy"
+            />
+            <img
+              src={product.gallery.away[0]?.src}
+              alt={product.gallery.away[0]?.alt || "The Don Gorgon — AWAY"}
+              data-testid="don-gorgon-gallery-img-away"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[450ms] ease-out ${
+                variant === "away" ? "opacity-100" : "opacity-0"
+              }`}
+              loading="lazy"
+            />
+          </div>
+
+          {/* Remaining slots: additional per-variant imagery (index >= 1) */}
+          {variantGallery.slice(1).map((img, i) => (
             <div
               key={img.src}
               className="
-                relative flex-shrink-0
-                snap-center
+                relative flex-shrink-0 snap-center
                 w-[78vw] sm:w-[52vw] md:w-[36vw] lg:w-[30vw]
-                aspect-square
-                bg-black overflow-hidden
+                aspect-square bg-black overflow-hidden
               "
-              data-testid={`don-gorgon-gallery-item-${i}`}
+              data-testid={`don-gorgon-gallery-item-${i + 1}`}
             >
               <img
                 src={img.src}
-                alt={img.alt || `The Don Gorgon — ${variantObj.name} view ${i + 1}`}
-                className="w-full h-full object-cover"
+                alt={img.alt || `The Don Gorgon — ${variantObj.name} view ${i + 2}`}
+                className="w-full h-full object-cover transition-opacity duration-[450ms] ease-out"
                 loading="lazy"
               />
             </div>
           ))}
+
+          {/* "Additional imagery coming soon" helper when only one photo per variant */}
           {variantGallery.length === 1 && (
             <div className="flex-shrink-0 self-center px-6 max-w-[280px] dg-cormorant italic text-sm text-white/45 text-center">
               Additional {variantObj.name.toLowerCase()} imagery coming soon.
