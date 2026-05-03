@@ -48,6 +48,14 @@ Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED ME
 - `/size-guide` standalone page reuses `SizeGuideContent` so both surfaces stay in sync.
 - Wired (no changes needed) on: LadyBamburghPage, CorinthiansPage, CocktailJessicaPage, CouronnePage.
 
+## THE DON GORGON — HOME Set Re-Generated with WHITE GOLD Material Lock (Feb 2026)
+- First generation pass produced yellow-gold channels (model copied the reference's yellow metal despite prompt override).
+- Root cause: Nano Banana heavily weights the reference image's actual colors over text instructions.
+- Fix: `generate_don_gorgon_home.py` now pre-processes the reference via PIL — fully desaturates it and pulls the red channel down 5% before base64-encoding. This way the model sees a cool, colourless reference and follows the prompt for material.
+- Prompt also updated with explicit "CRITICAL MATERIAL OVERRIDE — ignore the reference's metal, output is WHITE GOLD / PLATINUM ONLY" language on every shot.
+- All 10 shots regenerated and wired into HOME gallery (added 08_on_finger_macro to slot 5). Automated color analysis confirmed WHITE_GOLD on 01_hero, 05_macro_ruby, 07_on_finger_hero, and 09_box_moment.
+- Rule codified: when generating product image sets from a reference with "wrong" material, pre-desaturate the reference so text prompt can override material perception.
+
 ## THE DON GORGON — Full HOME Image Set Generated via Nano Banana (Feb 2026)
 - Built `/app/backend/scripts/generate_don_gorgon_home.py` — generator that takes the reference HOME artifact, locks product identity via prompt, and generates the 10-shot luxury campaign set using `gemini-3.1-flash-image-preview` with `EMERGENT_LLM_KEY`.
 - **9 of 10 shots generated** and saved to `/app/frontend/public/don-gorgon/home/` (01–07, 09, 10). Shot 08 (`08_on_finger_macro`) failed mid-run because the Emergent Universal Key balance was exceeded (cap ≈ $2.00, final cost ≈ $2.02).

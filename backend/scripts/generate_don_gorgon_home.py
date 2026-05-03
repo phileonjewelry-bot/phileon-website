@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import io
 import os
 import sys
 import uuid
@@ -20,6 +21,7 @@ from pathlib import Path
 import httpx
 from dotenv import load_dotenv
 from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+from PIL import Image, ImageEnhance
 
 load_dotenv()
 
@@ -32,24 +34,42 @@ OUTPUT_DIR = Path("/app/frontend/public/don-gorgon/home")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 LOCKED_PRODUCT = (
-    "Use the ring in the reference image. Preserve its identity EXACTLY: "
+    "Use the SHAPE, DOME SILHOUETTE, PROPORTIONS, RUBY RAIL LAYOUT, BAND "
+    "THICKNESS and PAVÉ DENSITY from the ring in the reference image. "
+    "Preserve its identity EXACTLY: "
     "bold men's statement ring, large dome signet silhouette ~25mm x 18mm top, "
     "8mm wide heavy band, 3/4 pavé coverage of small BLACK round stones across "
     "the domed face, a single vertical curved ruby rail/channel running across "
-    "the top with ~12 deep red princess-cut rubies set in polished gold, "
+    "the top with ~12 deep red princess-cut rubies, "
     "heavy architectural volume. DO NOT change the silhouette, proportions, "
-    "band thickness, ruby count or placement, rail direction, pavé density, "
-    "or metal colour. Only the composition, framing, lighting, camera angle "
-    "and surroundings change between shots."
+    "band thickness, ruby count or placement, rail direction, or pavé density. "
+    "Only the composition, framing, lighting, camera angle and surroundings "
+    "change between shots."
+    "\n\n"
+    "CRITICAL MATERIAL OVERRIDE — THE REFERENCE IMAGE IS WRONG ON MATERIAL. "
+    "IGNORE the yellow gold shown in the reference. In your output the metal "
+    "is WHITE GOLD / PLATINUM ONLY — bright cool silvery-white, like polished "
+    "platinum or rhodium-plated white gold. "
+    "Every metal surface on the ring (the ruby rail channel, the band, the "
+    "pavé settings, the beads, every prong and bezel) MUST appear bright "
+    "silvery white / platinum. "
+    "DO NOT use yellow gold. DO NOT use rose gold. DO NOT use any warm gold, "
+    "champagne, brass, bronze or copper tones on the ring. "
+    "Even if warm lighting is in the scene, the metal must NOT shift yellow — "
+    "it stays cool silvery white. "
+    "If ANY part of the ring's metal reads as yellow or warm gold, the output "
+    "is INCORRECT and must be rejected."
 )
 
 STYLE = (
     "Ultra-realistic luxury jewelry photography, Cartier-level campaign quality, "
     "cinematic low-key lighting, deep black velvet and warm cream leather jewelry "
-    "box, polished gold accents, shallow depth of field, rich contrast, realistic "
-    "reflections, sharp product detail. No cartoon, no CGI, no plastic skin, "
-    "no warped jewelry or fingers, no extra gemstones, no white pavé, no silver-"
-    "only look, no horizontal ruby rail, no extra rails, no watch, no bracelet, "
+    "box, cool silvery metal tones on the ring (white gold / platinum only, never "
+    "yellow), shallow depth of field, rich contrast, realistic reflections, sharp "
+    "product detail. No cartoon, no CGI, no plastic skin, no warped jewelry or "
+    "fingers, no extra gemstones, no yellow gold, no rose gold, no warm gold, no "
+    "champagne gold, no brass, no bronze, no copper tones on the ring, no white "
+    "pavé, no horizontal ruby rail, no extra rails, no watch, no bracelet, "
     "no text, no watermark."
 )
 
@@ -58,8 +78,8 @@ SHOTS = [
         "01_hero",
         "PRIMARY PRODUCT HERO. 3/4 angle of the ring sitting inside a warm cream "
         "leather jewelry box. Ring large in frame, ruby rail facing camera at a "
-        "slight diagonal, dome curvature visible, BLACK pavé crisp, polished gold "
-        "edges visible, soft champagne highlights.",
+        "slight diagonal, dome curvature visible, BLACK pavé crisp, polished "
+        "WHITE gold / platinum edges visible, cool silvery highlights.",
     ),
     (
         "02_front",
@@ -83,16 +103,18 @@ SHOTS = [
     (
         "05_macro_ruby",
         "MACRO RUBY RAIL. Extreme close-up of the ruby channel, deep red "
-        "princess-cut rubies in a polished gold channel, BLACK pavé visible on "
-        "both sides of the rail, shallow depth of field, sharp center stones, "
-        "luxury macro detail.",
+        "princess-cut rubies set in a polished WHITE GOLD / PLATINUM channel "
+        "(cool silvery metal, never yellow), BLACK pavé visible on both sides "
+        "of the rail, shallow depth of field, sharp center stones, luxury "
+        "macro detail.",
     ),
     (
         "06_macro_pave",
-        "MACRO BLACK PAVÉ. Extreme close-up of the BLACK round pavé stones, dark "
-        "reflective sparkle, pavé setting texture with tiny gold beads, ruby rail "
-        "partially visible at frame edge, moody macro lighting, tack-sharp main "
-        "stones.",
+        "MACRO BLACK PAVÉ. Extreme close-up of the BLACK round pavé stones "
+        "set in WHITE GOLD / PLATINUM (cool silvery settings and beads, "
+        "never yellow), dark reflective sparkle, pavé setting texture, "
+        "ruby rail partially visible at frame edge, moody macro lighting, "
+        "tack-sharp main stones.",
     ),
     (
         "07_on_finger_hero",
@@ -113,8 +135,9 @@ SHOTS = [
         "09_box_moment",
         "OWNERSHIP / BOX MOMENT. Ring presented in a black velvet or cream leather "
         "jewelry box, optionally with hands holding the box edges, ring centered, "
-        "premium unboxing feeling, warm directional light on the ruby rail, "
-        "no clutter, no text, no logos.",
+        "premium unboxing feeling, cool directional light on the ruby rail, "
+        "WHITE gold / platinum metal stays cool silvery (no yellow shift under "
+        "warm box lighting), no clutter, no text, no logos.",
     ),
     (
         "10_carousel",
@@ -127,10 +150,29 @@ SHOTS = [
 
 
 async def fetch_reference_base64() -> str:
+    """Fetch the reference image and rebuild it with the yellow-gold metal
+    neutralised to cool silvery tones. This prevents the generator from copying
+    the yellow channel into the output.
+    """
     async with httpx.AsyncClient(timeout=30) as client:
         r = await client.get(REFERENCE_URL)
         r.raise_for_status()
-        return base64.b64encode(r.content).decode("utf-8")
+        raw = r.content
+
+    img = Image.open(io.BytesIO(raw)).convert("RGB")
+    # Desaturate the entire reference so the model sees a cool, colourless metal
+    # tone (only the rubies and any intentionally-preserved saturated areas
+    # should read as colour — but rubies in this image are already handled by
+    # the prompt). Full desaturation is simplest and most reliable.
+    img = ImageEnhance.Color(img).enhance(0.0)  # 0.0 = full grayscale, 1.0 = original
+    # Nudge toward a very slightly cool white balance
+    r_ch, g_ch, b_ch = img.split()
+    r_ch = r_ch.point(lambda v: int(v * 0.95))  # pull red/warmth down
+    img = Image.merge("RGB", (r_ch, g_ch, b_ch))
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 
 async def generate_one(api_key: str, ref_b64: str, slug: str, shot_prompt: str) -> None:
