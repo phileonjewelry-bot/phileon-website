@@ -89,6 +89,37 @@ export default function DonGorgonPage() {
     };
   }, [hasHeroVideo]);
 
+  // ─── Section fade-up + gallery active detection ─────────────────
+  useEffect(() => {
+    const sections = document.querySelectorAll("[data-dg-motion]");
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("is-visible");
+        });
+      },
+      { threshold: 0.18 }
+    );
+    sections.forEach((el) => sectionObserver.observe(el));
+
+    const galleryRoot = document.querySelector("[data-dg-gallery-scroller]");
+    const galleryItems = document.querySelectorAll(".dg-gallery-item");
+    const galleryObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("is-active", entry.intersectionRatio >= 0.65);
+        });
+      },
+      { root: galleryRoot, threshold: [0, 0.65, 1] }
+    );
+    galleryItems.forEach((item) => galleryObserver.observe(item));
+
+    return () => {
+      sectionObserver.disconnect();
+      galleryObserver.disconnect();
+    };
+  }, [variant]);
+
   // Compute effective price summary line for each metal (for the metal selector cards)
   const silverFromPrice = useMemo(
     () => getLockedPrice(product, "silver", "foundation", variant),
@@ -105,6 +136,116 @@ export default function DonGorgonPage() {
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap');
         .dg-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
         .dg-cormorant { font-family: 'Cormorant Garamond', serif; }
+
+        /* ─── Luxury pacing system (scoped to Don Gorgon page) ─── */
+        .dg-ease { transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+
+        /* 1. Hero drift — barely-noticeable cinematic zoom */
+        @keyframes dgHeroDrift {
+          from { transform: scale(1) translateY(0); }
+          to   { transform: scale(1.04) translateY(-8px); }
+        }
+        .dg-hero-media {
+          transform-origin: center center;
+          animation: dgHeroDrift 16s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+
+        /* 2. Hero text reveal */
+        @keyframes dgTextReveal {
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .dg-hero-copy > * {
+          opacity: 0;
+          transform: translateY(10px);
+          animation: dgTextReveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .dg-hero-copy > *:nth-child(1) { animation-delay: 0.20s; }
+        .dg-hero-copy > *:nth-child(2) { animation-delay: 0.45s; }
+        .dg-hero-copy > *:nth-child(3) { animation-delay: 0.75s; }
+
+        /* 3. Variant image — "light change" feel (opacity + filter + micro scale) */
+        .dg-variant-image {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition:
+            opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 650ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .dg-variant-image.is-active { opacity: 1; transform: scale(1); filter: brightness(1) contrast(1); }
+        .dg-variant-image.is-inactive { opacity: 0; transform: scale(1.015); filter: brightness(0.85) contrast(1.08); }
+        /* HOME active: darker & heavier. AWAY active: cleaner & brighter. */
+        .dg-variant-image.is-active[data-variant="home"] { filter: brightness(0.98) contrast(1.05); }
+        .dg-variant-image.is-active[data-variant="away"] { filter: brightness(1.02) contrast(1.0); }
+
+        /* 4. Gallery momentum */
+        .dg-gallery-item {
+          scroll-snap-align: center;
+          opacity: 0.55;
+          transform: scale(0.96);
+          filter: brightness(0.75);
+          transition:
+            opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .dg-gallery-item.is-active {
+          opacity: 1;
+          transform: scale(1);
+          filter: brightness(1);
+        }
+
+        /* 6. Ruby-rail glint — subtle, 6.5s cadence, only applied to ruby-macro slot */
+        @keyframes dgRubySweep {
+          0%   { transform: translateX(-120%); }
+          35%  { transform: translateX(120%); }
+          100% { transform: translateX(120%); }
+        }
+        .dg-ruby-glint { position: relative; overflow: hidden; }
+        .dg-ruby-glint::after {
+          content: "";
+          position: absolute; inset: 0;
+          transform: translateX(-120%);
+          background: linear-gradient(
+            110deg,
+            transparent 0%,
+            rgba(255,255,255,0.08) 42%,
+            rgba(255,255,255,0.32) 50%,
+            rgba(255,255,255,0.08) 58%,
+            transparent 100%
+          );
+          animation: dgRubySweep 6.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+          pointer-events: none;
+        }
+
+        /* 7. Section pacing — fade-up on intersect */
+        .dg-motion-section {
+          opacity: 0;
+          transform: translateY(26px);
+          transition:
+            opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+            transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .dg-motion-section.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* 9. Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .dg-hero-media,
+          .dg-hero-copy > *,
+          .dg-variant-image,
+          .dg-gallery-item,
+          .dg-ruby-glint::after,
+          .dg-motion-section {
+            animation: none !important;
+            transition-duration: 0.001ms !important;
+          }
+          .dg-hero-copy > * { opacity: 1 !important; transform: none !important; }
+          .dg-motion-section { opacity: 1 !important; transform: none !important; }
+        }
       `}</style>
 
       {/* ─── 1. HERO ───────────────────────────────────────────────── */}
@@ -131,27 +272,23 @@ export default function DonGorgonPage() {
             data-testid="don-gorgon-hero-video-el"
           />
         ) : (
-          <>
-            {/* Crossfade: two layered images — HOME (black) + AWAY (white) */}
+          <div className="dg-hero-media absolute inset-0">
+            {/* Crossfade + filter shift: HOME (black) ⇄ AWAY (white) */}
             <img
               src={product.gallery.home[0]?.src}
               alt="The Don Gorgon — HOME (black pavé)"
               data-testid="don-gorgon-hero-img-home"
-              style={{ transition: "opacity 450ms ease-out" }}
-              className={`absolute inset-0 w-full h-full object-cover ${
-                variant === "home" ? "opacity-100" : "opacity-0"
-              }`}
+              data-variant="home"
+              className={`dg-variant-image ${variant === "home" ? "is-active" : "is-inactive"}`}
             />
             <img
               src={product.gallery.away[0]?.src}
               alt="The Don Gorgon — AWAY (white pavé)"
               data-testid="don-gorgon-hero-img-away"
-              style={{ transition: "opacity 450ms ease-out" }}
-              className={`absolute inset-0 w-full h-full object-cover ${
-                variant === "away" ? "opacity-100" : "opacity-0"
-              }`}
+              data-variant="away"
+              className={`dg-variant-image ${variant === "away" ? "is-active" : "is-inactive"}`}
             />
-          </>
+          </div>
         )}
 
         {/* Bottom gradient for text readability */}
@@ -169,7 +306,7 @@ export default function DonGorgonPage() {
         </Link>
 
         <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
-          <div>
+          <div className="dg-hero-copy">
             <p className="dg-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
               {product.heroText.eyebrow}
             </p>
@@ -192,7 +329,7 @@ export default function DonGorgonPage() {
       </section>
 
       {/* ─── 2. PURCHASE BLOCK (progressive flow) ──────────────────── */}
-      <section className="w-full py-14 md:py-20" data-testid="don-gorgon-purchase">
+      <section className="dg-motion-section w-full py-14 md:py-20" data-dg-motion data-testid="don-gorgon-purchase">
         <div className="max-w-[960px] mx-auto px-6 md:px-8 space-y-12">
           <div className="text-center">
             <h2
@@ -390,7 +527,8 @@ export default function DonGorgonPage() {
 
       {/* ─── 3. GALLERY (per-variant with crossfade on first slot) ── */}
       <section
-        className="w-full bg-black py-8 md:py-12"
+        className="dg-motion-section w-full bg-black py-8 md:py-12"
+        data-dg-motion
         data-testid="don-gorgon-gallery"
       >
         <div
@@ -401,12 +539,15 @@ export default function DonGorgonPage() {
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "rgba(198,168,107,0.4) transparent",
+            scrollBehavior: "smooth",
           }}
+          data-dg-gallery-scroller
         >
-          {/* First slot: layered HOME + AWAY with opacity crossfade */}
+          {/* First slot: layered HOME + AWAY with light-change crossfade */}
           <div
             className="
-              relative flex-shrink-0 snap-center
+              dg-gallery-item
+              relative flex-shrink-0
               w-[78vw] sm:w-[52vw] md:w-[36vw] lg:w-[30vw]
               aspect-square bg-black overflow-hidden
             "
@@ -416,44 +557,45 @@ export default function DonGorgonPage() {
               src={product.gallery.home[0]?.src}
               alt={product.gallery.home[0]?.alt || "The Don Gorgon — HOME"}
               data-testid="don-gorgon-gallery-img-home"
-              style={{ transition: "opacity 450ms ease-out" }}
-              className={`absolute inset-0 w-full h-full object-cover ${
-                variant === "home" ? "opacity-100" : "opacity-0"
-              }`}
+              data-variant="home"
+              className={`dg-variant-image ${variant === "home" ? "is-active" : "is-inactive"}`}
               loading="lazy"
             />
             <img
               src={product.gallery.away[0]?.src}
               alt={product.gallery.away[0]?.alt || "The Don Gorgon — AWAY"}
               data-testid="don-gorgon-gallery-img-away"
-              style={{ transition: "opacity 450ms ease-out" }}
-              className={`absolute inset-0 w-full h-full object-cover ${
-                variant === "away" ? "opacity-100" : "opacity-0"
-              }`}
+              data-variant="away"
+              className={`dg-variant-image ${variant === "away" ? "is-active" : "is-inactive"}`}
               loading="lazy"
             />
           </div>
 
           {/* Remaining slots: additional per-variant imagery (index >= 1) */}
-          {variantGallery.slice(1).map((img, i) => (
-            <div
-              key={img.src}
-              className="
-                relative flex-shrink-0 snap-center
-                w-[78vw] sm:w-[52vw] md:w-[36vw] lg:w-[30vw]
-                aspect-square bg-black overflow-hidden
-              "
-              data-testid={`don-gorgon-gallery-item-${i + 1}`}
-            >
-              <img
-                src={img.src}
-                alt={img.alt || `The Don Gorgon — ${variantObj.name} view ${i + 2}`}
-                style={{ transition: "opacity 450ms ease-out" }}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
+          {variantGallery.slice(1).map((img, i) => {
+            const altLower = (img.alt || "").toLowerCase();
+            const isRubyMacro = altLower.includes("ruby rail") || altLower.includes("macro, ruby");
+            return (
+              <div
+                key={img.src}
+                className={`
+                  dg-gallery-item
+                  relative flex-shrink-0
+                  w-[78vw] sm:w-[52vw] md:w-[36vw] lg:w-[30vw]
+                  aspect-square bg-black overflow-hidden
+                  ${isRubyMacro ? "dg-ruby-glint" : ""}
+                `}
+                data-testid={`don-gorgon-gallery-item-${i + 1}`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt || `The Don Gorgon — ${variantObj.name} view ${i + 2}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            );
+          })}
 
           {/* "Additional imagery coming soon" helper when only one photo per variant */}
           {variantGallery.length === 1 && (
@@ -465,7 +607,7 @@ export default function DonGorgonPage() {
       </section>
 
       {/* ─── 4. COMPACT EDITORIAL ──────────────────────────────────── */}
-      <section className="w-full py-16 md:py-20" data-testid="don-gorgon-editorial">
+      <section className="dg-motion-section w-full py-16 md:py-20" data-dg-motion data-testid="don-gorgon-editorial">
         <div className="max-w-[640px] mx-auto px-6 text-center">
           <p className="dg-cormorant italic text-xl md:text-2xl text-white/80 leading-[1.6]">
             One form. Two states.
@@ -477,7 +619,7 @@ export default function DonGorgonPage() {
       </section>
 
       {/* ─── 5. SPECIFICATIONS ─────────────────────────────────────── */}
-      <section className="w-full py-16 md:py-20" data-testid="don-gorgon-specifications">
+      <section className="dg-motion-section w-full py-16 md:py-20" data-dg-motion data-testid="don-gorgon-specifications">
         <div className="max-w-[1080px] mx-auto px-6 md:px-10">
           <p className="dg-cinzel text-[11px] tracking-[0.4em] text-center text-white/55 mb-10">
             SPECIFICATIONS
@@ -509,7 +651,7 @@ export default function DonGorgonPage() {
       </section>
 
       {/* ─── 6. FINAL STATEMENT ────────────────────────────────────── */}
-      <section className="w-full py-32 md:py-44" data-testid="don-gorgon-final-statement">
+      <section className="dg-motion-section w-full py-32 md:py-44" data-dg-motion data-testid="don-gorgon-final-statement">
         <div className="max-w-[720px] mx-auto px-6 text-center">
           <p
             className="dg-cormorant italic text-3xl md:text-5xl text-white/85 leading-[1.4]"

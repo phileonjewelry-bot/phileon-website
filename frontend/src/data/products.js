@@ -2174,8 +2174,8 @@ This is expression — under control.`,
     tagline: "Two sides of the same authority.",
     collections: ["gentlemens-club", "collective"],
     currency: "CAD",
-    priceFrom: "From $2,800 CAD",
-    basePrice: 2800,
+    priceFrom: "From $3,100 CAD",
+    basePrice: 3100,
     dynamicPricing: true,
     pricingPending: false,
     isFeatured: true,
@@ -2183,9 +2183,8 @@ This is expression — under control.`,
     displayOrder: 5,
     showInHomepageCarousel: true,
 
-    // Default product card image (white/AWAY for shop grid — clean product image, no split visual per spec)
-    imageUrl:
-      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8en7jk9g_1000147731.png",
+    // Default product card image — FORCE HOME HERO (cinematic black pavé shot)
+    imageUrl: "/don-gorgon/home/01_hero.png",
 
     // Two colorways
     variants: {
@@ -2227,7 +2226,7 @@ This is expression — under control.`,
     },
 
     defaultSelection: {
-      variant: "away",
+      variant: "home",
       metal: "gold",
       tier: "foundation",
     },
@@ -2258,10 +2257,10 @@ This is expression — under control.`,
       ],
     },
 
-    // Hero — until /videos/the-don-gorgon.mp4 is uploaded, page falls back to the AWAY on-finger hero image
+    // Hero — until /videos/the-don-gorgon.mp4 is uploaded, page falls back to the HOME cinematic hero
     hero: {
       videoSrc: null,
-      poster: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tvyum380_1000148750.png",
+      poster: "/don-gorgon/home/01_hero.png",
     },
 
     heroText: {

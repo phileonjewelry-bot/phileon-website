@@ -1,5 +1,18 @@
 # PHILEON — Luxury Jewelry E-Commerce
 
+## THE DON GORGON — Luxury Motion System + HOME Default Lock (Feb 2026)
+- **Defaults**: `products.js` `defaultSelection.variant="home"`, `imageUrl="/don-gorgon/home/01_hero.png"`, `priceFrom="From $3,100 CAD"`, `basePrice=3100`, `hero.poster` pointing to HOME cinematic shot. Shop grid + product page both open on HOME.
+- **Motion system** (scoped to `DonGorgonPage.jsx` via `.dg-*` classes to avoid bleeding into other pages):
+  1. Hero drift — `scale(1)→scale(1.04) translateY(-8px)` 16s infinite alternate.
+  2. Hero copy reveal — staggered 0.2s/0.45s/0.75s fade-up (eyebrow → title → subline).
+  3. Variant image "light change" — opacity + brightness/contrast filter + 1.015 scale on inactive layer. HOME active = brightness 0.98 / contrast 1.05 (darker heavier). AWAY active = brightness 1.02 / contrast 1.0 (cleaner brighter).
+  4. Gallery momentum — active slot at full opacity/scale/brightness, inactive slots dimmed.
+  5. IntersectionObserver drives gallery `is-active` class (root=gallery scroller, threshold 0.65) and section fade-up `is-visible` (threshold 0.18).
+  6. Ruby glint — 6.5s cubic-bezier sweep, applied only to the macro-ruby slot (auto-detected by alt text).
+  7. Section pacing — `.dg-motion-section` opacity + translateY(26px) → 0 over 1s on intersect.
+  8. `prefers-reduced-motion` override resets all animations to near-instant.
+- Verified live: HOME pressed by default, all motion names confirmed via computed styles, 3 active gallery items + 8 dimmed, ruby-glint on exactly 1 slot.
+
 ## Live Pricing System — PRODUCTION READY
 Formula: `DISPLAY PRICE = LOCKED UPLOAD PRICE + (CURRENT METAL VALUE - LOCKED METAL REFERENCE)`
 
