@@ -2238,20 +2238,20 @@ This is expression — under control.`,
         { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/62xv6x0s_1000147741.png", alt: "The Don Gorgon — HOME (black pavé)" },
       ],
       away: [
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5q24m209_1000148728.png", alt: "The Don Gorgon — AWAY (white pavé, three-quarter)" },
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tvyum380_1000148750.png", alt: "The Don Gorgon — AWAY (worn, hand)" },
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/djgex5cm_1000148722.png", alt: "The Don Gorgon — AWAY (white pavé, editorial)" },
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dvsar5to_1000148718.png", alt: "The Don Gorgon — AWAY (white pavé, box)" },
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9vimli6r_1000148724.png", alt: "The Don Gorgon — AWAY (white pavé, macro front)" },
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8it7op3p_1000148738.png", alt: "The Don Gorgon — AWAY (ruby rail, macro)" },
-        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8en7jk9g_1000147731.png", alt: "The Don Gorgon — AWAY (white pavé, studio)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dvsar5to_1000148718.png", alt: "The Don Gorgon — AWAY (3/4 hero, white pavé)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/djgex5cm_1000148722.png", alt: "The Don Gorgon — AWAY (clean product, cream cushion)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9vimli6r_1000148724.png", alt: "The Don Gorgon — AWAY (alternate angle)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tvyum380_1000148750.png", alt: "The Don Gorgon — AWAY (on-finger)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8it7op3p_1000148738.png", alt: "The Don Gorgon — AWAY (macro, ruby rail)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5q24m209_1000148728.png", alt: "The Don Gorgon — AWAY (macro, pavé texture)" },
+        { src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8en7jk9g_1000147731.png", alt: "The Don Gorgon — AWAY (studio)" },
       ],
     },
 
-    // Hero — until /videos/the-don-gorgon.mp4 is uploaded, page falls back to the AWAY hero image
+    // Hero — until /videos/the-don-gorgon.mp4 is uploaded, page falls back to the AWAY on-finger hero image
     hero: {
       videoSrc: null,
-      poster: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5q24m209_1000148728.png",
+      poster: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tvyum380_1000148750.png",
     },
 
     heroText: {
