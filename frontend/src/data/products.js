@@ -2277,6 +2277,81 @@ This is expression — under control.`,
     specs: "3/4 pavé structure · 12-stone ruby rail · Multi-metal · Dual-state",
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // THE GRAND DAME (Cuff)
+  // Sculptural open cuff in rose gold mesh — 3 tiers, rose-gold floats live
+  // Pricing pending — placeholders only, NOT shown on the page
+  // ==========================================
+  theGrandDame: {
+    name: "The Grand Dame Cuff",
+    slug: "the-grand-dame",
+    category: "bracelets",
+    audience: ["ladies"],
+    type: "cuff",
+    subtitle: "Sculptural Open Cuff",
+    categoryType: "Cuff Bracelet",
+    shopMaterialLine: "Sculptural Open Cuff · Rose Gold · Mesh Lattice",
+    tagline: "Old money never speaks first.",
+    collections: ["ladies"],
+    currency: "CAD",
+    priceFrom: "Pricing on Inquiry",
+    basePrice: 0,
+    dynamicPricing: true,
+    pricingPending: true,
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 6,
+    showInHomepageCarousel: false,
+
+    // Default product card image — cinematic 3/4 hero
+    imageUrl: "/grand-dame/01_hero.png",
+
+    // Single metal: rose gold across all tiers
+    metals: {
+      rose: {
+        key: "rose",
+        name: "Rose Gold",
+        note: "Polished rose gold mesh — old money restraint.",
+        tiers: {
+          foundation: { key: "foundation", name: "Foundation", price: 0, description: "Entry expression. Polished rose gold mesh." },
+          signature:  { key: "signature",  name: "Signature",  price: 0, description: "Elevated weight and structure." },
+          heirloom:   { key: "heirloom",   name: "Heirloom",   price: 0, description: "Maximum density. Lasting." },
+        },
+      },
+    },
+
+    defaultSelection: {
+      metal: "rose",
+      tier: "foundation",
+    },
+
+    gallery: [
+      { src: "/grand-dame/01_hero.png",         alt: "The Grand Dame — 3/4 cinematic hero" },
+      { src: "/grand-dame/02_front.png",        alt: "The Grand Dame — front symmetry, open gap" },
+      { src: "/grand-dame/04_side_profile.png", alt: "The Grand Dame — side profile, structure" },
+      { src: "/grand-dame/07_in_hand.png",      alt: "The Grand Dame — held in hand" },
+      { src: "/grand-dame/08_on_wrist.png",     alt: "The Grand Dame — on wrist" },
+      { src: "/grand-dame/05_macro.png",        alt: "The Grand Dame — macro mesh detail" },
+      { src: "/grand-dame/06_on_surface.png",   alt: "The Grand Dame — on lacquer tray" },
+      { src: "/grand-dame/03_topdown.png",      alt: "The Grand Dame — top-down" },
+    ],
+
+    hero: {
+      videoSrc: null,
+      poster: "/grand-dame/01_hero.png",
+    },
+
+    heroText: {
+      eyebrow: "PHILEON",
+      title: "THE GRAND DAME",
+      subline: "Old money never speaks first.",
+    },
+
+    specs: "Sculptural open cuff · Polished rose gold · Fine mesh lattice · Made to order",
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };

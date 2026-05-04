@@ -1,5 +1,13 @@
 # PHILEON — Luxury Jewelry E-Commerce
 
+## THE GRAND DAME — New Bespoke Product Page (Feb 2026)
+- New product `theGrandDame` added to `products.js`, `livePricingConfig.js`, and `pricing_engine.py`. Slug `the-grand-dame`, category `bracelets`, audience `ladies`, type `cuff`, 3 tiers (Foundation / Signature / Heirloom), single metal (rose gold), `pricingPending: true` → page renders "Pricing on Inquiry" everywhere instead of CAD numbers.
+- 8-shot luxury image set generated via Nano Banana into `/app/frontend/public/grand-dame/` with locked product identity (sculptural open cuff, polished rose gold, fine mesh lattice, no gemstones). Generator: `/app/backend/scripts/generate_grand_dame.py`.
+- Bespoke editorial page at `/products/the-grand-dame` (`GrandDamePage.jsx`) with the same motion system as Don Gorgon, scoped via `.gd-*` classes (hero drift, hero copy stagger, gallery momentum, section fade-up, reduced-motion guard). No add-to-cart while pricingPending — replaced with `INQUIRE` mailto CTA.
+- Tagline locked: "Old money never speaks first."
+- Wired into the ladies bracelets shop grid (`ShopDropPage.jsx` CORE_PRODUCTS) using `/grand-dame/01_hero.png` as the card image.
+- Backend pricing structure scaffolded with realistic placeholder weights (45g/50g/55g) at `lockedBasePriceCad: 0` so cart validation will work the moment real prices are dropped in.
+
 ## THE DON GORGON — Dual-State Video Hero (Feb 2026)
 - New 92vh / 86vh-mobile cinematic video hero added ABOVE the existing HOME/AWAY variant hero. Saved at `/app/frontend/public/videos/the-don-gorgon-dual-hero.mp4`.
 - Source video re-muxed with ffmpeg: H.264 Main / yuv420p / +faststart / AAC LC / 10s / 2.7 MB. The user-uploaded original (XiaoYing mobile editor export) was H.264 Baseline but had a non-streamable atom layout that some browsers refused — re-encode fixes that.

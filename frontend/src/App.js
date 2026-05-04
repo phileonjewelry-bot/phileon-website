@@ -53,6 +53,7 @@ import SizeGuidePage from "@/pages/SizeGuidePage";
 import CouronnePage from "@/pages/CouronnePage";
 import NervaturaPage from "@/pages/NervaturaPage";
 import DonGorgonPage from "@/pages/DonGorgonPage";
+import GrandDamePage from "@/pages/GrandDamePage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -136,6 +137,7 @@ function App() {
             <Route path="/products/prise-de-couronne" element={<CouronnePage />} />
             <Route path="/products/nervatura" element={<NervaturaPage />} />
             <Route path="/products/the-don-gorgon" element={<DonGorgonPage />} />
+            <Route path="/products/the-grand-dame" element={<GrandDamePage />} />
             <Route path="/shop/labete" element={<LaBetePage />} />
             <Route path="/shop/blessed" element={<BlessedPage />} />
             <Route path="/shop/coogi-i" element={<CoogiPage />} />

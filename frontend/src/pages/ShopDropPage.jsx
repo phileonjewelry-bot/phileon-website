@@ -452,6 +452,22 @@ const CORE_PRODUCTS = [
     isFeatured: true,
     displayOrder: 5,
   },
+  {
+    id: 'the-grand-dame',
+    name: 'The Grand Dame Cuff',
+    slug: 'the-grand-dame',
+    materialLine: products.theGrandDame.shopMaterialLine,
+    imageUrl: products.theGrandDame.imageUrl,
+    href: '/products/the-grand-dame',
+    price_range: products.theGrandDame.priceFrom,
+    inventory_count: 100,
+    is_core: true,
+    category: 'bracelets',
+    audience: ['ladies'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 6,
+  },
 ];
 
 // Additional drop products as fallback

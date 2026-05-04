@@ -202,6 +202,16 @@ const livePricingConfig = {
     gold_heirloom_home:     { lockedBasePriceCad: 14800, metalType: "18K", weightGrams: 14, lockedMetalReferenceCad: 1575 },
     gold_heirloom_away:     { lockedBasePriceCad: 14500, metalType: "18K", weightGrams: 14, lockedMetalReferenceCad: 1575 },
   },
+
+  // THE GRAND DAME — Cuff (rose gold, 3 tiers)
+  // pricingPending: lockedBasePriceCad placeholders below are NOT shown on the
+  // page (page renders "Pricing on Inquiry") but the structure must exist so
+  // cart validation works once prices are unlocked.
+  theGrandDame: {
+    foundation: { lockedBasePriceCad: 0, metalType: "10K", weightGrams: 45, lockedMetalReferenceCad: 2813 },
+    signature:  { lockedBasePriceCad: 0, metalType: "14K", weightGrams: 50, lockedMetalReferenceCad: 4375 },
+    heirloom:   { lockedBasePriceCad: 0, metalType: "18K", weightGrams: 55, lockedMetalReferenceCad: 6188 },
+  },
 };
 
 export default livePricingConfig;
