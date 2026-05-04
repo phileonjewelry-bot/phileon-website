@@ -2281,8 +2281,8 @@ This is expression — under control.`,
 
   // ==========================================
   // THE GRAND DAME (Cuff)
-  // Sculptural open cuff in rose gold mesh — 3 tiers, rose-gold floats live
-  // Pricing pending — placeholders only, NOT shown on the page
+  // Sculptural open cuff — Rose Gold / Yellow Gold, 3 tiers
+  // FIXED PRICING (live metals market disabled per spec)
   // ==========================================
   theGrandDame: {
     name: "The Grand Dame Cuff",
@@ -2292,14 +2292,16 @@ This is expression — under control.`,
     type: "cuff",
     subtitle: "Sculptural Open Cuff",
     categoryType: "Cuff Bracelet",
-    shopMaterialLine: "Sculptural Open Cuff · Rose Gold · Mesh Lattice",
+    shopMaterialLine: "Sculptural Open Cuff · Rose / Yellow Gold · Mesh Lattice",
     tagline: "Old money never speaks first.",
     collections: ["ladies"],
     currency: "CAD",
-    priceFrom: "Pricing on Inquiry",
-    basePrice: 0,
-    dynamicPricing: true,
-    pricingPending: true,
+    priceFrom: "From $12,800 CAD",
+    basePrice: 12800,
+    pricingType: "fixed",
+    livePricing: false,
+    dynamicPricing: false,
+    pricingPending: false,
     isFeatured: true,
     isNew: true,
     displayOrder: 6,
@@ -2308,34 +2310,46 @@ This is expression — under control.`,
     // Default product card image — cinematic 3/4 hero
     imageUrl: "/grand-dame/01_hero.png",
 
-    // Single metal: rose gold across all tiers
+    // Two metals, three tiers each (parity pricing across metals)
     metals: {
       rose: {
         key: "rose",
         name: "Rose Gold",
         note: "Polished rose gold mesh — old money restraint.",
         tiers: {
-          foundation: { key: "foundation", name: "Foundation", price: 0, description: "Entry expression. Polished rose gold mesh." },
-          signature:  { key: "signature",  name: "Signature",  price: 0, description: "Elevated weight and structure." },
-          heirloom:   { key: "heirloom",   name: "Heirloom",   price: 0, description: "Maximum density. Lasting." },
+          foundation: { key: "foundation", name: "Foundation", price: 12800, description: "Entry expression. Polished rose gold mesh." },
+          signature:  { key: "signature",  name: "Signature",  price: 16800, description: "Elevated weight and structure." },
+          heirloom:   { key: "heirloom",   name: "Heirloom",   price: 22800, description: "Maximum density. Lasting." },
+        },
+      },
+      yellow: {
+        key: "yellow",
+        name: "Yellow Gold",
+        note: "Polished yellow gold mesh — heritage warmth.",
+        tiers: {
+          foundation: { key: "foundation", name: "Foundation", price: 12800, description: "Entry expression. Polished yellow gold mesh." },
+          signature:  { key: "signature",  name: "Signature",  price: 16800, description: "Elevated weight and structure." },
+          heirloom:   { key: "heirloom",   name: "Heirloom",   price: 22800, description: "Maximum density. Lasting." },
         },
       },
     },
 
     defaultSelection: {
       metal: "rose",
-      tier: "foundation",
+      tier: "signature",
     },
 
+    // 9-slot editorial narrative
     gallery: [
-      { src: "/grand-dame/01_hero.png",         alt: "The Grand Dame — 3/4 cinematic hero" },
-      { src: "/grand-dame/02_front.png",        alt: "The Grand Dame — front symmetry, open gap" },
-      { src: "/grand-dame/04_side_profile.png", alt: "The Grand Dame — side profile, structure" },
-      { src: "/grand-dame/09_on_wrist_real.png", alt: "The Grand Dame — stacked on wrist (intimate)" },
-      { src: "/grand-dame/10_on_wrist_real.png", alt: "The Grand Dame — stacked on wrist (campaign)" },
-      { src: "/grand-dame/05_macro.png",        alt: "The Grand Dame — macro mesh detail" },
-      { src: "/grand-dame/06_on_surface.png",   alt: "The Grand Dame — on lacquer tray" },
-      { src: "/grand-dame/03_topdown.png",      alt: "The Grand Dame — top-down" },
+      { src: "/grand-dame/01_hero.png",          alt: "The Grand Dame — hero (authority)" },
+      { src: "/grand-dame/02_front.png",         alt: "The Grand Dame — front view, structure clarity" },
+      { src: "/grand-dame/04_side_profile.png",  alt: "The Grand Dame — 3/4 angle, form and curvature" },
+      { src: "/grand-dame/05_macro.png",         alt: "The Grand Dame — macro, lattice craftsmanship" },
+      { src: "/grand-dame/09_on_wrist_real.png", alt: "The Grand Dame — on wrist, primary lifestyle" },
+      { src: "/grand-dame/03_topdown.png",       alt: "The Grand Dame — opening detail, top-down" },
+      { src: "/grand-dame/07_in_hand.png",       alt: "The Grand Dame — in hand, scale reference" },
+      { src: "/grand-dame/10_on_wrist_real.png", alt: "The Grand Dame — on wrist, editorial" },
+      { src: "/grand-dame/06_on_surface.png",    alt: "The Grand Dame — final cinematic close" },
     ],
 
     hero: {
@@ -2349,7 +2363,18 @@ This is expression — under control.`,
       subline: "Old money never speaks first.",
     },
 
-    specs: "Sculptural open cuff · Polished rose gold · Fine mesh lattice · Made to order",
+    specs: "Sculptural open cuff · Solid gold (10K / 14K / 18K) · Fine mesh lattice · Made to order",
+
+    // Detailed specifications (rendered on the page)
+    detailedSpecs: {
+      width: "15 mm",
+      innerSpan: "60 mm",
+      openingGap: "30 mm",
+      weight: "45 grams",
+      material: "Solid Gold (10K / 14K / 18K depending on selection)",
+      finish: "High polish exterior with lattice structure",
+      construction: "Open cuff, engineered for balance and tension",
+    },
 
     shipping: "Complimentary insured shipping within Canada."
   }

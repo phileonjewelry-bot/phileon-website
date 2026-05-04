@@ -1,13 +1,35 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { products } from "@/data/products";
+import { useAddToCart } from "../hooks/useAddToCart";
 
 export default function GrandDamePage() {
   const product = products.theGrandDame;
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
-  // IntersectionObserver — fades in .gd-reveal and .gd-section elements
-  // + gallery active detection
+  const [metal, setMetal] = useState(product.defaultSelection.metal);
+  const [tier, setTier] = useState(product.defaultSelection.tier);
+
+  const metalObj = product.metals[metal];
+  const tierObj = metalObj?.tiers?.[tier];
+  const price = tierObj?.price || 0;
+  const formattedPrice = `$${price.toLocaleString("en-CA")} CAD`;
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: `theGrandDame-${metal}-${tier}`,
+      name: `The Grand Dame Cuff — ${metalObj.name} · ${tierObj.name}`,
+      price,
+      productKey: "theGrandDame",
+      tierKey: `${metal}_${tier}`,
+      metal: metalObj.name,
+      quantity: 1,
+      image: product.gallery[0]?.src,
+    });
+  };
+
+  // IntersectionObserver — fades in .gd-reveal / .gd-section + gallery active state
   useEffect(() => {
     const revealEls = document.querySelectorAll(".gd-reveal, .gd-section");
     const revealObserver = new IntersectionObserver(
@@ -38,6 +60,8 @@ export default function GrandDamePage() {
     };
   }, []);
 
+  const specs = product.detailedSpecs;
+
   return (
     <div className="min-h-screen bg-black text-white" data-testid="grand-dame-page">
       <style>{`
@@ -45,7 +69,6 @@ export default function GrandDamePage() {
         .gd-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
         .gd-cormorant { font-family: 'Cormorant Garamond', serif; }
 
-        /* Hero drift */
         @keyframes gdHeroDrift {
           from { transform: scale(1) translateY(0); }
           to   { transform: scale(1.04) translateY(-8px); }
@@ -56,34 +79,25 @@ export default function GrandDamePage() {
           will-change: transform;
         }
 
-        /* Text reveal — IntersectionObserver-driven, 8px lift, 1.2s ease */
         .gd-reveal {
           opacity: 0;
           transform: translateY(8px);
           transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
                       transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .gd-reveal.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        .gd-reveal.visible { opacity: 1; transform: translateY(0); }
         .gd-delay-1 { transition-delay: 0.2s; }
         .gd-delay-2 { transition-delay: 0.5s; }
         .gd-delay-3 { transition-delay: 0.8s; }
 
-        /* Section reveal — 20px lift, 1.1s ease */
         .gd-section {
           opacity: 0;
           transform: translateY(20px);
           transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
                       transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .gd-section.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        .gd-section.visible { opacity: 1; transform: translateY(0); }
 
-        /* Gallery momentum */
         .gd-gallery-item {
           scroll-snap-align: center;
           opacity: 0.55;
@@ -96,15 +110,16 @@ export default function GrandDamePage() {
         }
         .gd-gallery-item.is-active { opacity: 1; transform: scale(1); filter: brightness(1); }
 
+        @media (max-width: 767px) {
+          [data-testid="grand-dame-hero"] { height: 86vh !important; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .gd-hero-media, .gd-reveal, .gd-section, .gd-gallery-item {
             animation: none !important;
             transition-duration: 0.001ms !important;
           }
-          .gd-reveal, .gd-section {
-            opacity: 1 !important;
-            transform: none !important;
-          }
+          .gd-reveal, .gd-section { opacity: 1 !important; transform: none !important; }
         }
       `}</style>
 
@@ -119,12 +134,6 @@ export default function GrandDamePage() {
           alt="The Grand Dame — cinematic hero"
           className="gd-hero-media absolute inset-0 w-full h-full object-cover"
         />
-
-        <style>{`
-          @media (max-width: 767px) {
-            [data-testid="grand-dame-hero"] { height: 86vh !important; }
-          }
-        `}</style>
 
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/55 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
@@ -161,10 +170,11 @@ export default function GrandDamePage() {
         </div>
       </section>
 
-      {/* ─── INQUIRY BLOCK (pricingPending) ────────────────────────── */}
-      <section className="gd-section w-full py-14 md:py-20" data-testid="grand-dame-inquiry">
-        <div className="max-w-[860px] mx-auto px-6 md:px-8 text-center space-y-10">
-          <div>
+      {/* ─── PURCHASE BLOCK ──────────────────────────────────────── */}
+      <section className="gd-section w-full py-14 md:py-20" data-testid="grand-dame-purchase">
+        <div className="max-w-[860px] mx-auto px-6 md:px-8 space-y-10">
+          {/* Title + tagline + price */}
+          <div className="text-center">
             <h2
               className="gd-cinzel text-2xl md:text-3xl text-white"
               style={{ letterSpacing: "0.18em" }}
@@ -173,58 +183,122 @@ export default function GrandDamePage() {
               THE GRAND DAME
             </h2>
             <p className="gd-cormorant italic text-base md:text-lg text-white/65 mt-3">
-              {product.subtitle}
+              {product.tagline}
+            </p>
+            <p
+              className="gd-cinzel text-3xl md:text-4xl text-white mt-6"
+              style={{ letterSpacing: "0.06em" }}
+              data-testid="grand-dame-price"
+            >
+              {formattedPrice}
             </p>
           </div>
 
-          {/* Tier preview — names and material only, no prices */}
-          <div data-testid="grand-dame-tiers">
-            <p className="gd-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-5">
-              EDITIONS
+          {/* SELECT METAL */}
+          <div data-testid="grand-dame-step-metal">
+            <p className="gd-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-5 text-center">
+              SELECT METAL
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 text-left">
-              {Object.values(product.metals.rose.tiers).map((t) => (
-                <div
-                  key={t.key}
-                  data-testid={`grand-dame-tier-${t.key}`}
-                  className="
-                    relative rounded-2xl border border-white/15 bg-transparent
-                    px-5 md:px-6 py-6 md:py-7
-                  "
-                >
-                  <p className="gd-cinzel text-[14px] md:text-[15px] tracking-[0.22em] text-white/80">
-                    {t.name.toUpperCase()}
-                  </p>
-                  <p className="gd-cormorant italic text-[14px] mt-3 text-white/60">
-                    {t.description}
-                  </p>
-                  <p className="gd-cormorant text-xs text-[#C6A86B]/70 mt-5 tracking-[0.12em]">
-                    PRICING ON INQUIRY
-                  </p>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-4 md:gap-5">
+              {Object.values(product.metals).map((m) => {
+                const isSel = metal === m.key;
+                return (
+                  <button
+                    key={m.key}
+                    type="button"
+                    onClick={() => setMetal(m.key)}
+                    aria-pressed={isSel}
+                    data-testid={`grand-dame-metal-${m.key}-btn`}
+                    className={`
+                      relative rounded-2xl border bg-transparent
+                      transition-all duration-500 ease-out
+                      px-5 md:px-6 py-6 md:py-7 text-center
+                      ${isSel
+                        ? "border-[#C6A86B] bg-[#C6A86B]/[0.06] shadow-[inset_0_0_0_1px_rgba(198,168,107,0.18)]"
+                        : "border-white/20 hover:border-[#C6A86B] hover:bg-[#C6A86B]/[0.04]"}
+                    `}
+                  >
+                    <p className={`gd-cinzel text-[14px] md:text-[15px] tracking-[0.22em] ${isSel ? "text-white" : "text-white/80"}`}>
+                      {m.name.toUpperCase()}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Inquire CTA (no Add to Cart while pricingPending) */}
-          <div className="pt-2 space-y-7">
-            <p className="gd-cinzel text-[10px] tracking-[0.35em] text-white/45">
-              ROSE GOLD · MADE TO ORDER
+          {/* SELECT STANDARD */}
+          <div data-testid="grand-dame-step-tier">
+            <p className="gd-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-5 text-center">
+              SELECT STANDARD
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+              {Object.values(metalObj.tiers).map((t) => {
+                const isSel = tier === t.key;
+                const isSig = t.key === "signature";
+                const isHeir = t.key === "heirloom";
+                return (
+                  <button
+                    key={t.key}
+                    type="button"
+                    onClick={() => setTier(t.key)}
+                    aria-pressed={isSel}
+                    data-testid={`grand-dame-tier-${t.key}-btn`}
+                    className={`
+                      relative rounded-2xl border bg-transparent
+                      transition-all duration-500 ease-out
+                      px-5 md:px-6 py-6 md:py-7 text-left
+                      ${isSel
+                        ? "border-[#C6A86B] bg-[#C6A86B]/[0.06] shadow-[inset_0_0_0_1px_rgba(198,168,107,0.18)]"
+                        : "border-white/20 hover:border-[#C6A86B] hover:bg-[#C6A86B]/[0.04]"}
+                    `}
+                  >
+                    {isSig && (
+                      <span className="absolute top-4 right-4 bg-black text-white uppercase tracking-[0.18em] rounded-full text-[9px] px-2 py-1">
+                        Most Chosen
+                      </span>
+                    )}
+                    {isHeir && (
+                      <span className="absolute top-4 right-4 bg-black text-white uppercase tracking-[0.18em] rounded-full text-[9px] px-2 py-1">
+                        Atelier
+                      </span>
+                    )}
+                    <p className={`gd-cinzel text-[14px] md:text-[15px] tracking-[0.22em] ${isSel ? "text-white" : "text-white/80"}`}>
+                      {t.name.toUpperCase()}
+                    </p>
+                    <p className={`gd-cormorant italic text-[14px] mt-3 ${isSel ? "text-white/80" : "text-white/55"}`}>
+                      {t.description}
+                    </p>
+                    <p className={`gd-cinzel text-[16px] mt-5 ${isSel ? "text-white" : "text-white/70"}`}>
+                      ${t.price.toLocaleString("en-CA")} CAD
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* SUMMARY + ADD TO BAG */}
+          <div className="text-center pt-2 space-y-7">
+            <p className="gd-cinzel text-[10px] tracking-[0.35em] text-white/55">
+              {metalObj.name.toUpperCase()} · {tierObj.name.toUpperCase()}
             </p>
 
-            <a
-              href="mailto:atelier@phileon.com?subject=The%20Grand%20Dame%20Cuff%20%E2%80%94%20Inquiry"
-              data-testid="grand-dame-inquire-btn"
+            <button
+              onClick={onAddToCart}
+              disabled={isAdding}
+              data-testid="grand-dame-add-to-cart-btn"
               className="
                 gd-cinzel inline-block px-14 py-5
                 bg-transparent border border-[#C6A86B] text-[#C6A86B]
                 tracking-[0.3em] text-[12px]
                 hover:bg-[#C6A86B] hover:text-black
+                disabled:opacity-40 disabled:cursor-not-allowed
                 transition-colors duration-500
               "
             >
-              INQUIRE
-            </a>
+              {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "ADD TO BAG"}
+            </button>
 
             <p className="gd-cormorant text-sm text-white/45 italic">
               Made to order · Atelier consultation · Complimentary insured shipping
@@ -234,10 +308,7 @@ export default function GrandDamePage() {
       </section>
 
       {/* ─── GALLERY ──────────────────────────────────────────────── */}
-      <section
-        className="gd-section w-full bg-black py-8 md:py-12"
-        data-testid="grand-dame-gallery"
-      >
+      <section className="gd-section w-full bg-black py-8 md:py-12" data-testid="grand-dame-gallery">
         <div
           className="
             flex overflow-x-auto gap-3 md:gap-4 px-4 md:px-10 pb-4
@@ -292,33 +363,79 @@ export default function GrandDamePage() {
             SPECIFICATIONS
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-            {[
-              { label: "FORM", lines: ["Sculptural open cuff.", "Oval profile.", "Architectural width."] },
-              { label: "FINISH", lines: ["Polished rose gold.", "Fine mesh lattice.", "Bevelled outer edge."] },
-              { label: "EDITIONS", lines: ["Foundation · 10K rose.", "Signature · 14K rose.", "Heirloom · 18K rose."] },
-            ].map((spec) => (
-              <div key={spec.label} className="text-center md:text-left">
-                <div
-                  aria-hidden
-                  className="h-px w-10 mx-auto md:mx-0 mb-4"
-                  style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }}
-                />
-                <p className="gd-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">
-                  {spec.label}
-                </p>
-                <div className="gd-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
-                  {spec.lines.map((ln, li) => (
-                    <p key={li}>{ln}</p>
-                  ))}
-                </div>
+            <div className="text-center md:text-left">
+              <div aria-hidden className="h-px w-10 mx-auto md:mx-0 mb-4" style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }} />
+              <p className="gd-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">DIMENSIONS</p>
+              <div className="gd-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
+                <p>Width · {specs.width}</p>
+                <p>Inner span · {specs.innerSpan}</p>
+                <p>Opening gap · {specs.openingGap}</p>
+                <p>Weight · {specs.weight}</p>
               </div>
-            ))}
+            </div>
+
+            <div className="text-center md:text-left">
+              <div aria-hidden className="h-px w-10 mx-auto md:mx-0 mb-4" style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }} />
+              <p className="gd-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">MATERIAL</p>
+              <div className="gd-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
+                <p>{specs.material}</p>
+                <p>{specs.finish}</p>
+              </div>
+            </div>
+
+            <div className="text-center md:text-left">
+              <div aria-hidden className="h-px w-10 mx-auto md:mx-0 mb-4" style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }} />
+              <p className="gd-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">CONSTRUCTION</p>
+              <div className="gd-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
+                <p>{specs.construction}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* ─── BOTTOM CTA ECHO ─────────────────────────────────────── */}
+      <section className="gd-section w-full py-20 md:py-28" data-testid="grand-dame-bottom-cta">
+        <div className="max-w-[640px] mx-auto px-6 text-center space-y-7">
+          <h3
+            className="gd-cinzel text-2xl md:text-3xl text-white"
+            style={{ letterSpacing: "0.18em" }}
+          >
+            THE GRAND DAME
+          </h3>
+          <p className="gd-cormorant italic text-base md:text-lg text-white/65">
+            Old money never speaks first.
+          </p>
+          <p
+            className="gd-cinzel text-3xl md:text-4xl text-white"
+            style={{ letterSpacing: "0.06em" }}
+            data-testid="grand-dame-price-bottom"
+          >
+            {formattedPrice}
+          </p>
+          <button
+            onClick={onAddToCart}
+            disabled={isAdding}
+            data-testid="grand-dame-add-to-cart-btn-bottom"
+            className="
+              gd-cinzel inline-block px-14 py-5
+              bg-transparent border border-[#C6A86B] text-[#C6A86B]
+              tracking-[0.3em] text-[12px]
+              hover:bg-[#C6A86B] hover:text-black
+              disabled:opacity-40 disabled:cursor-not-allowed
+              transition-colors duration-500
+            "
+          >
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "ADD TO BAG"}
+          </button>
+          <p className="gd-cormorant text-sm text-white/45 italic">
+            Made to order · Atelier consultation · Complimentary insured shipping
+          </p>
+        </div>
+      </section>
+
       {/* ─── FINAL STATEMENT ─────────────────────────────────────── */}
-      <section className="gd-section w-full py-32 md:py-44" data-testid="grand-dame-final-statement">
+      <section className="gd-section w-full py-24 md:py-32" data-testid="grand-dame-final-statement">
         <div className="max-w-[720px] mx-auto px-6 text-center">
           <p
             className="gd-cormorant italic text-3xl md:text-5xl text-white/85 leading-[1.4]"
