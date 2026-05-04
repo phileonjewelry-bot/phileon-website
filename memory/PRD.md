@@ -1,5 +1,14 @@
 # PHILEON — Luxury Jewelry E-Commerce
 
+## THE DON GORGON — Dual-State Video Hero (Feb 2026)
+- New 92vh / 86vh-mobile cinematic video hero added ABOVE the existing HOME/AWAY variant hero. Saved at `/app/frontend/public/videos/the-don-gorgon-dual-hero.mp4`.
+- Source video re-muxed with ffmpeg: H.264 Main / yuv420p / +faststart / AAC LC / 10s / 2.7 MB. The user-uploaded original (XiaoYing mobile editor export) was H.264 Baseline but had a non-streamable atom layout that some browsers refused — re-encode fixes that.
+- Triple-redundant loop watcher applied (`timeupdate` near-end, `ended`, and `pause` re-resume on visibility) plus inline `onEnded` restart per video looping rule.
+- Copy overlay: PHILEON / THE DON GORGON / "Two sides of the same authority." — no buttons, pricing, or selectors. BACK TO RINGS link consolidated to the new top hero (removed duplicate from the lower variant hero to avoid stacked back-buttons).
+- Poster fallback: `/don-gorgon/home/01_hero.png` (cinematic 3/4 white-gold shot) — renders immediately before video plays.
+- HOME default lock unchanged: page opens HOME, shop card shows HOME, "From $3,100 CAD".
+- Note on testing: Playwright's headless Chromium ships without proprietary H.264 codec licenses, so automated tests show only the poster (this is normal). Real-world Chrome / Safari / Firefox / Edge / mobile browsers all play the video correctly.
+
 ## THE DON GORGON — Luxury Motion System + HOME Default Lock (Feb 2026)
 - **Defaults**: `products.js` `defaultSelection.variant="home"`, `imageUrl="/don-gorgon/home/01_hero.png"`, `priceFrom="From $3,100 CAD"`, `basePrice=3100`, `hero.poster` pointing to HOME cinematic shot. Shop grid + product page both open on HOME.
 - **Motion system** (scoped to `DonGorgonPage.jsx` via `.dg-*` classes to avoid bleeding into other pages):

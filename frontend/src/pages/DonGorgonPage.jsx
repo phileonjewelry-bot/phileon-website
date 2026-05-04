@@ -19,6 +19,7 @@ function getLockedPrice(product, metal, tier, variant) {
 export default function DonGorgonPage() {
   const product = products.theDonGorgon;
   const heroRef = useRef(null);
+  const dualHeroRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const defaults = product.defaultSelection;
@@ -88,6 +89,43 @@ export default function DonGorgonPage() {
       v.removeEventListener("ended", onEnded);
     };
   }, [hasHeroVideo]);
+
+  // ─── Dual-state video hero loop watcher (always present) ────────
+  useEffect(() => {
+    const v = dualHeroRef.current;
+    if (!v) return;
+    const onTimeUpdate = () => {
+      if (!isFinite(v.duration) || v.duration === 0) return;
+      if (v.duration - v.currentTime < 0.15) {
+        v.currentTime = 0;
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+    };
+    const onEnded = () => {
+      v.currentTime = 0;
+      const p = v.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+    const onPause = () => {
+      // Defensive: some browsers (iOS Safari) pause autoplaying video on
+      // visibility change. Resume silently when we regain focus.
+      if (document.visibilityState === "visible") {
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+    };
+    v.addEventListener("timeupdate", onTimeUpdate);
+    v.addEventListener("ended", onEnded);
+    v.addEventListener("pause", onPause);
+    const initial = v.play();
+    if (initial && initial.catch) initial.catch(() => {});
+    return () => {
+      v.removeEventListener("timeupdate", onTimeUpdate);
+      v.removeEventListener("ended", onEnded);
+      v.removeEventListener("pause", onPause);
+    };
+  }, []);
 
   // ─── Section fade-up + gallery active detection ─────────────────
   useEffect(() => {
@@ -248,6 +286,77 @@ export default function DonGorgonPage() {
         }
       `}</style>
 
+      {/* ─── 0. DUAL-STATE VIDEO HERO (sits above the variant hero) ── */}
+      <section
+        className="relative w-full bg-black overflow-hidden"
+        style={{ height: "92vh", minHeight: "320px" }}
+        data-testid="don-gorgon-dual-hero"
+      >
+        <video
+          key="don-gorgon-dual-hero-video"
+          ref={dualHeroRef}
+          className="dg-hero-media absolute inset-0 w-full h-full object-cover"
+          src="/videos/the-don-gorgon-dual-hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/don-gorgon/home/01_hero.png"
+          onEnded={(e) => {
+            e.currentTarget.currentTime = 0;
+            e.currentTarget.play().catch(() => {});
+          }}
+          data-testid="don-gorgon-dual-hero-video-el"
+          style={{
+            // mobile height override
+            height: "100%",
+          }}
+        />
+
+        {/* mobile height tweak (86vh) handled via CSS variable below */}
+        <style>{`
+          @media (max-width: 767px) {
+            [data-testid="don-gorgon-dual-hero"] { height: 86vh !important; }
+          }
+        `}</style>
+
+        {/* Bottom gradient for text readability */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/55 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
+
+        <Link
+          to="/shop?category=rings"
+          className="absolute top-6 left-6 z-20 flex items-center gap-2 text-white/55 text-[11px] tracking-[0.3em] hover:text-[#C6A86B] transition-colors"
+          data-testid="don-gorgon-dual-hero-back-btn"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>BACK TO RINGS</span>
+        </Link>
+
+        <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
+          <div className="dg-hero-copy">
+            <p className="dg-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
+              PHILEON
+            </p>
+            <h1
+              className="dg-cinzel text-3xl md:text-5xl text-white"
+              style={{ letterSpacing: "0.14em" }}
+              data-testid="don-gorgon-dual-hero-title"
+            >
+              THE DON GORGON
+            </h1>
+            <p
+              className="text-white italic tracking-wide text-sm mt-4"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              data-testid="don-gorgon-dual-hero-subline"
+            >
+              Two sides of the same authority.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ─── 1. HERO ───────────────────────────────────────────────── */}
       <section
         className="relative w-full h-[92vh] bg-black overflow-hidden"
@@ -295,15 +404,6 @@ export default function DonGorgonPage() {
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/55 to-transparent" />
         {/* Light vignette around overlay */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
-
-        <Link
-          to="/shop?category=rings"
-          className="absolute top-6 left-6 z-20 flex items-center gap-2 text-white/55 text-[11px] tracking-[0.3em] hover:text-[#C6A86B] transition-colors"
-          data-testid="don-gorgon-back-btn"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>BACK TO RINGS</span>
-        </Link>
 
         <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
           <div className="dg-hero-copy">
