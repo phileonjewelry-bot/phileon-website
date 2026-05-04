@@ -6,18 +6,19 @@ import { products } from "@/data/products";
 export default function GrandDamePage() {
   const product = products.theGrandDame;
 
-  // Section fade-up + gallery active detection (mirrors Don Gorgon pattern)
+  // IntersectionObserver — fades in .gd-reveal and .gd-section elements
+  // + gallery active detection
   useEffect(() => {
-    const sections = document.querySelectorAll("[data-gd-motion]");
-    const sectionObserver = new IntersectionObserver(
+    const revealEls = document.querySelectorAll(".gd-reveal, .gd-section");
+    const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("is-visible");
+          if (entry.isIntersecting) entry.target.classList.add("visible");
         });
       },
       { threshold: 0.18 }
     );
-    sections.forEach((el) => sectionObserver.observe(el));
+    revealEls.forEach((el) => revealObserver.observe(el));
 
     const galleryRoot = document.querySelector("[data-gd-gallery-scroller]");
     const galleryItems = document.querySelectorAll(".gd-gallery-item");
@@ -32,7 +33,7 @@ export default function GrandDamePage() {
     galleryItems.forEach((item) => galleryObserver.observe(item));
 
     return () => {
-      sectionObserver.disconnect();
+      revealObserver.disconnect();
       galleryObserver.disconnect();
     };
   }, []);
@@ -55,16 +56,32 @@ export default function GrandDamePage() {
           will-change: transform;
         }
 
-        /* Hero text reveal */
-        @keyframes gdTextReveal { to { opacity: 1; transform: translateY(0); } }
-        .gd-hero-copy > * {
+        /* Text reveal — IntersectionObserver-driven, 8px lift, 1.2s ease */
+        .gd-reveal {
           opacity: 0;
-          transform: translateY(10px);
-          animation: gdTextReveal 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          transform: translateY(8px);
+          transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+                      transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .gd-hero-copy > *:nth-child(1) { animation-delay: 0.20s; }
-        .gd-hero-copy > *:nth-child(2) { animation-delay: 0.45s; }
-        .gd-hero-copy > *:nth-child(3) { animation-delay: 0.75s; }
+        .gd-reveal.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .gd-delay-1 { transition-delay: 0.2s; }
+        .gd-delay-2 { transition-delay: 0.5s; }
+        .gd-delay-3 { transition-delay: 0.8s; }
+
+        /* Section reveal — 20px lift, 1.1s ease */
+        .gd-section {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+                      transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .gd-section.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
 
         /* Gallery momentum */
         .gd-gallery-item {
@@ -79,23 +96,15 @@ export default function GrandDamePage() {
         }
         .gd-gallery-item.is-active { opacity: 1; transform: scale(1); filter: brightness(1); }
 
-        /* Section pacing */
-        .gd-motion-section {
-          opacity: 0;
-          transform: translateY(26px);
-          transition:
-            opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
-            transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .gd-motion-section.is-visible { opacity: 1; transform: translateY(0); }
-
         @media (prefers-reduced-motion: reduce) {
-          .gd-hero-media, .gd-hero-copy > *, .gd-gallery-item, .gd-motion-section {
+          .gd-hero-media, .gd-reveal, .gd-section, .gd-gallery-item {
             animation: none !important;
             transition-duration: 0.001ms !important;
           }
-          .gd-hero-copy > * { opacity: 1 !important; transform: none !important; }
-          .gd-motion-section { opacity: 1 !important; transform: none !important; }
+          .gd-reveal, .gd-section {
+            opacity: 1 !important;
+            transform: none !important;
+          }
         }
       `}</style>
 
@@ -130,19 +139,19 @@ export default function GrandDamePage() {
         </Link>
 
         <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
-          <div className="gd-hero-copy">
-            <p className="gd-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
+          <div>
+            <p className="gd-reveal gd-delay-1 gd-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
               {product.heroText.eyebrow}
             </p>
             <h1
-              className="gd-cinzel text-3xl md:text-5xl text-white"
+              className="gd-reveal gd-delay-2 gd-cinzel text-3xl md:text-5xl text-white"
               style={{ letterSpacing: "0.14em" }}
               data-testid="grand-dame-title"
             >
               {product.heroText.title}
             </h1>
             <p
-              className="text-white italic tracking-wide text-sm mt-4"
+              className="gd-reveal gd-delay-3 text-white italic tracking-wide text-sm mt-4"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
               data-testid="grand-dame-subline"
             >
@@ -153,7 +162,7 @@ export default function GrandDamePage() {
       </section>
 
       {/* ─── INQUIRY BLOCK (pricingPending) ────────────────────────── */}
-      <section className="gd-motion-section w-full py-14 md:py-20" data-gd-motion data-testid="grand-dame-inquiry">
+      <section className="gd-section w-full py-14 md:py-20" data-testid="grand-dame-inquiry">
         <div className="max-w-[860px] mx-auto px-6 md:px-8 text-center space-y-10">
           <div>
             <h2
@@ -226,8 +235,7 @@ export default function GrandDamePage() {
 
       {/* ─── GALLERY ──────────────────────────────────────────────── */}
       <section
-        className="gd-motion-section w-full bg-black py-8 md:py-12"
-        data-gd-motion
+        className="gd-section w-full bg-black py-8 md:py-12"
         data-testid="grand-dame-gallery"
       >
         <div
@@ -265,7 +273,7 @@ export default function GrandDamePage() {
       </section>
 
       {/* ─── EDITORIAL ────────────────────────────────────────────── */}
-      <section className="gd-motion-section w-full py-16 md:py-20" data-gd-motion data-testid="grand-dame-editorial">
+      <section className="gd-section w-full py-16 md:py-20" data-testid="grand-dame-editorial">
         <div className="max-w-[640px] mx-auto px-6 text-center">
           <p className="gd-cormorant italic text-xl md:text-2xl text-white/80 leading-[1.6]">
             Old money never speaks first.
@@ -278,7 +286,7 @@ export default function GrandDamePage() {
       </section>
 
       {/* ─── SPECIFICATIONS ──────────────────────────────────────── */}
-      <section className="gd-motion-section w-full py-16 md:py-20" data-gd-motion data-testid="grand-dame-specifications">
+      <section className="gd-section w-full py-16 md:py-20" data-testid="grand-dame-specifications">
         <div className="max-w-[1080px] mx-auto px-6 md:px-10">
           <p className="gd-cinzel text-[11px] tracking-[0.4em] text-center text-white/55 mb-10">
             SPECIFICATIONS
@@ -310,7 +318,7 @@ export default function GrandDamePage() {
       </section>
 
       {/* ─── FINAL STATEMENT ─────────────────────────────────────── */}
-      <section className="gd-motion-section w-full py-32 md:py-44" data-gd-motion data-testid="grand-dame-final-statement">
+      <section className="gd-section w-full py-32 md:py-44" data-testid="grand-dame-final-statement">
         <div className="max-w-[720px] mx-auto px-6 text-center">
           <p
             className="gd-cormorant italic text-3xl md:text-5xl text-white/85 leading-[1.4]"
