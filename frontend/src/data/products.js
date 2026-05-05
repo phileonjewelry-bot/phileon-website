@@ -2396,8 +2396,8 @@ This is expression — under control.`,
     tagline: "Not a ring. A reputation.",
     collections: ["collective"],
     currency: "CAD",
-    priceFrom: "$4,800 CAD",
-    basePrice: 4800,
+    priceFrom: "$2,800 CAD",
+    basePrice: 2800,
     pricingType: "fixed",
     livePricing: false,
     dynamicPricing: false,
@@ -2414,11 +2414,11 @@ This is expression — under control.`,
     variantType: "metal",
     variants: [
       { key: "vermeil", metal: "Vermeil", price: 1200, default: false, description: "Gilt silver foundation." },
-      { key: "gold",    metal: "10K Gold", price: 4800, default: true,  description: "Solid 10K gold exoskeleton." },
+      { key: "10k",     metal: "10K Gold", price: 2800, default: true,  description: "Solid 10K gold exoskeleton." },
     ],
 
     defaultSelection: {
-      metal: "gold",
+      metal: "10k",
     },
 
     shopDisplay: {
