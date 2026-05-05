@@ -2381,7 +2381,8 @@ This is expression — under control.`,
 
   // ==========================================
   // THE CARAPACE (Statement Ring)
-  // Sculptural lattice dome — 2 metal variants, fixed pricing
+  // STRICT IMAGE CONTROL — gallery is FIXED to 5 approved frames.
+  // Do NOT auto-generate, regenerate, or add new angles. Image set is final.
   // ==========================================
   theCarapace: {
     name: "The Carapace",
@@ -2393,11 +2394,11 @@ This is expression — under control.`,
     subtitle: "Sculptural Lattice Dome Ring",
     categoryType: "Statement Ring",
     shopMaterialLine: "Sculptural Lattice Dome · Vermeil · 10K Gold",
-    tagline: "Not a ring. A reputation.",
+    tagline: "Not a ring, a reputation.",
     collections: ["collective"],
     currency: "USD",
-    priceFrom: "$2,800 USD",
-    basePrice: 2800,
+    priceFrom: "$1,450 USD",
+    basePrice: 1450,
     pricingType: "fixed",
     livePricing: false,
     dynamicPricing: false,
@@ -2409,12 +2410,11 @@ This is expression — under control.`,
 
     imageUrl: "/carapace/01_hero.png",
 
-    // Variant shape per user spec — two metals, no tiers
     hasVariants: true,
     variantType: "metal",
     variants: [
-      { key: "vermeil", metal: "Vermeil", price: 700, default: false, description: "Gilt silver foundation." },
-      { key: "10k",     metal: "10K Gold", price: 2800, default: true,  description: "Solid 10K gold exoskeleton." },
+      { key: "vermeil", metal: "Vermeil", price: 480, default: false, description: "Gilt silver foundation." },
+      { key: "10k",     metal: "10K Gold", price: 1450, default: true,  description: "Solid 10K gold exoskeleton." },
     ],
 
     defaultSelection: {
@@ -2426,21 +2426,25 @@ This is expression — under control.`,
       showExactPrice: true,
     },
 
-    specs: "Sculptural lattice dome · Organic exoskeleton · High-polish finish · Statement coverage",
+    specs: "Sculptural lattice dome · Open exoskeleton · High-polish · Vermeil / 10K Gold",
     detailedSpecs: {
-      form: "Sculptural lattice dome",
-      structure: "Organic exoskeleton construction",
-      finish: "High-polish gold",
-      coverage: "Statement-scale dome across the finger",
+      weight: "8.5 grams",
+      material: "Vermeil / 10K Gold",
+      construction: "Open lattice structure",
+      form: "Sculptural dome profile",
+      finish: "High polish",
+      fit: "Standard ring sizing",
+      leadTime: "Made to order · 2–3 weeks · Complimentary insured shipping",
     },
 
+    // STRICT IMAGE CONTROL — locked 5-frame set per spec.
+    // 1. Hero 3/4   2. Top-down   3. Side profile   4. Macro   5. On-hand
     gallery: [
-      { src: "/carapace/01_hero.png",    alt: "The Carapace — hero (authority)" },
-      { src: "/carapace/02_angle.png",   alt: "The Carapace — 3/4 angle (form + band)" },
-      { src: "/carapace/03_top.png",     alt: "The Carapace — top-down (lattice pattern)" },
-      { src: "/carapace/04_macro.png",   alt: "The Carapace — macro (cell craftsmanship)" },
-      { src: "/carapace/05_shadow.png",  alt: "The Carapace — shadow study (architectural)" },
-      { src: "/carapace/06_on_hand.png", alt: "The Carapace — worn on hand (scale + presence)" },
+      { src: "/carapace/01_hero.png",    alt: "The Carapace — hero 3/4 angle" },
+      { src: "/carapace/03_top.png",     alt: "The Carapace — top-down view (pattern clarity)" },
+      { src: "/carapace/02_angle.png",   alt: "The Carapace — side profile (height and curvature)" },
+      { src: "/carapace/04_macro.png",   alt: "The Carapace — macro detail (lattice structure)" },
+      { src: "/carapace/06_on_hand.png", alt: "The Carapace — on-hand (finger placement)" },
     ],
 
     hero: {
@@ -2451,7 +2455,7 @@ This is expression — under control.`,
     heroText: {
       eyebrow: "PHILEON",
       title: "THE CARAPACE",
-      subline: "Not a ring. A reputation.",
+      subline: "Not a ring, a reputation.",
     },
 
     shipping: "Complimentary insured shipping within Canada."

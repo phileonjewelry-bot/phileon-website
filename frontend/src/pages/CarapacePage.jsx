@@ -252,7 +252,7 @@ export default function CarapacePage() {
             </button>
 
             <p className="cp-cormorant text-sm text-white/45 italic">
-              Made to order · Atelier consultation · Complimentary insured shipping
+              Made to order · 2–3 weeks · Complimentary insured shipping
             </p>
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function CarapacePage() {
       <section className="cp-section w-full py-16 md:py-20" data-testid="carapace-editorial">
         <div className="max-w-[640px] mx-auto px-6 text-center">
           <p className="cp-cormorant italic text-xl md:text-2xl text-white/80 leading-[1.6]">
-            Not a ring. A reputation.
+            Not a ring, a reputation.
           </p>
           <p className="cp-cormorant italic text-lg md:text-xl text-white/55 leading-[1.6] mt-4">
             An exoskeleton in polished gold. Worn where the world can see it —
@@ -313,25 +313,38 @@ export default function CarapacePage() {
           <p className="cp-cinzel text-[11px] tracking-[0.4em] text-center text-white/55 mb-10">
             SPECIFICATIONS
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
             <div className="text-center md:text-left">
               <div aria-hidden className="h-px w-10 mx-auto md:mx-0 mb-4" style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }} />
-              <p className="cp-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">FORM</p>
+              <p className="cp-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">DIMENSIONS</p>
               <div className="cp-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
-                <p>{specs.form}</p>
-                <p>{specs.coverage}</p>
+                <p>Weight · {specs.weight}</p>
+                <p>Fit · {specs.fit}</p>
+              </div>
+            </div>
+            <div className="text-center md:text-left">
+              <div aria-hidden className="h-px w-10 mx-auto md:mx-0 mb-4" style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }} />
+              <p className="cp-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">MATERIAL</p>
+              <div className="cp-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
+                <p>{specs.material}</p>
+                <p>{specs.finish}</p>
               </div>
             </div>
             <div className="text-center md:text-left">
               <div aria-hidden className="h-px w-10 mx-auto md:mx-0 mb-4" style={{ backgroundColor: "rgba(198, 168, 107, 0.4)" }} />
               <p className="cp-cinzel text-[11px] tracking-[0.35em] text-[#C6A86B] mb-4">CONSTRUCTION</p>
               <div className="cp-cormorant text-[16px] md:text-[17px] leading-[1.55] text-white/70 space-y-1">
-                <p>{specs.structure}</p>
-                <p>{specs.finish}</p>
-                <p>Available in Vermeil or 10K Gold</p>
+                <p>{specs.construction}</p>
+                <p>{specs.form}</p>
               </div>
             </div>
           </div>
+          <p
+            className="cp-cormorant italic text-sm text-white/45 text-center mt-12"
+            data-testid="carapace-lead-time"
+          >
+            {specs.leadTime}
+          </p>
         </div>
       </section>
 
@@ -345,7 +358,7 @@ export default function CarapacePage() {
             THE CARAPACE
           </h3>
           <p className="cp-cormorant italic text-base md:text-lg text-white/65">
-            Not a ring. A reputation.
+            Not a ring, a reputation.
           </p>
           <p
             className="cp-cinzel text-3xl md:text-4xl text-white"
@@ -370,7 +383,7 @@ export default function CarapacePage() {
             {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : "ADD TO BAG"}
           </button>
           <p className="cp-cormorant text-sm text-white/45 italic">
-            Made to order · Atelier consultation · Complimentary insured shipping
+            Made to order · 2–3 weeks · Complimentary insured shipping
           </p>
         </div>
       </section>
