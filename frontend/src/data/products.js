@@ -2413,7 +2413,7 @@ This is expression — under control.`,
     hasVariants: true,
     variantType: "metal",
     variants: [
-      { key: "vermeil", metal: "Vermeil", price: 1200, default: false, description: "Gilt silver foundation." },
+      { key: "vermeil", metal: "Vermeil", price: 700, default: false, description: "Gilt silver foundation." },
       { key: "10k",     metal: "10K Gold", price: 2800, default: true,  description: "Solid 10K gold exoskeleton." },
     ],
 
