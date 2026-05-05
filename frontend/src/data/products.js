@@ -2408,7 +2408,7 @@ This is expression — under control.`,
     displayOrder: 7,
     showInHomepageCarousel: false,
 
-    imageUrl: "/carapace/01_hero.png",
+    imageUrl: "/carapace/09_hero_oval.png",
 
     hasVariants: true,
     variantType: "metal",
@@ -2440,12 +2440,14 @@ This is expression — under control.`,
     },
 
     // STRICT IMAGE CONTROL — locked 5-frame set per spec.
-    // 1. Hero 3/4   2. Top-down   3. Side profile   4. Macro   5. On-hand
+    // 1. Hero 3/4 (oval regen)   2. Top-down (real photo)
+    // 3. Side profile (oval regen)   4. Macro (legacy — pending oval regen on next budget cycle)
+    // 5. On-hand (real photo)
     gallery: [
-      { src: "/carapace/01_hero.png",        alt: "The Carapace — hero 3/4 angle" },
-      { src: "/carapace/07_top_real.png",    alt: "The Carapace — top-down view (oval domed geometry)" },
-      { src: "/carapace/02_angle.png",       alt: "The Carapace — side profile (height and curvature)" },
-      { src: "/carapace/04_macro.png",       alt: "The Carapace — macro detail (lattice structure)" },
+      { src: "/carapace/09_hero_oval.png",    alt: "The Carapace — hero 3/4 angle (elongated oval shield)" },
+      { src: "/carapace/07_top_real.png",     alt: "The Carapace — top-down view (oval domed geometry)" },
+      { src: "/carapace/10_side_oval.png",    alt: "The Carapace — side profile (low oval shield)" },
+      { src: "/carapace/04_macro.png",        alt: "The Carapace — macro detail (lattice structure)" },
       { src: "/carapace/08_on_hand_real.png", alt: "The Carapace — on-hand (finger placement)" },
     ],
 
@@ -2458,7 +2460,7 @@ This is expression — under control.`,
 
     hero: {
       videoSrc: null,
-      poster: "/carapace/01_hero.png",
+      poster: "/carapace/09_hero_oval.png",
     },
 
     heroText: {
