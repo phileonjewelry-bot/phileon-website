@@ -468,6 +468,22 @@ const CORE_PRODUCTS = [
     isFeatured: true,
     displayOrder: 6,
   },
+  {
+    id: 'the-carapace',
+    name: 'The Carapace',
+    slug: 'the-carapace',
+    materialLine: products.theCarapace.shopMaterialLine,
+    imageUrl: products.theCarapace.imageUrl,
+    href: '/products/the-carapace',
+    price_range: products.theCarapace.priceFrom,
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['ladies', 'gentlemens-club', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 7,
+  },
 ];
 
 // Additional drop products as fallback

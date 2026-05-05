@@ -59,6 +59,16 @@ export function LiveFromPrice({ slug, fallback }) {
     !!product.defaultSelection?.metal &&
     !!product.defaultSelection?.tier;
 
+  // Fixed-price products that use the simpler variants[] shape (no tiers)
+  // e.g. THE CARAPACE → two metal variants, one marked default: true.
+  const fixedVariant =
+    !!product &&
+    product.pricingType === "fixed" &&
+    Array.isArray(product.variants) &&
+    product.variants.length > 0
+      ? (product.variants.find((v) => v.default) || product.variants[0])
+      : null;
+
   // Hook calls must be unconditional — give stable args either way.
   const fixedTierArg = isFixedMultiMetal
     ? { metal: product.defaultSelection.metal, tier: product.defaultSelection.tier }
@@ -74,6 +84,10 @@ export function LiveFromPrice({ slug, fallback }) {
 
   if (isFixedMultiMetal) {
     return <>{fixedFormatted} CAD</>;
+  }
+  if (fixedVariant) {
+    const formatted = `$${fixedVariant.price.toLocaleString("en-CA")}`;
+    return <>{formatted} CAD</>;
   }
   if (isLive) {
     return <>{fromFormatted} CAD</>;

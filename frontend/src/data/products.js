@@ -2377,6 +2377,84 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // THE CARAPACE (Statement Ring)
+  // Sculptural lattice dome — 2 metal variants, fixed pricing
+  // ==========================================
+  theCarapace: {
+    name: "The Carapace",
+    slug: "the-carapace",
+    category: "rings",
+    subcategory: "statement",
+    audience: ["ladies", "gentlemens-club", "collective"],
+    type: "ring",
+    subtitle: "Sculptural Lattice Dome Ring",
+    categoryType: "Statement Ring",
+    shopMaterialLine: "Sculptural Lattice Dome · Vermeil · 10K Gold",
+    tagline: "Not jewelry. Protection.",
+    collections: ["collective"],
+    currency: "CAD",
+    priceFrom: "$4,800 CAD",
+    basePrice: 4800,
+    pricingType: "fixed",
+    livePricing: false,
+    dynamicPricing: false,
+    pricingPending: false,
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 7,
+    showInHomepageCarousel: false,
+
+    imageUrl: "/carapace/01_hero.png",
+
+    // Variant shape per user spec — two metals, no tiers
+    hasVariants: true,
+    variantType: "metal",
+    variants: [
+      { key: "vermeil", metal: "Vermeil", price: 1200, default: false, description: "Gilt silver foundation." },
+      { key: "gold",    metal: "10K Gold", price: 4800, default: true,  description: "Solid 10K gold exoskeleton." },
+    ],
+
+    defaultSelection: {
+      metal: "gold",
+    },
+
+    shopDisplay: {
+      showFromPrice: false,
+      showExactPrice: true,
+    },
+
+    specs: "Sculptural lattice dome · Organic exoskeleton · High-polish finish · Statement coverage",
+    detailedSpecs: {
+      form: "Sculptural lattice dome",
+      structure: "Organic exoskeleton construction",
+      finish: "High-polish gold",
+      coverage: "Statement-scale dome across the finger",
+    },
+
+    gallery: [
+      { src: "/carapace/01_hero.png",    alt: "The Carapace — hero (authority)" },
+      { src: "/carapace/02_angle.png",   alt: "The Carapace — 3/4 angle (form + band)" },
+      { src: "/carapace/03_top.png",     alt: "The Carapace — top-down (lattice pattern)" },
+      { src: "/carapace/04_macro.png",   alt: "The Carapace — macro (cell craftsmanship)" },
+      { src: "/carapace/05_shadow.png",  alt: "The Carapace — shadow study (architectural)" },
+      { src: "/carapace/06_on_hand.png", alt: "The Carapace — worn on hand (scale + presence)" },
+    ],
+
+    hero: {
+      videoSrc: null,
+      poster: "/carapace/01_hero.png",
+    },
+
+    heroText: {
+      eyebrow: "PHILEON",
+      title: "THE CARAPACE",
+      subline: "Not jewelry. Protection.",
+    },
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
