@@ -2448,7 +2448,7 @@ This is expression — under control.`,
       { src: "/carapace/07_top_real.png",     alt: "The Carapace — top-down view (oval domed geometry)" },
       { src: "/carapace/10_side_oval.png",    alt: "The Carapace — side profile (low oval shield)" },
       { src: "/carapace/04_macro.png",        alt: "The Carapace — macro detail (lattice structure)" },
-      { src: "/carapace/08_on_hand_real.png", alt: "The Carapace — on-hand (finger placement)" },
+      { src: "/carapace/12_on_hand_v2.png", alt: "The Carapace — on-hand (finger placement)" },
     ],
 
     // TODO: PAVÉ GALLERY ASSETS — not yet produced.
