@@ -49,3 +49,28 @@ export function formatUsd(value) {
 // Backwards-compatible alias — internal name retained so older imports keep
 // working until they're swept. New code should import formatUsd.
 export const formatCad = formatUsd;
+
+/**
+ * PHILEON USD pricing rule.
+ *
+ * Internal pricing is stored in CAD. Storefront display must convert to USD
+ * via FX 0.75 and round to luxury-clean numbers:
+ *   - nearest $50 for prices < $2,000
+ *   - nearest $500 for prices >= $2,000
+ *
+ * Examples from spec:
+ *   $480 CAD → $350 USD
+ *   $1,450 CAD → $1,100 USD
+ *   $12,800 CAD → $9,500 USD
+ *   $22,800 CAD → $17,000 USD
+ */
+const PHILEON_FX = 0.75;
+
+export function cadToUsdLuxury(cadValue) {
+  if (typeof cadValue !== "number" || !isFinite(cadValue) || cadValue <= 0) {
+    return 0;
+  }
+  const raw = cadValue * PHILEON_FX;
+  const step = raw < 2000 ? 50 : 500;
+  return Math.round(raw / step) * step;
+}

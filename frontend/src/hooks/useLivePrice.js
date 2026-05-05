@@ -1,6 +1,11 @@
 import { useMemo } from "react";
 import { useMarketPricing } from "@/context/MarketPricingContext";
-import { calculateMetalValueCad, calculateLiveDisplayPrice, formatUsd } from "@/lib/livePricing";
+import {
+  calculateMetalValueCad,
+  calculateLiveDisplayPrice,
+  formatUsd,
+  cadToUsdLuxury,
+} from "@/lib/livePricing";
 import livePricingConfig from "@/data/livePricingConfig";
 import { products } from "@/data/products";
 
@@ -84,11 +89,14 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
       market,
     });
 
-    const displayPrice = calculateLiveDisplayPrice({
+    const cadPrice = calculateLiveDisplayPrice({
       lockedBasePriceCad: tierConfig.lockedBasePriceCad,
       lockedMetalReferenceCad: tierConfig.lockedMetalReferenceCad,
       currentMetalValueCad,
     });
+
+    // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding
+    const displayPrice = cadToUsdLuxury(cadPrice);
 
     return { price: displayPrice, formatted: formatUsd(displayPrice), isLive: true };
   }, [productIdOrSlug, tierArg, fallbackPrice, market]);
@@ -116,8 +124,8 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
       };
     }
 
-    // Find the lowest priced tier
-    let lowestPrice = Infinity;
+    // Find the lowest priced tier (CAD), then apply USD luxury rounding
+    let lowestCad = Infinity;
     for (const tierKey of Object.keys(productConfig)) {
       const tc = productConfig[tierKey];
       const currentMetal = calculateMetalValueCad({
@@ -130,8 +138,9 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
         lockedMetalReferenceCad: tc.lockedMetalReferenceCad,
         currentMetalValueCad: currentMetal,
       });
-      if (livePrice < lowestPrice) lowestPrice = livePrice;
+      if (livePrice < lowestCad) lowestCad = livePrice;
     }
+    const lowestPrice = cadToUsdLuxury(lowestCad);
 
     return {
       price: lowestPrice,
@@ -162,11 +171,13 @@ export function useLiveTierPrices(productKey) {
         metalType: tc.metalType,
         market,
       });
-      const livePrice = calculateLiveDisplayPrice({
+      const livePriceCad = calculateLiveDisplayPrice({
         lockedBasePriceCad: tc.lockedBasePriceCad,
         lockedMetalReferenceCad: tc.lockedMetalReferenceCad,
         currentMetalValueCad: currentMetal,
       });
+      // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding
+      const livePrice = cadToUsdLuxury(livePriceCad);
       result[tierKey] = { price: livePrice, formatted: formatUsd(livePrice) };
     }
     return result;
