@@ -1,4 +1,5 @@
-import { useLiveFromPrice } from "@/hooks/useLivePrice";
+import { useLiveFromPrice, useLivePrice } from "@/hooks/useLivePrice";
+import { products } from "@/data/products";
 
 // Maps product slug to livePricingConfig key
 const SLUG_TO_KEY = {
@@ -31,14 +32,49 @@ export function slugToProductKey(slug) {
   return SLUG_TO_KEY[slug] || null;
 }
 
+// Finds the products.js productKey for a given slug by walking the products map
+function productKeyBySlug(slug) {
+  for (const [key, p] of Object.entries(products)) {
+    if (p.slug === slug) return key;
+  }
+  return null;
+}
+
 /**
- * Renders a live "From $X,XXX CAD" price label.
- * Falls back to the static price_range string if no live config.
+ * Renders a luxury card price label.
+ *
+ * Behaviour:
+ * - Fixed-price products with defaultSelection → show that fixed price
+ *   (e.g. Grand Dame → Rose Gold · Signature · $16,800 CAD).
+ * - Live-pricing products → "From $X,XXX CAD" via useLiveFromPrice.
+ * - Fallback → static price_range string from the product card data.
  */
 export function LiveFromPrice({ slug, fallback }) {
-  const productKey = slugToProductKey(slug);
-  const { fromFormatted, isLive } = useLiveFromPrice(productKey, 0);
+  const productKey = productKeyBySlug(slug);
+  const product = productKey ? products[productKey] : null;
 
+  const isFixedMultiMetal =
+    !!product &&
+    product.pricingType === "fixed" &&
+    !!product.defaultSelection?.metal &&
+    !!product.defaultSelection?.tier;
+
+  // Hook calls must be unconditional — give stable args either way.
+  const fixedTierArg = isFixedMultiMetal
+    ? { metal: product.defaultSelection.metal, tier: product.defaultSelection.tier }
+    : null;
+  const { formatted: fixedFormatted } = useLivePrice(
+    productKey || slug,
+    fixedTierArg,
+    0
+  );
+
+  const liveKey = SLUG_TO_KEY[slug] || null;
+  const { fromFormatted, isLive } = useLiveFromPrice(liveKey, 0);
+
+  if (isFixedMultiMetal) {
+    return <>{fixedFormatted} CAD</>;
+  }
   if (isLive) {
     return <>{fromFormatted} CAD</>;
   }
