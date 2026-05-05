@@ -2442,11 +2442,11 @@ This is expression — under control.`,
     // STRICT IMAGE CONTROL — locked 5-frame set per spec.
     // 1. Hero 3/4   2. Top-down   3. Side profile   4. Macro   5. On-hand
     gallery: [
-      { src: "/carapace/01_hero.png",    alt: "The Carapace — hero 3/4 angle" },
-      { src: "/carapace/03_top.png",     alt: "The Carapace — top-down view (pattern clarity)" },
-      { src: "/carapace/02_angle.png",   alt: "The Carapace — side profile (height and curvature)" },
-      { src: "/carapace/04_macro.png",   alt: "The Carapace — macro detail (lattice structure)" },
-      { src: "/carapace/06_on_hand.png", alt: "The Carapace — on-hand (finger placement)" },
+      { src: "/carapace/01_hero.png",        alt: "The Carapace — hero 3/4 angle" },
+      { src: "/carapace/07_top_real.png",    alt: "The Carapace — top-down view (oval domed geometry)" },
+      { src: "/carapace/02_angle.png",       alt: "The Carapace — side profile (height and curvature)" },
+      { src: "/carapace/04_macro.png",       alt: "The Carapace — macro detail (lattice structure)" },
+      { src: "/carapace/08_on_hand_real.png", alt: "The Carapace — on-hand (finger placement)" },
     ],
 
     hero: {
