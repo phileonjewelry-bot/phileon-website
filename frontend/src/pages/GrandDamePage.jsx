@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { products } from "@/data/products";
@@ -6,6 +6,8 @@ import { useAddToCart } from "../hooks/useAddToCart";
 
 export default function GrandDamePage() {
   const product = products.theGrandDame;
+  const heroVideoRef = useRef(null);
+  const hasHeroVideo = !!product.hero?.videoSrc;
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const [metal, setMetal] = useState(product.defaultSelection.metal);
@@ -28,6 +30,42 @@ export default function GrandDamePage() {
       image: product.gallery[0]?.src,
     });
   };
+
+  // Hero video loop watcher (triple-redundant: timeupdate near-end + ended + pause-resume on visibility)
+  useEffect(() => {
+    if (!hasHeroVideo) return;
+    const v = heroVideoRef.current;
+    if (!v) return;
+    const onTimeUpdate = () => {
+      if (!isFinite(v.duration) || v.duration === 0) return;
+      if (v.duration - v.currentTime < 0.15) {
+        v.currentTime = 0;
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+    };
+    const onEnded = () => {
+      v.currentTime = 0;
+      const p = v.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+    const onPause = () => {
+      if (document.visibilityState === "visible") {
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+    };
+    v.addEventListener("timeupdate", onTimeUpdate);
+    v.addEventListener("ended", onEnded);
+    v.addEventListener("pause", onPause);
+    const initial = v.play();
+    if (initial && initial.catch) initial.catch(() => {});
+    return () => {
+      v.removeEventListener("timeupdate", onTimeUpdate);
+      v.removeEventListener("ended", onEnded);
+      v.removeEventListener("pause", onPause);
+    };
+  }, [hasHeroVideo]);
 
   // IntersectionObserver — fades in .gd-reveal / .gd-section + gallery active state
   useEffect(() => {
@@ -78,6 +116,8 @@ export default function GrandDamePage() {
           animation: gdHeroDrift 16s ease-in-out infinite alternate;
           will-change: transform;
         }
+        /* When the hero is a video, no scale drift — let the footage breathe */
+        video.gd-hero-media { animation: none; }
 
         .gd-reveal {
           opacity: 0;
@@ -125,17 +165,39 @@ export default function GrandDamePage() {
 
       {/* ─── HERO ─────────────────────────────────────────────────── */}
       <section
-        className="relative w-full bg-black overflow-hidden"
-        style={{ height: "92vh", minHeight: "320px" }}
+        className="relative w-full bg-black overflow-hidden gd-hero"
+        style={{ height: "90vh", minHeight: "320px" }}
         data-testid="grand-dame-hero"
       >
-        <img
-          src={product.hero.poster}
-          alt="The Grand Dame — cinematic hero"
-          className="gd-hero-media absolute inset-0 w-full h-full object-cover"
-        />
+        {hasHeroVideo ? (
+          <video
+            key="gd-hero-video"
+            ref={heroVideoRef}
+            className="gd-hero-video gd-hero-media absolute inset-0 w-full h-full object-cover"
+            src={product.hero.videoSrc}
+            poster={product.hero.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onEnded={(e) => {
+              e.currentTarget.currentTime = 0;
+              e.currentTarget.play().catch(() => {});
+            }}
+            data-testid="grand-dame-hero-video"
+            style={{ filter: "brightness(0.9) contrast(1.05)" }}
+          />
+        ) : (
+          <img
+            src={product.hero.poster}
+            alt="The Grand Dame — cinematic hero"
+            className="gd-hero-media absolute inset-0 w-full h-full object-cover"
+          />
+        )}
 
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/55 to-transparent" />
+        {/* Bottom-left text-readability gradient (video amplifies it) */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-2/3 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
 
         <Link
@@ -147,27 +209,54 @@ export default function GrandDamePage() {
           <span>BACK TO BRACELETS</span>
         </Link>
 
-        <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
-          <div>
-            <p className="gd-reveal gd-delay-1 gd-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
+        {hasHeroVideo ? (
+          /* Bottom-left overlay (per video hero spec) */
+          <div
+            className="gd-hero-overlay absolute z-10 text-white"
+            style={{ bottom: "8%", left: "6%" }}
+          >
+            <p className="gd-reveal gd-delay-1 gd-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/70 mb-3">
               {product.heroText.eyebrow}
             </p>
             <h1
-              className="gd-reveal gd-delay-2 gd-cinzel text-3xl md:text-5xl text-white"
-              style={{ letterSpacing: "0.14em" }}
+              className="gd-reveal gd-delay-2 gd-cinzel text-2xl md:text-[2.2rem] text-white font-normal"
+              style={{ letterSpacing: "0.12em" }}
               data-testid="grand-dame-title"
             >
               {product.heroText.title}
             </h1>
             <p
-              className="gd-reveal gd-delay-3 text-white italic tracking-wide text-sm mt-4"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              className="gd-reveal gd-delay-3 text-white/70 mt-2 text-[0.95rem]"
+              style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.08em" }}
               data-testid="grand-dame-subline"
             >
               {product.heroText.subline}
             </p>
           </div>
-        </div>
+        ) : (
+          /* Centered overlay (still hero fallback) */
+          <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
+            <div>
+              <p className="gd-reveal gd-delay-1 gd-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
+                {product.heroText.eyebrow}
+              </p>
+              <h1
+                className="gd-reveal gd-delay-2 gd-cinzel text-3xl md:text-5xl text-white"
+                style={{ letterSpacing: "0.14em" }}
+                data-testid="grand-dame-title"
+              >
+                {product.heroText.title}
+              </h1>
+              <p
+                className="gd-reveal gd-delay-3 text-white italic tracking-wide text-sm mt-4"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                data-testid="grand-dame-subline"
+              >
+                {product.heroText.subline}
+              </p>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ─── PURCHASE BLOCK ──────────────────────────────────────── */}

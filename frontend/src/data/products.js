@@ -2353,7 +2353,7 @@ This is expression — under control.`,
     ],
 
     hero: {
-      videoSrc: null,
+      videoSrc: "/videos/grand-dame-hero.mp4",
       poster: "/grand-dame/01_hero.png",
     },
 
