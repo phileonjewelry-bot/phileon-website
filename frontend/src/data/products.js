@@ -2413,8 +2413,10 @@ This is expression — under control.`,
     hasVariants: true,
     variantType: "metal",
     variants: [
-      { key: "vermeil", metal: "Vermeil", price: 480, default: false, description: "Gilt silver foundation." },
-      { key: "10k",     metal: "10K Gold", price: 1450, default: true,  description: "Solid 10K gold exoskeleton." },
+      { key: "vermeil",       metal: "Vermeil",              price: 480,  default: false, pave: false, description: "Gilt silver foundation." },
+      { key: "vermeil-pave",  metal: "Vermeil Pavé (Cubic)", price: 780,  default: false, pave: true,  description: "Cubic-zirconia pavé set into the lattice." },
+      { key: "10k",           metal: "10K Gold",             price: 1450, default: true,  pave: false, description: "Solid 10K gold exoskeleton." },
+      { key: "10k-pave",      metal: "10K Pavé (Lab Grown)", price: 1950, default: false, pave: true,  description: "Lab-grown diamond pavé inside the 10K lattice." },
     ],
 
     defaultSelection: {

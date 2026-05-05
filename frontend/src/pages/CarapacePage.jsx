@@ -195,7 +195,7 @@ export default function CarapacePage() {
             <p className="cp-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-5 text-center">
               SELECT METAL
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
               {product.variants.map((v) => {
                 const isSel = variantKey === v.key;
                 return (
@@ -208,13 +208,21 @@ export default function CarapacePage() {
                     className={`
                       relative rounded-2xl border bg-transparent
                       transition-all duration-500 ease-out
-                      px-5 md:px-6 py-6 md:py-7 text-left
+                      px-5 md:px-5 py-6 md:py-7 text-left
                       ${isSel
                         ? "border-[#C6A86B] bg-[#C6A86B]/[0.06] shadow-[inset_0_0_0_1px_rgba(198,168,107,0.18)]"
                         : "border-white/20 hover:border-[#C6A86B] hover:bg-[#C6A86B]/[0.04]"}
                     `}
                   >
-                    <p className={`cp-cinzel text-[14px] md:text-[15px] tracking-[0.22em] ${isSel ? "text-white" : "text-white/80"}`}>
+                    {v.pave && (
+                      <span
+                        className="absolute top-4 right-4 cp-cinzel text-[9px] tracking-[0.18em] text-[#C6A86B] border border-[#C6A86B]/40 rounded-full px-2 py-0.5"
+                        data-testid={`carapace-variant-${v.key}-pave-badge`}
+                      >
+                        PAVÉ
+                      </span>
+                    )}
+                    <p className={`cp-cinzel text-[13px] md:text-[14px] tracking-[0.18em] ${isSel ? "text-white" : "text-white/80"}`}>
                       {v.metal.toUpperCase()}
                     </p>
                     <p className={`cp-cormorant italic text-[14px] mt-3 ${isSel ? "text-white/80" : "text-white/55"}`}>
