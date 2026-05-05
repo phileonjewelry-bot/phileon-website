@@ -97,7 +97,7 @@ const FormeCuffPage = () => {
       shortName: 'Yellow 10K',
       category: 'Solid Gold',
       price: productSolidGold.find(o => o.id === 'yellow-10k')?.price || 2850,
-      currency: 'CAD',
+      currency: 'USD',
       swatchColor: '#D4AF37', // Yellow gold color
       galleryType: 'yellow',
       heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
@@ -108,7 +108,7 @@ const FormeCuffPage = () => {
       shortName: 'Rose 10K',
       category: 'Solid Gold',
       price: productSolidGold.find(o => o.id === 'rose-10k')?.price || 2850,
-      currency: 'CAD',
+      currency: 'USD',
       swatchColor: '#B76E79', // Rose gold color
       galleryType: 'rose',
       heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",
@@ -119,7 +119,7 @@ const FormeCuffPage = () => {
       shortName: 'Yellow Plated',
       category: 'Gold Plated Silver',
       price: productPlated.find(o => o.id === 'plated-yellow')?.price || 695,
-      currency: 'CAD',
+      currency: 'USD',
       swatchColor: '#D4AF37', // Yellow gold color
       galleryType: 'yellow', // Uses yellow gold image set
       heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png",
@@ -130,7 +130,7 @@ const FormeCuffPage = () => {
       shortName: 'Rose Plated',
       category: 'Gold Plated Silver',
       price: productPlated.find(o => o.id === 'plated-rose')?.price || 695,
-      currency: 'CAD',
+      currency: 'USD',
       swatchColor: '#B76E79', // Rose gold color
       galleryType: 'rose', // Uses rose gold image set
       heroImage: "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/gs6lblps_1000142863.png",

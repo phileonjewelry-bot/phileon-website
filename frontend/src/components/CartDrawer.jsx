@@ -172,7 +172,7 @@ const CartDrawer = () => {
                       
                       <div className="flex items-center gap-2">
                         <span className="text-yellow-500 font-semibold text-sm">
-                          ${((item.unit_amount_cents * item.qty) / 100).toFixed(2)}
+                          ${Math.round((item.unit_amount_cents * item.qty) / 100).toLocaleString("en-US")} USD
                         </span>
                         <Button
                           onClick={() => removeFromCart(item.product_id, item.variant)}
@@ -196,7 +196,7 @@ const CartDrawer = () => {
               {/* Subtotal */}
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Subtotal</span>
-                <span className="text-white text-xl font-bold">${getFormattedTotal()}</span>
+                <span className="text-white text-xl font-bold">${getFormattedTotal()} USD</span>
               </div>
               
               {/* Shipping Note */}

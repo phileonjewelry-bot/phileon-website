@@ -88,7 +88,7 @@ const Cart = () => {
                         </h3>
                       </Link>
                       <p className="text-gray-400 text-sm mb-4">{item.material}</p>
-                      <p className="text-yellow-500 font-bold text-xl">${item.price.toFixed(2)}</p>
+                      <p className="text-yellow-500 font-bold text-xl">${Math.round(item.price).toLocaleString("en-US")} USD</p>
                     </div>
                     <div className="flex flex-col items-end justify-between">
                       <button
@@ -127,23 +127,23 @@ const Cart = () => {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-gray-400">
                     <span>Subtotal</span>
-                    <span className="text-white">${subtotal.toFixed(2)}</span>
+                    <span className="text-white">${Math.round(subtotal).toLocaleString("en-US")} USD</span>
                   </div>
                   <div className="flex justify-between text-gray-400">
                     <span>Shipping</span>
                     <span className={shipping === 0 ? 'text-green-500 font-semibold' : 'text-white'}>
-                      {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+                      {shipping === 0 ? 'FREE' : `$${Math.round(shipping).toLocaleString("en-US")} USD`}
                     </span>
                   </div>
                   {subtotal < 100 && (
                     <p className="text-yellow-500 text-sm">
-                      Add ${(100 - subtotal).toFixed(2)} more for free shipping!
+                      Add ${Math.round(100 - subtotal).toLocaleString("en-US")} USD more for free shipping!
                     </p>
                   )}
                   <div className="border-t border-gray-800 pt-4">
                     <div className="flex justify-between text-white text-xl font-bold">
                       <span>Total</span>
-                      <span className="text-yellow-500">${total.toFixed(2)}</span>
+                      <span className="text-yellow-500">${Math.round(total).toLocaleString("en-US")} USD</span>
                     </div>
                   </div>
                 </div>

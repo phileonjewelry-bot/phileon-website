@@ -24,7 +24,7 @@ export default function RosariaPage() {
   };
 
   // Format price with currency — uses live pricing if available
-  const formatPrice = (price, currency = "CAD", pricingKey) => {
+  const formatPrice = (price, currency = 'USD', pricingKey) => {
     if (pricingKey && tierPricesLive[pricingKey]) {
       return `${tierPricesLive[pricingKey].formatted} ${currency}`;
     }

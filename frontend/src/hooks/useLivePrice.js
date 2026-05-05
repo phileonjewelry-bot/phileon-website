@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useMarketPricing } from "@/context/MarketPricingContext";
-import { calculateMetalValueCad, calculateLiveDisplayPrice, formatCad } from "@/lib/livePricing";
+import { calculateMetalValueCad, calculateLiveDisplayPrice, formatUsd } from "@/lib/livePricing";
 import livePricingConfig from "@/data/livePricingConfig";
 import { products } from "@/data/products";
 
@@ -60,14 +60,14 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
     if (product && product.pricingType === "fixed" && metal && tier) {
       const fixed = product.metals?.[metal]?.tiers?.[tier]?.price;
       if (typeof fixed === "number") {
-        return { price: fixed, formatted: formatCad(fixed), isLive: false };
+        return { price: fixed, formatted: formatUsd(fixed), isLive: false };
       }
     }
 
     // ─ Live-price flow (unchanged) ─
     const productConfig = key ? livePricingConfig[key] : null;
     if (!productConfig) {
-      return { price: fallbackPrice, formatted: formatCad(fallbackPrice), isLive: false };
+      return { price: fallbackPrice, formatted: formatUsd(fallbackPrice), isLive: false };
     }
 
     // Try the composite key first ("rose_signature"), then the plain tier key
@@ -75,7 +75,7 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
       (rawTier && productConfig[rawTier]) ||
       (tier && productConfig[tier]);
     if (!tierConfig) {
-      return { price: fallbackPrice, formatted: formatCad(fallbackPrice), isLive: false };
+      return { price: fallbackPrice, formatted: formatUsd(fallbackPrice), isLive: false };
     }
 
     const currentMetalValueCad = calculateMetalValueCad({
@@ -90,7 +90,7 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
       currentMetalValueCad,
     });
 
-    return { price: displayPrice, formatted: formatCad(displayPrice), isLive: true };
+    return { price: displayPrice, formatted: formatUsd(displayPrice), isLive: true };
   }, [productIdOrSlug, tierArg, fallbackPrice, market]);
 }
 
@@ -110,8 +110,8 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
     if (!productConfig) {
       return {
         price: fallbackBasePrice,
-        formatted: formatCad(fallbackBasePrice),
-        fromFormatted: formatCad(fallbackBasePrice),
+        formatted: formatUsd(fallbackBasePrice),
+        fromFormatted: formatUsd(fallbackBasePrice),
         isLive: false,
       };
     }
@@ -135,8 +135,8 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
 
     return {
       price: lowestPrice,
-      formatted: formatCad(lowestPrice),
-      fromFormatted: formatCad(lowestPrice),
+      formatted: formatUsd(lowestPrice),
+      fromFormatted: formatUsd(lowestPrice),
       isLive: true,
     };
   }, [productKey, fallbackBasePrice, market]);
@@ -167,7 +167,7 @@ export function useLiveTierPrices(productKey) {
         lockedMetalReferenceCad: tc.lockedMetalReferenceCad,
         currentMetalValueCad: currentMetal,
       });
-      result[tierKey] = { price: livePrice, formatted: formatCad(livePrice) };
+      result[tierKey] = { price: livePrice, formatted: formatUsd(livePrice) };
     }
     return result;
   }, [productKey, market]);

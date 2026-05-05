@@ -36,13 +36,16 @@ export function calculateLiveDisplayPrice({
   return rounding ? roundLuxury(raw) : raw;
 }
 
-export function formatCad(value) {
+export function formatUsd(value) {
   // Output format: "$X,XXX" — currency suffix " USD" appended at the
-  // call site. Site-wide currency is USD; function name retained for
-  // backward compatibility.
+  // call site. Site-wide currency is USD.
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(value);
 }
+
+// Backwards-compatible alias — internal name retained so older imports keep
+// working until they're swept. New code should import formatUsd.
+export const formatCad = formatUsd;

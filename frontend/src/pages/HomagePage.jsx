@@ -372,7 +372,7 @@ const HomagePage = () => {
           <div className="text-center mt-4">
             <p className="text-4xl md:text-5xl font-light tracking-wide">
               {tierPricesLive[selectedTier]?.formatted || `$${currentPrice.toLocaleString()}`}
-              <span className="text-lg text-neutral-500 ml-2">CAD</span>
+              <span className="text-lg text-neutral-500 ml-2">USD</span>
             </p>
             <p className="text-sm text-neutral-400 mt-2">
               {currentVariant.label} · {currentTier.metal} — {currentTier.stones}

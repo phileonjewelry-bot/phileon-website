@@ -379,7 +379,7 @@ const BoundPage = () => {
                 </div>
 
                 <div className="text-[#C6A25D] text-4xl mt-8 tracking-wide font-light">
-                  {tierPrices[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`} <span className="text-lg text-white/30">CAD</span>
+                  {tierPrices[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`} <span className="text-lg text-white/30">USD</span>
                 </div>
 
                 <p className="text-white/50 text-sm mt-2">

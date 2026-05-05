@@ -23,7 +23,7 @@ export default function DesirCorsetPage() {
   };
 
   // Format price with currency
-  const formatPrice = (price, currency = "CAD", pricingKey) => {
+  const formatPrice = (price, currency = 'USD', pricingKey) => {
     if (pricingKey && tierPricesLive[pricingKey]) {
       return `${tierPricesLive[pricingKey].formatted} ${currency}`;
     }

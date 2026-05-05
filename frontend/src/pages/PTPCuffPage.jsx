@@ -193,7 +193,7 @@ export default function PTPCuffPage() {
                           ].join(" ")}>
                             ${edition.price.toLocaleString()}
                           </p>
-                          <p className="text-white/40 text-[10px] tracking-wider">CAD</p>
+                          <p className="text-white/40 text-[10px] tracking-wider">USD</p>
                         </div>
                       </div>
                     </button>
@@ -211,7 +211,7 @@ export default function PTPCuffPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-white/50 text-xs tracking-widest uppercase">Price</p>
-                    <p className="text-[#C6A24A] text-xl font-light mt-1">${selectedEdition.price.toLocaleString()} <span className="text-sm text-white/40">CAD</span></p>
+                    <p className="text-[#C6A24A] text-xl font-light mt-1">${selectedEdition.price.toLocaleString()} <span className="text-sm text-white/40">USD</span></p>
                   </div>
                 </div>
               </div>

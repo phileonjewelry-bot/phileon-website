@@ -110,7 +110,7 @@ export function ProductSpecs({ specs = [] }) {
  */
 export function ProductPrice({
   price,
-  currency = "CAD",
+  currency = 'USD',
   label = "Price",
   highlight = false,
   note = null,

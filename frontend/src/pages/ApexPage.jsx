@@ -310,7 +310,7 @@ const ApexPage = () => {
             <div className="mt-4">
               <p className="text-3xl md:text-4xl font-light tracking-wide">
                 {tierPricesLive[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`}
-                <span className="text-lg text-neutral-500 ml-2">CAD</span>
+                <span className="text-lg text-neutral-500 ml-2">USD</span>
               </p>
               <p className="text-sm text-neutral-400 mt-1">
                 {currentTier.metal} — {currentTier.stones}

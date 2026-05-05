@@ -95,7 +95,8 @@ export const CartProvider = ({ children }) => {
 
   const getTotalAmount = () => items.reduce((total, item) => total + (item.unit_amount_cents * item.qty), 0);
 
-  const getFormattedTotal = () => (getTotalAmount() / 100).toFixed(2);
+  const getFormattedTotal = () =>
+    Math.round(getTotalAmount() / 100).toLocaleString("en-US");
 
   const getCheckoutItems = () => {
     return items.map(item => ({
