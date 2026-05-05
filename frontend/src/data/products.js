@@ -2393,7 +2393,7 @@ This is expression — under control.`,
     subtitle: "Sculptural Lattice Dome Ring",
     categoryType: "Statement Ring",
     shopMaterialLine: "Sculptural Lattice Dome · Vermeil · 10K Gold",
-    tagline: "Not jewelry. Protection.",
+    tagline: "Not a ring. A reputation.",
     collections: ["collective"],
     currency: "CAD",
     priceFrom: "$4,800 CAD",
@@ -2451,7 +2451,7 @@ This is expression — under control.`,
     heroText: {
       eyebrow: "PHILEON",
       title: "THE CARAPACE",
-      subline: "Not jewelry. Protection.",
+      subline: "Not a ring. A reputation.",
     },
 
     shipping: "Complimentary insured shipping within Canada."

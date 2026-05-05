@@ -298,7 +298,7 @@ export default function CarapacePage() {
       <section className="cp-section w-full py-16 md:py-20" data-testid="carapace-editorial">
         <div className="max-w-[640px] mx-auto px-6 text-center">
           <p className="cp-cormorant italic text-xl md:text-2xl text-white/80 leading-[1.6]">
-            Not jewelry. Protection.
+            Not a ring. A reputation.
           </p>
           <p className="cp-cormorant italic text-lg md:text-xl text-white/55 leading-[1.6] mt-4">
             An exoskeleton in polished gold. Worn where the world can see it —
@@ -345,7 +345,7 @@ export default function CarapacePage() {
             THE CARAPACE
           </h3>
           <p className="cp-cormorant italic text-base md:text-lg text-white/65">
-            Not jewelry. Protection.
+            Not a ring. A reputation.
           </p>
           <p
             className="cp-cinzel text-3xl md:text-4xl text-white"
