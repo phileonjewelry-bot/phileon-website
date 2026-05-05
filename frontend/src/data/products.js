@@ -2413,10 +2413,10 @@ This is expression — under control.`,
     hasVariants: true,
     variantType: "metal",
     variants: [
-      { key: "vermeil",       metal: "Vermeil",              price: 350,  default: false, pave: false, description: "Gilt silver foundation." },
-      { key: "vermeil-pave",  metal: "Vermeil Pavé (Cubic)", price: 600,  default: false, pave: true,  description: "Cubic-zirconia pavé set into the lattice." },
-      { key: "10k",           metal: "10K Gold",             price: 1100, default: true,  pave: false, description: "Solid 10K gold exoskeleton." },
-      { key: "10k-pave",      metal: "10K Pavé (Lab Grown)", price: 1450, default: false, pave: true,  description: "Lab-grown diamond pavé inside the 10K lattice." },
+      { key: "vermeil",       metal: "Vermeil",       price: 350,  default: false, pave: false, imageSet: "base", description: "Gilt silver foundation." },
+      { key: "vermeil-pave",  metal: "Vermeil Pavé",  price: 600,  default: false, pave: true,  imageSet: "pave", description: "Cubic-zirconia pavé set into the lattice." },
+      { key: "10k",           metal: "10K Gold",      price: 1100, default: true,  pave: false, imageSet: "base", description: "Solid 10K gold exoskeleton." },
+      { key: "10k-pave",      metal: "10K Pavé",      price: 1450, default: false, pave: true,  imageSet: "pave", description: "Lab-grown diamond pavé inside the 10K lattice." },
     ],
 
     defaultSelection: {
@@ -2448,6 +2448,13 @@ This is expression — under control.`,
       { src: "/carapace/04_macro.png",       alt: "The Carapace — macro detail (lattice structure)" },
       { src: "/carapace/08_on_hand_real.png", alt: "The Carapace — on-hand (finger placement)" },
     ],
+
+    // TODO: PAVÉ GALLERY ASSETS — not yet produced.
+    // When ready, drop 5 frames into /app/frontend/public/carapace-pave/
+    // (mirroring the base 5-shot rhythm) and uncomment paveGallery below.
+    // For now the page falls back to the base gallery when a pavé variant
+    // is selected, per spec ("Keep base gallery visible until pavé assets exist").
+    paveGallery: null,
 
     hero: {
       videoSrc: null,

@@ -14,6 +14,13 @@ export default function CarapacePage() {
   const variant = product.variants.find((v) => v.key === variantKey) || defaultVariant;
   const formattedPrice = `$${variant.price.toLocaleString("en-US")} USD`;
 
+  // Gallery swap: when a pavé variant is selected, prefer paveGallery if present,
+  // otherwise gracefully fall back to the base gallery (per spec).
+  const activeGallery =
+    variant.imageSet === "pave" && Array.isArray(product.paveGallery) && product.paveGallery.length > 0
+      ? product.paveGallery
+      : product.gallery;
+
   const onAddToCart = () => {
     handleAddToCart({
       id: `theCarapace-${variant.key}`,
@@ -23,7 +30,7 @@ export default function CarapacePage() {
       tierKey: variant.key,
       metal: variant.metal,
       quantity: 1,
-      image: product.gallery[0]?.src,
+      image: activeGallery[0]?.src,
     });
   };
 
@@ -190,10 +197,10 @@ export default function CarapacePage() {
             </p>
           </div>
 
-          {/* SELECT METAL */}
+          {/* SELECT FINISH */}
           <div data-testid="carapace-step-metal">
             <p className="cp-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-5 text-center">
-              SELECT METAL
+              SELECT FINISH
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
               {product.variants.map((v) => {
@@ -280,7 +287,7 @@ export default function CarapacePage() {
           }}
           data-cp-gallery-scroller
         >
-          {product.gallery.map((img, i) => (
+          {activeGallery.map((img, i) => (
             <div
               key={img.src}
               className="
