@@ -45,8 +45,8 @@ function productKeyBySlug(slug) {
  *
  * Behaviour:
  * - Fixed-price products with defaultSelection → show that fixed price
- *   (e.g. Grand Dame → Rose Gold · Signature · $16,800 CAD).
- * - Live-pricing products → "From $X,XXX CAD" via useLiveFromPrice.
+ *   (e.g. Grand Dame → Rose Gold · Signature · $16,800 USD).
+ * - Live-pricing products → "From $X,XXX USD" via useLiveFromPrice.
  * - Fallback → static price_range string from the product card data.
  */
 export function LiveFromPrice({ slug, fallback }) {
@@ -83,14 +83,14 @@ export function LiveFromPrice({ slug, fallback }) {
   const { fromFormatted, isLive } = useLiveFromPrice(liveKey, 0);
 
   if (isFixedMultiMetal) {
-    return <>{fixedFormatted} CAD</>;
+    return <>{fixedFormatted} USD</>;
   }
   if (fixedVariant) {
-    const formatted = `$${fixedVariant.price.toLocaleString("en-CA")}`;
-    return <>{formatted} CAD</>;
+    const formatted = `$${fixedVariant.price.toLocaleString("en-US")}`;
+    return <>{formatted} USD</>;
   }
   if (isLive) {
-    return <>{fromFormatted} CAD</>;
+    return <>{fromFormatted} USD</>;
   }
   return <>{fallback}</>;
 }

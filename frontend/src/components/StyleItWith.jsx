@@ -15,7 +15,7 @@ export const STYLE_SUGGESTIONS = {
       materialLine: 'Earrings · 10K & 14K Rose Gold',
       imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/uxgms0ee_1000098068.jpg',
       href: '/products/rosaria',
-      fallbackPrice: `From $${products.rosaria.basePrice.toLocaleString()} CAD`,
+      fallbackPrice: `From $${products.rosaria.basePrice.toLocaleString()} USD`,
     }
   ],
   'rosaria': [
@@ -26,7 +26,7 @@ export const STYLE_SUGGESTIONS = {
       materialLine: 'Pendant · 10K Rose Gold',
       imageUrl: 'https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/sxr71rsz_1000141578.jpg',
       href: '/products/desir-corset',
-      fallbackPrice: `From $${products.desirCorset.basePrice.toLocaleString()} CAD`,
+      fallbackPrice: `From $${products.desirCorset.basePrice.toLocaleString()} USD`,
     }
   ]
 };

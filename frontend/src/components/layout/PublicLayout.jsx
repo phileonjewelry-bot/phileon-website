@@ -240,8 +240,11 @@ const Footer = () => {
           <p className="text-xs text-phileon-ivory-muted/60 tracking-wider">
             © {new Date().getFullYear()} Phileon
           </p>
-          <p className="text-xs text-phileon-ivory-muted/50 tracking-wide">
-            All prices in CAD
+          <p
+            className="text-xs text-phileon-ivory-muted/50 tracking-wide italic"
+            data-testid="footer-currency-note"
+          >
+            Prices shown in USD. Your bank may apply currency conversion if applicable.
           </p>
         </div>
       </div>

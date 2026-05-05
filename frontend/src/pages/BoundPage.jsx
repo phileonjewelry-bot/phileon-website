@@ -691,7 +691,7 @@ const BoundPage = () => {
           </p>
 
           <div className="text-[#C6A25D] text-3xl mt-10 tracking-wide font-light">
-            From {tierPrices.foundation?.formatted || `$${tiers.foundation.price.toLocaleString()}`} CAD
+            From {tierPrices.foundation?.formatted || `$${tiers.foundation.price.toLocaleString()}`} USD
           </div>
 
           <button

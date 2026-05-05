@@ -271,7 +271,7 @@ export default function CocktailJessicaPage() {
               <div className="mt-6 flex items-baseline justify-between pb-4 border-b border-white/10">
                 <span className="cj-body text-[var(--cj-cream)]/70 text-[14px]">Price</span>
                 <span className="cj-head text-white text-[22px] tracking-wide" data-testid="cocktail-jessica-price">
-                  {ctaPrice} CAD
+                  {ctaPrice} USD
                 </span>
               </div>
 
@@ -325,7 +325,7 @@ export default function CocktailJessicaPage() {
                 ? "ADDING..."
                 : buttonText === "Added!"
                 ? "ADDED"
-                : `ADD TO BAG — ${ctaPrice} CAD`}
+                : `ADD TO BAG — ${ctaPrice} USD`}
             </button>
 
             <p className="text-[10px] text-[var(--cj-cream)]/35 text-center pt-4 cj-body">

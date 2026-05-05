@@ -37,9 +37,12 @@ export function calculateLiveDisplayPrice({
 }
 
 export function formatCad(value) {
-  return new Intl.NumberFormat("en-CA", {
+  // Output format: "$X,XXX" — currency suffix " USD" appended at the
+  // call site. Site-wide currency is USD; function name retained for
+  // backward compatibility.
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "CAD",
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(value);
 }

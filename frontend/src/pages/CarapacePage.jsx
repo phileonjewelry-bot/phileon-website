@@ -12,7 +12,7 @@ export default function CarapacePage() {
   const defaultVariant = product.variants.find((v) => v.default) || product.variants[0];
   const [variantKey, setVariantKey] = useState(defaultVariant.key);
   const variant = product.variants.find((v) => v.key === variantKey) || defaultVariant;
-  const formattedPrice = `$${variant.price.toLocaleString("en-CA")} CAD`;
+  const formattedPrice = `$${variant.price.toLocaleString("en-US")} USD`;
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -221,7 +221,7 @@ export default function CarapacePage() {
                       {v.description}
                     </p>
                     <p className={`cp-cinzel text-[16px] mt-5 ${isSel ? "text-white" : "text-white/70"}`}>
-                      ${v.price.toLocaleString("en-CA")} CAD
+                      ${v.price.toLocaleString("en-US")} USD
                     </p>
                   </button>
                 );

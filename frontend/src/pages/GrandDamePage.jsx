@@ -14,7 +14,7 @@ export default function GrandDamePage() {
   const metalObj = product.metals[metal];
   const tierObj = metalObj?.tiers?.[tier];
   const price = tierObj?.price || 0;
-  const formattedPrice = `$${price.toLocaleString("en-CA")} CAD`;
+  const formattedPrice = `$${price.toLocaleString("en-US")} USD`;
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -270,7 +270,7 @@ export default function GrandDamePage() {
                       {t.description}
                     </p>
                     <p className={`gd-cinzel text-[16px] mt-5 ${isSel ? "text-white" : "text-white/70"}`}>
-                      ${t.price.toLocaleString("en-CA")} CAD
+                      ${t.price.toLocaleString("en-US")} USD
                     </p>
                   </button>
                 );

@@ -204,7 +204,7 @@ export default function LadyBamburghPage() {
                         {label}
                       </span>
                       <span className={isSelected ? "text-white" : "text-white/80"}>
-                        {priceStr} CAD
+                        {priceStr} USD
                       </span>
                     </div>
                     {note && (
@@ -269,7 +269,7 @@ export default function LadyBamburghPage() {
             data-testid="lady-bamburgh-add-to-bag-btn"
             className="w-full bg-[#D4AF37] text-black py-4 tracking-[0.2em] text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
           >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} USD`}
           </button>
 
           {/* TRUST LINE */}

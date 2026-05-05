@@ -479,7 +479,7 @@ export default function DonGorgonPage() {
                     </p>
                     {v.adjustment > 0 && (
                       <p className="dg-cormorant text-xs text-[#C6A86B]/80 mt-3">
-                        +${v.adjustment.toLocaleString("en-CA")} CAD
+                        +${v.adjustment.toLocaleString("en-US")} USD
                       </p>
                     )}
                   </button>
@@ -522,7 +522,7 @@ export default function DonGorgonPage() {
                       </p>
                     ) : null}
                     <p className={`dg-cormorant text-sm mt-3 ${isSel ? "text-white/80" : "text-white/55"}`}>
-                      From ${fromPrice.toLocaleString("en-CA")} CAD
+                      ${fromPrice.toLocaleString("en-US")} USD
                     </p>
                   </button>
                 );
@@ -575,7 +575,7 @@ export default function DonGorgonPage() {
                         {t.description}
                       </p>
                       <p className={`dg-cinzel text-[16px] mt-5 ${isSel ? "text-white" : "text-white/70"}`}>
-                        ${(t.price + adj).toLocaleString("en-CA")} CAD
+                        ${(t.price + adj).toLocaleString("en-US")} USD
                       </p>
                     </button>
                   );
@@ -595,7 +595,7 @@ export default function DonGorgonPage() {
                 style={{ letterSpacing: "0.06em" }}
                 data-testid="don-gorgon-price"
               >
-                {ctaPrice} CAD
+                {ctaPrice} USD
               </p>
               <p className="text-[10px] tracking-[0.25em] text-white/35 mt-2">
                 PRICE ADJUSTS WITH THE LIVE METALS MARKET

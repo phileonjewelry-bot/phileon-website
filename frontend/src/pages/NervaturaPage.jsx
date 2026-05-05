@@ -307,7 +307,7 @@ export default function NervaturaPage() {
                 const tier = product.tiers[key];
                 const isSelected = selectedTier === key;
                 const livePriceFormatted = tierPrices[key]?.formatted;
-                const basePriceFormatted = `$${product.pricing[key].toLocaleString("en-CA")} CAD`;
+                const basePriceFormatted = `$${product.pricing[key].toLocaleString("en-US")} USD`;
 
                 return (
                   <button
@@ -370,7 +370,7 @@ export default function NervaturaPage() {
                         ${isSelected ? "text-white" : "text-white/70"}
                       `}
                     >
-                      {livePriceFormatted ? `${livePriceFormatted} CAD` : basePriceFormatted}
+                      {livePriceFormatted ? `${livePriceFormatted} USD` : basePriceFormatted}
                     </p>
                   </button>
                 );
@@ -385,7 +385,7 @@ export default function NervaturaPage() {
               style={{ letterSpacing: "0.06em" }}
               data-testid="nervatura-price"
             >
-              {ctaPrice} CAD
+              {ctaPrice} USD
             </p>
             <p className="text-[10px] tracking-[0.25em] text-white/35 mt-3">
               {tierPrices[selectedTier]?.formatted ? "PRICE ADJUSTS WITH THE LIVE METALS MARKET" : ""}

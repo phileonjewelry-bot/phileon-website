@@ -135,6 +135,14 @@ const Footer = () => {
             </Link>
           </div>
         </div>
+
+        {/* Currency note */}
+        <p
+          className="text-gray-500 text-xs text-center mt-6 italic"
+          data-testid="footer-currency-note"
+        >
+          Prices shown in USD. Your bank may apply currency conversion if applicable.
+        </p>
       </div>
     </footer>
   );

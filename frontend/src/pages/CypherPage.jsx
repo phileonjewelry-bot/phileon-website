@@ -151,7 +151,7 @@ export default function CypherPage() {
                         )}
                       </div>
                       <p className={`text-lg ml-4 ${isActive ? "text-white" : "opacity-70"}`}>
-                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
+                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} USD
                       </p>
                     </div>
                   </div>

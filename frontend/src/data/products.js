@@ -232,7 +232,7 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false, // Fixed pricing, no gold adjustments
-    currency: "CAD",
+    currency: "USD",
     
     // Edition tiers
     editions: ["Movement", "Signature", "Heirloom"],
@@ -320,7 +320,7 @@ export const products = {
         color: "Rose",
         pricingKey: "rose10k",
         price: 2950,
-        currency: "CAD"
+        currency: "USD"
       },
       {
         name: "14K Rose Gold",
@@ -328,7 +328,7 @@ export const products = {
         color: "Rose",
         pricingKey: "rose14k",
         price: 3250,
-        currency: "CAD"
+        currency: "USD"
       }
     ],
     
@@ -383,21 +383,21 @@ export const products = {
         name: "Pendant Only",
         pricingKey: "pendant-only",
         price: 5995,
-        currency: "CAD",
+        currency: "USD",
         description: "Pendant without chain"
       },
       {
         name: "Pendant + 18\" Chain",
         pricingKey: "pendant-18-chain",
         price: 6990,
-        currency: "CAD",
+        currency: "USD",
         description: "Includes 18 inch rose gold chain"
       },
       {
         name: "Pendant + 20\" Chain",
         pricingKey: "pendant-20-chain",
         price: 7090,
-        currency: "CAD",
+        currency: "USD",
         description: "Includes 20 inch rose gold chain"
       }
     ],
@@ -445,7 +445,7 @@ export const products = {
           name: "10K Yellow Gold",
           shortName: "Yellow 10K",
           price: 2850,
-          currency: "CAD",
+          currency: "USD",
           image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
         },
         {
@@ -453,7 +453,7 @@ export const products = {
           name: "10K Rose Gold",
           shortName: "Rose 10K",
           price: 2850,
-          currency: "CAD",
+          currency: "USD",
           image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
         }
       ],
@@ -463,7 +463,7 @@ export const products = {
           name: "Gold Plated Silver (Yellow)",
           shortName: "Yellow Plated",
           price: 695,
-          currency: "CAD",
+          currency: "USD",
           image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
         },
         {
@@ -471,7 +471,7 @@ export const products = {
           name: "Gold Plated Silver (Rose)",
           shortName: "Rose Plated",
           price: 695,
-          currency: "CAD",
+          currency: "USD",
           image: "https://customer-assets.emergentagent.com/job_63c5abba-472d-4451-a69c-37c068fb273a/artifacts/74rz59yq_1000142846.png"
         }
       ]
@@ -543,7 +543,7 @@ export const products = {
     
     // Pricing Configuration (Ironclad Rules: Yellow Gold Only)
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultMetal: "10K Yellow Gold",
     metals: ["10K Yellow Gold", "14K Yellow Gold", "18K Yellow Gold"],
     
@@ -635,7 +635,7 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     
     pricing: {
       foundation: 3800,  // 10K Yellow Gold
@@ -659,7 +659,7 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     
     pricing: {
       plated: 900,       // 10K Gold Plated
@@ -685,7 +685,7 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     
     pricing: {
       foundation: 12800,  // 10K Yellow Gold
@@ -711,7 +711,7 @@ export const products = {
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "core",
     
     // Hero image
@@ -776,12 +776,12 @@ export const products = {
     tagline: "Structure. Light. Memory.",
     category: "earrings",
     audience: "ladies",
-    currency: "CAD",
+    currency: "USD",
     collections: ["ladies-earrings", "collective"],
     defaultVariant: "core",
     defaultTier: "signature",
     basePrice: 1400,
-    priceFrom: "From $1,400 CAD",
+    priceFrom: "$1,400 USD",
     
     // Hero image
     imageUrl: "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png",
@@ -908,7 +908,7 @@ For the right one.`
     collections: ["rings", "collective", "gentlemens-club"],
     subtitle: "RING",
     tagline: "Drama on your finger.",
-    priceFrom: "From $4,400 CAD",
+    priceFrom: "$4,400 USD",
     basePrice: 4400,
     
     // Hero image for shop cards
@@ -916,7 +916,7 @@ For the right one.`
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
     
     // Tier-based pricing
@@ -1023,7 +1023,7 @@ Claimed.`,
     collections: ["rings", "collective", "gentlemens-club"],
     subtitle: "RING",
     tagline: "The Bite of the King.",
-    priceFrom: "From $6,800 CAD",
+    priceFrom: "$6,800 USD",
     basePrice: 6800,
     
     // Hero image for shop cards
@@ -1031,7 +1031,7 @@ Claimed.`,
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
     
     // Tier-based pricing (2 tiers only)
@@ -1133,7 +1133,7 @@ Crowned.`,
     collections: ["rings", "collective", "gentlemens-club"],
     subtitle: "RING",
     tagline: "Born in the showroom. Built for the hand.",
-    priceFrom: "From $7,400 CAD",
+    priceFrom: "$7,400 USD",
     basePrice: 7400,
     
     // Collection/grid card image (showroom - hook/world-building)
@@ -1144,7 +1144,7 @@ Crowned.`,
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
     
     // Tier-based pricing (4 tiers)
@@ -1264,7 +1264,7 @@ Driven.`,
     collections: ["rings", "collective", "gentlemens-club", "ladies"],
     subtitle: "DEUTERONOMY 28:3",
     tagline: "Word Made Metal.",
-    priceFrom: "From $880 CAD",
+    priceFrom: "$880 USD",
     basePrice: 880,
     
     // Hero image for shop cards
@@ -1272,7 +1272,7 @@ Driven.`,
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
     
     // Tier-based pricing (CAD)
@@ -1404,7 +1404,7 @@ Covenant.`,
     collection: "Tribute Series",
     subtitle: "Pattern made power.",
     tagline: "Chaos, disciplined.",
-    priceFrom: "From $12,800 CAD",
+    priceFrom: "$12,800 USD",
     basePrice: 12800,
     
     // Hero image for shop cards
@@ -1412,7 +1412,7 @@ Covenant.`,
     
     // Pricing Configuration
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
     
     // Tier-based pricing (CAD)
@@ -1539,13 +1539,13 @@ This is expression — under control.`,
     collection: "Signature Series",
     subtitle: "His & Hers",
     tagline: "For the ones who made it. And the ones who made them better.",
-    priceFrom: "From $8,200 CAD",
+    priceFrom: "$8,200 USD",
     basePrice: 8200,
 
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png",
 
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
 
     pricing: {
@@ -1625,13 +1625,13 @@ This is expression — under control.`,
     collection: "Signature Series",
     subtitle: "Command, in form.",
     tagline: "Command, in form.",
-    priceFrom: "From $11,400 CAD",
+    priceFrom: "$11,400 USD",
     basePrice: 11400,
 
     imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png",
 
     dynamicPricing: false,
-    currency: "CAD",
+    currency: "USD",
     defaultTier: "signature",
 
     pricing: {
@@ -1714,8 +1714,8 @@ This is expression — under control.`,
     shopMaterialLine: "Statement Earrings · Silver / 10K White Gold",
     tagline: "Says everything to those who see it. Says nothing to those who don't.",
     collections: ["ladies-earrings", "collective"],
-    currency: "CAD",
-    priceFrom: "From $2,950 CAD",
+    currency: "USD",
+    priceFrom: "$2,950 USD",
     basePrice: 2950,
     dynamicPricing: true,
     pricingPending: false,
@@ -1763,8 +1763,8 @@ This is expression — under control.`,
     tagline: "This is not ornament alone. This is doctrine carried in form.",
     collections: ["ladies-rings", "sacred-collection", "collective"],
     collection: "Sacred Collection",
-    currency: "CAD",
-    priceFrom: "From $4,200 CAD",
+    currency: "USD",
+    priceFrom: "$4,200 USD",
     basePrice: 4200,
     dynamicPricing: true,
     pricingPending: false,
@@ -1857,8 +1857,8 @@ This is expression — under control.`,
     shopMaterialLine: "Sculptural Pendant · Silver / 10K / 14K / 18K Rose Gold",
     tagline: "The dress left. The bones remain.",
     collections: ["ladies-pendants", "editorial", "collective"],
-    currency: "CAD",
-    priceFrom: "From $1,950 CAD",
+    currency: "USD",
+    priceFrom: "$1,950 USD",
     basePrice: 1950,
     dynamicPricing: true,
     pricingPending: false,
@@ -1944,8 +1944,8 @@ This is expression — under control.`,
     shopMaterialLine: "Cocktail Ring · 10K Tri-Colour Gold · Natural Stones",
     tagline: "Composed in colour.",
     collections: ["ladies-rings", "editorial", "collective"],
-    currency: "CAD",
-    priceFrom: "$8,500 CAD",
+    currency: "USD",
+    priceFrom: "$8,500 USD",
     basePrice: 8500,
     dynamicPricing: true,
     pricingPending: false,
@@ -1980,7 +1980,7 @@ This is expression — under control.`,
       metal: "Tri-colour gold",
       weightGrams: "~18.5 grams",
       caratsTotal: "~3.90 carats total",
-      price: "$8,500 CAD",
+      price: "$8,500 USD",
       details: "10K gold · Natural stones",
     },
 
@@ -2024,8 +2024,8 @@ This is expression — under control.`,
     shopMaterialLine: "Signature Ring · Pavé Crown Band · Black Enamel",
     tagline: "The crown was never given. It was taken.",
     collections: ["gents-rings", "signature", "collective"],
-    currency: "CAD",
-    priceFrom: "From $2,800 CAD",
+    currency: "USD",
+    priceFrom: "$2,800 USD",
     basePrice: 2800,
     dynamicPricing: true,
     pricingPending: false,
@@ -2100,8 +2100,8 @@ This is expression — under control.`,
     shopMaterialLine: "Architectural Drop Earrings · 10K / 14K / 18K Gold",
     tagline: "The line carries the form.",
     collections: ["ladies-earrings", "editorial", "collective"],
-    currency: "CAD",
-    priceFrom: "$1,200 CAD",
+    currency: "USD",
+    priceFrom: "$1,200 USD",
     basePrice: 1200,
     dynamicPricing: true,
     pricingPending: false,
@@ -2173,8 +2173,8 @@ This is expression — under control.`,
     shopMaterialLine: "Dual-State Ring · Black / White Pavé · Ruby Rail",
     tagline: "Two sides of the same authority.",
     collections: ["gentlemens-club", "collective"],
-    currency: "CAD",
-    priceFrom: "From $3,100 CAD",
+    currency: "USD",
+    priceFrom: "$3,100 USD",
     basePrice: 3100,
     dynamicPricing: true,
     pricingPending: false,
@@ -2295,8 +2295,8 @@ This is expression — under control.`,
     shopMaterialLine: "Sculptural Open Cuff · Rose / Yellow Gold · Mesh Lattice",
     tagline: "Old money never speaks first.",
     collections: ["ladies"],
-    currency: "CAD",
-    priceFrom: "From $12,800 CAD",
+    currency: "USD",
+    priceFrom: "$12,800 USD",
     basePrice: 12800,
     pricingType: "fixed",
     livePricing: false,
@@ -2395,8 +2395,8 @@ This is expression — under control.`,
     shopMaterialLine: "Sculptural Lattice Dome · Vermeil · 10K Gold",
     tagline: "Not a ring. A reputation.",
     collections: ["collective"],
-    currency: "CAD",
-    priceFrom: "$2,800 CAD",
+    currency: "USD",
+    priceFrom: "$2,800 USD",
     basePrice: 2800,
     pricingType: "fixed",
     livePricing: false,

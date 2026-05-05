@@ -87,7 +87,7 @@ function getLastValidCache() {
  * 1. Slow Adjustment Curve - Only applies 40% of gold movement (dampening factor)
  * 2. Maximum Adjustment Cap - Limits price changes to ±50%
  * 
- * @param {number} basePrice - Base price in CAD
+ * @param {number} basePrice - Base price in USD
  * @param {number} currentGoldUSD - Current gold spot price (USD/oz)
  * @param {number} baselineGoldUSD - Baseline gold price when pricing was set (USD/oz)
  * @param {number} thresholdPct - Threshold percentage for adjustment (e.g., 5 for 5%)
@@ -240,14 +240,14 @@ export function calculateProductPricing(productConfig, currentGoldUSD = null) {
 
 /**
  * Format price for display
- * 
- * @param {number} price - Price in CAD
- * @param {boolean} includeCurrency - Whether to include " CAD" suffix
- * @returns {string} - Formatted price (e.g., "$12,200" or "$12,200 CAD")
+ *
+ * @param {number} price - Price in USD
+ * @param {boolean} includeCurrency - Whether to include " USD" suffix
+ * @returns {string} - Formatted price (e.g., "$12,200" or "$12,200 USD")
  */
 export function formatPrice(price, includeCurrency = false) {
   const formatted = `$${price.toLocaleString()}`;
-  return includeCurrency ? `${formatted} CAD` : formatted;
+  return includeCurrency ? `${formatted} USD` : formatted;
 }
 
 /**

@@ -444,7 +444,7 @@ export default function BlessedPage() {
                             )}
                           </div>
                           <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                            {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
+                            {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} USD
                           </p>
                         </div>
                       </div>

@@ -176,7 +176,7 @@ export default function BamburghPage() {
                         <p className={`text-[11px] ${isActive ? "text-white/40" : "text-white/18"}`}>{tier.metal} &middot; {tier.stones}</p>
                       </div>
                       <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} CAD
+                        {tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} USD
                       </p>
                     </div>
                   </div>
@@ -213,7 +213,7 @@ export default function BamburghPage() {
             disabled={isAdding || !selectedSize}
             className="w-full bg-white text-black rounded-md py-3 text-[10px] tracking-[0.2em] font-medium hover:bg-white/90 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-200 mb-3"
           >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} CAD`}
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} USD`}
           </button>
 
           <p className="text-[8px] text-white/18 mb-4">Made to order &middot; Limited production &middot; Signature Series</p>

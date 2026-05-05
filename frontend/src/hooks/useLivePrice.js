@@ -111,7 +111,7 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
       return {
         price: fallbackBasePrice,
         formatted: formatCad(fallbackBasePrice),
-        fromFormatted: `From ${formatCad(fallbackBasePrice)}`,
+        fromFormatted: formatCad(fallbackBasePrice),
         isLive: false,
       };
     }
@@ -136,7 +136,7 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
     return {
       price: lowestPrice,
       formatted: formatCad(lowestPrice),
-      fromFormatted: `From ${formatCad(lowestPrice)}`,
+      fromFormatted: formatCad(lowestPrice),
       isLive: true,
     };
   }, [productKey, fallbackBasePrice, market]);
