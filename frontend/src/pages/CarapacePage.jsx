@@ -79,6 +79,22 @@ export default function CarapacePage() {
         .cp-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
         .cp-cormorant { font-family: 'Cormorant Garamond', serif; }
 
+        /* Sharper image rendering — preserve full source resolution feel
+           on retina + 4K displays. Helps the new authentic photography
+           look crisp against the ~1.015 drift transform. */
+        .cp-hero-media,
+        .cp-gallery-item img {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: high-quality;
+          backface-visibility: hidden;
+        }
+
+        /* Hero text needs a soft shadow now that the dimming overlay is gone,
+           otherwise the white type can fight the brighter gold lattice. */
+        .cp-hero-text-shadow {
+          text-shadow: 0 1px 18px rgba(0, 0, 0, 0.55), 0 0 6px rgba(0, 0, 0, 0.35);
+        }
+
         /* CARAPACE drift — quiet luxury "living photograph" motion.
            translateY -6px → 6px, scale 1 → 1.015, 16s ease-in-out alternate.
            Applied ONLY to the active hero image and the active gallery slide. */
@@ -167,6 +183,9 @@ export default function CarapacePage() {
           alt="The Carapace — cinematic hero"
           className="cp-hero-media cp-hero-layer absolute inset-0 w-full h-full object-cover"
           style={{ opacity: showPaveHero ? 0 : 1 }}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
           data-testid="carapace-hero-base-img"
         />
 
@@ -177,12 +196,16 @@ export default function CarapacePage() {
             alt="The Carapace Pavé — cinematic hero"
             className="cp-hero-media cp-hero-layer absolute inset-0 w-full h-full object-cover"
             style={{ opacity: showPaveHero ? 1 : 0 }}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
             data-testid="carapace-hero-pave-img"
           />
         )}
 
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/55 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
+        {/* Bottom vignette only — softened from black/55 → black/28 so the photo reads at full luminance.
+            Top gradient removed entirely; corner links rely on their own pill contrast. */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-black/28 to-transparent" />
 
         <Link
           to="/shop?category=rings"
@@ -194,7 +217,7 @@ export default function CarapacePage() {
         </Link>
 
         <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
-          <div>
+          <div className="cp-hero-text-shadow">
             <p className="cp-reveal cp-delay-1 cp-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5">
               {product.heroText.eyebrow}
             </p>
