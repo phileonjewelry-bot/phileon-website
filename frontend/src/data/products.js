@@ -2408,7 +2408,7 @@ This is expression — under control.`,
     displayOrder: 7,
     showInHomepageCarousel: false,
 
-    imageUrl: "/carapace/09_hero_oval.png",
+    imageUrl: "/carapace/13_hero_v2.png",
 
     hasVariants: true,
     variantType: "metal",
@@ -2444,7 +2444,7 @@ This is expression — under control.`,
     // 3. Side profile (oval regen)   4. Macro (legacy — pending oval regen on next budget cycle)
     // 5. On-hand (real photo)
     gallery: [
-      { src: "/carapace/09_hero_oval.png",    alt: "The Carapace — hero 3/4 angle (elongated oval shield)" },
+      { src: "/carapace/13_hero_v2.png",     alt: "The Carapace — hero front-facing (elongated oval shield)" },
       { src: "/carapace/07_top_real.png",     alt: "The Carapace — top-down view (oval domed geometry)" },
       { src: "/carapace/10_side_oval.png",    alt: "The Carapace — side profile (low oval shield)" },
       { src: "/carapace/04_macro.png",        alt: "The Carapace — macro detail (lattice structure)" },
@@ -2460,7 +2460,7 @@ This is expression — under control.`,
 
     hero: {
       videoSrc: null,
-      poster: "/carapace/09_hero_oval.png",
+      poster: "/carapace/13_hero_v2.png",
     },
 
     heroText: {
