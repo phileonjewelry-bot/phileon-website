@@ -2550,24 +2550,23 @@ This is expression — under control.`,
       leadTime: "Made to order · 2–3 weeks · Complimentary insured shipping",
     },
 
-    // STRICT CAMPAIGN LOCK — 7 approved angles, exact order:
-    // DESIGN: SLIP-ON OPEN CUFF (C-shape) with EXACTLY TWO black-diamond pavé
-    //         END CAPS at the open terminals. NO middle pavé, NO third station.
-    // 1. HERO STACK         — two cuffs on pool table (user's authentic photo)
-    // 2. SINGLE HERO OBJECT — single open cuff on green felt, low 3/4
-    // 3. ON-WRIST ONE       — Black model, navy/black wardrobe, ONE open cuff
-    // 4. DOUBLE STACK WRIST — Black model, TWO open cuffs stacked, billiard table
-    // 5. MACRO DETAIL       — close-up of one black-diamond end cap meeting the weave
-    // 6. SIDE PROFILE       — low side angle showing the C-shape and both end caps
-    // 7. LIFESTYLE TABLE    — single open cuff w/ cue + whiskey + blurred ball
+    // STRICT CAMPAIGN LOCK — 6 approved slides, exact order:
+    // DESIGN: CLOSED slide-on bangle (continuous loop) with EXACTLY TWO black-
+    //         diamond pavé barrels on the FRONT, close together. Plain silver
+    //         mesh on the back and sides.
+    // 1. HERO STACK            — two bangles on pool table (user's authentic photo)
+    // 2. ON-WRIST SOLO         — Black model, navy/black, ONE bangle (AI editorial)
+    // 3. WRIST AUTHENTIC CLOSE — Black model, two stacked bangles, navy sweater (real photo)
+    // 4. WRIST AUTHENTIC WIDE  — Black model, two stacked bangles, billiard table balls visible (real photo)
+    // 5. MACRO DETAIL          — close-up of one black-diamond barrel meeting the weave
+    // 6. LIFESTYLE TABLE       — single bangle w/ cue + whiskey + blurred ball
     gallery: [
-      { src: "/midweek/01_hero.png",            alt: "MIDWEEK — hero stack on pool table" },
-      { src: "/midweek/02_single_felt.png",     alt: "MIDWEEK — single open cuff on green felt" },
-      { src: "/midweek/03_on_wrist_solo.png",   alt: "MIDWEEK — on-wrist editorial (solo, slip-on)" },
-      { src: "/midweek/04_on_wrist_stack.png",  alt: "MIDWEEK — double stack on wrist" },
-      { src: "/midweek/05_macro.png",           alt: "MIDWEEK — macro detail (black-diamond end cap)" },
-      { src: "/midweek/06_side_profile.png",    alt: "MIDWEEK — side profile (open C-shape)" },
-      { src: "/midweek/07_lifestyle_table.png", alt: "MIDWEEK — lifestyle table (cue, whiskey, blurred ball)" },
+      { src: "/midweek/01_hero.png",             alt: "MIDWEEK — hero stack on pool table" },
+      { src: "/midweek/03_on_wrist_solo.png",    alt: "MIDWEEK — on-wrist editorial (solo)" },
+      { src: "/midweek/08_wrist_real_close.png", alt: "MIDWEEK — two stacked bangles on wrist (close)" },
+      { src: "/midweek/09_wrist_real_wide.png",  alt: "MIDWEEK — two stacked bangles at the billiard table" },
+      { src: "/midweek/05_macro.png",            alt: "MIDWEEK — macro detail (black-diamond barrel)" },
+      { src: "/midweek/07_lifestyle_table.png",  alt: "MIDWEEK — lifestyle table (cue, whiskey, blurred ball)" },
     ],
 
     hero: {
