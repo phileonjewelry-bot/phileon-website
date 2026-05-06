@@ -2451,12 +2451,21 @@ This is expression — under control.`,
       { src: "/carapace/12_on_hand_v2.png",  alt: "The Carapace — on-hand (finger placement)" },
     ],
 
-    // TODO: PAVÉ GALLERY ASSETS — not yet produced.
-    // When ready, drop 5 frames into /app/frontend/public/carapace-pave/
-    // (mirroring the base 5-shot rhythm) and uncomment paveGallery below.
-    // For now the page falls back to the base gallery when a pavé variant
-    // is selected, per spec ("Keep base gallery visible until pavé assets exist").
-    paveGallery: null,
+    // PAVÉ IMAGE SET — used when variant.imageSet === "pave"
+    // (Vermeil Pavé and 10K Pavé). Order locked per spec:
+    //   1. Black-background pavé hero (silhouette clarity)
+    //   2. Editorial portrait (campaign emotion)
+    //   3. Interaction shot — hand adjusting (ownership psychology)
+    //   4. Macro detail (craftsmanship + stone integration)
+    //   5. Structure / wearable clarity (dome depth, band visibility)
+    paveGallery: [
+      { src: "/carapace-pave/01_hero.png",        alt: "The Carapace Pavé — black-background hero (oval shield silhouette)" },
+      { src: "/carapace-pave/02_editorial.png",   alt: "The Carapace Pavé — editorial portrait" },
+      { src: "/carapace-pave/03_interaction.png", alt: "The Carapace Pavé — hand adjusting the ring" },
+      { src: "/carapace-pave/04_macro.png",       alt: "The Carapace Pavé — macro lattice and pavé detail" },
+      { src: "/carapace-pave/05_structure.png",   alt: "The Carapace Pavé — wearable clarity, dome and band" },
+    ],
+    paveHero: "/carapace-pave/01_hero.png",
 
     hero: {
       videoSrc: null,

@@ -16,10 +16,16 @@ export default function CarapacePage() {
 
   // Gallery swap: when a pavé variant is selected, prefer paveGallery if present,
   // otherwise gracefully fall back to the base gallery (per spec).
+  const isPave = variant.imageSet === "pave";
   const activeGallery =
-    variant.imageSet === "pave" && Array.isArray(product.paveGallery) && product.paveGallery.length > 0
+    isPave && Array.isArray(product.paveGallery) && product.paveGallery.length > 0
       ? product.paveGallery
       : product.gallery;
+
+  // Hero swap: pavé variants show the dedicated paveHero (soft 250ms fade),
+  // base variants show the standard hero poster.
+  const heroSrcPave = product.paveHero || (product.paveGallery && product.paveGallery[0]?.src);
+  const showPaveHero = isPave && !!heroSrcPave;
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -118,8 +124,13 @@ export default function CarapacePage() {
           [data-testid="carapace-hero"] { height: 86vh !important; }
         }
 
+        /* Pavé crossfade — soft 250ms opacity swap, no slide, no zoom */
+        .cp-hero-layer {
+          transition: opacity 250ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
         @media (prefers-reduced-motion: reduce) {
-          .cp-hero-media, .cp-reveal, .cp-section, .cp-gallery-item {
+          .cp-hero-media, .cp-reveal, .cp-section, .cp-gallery-item, .cp-hero-layer {
             animation: none !important;
             transition-duration: 0.001ms !important;
           }
@@ -133,11 +144,25 @@ export default function CarapacePage() {
         style={{ height: "92vh", minHeight: "320px" }}
         data-testid="carapace-hero"
       >
+        {/* Base hero (visible when a base variant is selected) */}
         <img
           src={product.hero.poster}
           alt="The Carapace — cinematic hero"
-          className="cp-hero-media absolute inset-0 w-full h-full object-cover"
+          className="cp-hero-media cp-hero-layer absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: showPaveHero ? 0 : 1 }}
+          data-testid="carapace-hero-base-img"
         />
+
+        {/* Pavé hero (visible when a pavé variant is selected) — soft 250ms crossfade */}
+        {heroSrcPave && (
+          <img
+            src={heroSrcPave}
+            alt="The Carapace Pavé — cinematic hero"
+            className="cp-hero-media cp-hero-layer absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: showPaveHero ? 1 : 0 }}
+            data-testid="carapace-hero-pave-img"
+          />
+        )}
 
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/55 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-transparent" />
