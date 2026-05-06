@@ -454,6 +454,11 @@ const HomePage = () => {
             href: "/products/labete" 
           },
           { 
+            title: "MIDWEEK", 
+            image: products.midweek?.imageUrl, 
+            href: "/products/midweek" 
+          },
+          { 
             title: "ALEJANDRA HEELS", 
             image: products.alejandraHeels?.images?.hero || "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/alejandra-hero.jpg", 
             href: "/products/alejandra-heels" 

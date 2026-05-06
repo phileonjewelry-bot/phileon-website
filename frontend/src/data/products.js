@@ -2507,7 +2507,7 @@ This is expression — under control.`,
     isFeatured: true,
     isNew: true,
     displayOrder: 8,
-    showInHomepageCarousel: false,
+    showInHomepageCarousel: true,
 
     imageUrl: "/midweek/01_hero.png",
 
