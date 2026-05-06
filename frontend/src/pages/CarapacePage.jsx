@@ -110,15 +110,10 @@ export default function CarapacePage() {
 
         .cp-gallery-item {
           scroll-snap-align: center;
-          opacity: 0.55;
-          transform: scale(0.96);
-          filter: brightness(0.75);
-          transition:
-            opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-            transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
-            filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+          opacity: 0.78;
+          transition: opacity 200ms ease;
         }
-        .cp-gallery-item.is-active { opacity: 1; transform: scale(1); filter: brightness(1); }
+        .cp-gallery-item.is-active { opacity: 1; }
 
         @media (max-width: 767px) {
           [data-testid="carapace-hero"] { height: 86vh !important; }
