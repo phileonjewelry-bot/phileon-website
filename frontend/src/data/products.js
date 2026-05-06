@@ -2550,13 +2550,22 @@ This is expression — under control.`,
       leadTime: "Made to order · 2–3 weeks · Complimentary insured shipping",
     },
 
-    // 5-frame gallery — environmental → top-down → on-wrist → macro → detail
+    // STRICT CAMPAIGN LOCK — 7 approved angles, exact order:
+    // 1. HERO STACK         — two cuffs on pool table (user's authentic photo)
+    // 2. SINGLE HERO OBJECT — single cuff on green felt, low 3/4
+    // 3. ON-WRIST ONE       — Black model, navy/black wardrobe, ONE cuff
+    // 4. DOUBLE STACK WRIST — Black model, TWO cuffs stacked, billiard table
+    // 5. MACRO DETAIL       — woven texture + black pavé cap close-up
+    // 6. SIDE PROFILE       — low side angle, cuff thickness + structure
+    // 7. LIFESTYLE TABLE    — single cuff w/ cue + whiskey + blurred ball
     gallery: [
-      { src: "/midweek/01_hero.png",     alt: "MIDWEEK — hero environmental (pool table, whisky)" },
-      { src: "/midweek/02_top_down.png", alt: "MIDWEEK — top-down still life on slate" },
-      { src: "/midweek/03_on_wrist.png", alt: "MIDWEEK — on-wrist (men's editorial)" },
-      { src: "/midweek/04_macro.png",    alt: "MIDWEEK — macro detail (black-diamond barrel)" },
-      { src: "/midweek/05_detail.png",   alt: "MIDWEEK — side profile (mesh weave structure)" },
+      { src: "/midweek/01_hero.png",            alt: "MIDWEEK — hero stack on pool table" },
+      { src: "/midweek/02_single_felt.png",     alt: "MIDWEEK — single cuff on green felt" },
+      { src: "/midweek/03_on_wrist_solo.png",   alt: "MIDWEEK — on-wrist editorial (solo)" },
+      { src: "/midweek/04_on_wrist_stack.png",  alt: "MIDWEEK — double stack on wrist" },
+      { src: "/midweek/04_macro.png",           alt: "MIDWEEK — macro detail (black-diamond barrel)" },
+      { src: "/midweek/05_detail.png",          alt: "MIDWEEK — side profile (mesh weave structure)" },
+      { src: "/midweek/07_lifestyle_table.png", alt: "MIDWEEK — lifestyle table (cue, whiskey, blurred ball)" },
     ],
 
     hero: {

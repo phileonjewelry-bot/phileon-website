@@ -265,7 +265,7 @@ export default function MidweekPage() {
           >
             <img
               src={product.gallery[1]?.src || product.gallery[0]?.src}
-              alt="MIDWEEK — top-down still life"
+              alt="MIDWEEK — single cuff on green felt"
               className="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
@@ -409,8 +409,8 @@ export default function MidweekPage() {
 
           <div className="order-1 lg:order-2 relative aspect-[4/5] w-full overflow-hidden bg-black/30">
             <img
-              src={product.gallery[2]?.src || product.gallery[0]?.src}
-              alt="MIDWEEK — on-wrist editorial"
+              src={product.gallery[3]?.src || product.gallery[0]?.src}
+              alt="MIDWEEK — two cuffs stacked on a Black man's wrist at the billiard table"
               className="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
