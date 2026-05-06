@@ -55,6 +55,7 @@ import NervaturaPage from "@/pages/NervaturaPage";
 import DonGorgonPage from "@/pages/DonGorgonPage";
 import GrandDamePage from "@/pages/GrandDamePage";
 import CarapacePage from "@/pages/CarapacePage";
+import MidweekPage from "@/pages/MidweekPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -140,6 +141,7 @@ function App() {
             <Route path="/products/the-don-gorgon" element={<DonGorgonPage />} />
             <Route path="/products/the-grand-dame" element={<GrandDamePage />} />
             <Route path="/products/the-carapace" element={<CarapacePage />} />
+            <Route path="/products/midweek" element={<MidweekPage />} />
             <Route path="/shop/labete" element={<LaBetePage />} />
             <Route path="/shop/blessed" element={<BlessedPage />} />
             <Route path="/shop/coogi-i" element={<CoogiPage />} />

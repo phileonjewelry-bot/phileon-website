@@ -2479,6 +2479,98 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // MIDWEEK — Sterling Silver mesh cuff with black-diamond pavé barrels.
+  // Gentlemen's Club edition. Single price, single variant.
+  // ==========================================
+  midweek: {
+    name: "MIDWEEK",
+    slug: "midweek",
+    category: "bracelets",
+    subcategory: "cuff",
+    audience: ["gentlemens-club", "collective"],
+    type: "bracelet",
+    subtitle: "Sterling Silver Mesh Cuff",
+    categoryType: "Cuff Bracelet",
+    shopMaterialLine: "Woven Sterling Silver · Black Diamond Pavé",
+    tagline: "Two on the wrist. One on the table.",
+    collections: ["gentlemens-club", "collective"],
+    currency: "USD",
+    priceFrom: "$850 USD",
+    basePrice: 850,
+    pricingType: "fixed",
+    livePricing: false,
+    dynamicPricing: false,
+    pricingPending: false,
+    isFeatured: true,
+    isNew: true,
+    displayOrder: 8,
+    showInHomepageCarousel: false,
+
+    imageUrl: "/midweek/01_hero.png",
+
+    hasVariants: true,
+    variantType: "metal",
+    variants: [
+      {
+        key: "silver-black-dia",
+        metal: "Sterling Silver + Black Diamonds",
+        price: 850,
+        default: true,
+        pave: false,
+        imageSet: "base",
+        description: "Sterling silver mesh cuff with three pavé black-diamond barrel stations.",
+      },
+    ],
+
+    defaultSelection: {
+      metal: "silver-black-dia",
+    },
+
+    shopDisplay: {
+      showFromPrice: false,
+      showExactPrice: true,
+    },
+
+    purchaseNote: "Includes one MIDWEEK cuff. Styled stacked throughout the campaign imagery.",
+
+    specs: "Woven sterling silver · Black diamond pavé · 28.4g · Made to order",
+    detailedSpecs: {
+      weight: "28.4 grams",
+      material: "Sterling Silver",
+      stones: "Black Diamonds",
+      construction: "Woven architectural cuff",
+      form: "Round mesh weave with three barrel pavé stations",
+      finish: "High polish",
+      fit: "Designed for daily and evening wear",
+      wearability: "Designed for daily and evening wear",
+      origin: "Made to order",
+      leadTime: "Made to order · 2–3 weeks · Complimentary insured shipping",
+    },
+
+    // 5-frame gallery — environmental → top-down → on-wrist → macro → detail
+    gallery: [
+      { src: "/midweek/01_hero.png",     alt: "MIDWEEK — hero environmental (pool table, whisky)" },
+      { src: "/midweek/02_top_down.png", alt: "MIDWEEK — top-down still life on slate" },
+      { src: "/midweek/03_on_wrist.png", alt: "MIDWEEK — on-wrist (men's editorial)" },
+      { src: "/midweek/04_macro.png",    alt: "MIDWEEK — macro detail (black-diamond barrel)" },
+      { src: "/midweek/05_detail.png",   alt: "MIDWEEK — side profile (mesh weave structure)" },
+    ],
+
+    hero: {
+      videoSrc: null,
+      poster: "/midweek/01_hero.png",
+    },
+
+    heroText: {
+      eyebrow: "PHILEON · GENTLEMEN'S CLUB",
+      title: "MIDWEEK",
+      subline: "For the night that didn't ask permission.",
+    },
+
+    shipping: "Complimentary insured shipping within Canada."
   }
 
 };
