@@ -484,6 +484,22 @@ const CORE_PRODUCTS = [
     isFeatured: true,
     displayOrder: 7,
   },
+  {
+    id: 'midweek',
+    name: 'MIDWEEK',
+    slug: 'midweek',
+    materialLine: products.midweek.shopMaterialLine,
+    imageUrl: products.midweek.imageUrl,
+    href: '/products/midweek',
+    price_range: products.midweek.priceFrom,
+    inventory_count: 100,
+    is_core: true,
+    category: 'bracelets',
+    audience: ['gentlemens-club', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 8,
+  },
 ];
 
 // Additional drop products as fallback
