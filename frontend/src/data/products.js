@@ -2439,16 +2439,16 @@ This is expression — under control.`,
       leadTime: "Made to order · 2–3 weeks · Complimentary insured shipping",
     },
 
-    // STRICT IMAGE CONTROL — locked 5-frame set per spec.
-    // 1. Hero 3/4 (oval regen)   2. Top-down (real photo)
-    // 3. Side profile (oval regen)   4. Macro (legacy — pending oval regen on next budget cycle)
-    // 5. On-hand (real photo)
+    // STRICT IMAGE CONTROL — fully locked 5-frame set, ALL authentic photography.
+    // 1. Hero front-facing (real)   2. Top-down (real)
+    // 3. Side profile + band (real)   4. Macro detail (real)
+    // 5. On-hand (real)
     gallery: [
       { src: "/carapace/13_hero_v2.png",     alt: "The Carapace — hero front-facing (elongated oval shield)" },
-      { src: "/carapace/07_top_real.png",     alt: "The Carapace — top-down view (oval domed geometry)" },
-      { src: "/carapace/10_side_oval.png",    alt: "The Carapace — side profile (low oval shield)" },
-      { src: "/carapace/04_macro.png",        alt: "The Carapace — macro detail (lattice structure)" },
-      { src: "/carapace/12_on_hand_v2.png", alt: "The Carapace — on-hand (finger placement)" },
+      { src: "/carapace/07_top_real.png",    alt: "The Carapace — top-down view (oval domed geometry)" },
+      { src: "/carapace/14_side_real.png",   alt: "The Carapace — side profile and band" },
+      { src: "/carapace/15_macro_real.png",  alt: "The Carapace — macro detail (lattice structure)" },
+      { src: "/carapace/12_on_hand_v2.png",  alt: "The Carapace — on-hand (finger placement)" },
     ],
 
     // TODO: PAVÉ GALLERY ASSETS — not yet produced.
