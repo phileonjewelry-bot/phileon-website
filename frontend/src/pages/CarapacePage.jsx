@@ -79,14 +79,31 @@ export default function CarapacePage() {
         .cp-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
         .cp-cormorant { font-family: 'Cormorant Garamond', serif; }
 
+        /* CARAPACE drift — quiet luxury "living photograph" motion.
+           translateY -6px → 6px, scale 1 → 1.015, 16s ease-in-out alternate.
+           Applied ONLY to the active hero image and the active gallery slide. */
         @keyframes cpHeroDrift {
-          from { transform: scale(1) translateY(0); }
-          to   { transform: scale(1.04) translateY(-8px); }
+          0%   { transform: translateY(-6px) scale(1); }
+          100% { transform: translateY(6px) scale(1.015); }
+        }
+        @keyframes cpHeroDriftMobile {
+          0%   { transform: translateY(-4px) scale(1); }
+          100% { transform: translateY(4px) scale(1.015); }
         }
         .cp-hero-media {
           transform-origin: center center;
           animation: cpHeroDrift 16s ease-in-out infinite alternate;
           will-change: transform;
+        }
+        /* Active gallery slide — drift the inner image only, never the snap container */
+        .cp-gallery-item.is-active img {
+          animation: cpHeroDrift 16s ease-in-out infinite alternate;
+          transform-origin: center center;
+          will-change: transform;
+        }
+        .cp-gallery-item:not(.is-active) img {
+          animation: none;
+          transform: none;
         }
 
         .cp-reveal {
@@ -117,6 +134,10 @@ export default function CarapacePage() {
 
         @media (max-width: 767px) {
           [data-testid="carapace-hero"] { height: 86vh !important; }
+          .cp-hero-media,
+          .cp-gallery-item.is-active img {
+            animation: cpHeroDriftMobile 16s ease-in-out infinite alternate;
+          }
         }
 
         /* Pavé crossfade — soft 250ms opacity swap, no slide, no zoom */
@@ -125,7 +146,8 @@ export default function CarapacePage() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .cp-hero-media, .cp-reveal, .cp-section, .cp-gallery-item, .cp-hero-layer {
+          .cp-hero-media, .cp-reveal, .cp-section, .cp-gallery-item, .cp-hero-layer,
+          .cp-gallery-item.is-active img {
             animation: none !important;
             transition-duration: 0.001ms !important;
           }
