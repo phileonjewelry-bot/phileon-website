@@ -96,24 +96,24 @@ export default function CarapacePage() {
         }
 
         /* CARAPACE drift — quiet luxury "living photograph" motion.
-           translateY -6px → 6px, scale 1 → 1.015, 16s ease-in-out alternate.
+           translateY -12px → 12px, scale 1 → 1.035, 12s ease-in-out alternate.
            Applied ONLY to the active hero image and the active gallery slide. */
         @keyframes cpHeroDrift {
-          0%   { transform: translateY(-6px) scale(1); }
-          100% { transform: translateY(6px) scale(1.015); }
+          0%   { transform: translateY(-12px) scale(1); }
+          100% { transform: translateY(12px) scale(1.035); }
         }
         @keyframes cpHeroDriftMobile {
-          0%   { transform: translateY(-4px) scale(1); }
-          100% { transform: translateY(4px) scale(1.015); }
+          0%   { transform: translateY(-8px) scale(1); }
+          100% { transform: translateY(8px) scale(1.025); }
         }
         .cp-hero-media {
           transform-origin: center center;
-          animation: cpHeroDrift 16s ease-in-out infinite alternate;
+          animation: cpHeroDrift 12s ease-in-out infinite alternate;
           will-change: transform;
         }
         /* Active gallery slide — drift the inner image only, never the snap container */
         .cp-gallery-item.is-active img {
-          animation: cpHeroDrift 16s ease-in-out infinite alternate;
+          animation: cpHeroDrift 12s ease-in-out infinite alternate;
           transform-origin: center center;
           will-change: transform;
         }
@@ -152,7 +152,7 @@ export default function CarapacePage() {
           [data-testid="carapace-hero"] { height: 86vh !important; }
           .cp-hero-media,
           .cp-gallery-item.is-active img {
-            animation: cpHeroDriftMobile 16s ease-in-out infinite alternate;
+            animation: cpHeroDriftMobile 12s ease-in-out infinite alternate;
           }
         }
 
