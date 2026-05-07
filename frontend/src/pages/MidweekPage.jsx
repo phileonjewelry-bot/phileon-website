@@ -133,10 +133,10 @@ export default function MidweekPage() {
           cursor: url('data:image/svg+xml;utf8,${silverCursorSvg}') 10 10, pointer;
         }
 
-        /* MIDWEEK HERO SHELL — full-bleed, 92vh / 78vh */
+        /* MIDWEEK HERO SHELL — full-bleed, 92vh / 68vh */
         .mw-hero-shell { height: 92vh; min-height: 360px; }
         @media (max-width: 767px) {
-          .mw-hero-shell { height: 78vh !important; min-height: 320px; }
+          .mw-hero-shell { height: 68vh !important; min-height: 280px; }
         }
 
         /* Bottom-left text positioning — desktop 72/72, mobile 24/36 */
