@@ -2570,7 +2570,7 @@ This is expression — under control.`,
     ],
 
     hero: {
-      videoSrc: null,
+      videoSrc: "/midweek/hero.mp4",
       poster: "/midweek/01_hero.png",
     },
 

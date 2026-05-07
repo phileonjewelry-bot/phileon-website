@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { products } from "@/data/products";
@@ -7,6 +7,8 @@ import { useAddToCart } from "../hooks/useAddToCart";
 export default function MidweekPage() {
   const product = products.midweek;
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const heroVideoRef = useRef(null);
+  const [videoReady, setVideoReady] = useState(false);
 
   const defaultVariant = product.variants.find((v) => v.default) || product.variants[0];
   const [variantKey] = useState(defaultVariant.key);
@@ -50,9 +52,53 @@ export default function MidweekPage() {
     );
     galleryItems.forEach((item) => galleryObserver.observe(item));
 
+    // Triple-redundant loop watcher for the hero video (per project pattern):
+    // React re-renders can drop loop state on H.264 mp4. Force replay on
+    // 'ended', 'pause', and the 'timeupdate' near-end heuristic.
+    const v = heroVideoRef.current;
+    let timeUpdateHandler = null;
+    let endedHandler = null;
+    let pauseHandler = null;
+    let canPlayHandler = null;
+    if (v) {
+      const safePlay = () => {
+        const p = v.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      };
+      timeUpdateHandler = () => {
+        if (v.duration && v.currentTime >= v.duration - 0.06) {
+          v.currentTime = 0;
+          safePlay();
+        }
+      };
+      endedHandler = () => {
+        v.currentTime = 0;
+        safePlay();
+      };
+      pauseHandler = () => {
+        if (!v.ended && !document.hidden) safePlay();
+      };
+      canPlayHandler = () => {
+        setVideoReady(true);
+        safePlay();
+      };
+      v.addEventListener("timeupdate", timeUpdateHandler);
+      v.addEventListener("ended", endedHandler);
+      v.addEventListener("pause", pauseHandler);
+      v.addEventListener("canplay", canPlayHandler);
+      // Kick off attempt — many browsers will autoplay muted+playsInline immediately.
+      safePlay();
+    }
+
     return () => {
       revealObserver.disconnect();
       galleryObserver.disconnect();
+      if (v) {
+        v.removeEventListener("timeupdate", timeUpdateHandler);
+        v.removeEventListener("ended", endedHandler);
+        v.removeEventListener("pause", pauseHandler);
+        v.removeEventListener("canplay", canPlayHandler);
+      }
     };
   }, []);
 
@@ -87,22 +133,68 @@ export default function MidweekPage() {
           cursor: url('data:image/svg+xml;utf8,${silverCursorSvg}') 10 10, pointer;
         }
 
-        /* HERO drift — quiet living-photograph motion. translateY -10→10, scale 1→1.03, 14s */
-        @keyframes mwDrift {
+        /* MIDWEEK HERO SHELL — full-bleed, 92vh / 78vh */
+        .mw-hero-shell { height: 92vh; min-height: 360px; }
+        @media (max-width: 767px) {
+          .mw-hero-shell { height: 78vh !important; min-height: 320px; }
+        }
+
+        /* Bottom-left text positioning — desktop 72/72, mobile 24/36 */
+        .mw-hero-textblock {
+          left: 72px;
+          bottom: 72px;
+        }
+        @media (max-width: 767px) {
+          .mw-hero-textblock {
+            left: 24px;
+            bottom: 36px;
+          }
+        }
+
+        /* Hero typography — exact spec */
+        .mw-hero-eyebrow {
+          font-size: 12px;
+          letter-spacing: 0.35em;
+          text-transform: uppercase;
+          color: rgba(220, 225, 232, 0.82);
+          margin-bottom: 18px;
+        }
+        .mw-hero-title {
+          font-size: clamp(72px, 12vw, 184px);
+          line-height: 0.9;
+          letter-spacing: 0.04em;
+          color: #FFFFFF;
+        }
+        .mw-hero-tagline {
+          margin-top: 18px;
+          font-size: clamp(15px, 1.4vw, 20px);
+          color: rgba(220, 225, 232, 0.78);
+          letter-spacing: 0.005em;
+        }
+
+        /* HERO video drift — scale-only, no translateY (per new spec).
+           Applied to the video container so the video itself doesn't fight
+           the gradient overlay above it. */
+        @keyframes mwHeroScale {
+          0%   { transform: scale(1); }
+          100% { transform: scale(1.03); }
+        }
+        .mw-hero-video {
+          transform-origin: center center;
+          animation: mwHeroScale 16s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        /* Active gallery slide image still uses the original drift */
+        @keyframes mwGalleryDrift {
           0%   { transform: translateY(-10px) scale(1); }
           100% { transform: translateY(10px) scale(1.03); }
         }
-        @keyframes mwDriftMobile {
+        @keyframes mwGalleryDriftMobile {
           0%   { transform: translateY(-6px) scale(1); }
           100% { transform: translateY(6px) scale(1.02); }
         }
-        .mw-hero-media {
-          transform-origin: center center;
-          animation: mwDrift 14s ease-in-out infinite alternate;
-          will-change: transform;
-        }
         .mw-gallery-item.is-active img {
-          animation: mwDrift 14s ease-in-out infinite alternate;
+          animation: mwGalleryDrift 14s ease-in-out infinite alternate;
           transform-origin: center center;
           will-change: transform;
         }
@@ -155,40 +247,66 @@ export default function MidweekPage() {
         .mw-silver-soft { color: rgba(220, 225, 232, 0.65); }
 
         @media (max-width: 767px) {
-          [data-testid="midweek-hero"] { height: 88vh !important; }
-          .mw-hero-media,
           .mw-gallery-item.is-active img {
-            animation: mwDriftMobile 14s ease-in-out infinite alternate;
+            animation: mwGalleryDriftMobile 14s ease-in-out infinite alternate;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .mw-hero-media, .mw-reveal, .mw-section, .mw-gallery-item,
+          .mw-hero-media, .mw-hero-video, .mw-reveal, .mw-section, .mw-gallery-item,
           .mw-gallery-item.is-active img {
             animation: none !important;
             transition-duration: 0.001ms !important;
+            transform: none !important;
           }
           .mw-reveal, .mw-section { opacity: 1 !important; transform: none !important; }
         }
       `}</style>
 
-      {/* ─── HERO ─────────────────────────────────────────────────── */}
+      {/* ─── HERO — full-bleed autoplay video with bottom-left text overlay ── */}
       <section
-        className="relative w-full bg-black overflow-hidden"
-        style={{ height: "92vh", minHeight: "320px" }}
+        className="mw-hero-shell relative w-full bg-black overflow-hidden"
         data-testid="midweek-hero"
       >
+        {/* Poster (bright, instant) — visible until canplay */}
         <img
           src={product.hero.poster}
           alt="MIDWEEK — cinematic hero"
-          className="mw-hero-media absolute inset-0 w-full h-full object-cover"
+          className="mw-hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          style={{ opacity: videoReady ? 0 : 1 }}
           loading="eager"
           decoding="async"
           fetchpriority="high"
           data-testid="midweek-hero-img"
         />
-        {/* Soft bottom vignette only — keep the photo bright */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/35 to-transparent" />
+
+        {/* Cinematic autoplay video — muted, looped, playsInline, no controls */}
+        <video
+          ref={heroVideoRef}
+          src={product.hero.videoSrc}
+          poster={product.hero.poster}
+          className="mw-hero-media mw-hero-video absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          style={{ opacity: videoReady ? 1 : 0 }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          controls={false}
+          aria-hidden="true"
+          data-testid="midweek-hero-video"
+        />
+
+        {/* Spec gradient overlay — never crush blacks under 0.58 */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.58), rgba(0,0,0,0.18))",
+          }}
+        />
 
         <Link
           to="/shop?category=bracelets"
@@ -199,32 +317,29 @@ export default function MidweekPage() {
           <span className="mw-bebas">BACK TO BRACELETS</span>
         </Link>
 
-        <div className="relative z-10 h-full flex items-center justify-center px-6 text-center">
-          <div className="mw-hero-text-shadow">
-            <p
-              className="mw-reveal mw-delay-1 mw-bebas text-[11px] md:text-[12px] tracking-[0.5em] mw-silver-soft mb-6"
-              data-testid="midweek-eyebrow"
-            >
-              {product.heroText.eyebrow}
-            </p>
-            <h1
-              className="mw-reveal mw-delay-2 mw-bebas text-white"
-              style={{
-                fontSize: "clamp(72px, 12vw, 192px)",
-                lineHeight: "0.92",
-                letterSpacing: "0.06em",
-              }}
-              data-testid="midweek-title"
-            >
-              {product.heroText.title}
-            </h1>
-            <p
-              className="mw-reveal mw-delay-3 mw-cormorant italic mw-silver text-base md:text-lg mt-5 tracking-wide"
-              data-testid="midweek-subline"
-            >
-              {product.heroText.subline}
-            </p>
-          </div>
+        {/* Bottom-left text stack */}
+        <div
+          className="mw-hero-textblock absolute z-10 max-w-[88vw] md:max-w-[640px]"
+          data-testid="midweek-hero-textblock"
+        >
+          <p
+            className="mw-reveal mw-delay-1 mw-bebas mw-hero-eyebrow"
+            data-testid="midweek-eyebrow"
+          >
+            PHILEON
+          </p>
+          <h1
+            className="mw-reveal mw-delay-2 mw-bebas text-white mw-hero-title"
+            data-testid="midweek-title"
+          >
+            MIDWEEK
+          </h1>
+          <p
+            className="mw-reveal mw-delay-3 mw-cormorant italic mw-hero-tagline"
+            data-testid="midweek-subline"
+          >
+            Two on the wrist. One on the table.
+          </p>
         </div>
       </section>
 
