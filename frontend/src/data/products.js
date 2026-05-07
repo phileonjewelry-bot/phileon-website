@@ -2521,7 +2521,7 @@ This is expression — under control.`,
         default: true,
         pave: false,
         imageSet: "base",
-        description: "Sterling silver mesh cuff with three pavé black-diamond barrel stations.",
+        description: "Sterling silver mesh cuff with two pavé black-diamond barrels on the front.",
       },
     ],
 
