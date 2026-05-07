@@ -2550,23 +2550,21 @@ This is expression — under control.`,
       leadTime: "Made to order · 2–3 weeks · Complimentary insured shipping",
     },
 
-    // STRICT CAMPAIGN LOCK — 6 approved slides, exact order:
+    // STRICT CAMPAIGN LOCK — 5 approved slides, exact order:
     // DESIGN: CLOSED slide-on bangle (continuous loop) with EXACTLY TWO black-
     //         diamond pavé barrels on the FRONT, close together. Plain silver
     //         mesh on the back and sides.
-    // 1. HERO STACK            — two bangles on pool table (user's authentic photo)
-    // 2. ON-WRIST SOLO         — Black model, navy/black, ONE bangle (AI editorial)
-    // 3. WRIST AUTHENTIC CLOSE — Black model, two stacked bangles, navy sweater (real photo)
-    // 4. WRIST AUTHENTIC WIDE  — Black model, two stacked bangles, billiard table balls visible (real photo)
-    // 5. MACRO DETAIL          — close-up of one black-diamond barrel meeting the weave
-    // 6. LIFESTYLE TABLE       — single bangle w/ cue + whiskey + blurred ball
+    // 1. HERO STACK         — two bangles on pool table (user's authentic photo)
+    // 2. EDITORIAL PORTRAIT — full body, fedora, navy shirt, holding cue (real photo)
+    // 3. ON-WRIST ENV       — environmental on-wrist with billiard table + cue (real photo)
+    // 4. ON-WRIST WHISKEY   — close on-wrist with whiskey glass blurred (real photo)
+    // 5. MACRO DETAIL       — close-up of one black-diamond barrel meeting the weave
     gallery: [
-      { src: "/midweek/01_hero.png",             alt: "MIDWEEK — hero stack on pool table" },
-      { src: "/midweek/03_on_wrist_solo.png",    alt: "MIDWEEK — on-wrist editorial (solo)" },
-      { src: "/midweek/08_wrist_real_close.png", alt: "MIDWEEK — two stacked bangles on wrist (close)" },
-      { src: "/midweek/09_wrist_real_wide.png",  alt: "MIDWEEK — two stacked bangles at the billiard table" },
-      { src: "/midweek/05_macro.png",            alt: "MIDWEEK — macro detail (black-diamond barrel)" },
-      { src: "/midweek/07_lifestyle_table.png",  alt: "MIDWEEK — lifestyle table (cue, whiskey, blurred ball)" },
+      { src: "/midweek/01_hero.png",            alt: "MIDWEEK — hero stack on pool table" },
+      { src: "/midweek/10_editorial_pool.png",  alt: "MIDWEEK — editorial portrait at the pool table" },
+      { src: "/midweek/11_wrist_env.png",       alt: "MIDWEEK — two stacked bangles on wrist (environmental)" },
+      { src: "/midweek/12_wrist_whiskey.png",   alt: "MIDWEEK — two stacked bangles on wrist (whiskey lounge)" },
+      { src: "/midweek/05_macro.png",           alt: "MIDWEEK — macro detail (black-diamond barrel)" },
     ],
 
     hero: {
