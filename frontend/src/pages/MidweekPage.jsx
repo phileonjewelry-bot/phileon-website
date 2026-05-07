@@ -52,11 +52,13 @@ export default function MidweekPage() {
     );
     galleryItems.forEach((item) => galleryObserver.observe(item));
 
-    // Triple-redundant loop watcher for the hero video (per project pattern):
-    // React re-renders can drop loop state on H.264 mp4. Force replay on
-    // 'ended', 'pause', and the 'timeupdate' near-end heuristic.
+    // Loop & autoplay safety net for the hero video (per project pattern).
+    // We rely PRIMARILY on the native `loop` attribute for seam-free playback
+    // (no JS seek = no black flash). The handlers below are defensive only:
+    //   • `ended`   — fires only if the browser fails to honour `loop`
+    //   • `pause`   — recovers from inadvertent pause (non-tab-hidden)
+    //   • `canplay` — kicks off play in case autoplay was deferred
     const v = heroVideoRef.current;
-    let timeUpdateHandler = null;
     let endedHandler = null;
     let pauseHandler = null;
     let canPlayHandler = null;
@@ -64,12 +66,6 @@ export default function MidweekPage() {
       const safePlay = () => {
         const p = v.play();
         if (p && typeof p.catch === "function") p.catch(() => {});
-      };
-      timeUpdateHandler = () => {
-        if (v.duration && v.currentTime >= v.duration - 0.06) {
-          v.currentTime = 0;
-          safePlay();
-        }
       };
       endedHandler = () => {
         v.currentTime = 0;
@@ -82,11 +78,10 @@ export default function MidweekPage() {
         setVideoReady(true);
         safePlay();
       };
-      v.addEventListener("timeupdate", timeUpdateHandler);
       v.addEventListener("ended", endedHandler);
       v.addEventListener("pause", pauseHandler);
       v.addEventListener("canplay", canPlayHandler);
-      // Kick off attempt — many browsers will autoplay muted+playsInline immediately.
+      // Mount-time kick — for browsers that block autoplay until JS asks.
       safePlay();
     }
 
@@ -94,7 +89,6 @@ export default function MidweekPage() {
       revealObserver.disconnect();
       galleryObserver.disconnect();
       if (v) {
-        v.removeEventListener("timeupdate", timeUpdateHandler);
         v.removeEventListener("ended", endedHandler);
         v.removeEventListener("pause", pauseHandler);
         v.removeEventListener("canplay", canPlayHandler);
@@ -133,10 +127,10 @@ export default function MidweekPage() {
           cursor: url('data:image/svg+xml;utf8,${silverCursorSvg}') 10 10, pointer;
         }
 
-        /* MIDWEEK HERO SHELL — full-bleed, 92vh / 68vh */
-        .mw-hero-shell { height: 92vh; min-height: 360px; }
+        /* MIDWEEK HERO SHELL — full-bleed, 88vh / 72vh per spec */
+        .mw-hero-shell { height: 88vh; min-height: 360px; }
         @media (max-width: 767px) {
-          .mw-hero-shell { height: 68vh !important; min-height: 280px; }
+          .mw-hero-shell { height: 72vh !important; min-height: 280px; }
         }
 
         /* Bottom-left text positioning — desktop 72/72, mobile 24/36 */
@@ -172,17 +166,16 @@ export default function MidweekPage() {
           letter-spacing: 0.005em;
         }
 
-        /* HERO video drift — scale-only, no translateY (per new spec).
-           Applied to the video container so the video itself doesn't fight
-           the gradient overlay above it. */
-        @keyframes mwHeroScale {
-          0%   { transform: scale(1); }
-          100% { transform: scale(1.03); }
-        }
+        /* HERO video — STATIC scale(1.01) per new spec.
+           No drift animation here: removed mwHeroScale because it could push
+           the frame to 1.03 mid-cycle and crop wrists/bracelets. The video
+           sits centered with a tiny 1% over-scale to hide any seam pixels
+           at the edges. */
         .mw-hero-video {
+          object-fit: cover;
+          object-position: center center;
+          transform: scale(1.01);
           transform-origin: center center;
-          animation: mwHeroScale 16s ease-in-out infinite alternate;
-          will-change: transform;
         }
         /* Active gallery slide image still uses the original drift */
         @keyframes mwGalleryDrift {
@@ -272,8 +265,12 @@ export default function MidweekPage() {
         <img
           src={product.hero.poster}
           alt="MIDWEEK — cinematic hero"
-          className="mw-hero-media absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
-          style={{ opacity: videoReady ? 0 : 1 }}
+          className="mw-hero-media absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: videoReady ? 0 : 1,
+            transition: "opacity 220ms ease-out",
+            objectPosition: "center center",
+          }}
           loading="eager"
           decoding="async"
           fetchpriority="high"
@@ -285,8 +282,11 @@ export default function MidweekPage() {
           ref={heroVideoRef}
           src={product.hero.videoSrc}
           poster={product.hero.poster}
-          className="mw-hero-media mw-hero-video absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
-          style={{ opacity: videoReady ? 1 : 0 }}
+          className="mw-hero-media mw-hero-video absolute inset-0 w-full h-full"
+          style={{
+            opacity: videoReady ? 1 : 0,
+            transition: "opacity 220ms ease-out",
+          }}
           autoPlay
           muted
           loop
