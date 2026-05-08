@@ -8,6 +8,7 @@ export default function MidweekPage() {
   const product = products.midweek;
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const heroVideoRef = useRef(null);
+  const introVideoRef = useRef(null);
 
   const defaultVariant = product.variants.find((v) => v.default) || product.variants[0];
   const [variantKey] = useState(defaultVariant.key);
@@ -65,6 +66,31 @@ export default function MidweekPage() {
   // no `pause` handler. Per project pattern.
   useEffect(() => {
     const video = heroVideoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    const forcePlay = () => {
+      video.play().catch(() => {});
+    };
+
+    video.addEventListener("loadedmetadata", forcePlay);
+    video.addEventListener("canplay", forcePlay);
+
+    forcePlay();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", forcePlay);
+      video.removeEventListener("canplay", forcePlay);
+    };
+  }, []);
+
+  // ─── INTRO SPLIT VIDEO — same native-loop pattern ─────────────────
+  // Source is a forward+reverse boomerang so the loop seam is frame-perfect.
+  useEffect(() => {
+    const video = introVideoRef.current;
     if (!video) return;
 
     video.muted = true;
@@ -342,22 +368,30 @@ export default function MidweekPage() {
               <p>
                 <span className="italic mw-silver">MIDWEEK</span> is built for
                 that hour — when the room has settled and the only sound is
-                silver against a wrist, low and steady. Three black-diamond
+                silver against a wrist, low and steady. Two black-diamond
                 barrels. No declarations. Just presence.
               </p>
             </div>
           </div>
 
           <div
-            className="mw-split-img relative aspect-square w-full overflow-hidden bg-neutral-900"
+            className="mw-split-video relative aspect-square w-full overflow-hidden bg-neutral-900"
             data-testid="midweek-intro-img"
           >
-            <img
-              src={product.gallery[1]?.src || product.gallery[0]?.src}
-              alt="MIDWEEK — single cuff on green felt"
+            <video
+              ref={introVideoRef}
               className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
+              src="/videos/midweek-intro.mp4"
+              poster={product.gallery[1]?.src || product.gallery[0]?.src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              controls={false}
+              disablePictureInPicture
+              aria-hidden="true"
+              data-testid="midweek-intro-video"
             />
           </div>
         </div>
