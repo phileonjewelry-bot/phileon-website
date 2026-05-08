@@ -8,7 +8,6 @@ export default function MidweekPage() {
   const product = products.midweek;
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const heroVideoRef = useRef(null);
-  const [videoReady, setVideoReady] = useState(false);
 
   const defaultVariant = product.variants.find((v) => v.default) || product.variants[0];
   const [variantKey] = useState(defaultVariant.key);
@@ -52,47 +51,53 @@ export default function MidweekPage() {
     );
     galleryItems.forEach((item) => galleryObserver.observe(item));
 
-    // Loop & autoplay safety net for the hero video (per project pattern).
-    // We rely PRIMARILY on the native `loop` attribute for seam-free playback
-    // (no JS seek = no black flash). The handlers below are defensive only:
-    //   • `ended`   — fires only if the browser fails to honour `loop`
-    //   • `pause`   — recovers from inadvertent pause (non-tab-hidden)
-    //   • `canplay` — kicks off play in case autoplay was deferred
-    const v = heroVideoRef.current;
-    let endedHandler = null;
-    let pauseHandler = null;
-    let canPlayHandler = null;
-    if (v) {
-      const safePlay = () => {
-        const p = v.play();
-        if (p && typeof p.catch === "function") p.catch(() => {});
-      };
-      endedHandler = () => {
-        v.currentTime = 0;
-        safePlay();
-      };
-      pauseHandler = () => {
-        if (!v.ended && !document.hidden) safePlay();
-      };
-      canPlayHandler = () => {
-        setVideoReady(true);
-        safePlay();
-      };
-      v.addEventListener("ended", endedHandler);
-      v.addEventListener("pause", pauseHandler);
-      v.addEventListener("canplay", canPlayHandler);
-      // Mount-time kick — for browsers that block autoplay until JS asks.
-      safePlay();
-    }
-
     return () => {
       revealObserver.disconnect();
       galleryObserver.disconnect();
-      if (v) {
-        v.removeEventListener("ended", endedHandler);
-        v.removeEventListener("pause", pauseHandler);
-        v.removeEventListener("canplay", canPlayHandler);
+    };
+  }, []);
+
+  // ─── HERO VIDEO — HARD AUTOLOOP (per user spec) ──────────────────
+  // Listeners: loadedmetadata, canplay, ended, timeupdate near-end.
+  // No `pause` handler — that listener was creating play-block fights with
+  // browsers that defer autoplay. Native `loop` + these 4 listeners is the
+  // most reliable combination across Chrome / Safari / Firefox / iOS Safari.
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    const forcePlay = () => {
+      video.play().catch(() => {});
+    };
+
+    const forceLoop = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+
+    const nearEndLoop = () => {
+      if (video.duration && video.currentTime >= video.duration - 0.08) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
       }
+    };
+
+    video.addEventListener("loadedmetadata", forcePlay);
+    video.addEventListener("canplay", forcePlay);
+    video.addEventListener("ended", forceLoop);
+    video.addEventListener("timeupdate", nearEndLoop);
+
+    forcePlay();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", forcePlay);
+      video.removeEventListener("canplay", forcePlay);
+      video.removeEventListener("ended", forceLoop);
+      video.removeEventListener("timeupdate", nearEndLoop);
     };
   }, []);
 
@@ -127,56 +132,80 @@ export default function MidweekPage() {
           cursor: url('data:image/svg+xml;utf8,${silverCursorSvg}') 10 10, pointer;
         }
 
-        /* MIDWEEK HERO SHELL — full-bleed, 88vh / 72vh per spec */
-        .mw-hero-shell { height: 88vh; min-height: 360px; }
-        @media (max-width: 767px) {
-          .mw-hero-shell { height: 72vh !important; min-height: 280px; }
+        /* ════ MIDWEEK HARD-FIX HERO BLOCK ════════════════════════════════
+           object-fit: contain (full editorial composition, no crop)
+           static, no transforms, no animations on the video element.
+           ────────────────────────────────────────────────────────────────── */
+        .midweek-video-hero {
+          position: relative;
+          width: 100%;
+          height: 78vh;
+          min-height: 560px;
+          max-height: 780px;
+          overflow: hidden;
+          background: #050505;
+        }
+        .midweek-video-hero-media {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: center center;
+          background: #050505;
+          transform: none !important;
+          animation: none !important;
+          scale: 1 !important;
+        }
+        @media (max-width: 768px) {
+          .midweek-video-hero {
+            height: 68vh;
+            min-height: 480px;
+            max-height: 620px;
+          }
+          .midweek-video-hero-media {
+            object-fit: contain;
+            object-position: center center;
+          }
         }
 
-        /* Bottom-left text positioning — desktop 72/72, mobile 24/36 */
-        .mw-hero-textblock {
+        .midweek-video-overlay {
+          position: absolute;
           left: 72px;
-          bottom: 72px;
+          bottom: 64px;
+          z-index: 2;
+          color: white;
+          pointer-events: none;
         }
-        @media (max-width: 767px) {
-          .mw-hero-textblock {
+        @media (max-width: 768px) {
+          .midweek-video-overlay {
             left: 24px;
             bottom: 36px;
           }
         }
 
-        /* Hero typography — exact spec */
-        .mw-hero-eyebrow {
+        .midweek-video-eyebrow {
           font-size: 12px;
           letter-spacing: 0.35em;
           text-transform: uppercase;
           color: rgba(220, 225, 232, 0.82);
-          margin-bottom: 18px;
+          margin: 0 0 18px 0;
         }
-        .mw-hero-title {
+        .midweek-video-title {
           font-size: clamp(72px, 12vw, 184px);
           line-height: 0.9;
           letter-spacing: 0.04em;
           color: #FFFFFF;
+          margin: 0;
         }
-        .mw-hero-tagline {
-          margin-top: 18px;
+        .midweek-video-tagline {
+          margin: 18px 0 0 0;
           font-size: clamp(15px, 1.4vw, 20px);
           color: rgba(220, 225, 232, 0.78);
+          font-style: italic;
           letter-spacing: 0.005em;
         }
-
-        /* HERO video — STATIC scale(1.01) per new spec.
-           No drift animation here: removed mwHeroScale because it could push
-           the frame to 1.03 mid-cycle and crop wrists/bracelets. The video
-           sits centered with a tiny 1% over-scale to hide any seam pixels
-           at the edges. */
-        .mw-hero-video {
-          object-fit: cover;
-          object-position: center center;
-          transform: scale(1.01);
-          transform-origin: center center;
-        }
+        /* ════ END HARD-FIX HERO BLOCK ═══════════════════════════════════ */
         /* Active gallery slide image still uses the original drift */
         @keyframes mwGalleryDrift {
           0%   { transform: translateY(-10px) scale(1); }
@@ -197,16 +226,11 @@ export default function MidweekPage() {
         }
 
         /* Sharper image rendering */
-        .mw-hero-media,
         .mw-gallery-item img,
         .mw-split-img img {
           image-rendering: -webkit-optimize-contrast;
           image-rendering: high-quality;
           backface-visibility: hidden;
-        }
-
-        .mw-hero-text-shadow {
-          text-shadow: 0 2px 22px rgba(0,0,0,0.6), 0 0 8px rgba(0,0,0,0.4);
         }
 
         .mw-reveal {
@@ -246,7 +270,7 @@ export default function MidweekPage() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .mw-hero-media, .mw-hero-video, .mw-reveal, .mw-section, .mw-gallery-item,
+          .mw-reveal, .mw-section, .mw-gallery-item,
           .mw-gallery-item.is-active img {
             animation: none !important;
             transition-duration: 0.001ms !important;
@@ -256,56 +280,25 @@ export default function MidweekPage() {
         }
       `}</style>
 
-      {/* ─── HERO — full-bleed autoplay video with bottom-left text overlay ── */}
+      {/* ─── HERO — HARD-FIX VIDEO BLOCK (full editorial composition, no crop) ── */}
       <section
-        className="mw-hero-shell relative w-full bg-black overflow-hidden"
+        className="midweek-video-hero"
         data-testid="midweek-hero"
       >
-        {/* Poster (bright, instant) — visible until canplay */}
-        <img
-          src={product.hero.poster}
-          alt="MIDWEEK — cinematic hero"
-          className="mw-hero-media absolute inset-0 w-full h-full object-cover"
-          style={{
-            opacity: videoReady ? 0 : 1,
-            transition: "opacity 220ms ease-out",
-            objectPosition: "center center",
-          }}
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
-          data-testid="midweek-hero-img"
-        />
-
-        {/* Cinematic autoplay video — muted, looped, playsInline, no controls */}
         <video
           ref={heroVideoRef}
-          src={product.hero.videoSrc}
-          poster={product.hero.poster}
-          className="mw-hero-media mw-hero-video absolute inset-0 w-full h-full"
-          style={{
-            opacity: videoReady ? 1 : 0,
-            transition: "opacity 220ms ease-out",
-          }}
+          className="midweek-video-hero-media"
+          src="/videos/midweek-hero.mp4"
+          poster="/midweek/hero-poster.jpg"
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          disablePictureInPicture
           controls={false}
+          disablePictureInPicture
           aria-hidden="true"
           data-testid="midweek-hero-video"
-        />
-
-        {/* Spec gradient overlay — never crush blacks under 0.58 */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.58), rgba(0,0,0,0.18))",
-          }}
         />
 
         <Link
@@ -317,25 +310,21 @@ export default function MidweekPage() {
           <span className="mw-bebas">BACK TO BRACELETS</span>
         </Link>
 
-        {/* Bottom-left text stack */}
-        <div
-          className="mw-hero-textblock absolute z-10 max-w-[88vw] md:max-w-[640px]"
-          data-testid="midweek-hero-textblock"
-        >
+        <div className="midweek-video-overlay" data-testid="midweek-hero-textblock">
           <p
-            className="mw-reveal mw-delay-1 mw-bebas mw-hero-eyebrow"
+            className="midweek-video-eyebrow mw-bebas"
             data-testid="midweek-eyebrow"
           >
             PHILEON
           </p>
           <h1
-            className="mw-reveal mw-delay-2 mw-bebas text-white mw-hero-title"
+            className="mw-bebas midweek-video-title"
             data-testid="midweek-title"
           >
             MIDWEEK
           </h1>
           <p
-            className="mw-reveal mw-delay-3 mw-cormorant italic mw-hero-tagline"
+            className="mw-cormorant midweek-video-tagline"
             data-testid="midweek-subline"
           >
             Two on the wrist. One on the table.
