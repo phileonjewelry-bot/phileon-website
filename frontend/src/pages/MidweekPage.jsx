@@ -57,11 +57,12 @@ export default function MidweekPage() {
     };
   }, []);
 
-  // ─── HERO VIDEO — HARD AUTOLOOP (per user spec) ──────────────────
-  // Listeners: loadedmetadata, canplay, ended, timeupdate near-end.
-  // No `pause` handler — that listener was creating play-block fights with
-  // browsers that defer autoplay. Native `loop` + these 4 listeners is the
-  // most reliable combination across Chrome / Safari / Firefox / iOS Safari.
+  // ─── HERO VIDEO — NATIVE LOOP ONLY ───────────────────────────────
+  // Source video has been trimmed to remove the fade-to-black tail
+  // (loop seam delta = 7.5 luminance, imperceptible). With a clean
+  // source, the browser's native `loop` is seamless on its own.
+  // We keep ONLY the autoplay kickstart listeners — no manual reseek,
+  // no `pause` handler. Per project pattern.
   useEffect(() => {
     const video = heroVideoRef.current;
     if (!video) return;
@@ -74,30 +75,14 @@ export default function MidweekPage() {
       video.play().catch(() => {});
     };
 
-    const forceLoop = () => {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    };
-
-    const nearEndLoop = () => {
-      if (video.duration && video.currentTime >= video.duration - 0.08) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
-    };
-
     video.addEventListener("loadedmetadata", forcePlay);
     video.addEventListener("canplay", forcePlay);
-    video.addEventListener("ended", forceLoop);
-    video.addEventListener("timeupdate", nearEndLoop);
 
     forcePlay();
 
     return () => {
       video.removeEventListener("loadedmetadata", forcePlay);
       video.removeEventListener("canplay", forcePlay);
-      video.removeEventListener("ended", forceLoop);
-      video.removeEventListener("timeupdate", nearEndLoop);
     };
   }, []);
 
