@@ -158,9 +158,10 @@ export default function LaMadonnaPage() {
         }
         @media (max-width: 768px) {
           .lm-hero-overlay {
-            left: 22px;
+            left: 18px;
+            right: 18px;
             bottom: 64px;
-            max-width: 80vw;
+            max-width: none;
           }
         }
 
@@ -177,9 +178,9 @@ export default function LaMadonnaPage() {
         }
         @media (max-width: 768px) {
           .lm-hero-title {
-            font-size: clamp(3.8rem, 16vw, 5.8rem);
-            line-height: 0.9;
-            letter-spacing: -0.03em;
+            font-size: clamp(3rem, 13.5vw, 4.6rem);
+            line-height: 0.92;
+            letter-spacing: -0.035em;
           }
         }
 
