@@ -19,6 +19,19 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA MADONNA Full Editorial Page Live
+- Replaced AI-generated 6-image gallery with 5 authentic user photos
+  (`la-madonna-01-front.png` … `la-madonna-05-bust-detail.png`).
+- Gallery grid switched from `repeat(6,1fr)` → `repeat(5,1fr)` (desktop + mobile).
+- ShopDropPage entry: `price_range: '$28,500 USD'`, `inventory_count: 100`,
+  removed `'COMING SOON'` flag.
+- Added `'la-madonna': 'editorial'` to `SHOP_COLLECTION_MAP` so the card now
+  renders inside the EDITORIAL group on `/shop` (was being silently dropped
+  from grouped view). Same fix applied to `'midweek': 'editorial'` and
+  `'the-carapace': 'signature'` which were also missing from the map.
+- Verified end-to-end: hero loads, all 5 thumbs decode, ACQUIRE button adds
+  to cart at $28,500 USD, sitewide `COMING SOON` reference is gone.
+
 ### 2026-02 — CARAPACE Pavé Variant Wiring + Oval-Shield Image Regen
 - Confirmed all 4 variants render and update price on click:
   Vermeil $350 / Vermeil Pavé $600 / 10K Gold $1,100 (default) / 10K Pavé $1,450.

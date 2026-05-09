@@ -21,6 +21,7 @@ const formatPrice = (basePrice, currency = 'USD') => {
 const SHOP_COLLECTION_MAP = {
   // SIGNATURE — gentlemen's flagship pieces
   'the-don-gorgon': 'signature',
+  'the-carapace': 'signature',
 
   // SACRED — scripture/faith driven
   'galatians-614': 'sacred',
@@ -50,6 +51,8 @@ const SHOP_COLLECTION_MAP = {
   'rhythm-mesh-ring': 'editorial',
   'le-cocktail-de-jessica': 'editorial',
   'nervatura': 'editorial',
+  'midweek': 'editorial',
+  'la-madonna': 'editorial',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',
@@ -507,8 +510,8 @@ const CORE_PRODUCTS = [
     materialLine: 'Architectural Gold Mesh · Corset Form',
     imageUrl: '/la-madonna/la-madonna-category.png',
     href: '/la-madonna',
-    price_range: 'COMING SOON',
-    inventory_count: 0,
+    price_range: '$28,500 USD',
+    inventory_count: 100,
     is_core: true,
     category: 'bracelets',
     audience: ['ladies', 'collective'],

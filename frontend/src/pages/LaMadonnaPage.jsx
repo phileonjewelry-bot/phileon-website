@@ -16,12 +16,11 @@ import { useAddToCart } from "../hooks/useAddToCart";
  */
 
 const GALLERY = [
-  { src: "/la-madonna/la-madonna-01-hero-front.png",   label: "01 — HERO FRONT",         alt: "LA MADONNA — straight-on hero front" },
-  { src: "/la-madonna/la-madonna-02-three-quarter.png", label: "02 — THREE QUARTER",      alt: "LA MADONNA — three-quarter pedestal" },
-  { src: "/la-madonna/la-madonna-03-cup-detail.png",   label: "03 — CUP DETAIL",         alt: "LA MADONNA — upper cup macro" },
-  { src: "/la-madonna/la-madonna-04-top-view.png",     label: "04 — TOP VIEW",           alt: "LA MADONNA — overhead architectural" },
-  { src: "/la-madonna/la-madonna-05-pedestal-crop.png", label: "05 — PEDESTAL CROP",      alt: "LA MADONNA — pedestal editorial pacing" },
-  { src: "/la-madonna/la-madonna-06-angled-detail.png", label: "06 — ANGLED DETAIL",      alt: "LA MADONNA — angled gold-piping detail" },
+  { src: "/la-madonna/la-madonna-01-front.png",        label: "01 — FRONT",          alt: "LA MADONNA — full front view, gold mesh corset" },
+  { src: "/la-madonna/la-madonna-02-pedestal.png",     label: "02 — PEDESTAL",       alt: "LA MADONNA — three-quarter on red velvet pedestal" },
+  { src: "/la-madonna/la-madonna-03-cup-macro.png",    label: "03 — CUP MACRO",      alt: "LA MADONNA — upper cup mesh macro" },
+  { src: "/la-madonna/la-madonna-04-top.png",          label: "04 — TOP VIEW",       alt: "LA MADONNA — overhead architectural form" },
+  { src: "/la-madonna/la-madonna-05-bust-detail.png",  label: "05 — BUST DETAIL",    alt: "LA MADONNA — bust and front piping detail" },
 ];
 
 const PRICE_USD = 28500;
@@ -236,13 +235,13 @@ export default function LaMadonnaPage() {
 
         .lm-gallery-thumbs {
           display: grid;
-          grid-template-columns: repeat(6, 1fr);
+          grid-template-columns: repeat(5, 1fr);
           gap: 32px;
           padding: clamp(36px, 6vh, 72px) clamp(24px, 6vw, 96px) 0;
           max-width: 1300px; margin: 0 auto;
         }
         @media (max-width: 768px) {
-          .lm-gallery-thumbs { grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 36px 18px 0; }
+          .lm-gallery-thumbs { grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 32px 14px 0; }
         }
         .lm-thumb {
           background: #050505; border: none; padding: 0; cursor: pointer;
