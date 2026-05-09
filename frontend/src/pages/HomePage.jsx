@@ -369,6 +369,12 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           { 
+            title: "LA MADONNA", 
+            image: "/la-madonna/la-madonna-hero.png", 
+            href: "/la-madonna",
+            subtitle: "Stripped to Gold."
+          },
+          { 
             title: "DRAPE", 
             image: products.drape?.imageUrl, 
             href: "/products/drape" 

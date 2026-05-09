@@ -500,6 +500,22 @@ const CORE_PRODUCTS = [
     isFeatured: true,
     displayOrder: 8,
   },
+  {
+    id: 'la-madonna',
+    name: 'LA MADONNA',
+    slug: 'la-madonna',
+    materialLine: 'Architectural Gold Mesh · Corset Form',
+    imageUrl: '/la-madonna/la-madonna-category.png',
+    href: '/la-madonna',
+    price_range: 'COMING SOON',
+    inventory_count: 0,
+    is_core: true,
+    category: 'bracelets',
+    audience: ['ladies', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 2,
+  },
 ];
 
 // Additional drop products as fallback
