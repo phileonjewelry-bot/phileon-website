@@ -94,29 +94,39 @@ export default function LaMadonnaPage() {
         }
 
         .lm-hero-media {
+          /* Centered, contained — does NOT fill the section. The hero
+             section stays 92vh but the image breathes inside it,
+             anchored to bottom so the corset / pedestal stay the focus. */
           position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
+          left: 50%;
+          bottom: 0;
+          transform: translateX(-50%);
+          max-width: 92vw;
+          max-height: 68vh;
+          width: auto;
+          height: 68vh;
           object-fit: contain;
-          object-position: center center;
-          background: #050505;
+          object-position: center bottom;
+          background: transparent;
           /* Cinematic drift — scale 1→1.018 + translateY -6→6 over 18s */
           animation: lmHeroDrift 18s ease-in-out infinite alternate;
           will-change: transform;
-          transform-origin: center center;
+          transform-origin: center bottom;
         }
         @keyframes lmHeroDrift {
-          0%   { transform: translateY(-6px) scale(1); }
-          100% { transform: translateY(6px) scale(1.018); }
+          0%   { transform: translateX(-50%) translateY(-6px) scale(1); }
+          100% { transform: translateX(-50%) translateY(6px) scale(1.018); }
         }
-        /* Mobile: reduce motion by ~40% */
+        /* Mobile: reduce motion ~40% + tighter image scale */
         @keyframes lmHeroDriftMobile {
-          0%   { transform: translateY(-3.6px) scale(1); }
-          100% { transform: translateY(3.6px) scale(1.011); }
+          0%   { transform: translateX(-50%) translateY(-3.6px) scale(1); }
+          100% { transform: translateX(-50%) translateY(3.6px) scale(1.011); }
         }
         @media (max-width: 768px) {
           .lm-hero-media {
+            max-width: 76vw;
+            max-height: 60vh;
+            height: 60vh;
             animation: lmHeroDriftMobile 18s ease-in-out infinite alternate;
           }
         }
@@ -140,40 +150,50 @@ export default function LaMadonnaPage() {
         .lm-hero-overlay {
           position: absolute;
           z-index: 2;
-          left: 72px;
-          bottom: 72px;
-          max-width: min(640px, 80vw);
+          left: 56px;
+          bottom: 96px;
+          max-width: 460px;
           color: #FFFFFF;
           pointer-events: none;
         }
         @media (max-width: 768px) {
           .lm-hero-overlay {
-            left: 24px;
-            bottom: 36px;
-            max-width: 88vw;
+            left: 22px;
+            bottom: 64px;
+            max-width: 80vw;
           }
         }
 
         .lm-hero-title {
           font-family: 'Cinzel', serif;
-          font-weight: 600;
+          font-weight: 500;
           text-transform: uppercase;
-          letter-spacing: 0.16em;
-          font-size: clamp(48px, 8vw, 112px);
-          line-height: 0.96;
+          letter-spacing: -0.04em;
+          font-size: clamp(5rem, 9vw, 8rem);
+          line-height: 0.88;
           margin: 0;
-          color: #E6CFA8;        /* warm champagne — no glow */
+          color: #E6CFA8;        /* warm champagne matte */
+          opacity: 0.92;
+        }
+        @media (max-width: 768px) {
+          .lm-hero-title {
+            font-size: clamp(3.8rem, 16vw, 5.8rem);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+          }
         }
 
         .lm-hero-subline {
           font-family: 'Cormorant Garamond', serif;
           font-style: italic;
           font-weight: 300;
-          font-size: clamp(17px, 1.5vw, 22px);
-          color: rgba(230, 207, 168, 0.85);
-          letter-spacing: 0.01em;
-          line-height: 1.45;
-          margin: 22px 0 0 0;
+          font-size: clamp(15px, 1.25vw, 19px);
+          color: rgba(214, 178, 116, 0.78);   /* faded gold, not bright white */
+          opacity: 0.78;
+          letter-spacing: 0.012em;
+          line-height: 1.65;
+          max-width: 420px;
+          margin: 26px 0 0 0;
         }
         .lm-hero-subline span { display: block; }
 
