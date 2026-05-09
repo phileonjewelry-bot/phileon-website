@@ -508,7 +508,7 @@ const CORE_PRODUCTS = [
     name: 'LA MADONNA',
     slug: 'la-madonna',
     materialLine: 'Architectural Gold Mesh · Corset Form',
-    imageUrl: '/la-madonna/la-madonna-category.png',
+    imageUrl: '/images/la-madonna-hand-category.png',
     href: '/la-madonna',
     price_range: '$28,500 USD',
     inventory_count: 100,

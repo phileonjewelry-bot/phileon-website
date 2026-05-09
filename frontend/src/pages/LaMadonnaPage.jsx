@@ -348,8 +348,8 @@ export default function LaMadonnaPage() {
       {/* ─── HERO ────────────────────────────────────────────── */}
       <section className="lm-hero" data-testid="la-madonna-hero">
         <img
-          src="/la-madonna/la-madonna-hero.png"
-          alt="LA MADONNA — ceremonial gold corset on velvet pedestal"
+          src="/images/la-madonna-hero-monument.png"
+          alt="LA MADONNA — couture corset cuff on crimson velvet pedestal"
           className="lm-hero-media"
           loading="eager"
           decoding="async"

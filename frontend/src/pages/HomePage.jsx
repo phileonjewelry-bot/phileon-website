@@ -370,9 +370,15 @@ const HomePage = () => {
         const stripItems = [
           { 
             title: "LA MADONNA", 
-            image: "/la-madonna/la-madonna-hero.png", 
+            image: "/images/la-madonna-hand-category.png", 
             href: "/la-madonna",
-            subtitle: "Stripped to Gold."
+            subtitle: "She took the corset off. Then she put it back on. In gold."
+          },
+          { 
+            title: "LA MADONNA", 
+            image: "/images/la-madonna-hero-monument.png", 
+            href: "/la-madonna",
+            subtitle: "Stripped to gold."
           },
           { 
             title: "DRAPE", 
