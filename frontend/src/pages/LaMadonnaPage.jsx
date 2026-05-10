@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import Lightbox from "./laMadonna/Lightbox";
 
 /**
  * LA MADONNA — Full Editorial Product Page
@@ -49,6 +50,7 @@ const INCLUDED = [
 export default function LaMadonnaPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [activeIdx, setActiveIdx] = useState(0);
+  const [lightboxIdx, setLightboxIdx] = useState(null);
   const galleryRef = useRef(null);
 
   useEffect(() => {
@@ -229,6 +231,7 @@ export default function LaMadonnaPage() {
           position: relative;
           display: flex; align-items: center; justify-content: center;
           overflow: hidden;
+          padding: 0; border: none; cursor: zoom-in;
         }
         .lm-gallery-active img {
           max-width: 100%; max-height: 100%;
@@ -393,7 +396,13 @@ export default function LaMadonnaPage() {
       {/* ─── GALLERY ──────────────────────────────────────────── */}
       <section className="lm-gallery" data-testid="la-madonna-gallery" ref={galleryRef}>
         <div className="lm-gallery-stage lm-reveal">
-          <div className="lm-gallery-active" data-testid="la-madonna-gallery-active">
+          <button
+            type="button"
+            className="lm-gallery-active"
+            data-testid="la-madonna-gallery-active"
+            onClick={() => setLightboxIdx(activeIdx)}
+            aria-label="Open viewing room"
+          >
             <img
               key={activeImg.src}
               src={activeImg.src}
@@ -401,7 +410,7 @@ export default function LaMadonnaPage() {
               loading="eager"
               decoding="async"
             />
-          </div>
+          </button>
         </div>
 
         <div className="lm-gallery-thumbs lm-reveal" data-testid="la-madonna-gallery-thumbs">
@@ -409,7 +418,10 @@ export default function LaMadonnaPage() {
             <button
               key={g.src}
               type="button"
-              onClick={() => setActiveIdx(i)}
+              onClick={() => {
+                setActiveIdx(i);
+                setLightboxIdx(i);
+              }}
               className={`lm-thumb${i === activeIdx ? " is-active" : ""}`}
               aria-label={g.label}
               data-testid={`la-madonna-thumb-${i + 1}`}
@@ -420,6 +432,17 @@ export default function LaMadonnaPage() {
           ))}
         </div>
       </section>
+
+      {/* ─── CINEMATIC LIGHTBOX ──────────────────────────────── */}
+      <Lightbox
+        items={GALLERY}
+        openIndex={lightboxIdx}
+        onClose={() => setLightboxIdx(null)}
+        onChange={(i) => {
+          setLightboxIdx(i);
+          setActiveIdx(i);
+        }}
+      />
 
       {/* ─── SPECIFICATION BLOCK ──────────────────────────────── */}
       <section className="lm-spec lm-reveal" data-testid="la-madonna-spec">

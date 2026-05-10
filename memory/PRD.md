@@ -19,6 +19,27 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA MADONNA Cinematic Lightbox
+- Built dedicated viewing-room lightbox at `/app/frontend/src/pages/laMadonna/Lightbox.jsx`.
+- Framer Motion crossfades (0.45s, cubic-bezier(0.22,1,0.36,1)), 0.98 → 1
+  scale, no bounce.
+- Full black backdrop, image contain-fit at 88vh × 82vw desktop / 72vh mobile.
+- Custom gold SVG arrow cursors on left/right click zones.
+- ESC closes, ←/→ navigates with wrap, swipe (>48px) on mobile, click backdrop
+  closes, body scroll locked.
+- Top chrome: "LA MADONNA · ARCHIVE" eyebrow + close pill. Bottom chrome:
+  slot label + counter "01 / 10" with tabular-nums.
+- Bottom thumbnail strip — center-justified desktop, horizontal-scroll
+  snap-x on mobile.
+- When slot 09 or 10 is active, all UI chrome dims to opacity 0.45
+  (full opacity on hover) so portraits dominate the frame.
+- Preloads neighbour images for instant crossfades.
+- Reduced-motion respected.
+
+### 2026-02 — LA MADONNA Gallery → 10 Shots
+- Added editorial portrait (gold-bokeh, raised wrist) as slot 09; pushed
+  full-body campaign to slot 10. Grid: 5×2 desktop / 2×5 mobile.
+
 ### 2026-02 — LA MADONNA Gallery Expansion (5 → 9 Shots)
 - Added 4 new authentic worn/editorial shots: collarbone (HUMAN ENTRY),
   worn-hand against void (ARCHITECTURE), hip context with sheer bodysuit
