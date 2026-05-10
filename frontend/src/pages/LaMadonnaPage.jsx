@@ -24,7 +24,8 @@ const GALLERY = [
   { src: "/la-madonna/la-madonna-05-bust-detail.png",    label: "06 — BUST DETAIL",    alt: "LA MADONNA — bust and front piping detail" },
   { src: "/la-madonna/la-madonna-04-top.png",            label: "07 — TOP VIEW",       alt: "LA MADONNA — overhead architectural form" },
   { src: "/la-madonna/la-madonna-08-hip-context.png",    label: "08 — CONTEXT",        alt: "LA MADONNA — worn at hip, sheer bodysuit" },
-  { src: "/la-madonna/la-madonna-09-campaign.png",       label: "09 — CAMPAIGN",       alt: "LA MADONNA — full editorial portrait" },
+  { src: "/la-madonna/la-madonna-10-portrait.webp",      label: "09 — PORTRAIT",       alt: "LA MADONNA — editorial portrait with raised wrist, gold bokeh" },
+  { src: "/la-madonna/la-madonna-09-campaign.png",       label: "10 — CAMPAIGN",       alt: "LA MADONNA — full editorial portrait" },
 ];
 
 const PRICE_USD = 28500;
@@ -245,7 +246,7 @@ export default function LaMadonnaPage() {
           max-width: 1300px; margin: 0 auto;
         }
         @media (max-width: 768px) {
-          .lm-gallery-thumbs { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 32px 14px 0; }
+          .lm-gallery-thumbs { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 32px 14px 0; }
         }
         .lm-thumb {
           background: #050505; border: none; padding: 0; cursor: pointer;
