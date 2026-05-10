@@ -19,6 +19,25 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA MADONNA Gallery Expansion (5 → 9 Shots)
+- Added 4 new authentic worn/editorial shots: collarbone (HUMAN ENTRY),
+  worn-hand against void (ARCHITECTURE), hip context with sheer bodysuit
+  (CONTEXT), full editorial portrait (CAMPAIGN).
+- Re-sequenced gallery in proper luxury editorial flow: object hero → human
+  entry → worn architecture → craft macros → overhead architecture →
+  lifestyle → campaign closer.
+- Switched thumb `object-fit` from `contain` → `cover` so portrait shots
+  show meaningful crops instead of letterboxed bars.
+- Forced `loading="eager"` on thumbs (only 9, painting reliably below the
+  fold matters more than tiny lazy-load wins).
+- Grid retuned: 5-col desktop (5 + 4 wrap), 3-col mobile.
+
+### 2026-02 — LA MADONNA Asset Routing Per Spec
+- Product page hero → `/images/la-madonna-hero-monument.png` (no-hand monument).
+- Ladies > Bracelets/Cuffs catalog card → `/images/la-madonna-hand-category.png`.
+- Homepage cinematic strip → 2-slide collective sequence: hand first
+  ("She took the corset off…"), monument second ("Stripped to gold.").
+
 ### 2026-02 — LA MADONNA Full Editorial Page Live
 - Replaced AI-generated 6-image gallery with 5 authentic user photos
   (`la-madonna-01-front.png` … `la-madonna-05-bust-detail.png`).

@@ -16,11 +16,15 @@ import { useAddToCart } from "../hooks/useAddToCart";
  */
 
 const GALLERY = [
-  { src: "/la-madonna/la-madonna-01-front.png",        label: "01 — FRONT",          alt: "LA MADONNA — full front view, gold mesh corset" },
-  { src: "/la-madonna/la-madonna-02-pedestal.png",     label: "02 — PEDESTAL",       alt: "LA MADONNA — three-quarter on red velvet pedestal" },
-  { src: "/la-madonna/la-madonna-03-cup-macro.png",    label: "03 — CUP MACRO",      alt: "LA MADONNA — upper cup mesh macro" },
-  { src: "/la-madonna/la-madonna-04-top.png",          label: "04 — TOP VIEW",       alt: "LA MADONNA — overhead architectural form" },
-  { src: "/la-madonna/la-madonna-05-bust-detail.png",  label: "05 — BUST DETAIL",    alt: "LA MADONNA — bust and front piping detail" },
+  { src: "/la-madonna/la-madonna-01-front.png",          label: "01 — FRONT",          alt: "LA MADONNA — full front view, gold mesh corset" },
+  { src: "/la-madonna/la-madonna-02-pedestal.png",       label: "02 — PEDESTAL",       alt: "LA MADONNA — three-quarter on red velvet pedestal" },
+  { src: "/la-madonna/la-madonna-06-worn-collarbone.png", label: "03 — WORN",           alt: "LA MADONNA — held against the collarbone" },
+  { src: "/la-madonna/la-madonna-07-worn-hand.png",      label: "04 — ARCHITECTURE",   alt: "LA MADONNA — worn on outstretched wrist against void" },
+  { src: "/la-madonna/la-madonna-03-cup-macro.png",      label: "05 — CUP MACRO",      alt: "LA MADONNA — upper cup mesh macro" },
+  { src: "/la-madonna/la-madonna-05-bust-detail.png",    label: "06 — BUST DETAIL",    alt: "LA MADONNA — bust and front piping detail" },
+  { src: "/la-madonna/la-madonna-04-top.png",            label: "07 — TOP VIEW",       alt: "LA MADONNA — overhead architectural form" },
+  { src: "/la-madonna/la-madonna-08-hip-context.png",    label: "08 — CONTEXT",        alt: "LA MADONNA — worn at hip, sheer bodysuit" },
+  { src: "/la-madonna/la-madonna-09-campaign.png",       label: "09 — CAMPAIGN",       alt: "LA MADONNA — full editorial portrait" },
 ];
 
 const PRICE_USD = 28500;
@@ -236,12 +240,12 @@ export default function LaMadonnaPage() {
         .lm-gallery-thumbs {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
-          gap: 32px;
+          gap: 24px;
           padding: clamp(36px, 6vh, 72px) clamp(24px, 6vw, 96px) 0;
           max-width: 1300px; margin: 0 auto;
         }
         @media (max-width: 768px) {
-          .lm-gallery-thumbs { grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 32px 14px 0; }
+          .lm-gallery-thumbs { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 32px 14px 0; }
         }
         .lm-thumb {
           background: #050505; border: none; padding: 0; cursor: pointer;
@@ -251,7 +255,7 @@ export default function LaMadonnaPage() {
         }
         .lm-thumb:hover { opacity: 0.85; transform: scale(1.01); }
         .lm-thumb.is-active { opacity: 1; }
-        .lm-thumb img { width: 100%; height: 100%; object-fit: contain; object-position: center center; background: #050505; }
+        .lm-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center center; background: #050505; }
         .lm-thumb-label {
           position: absolute; bottom: 6px; left: 8px;
           font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.28em;
@@ -409,7 +413,7 @@ export default function LaMadonnaPage() {
               aria-label={g.label}
               data-testid={`la-madonna-thumb-${i + 1}`}
             >
-              <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
+              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
               <span className="lm-thumb-label">{g.label.split("—")[0].trim()}</span>
             </button>
           ))}
