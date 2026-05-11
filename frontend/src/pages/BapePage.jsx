@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 /**
- * BAPE™ — HOMAGE SERIES
+ * BAPE™ — TRIBUTE SERIES
  * "Not collaboration. Recognition."
  *
  * Full-screen bright luxury environment. Deliberately breaks the dark
@@ -199,10 +199,10 @@ export default function BapePage() {
         <span>RETURN</span>
       </Link>
 
-      <span className="bp-eyebrow-fixed">PHILEON · HOMAGE SERIES</span>
+      <span className="bp-eyebrow-fixed">PHILEON · TRIBUTE SERIES</span>
 
       <section className="bp-stage" data-testid="bape-stage">
-        <p className="bp-collection" data-testid="bape-collection">HOMAGE SERIES</p>
+        <p className="bp-collection" data-testid="bape-collection">TRIBUTE SERIES</p>
 
         <div className="bp-ring-wrap">
           <img

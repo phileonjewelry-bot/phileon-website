@@ -525,7 +525,7 @@ const CORE_PRODUCTS = [
     id: 'bape',
     name: 'BAPE™',
     slug: 'bape',
-    materialLine: 'Homage Series · Multi-stone Signet',
+    materialLine: 'Tribute Series · Multi-stone Signet',
     imageUrl: '/homage/bape-ring.webp',
     href: '/homage/bape',
     inventory_count: 100,

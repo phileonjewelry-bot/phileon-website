@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 /**
- * BapeShopCard — Homage Series cultural artifact card
+ * BapeShopCard — Tribute Series cultural artifact card
  *
  * Deliberately breaks the dark PHILEON shop system.
  * Bright luxury / glossy acrylic / reflective / collectible-object energy.
@@ -16,7 +16,7 @@ export default function BapeShopCard() {
       to="/homage/bape"
       className="bape-card"
       data-testid="bape-shop-card"
-      aria-label="BAPE — Homage Series — Coming Soon"
+      aria-label="BAPE — Tribute Series — Coming Soon"
     >
       <style>{`
         .bape-card {
@@ -163,7 +163,7 @@ export default function BapeShopCard() {
 
       <div className="bape-card__chrome">
         <div className="bape-card__copy">
-          <p className="bape-card__series">HOMAGE SERIES</p>
+          <p className="bape-card__series">TRIBUTE SERIES</p>
           <h3 className="bape-card__title">
             BAPE<sup>™</sup>
           </h3>
