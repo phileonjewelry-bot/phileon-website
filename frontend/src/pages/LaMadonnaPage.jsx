@@ -491,10 +491,9 @@ export default function LaMadonnaPage() {
         </div>
       </section>
 
-      {/* ─── ACQUIRE ──────────────────────────────────────────── */}
+      {/* ─── ADD TO CART ──────────────────────────────────────── */}
       <section className="lm-acquire lm-reveal" data-testid="la-madonna-acquire">
         <div className="lm-acquire-inner">
-          <p className="lm-section-eyebrow">ACQUIRE</p>
           <h2 className="lm-acquire-title" data-testid="la-madonna-acquire-title">LA MADONNA</h2>
           <p className="lm-acquire-price" data-testid="la-madonna-price">{formattedPrice}</p>
           <p className="lm-acquire-leadtime">Made-to-order · 8–12 weeks</p>
@@ -505,7 +504,7 @@ export default function LaMadonnaPage() {
             className="lm-acquire-button"
             data-testid="la-madonna-add-to-cart-btn"
           >
-            {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ACQUIRE"}
+            {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
           </button>
         </div>
       </section>
