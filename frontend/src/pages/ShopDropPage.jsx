@@ -7,6 +7,7 @@ import StockBadge from '@/components/StockBadge';
 import { Button } from '@/components/ui/button';
 import { products } from '@/data/products';
 import { LiveFromPrice } from '@/components/LiveFromPrice';
+import BapeShopCard from '@/components/shop/BapeShopCard';
 import '../styles/shop-drop.css';
 
 // Helper to format price from products.js basePrice
@@ -60,6 +61,7 @@ const SHOP_COLLECTION_MAP = {
   'the-bamburgh': 'collective',
   'bamburgh': 'collective',
   'drape': 'collective',
+  'bape': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -519,6 +521,22 @@ const CORE_PRODUCTS = [
     isFeatured: true,
     displayOrder: 2,
   },
+  {
+    id: 'bape',
+    name: 'BAPE™',
+    slug: 'bape',
+    materialLine: 'Homage Series · Multi-stone Signet',
+    imageUrl: '/homage/bape-ring.webp',
+    href: '/homage/bape',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['gentlemens-club', 'ladies', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 3,
+    customCard: 'bape',
+  },
 ];
 
 // Additional drop products as fallback
@@ -851,6 +869,18 @@ const ShopDropPage = () => {
                 // Use clean product shot for non-BOUND items
                 const cardImage = product.imageUrl;
                 
+                if (product.customCard === 'bape') {
+                  return (
+                    <div
+                      key={product.id}
+                      className={`shop-drop__card-wrapper ${visibleProducts.includes(index) ? 'is-visible' : ''}`}
+                      style={{ position: 'relative', transitionDelay: `${index * 80}ms` }}
+                    >
+                      <BapeShopCard />
+                    </div>
+                  );
+                }
+
                 return (
                   <div 
                     key={product.id}
@@ -953,6 +983,18 @@ const ShopDropPage = () => {
                     product.images?.[0] ||
                     product.imageUrl ||
                     'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80';
+
+                  if (product.customCard === 'bape') {
+                    return (
+                      <div
+                        key={product.id}
+                        className={`shop-drop__card-wrapper ${visibleProducts.includes(globalIndex) ? 'is-visible' : ''}`}
+                        style={{ position: 'relative', transitionDelay: `${index * 80}ms` }}
+                      >
+                        <BapeShopCard />
+                      </div>
+                    );
+                  }
 
                   return (
                     <div

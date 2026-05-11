@@ -19,6 +19,19 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — HOMAGE SERIES: BAPE™ Placeholder
+- New route `/homage/bape` with full-screen bright luxury environment.
+- `BapePage.jsx` — radial white→champagne gradient, soft particle drift,
+  stone-glow accents (red/gold/blue), centered ring with subtle breath
+  animation, bottom tagline "Not collaboration. *Recognition.*"
+- `BapeShopCard.jsx` — bespoke catalog card that intentionally breaks
+  the dark PHILEON system. Glossy acrylic feel, reflective base, drop
+  shadow lift on hover, stone-glow pulse, "RECOGNITION." fades in
+  beneath title on hover.
+- Wired into `CORE_PRODUCTS` with `customCard: 'bape'` flag; intercepted
+  in both ring-grid and standard-grid renderers in `ShopDropPage.jsx`.
+- Added to `SHOP_COLLECTION_MAP` as 'collective'.
+
 ### 2026-02 — LA MADONNA Lightbox — Archive Tick Indicator
 - Added 10-tick micro index above thumbnail strip, centered, 8px gap.
 - Inactive ticks: 10px × 1px, rgba(212,175,55,0.45) @ 0.22 opacity.
