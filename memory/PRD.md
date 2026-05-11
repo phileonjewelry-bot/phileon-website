@@ -19,6 +19,14 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA MADONNA Lightbox — Archive Tick Indicator
+- Added 10-tick micro index above thumbnail strip, centered, 8px gap.
+- Inactive ticks: 10px × 1px, rgba(212,175,55,0.45) @ 0.22 opacity.
+- Active tick: expands to 26px, rgba(245,214,142,0.95) @ opacity 1.
+- Transitions 200ms ease on width / opacity / background.
+- Clickable navigation; aria-label="View image N"; respects portrait-focus
+  dim and reduced-motion.
+
 ### 2026-02 — LA MADONNA Cinematic Lightbox
 - Built dedicated viewing-room lightbox at `/app/frontend/src/pages/laMadonna/Lightbox.jsx`.
 - Framer Motion crossfades (0.45s, cubic-bezier(0.22,1,0.36,1)), 0.98 → 1

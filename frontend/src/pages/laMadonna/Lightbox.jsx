@@ -190,6 +190,46 @@ export default function Lightbox({ items, openIndex, onClose, onChange }) {
               color: rgba(214,178,116,0.55);
             }
 
+            /* Archive tick progress indicator */
+            .lm-lightbox-ticks {
+              position: fixed; left: 50%; transform: translateX(-50%);
+              bottom: 102px;
+              z-index: 6;
+              display: flex; align-items: center; gap: 8px;
+              padding: 6px 8px;
+              transition: opacity ${FADE}s cubic-bezier(0.22,1,0.36,1);
+            }
+            @media (max-width: 768px) {
+              .lm-lightbox-ticks { bottom: 80px; }
+            }
+            .lm-lightbox[data-portrait-focus="true"] .lm-lightbox-ticks {
+              opacity: 0.4;
+            }
+            .lm-lightbox[data-portrait-focus="true"] .lm-lightbox-ticks:hover {
+              opacity: 1;
+            }
+            .lm-lightbox-tick {
+              padding: 6px 0;
+              background: transparent; border: none; cursor: pointer;
+              display: inline-flex; align-items: center;
+            }
+            .lm-lightbox-tick::after {
+              content: "";
+              display: block;
+              width: 10px; height: 1px;
+              background: rgba(212, 175, 55, 0.45);
+              opacity: 0.22;
+              transition:
+                width 200ms ease,
+                opacity 200ms ease,
+                background-color 200ms ease;
+            }
+            .lm-lightbox-tick[aria-current="true"]::after {
+              width: 26px;
+              background: rgba(245, 214, 142, 0.95);
+              opacity: 1;
+            }
+
             /* Bottom thumbnail strip */
             .lm-lightbox-strip {
               position: fixed; left: 0; right: 0; bottom: 28px;
@@ -243,7 +283,7 @@ export default function Lightbox({ items, openIndex, onClose, onChange }) {
 
             @media (prefers-reduced-motion: reduce) {
               .lm-lightbox, .lm-lightbox-img, .lm-lightbox-chrome, .lm-lightbox-strip,
-              .lm-lightbox-strip button {
+              .lm-lightbox-strip button, .lm-lightbox-ticks, .lm-lightbox-tick::after {
                 transition: none !important;
               }
             }
@@ -318,6 +358,27 @@ export default function Lightbox({ items, openIndex, onClose, onChange }) {
             <span className="lm-lightbox-counter" data-testid="la-madonna-lightbox-counter">
               {counter}
             </span>
+          </div>
+
+          {/* ARCHIVE TICK INDEX */}
+          <div
+            className="lm-lightbox-ticks"
+            data-testid="la-madonna-lightbox-ticks"
+            onClick={(e) => e.stopPropagation()}
+            role="tablist"
+            aria-label="Archive index"
+          >
+            {items.map((_, i) => (
+              <button
+                key={`tick-${i}`}
+                type="button"
+                className="lm-lightbox-tick"
+                aria-label={`View image ${i + 1}`}
+                aria-current={i === openIndex ? "true" : "false"}
+                onClick={() => onChange(i)}
+                data-testid={`la-madonna-lightbox-tick-${i + 1}`}
+              />
+            ))}
           </div>
 
           {/* THUMBNAIL STRIP */}
