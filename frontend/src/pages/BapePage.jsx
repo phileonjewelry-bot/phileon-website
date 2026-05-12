@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import Lightbox from "../components/CinematicLightbox";
 
 /**
  * BAPE™ — TRIBUTE SERIES
@@ -11,7 +12,18 @@ import { ArrowLeft } from "lucide-react";
  * staged like an Art Basel object.
  */
 
+const GALLERY = [
+  { src: "/homage/bape-ring.webp",         label: "01 — SPOTLIGHTS",  alt: "BAPE — under spotlights with mirror reflection" },
+  { src: "/homage/bape-01-front.png",      label: "02 — FRONT",       alt: "BAPE — front product shot on white" },
+  { src: "/homage/bape-02-angled.png",     label: "03 — THREE QUARTER", alt: "BAPE — three-quarter angle on black" },
+  { src: "/homage/bape-04-top.png",        label: "04 — OVERHEAD",    alt: "BAPE — top-down architecture on black" },
+  { src: "/homage/bape-05-stone-macro.png", label: "05 — STONE FIELD", alt: "BAPE — macro detail of the multi-color stone composition" },
+  { src: "/homage/bape-03-side-enamel.png", label: "06 — ENAMEL FLAG", alt: "BAPE — macro detail of the side enamel panel" },
+];
+
 export default function BapePage() {
+  const [lightboxIdx, setLightboxIdx] = useState(null);
+
   useEffect(() => {
     const root = document.querySelector("[data-page='bape']");
     if (!root) return;
@@ -165,6 +177,64 @@ export default function BapePage() {
           display: inline-block;
         }
 
+        /* ═════ DETAIL ARCHIVE GALLERY ═══════════════════════ */
+        .bp-archive {
+          position: relative; z-index: 3;
+          background: #050505;
+          padding: clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px);
+          color: rgba(230,207,168,0.85);
+        }
+        .bp-archive-eyebrow {
+          font-family: 'Cinzel', serif; font-weight: 500;
+          font-size: 11px; letter-spacing: 0.42em; text-transform: uppercase;
+          color: rgba(214,178,116,0.55);
+          padding-top: 22px; position: relative; display: inline-block;
+          margin: 0 0 36px 0;
+        }
+        .bp-archive-eyebrow::before {
+          content: ""; position: absolute; top: 0; left: 0;
+          width: 32px; height: 1px; background: rgba(214,178,116,0.4);
+        }
+        .bp-archive-intro {
+          max-width: 540px; margin: 0 0 48px 0;
+          font-family: 'Cormorant Garamond', serif; font-weight: 300;
+          font-style: italic; font-size: clamp(15px, 1.15vw, 18px);
+          color: rgba(230,207,168,0.6); line-height: 1.7;
+        }
+        .bp-archive-grid {
+          display: grid; gap: 18px;
+          grid-template-columns: repeat(3, 1fr);
+          max-width: 1300px; margin: 0 auto;
+        }
+        @media (max-width: 1024px) { .bp-archive-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 540px)  { .bp-archive-grid { grid-template-columns: 1fr; } }
+
+        .bp-archive-cell {
+          aspect-ratio: 1/1;
+          background: #050505;
+          border: 1px solid rgba(214,178,116,0.08);
+          padding: 0; cursor: zoom-in;
+          overflow: hidden; position: relative;
+          transition: border-color 360ms cubic-bezier(0.22,1,0.36,1);
+        }
+        .bp-archive-cell:hover { border-color: rgba(214,178,116,0.4); }
+        .bp-archive-cell img {
+          width: 100%; height: 100%;
+          object-fit: cover; object-position: center;
+          display: block;
+          transition: transform 600ms cubic-bezier(0.22,1,0.36,1),
+                      opacity 360ms ease;
+          opacity: 0.92;
+        }
+        .bp-archive-cell:hover img { transform: scale(1.02); opacity: 1; }
+        .bp-archive-cell-label {
+          position: absolute; left: 12px; bottom: 10px;
+          font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.32em;
+          color: rgba(214,178,116,0.6); text-transform: uppercase;
+          pointer-events: none;
+          mix-blend-mode: difference;
+        }
+
         /* ═════ BOTTOM TAGLINE ═══════════════════════════════ */
         .bp-tagline {
           position: relative; z-index: 3;
@@ -225,11 +295,46 @@ export default function BapePage() {
         <span className="bp-status" data-testid="bape-status">COMING SOON</span>
       </section>
 
+      {/* ─── DETAIL ARCHIVE ──────────────────────────────────── */}
+      <section className="bp-archive" data-testid="bape-archive">
+        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
+          <p className="bp-archive-eyebrow">DETAIL ARCHIVE</p>
+          <p className="bp-archive-intro">
+            Six frames. Studied like an object on a plinth — examined for
+            placement, intent, and proportion. Click any frame to enter the
+            archive room.
+          </p>
+        </div>
+        <div className="bp-archive-grid" data-testid="bape-archive-grid">
+          {GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              type="button"
+              className="bp-archive-cell"
+              aria-label={g.label}
+              onClick={() => setLightboxIdx(i)}
+              data-testid={`bape-archive-cell-${i + 1}`}
+            >
+              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
+              <span className="bp-archive-cell-label">{g.label.split("—")[0].trim()}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
       <section className="bp-tagline" data-testid="bape-tagline">
         <p className="bp-tagline-text">
           Not collaboration. <em>Recognition.</em>
         </p>
       </section>
+
+      <Lightbox
+        items={GALLERY}
+        openIndex={lightboxIdx}
+        onClose={() => setLightboxIdx(null)}
+        onChange={(i) => setLightboxIdx(i)}
+        archiveLabel="BAPE · TRIBUTE SERIES"
+      />
     </div>
   );
 }

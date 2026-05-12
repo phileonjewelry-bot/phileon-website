@@ -11,7 +11,7 @@ import { X } from "lucide-react";
 const EASE = [0.22, 1, 0.36, 1];
 const FADE = 0.45;
 
-export default function Lightbox({ items, openIndex, onClose, onChange }) {
+export default function Lightbox({ items, openIndex, onClose, onChange, archiveLabel = "ARCHIVE" }) {
   const isOpen = openIndex !== null;
   const total = items.length;
   const active = isOpen ? items[openIndex] : null;
@@ -292,7 +292,7 @@ export default function Lightbox({ items, openIndex, onClose, onChange }) {
           {/* TOP CHROME — counter + close */}
           <div className="lm-lightbox-chrome lm-lightbox-chrome--top" aria-hidden={false}>
             <span className="lm-lightbox-eyebrow" data-testid="la-madonna-lightbox-eyebrow">
-              LA MADONNA · ARCHIVE
+              {archiveLabel}
             </span>
             <button
               type="button"

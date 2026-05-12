@@ -32,6 +32,23 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
   in both ring-grid and standard-grid renderers in `ShopDropPage.jsx`.
 - Added to `SHOP_COLLECTION_MAP` as 'collective'.
 
+### 2026-02 — BAPE™ Detail Archive Gallery + Lightbox Reuse
+- Added 5 authentic BAPE photos (front, three-quarter, side enamel macro,
+  top view, stone-field macro) to `/homage/bape`. Combined with the original
+  spotlight hero render → 6-frame DETAIL ARCHIVE.
+- Editorial pivot: bright luxury hero → dark archive room ("private viewing"
+  contrast). 3-col desktop / 2-col tablet / 1-col mobile grid with subtle
+  gold hairline borders that intensify on hover.
+- Renamed `pages/laMadonna/Lightbox.jsx` → `components/CinematicLightbox.jsx`
+  (shared component). Added `archiveLabel` prop (default `"ARCHIVE"`).
+- LA MADONNA passes `"LA MADONNA · ARCHIVE"`, BAPE passes
+  `"BAPE · TRIBUTE SERIES"`.
+
+### 2026-02 — TRIBUTE SERIES Label Rename
+- Renamed all visible "HOMAGE SERIES" copy → "TRIBUTE SERIES" across
+  BapePage eyebrow + collection label, BapeShopCard series, and shop
+  metadata. Route URL `/homage/bape` kept stable (path identifier).
+
 ### 2026-02 — LA MADONNA Lightbox — Archive Tick Indicator
 - Added 10-tick micro index above thumbnail strip, centered, 8px gap.
 - Inactive ticks: 10px × 1px, rgba(212,175,55,0.45) @ 0.22 opacity.

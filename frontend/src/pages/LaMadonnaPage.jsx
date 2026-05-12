@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
-import Lightbox from "./laMadonna/Lightbox";
+import Lightbox from "../components/CinematicLightbox";
 
 /**
  * LA MADONNA — Full Editorial Product Page
@@ -442,6 +442,7 @@ export default function LaMadonnaPage() {
           setLightboxIdx(i);
           setActiveIdx(i);
         }}
+        archiveLabel="LA MADONNA · ARCHIVE"
       />
 
       {/* ─── SPECIFICATION BLOCK ──────────────────────────────── */}
