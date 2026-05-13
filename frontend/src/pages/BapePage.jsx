@@ -157,22 +157,44 @@ export default function BapePage() {
         }
         .bp-back:hover { color: rgba(26,24,21,0.9); }
 
-        .bp-eyebrow-fixed {
-          position: absolute; top: 30px; right: 32px; z-index: 6;
-          font-family: 'Cinzel', serif; font-size: 10.5px; letter-spacing: 0.42em;
+        /* ═════ EDITORIAL HEADER ═════════════════════════════ */
+        .bp-header {
+          position: relative; z-index: 4;
+          max-width: 1200px; margin: 0 auto;
+          padding: 96px clamp(20px, 6vw, 96px) 0;
+          display: flex; flex-direction: column; gap: 14px;
+          text-align: left;
+        }
+        @media (max-width: 768px) {
+          .bp-header { padding: 84px 18px 0; gap: 10px; }
+        }
+        .bp-header-eyebrow {
+          font-family: 'Cinzel', serif; font-weight: 500;
+          font-size: 10.5px; letter-spacing: 0.42em;
           color: rgba(26,24,21,0.45); text-transform: uppercase;
+          margin: 0;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+          .bp-header-eyebrow { font-size: 9.5px; letter-spacing: 0.32em; }
+        }
+        .bp-header-title {
+          font-family: 'Cinzel', serif; font-weight: 400;
+          font-size: clamp(1.5rem, 2.6vw, 2rem);
+          letter-spacing: 0.18em;
+          color: #1A1815;
+          margin: 0; text-transform: uppercase;
         }
 
         /* ═════ STAGE ═════════════════════════════════════════ */
         .bp-stage {
           position: relative; z-index: 3;
-          min-height: 100vh;
           display: flex; flex-direction: column;
           align-items: center; justify-content: center;
-          padding: 120px 32px 80px;
+          padding: 40px 32px 80px;
           text-align: center;
         }
-        @media (max-width: 768px) { .bp-stage { padding: 110px 18px 60px; } }
+        @media (max-width: 768px) { .bp-stage { padding: 32px 18px 60px; } }
 
         .bp-collection {
           font-family: 'Cinzel', serif; font-weight: 500;
@@ -535,10 +557,12 @@ export default function BapePage() {
         <span>RETURN</span>
       </Link>
 
-      <span className="bp-eyebrow-fixed">PHILEON · TRIBUTE SERIES</span>
+      <header className="bp-header" data-testid="bape-header">
+        <p className="bp-header-eyebrow">PHILEON · TRIBUTE SERIES</p>
+        <h1 className="bp-header-title" data-testid="bape-collection">TRIBUTE SERIES</h1>
+      </header>
 
       <section className="bp-stage" data-testid="bape-stage">
-        <p className="bp-collection" data-testid="bape-collection">TRIBUTE SERIES</p>
 
         <div className="bp-ring-wrap">
           <img
@@ -551,9 +575,9 @@ export default function BapePage() {
           />
         </div>
 
-        <h1 className="bp-title" data-testid="bape-title">
+        <h2 className="bp-title" data-testid="bape-title">
           BAPE<sup>™</sup>
-        </h1>
+        </h2>
         <p className="bp-sub">For the ones who were really there.</p>
 
         <p className="bp-recognition" data-testid="bape-recognition">Recognition.</p>
