@@ -676,11 +676,11 @@ export default function BapePage() {
       {/* ─── DETAIL ARCHIVE ──────────────────────────────────── */}
       <section className="bp-archive" data-testid="bape-archive">
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <p className="bp-archive-eyebrow">DETAIL ARCHIVE</p>
+          <p className="bp-archive-eyebrow">TRIBUTE ARCHIVE</p>
           <p className="bp-archive-intro">
-            Ten frames. Object, macro, presence, lineage. Studied like a
-            plinth piece, then worn like one. Click any frame to enter the
-            archive room.
+            Ten images. One era. For the ones who were really there.
+            <br /><br />
+            Click any image to view the full archive.
           </p>
         </div>
         <div className="bp-archive-grid" data-testid="bape-archive-grid">
