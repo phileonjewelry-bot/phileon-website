@@ -13,12 +13,15 @@ import Lightbox from "../components/CinematicLightbox";
  */
 
 const GALLERY = [
-  { src: "/homage/bape-ring.webp",         label: "01 — SPOTLIGHTS",  alt: "BAPE — under spotlights with mirror reflection" },
-  { src: "/homage/bape-01-front.png",      label: "02 — FRONT",       alt: "BAPE — front product shot on white" },
-  { src: "/homage/bape-02-angled.png",     label: "03 — THREE QUARTER", alt: "BAPE — three-quarter angle on black" },
-  { src: "/homage/bape-04-top.png",        label: "04 — OVERHEAD",    alt: "BAPE — top-down architecture on black" },
-  { src: "/homage/bape-05-stone-macro.png", label: "05 — STONE FIELD", alt: "BAPE — macro detail of the multi-color stone composition" },
-  { src: "/homage/bape-03-side-enamel.png", label: "06 — ENAMEL FLAG", alt: "BAPE — macro detail of the side enamel panel" },
+  { src: "/homage/bape-ring.webp",          label: "01 — SPOTLIGHTS",    alt: "BAPE — under spotlights with mirror reflection" },
+  { src: "/homage/bape-01-front.png",       label: "02 — FRONT",         alt: "BAPE — front product shot on white" },
+  { src: "/homage/bape-02-angled.png",      label: "03 — THREE QUARTER", alt: "BAPE — three-quarter angle on black" },
+  { src: "/homage/bape-04-top.png",         label: "04 — OVERHEAD",      alt: "BAPE — top-down architecture on black" },
+  { src: "/homage/bape-05-stone-macro.png", label: "05 — STONE FIELD",   alt: "BAPE — macro detail of the multi-color stone composition" },
+  { src: "/homage/bape-03-side-enamel.png", label: "06 — ENAMEL FLAG",   alt: "BAPE — macro detail of the side enamel panel" },
+  { src: "/homage/bape-06-palm.png",        label: "07 — IN HAND",       alt: "BAPE — resting in an open palm, intimate scale" },
+  { src: "/homage/bape-07-worn-knuckle.png", label: "08 — WORN",          alt: "BAPE — worn across the knuckles" },
+  { src: "/homage/bape-08-campaign-fist.png", label: "09 — RECOGNITION",  alt: "BAPE — editorial campaign, fist forward in BAPE hoodie" },
 ];
 
 export default function BapePage() {
@@ -300,8 +303,8 @@ export default function BapePage() {
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <p className="bp-archive-eyebrow">DETAIL ARCHIVE</p>
           <p className="bp-archive-intro">
-            Six frames. Studied like an object on a plinth — examined for
-            placement, intent, and proportion. Click any frame to enter the
+            Nine frames. Object, macro, presence. Studied like a plinth
+            piece, then worn like one. Click any frame to enter the
             archive room.
           </p>
         </div>
