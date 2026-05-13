@@ -76,14 +76,13 @@ export default function BapePage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [selectedVariantId, setSelectedVariantId] = useState("14k-yellow");
   const [selectedRingSize, setSelectedRingSize] = useState("9");
+  const [isMounted, setIsMounted] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const selectedVariant = VARIANTS.find((v) => v.id === selectedVariantId) || VARIANTS[1];
 
   useEffect(() => {
-    const root = document.querySelector("[data-page='bape']");
-    if (!root) return;
-    const t = window.setTimeout(() => root.classList.add("bp-loaded"), 60);
+    const t = window.setTimeout(() => setIsMounted(true), 60);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -105,7 +104,7 @@ export default function BapePage() {
   const priceText = `$${selectedVariant.priceUsd.toLocaleString("en-US")} USD`;
 
   return (
-    <div className="bp-room" data-page="bape" data-testid="bape-page">
+    <div className={`bp-room${isMounted ? " bp-loaded" : ""}`} data-page="bape" data-testid="bape-page">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500&display=swap');
 

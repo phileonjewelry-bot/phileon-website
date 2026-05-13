@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 /**
  * BapeShopCard — Tribute Series cultural artifact card
  *
@@ -8,12 +6,13 @@ import { Link } from "react-router-dom";
  *
  * Drops straight into the `/shop` grid as a single CORE_PRODUCTS entry.
  * Renders its own visual world rather than using the standard card chrome.
+ * Uses a plain <a> (full browser nav) to match the rest of the catalog.
  */
 
 export default function BapeShopCard() {
   return (
-    <Link
-      to="/homage/bape"
+    <a
+      href="/homage/bape"
       className="bape-card"
       data-testid="bape-shop-card"
       aria-label="BAPE — Tribute Series — From $9,500 USD"
@@ -171,6 +170,6 @@ export default function BapeShopCard() {
         </div>
         <span className="bape-card__status">FROM $9,500</span>
       </div>
-    </Link>
+    </a>
   );
 }

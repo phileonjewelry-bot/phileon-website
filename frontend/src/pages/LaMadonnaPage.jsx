@@ -51,12 +51,11 @@ export default function LaMadonnaPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
   const galleryRef = useRef(null);
 
   useEffect(() => {
-    const fadeRoot = document.querySelector("[data-page='la-madonna']");
-    if (!fadeRoot) return;
-    const t = window.setTimeout(() => fadeRoot.classList.add("lm-loaded"), 60);
+    const t = window.setTimeout(() => setIsMounted(true), 60);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -89,7 +88,7 @@ export default function LaMadonnaPage() {
 
   return (
     <div
-      className="lm-room"
+      className={`lm-room${isMounted ? " lm-loaded" : ""}`}
       data-testid="la-madonna-page"
       data-page="la-madonna"
     >
