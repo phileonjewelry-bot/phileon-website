@@ -32,6 +32,21 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
   in both ring-grid and standard-grid renderers in `ShopDropPage.jsx`.
 - Added to `SHOP_COLLECTION_MAP` as 'collective'.
 
+### 2026-02 — BAPE™ Goes Live — Commerce Wiring
+- Three-tier variant selector (10K / 14K / 18K Yellow Gold) with sublabels
+  FOUNDATION · SIGNATURE · HEIRLOOM. Default selection: 14K Yellow Gold.
+- USD pricing derived from CAD × 0.75 and rounded to nearest $500:
+  $9,500 / $12,500 / $17,000.
+- Frosted-glass variant cards with gold MOST POPULAR / COLLECTOR pills.
+  Selected state: gold border, +translateY, soft shadow.
+- ADD TO CART writes BAPE + selected metal + cents to `phileon_cart`.
+  Verified payload: `unit_amount_cents: 1700000` for 18K.
+- 7-row SPECIFICATIONS block beneath: stone count 217, Custom pavé signet
+  construction, multi-stone material list, polish, made-to-order
+  production, 4–6 weeks lead time, complimentary worldwide shipping.
+- Shop card transitioned: COMING SOON pill → FROM $9,500. Catalog
+  `price_range: 'From $9,500 USD'`.
+
 ### 2026-02 — BAPE™ Detail Archive Gallery + Lightbox Reuse
 - Added 5 authentic BAPE photos (front, three-quarter, side enamel macro,
   top view, stone-field macro) to `/homage/bape`. Combined with the original

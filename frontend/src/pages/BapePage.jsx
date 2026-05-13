@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Lightbox from "../components/CinematicLightbox";
+import { useAddToCart } from "../hooks/useAddToCart";
 
 /**
  * BAPE™ — TRIBUTE SERIES
@@ -11,6 +12,52 @@ import Lightbox from "../components/CinematicLightbox";
  * PHILEON system — this is a cultural artifact presented as fine jewelry,
  * staged like an Art Basel object.
  */
+
+/* USD prices derived from CAD * 0.75, rounded to nearest $500 per
+   PHILEON sitewide luxury rounding rule. Sitewide USD lock — customer-
+   facing UI never shows CAD. */
+const VARIANTS = [
+  {
+    id: "10k-yellow",
+    metal: "10K Yellow Gold",
+    sublabel: "FOUNDATION",
+    priceUsd: 9500,
+    priceCad: 12500,
+    weight: "14g–15g",
+    description: "Entry tribute configuration. Full cultural presence with optimized gold weight and custom stone layout.",
+    badge: "",
+  },
+  {
+    id: "14k-yellow",
+    metal: "14K Yellow Gold",
+    sublabel: "SIGNATURE",
+    priceUsd: 12500,
+    priceCad: 16500,
+    weight: "15g finished",
+    description: "Signature configuration. Balanced luxury weight, full pavé architecture, calibrated custom stone arrangement.",
+    badge: "MOST POPULAR",
+  },
+  {
+    id: "18k-yellow",
+    metal: "18K Yellow Gold",
+    sublabel: "HEIRLOOM",
+    priceUsd: 17000,
+    priceCad: 22500,
+    weight: "16g–17g",
+    description: "Collector-grade configuration. Higher gold density, warmer tone, elevated finishing and archive-level execution.",
+    badge: "COLLECTOR",
+  },
+];
+
+const SPECS = [
+  { label: "STONE COUNT",  value: "217 stones" },
+  { label: "CONSTRUCTION", value: "Custom pavé signet" },
+  { label: "MATERIALS",    value: "White Diamonds · Black Diamonds · Blue Sapphires · Yellow Sapphires · Ruby Stones" },
+  { label: "FINISH",       value: "High polish mirror finish" },
+  { label: "PRODUCTION",   value: "Made to order" },
+  { label: "LEAD TIME",    value: "4–6 weeks" },
+  { label: "SHIPPING",     value: "Complimentary insured worldwide shipping" },
+];
 
 const GALLERY = [
   { src: "/homage/bape-ring.webp",          label: "01 — SPOTLIGHTS",    alt: "BAPE — under spotlights with mirror reflection" },
@@ -27,6 +74,10 @@ const GALLERY = [
 
 export default function BapePage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const [selectedVariantId, setSelectedVariantId] = useState("14k-yellow");
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  const selectedVariant = VARIANTS.find((v) => v.id === selectedVariantId) || VARIANTS[1];
 
   useEffect(() => {
     const root = document.querySelector("[data-page='bape']");
@@ -34,6 +85,21 @@ export default function BapePage() {
     const t = window.setTimeout(() => root.classList.add("bp-loaded"), 60);
     return () => window.clearTimeout(t);
   }, []);
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: `bape-${selectedVariant.id}`,
+      name: `BAPE — ${selectedVariant.metal}`,
+      price: selectedVariant.priceUsd,
+      productKey: "bape",
+      tierKey: selectedVariant.id,
+      metal: selectedVariant.metal,
+      quantity: 1,
+      image: "/homage/bape-ring.webp",
+    });
+  };
+
+  const priceText = `$${selectedVariant.priceUsd.toLocaleString("en-US")} USD`;
 
   return (
     <div className="bp-room" data-page="bape" data-testid="bape-page">
@@ -181,6 +247,156 @@ export default function BapePage() {
           display: inline-block;
         }
 
+        /* ═════ VARIANTS BLOCK ═══════════════════════════════ */
+        .bp-variants {
+          position: relative; z-index: 3;
+          padding: clamp(56px, 9vh, 110px) clamp(20px, 6vw, 96px);
+          background:
+            radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 60%),
+            rgba(255,255,255,0.4);
+          border-top: 1px solid rgba(26,24,21,0.07);
+        }
+        .bp-variants-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+        .bp-variants-eyebrow {
+          font-family: 'Cinzel', serif; font-weight: 500; font-size: 11px;
+          letter-spacing: 0.42em; text-transform: uppercase;
+          color: rgba(26,24,21,0.55); margin: 0;
+        }
+        .bp-variants-grid {
+          margin: 44px 0 0 0;
+          display: grid; gap: 18px;
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 900px) { .bp-variants-grid { grid-template-columns: 1fr; gap: 14px; } }
+
+        .bp-variant {
+          position: relative;
+          background: rgba(255,255,255,0.55);
+          border: 1px solid rgba(26,24,21,0.12);
+          padding: 28px 24px 26px;
+          text-align: left;
+          cursor: pointer;
+          transition:
+            border-color 360ms cubic-bezier(0.22,1,0.36,1),
+            background-color 360ms cubic-bezier(0.22,1,0.36,1),
+            transform 360ms cubic-bezier(0.22,1,0.36,1),
+            box-shadow 360ms cubic-bezier(0.22,1,0.36,1);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+        }
+        .bp-variant:hover {
+          border-color: rgba(26,24,21,0.32);
+          background: rgba(255,255,255,0.75);
+        }
+        .bp-variant.is-selected {
+          border-color: rgba(166, 124, 50, 0.9);
+          background: rgba(255,255,255,0.82);
+          box-shadow: 0 8px 24px rgba(166,124,50,0.16);
+          transform: translateY(-2px);
+        }
+        .bp-variant-badge {
+          position: absolute; top: -10px; left: 24px;
+          font-family: 'Cinzel', serif; font-weight: 500;
+          font-size: 9px; letter-spacing: 0.36em;
+          color: #1A1815;
+          background: linear-gradient(180deg, #EEDFB5 0%, #D8B976 100%);
+          padding: 5px 10px;
+        }
+        .bp-variant-sublabel {
+          font-family: 'Cinzel', serif; font-weight: 500; font-size: 10px;
+          letter-spacing: 0.36em; color: rgba(26,24,21,0.5);
+          text-transform: uppercase; margin: 0;
+        }
+        .bp-variant-metal {
+          font-family: 'Cinzel', serif; font-weight: 500;
+          font-size: clamp(18px, 1.4vw, 22px);
+          letter-spacing: -0.005em; color: #1A1815;
+          margin: 8px 0 0 0;
+        }
+        .bp-variant-price {
+          font-family: 'Cinzel', serif; font-weight: 500;
+          font-size: clamp(20px, 1.6vw, 26px);
+          letter-spacing: 0.04em; color: #1A1815;
+          margin: 16px 0 0 0;
+          font-variant-numeric: tabular-nums;
+        }
+        .bp-variant-weight {
+          font-family: 'Cormorant Garamond', serif; font-style: italic;
+          font-weight: 300; font-size: 13px;
+          color: rgba(26,24,21,0.6); margin: 4px 0 0 0;
+        }
+        .bp-variant-desc {
+          margin: 20px 0 0 0; padding-top: 18px;
+          border-top: 1px solid rgba(26,24,21,0.1);
+          font-family: 'Cormorant Garamond', serif; font-weight: 300;
+          font-size: 14px; color: rgba(26,24,21,0.7); line-height: 1.55;
+        }
+
+        /* CTA */
+        .bp-cta {
+          margin: 48px 0 0 0;
+          display: flex; flex-direction: column; align-items: center; gap: 14px;
+        }
+        .bp-cta-price {
+          font-family: 'Cinzel', serif; font-weight: 500;
+          font-size: clamp(20px, 1.8vw, 26px);
+          letter-spacing: 0.18em; color: #1A1815;
+          font-variant-numeric: tabular-nums; margin: 0;
+        }
+        .bp-cta-lead {
+          font-family: 'Cormorant Garamond', serif; font-style: italic;
+          font-weight: 300; font-size: 14px;
+          color: rgba(26,24,21,0.55); margin: 0;
+        }
+        .bp-cta-button {
+          margin-top: 18px;
+          font-family: 'Cinzel', serif; font-weight: 500; font-size: 11px;
+          letter-spacing: 0.42em; text-transform: uppercase;
+          color: #FFFFFF;
+          background: #1A1815;
+          border: 1px solid #1A1815;
+          padding: 18px 56px; cursor: pointer;
+          transition: background 320ms ease, color 320ms ease,
+                      border-color 320ms ease, transform 320ms ease;
+        }
+        .bp-cta-button:hover {
+          background: #2A2723; border-color: #2A2723; transform: translateY(-1px);
+        }
+        .bp-cta-button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ═════ SPECIFICATIONS ═════════════════════════════ */
+        .bp-specs {
+          position: relative; z-index: 3;
+          padding: clamp(56px, 9vh, 110px) clamp(20px, 6vw, 96px);
+          background: rgba(255,255,255,0.35);
+          border-top: 1px solid rgba(26,24,21,0.07);
+        }
+        .bp-specs-inner {
+          max-width: 980px; margin: 0 auto;
+          display: grid; grid-template-columns: 220px 1fr; gap: 56px;
+        }
+        @media (max-width: 768px) {
+          .bp-specs-inner { grid-template-columns: 1fr; gap: 32px; }
+        }
+        .bp-specs-table { display: grid; row-gap: 18px; }
+        .bp-spec-row {
+          display: grid; grid-template-columns: 200px 1fr; gap: 24px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid rgba(26,24,21,0.08);
+        }
+        @media (max-width: 768px) {
+          .bp-spec-row { grid-template-columns: 1fr; gap: 6px; }
+        }
+        .bp-spec-label {
+          font-family: 'Cinzel', serif; font-weight: 500; font-size: 10.5px;
+          letter-spacing: 0.36em; color: rgba(26,24,21,0.55); text-transform: uppercase;
+        }
+        .bp-spec-value {
+          font-family: 'Cormorant Garamond', serif; font-weight: 300;
+          font-size: clamp(14px, 1.05vw, 17px);
+          color: rgba(26,24,21,0.85); line-height: 1.55;
+        }
+
         /* ═════ DETAIL ARCHIVE GALLERY ═══════════════════════ */
         .bp-archive {
           position: relative; z-index: 3;
@@ -295,8 +511,68 @@ export default function BapePage() {
         <p className="bp-sub">For the ones who were really there.</p>
 
         <p className="bp-recognition" data-testid="bape-recognition">Recognition.</p>
+      </section>
 
-        <span className="bp-status" data-testid="bape-status">COMING SOON</span>
+      {/* ─── VARIANT SELECTOR + ADD TO CART ───────────────── */}
+      <section className="bp-variants" data-testid="bape-variants">
+        <div className="bp-variants-inner">
+          <p className="bp-variants-eyebrow">SELECT METAL</p>
+
+          <div className="bp-variants-grid" role="radiogroup" aria-label="Select metal">
+            {VARIANTS.map((v) => {
+              const isSelected = v.id === selectedVariantId;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => setSelectedVariantId(v.id)}
+                  className={`bp-variant${isSelected ? " is-selected" : ""}`}
+                  data-testid={`bape-variant-${v.id}`}
+                >
+                  {v.badge && <span className="bp-variant-badge">{v.badge}</span>}
+                  <p className="bp-variant-sublabel">{v.sublabel}</p>
+                  <h3 className="bp-variant-metal">{v.metal}</h3>
+                  <p className="bp-variant-price">${v.priceUsd.toLocaleString("en-US")} USD</p>
+                  <p className="bp-variant-weight">{v.weight}</p>
+                  <p className="bp-variant-desc">{v.description}</p>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="bp-cta">
+            <p className="bp-cta-price" data-testid="bape-active-price">{priceText}</p>
+            <p className="bp-cta-lead">Made to order · 4–6 weeks · Complimentary insured worldwide shipping</p>
+            <button
+              type="button"
+              onClick={onAddToCart}
+              disabled={isAdding}
+              className="bp-cta-button"
+              data-testid="bape-add-to-cart-btn"
+            >
+              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SPECIFICATIONS ────────────────────────────────── */}
+      <section className="bp-specs" data-testid="bape-specs">
+        <div className="bp-specs-inner">
+          <div>
+            <p className="bp-variants-eyebrow">SPECIFICATIONS</p>
+          </div>
+          <div className="bp-specs-table">
+            {SPECS.map((s) => (
+              <div key={s.label} className="bp-spec-row" data-testid={`bape-spec-${s.label.toLowerCase().replace(/\s+/g, "-")}`}>
+                <p className="bp-spec-label">{s.label}</p>
+                <p className="bp-spec-value">{s.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ─── DETAIL ARCHIVE ──────────────────────────────────── */}

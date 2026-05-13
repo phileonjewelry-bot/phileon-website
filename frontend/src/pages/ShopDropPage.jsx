@@ -528,6 +528,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Tribute Series · Multi-stone Signet',
     imageUrl: '/homage/bape-ring.webp',
     href: '/homage/bape',
+    price_range: 'From $9,500 USD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',

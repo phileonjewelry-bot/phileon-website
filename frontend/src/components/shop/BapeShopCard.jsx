@@ -16,7 +16,7 @@ export default function BapeShopCard() {
       to="/homage/bape"
       className="bape-card"
       data-testid="bape-shop-card"
-      aria-label="BAPE — Tribute Series — Coming Soon"
+      aria-label="BAPE — Tribute Series — From $9,500 USD"
     >
       <style>{`
         .bape-card {
@@ -94,14 +94,15 @@ export default function BapeShopCard() {
         }
         .bape-card__status {
           font-family: 'Cinzel', serif; font-weight: 500;
-          font-size: 9px; letter-spacing: 0.4em;
-          color: rgba(26,24,21,0.55); text-transform: uppercase;
+          font-size: 9.5px; letter-spacing: 0.32em;
+          color: rgba(26,24,21,0.75); text-transform: uppercase;
           padding: 8px 12px;
-          border: 1px solid rgba(26,24,21,0.18);
-          background: rgba(255,255,255,0.45);
+          border: 1px solid rgba(26,24,21,0.2);
+          background: rgba(255,255,255,0.55);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
           white-space: nowrap;
+          font-variant-numeric: tabular-nums;
         }
 
         .bape-card__recognition {
@@ -168,7 +169,7 @@ export default function BapeShopCard() {
             BAPE<sup>™</sup>
           </h3>
         </div>
-        <span className="bape-card__status">COMING SOON</span>
+        <span className="bape-card__status">FROM $9,500</span>
       </div>
     </Link>
   );
