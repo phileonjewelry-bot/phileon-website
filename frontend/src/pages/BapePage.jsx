@@ -22,6 +22,7 @@ const GALLERY = [
   { src: "/homage/bape-06-palm.png",        label: "07 — IN HAND",       alt: "BAPE — resting in an open palm, intimate scale" },
   { src: "/homage/bape-07-worn-knuckle.png", label: "08 — WORN",          alt: "BAPE — worn across the knuckles" },
   { src: "/homage/bape-08-campaign-fist.png", label: "09 — RECOGNITION",  alt: "BAPE — editorial campaign, fist forward in BAPE hoodie" },
+  { src: "/homage/bape-09-campaign-camo.png", label: "10 — LINEAGE",      alt: "BAPE — campaign portrait in original camo, prismatic gallery" },
 ];
 
 export default function BapePage() {
@@ -303,8 +304,8 @@ export default function BapePage() {
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <p className="bp-archive-eyebrow">DETAIL ARCHIVE</p>
           <p className="bp-archive-intro">
-            Nine frames. Object, macro, presence. Studied like a plinth
-            piece, then worn like one. Click any frame to enter the
+            Ten frames. Object, macro, presence, lineage. Studied like a
+            plinth piece, then worn like one. Click any frame to enter the
             archive room.
           </p>
         </div>
