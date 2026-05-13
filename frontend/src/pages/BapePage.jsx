@@ -75,6 +75,7 @@ const GALLERY = [
 export default function BapePage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [selectedVariantId, setSelectedVariantId] = useState("14k-yellow");
+  const [selectedRingSize, setSelectedRingSize] = useState("9");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const selectedVariant = VARIANTS.find((v) => v.id === selectedVariantId) || VARIANTS[1];
@@ -87,13 +88,15 @@ export default function BapePage() {
   }, []);
 
   const onAddToCart = () => {
+    const sizeLabel = selectedRingSize === "custom" ? "Custom (Above US 12)" : `US ${selectedRingSize}`;
     handleAddToCart({
-      id: `bape-${selectedVariant.id}`,
-      name: `BAPE — ${selectedVariant.metal}`,
+      id: `bape-${selectedVariant.id}-size-${selectedRingSize}`,
+      name: `BAPE — ${selectedVariant.metal} · ${sizeLabel}`,
       price: selectedVariant.priceUsd,
       productKey: "bape",
       tierKey: selectedVariant.id,
       metal: selectedVariant.metal,
+      ringSize: selectedRingSize,
       quantity: 1,
       image: "/homage/bape-ring.webp",
     });
@@ -104,7 +107,7 @@ export default function BapePage() {
   return (
     <div className="bp-room" data-page="bape" data-testid="bape-page">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@400;500&display=swap');
 
         .bp-room {
           position: relative;
@@ -332,6 +335,50 @@ export default function BapePage() {
           font-size: 14px; color: rgba(26,24,21,0.7); line-height: 1.55;
         }
 
+        /* ═════ RING SIZE BLOCK ═══════════════════════════ */
+        .bape-size-block {
+          display: flex; flex-direction: column; gap: 10px;
+          margin: 36px auto 8px;
+          max-width: 360px;
+          text-align: left;
+        }
+        .bape-size-label {
+          font-size: 11px; letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(0,0,0,0.58);
+          font-family: 'Inter', sans-serif;
+        }
+        .bape-size-select {
+          width: 100%; height: 54px;
+          padding: 0 18px;
+          background: rgba(255,255,255,0.72);
+          border: 1px solid rgba(212,175,55,0.22);
+          color: #111;
+          font-size: 14px; letter-spacing: 0.04em;
+          font-family: 'Inter', sans-serif;
+          outline: none;
+          transition:
+            border-color 220ms ease,
+            background 220ms ease,
+            box-shadow 220ms ease;
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          appearance: none;
+          -webkit-appearance: none;
+          background-image:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23A67C32' stroke-width='1.2' fill='none' stroke-linecap='square'/></svg>"),
+            linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.72) 100%);
+          background-repeat: no-repeat;
+          background-position: right 18px center, 0 0;
+          padding-right: 44px;
+        }
+        .bape-size-select:hover { border-color: rgba(212,175,55,0.4); }
+        .bape-size-select:focus {
+          border-color: rgba(212,175,55,0.7);
+          background: rgba(255,255,255,0.82);
+          box-shadow: 0 0 0 1px rgba(212,175,55,0.14);
+        }
+
         /* CTA */
         .bp-cta {
           margin: 48px 0 0 0;
@@ -540,6 +587,34 @@ export default function BapePage() {
                 </button>
               );
             })}
+          </div>
+
+          <div className="bape-size-block">
+            <label htmlFor="bape-size-select" className="bape-size-label">
+              RING SIZE
+            </label>
+            <select
+              id="bape-size-select"
+              value={selectedRingSize}
+              onChange={(e) => setSelectedRingSize(e.target.value)}
+              className="bape-size-select"
+              data-testid="bape-ring-size-select"
+            >
+              <option value="6">US 6</option>
+              <option value="6.5">US 6.5</option>
+              <option value="7">US 7</option>
+              <option value="7.5">US 7.5</option>
+              <option value="8">US 8</option>
+              <option value="8.5">US 8.5</option>
+              <option value="9">US 9</option>
+              <option value="9.5">US 9.5</option>
+              <option value="10">US 10</option>
+              <option value="10.5">US 10.5</option>
+              <option value="11">US 11</option>
+              <option value="11.5">US 11.5</option>
+              <option value="12">US 12</option>
+              <option value="custom">Custom Above 12</option>
+            </select>
           </div>
 
           <div className="bp-cta">
