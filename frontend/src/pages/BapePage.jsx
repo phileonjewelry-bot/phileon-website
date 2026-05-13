@@ -271,6 +271,17 @@ export default function BapePage() {
           display: inline-block;
         }
 
+        /* ═════ RECOGNITION SECTION (standalone) ═══════════ */
+        .bp-recognition-section {
+          position: relative; z-index: 3;
+          display: flex; align-items: center; justify-content: center;
+          padding: clamp(56px, 9vh, 110px) clamp(20px, 6vw, 96px);
+          text-align: center;
+        }
+        .bp-recognition-section .bp-recognition {
+          margin: 0;
+        }
+
         /* ═════ VARIANTS BLOCK ═══════════════════════════════ */
         .bp-variants {
           position: relative; z-index: 3;
@@ -579,7 +590,37 @@ export default function BapePage() {
           BAPE<sup>™</sup>
         </h2>
         <p className="bp-sub">For the ones who were really there.</p>
+      </section>
 
+      {/* ─── TRIBUTE ARCHIVE ─────────────────────────────────── */}
+      <section className="bp-archive" data-testid="bape-archive">
+        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
+          <p className="bp-archive-eyebrow">TRIBUTE ARCHIVE</p>
+          <p className="bp-archive-intro">
+            Ten images. One era. For the ones who were really there.
+            <br /><br />
+            Click any image to view the full archive.
+          </p>
+        </div>
+        <div className="bp-archive-grid" data-testid="bape-archive-grid">
+          {GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              type="button"
+              className="bp-archive-cell"
+              aria-label={g.label}
+              onClick={() => setLightboxIdx(i)}
+              data-testid={`bape-archive-cell-${i + 1}`}
+            >
+              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
+              <span className="bp-archive-cell-label">{g.label.split("—")[0].trim()}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── RECOGNITION ─────────────────────────────────────── */}
+      <section className="bp-recognition-section" data-testid="bape-recognition-section">
         <p className="bp-recognition" data-testid="bape-recognition">Recognition.</p>
       </section>
 
@@ -670,33 +711,6 @@ export default function BapePage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ─── DETAIL ARCHIVE ──────────────────────────────────── */}
-      <section className="bp-archive" data-testid="bape-archive">
-        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <p className="bp-archive-eyebrow">TRIBUTE ARCHIVE</p>
-          <p className="bp-archive-intro">
-            Ten images. One era. For the ones who were really there.
-            <br /><br />
-            Click any image to view the full archive.
-          </p>
-        </div>
-        <div className="bp-archive-grid" data-testid="bape-archive-grid">
-          {GALLERY.map((g, i) => (
-            <button
-              key={g.src}
-              type="button"
-              className="bp-archive-cell"
-              aria-label={g.label}
-              onClick={() => setLightboxIdx(i)}
-              data-testid={`bape-archive-cell-${i + 1}`}
-            >
-              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
-              <span className="bp-archive-cell-label">{g.label.split("—")[0].trim()}</span>
-            </button>
-          ))}
         </div>
       </section>
 
