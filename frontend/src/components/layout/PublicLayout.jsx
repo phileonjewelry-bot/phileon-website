@@ -76,8 +76,11 @@ const Header = ({ onVaultOpen }) => {
     }
     
     // First tap: navigate home immediately (if not already there)
+    // EXCEPTION: inside /vault/* the logo is non-navigational so users
+    // can browse the vault without accidentally bouncing back home.
     if (tapCountRef.current === 1 && !isRapidTap) {
-      if (location.pathname !== '/') {
+      const inVault = location.pathname.startsWith('/vault');
+      if (location.pathname !== '/' && !inVault) {
         navigate('/');
       }
     }
