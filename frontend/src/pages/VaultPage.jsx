@@ -423,12 +423,16 @@ const VaultPage = () => {
 
         /* ═════ TEASER VARIANT ═════════════════════════════ */
         .vault-drop-card--teaser {
-          aspect-ratio: 4/5;
+          aspect-ratio: auto;
           background: #050505;
           border: 1px solid rgba(199, 162, 75, 0.22);
           overflow: hidden;
           position: relative;
           border-radius: 8px;
+          min-height: 540px;
+        }
+        @media (max-width: 768px) {
+          .vault-drop-card--teaser { min-height: 460px; }
         }
         .vault-drop-card--teaser:hover {
           border-color: rgba(199, 162, 75, 0.65);
@@ -442,25 +446,30 @@ const VaultPage = () => {
         .vault-drop-teaser-img-wrap {
           position: relative;
           flex: 1 1 auto;
+          min-height: 420px;
           overflow: hidden;
-          background:
-            radial-gradient(ellipse at 50% 30%, #2A2A2A 0%, #0A0A0A 75%);
+          background: #050505;
+          display: flex; align-items: center; justify-content: center;
+        }
+        @media (max-width: 768px) {
+          .vault-drop-teaser-img-wrap { min-height: 320px; }
         }
         .vault-drop-teaser-img-wrap::after {
           content: ""; position: absolute; inset: 0;
-          background: linear-gradient(180deg, transparent 55%, rgba(5,5,5,0.65) 100%);
+          background: linear-gradient(180deg, transparent 70%, rgba(5,5,5,0.45) 100%);
           pointer-events: none;
         }
         .vault-drop-teaser-img {
           width: 100%; height: 100%;
-          object-fit: cover; object-position: center 38%;
+          object-fit: contain;
+          object-position: center center;
           display: block;
           transition:
             transform 700ms cubic-bezier(0.22,1,0.36,1),
             filter 700ms cubic-bezier(0.22,1,0.36,1);
         }
         .vault-drop-card--teaser:hover .vault-drop-teaser-img {
-          transform: scale(1.04);
+          transform: scale(1.03);
           filter: brightness(1.06) saturate(1.06);
         }
         .vault-drop-teaser-copy {

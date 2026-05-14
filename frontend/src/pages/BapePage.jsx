@@ -96,7 +96,6 @@ export default function BapePage() {
       tierKey: selectedVariant.id,
       metal: selectedVariant.metal,
       ringSize: selectedRingSize,
-      quantity: 1,
       image: "/homage/bape-ring.webp",
     });
   };

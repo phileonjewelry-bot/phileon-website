@@ -58,14 +58,14 @@ export default function DrewFacePage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const onAddToCart = () => {
+  // addToCartButton handler — adds DREW FACE to cart only
+  const onAddToCartButton = () => {
     handleAddToCart({
       id: "drew-face",
       name: "DREW FACE™ — Drew's Vault",
       price: PRICE_USD,
       productKey: "drew-face",
       tierKey: "vault",
-      quantity: 1,
       image: "/vault/drew-face/drew-face-hero.png",
     });
   };
@@ -106,8 +106,29 @@ export default function DrewFacePage() {
           font-family: 'Bebas Neue', sans-serif; font-size: 13px;
           letter-spacing: 0.36em; color: rgba(228,178,60,0.7);
           text-decoration: none; transition: color 300ms ease;
+          white-space: nowrap;
+          overflow: hidden; text-overflow: ellipsis;
+          max-width: calc(100vw - 40px);
         }
         .df-back:hover { color: rgba(245,228,172,1); }
+        .df-back .df-back-mobile-only { display: none; }
+        .df-back .df-back-live {
+          color: rgba(245,228,172,0.85);
+          font-weight: 400;
+        }
+        .df-back .df-back-live::before {
+          content: "● ";
+          color: rgba(214,52,52,0.95);
+          animation: dfPulse 1.6s ease-in-out infinite;
+        }
+        @media (max-width: 768px) {
+          .df-back {
+            font-size: 11px; letter-spacing: 0.22em; gap: 10px;
+            top: 22px; left: 18px;
+          }
+          .df-back .df-back-mobile-only { display: inline; }
+          .df-back .df-back-desktop-only { display: none; }
+        }
 
         .df-vault-tag {
           position: absolute; top: 32px; right: 32px; z-index: 6;
@@ -117,6 +138,9 @@ export default function DrewFacePage() {
         .df-vault-tag::before {
           content: "● "; color: rgba(214,52,52,0.85);
           animation: dfPulse 1.6s ease-in-out infinite;
+        }
+        @media (max-width: 768px) {
+          .df-vault-tag { display: none; }
         }
         @keyframes dfPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
@@ -134,7 +158,7 @@ export default function DrewFacePage() {
 
         .df-hero-vis {
           position: relative;
-          width: 100%; aspect-ratio: 4/5;
+          width: 100%;
           background:
             radial-gradient(ellipse at 50% 38%, rgba(228,178,60,0.18) 0%, rgba(228,178,60,0) 55%),
             radial-gradient(ellipse at 50% 75%, rgba(214,52,52,0.10) 0%, rgba(214,52,52,0) 60%),
@@ -156,26 +180,22 @@ export default function DrewFacePage() {
           letter-spacing: 0.4em; color: rgba(228,178,60,0.5);
         }
         .df-hero-img {
-          width: 100%; height: 100%; object-fit: cover;
+          width: 100%; height: auto;
+          max-height: 92vh; object-fit: contain;
+          object-position: center center;
           filter: drop-shadow(0 24px 32px rgba(0,0,0,0.65))
                   drop-shadow(0 0 24px rgba(228,178,60,0.18));
           transform: scale(1);
           animation: dfHeroBreath 22s ease-in-out infinite alternate;
           will-change: transform, filter;
         }
+        @media (max-width: 768px) {
+          .df-hero-img { max-height: 78vh; }
+        }
         @keyframes dfHeroBreath {
           0%   { transform: scale(1)    translateY(0px); filter: drop-shadow(0 24px 32px rgba(0,0,0,0.65)) drop-shadow(0 0 22px rgba(228,178,60,0.15)); }
           100% { transform: scale(1.04) translateY(-6px); filter: drop-shadow(0 28px 38px rgba(0,0,0,0.7))  drop-shadow(0 0 32px rgba(228,178,60,0.28)); }
         }
-        .df-hero-placeholder {
-          width: 56%; height: 56%;
-          border: 1px dashed rgba(228,178,60,0.35);
-          display: flex; align-items: center; justify-content: center;
-          color: rgba(228,178,60,0.55);
-          font-family: 'Bebas Neue', sans-serif; font-size: 11px;
-          letter-spacing: 0.42em; text-align: center;
-        }
-
         .df-hero-copy {
           padding-left: clamp(0px, 4vw, 64px);
           display: flex; flex-direction: column; gap: 24px;
@@ -595,14 +615,15 @@ export default function DrewFacePage() {
 
       <Link to="/vault/drews-world" className="df-back" data-testid="drew-face-back-btn">
         <ArrowLeft className="w-3.5 h-3.5" />
-        <span>BACK TO VAULT</span>
+        <span className="df-back-desktop-only">BACK TO DREW'S VAULT</span>
+        <span className="df-back-mobile-only">BACK TO VAULT</span>
+        <span className="df-back-live df-back-mobile-only">· LIVE</span>
       </Link>
       <span className="df-vault-tag">DREW'S VAULT · LIVE</span>
 
       {/* ─── HERO ──────────────────────────────────────────── */}
       <section className="df-hero" data-testid="drew-face-hero">
         <div className="df-hero-vis">
-          {/* Drop the real DREW FACE pendant render at /vault/drew-face/drew-face-hero.png */}
           <img
             src="/vault/drew-face/drew-face-hero.png"
             alt="DREW FACE — gold pendant by Andrew"
@@ -610,9 +631,7 @@ export default function DrewFacePage() {
             loading="eager"
             decoding="async"
             data-testid="drew-face-hero-img"
-            onError={(e) => { e.currentTarget.style.display = "none"; }}
           />
-          <div className="df-hero-placeholder">AWAITING<br />HERO ASSET</div>
         </div>
 
         <div className="df-hero-copy">
@@ -674,12 +693,13 @@ export default function DrewFacePage() {
         <p className="df-cta-meta">Drew's Vault exclusive · Made to order</p>
         <button
           type="button"
-          onClick={onAddToCart}
+          onClick={onAddToCartButton}
           disabled={isAdding}
           className="df-cta-btn"
           data-testid="drew-face-add-to-cart-btn"
+          aria-label="Add DREW FACE to cart"
         >
-          {isAdding ? "ENTERING…" : buttonText === "Added!" ? "SECURED" : "ENTER THE VAULT"}
+          {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
         </button>
         <p className="df-cta-note">FAMILY-CREATED · LIMITED RELEASE</p>
       </section>
