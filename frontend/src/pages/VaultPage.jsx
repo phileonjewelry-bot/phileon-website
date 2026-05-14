@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 const VaultPage = () => {
   // Placeholder exclusive drops
   const exclusiveDrops = [
-    { id: 1, name: 'Coming Soon', status: 'unreleased' },
+    { id: 'drew-face', name: 'DREW FACE™', status: 'live', href: '/vault/drew-face', badge: 'LIVE', byline: "By Andrew" },
     { id: 2, name: 'Coming Soon', status: 'unreleased' },
     { id: 3, name: 'Coming Soon', status: 'unreleased' },
   ];
@@ -59,8 +59,9 @@ const VaultPage = () => {
         <h2 className="vault-section-title">Exclusive Drops</h2>
         
         <div className="vault-drops-grid">
-          {exclusiveDrops.map((drop) => (
-            <div key={drop.id} className="vault-drop-card">
+          {exclusiveDrops.map((drop) => {
+            const isLive = drop.status === 'live';
+            const inner = (
               <div className="vault-drop-inner">
                 <div className="vault-drop-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -70,10 +71,27 @@ const VaultPage = () => {
                   </svg>
                 </div>
                 <p className="vault-drop-name">{drop.name}</p>
-                <span className="vault-drop-badge">UNRELEASED</span>
+                {drop.byline && <p className="vault-drop-byline">{drop.byline}</p>}
+                <span className={`vault-drop-badge${isLive ? ' vault-drop-badge--live' : ''}`}>
+                  {drop.badge || 'UNRELEASED'}
+                </span>
               </div>
-            </div>
-          ))}
+            );
+            return isLive ? (
+              <Link
+                to={drop.href}
+                key={drop.id}
+                className="vault-drop-card vault-drop-card--live"
+                data-testid={`vault-drop-${drop.id}`}
+              >
+                {inner}
+              </Link>
+            ) : (
+              <div key={drop.id} className="vault-drop-card">
+                {inner}
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -362,6 +380,30 @@ const VaultPage = () => {
           border: 1px solid rgba(199, 162, 75, 0.2);
           border-radius: 2px;
         }
+
+        .vault-drop-card--live { text-decoration: none; cursor: pointer; }
+        .vault-drop-card--live .vault-drop-name { color: rgba(245, 228, 172, 0.98); }
+        .vault-drop-card--live:hover { border-color: rgba(199, 162, 75, 0.65); }
+        .vault-drop-card--live:hover .vault-drop-icon { color: rgba(245, 228, 172, 1); }
+
+        .vault-drop-byline {
+          margin: 4px 0 12px 0;
+          font-size: 11px; letter-spacing: 0.1em;
+          color: rgba(199, 162, 75, 0.55);
+          font-style: italic;
+        }
+
+        .vault-drop-badge--live {
+          color: rgba(245, 228, 172, 1);
+          border-color: rgba(199, 162, 75, 0.7);
+          background: rgba(199, 162, 75, 0.08);
+        }
+        .vault-drop-badge--live::before {
+          content: "● ";
+          color: rgba(214, 52, 52, 0.95);
+          animation: vaultLivePulse 1.6s ease-in-out infinite;
+        }
+        @keyframes vaultLivePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
         /* ========== FOOTER ========== */
         .vault-footer {
