@@ -4,7 +4,15 @@ import { ArrowLeft } from 'lucide-react';
 const VaultPage = () => {
   // Placeholder exclusive drops
   const exclusiveDrops = [
-    { id: 'drew-face', name: 'DREW FACE™', status: 'live', href: '/vault/drew-face', badge: 'LIVE', byline: "By Andrew" },
+    {
+      id: 'drew-face',
+      name: 'DREW FACE™',
+      status: 'live',
+      href: '/vault/drew-face',
+      badge: 'LIVE',
+      tagline: 'A face drawn from sketch to gold.',
+      image: '/vault/drew-face/drew-face-teaser.webp',
+    },
     { id: 2, name: 'Coming Soon', status: 'unreleased' },
     { id: 3, name: 'Coming Soon', status: 'unreleased' },
   ];
@@ -61,7 +69,33 @@ const VaultPage = () => {
         <div className="vault-drops-grid">
           {exclusiveDrops.map((drop) => {
             const isLive = drop.status === 'live';
-            const inner = (
+            const hasImage = !!drop.image;
+
+            const inner = hasImage ? (
+              <div className="vault-drop-teaser">
+                <div className="vault-drop-teaser-img-wrap">
+                  <img
+                    src={drop.image}
+                    alt={drop.name}
+                    className="vault-drop-teaser-img"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+                <div className="vault-drop-teaser-copy">
+                  <div className="vault-drop-teaser-headline">
+                    <h3 className="vault-drop-teaser-name">{drop.name}</h3>
+                    {drop.tagline && <p className="vault-drop-teaser-tagline">{drop.tagline}</p>}
+                  </div>
+                  <span className="vault-drop-teaser-cta" aria-hidden="true">
+                    ENTER <span className="vault-drop-teaser-arrow">→</span>
+                  </span>
+                </div>
+                <span className={`vault-drop-badge vault-drop-badge--live vault-drop-badge--floating`}>
+                  {drop.badge || 'LIVE'}
+                </span>
+              </div>
+            ) : (
               <div className="vault-drop-inner">
                 <div className="vault-drop-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -77,11 +111,12 @@ const VaultPage = () => {
                 </span>
               </div>
             );
+
             return isLive ? (
               <Link
                 to={drop.href}
                 key={drop.id}
-                className="vault-drop-card vault-drop-card--live"
+                className={`vault-drop-card vault-drop-card--live${hasImage ? ' vault-drop-card--teaser' : ''}`}
                 data-testid={`vault-drop-${drop.id}`}
               >
                 {inner}
@@ -385,6 +420,96 @@ const VaultPage = () => {
         .vault-drop-card--live .vault-drop-name { color: rgba(245, 228, 172, 0.98); }
         .vault-drop-card--live:hover { border-color: rgba(199, 162, 75, 0.65); }
         .vault-drop-card--live:hover .vault-drop-icon { color: rgba(245, 228, 172, 1); }
+
+        /* ═════ TEASER VARIANT ═════════════════════════════ */
+        .vault-drop-card--teaser {
+          aspect-ratio: 4/5;
+          background: #050505;
+          border: 1px solid rgba(199, 162, 75, 0.22);
+          overflow: hidden;
+          position: relative;
+          border-radius: 8px;
+        }
+        .vault-drop-card--teaser:hover {
+          border-color: rgba(199, 162, 75, 0.65);
+          transform: translateY(-4px);
+          box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+        }
+        .vault-drop-teaser {
+          position: absolute; inset: 0;
+          display: flex; flex-direction: column;
+        }
+        .vault-drop-teaser-img-wrap {
+          position: relative;
+          flex: 1 1 auto;
+          overflow: hidden;
+          background:
+            radial-gradient(ellipse at 50% 30%, #2A2A2A 0%, #0A0A0A 75%);
+        }
+        .vault-drop-teaser-img-wrap::after {
+          content: ""; position: absolute; inset: 0;
+          background: linear-gradient(180deg, transparent 55%, rgba(5,5,5,0.65) 100%);
+          pointer-events: none;
+        }
+        .vault-drop-teaser-img {
+          width: 100%; height: 100%;
+          object-fit: cover; object-position: center 38%;
+          display: block;
+          transition:
+            transform 700ms cubic-bezier(0.22,1,0.36,1),
+            filter 700ms cubic-bezier(0.22,1,0.36,1);
+        }
+        .vault-drop-card--teaser:hover .vault-drop-teaser-img {
+          transform: scale(1.04);
+          filter: brightness(1.06) saturate(1.06);
+        }
+        .vault-drop-teaser-copy {
+          position: relative;
+          padding: 22px 24px 22px;
+          display: flex; align-items: flex-end; justify-content: space-between;
+          gap: 16px;
+          background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.9) 100%);
+        }
+        .vault-drop-teaser-headline { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .vault-drop-teaser-name {
+          margin: 0;
+          font-family: 'Bebas Neue', 'Cinzel', serif; font-weight: 500;
+          font-size: 22px; letter-spacing: 0.04em;
+          color: rgba(245, 228, 172, 0.98);
+          text-transform: uppercase;
+        }
+        .vault-drop-teaser-tagline {
+          margin: 0;
+          font-family: 'Cormorant Garamond', serif; font-style: italic;
+          font-weight: 300; font-size: 13px;
+          color: rgba(240, 232, 210, 0.6);
+          line-height: 1.35;
+        }
+        .vault-drop-teaser-cta {
+          flex-shrink: 0;
+          display: inline-flex; align-items: center; gap: 8px;
+          font-family: 'Bebas Neue', sans-serif; font-size: 11.5px;
+          letter-spacing: 0.36em; color: rgba(199, 162, 75, 0.85);
+          padding-top: 6px;
+          transition: color 320ms ease, gap 320ms cubic-bezier(0.22,1,0.36,1);
+        }
+        .vault-drop-card--teaser:hover .vault-drop-teaser-cta {
+          color: rgba(245, 228, 172, 1);
+          gap: 14px;
+        }
+        .vault-drop-teaser-arrow {
+          display: inline-block;
+          transition: transform 320ms cubic-bezier(0.22,1,0.36,1);
+        }
+        .vault-drop-card--teaser:hover .vault-drop-teaser-arrow {
+          transform: translateX(4px);
+        }
+        .vault-drop-badge--floating {
+          position: absolute; top: 14px; right: 14px;
+          background: rgba(8,8,8,0.6);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+        }
 
         .vault-drop-byline {
           margin: 4px 0 12px 0;
