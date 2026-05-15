@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import Lightbox from "../components/CinematicLightbox";
 
 /**
  * DREW FACE™ — Drew's Vault inventory release #1
@@ -12,6 +13,12 @@ import { useAddToCart } from "../hooks/useAddToCart";
  * family-created artifact. Dark cinematic with sharper anime-inspired energy.
  * No luxury soft-talk. No childish framing.
  */
+
+const GALLERY = [
+  { src: "/vault/drew-face/drew-face-01-triptych.jpg", label: "01 — TRIPTYCH", alt: "DREW FACE — three angles: profile, front, side" },
+  { src: "/vault/drew-face/drew-face-02-worn.webp",    label: "02 — WORN",     alt: "DREW FACE — worn on cuban chain in gloved hand" },
+  { src: "/vault/drew-face/drew-face-03-vitrine.webp", label: "03 — VITRINE",  alt: "DREW FACE — displayed in a museum vitrine on velvet bust" },
+];
 
 const PRICE_USD = 850; // collector-tier pendant pricing — adjust when finalized
 
@@ -26,6 +33,7 @@ const VAULT_DETAILS = [
 
 export default function DrewFacePage() {
   const [isMounted, setIsMounted] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
@@ -362,6 +370,83 @@ export default function DrewFacePage() {
           }
         }
 
+        /* ═════ VAULT GALLERY ═════════════════════════════════ */
+        .df-gallery {
+          position: relative; z-index: 2;
+          padding: clamp(56px, 9vh, 110px) clamp(20px, 5vw, 64px);
+          max-width: 1280px; margin: 0 auto;
+        }
+        .df-gallery-header {
+          display: flex; align-items: flex-end; justify-content: space-between;
+          gap: 24px; flex-wrap: wrap; margin: 0 0 36px 0;
+        }
+        .df-gallery-title {
+          font-family: 'Bebas Neue', sans-serif; font-weight: 400;
+          font-size: clamp(2rem, 3.6vw, 3rem);
+          letter-spacing: 0.04em; line-height: 0.96;
+          color: rgba(245,228,172,0.95); margin: 6px 0 0 0;
+        }
+        .df-gallery-eyebrow {
+          font-family: 'Bebas Neue', sans-serif; font-size: 10.5px;
+          letter-spacing: 0.46em; color: rgba(228,178,60,0.55);
+          margin: 0;
+          display: inline-flex; align-items: center; gap: 14px;
+        }
+        .df-gallery-eyebrow::before {
+          content: ""; width: 28px; height: 1px;
+          background: rgba(228,178,60,0.45);
+        }
+        .df-gallery-meta {
+          font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+          font-size: 13px; color: rgba(240,232,210,0.5);
+          letter-spacing: 0.04em;
+        }
+        .df-gallery-grid {
+          display: grid; gap: 18px;
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 900px)  { .df-gallery-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 560px)  { .df-gallery-grid { grid-template-columns: 1fr; } }
+
+        .df-gallery-cell {
+          position: relative;
+          aspect-ratio: 4/5;
+          background: #050505;
+          border: 1px solid rgba(228,178,60,0.14);
+          padding: 0; cursor: zoom-in;
+          overflow: hidden;
+          transition: border-color 360ms cubic-bezier(0.22,1,0.36,1);
+        }
+        .df-gallery-cell:hover { border-color: rgba(228,178,60,0.55); }
+        .df-gallery-cell img {
+          width: 100%; height: 100%;
+          object-fit: cover; object-position: center;
+          display: block;
+          opacity: 0.92; filter: saturate(0.96);
+          transition:
+            transform 700ms cubic-bezier(0.22,1,0.36,1),
+            opacity 360ms ease,
+            filter 360ms ease;
+        }
+        .df-gallery-cell:hover img {
+          transform: scale(1.025); opacity: 1;
+          filter: saturate(1.06) contrast(1.04);
+        }
+        .df-gallery-cell-label {
+          position: absolute; left: 12px; bottom: 10px;
+          font-family: 'Bebas Neue', sans-serif; font-size: 9.5px;
+          letter-spacing: 0.36em; color: rgba(228,178,60,0.7);
+          background: rgba(8,8,8,0.55);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          padding: 4px 8px;
+          pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .df-gallery-cell, .df-gallery-cell img { transition: none !important; }
+        }
+
         /* ═════ VAULT BLUEPRINT ═══════════════════════════════ */
         .df-blueprint {
           position: relative; z-index: 2;
@@ -646,6 +731,32 @@ export default function DrewFacePage() {
         </div>
       </section>
 
+      {/* ─── VAULT GALLERY ─────────────────────────────────── */}
+      <section className="df-gallery" data-testid="drew-face-gallery">
+        <div className="df-gallery-header">
+          <div>
+            <p className="df-gallery-eyebrow">VAULT GALLERY</p>
+            <h2 className="df-gallery-title">THE ARTIFACT, OBSERVED.</h2>
+          </div>
+          <p className="df-gallery-meta">{GALLERY.length} frames · click to enlarge</p>
+        </div>
+        <div className="df-gallery-grid" data-testid="drew-face-gallery-grid">
+          {GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              type="button"
+              className="df-gallery-cell"
+              aria-label={g.label}
+              onClick={() => setLightboxIdx(i)}
+              data-testid={`drew-face-gallery-cell-${i + 1}`}
+            >
+              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
+              <span className="df-gallery-cell-label">{g.label.split("—")[0].trim()}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* ─── ORIGIN ────────────────────────────────────────── */}
       <section className="df-section" data-testid="drew-face-origin">
         <p className="df-section-eyebrow">ORIGIN</p>
@@ -781,6 +892,14 @@ export default function DrewFacePage() {
           </div>
         </div>
       </section>
+
+      <Lightbox
+        items={GALLERY}
+        openIndex={lightboxIdx}
+        onClose={() => setLightboxIdx(null)}
+        onChange={(i) => setLightboxIdx(i)}
+        archiveLabel="DREW FACE · VAULT GALLERY"
+      />
     </div>
   );
 }
