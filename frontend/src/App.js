@@ -59,6 +59,7 @@ import MidweekPage from "@/pages/MidweekPage";
 import LaMadonnaPage from "@/pages/LaMadonnaPage";
 import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
+import LaScarpaPage from "@/pages/LaScarpaPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -166,6 +167,7 @@ function App() {
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/vault/drews-world" element={<VaultPage />} />
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
+            <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
           </Route>
           
           {/* Admin Routes */}
