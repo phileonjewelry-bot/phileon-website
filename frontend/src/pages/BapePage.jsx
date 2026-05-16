@@ -149,13 +149,198 @@ export default function BapePage() {
         }
 
         .bp-back {
-          position: absolute; top: 28px; left: 28px; z-index: 6;
+          position: absolute; top: 28px; left: 28px; z-index: 8;
           display: inline-flex; align-items: center; gap: 10px;
           font-family: 'Cinzel', serif; font-size: 10.5px; letter-spacing: 0.36em;
-          color: rgba(26,24,21,0.55); text-decoration: none;
+          color: rgba(245,228,172,0.65); text-decoration: none;
           transition: color 400ms ease;
         }
-        .bp-back:hover { color: rgba(26,24,21,0.9); }
+        .bp-back:hover { color: rgba(245,228,172,1); }
+
+        /* ═════ VHS HERO TRANSMISSION ═══════════════════════ */
+        .bp-hero-tx {
+          position: relative;
+          width: 100%; height: 92vh;
+          overflow: hidden;
+          background: #050505;
+          isolation: isolate;
+        }
+        @media (max-width: 768px) {
+          .bp-hero-tx { height: 76vh; }
+        }
+        .bp-hero-tx-video {
+          position: absolute; inset: 0;
+          width: 100%; height: 100%;
+          object-fit: cover; object-position: center center;
+          transform: scale(1.01);
+          z-index: 1;
+        }
+
+        /* CRT scanlines — soft alternating rows */
+        .bp-hero-tx-scan {
+          position: absolute; inset: 0; z-index: 3;
+          pointer-events: none;
+          background-image:
+            repeating-linear-gradient(180deg,
+              rgba(0,0,0,0.18) 0px,
+              rgba(0,0,0,0.18) 1px,
+              transparent 1px,
+              transparent 3px);
+          mix-blend-mode: multiply;
+          opacity: 0.55;
+        }
+
+        /* Chromatic bleed — subtle red/blue offset glow at edges */
+        .bp-hero-tx-bleed {
+          position: absolute; inset: 0; z-index: 3;
+          pointer-events: none;
+          background:
+            radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(214,52,52,0.06) 85%, transparent 100%),
+            radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(52,116,214,0.05) 90%, transparent 100%);
+          mix-blend-mode: screen;
+        }
+
+        /* Analog tape grain — moving */
+        .bp-hero-tx-grain {
+          position: absolute; inset: -8%; z-index: 4;
+          pointer-events: none;
+          opacity: 0.10;
+          mix-blend-mode: overlay;
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' seed='9'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+          animation: bpVhsGrain 0.18s steps(4) infinite;
+        }
+        @keyframes bpVhsGrain {
+          0%   { transform: translate(0, 0); }
+          25%  { transform: translate(-6px, 4px); }
+          50%  { transform: translate(4px, -4px); }
+          75%  { transform: translate(-3px, -3px); }
+          100% { transform: translate(0, 0); }
+        }
+
+        /* Low-opacity flicker — drives a subtle brightness pulse */
+        .bp-hero-tx-flicker {
+          position: absolute; inset: 0; z-index: 5;
+          pointer-events: none;
+          background: rgba(255,255,255,1);
+          opacity: 0;
+          mix-blend-mode: overlay;
+          animation: bpVhsFlicker 4.8s steps(40) infinite;
+        }
+        @keyframes bpVhsFlicker {
+          0%, 4%, 8%, 100% { opacity: 0; }
+          5%               { opacity: 0.08; }
+          50%              { opacity: 0; }
+          52%              { opacity: 0.05; }
+        }
+
+        /* Edge vignette to anchor the transmission */
+        .bp-hero-tx-vignette {
+          position: absolute; inset: 0; z-index: 6;
+          pointer-events: none;
+          background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%);
+        }
+
+        /* OSD (on-screen display) micro details */
+        .bp-hero-tx-osd {
+          position: absolute; z-index: 7;
+          display: flex; flex-direction: column; gap: 6px;
+          font-family: 'Bebas Neue', 'Courier New', monospace;
+          font-size: 11px; letter-spacing: 0.34em;
+          color: rgba(240,232,210,0.55);
+          opacity: 0; animation: bpVhsOsdIn 1.6s cubic-bezier(0.22,1,0.36,1) 0.9s forwards;
+        }
+        .bp-hero-tx-osd--tr { top: 32px;    right: 32px; text-align: right; }
+        .bp-hero-tx-osd--bl { bottom: 32px; left: 32px;  text-align: left; }
+        .bp-hero-tx-osd span { display: block; }
+        .bp-hero-tx-osd--bl span:last-child {
+          color: rgba(214,52,52,0.7);
+        }
+        .bp-hero-tx-osd--bl span:last-child::before {
+          content: "● "; color: rgba(214,52,52,0.95);
+          animation: bpVhsRec 1.4s ease-in-out infinite;
+        }
+        @keyframes bpVhsRec { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+        @media (max-width: 768px) {
+          .bp-hero-tx-osd { font-size: 9.5px; letter-spacing: 0.28em; }
+          .bp-hero-tx-osd--tr { top: 22px;    right: 18px; }
+          .bp-hero-tx-osd--bl { bottom: 22px; left: 18px; }
+        }
+        @keyframes bpVhsOsdIn { to { opacity: 1; } }
+
+        /* Editorial overlays */
+        .bp-hero-tx-eyebrow {
+          position: absolute; top: 64px; left: 32px; z-index: 7;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 12px; letter-spacing: 0.46em;
+          color: rgba(245,228,172,0.9);
+          text-transform: uppercase;
+          opacity: 0;
+          animation: bpVhsFadeIn 1.4s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+        }
+        @media (max-width: 768px) {
+          .bp-hero-tx-eyebrow { top: 50px; left: 18px; font-size: 10.5px; letter-spacing: 0.34em; }
+        }
+
+        .bp-hero-tx-center {
+          position: absolute; left: 50%; top: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 7;
+          text-align: center;
+          padding: 0 24px;
+          max-width: 92vw;
+        }
+        .bp-hero-tx-title {
+          font-family: 'Bebas Neue', 'Cinzel', serif;
+          font-weight: 400;
+          font-size: clamp(4rem, 10vw, 9rem);
+          letter-spacing: 0.06em; line-height: 0.9;
+          color: rgba(245,228,172,0.98);
+          margin: 0;
+          text-shadow:
+            -1.5px 0 0 rgba(214,52,52,0.5),
+            1.5px 0 0 rgba(52,116,214,0.4),
+            0 2px 18px rgba(0,0,0,0.85);
+          opacity: 0;
+          animation: bpVhsFadeIn 1.6s cubic-bezier(0.22,1,0.36,1) 0.8s forwards;
+        }
+        .bp-hero-tx-title sup {
+          font-size: 0.28em; vertical-align: super; letter-spacing: 0.18em;
+          color: rgba(228,178,60,0.7); margin-left: 8px; text-shadow: none;
+        }
+        .bp-hero-tx-statement {
+          margin: 18px 0 0 0;
+          font-family: 'Cormorant Garamond', serif; font-style: italic;
+          font-weight: 300;
+          font-size: clamp(15px, 1.4vw, 19px);
+          color: rgba(240,232,210,0.78);
+          letter-spacing: 0.02em;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.65);
+          opacity: 0;
+          animation: bpVhsFadeIn 1.6s cubic-bezier(0.22,1,0.36,1) 1.4s forwards;
+        }
+
+        .bp-hero-tx-stamp {
+          position: absolute; bottom: 32px; right: 32px; z-index: 7;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 10.5px; letter-spacing: 0.4em;
+          color: rgba(245,228,172,0.55);
+          opacity: 0;
+          animation: bpVhsFadeIn 1.4s cubic-bezier(0.22,1,0.36,1) 1.8s forwards;
+        }
+        @media (max-width: 768px) {
+          .bp-hero-tx-stamp { bottom: 22px; right: 18px; font-size: 9px; letter-spacing: 0.32em; }
+        }
+
+        @keyframes bpVhsFadeIn { to { opacity: 1; } }
+
+        @media (prefers-reduced-motion: reduce) {
+          .bp-hero-tx-grain, .bp-hero-tx-flicker,
+          .bp-hero-tx-osd, .bp-hero-tx-eyebrow,
+          .bp-hero-tx-title, .bp-hero-tx-statement,
+          .bp-hero-tx-stamp, .bp-hero-tx-osd--bl span:last-child::before {
+            animation: none !important; opacity: 1 !important;
+          }
+        }
 
         /* ═════ EDITORIAL HEADER ═════════════════════════════ */
         .bp-header {
@@ -535,6 +720,22 @@ export default function BapePage() {
           pointer-events: none;
           mix-blend-mode: difference;
         }
+        .bp-archive-cell-label--live {
+          background: rgba(8,8,8,0.55);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          padding: 5px 9px;
+          mix-blend-mode: normal;
+          color: rgba(245,228,172,0.95);
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 9.5px; letter-spacing: 0.36em;
+        }
+        .bp-archive-cell-label--live::before {
+          content: "● ";
+          color: rgba(214,52,52,0.95);
+          animation: bpLivePulse 1.5s ease-in-out infinite;
+        }
+        @keyframes bpLivePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
 
         /* ═════ BOTTOM TAGLINE ═══════════════════════════════ */
         .bp-tagline {
@@ -570,28 +771,46 @@ export default function BapePage() {
         <span>RETURN</span>
       </Link>
 
-      <header className="bp-header" data-testid="bape-header">
-        <p className="bp-header-eyebrow">PHILEON · TRIBUTE SERIES</p>
-        <h1 className="bp-header-title" data-testid="bape-collection">TRIBUTE SERIES</h1>
-      </header>
+      {/* ─── VHS HERO TRANSMISSION ─────────────────────────── */}
+      <section className="bp-hero-tx" data-testid="bape-hero-tx">
+        <video
+          src="/homage/bape-motion.mp4"
+          className="bp-hero-tx-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-label="BAPE — VHS campaign transmission"
+          data-testid="bape-hero-tx-video"
+        />
+        {/* VHS effect layers */}
+        <div className="bp-hero-tx-scan"     aria-hidden="true" />
+        <div className="bp-hero-tx-bleed"    aria-hidden="true" />
+        <div className="bp-hero-tx-grain"    aria-hidden="true" />
+        <div className="bp-hero-tx-flicker"  aria-hidden="true" />
+        <div className="bp-hero-tx-vignette" aria-hidden="true" />
 
-      <section className="bp-stage" data-testid="bape-stage">
-
-        <div className="bp-ring-wrap">
-          <img
-            src="/homage/bape-ring.webp"
-            alt="BAPE — multi-stone signet ring under spotlights with reflection"
-            className="bp-ring"
-            loading="eager"
-            decoding="async"
-            data-testid="bape-hero-img"
-          />
+        {/* OSD micro-details */}
+        <div className="bp-hero-tx-osd bp-hero-tx-osd--tr">
+          <span>PLAY  ▶</span>
+          <span>CHANNEL 07</span>
+          <span>SP</span>
+        </div>
+        <div className="bp-hero-tx-osd bp-hero-tx-osd--bl">
+          <span>2005</span>
+          <span>REC ●</span>
         </div>
 
-        <h2 className="bp-title" data-testid="bape-title">
-          BAPE<sup>™</sup>
-        </h2>
-        <p className="bp-sub">For the ones who were really there.</p>
+        {/* Editorial overlays */}
+        <span className="bp-hero-tx-eyebrow" data-testid="bape-hero-eyebrow">TRIBUTE SERIES</span>
+        <div className="bp-hero-tx-center">
+          <h1 className="bp-hero-tx-title" data-testid="bape-hero-title">
+            BAPE<sup>™</sup>
+          </h1>
+          <p className="bp-hero-tx-statement">For the ones who were really there.</p>
+        </div>
+        <span className="bp-hero-tx-stamp">PHILEON ARCHIVE TRANSMISSION</span>
       </section>
 
       {/* ─── TRIBUTE ARCHIVE ─────────────────────────────────── */}
@@ -624,7 +843,13 @@ export default function BapePage() {
               ) : (
                 <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
               )}
-              <span className="bp-archive-cell-label">{g.label.split("—")[0].trim()}</span>
+              <span
+                className={`bp-archive-cell-label${g.type === "video" ? " bp-archive-cell-label--live" : ""}`}
+              >
+                {g.type === "video"
+                  ? "LIVE TRANSMISSION"
+                  : g.label.split("—")[0].trim()}
+              </span>
             </button>
           ))}
         </div>
