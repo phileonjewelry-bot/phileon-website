@@ -58,6 +58,7 @@ export default function Lightbox({ items, openIndex, onClose, onChange, archiveL
     const next = items[(openIndex + 1) % total];
     const prev = items[(openIndex - 1 + total) % total];
     [next, prev].forEach((it) => {
+      if (it.type === "video") return; // browser handles video preload via element
       const img = new Image();
       img.src = it.src;
     });
@@ -319,18 +320,37 @@ export default function Lightbox({ items, openIndex, onClose, onChange, archiveL
             onMouseLeave={() => setHoverHalf(null)}
           >
             <AnimatePresence mode="wait" initial={false}>
-              <motion.img
-                key={active.src}
-                src={active.src}
-                alt={active.alt}
-                className="lm-lightbox-img"
-                data-testid="la-madonna-lightbox-img"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.985 }}
-                transition={{ duration: FADE, ease: EASE }}
-                draggable={false}
-              />
+              {active.type === "video" ? (
+                <motion.video
+                  key={active.src}
+                  src={active.src}
+                  poster={active.poster}
+                  className="lm-lightbox-img"
+                  data-testid="la-madonna-lightbox-img"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.985 }}
+                  transition={{ duration: FADE, ease: EASE }}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              ) : (
+                <motion.img
+                  key={active.src}
+                  src={active.src}
+                  alt={active.alt}
+                  className="lm-lightbox-img"
+                  data-testid="la-madonna-lightbox-img"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.985 }}
+                  transition={{ duration: FADE, ease: EASE }}
+                  draggable={false}
+                />
+              )}
             </AnimatePresence>
 
             {/* Click zones with gold arrow cursors */}
@@ -396,7 +416,7 @@ export default function Lightbox({ items, openIndex, onClose, onChange, archiveL
                 onClick={() => onChange(i)}
                 data-testid={`la-madonna-lightbox-thumb-${i + 1}`}
               >
-                <img src={it.src} alt="" loading="eager" decoding="async" />
+                <img src={it.poster || it.src} alt="" loading="eager" decoding="async" />
               </button>
             ))}
           </div>

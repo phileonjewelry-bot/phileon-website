@@ -70,6 +70,7 @@ const GALLERY = [
   { src: "/homage/bape-07-worn-knuckle.png", label: "08 — WORN",          alt: "BAPE — worn across the knuckles" },
   { src: "/homage/bape-08-campaign-fist.png", label: "09 — RECOGNITION",  alt: "BAPE — editorial campaign, fist forward in BAPE hoodie" },
   { src: "/homage/bape-09-campaign-camo.png", label: "10 — LINEAGE",      alt: "BAPE — campaign portrait in original camo, prismatic gallery" },
+  { src: "/homage/bape-motion.mp4",           label: "11 — IN MOTION",    alt: "BAPE — living editorial: ring on pedestal, poster figure in motion", type: "video", poster: "/homage/bape-ring.webp" },
 ];
 
 export default function BapePage() {
@@ -516,7 +517,8 @@ export default function BapePage() {
           transition: border-color 360ms cubic-bezier(0.22,1,0.36,1);
         }
         .bp-archive-cell:hover { border-color: rgba(214,178,116,0.4); }
-        .bp-archive-cell img {
+        .bp-archive-cell img,
+        .bp-archive-cell video {
           width: 100%; height: 100%;
           object-fit: cover; object-position: center;
           display: block;
@@ -524,7 +526,8 @@ export default function BapePage() {
                       opacity 360ms ease;
           opacity: 0.92;
         }
-        .bp-archive-cell:hover img { transform: scale(1.02); opacity: 1; }
+        .bp-archive-cell:hover img,
+        .bp-archive-cell:hover video { transform: scale(1.02); opacity: 1; }
         .bp-archive-cell-label {
           position: absolute; left: 12px; bottom: 10px;
           font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.32em;
@@ -596,7 +599,7 @@ export default function BapePage() {
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <p className="bp-archive-eyebrow">TRIBUTE ARCHIVE</p>
           <p className="bp-archive-intro">
-            Ten images. One era. For the ones who were really there.
+            Ten images. One era. One in motion. For the ones who were really there.
             <br /><br />
             Click any image to view the full archive.
           </p>
@@ -611,7 +614,16 @@ export default function BapePage() {
               onClick={() => setLightboxIdx(i)}
               data-testid={`bape-archive-cell-${i + 1}`}
             >
-              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
+              {g.type === "video" ? (
+                <video
+                  src={g.src}
+                  poster={g.poster}
+                  autoPlay muted loop playsInline preload="auto"
+                  aria-label={g.alt}
+                />
+              ) : (
+                <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
+              )}
               <span className="bp-archive-cell-label">{g.label.split("—")[0].trim()}</span>
             </button>
           ))}
