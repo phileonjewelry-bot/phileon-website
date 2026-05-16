@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Lightbox from "../components/CinematicLightbox";
@@ -78,6 +78,8 @@ export default function BapePage() {
   const [selectedVariantId, setSelectedVariantId] = useState("14k-yellow");
   const [selectedRingSize, setSelectedRingSize] = useState("9");
   const [isMounted, setIsMounted] = useState(false);
+  const [audioState, setAudioState] = useState("rec"); // 'rec' → 'tuning' → 'live' | 'tap'
+  const heroVideoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const selectedVariant = VARIANTS.find((v) => v.id === selectedVariantId) || VARIANTS[1];
@@ -86,6 +88,84 @@ export default function BapePage() {
     const t = window.setTimeout(() => setIsMounted(true), 60);
     return () => window.clearTimeout(t);
   }, []);
+
+  /* Transmission "finds its frequency" — on the second loop start, fade
+     audio in 0→1 over 1.6s. If the browser blocks unmute, expose a
+     one-tap unlock instead. */
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+
+    let loopCount = 0;
+    let lastTime = 0;
+    let frequencyArmed = true;
+    let fadeRaf = null;
+
+    const fadeAudioIn = async () => {
+      try {
+        video.volume = 0;
+        video.muted = false;
+        // Tickle play() to satisfy strict autoplay policies
+        await video.play();
+        setAudioState("tuning");
+        const start = performance.now();
+        const tick = () => {
+          const t = Math.min(1, (performance.now() - start) / 1600);
+          video.volume = t;
+          if (t < 1) {
+            fadeRaf = window.requestAnimationFrame(tick);
+          } else {
+            setAudioState("live");
+            fadeRaf = null;
+          }
+        };
+        fadeRaf = window.requestAnimationFrame(tick);
+      } catch (err) {
+        // Browser blocked unmute — stay muted, surface tap-to-unlock chip
+        video.muted = true;
+        video.volume = 0;
+        setAudioState("tap");
+      }
+    };
+
+    const onTimeUpdate = () => {
+      const t = video.currentTime;
+      // Loop wrap detected when currentTime jumps backwards by > 0.4s
+      if (t + 0.4 < lastTime) {
+        loopCount += 1;
+        if (loopCount === 1 && frequencyArmed) {
+          frequencyArmed = false;
+          fadeAudioIn();
+        }
+      }
+      lastTime = t;
+    };
+
+    video.addEventListener("timeupdate", onTimeUpdate);
+    return () => {
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      if (fadeRaf !== null) window.cancelAnimationFrame(fadeRaf);
+    };
+  }, []);
+
+  // One-tap unlock fallback for blocked browsers
+  const onHeroTap = () => {
+    const video = heroVideoRef.current;
+    if (!video || audioState === "live" || audioState === "tuning") return;
+    video.muted = false;
+    video.volume = 0;
+    video.play().then(() => {
+      setAudioState("tuning");
+      const start = performance.now();
+      const tick = () => {
+        const t = Math.min(1, (performance.now() - start) / 1200);
+        video.volume = t;
+        if (t < 1) window.requestAnimationFrame(tick);
+        else setAudioState("live");
+      };
+      window.requestAnimationFrame(tick);
+    }).catch(() => {});
+  };
 
   const onAddToCart = () => {
     const sizeLabel = selectedRingSize === "custom" ? "Custom (Above US 12)" : `US ${selectedRingSize}`;
@@ -254,12 +334,33 @@ export default function BapePage() {
         .bp-hero-tx-osd span { display: block; }
         .bp-hero-tx-osd--bl span:last-child {
           color: rgba(214,52,52,0.7);
+          font-variant-numeric: tabular-nums;
         }
         .bp-hero-tx-osd--bl span:last-child::before {
-          content: "● "; color: rgba(214,52,52,0.95);
+          display: none;
+        }
+        /* Audio state colors driven by data-audio on parent OSD */
+        .bp-hero-tx-osd[data-audio="rec"] .bp-hero-tx-audio-line {
+          color: rgba(214,52,52,0.85);
           animation: bpVhsRec 1.4s ease-in-out infinite;
         }
-        @keyframes bpVhsRec { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+        .bp-hero-tx-osd[data-audio="tuning"] .bp-hero-tx-audio-line {
+          color: rgba(228,178,60,0.95);
+          animation: bpVhsTune 0.55s ease-in-out infinite;
+        }
+        .bp-hero-tx-osd[data-audio="live"] .bp-hero-tx-audio-line {
+          color: rgba(245,228,172,0.98);
+        }
+        .bp-hero-tx-osd[data-audio="tap"] .bp-hero-tx-audio-line {
+          color: rgba(255,255,255,0.98);
+          background: rgba(8,8,8,0.5);
+          padding: 4px 8px;
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          animation: bpVhsRec 1.4s ease-in-out infinite;
+        }
+        @keyframes bpVhsRec { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+        @keyframes bpVhsTune { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
         @media (max-width: 768px) {
           .bp-hero-tx-osd { font-size: 9.5px; letter-spacing: 0.28em; }
           .bp-hero-tx-osd--tr { top: 22px;    right: 18px; }
@@ -772,8 +873,9 @@ export default function BapePage() {
       </Link>
 
       {/* ─── VHS HERO TRANSMISSION ─────────────────────────── */}
-      <section className="bp-hero-tx" data-testid="bape-hero-tx">
+      <section className="bp-hero-tx" data-testid="bape-hero-tx" onClick={onHeroTap}>
         <video
+          ref={heroVideoRef}
           src="/homage/bape-motion.mp4"
           className="bp-hero-tx-video"
           autoPlay
@@ -797,9 +899,14 @@ export default function BapePage() {
           <span>CHANNEL 07</span>
           <span>SP</span>
         </div>
-        <div className="bp-hero-tx-osd bp-hero-tx-osd--bl">
+        <div className="bp-hero-tx-osd bp-hero-tx-osd--bl" data-audio={audioState} data-testid="bape-audio-osd">
           <span>2005</span>
-          <span>REC ●</span>
+          <span className="bp-hero-tx-audio-line">
+            {audioState === "rec"    && "REC ●"}
+            {audioState === "tuning" && "TUNING ◐"}
+            {audioState === "live"   && "AUDIO ♪"}
+            {audioState === "tap"    && "TAP TO UNMUTE ▶"}
+          </span>
         </div>
 
         {/* Editorial overlays */}
