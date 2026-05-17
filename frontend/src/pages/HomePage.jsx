@@ -381,6 +381,12 @@ const HomePage = () => {
             subtitle: "Stripped to gold."
           },
           { 
+            title: "LA SCARPA DELLA REGINA", 
+            image: "/la-scarpa/scarpa-portrait.jpg", 
+            href: "/la-scarpa-della-regina",
+            subtitle: "The crown was given. The shoe was earned."
+          },
+          { 
             title: "DRAPE", 
             image: products.drape?.imageUrl, 
             href: "/products/drape" 
