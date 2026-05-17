@@ -19,6 +19,15 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — Hero CTA Removed (Single ADD TO CART)
+- Removed the inline price + ADD TO CART block that was duplicated inside
+  the hero. The hero is now pure editorial: title, "THE QUEEN'S SHOE",
+  Italian + English couplet, portrait.
+- Page now has exactly one ADD TO CART button — in the ACQUISITION block.
+- Confirmed final flow with no commerce noise interrupting the archive:
+  Hero → Archive Slider → COMPOSITION · STRUCTURE · CRAFT →
+  Specifications → Pricing + ADD TO CART → FINAL WORD.
+
 ### 2026-02 — LA SCARPA — Archive: Vertical Grid → Horizontal Swipe Slider
 - Retired the dark 3-col burgundy archive grid in favour of a bright
   horizontal swipeable slider on a `#f6f1eb` champagne ground.

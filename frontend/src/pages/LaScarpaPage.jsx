@@ -533,22 +533,6 @@ export default function LaScarpaPage() {
             </p>
           </div>
 
-          {/* PRICE + ACQUIRE inline CTA */}
-          <div className="scarpa-hero-cta" data-testid="la-scarpa-hero-cta">
-            <p className="scarpa-hero-price" data-testid="la-scarpa-hero-price">
-              {formattedPrice}
-            </p>
-            <p className="scarpa-hero-leadtime">Made to order · 4–6 weeks</p>
-            <button
-              type="button"
-              onClick={onAddToCart}
-              disabled={isAdding}
-              className="scarpa-cta-btn"
-              data-testid="la-scarpa-acquire-btn"
-            >
-              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
-            </button>
-          </div>
         </div>
 
         {/* RIGHT — portrait hero */}
