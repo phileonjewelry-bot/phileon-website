@@ -19,6 +19,30 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA DELLA REGINA — Full Commerce Page Live
+- Escalated from holding page to full editorial commerce page.
+- USD pricing: $12,000 CAD × 0.75 = $9,000 USD (luxury rounding to nearest
+  $500). Surfaced in hero, footer ACQUIRE block, and shop catalog (was
+  `COMING SOON`).
+- Rose-silk hero preserved (portrait + dual-language Italian/English copy)
+  with inline ACQUIRE button + price + lead time.
+- 4-block editorial section: COMPOSITION · STRUCTURE · CRAFT · FINAL WORD
+  (Cormorant italic on faint rose radial wash).
+- 7-frame DARK BURGUNDY archive grid with 4:5 cells, gold-rose hairline
+  borders that intensify on hover. Slots: HERO · ARCHIVE OBJECT ·
+  LIFESTYLE · REFLECTION · FRAME · DETAIL · PROFILE.
+- Wired into shared `CinematicLightbox` with archiveLabel
+  `"LA SCARPA · ARCHIVE"`. Portrait + pendant render also click to open
+  lightbox.
+- 6-row SPECIFICATIONS block (18K Rose Gold, hand-set diamond field
+  0.85ct, ~15.5g gold, mirror-polished, made-to-order, 4–6 weeks lead).
+- ACQUISITION footer: BEGIN COMMISSION CTA, USD price, lead-time line.
+- Burgundy signature closer with Italian + English wording.
+- ADD TO CART payload verified: `unit_amount_cents: 900000`, tierKey
+  `18k-rose`, productKey `la-scarpa-della-regina`.
+- **PENDING**: 8th gallery slot `ON BODY` — image not yet supplied;
+  current build ships 7 frames (HERO portrait already covers worn shot).
+
 ### 2026-02 — HOMAGE SERIES: BAPE™ Placeholder
 - New route `/homage/bape` with full-screen bright luxury environment.
 - `BapePage.jsx` — radial white→champagne gradient, soft particle drift,

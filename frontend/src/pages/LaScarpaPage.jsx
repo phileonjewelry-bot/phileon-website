@@ -1,23 +1,133 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useAddToCart } from "../hooks/useAddToCart";
+import Lightbox from "../components/CinematicLightbox";
 
 /**
- * LA SCARPA DELLA REGINA — placeholder/holding page.
+ * LA SCARPA DELLA REGINA — Full Editorial Product Page
  *
- * Hero: split editorial — portrait on the right, regal Italian dual-language
- * editorial copy on the left. Rose-silk atmosphere, mirrors LA MADONNA's
- * holding-page pattern.
+ * "La corona fu data. La scarpa fu guadagnata."
+ * "The crown was given. The shoe was earned."
+ *
+ * PHILEON Signature Objects · $9,000 USD (internal: $12,000 CAD).
+ * Rose-silk regal palette. Cormorant Garamond italics. Bright luxury
+ * editorial. Single CinematicLightbox shared with LA MADONNA / BAPE.
+ *
+ * Namespace: .scarpa-  (no class bleed)
  */
 
+const GALLERY = [
+  { src: "/la-scarpa/scarpa-portrait.jpg",         label: "01 — HERO",           alt: "LA SCARPA DELLA REGINA — model wearing the rose-gold stiletto pendant in baroque diamond frame" },
+  { src: "/la-scarpa/scarpa-04-velvet-box.png",    label: "02 — ARCHIVE OBJECT", alt: "LA SCARPA — pendant on velvet presentation tray" },
+  { src: "/la-scarpa/scarpa-02-marble.png",        label: "03 — LIFESTYLE",      alt: "LA SCARPA — pendant on Carrara marble" },
+  { src: "/la-scarpa/scarpa-03-glass-table.png",   label: "04 — REFLECTION",     alt: "LA SCARPA — pendant on glass surface, mirrored reflection" },
+  { src: "/la-scarpa/scarpa-pendant.png",          label: "05 — FRAME",          alt: "LA SCARPA — rose-gold stiletto pendant in baroque diamond frame, front detail" },
+  { src: "/la-scarpa/scarpa-05-heel-macro.png",    label: "06 — DETAIL",         alt: "LA SCARPA — macro of the sculpted stiletto heel and diamond field" },
+  { src: "/la-scarpa/scarpa-01-three-quarter.png", label: "07 — PROFILE",        alt: "LA SCARPA — pendant three-quarter side angle" },
+];
+
+const PRICE_USD = 9000;
+
+const EDITORIAL_BLOCKS = [
+  {
+    title: "COMPOSITION",
+    body:
+      "La Scarpa della Regina transforms a symbol of elegance into a framed object of permanence. Sculpted in 18K rose gold and suspended within an ornamental architectural border, the pendant merges couture femininity with collectible design.",
+  },
+  {
+    title: "STRUCTURE",
+    body:
+      "The silhouette is suspended against a hand-set diamond field designed to mimic cut crystal reflections. The framed composition creates the feeling of a preserved icon — less accessory, more artifact.",
+  },
+  {
+    title: "CRAFT",
+    body:
+      "Every surface is mirror-polished to amplify the liquid warmth of rose gold. The stiletto form is intentionally elongated and tensioned, creating a sculptural balance between delicacy and precision.",
+  },
+  {
+    title: "FINAL WORD",
+    body: "The crown was given. The shoe was earned.",
+  },
+];
+
+const SPECS = [
+  { label: "METAL",        value: "18K Rose Gold" },
+  { label: "STONES",       value: "Hand-set diamond field · 0.85ct total" },
+  { label: "WEIGHT",       value: "Approx. 15.5g gold weight" },
+  { label: "CONSTRUCTION", value: "Mirror-polished sculptural stiletto suspended within ornamental architectural frame." },
+  { label: "PRODUCTION",   value: "Made to order · individually finished by hand." },
+  { label: "LEAD TIME",    value: "4–6 weeks" },
+];
+
+const INCLUDED = [
+  "Complimentary insured worldwide shipping",
+  "Couture presentation packaging",
+  "Certificate of authenticity",
+  "Private client handling",
+];
+
 export default function LaScarpaPage() {
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const [lightboxIdx, setLightboxIdx] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const galleryRef = useRef(null);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setIsMounted(true), 60);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  // Reveal observer for editorial sections
+  useEffect(() => {
+    const els = document.querySelectorAll(".scarpa-reveal");
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("visible")),
+      { threshold: 0.18 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: "la-scarpa-della-regina",
+      name: "LA SCARPA DELLA REGINA",
+      price: PRICE_USD,
+      productKey: "la-scarpa-della-regina",
+      tierKey: "18k-rose",
+      metal: "18K Rose Gold",
+      quantity: 1,
+      image: GALLERY[0].src,
+    });
+  };
+
+  const formattedPrice = `$${PRICE_USD.toLocaleString("en-US")} USD`;
+
   return (
     <section
-      className="relative overflow-hidden bg-[#f6f1eb]"
+      className={`scarpa-room${isMounted ? " scarpa-loaded" : ""}`}
       data-page="la-scarpa"
       data-testid="la-scarpa-page"
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
+
+        .scarpa-room {
+          position: relative;
+          background: #f6f1eb;
+          overflow: hidden;
+          opacity: 0;
+          transition: opacity 900ms ease;
+        }
+        .scarpa-room.scarpa-loaded { opacity: 1; }
+
+        .scarpa-reveal { opacity: 0; transform: translateY(18px); transition: opacity 1100ms ease, transform 1100ms ease; }
+        .scarpa-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .scarpa-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .scarpa-cinzel    { font-family: 'Cinzel', serif; }
+        .scarpa-inter     { font-family: 'Inter', sans-serif; }
 
         .scarpa-portrait-frame {
           animation: scarpaFrameBreath 18s ease-in-out infinite alternate;
@@ -39,8 +149,237 @@ export default function LaScarpaPage() {
         }
         .scarpa-back:hover { color: rgba(95, 46, 46, 0.95); }
 
+        /* ─── HERO STACK ──────────────────────────────────── */
+        .scarpa-hero-cta {
+          margin-top: 56px;
+          display: flex; flex-direction: column; align-items: flex-start;
+          gap: 14px;
+        }
+        .scarpa-hero-price {
+          font-family: 'Cinzel', serif;
+          font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+          letter-spacing: 0.32em;
+          color: #5f2e2e;
+        }
+        .scarpa-hero-leadtime {
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.34em;
+          text-transform: uppercase;
+          color: rgba(95, 46, 46, 0.55);
+        }
+        .scarpa-cta-btn {
+          margin-top: 8px;
+          padding: 18px 56px;
+          background: #5f2e2e;
+          color: #f6e4e2;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          border: none;
+          cursor: pointer;
+          transition: background 320ms ease, transform 320ms ease, letter-spacing 320ms ease;
+        }
+        .scarpa-cta-btn:hover {
+          background: #4a2222;
+          letter-spacing: 0.48em;
+        }
+        .scarpa-cta-btn:disabled { opacity: 0.55; cursor: default; }
+
+        /* ─── EDITORIAL BLOCKS ────────────────────────────── */
+        .scarpa-editorial {
+          position: relative; z-index: 10;
+          padding: 120px 24px 100px;
+          background:
+            radial-gradient(circle at 20% 30%, rgba(244, 214, 216, 0.45), transparent 60%),
+            radial-gradient(circle at 80% 70%, rgba(232, 182, 187, 0.4), transparent 55%),
+            #faf3ed;
+        }
+        .scarpa-editorial-grid {
+          max-width: 1100px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 1fr;
+          column-gap: 80px; row-gap: 70px;
+        }
+        .scarpa-editorial-block .scarpa-block-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px; letter-spacing: 0.48em;
+          color: rgba(95, 46, 46, 0.7);
+          text-transform: uppercase;
+          margin-bottom: 22px;
+          display: inline-block;
+          padding-bottom: 14px;
+          border-bottom: 1px solid rgba(95, 46, 46, 0.18);
+        }
+        .scarpa-editorial-block .scarpa-block-body {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          font-size: clamp(1.05rem, 1.25vw, 1.3rem);
+          line-height: 1.7;
+          color: rgba(67, 33, 30, 0.88);
+          font-style: italic;
+        }
+
+        /* ─── ARCHIVE GALLERY ─────────────────────────────── */
+        .scarpa-archive {
+          position: relative;
+          padding: 120px 24px 120px;
+          background:
+            linear-gradient(180deg, #2a1418 0%, #3a1c20 100%);
+        }
+        .scarpa-archive::before {
+          content: ""; position: absolute; inset: 0; pointer-events: none;
+          background: radial-gradient(circle at 50% 0%, rgba(212, 154, 164, 0.18), transparent 60%);
+        }
+        .scarpa-archive-head { position: relative; max-width: 1300px; margin: 0 auto 60px; text-align: center; }
+        .scarpa-archive-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px; letter-spacing: 0.5em;
+          color: rgba(232, 182, 187, 0.7);
+          text-transform: uppercase;
+          margin-bottom: 22px;
+        }
+        .scarpa-archive-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: clamp(1.5rem, 2vw, 2rem);
+          color: rgba(245, 220, 215, 0.92);
+          letter-spacing: 0.03em;
+        }
+        .scarpa-archive-grid {
+          position: relative;
+          max-width: 1300px; margin: 0 auto;
+          display: grid; grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        }
+        @media (max-width: 900px) { .scarpa-archive-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .scarpa-archive-grid { grid-template-columns: 1fr; } }
+
+        .scarpa-archive-cell {
+          position: relative;
+          overflow: hidden;
+          aspect-ratio: 4 / 5;
+          background: #1a0c0f;
+          border: 1px solid rgba(212, 154, 164, 0.12);
+          cursor: pointer;
+          padding: 0;
+          transition: border-color 480ms ease, transform 480ms ease;
+        }
+        .scarpa-archive-cell:hover {
+          border-color: rgba(232, 182, 187, 0.42);
+          transform: translateY(-3px);
+        }
+        .scarpa-archive-cell img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 1200ms ease, filter 1200ms ease;
+          filter: brightness(0.92) saturate(0.95);
+        }
+        .scarpa-archive-cell:hover img { transform: scale(1.04); filter: brightness(1) saturate(1.05); }
+        .scarpa-archive-cell-label {
+          position: absolute; bottom: 14px; left: 14px;
+          font-family: 'Inter', sans-serif;
+          font-size: 9px; letter-spacing: 0.38em;
+          color: rgba(245, 220, 215, 0.7);
+          text-transform: uppercase;
+          background: rgba(26, 12, 15, 0.55);
+          padding: 6px 10px;
+          backdrop-filter: blur(6px);
+        }
+
+        /* ─── SPEC BLOCK ─────────────────────────────────── */
+        .scarpa-spec {
+          padding: 120px 24px;
+          background: #faf3ed;
+        }
+        .scarpa-spec-inner {
+          max-width: 1100px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 1fr;
+          gap: 80px;
+        }
+        @media (max-width: 900px) { .scarpa-spec-inner { grid-template-columns: 1fr; gap: 60px; } }
+        .scarpa-section-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px; letter-spacing: 0.5em;
+          color: rgba(95, 46, 46, 0.7);
+          text-transform: uppercase;
+        }
+        .scarpa-spec-table { margin-top: 32px; }
+        .scarpa-spec-row {
+          padding: 20px 0;
+          border-bottom: 1px solid rgba(95, 46, 46, 0.12);
+        }
+        .scarpa-spec-label {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px; letter-spacing: 0.42em;
+          color: rgba(95, 46, 46, 0.55);
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+        .scarpa-spec-value {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: clamp(1rem, 1.15vw, 1.18rem);
+          color: rgba(67, 33, 30, 0.88);
+          line-height: 1.55;
+        }
+
+        /* ─── ACQUIRE BLOCK ──────────────────────────────── */
+        .scarpa-acquire {
+          padding: 120px 24px 100px;
+          background:
+            radial-gradient(circle at 50% 100%, rgba(212, 154, 164, 0.4), transparent 65%),
+            #f6f1eb;
+          text-align: center;
+        }
+        .scarpa-acquire-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: clamp(2rem, 3vw, 2.8rem);
+          color: #5f2e2e;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .scarpa-acquire-price {
+          margin-top: 18px;
+          font-family: 'Cinzel', serif;
+          font-size: clamp(1.1rem, 1.45vw, 1.4rem);
+          letter-spacing: 0.32em;
+          color: #5f2e2e;
+        }
+        .scarpa-acquire-lead {
+          margin-top: 14px;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px; letter-spacing: 0.32em;
+          color: rgba(95, 46, 46, 0.6);
+          text-transform: uppercase;
+        }
+
+        /* ─── SIGNATURE ──────────────────────────────────── */
+        .scarpa-sig {
+          padding: 100px 24px 140px;
+          background: #2a1418;
+          text-align: center;
+        }
+        .scarpa-sig-italian {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+          color: rgba(232, 182, 187, 0.92);
+          letter-spacing: 0.04em;
+        }
+        .scarpa-sig-english {
+          margin-top: 24px;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px; letter-spacing: 0.5em;
+          color: rgba(232, 182, 187, 0.5);
+          text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+          .scarpa-editorial-grid { grid-template-columns: 1fr; gap: 60px; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .scarpa-portrait-frame { animation: none !important; }
+          .scarpa-archive-cell img { transition: none !important; }
         }
       `}</style>
 
@@ -71,7 +410,7 @@ export default function LaScarpaPage() {
             className="mb-6 tracking-[0.45em] text-[#9b6b62] text-xs uppercase"
             data-testid="la-scarpa-eyebrow"
           >
-            Phileon · Regal Collection
+            PHILEON SIGNATURE OBJECTS
           </span>
 
           <h1
@@ -107,7 +446,7 @@ export default function LaScarpaPage() {
                 fontFamily: "'Cormorant Garamond', serif",
               }}
             >
-              Una regina non cammina piano.
+              Una regina non cammina in silenzio.
               <br />
               Lascia un'impressione.
             </p>
@@ -125,23 +464,21 @@ export default function LaScarpaPage() {
             </p>
           </div>
 
-          <div className="mt-14 space-y-3">
-            <p
-              className="tracking-[0.2em] uppercase text-[#7d544d]"
-              style={{
-                fontSize: "0.78rem",
-                fontFamily: "'Cormorant Garamond', serif",
-              }}
+          {/* PRICE + ACQUIRE inline CTA */}
+          <div className="scarpa-hero-cta" data-testid="la-scarpa-hero-cta">
+            <p className="scarpa-hero-price" data-testid="la-scarpa-hero-price">
+              {formattedPrice}
+            </p>
+            <p className="scarpa-hero-leadtime">Made to order · 4–6 weeks</p>
+            <button
+              type="button"
+              onClick={onAddToCart}
+              disabled={isAdding}
+              className="scarpa-cta-btn"
+              data-testid="la-scarpa-acquire-btn"
             >
-              La corona fu data.
-              <br />
-              La scarpa fu guadagnata.
-            </p>
-            <p className="tracking-[0.35em] text-[#8d655d] text-[10px] uppercase">
-              The crown was given.
-              <br />
-              The shoe was earned.
-            </p>
+              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ACQUIRE"}
+            </button>
           </div>
         </div>
 
@@ -151,16 +488,17 @@ export default function LaScarpaPage() {
           <img
             src="/la-scarpa/scarpa-portrait.jpg"
             alt="LA SCARPA DELLA REGINA — model wearing the rose-gold stiletto pendant in baroque diamond frame"
-            className="scarpa-portrait-frame relative z-10 mx-auto block w-full max-w-[640px] rounded-[6px] object-cover"
+            className="scarpa-portrait-frame relative z-10 mx-auto block w-full max-w-[640px] rounded-[6px] object-cover cursor-pointer"
             loading="eager"
             decoding="async"
+            onClick={() => setLightboxIdx(0)}
             data-testid="la-scarpa-portrait"
           />
         </div>
       </div>
 
       {/* ─── ARTIFACT — pendant render ─────────────────────── */}
-      <div className="relative z-10 mx-auto max-w-4xl px-6 pb-32 text-center">
+      <div className="relative z-10 mx-auto max-w-4xl px-6 pb-32 text-center scarpa-reveal">
         <p
           className="mb-6 tracking-[0.42em] text-[#9b6b62] text-[11px] uppercase"
           style={{ fontFamily: "'Inter', sans-serif" }}
@@ -172,13 +510,149 @@ export default function LaScarpaPage() {
           <img
             src="/la-scarpa/scarpa-pendant.png"
             alt="LA SCARPA DELLA REGINA — rose-gold stiletto pendant detail"
-            className="relative z-10 mx-auto w-full object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)]"
+            className="relative z-10 mx-auto w-full object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] cursor-pointer"
             loading="lazy"
             decoding="async"
+            onClick={() => setLightboxIdx(4)}
             data-testid="la-scarpa-pendant"
           />
         </div>
       </div>
+
+      {/* ─── EDITORIAL BLOCKS ──────────────────────────────── */}
+      <section className="scarpa-editorial scarpa-reveal" data-testid="la-scarpa-editorial">
+        <div className="scarpa-editorial-grid">
+          {EDITORIAL_BLOCKS.map((b) => (
+            <div
+              key={b.title}
+              className="scarpa-editorial-block"
+              data-testid={`la-scarpa-editorial-${b.title.toLowerCase().replace(/\s+/g, "-")}`}
+            >
+              <p className="scarpa-block-eyebrow">{b.title}</p>
+              <p className="scarpa-block-body">{b.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── ARCHIVE GALLERY ───────────────────────────────── */}
+      <section className="scarpa-archive scarpa-reveal" data-testid="la-scarpa-archive" ref={galleryRef}>
+        <div className="scarpa-archive-head">
+          <p className="scarpa-archive-eyebrow">LA SCARPA · ARCHIVE</p>
+          <p className="scarpa-archive-title">Seven frames. One artifact.<br />Click any image to enter the viewing room.</p>
+        </div>
+        <div className="scarpa-archive-grid" data-testid="la-scarpa-archive-grid">
+          {GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              type="button"
+              className="scarpa-archive-cell"
+              aria-label={g.label}
+              onClick={() => setLightboxIdx(i)}
+              data-testid={`la-scarpa-archive-cell-${i + 1}`}
+            >
+              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
+              <span className="scarpa-archive-cell-label">{g.label.split("—")[1]?.trim() || g.label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── CINEMATIC LIGHTBOX ────────────────────────────── */}
+      <Lightbox
+        items={GALLERY}
+        openIndex={lightboxIdx}
+        onClose={() => setLightboxIdx(null)}
+        onChange={(i) => setLightboxIdx(i)}
+        archiveLabel="LA SCARPA · ARCHIVE"
+      />
+
+      {/* ─── SPECIFICATIONS ────────────────────────────────── */}
+      <section className="scarpa-spec scarpa-reveal" data-testid="la-scarpa-spec">
+        <div className="scarpa-spec-inner">
+          <div>
+            <p className="scarpa-section-eyebrow">SPECIFICATION</p>
+            <div className="scarpa-spec-table">
+              {SPECS.map((s) => (
+                <div
+                  key={s.label}
+                  className="scarpa-spec-row"
+                  data-testid={`la-scarpa-spec-${s.label.toLowerCase()}`}
+                >
+                  <p className="scarpa-spec-label">{s.label}</p>
+                  <p className="scarpa-spec-value">{s.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="scarpa-section-eyebrow">INCLUDED WITH ACQUISITION</p>
+            <ul
+              style={{
+                marginTop: 32, padding: 0, listStyle: "none",
+                display: "flex", flexDirection: "column", gap: 18,
+              }}
+            >
+              {INCLUDED.map((line) => (
+                <li
+                  key={line}
+                  className="scarpa-cormorant"
+                  style={{
+                    fontSize: "clamp(15px, 1.15vw, 18px)",
+                    color: "rgba(67, 33, 30, 0.85)",
+                    fontStyle: "italic", fontWeight: 300,
+                    paddingBottom: 14,
+                    borderBottom: "1px solid rgba(95, 46, 46, 0.12)",
+                  }}
+                >
+                  {line}
+                </li>
+              ))}
+            </ul>
+            <p
+              className="scarpa-cormorant"
+              style={{
+                marginTop: 36, fontSize: 14, fontStyle: "italic",
+                color: "rgba(95, 46, 46, 0.55)", lineHeight: 1.7,
+              }}
+            >
+              Acquisitions are processed privately. A member of our atelier
+              will follow up to confirm specifications and finalise delivery.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── ACQUIRE BLOCK ─────────────────────────────────── */}
+      <section className="scarpa-acquire scarpa-reveal" data-testid="la-scarpa-acquire">
+        <p className="scarpa-section-eyebrow">ACQUISITION</p>
+        <h2 className="scarpa-acquire-title" data-testid="la-scarpa-acquire-title" style={{ marginTop: 24 }}>
+          LA SCARPA DELLA REGINA
+        </h2>
+        <p className="scarpa-acquire-price" data-testid="la-scarpa-price">{formattedPrice}</p>
+        <p className="scarpa-acquire-lead">Made to order · 4–6 weeks · Complimentary insured worldwide shipping</p>
+        <button
+          type="button"
+          onClick={onAddToCart}
+          disabled={isAdding}
+          className="scarpa-cta-btn"
+          style={{ marginTop: 36 }}
+          data-testid="la-scarpa-begin-commission-btn"
+        >
+          {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "BEGIN COMMISSION"}
+        </button>
+      </section>
+
+      {/* ─── SIGNATURE CLOSER ──────────────────────────────── */}
+      <section className="scarpa-sig scarpa-reveal" data-testid="la-scarpa-signature">
+        <p className="scarpa-sig-italian">
+          La corona fu data. La scarpa fu guadagnata.
+        </p>
+        <p className="scarpa-sig-english">
+          The crown was given. The shoe was earned.
+        </p>
+      </section>
 
       {/* Bottom shimmer */}
       <div className="absolute bottom-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-[#c58c84] to-transparent opacity-60 pointer-events-none" aria-hidden="true" />
