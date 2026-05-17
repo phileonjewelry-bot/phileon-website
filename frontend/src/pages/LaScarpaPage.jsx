@@ -47,11 +47,9 @@ const EDITORIAL_BLOCKS = [
     body:
       "Every surface is mirror-polished to amplify the liquid warmth of rose gold. The stiletto form is intentionally elongated and tensioned, creating a sculptural balance between delicacy and precision.",
   },
-  {
-    title: "FINAL WORD",
-    body: "Every great room has a woman in it worth remembering.",
-  },
 ];
+
+const FINAL_WORD = "Every great room has a woman in it worth remembering.";
 
 const SPECS = [
   { label: "METAL",        value: "18K Rose Gold" },
@@ -499,44 +497,6 @@ export default function LaScarpaPage() {
         </div>
       </div>
 
-      {/* ─── ARTIFACT — pendant render ─────────────────────── */}
-      <div className="relative z-10 mx-auto max-w-4xl px-6 pb-32 text-center scarpa-reveal">
-        <p
-          className="mb-6 tracking-[0.42em] text-[#9b6b62] text-[11px] uppercase"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
-          The Artifact
-        </p>
-        <div className="relative w-full max-w-[520px] mx-auto">
-          <div className="absolute inset-0 rounded-full bg-[#f0c8c1] blur-[100px] opacity-40" aria-hidden="true" />
-          <img
-            src="/la-scarpa/scarpa-pendant.png"
-            alt="LA SCARPA DELLA REGINA — rose-gold stiletto pendant detail"
-            className="relative z-10 mx-auto w-full object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] cursor-pointer"
-            loading="lazy"
-            decoding="async"
-            onClick={() => setLightboxIdx(5)}
-            data-testid="la-scarpa-pendant"
-          />
-        </div>
-      </div>
-
-      {/* ─── EDITORIAL BLOCKS ──────────────────────────────── */}
-      <section className="scarpa-editorial scarpa-reveal" data-testid="la-scarpa-editorial">
-        <div className="scarpa-editorial-grid">
-          {EDITORIAL_BLOCKS.map((b) => (
-            <div
-              key={b.title}
-              className="scarpa-editorial-block"
-              data-testid={`la-scarpa-editorial-${b.title.toLowerCase().replace(/\s+/g, "-")}`}
-            >
-              <p className="scarpa-block-eyebrow">{b.title}</p>
-              <p className="scarpa-block-body">{b.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ─── ARCHIVE GALLERY ───────────────────────────────── */}
       <section className="scarpa-archive scarpa-reveal" data-testid="la-scarpa-archive" ref={galleryRef}>
         <div className="scarpa-archive-head">
@@ -568,6 +528,22 @@ export default function LaScarpaPage() {
         onChange={(i) => setLightboxIdx(i)}
         archiveLabel="LA SCARPA · ARCHIVE"
       />
+
+      {/* ─── EDITORIAL BLOCKS ──────────────────────────────── */}
+      <section className="scarpa-editorial scarpa-reveal" data-testid="la-scarpa-editorial">
+        <div className="scarpa-editorial-grid">
+          {EDITORIAL_BLOCKS.map((b) => (
+            <div
+              key={b.title}
+              className="scarpa-editorial-block"
+              data-testid={`la-scarpa-editorial-${b.title.toLowerCase().replace(/\s+/g, "-")}`}
+            >
+              <p className="scarpa-block-eyebrow">{b.title}</p>
+              <p className="scarpa-block-body">{b.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* ─── SPECIFICATIONS ────────────────────────────────── */}
       <section className="scarpa-spec scarpa-reveal" data-testid="la-scarpa-spec">
@@ -646,13 +622,17 @@ export default function LaScarpaPage() {
         </button>
       </section>
 
-      {/* ─── SIGNATURE CLOSER ──────────────────────────────── */}
-      <section className="scarpa-sig scarpa-reveal" data-testid="la-scarpa-signature">
-        <p className="scarpa-sig-italian">
-          La corona fu data. La scarpa fu guadagnata.
+      {/* ─── FINAL WORD — closer ───────────────────────────── */}
+      <section className="scarpa-sig scarpa-reveal" data-testid="la-scarpa-final-word">
+        <p
+          className="scarpa-sig-english"
+          style={{ marginTop: 0, marginBottom: 24 }}
+          data-testid="la-scarpa-final-word-eyebrow"
+        >
+          FINAL WORD
         </p>
-        <p className="scarpa-sig-english">
-          The crown was given. The shoe was earned.
+        <p className="scarpa-sig-italian" data-testid="la-scarpa-final-word-body">
+          {FINAL_WORD}
         </p>
       </section>
 

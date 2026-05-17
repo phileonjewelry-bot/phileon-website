@@ -19,6 +19,21 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA DELLA REGINA — Page Restructure
+- Removed duplicate "Artifact" pendant render section (FRAME tile in
+  archive already covers this view).
+- Reordered final page flow per user spec:
+  1. Hero (portrait + Italian/English intro copy + ADD TO CART)
+  2. 9-Slot Archive Gallery (CinematicLightbox)
+  3. Editorial — COMPOSITION · STRUCTURE · CRAFT (3 blocks; FINAL WORD
+     pulled out)
+  4. Specifications
+  5. Pricing + ADD TO CART
+  6. FINAL WORD — singular closer on burgundy band
+     ("Every great room has a woman in it worth remembering.")
+- Italian "La corona fu data" signature stanza retired in favour of the
+  cleaner FINAL WORD closer per the new spec.
+
 ### 2026-02 — LA SCARPA DELLA REGINA — 9-Slot Archive + LA REGINA Closer
 - Gallery reordered per final user spec and expanded to 9 frames:
   1. CAMPAIGN · 2. INTIMACY · 3. ARCHIVE OBJECT · 4. LIFESTYLE ·
