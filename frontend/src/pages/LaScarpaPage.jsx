@@ -479,7 +479,7 @@ export default function LaScarpaPage() {
               className="scarpa-cta-btn"
               data-testid="la-scarpa-acquire-btn"
             >
-              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ACQUIRE"}
+              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
             </button>
           </div>
         </div>
@@ -642,7 +642,7 @@ export default function LaScarpaPage() {
           style={{ marginTop: 36 }}
           data-testid="la-scarpa-begin-commission-btn"
         >
-          {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "BEGIN COMMISSION"}
+          {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
         </button>
       </section>
 
