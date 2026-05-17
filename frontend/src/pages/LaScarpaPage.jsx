@@ -25,6 +25,7 @@ const GALLERY = [
   { src: "/la-scarpa/scarpa-pendant.png",          label: "05 — FRAME",          alt: "LA SCARPA — rose-gold stiletto pendant in baroque diamond frame, front detail" },
   { src: "/la-scarpa/scarpa-05-heel-macro.png",    label: "06 — DETAIL",         alt: "LA SCARPA — macro of the sculpted stiletto heel and diamond field" },
   { src: "/la-scarpa/scarpa-01-three-quarter.png", label: "07 — PROFILE",        alt: "LA SCARPA — pendant three-quarter side angle" },
+  { src: "/la-scarpa/scarpa-08-in-hand.png",       label: "08 — IN HAND",        alt: "LA SCARPA — pendant cradled in a manicured hand against ivory silk" },
 ];
 
 const PRICE_USD = 9000;
@@ -47,7 +48,7 @@ const EDITORIAL_BLOCKS = [
   },
   {
     title: "FINAL WORD",
-    body: "The crown was given. The shoe was earned.",
+    body: "Every great room has a woman in it worth remembering.",
   },
 ];
 
@@ -446,9 +447,9 @@ export default function LaScarpaPage() {
                 fontFamily: "'Cormorant Garamond', serif",
               }}
             >
-              Una regina non cammina in silenzio.
+              Non chiede la stanza.
               <br />
-              Lascia un'impressione.
+              La stanza si riorganizza intorno a lei.
             </p>
 
             <p
@@ -458,9 +459,9 @@ export default function LaScarpaPage() {
                 fontFamily: "'Inter', sans-serif",
               }}
             >
-              A queen does not walk softly.
+              A queen does not ask for the room.
               <br />
-              She leaves an impression.
+              The room rearranges itself.
             </p>
           </div>
 

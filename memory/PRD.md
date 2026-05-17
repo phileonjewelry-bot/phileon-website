@@ -19,6 +19,16 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA DELLA REGINA — Copy Refresh + 8th Gallery Slot
+- Replaced hero couplet:
+  - Italian: "Non chiede la stanza. / La stanza si riorganizza intorno a lei."
+  - English: "A queen does not ask for the room. / The room rearranges itself."
+- FINAL WORD editorial block updated → "Every great room has a woman in it
+  worth remembering."
+- Added 8th gallery frame `IN HAND` (`/la-scarpa/scarpa-08-in-hand.png`) —
+  manicured hand cradling the pendant against ivory silk. Lightbox now
+  reads `08 / 08`.
+
 ### 2026-02 — LA SCARPA DELLA REGINA — Full Commerce Page Live
 - Escalated from holding page to full editorial commerce page.
 - USD pricing: $12,000 CAD × 0.75 = $9,000 USD (luxury rounding to nearest
