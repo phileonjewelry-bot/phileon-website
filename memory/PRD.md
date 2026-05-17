@@ -19,6 +19,18 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — FINAL WORD Closer Upgrade
+- Replaced the small Cormorant italic closer with a full editorial
+  cinema closer: 180px vertical padding, deep burgundy gradient
+  (#4a1f24 → #341317), centered ivory Cormorant headline at
+  clamp(2.4rem, 5vw, 4.8rem) line-height 1.08, soft cream FINAL WORD
+  eyebrow at 0.45em tracking.
+- Added animated gold signature line that draws from 0 → 240px over
+  3.5s ease-out with 0.45s delay — soft champagne radial gradient,
+  underlines the sentence like a signature. Verified: 240px width hit
+  exactly post-animation.
+- H2 semantic for accessibility.
+
 ### 2026-02 — LA SCARPA DELLA REGINA — Page Restructure
 - Removed duplicate "Artifact" pendant render section (FRAME tile in
   archive already covers this view).

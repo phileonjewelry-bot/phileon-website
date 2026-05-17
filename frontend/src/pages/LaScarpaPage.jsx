@@ -353,25 +353,53 @@ export default function LaScarpaPage() {
           text-transform: uppercase;
         }
 
-        /* ─── SIGNATURE ──────────────────────────────────── */
-        .scarpa-sig {
-          padding: 100px 24px 140px;
-          background: #2a1418;
+        /* ─── FINAL WORD ─────────────────────────────────── */
+        .scarpa-final-word {
+          position: relative;
+          background: linear-gradient(180deg, #4a1f24 0%, #341317 100%);
+          padding: 180px 24px;
+          overflow: hidden;
+        }
+        .scarpa-final-word-inner {
+          max-width: 980px;
+          margin: 0 auto;
           text-align: center;
         }
-        .scarpa-sig-italian {
-          font-family: 'Cormorant Garamond', serif;
-          font-style: italic; font-weight: 300;
-          font-size: clamp(1.4rem, 2.4vw, 2.2rem);
-          color: rgba(232, 182, 187, 0.92);
-          letter-spacing: 0.04em;
-        }
-        .scarpa-sig-english {
-          margin-top: 24px;
+        .scarpa-final-eyebrow {
+          display: block;
+          margin-bottom: 32px;
           font-family: 'Inter', sans-serif;
-          font-size: 11px; letter-spacing: 0.5em;
-          color: rgba(232, 182, 187, 0.5);
+          font-size: 0.82rem;
+          letter-spacing: 0.45em;
           text-transform: uppercase;
+          color: rgba(255, 240, 228, 0.68);
+        }
+        .scarpa-final-text {
+          margin: 0 auto;
+          max-width: 760px;
+          font-family: 'Cormorant Garamond', serif;
+          font-size: clamp(2.4rem, 5vw, 4.8rem);
+          line-height: 1.08;
+          font-weight: 500;
+          letter-spacing: -0.02em;
+          color: #fff6f0;
+        }
+        .scarpa-signature-line {
+          width: 0%;
+          height: 1px;
+          margin: 54px auto 0 auto;
+          background: linear-gradient(
+            90deg,
+            rgba(212, 168, 92, 0) 0%,
+            rgba(245, 214, 153, 0.95) 50%,
+            rgba(212, 168, 92, 0) 100%
+          );
+          animation: scarpaSignatureDraw 3.5s ease-out forwards;
+          animation-delay: 0.45s;
+        }
+        @keyframes scarpaSignatureDraw {
+          from { width: 0%;   opacity: 0; }
+          to   { width: 240px; opacity: 1; }
         }
 
         @media (max-width: 900px) {
@@ -623,17 +651,16 @@ export default function LaScarpaPage() {
       </section>
 
       {/* ─── FINAL WORD — closer ───────────────────────────── */}
-      <section className="scarpa-sig scarpa-reveal" data-testid="la-scarpa-final-word">
-        <p
-          className="scarpa-sig-english"
-          style={{ marginTop: 0, marginBottom: 24 }}
-          data-testid="la-scarpa-final-word-eyebrow"
-        >
-          FINAL WORD
-        </p>
-        <p className="scarpa-sig-italian" data-testid="la-scarpa-final-word-body">
-          {FINAL_WORD}
-        </p>
+      <section className="scarpa-final-word scarpa-reveal" data-testid="la-scarpa-final-word">
+        <div className="scarpa-final-word-inner">
+          <span className="scarpa-final-eyebrow" data-testid="la-scarpa-final-word-eyebrow">
+            FINAL WORD
+          </span>
+          <h2 className="scarpa-final-text" data-testid="la-scarpa-final-word-body">
+            {FINAL_WORD}
+          </h2>
+          <div className="scarpa-signature-line" aria-hidden="true" />
+        </div>
       </section>
 
       {/* Bottom shimmer */}
