@@ -18,14 +18,15 @@ import Lightbox from "../components/CinematicLightbox";
  */
 
 const GALLERY = [
-  { src: "/la-scarpa/scarpa-portrait.jpg",         label: "01 — HERO",           alt: "LA SCARPA DELLA REGINA — model wearing the rose-gold stiletto pendant in baroque diamond frame" },
-  { src: "/la-scarpa/scarpa-04-velvet-box.png",    label: "02 — ARCHIVE OBJECT", alt: "LA SCARPA — pendant on velvet presentation tray" },
-  { src: "/la-scarpa/scarpa-02-marble.png",        label: "03 — LIFESTYLE",      alt: "LA SCARPA — pendant on Carrara marble" },
-  { src: "/la-scarpa/scarpa-03-glass-table.png",   label: "04 — REFLECTION",     alt: "LA SCARPA — pendant on glass surface, mirrored reflection" },
-  { src: "/la-scarpa/scarpa-pendant.png",          label: "05 — FRAME",          alt: "LA SCARPA — rose-gold stiletto pendant in baroque diamond frame, front detail" },
-  { src: "/la-scarpa/scarpa-05-heel-macro.png",    label: "06 — DETAIL",         alt: "LA SCARPA — macro of the sculpted stiletto heel and diamond field" },
-  { src: "/la-scarpa/scarpa-01-three-quarter.png", label: "07 — PROFILE",        alt: "LA SCARPA — pendant three-quarter side angle" },
-  { src: "/la-scarpa/scarpa-08-in-hand.png",       label: "08 — IN HAND",        alt: "LA SCARPA — pendant cradled in a manicured hand against ivory silk" },
+  { src: "/la-scarpa/scarpa-portrait.jpg",         label: "01 — CAMPAIGN",       alt: "LA SCARPA DELLA REGINA — campaign portrait, model wearing the rose-gold stiletto pendant in baroque diamond frame" },
+  { src: "/la-scarpa/scarpa-08-in-hand.png",       label: "02 — INTIMACY",       alt: "LA SCARPA — pendant cradled in a manicured hand against ivory silk" },
+  { src: "/la-scarpa/scarpa-04-velvet-box.png",    label: "03 — ARCHIVE OBJECT", alt: "LA SCARPA — pendant on velvet presentation tray" },
+  { src: "/la-scarpa/scarpa-02-marble.png",        label: "04 — LIFESTYLE",      alt: "LA SCARPA — pendant on Carrara marble" },
+  { src: "/la-scarpa/scarpa-03-glass-table.png",   label: "05 — REFLECTION",     alt: "LA SCARPA — pendant on glass surface, mirrored reflection" },
+  { src: "/la-scarpa/scarpa-pendant.png",          label: "06 — FRAME",          alt: "LA SCARPA — rose-gold stiletto pendant in baroque diamond frame, front detail" },
+  { src: "/la-scarpa/scarpa-05-heel-macro.png",    label: "07 — DETAIL",         alt: "LA SCARPA — macro of the sculpted stiletto heel and diamond field" },
+  { src: "/la-scarpa/scarpa-01-three-quarter.png", label: "08 — PROFILE",        alt: "LA SCARPA — pendant three-quarter side angle" },
+  { src: "/la-scarpa/scarpa-09-la-regina.png",     label: "09 — LA REGINA",      alt: "LA SCARPA — owner in emerald silk holding the pendant within a vanity-room interior" },
 ];
 
 const PRICE_USD = 9000;
@@ -514,7 +515,7 @@ export default function LaScarpaPage() {
             className="relative z-10 mx-auto w-full object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] cursor-pointer"
             loading="lazy"
             decoding="async"
-            onClick={() => setLightboxIdx(4)}
+            onClick={() => setLightboxIdx(5)}
             data-testid="la-scarpa-pendant"
           />
         </div>
@@ -540,7 +541,7 @@ export default function LaScarpaPage() {
       <section className="scarpa-archive scarpa-reveal" data-testid="la-scarpa-archive" ref={galleryRef}>
         <div className="scarpa-archive-head">
           <p className="scarpa-archive-eyebrow">LA SCARPA · ARCHIVE</p>
-          <p className="scarpa-archive-title">Seven frames. One artifact.<br />Click any image to enter the viewing room.</p>
+          <p className="scarpa-archive-title">Nine frames. One artifact.<br />Click any image to enter the viewing room.</p>
         </div>
         <div className="scarpa-archive-grid" data-testid="la-scarpa-archive-grid">
           {GALLERY.map((g, i) => (

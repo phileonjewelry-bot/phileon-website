@@ -19,6 +19,19 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA DELLA REGINA — 9-Slot Archive + LA REGINA Closer
+- Gallery reordered per final user spec and expanded to 9 frames:
+  1. CAMPAIGN · 2. INTIMACY · 3. ARCHIVE OBJECT · 4. LIFESTYLE ·
+  5. REFLECTION · 6. FRAME · 7. DETAIL · 8. PROFILE · 9. LA REGINA.
+- Added LA REGINA ownership-fantasy shot (`/la-scarpa/scarpa-09-la-regina.png`)
+  as the closer — owner in emerald silk holding the pendant within a
+  vanity-room interior. Lightbox now reads `09 / 09`.
+- Archive subtitle updated → "Nine frames. One artifact."
+- Pendant render click target corrected to FRAME (lightbox idx 5, 1-indexed
+  slot 06) following the reorder.
+- **STILL PENDING**: 10th `ON BODY` slot — no image yet supplied that's
+  distinct from the CAMPAIGN portrait.
+
 ### 2026-02 — LA SCARPA DELLA REGINA — Copy Refresh + 8th Gallery Slot
 - Replaced hero couplet:
   - Italian: "Non chiede la stanza. / La stanza si riorganizza intorno a lei."
