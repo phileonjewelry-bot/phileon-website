@@ -19,6 +19,20 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — Archive: Vertical Grid → Horizontal Swipe Slider
+- Retired the dark 3-col burgundy archive grid in favour of a bright
+  horizontal swipeable slider on a `#f6f1eb` champagne ground.
+- Slides: `flex: 0 0 min(78vw, 460px)` · 4:5 aspect · 24px radius ·
+  scroll-snap mandatory · `-webkit-overflow-scrolling: touch` ·
+  `28px 80px` burgundy ambient shadow.
+- Label pill: gold-rimmed glass capsule bottom-aligned with index +
+  slot name (`01 · CAMPAIGN`, `02 · INTIMACY`, …).
+- Header retitled "THE ARCHIVE" eyebrow + "Nine frames. One artifact."
+  in italic Cormorant.
+- Custom 4px scrollbar in burgundy palette.
+- Lightbox wiring preserved — every slide opens the CinematicLightbox
+  at its index.
+
 ### 2026-02 — LA SCARPA — FINAL WORD Closer Upgrade
 - Replaced the small Cormorant italic closer with a full editorial
   cinema closer: 180px vertical padding, deep burgundy gradient

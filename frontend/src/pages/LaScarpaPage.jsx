@@ -220,70 +220,111 @@ export default function LaScarpaPage() {
           font-style: italic;
         }
 
-        /* ─── ARCHIVE GALLERY ─────────────────────────────── */
-        .scarpa-archive {
-          position: relative;
-          padding: 120px 24px 120px;
-          background:
-            linear-gradient(180deg, #2a1418 0%, #3a1c20 100%);
-        }
-        .scarpa-archive::before {
-          content: ""; position: absolute; inset: 0; pointer-events: none;
-          background: radial-gradient(circle at 50% 0%, rgba(212, 154, 164, 0.18), transparent 60%);
-        }
-        .scarpa-archive-head { position: relative; max-width: 1300px; margin: 0 auto 60px; text-align: center; }
-        .scarpa-archive-eyebrow {
-          font-family: 'Inter', sans-serif;
-          font-size: 10px; letter-spacing: 0.5em;
-          color: rgba(232, 182, 187, 0.7);
-          text-transform: uppercase;
-          margin-bottom: 22px;
-        }
-        .scarpa-archive-title {
-          font-family: 'Cormorant Garamond', serif;
-          font-style: italic; font-weight: 300;
-          font-size: clamp(1.5rem, 2vw, 2rem);
-          color: rgba(245, 220, 215, 0.92);
-          letter-spacing: 0.03em;
-        }
-        .scarpa-archive-grid {
-          position: relative;
-          max-width: 1300px; margin: 0 auto;
-          display: grid; grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
-        }
-        @media (max-width: 900px) { .scarpa-archive-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 560px) { .scarpa-archive-grid { grid-template-columns: 1fr; } }
-
-        .scarpa-archive-cell {
-          position: relative;
+        /* ─── ARCHIVE — HORIZONTAL SWIPE SLIDER ───────────── */
+        .scarpa-archive-slider-section {
+          width: 100%;
+          padding: 110px 0 130px;
+          background: #f6f1eb;
           overflow: hidden;
-          aspect-ratio: 4 / 5;
-          background: #1a0c0f;
-          border: 1px solid rgba(212, 154, 164, 0.12);
-          cursor: pointer;
-          padding: 0;
-          transition: border-color 480ms ease, transform 480ms ease;
         }
-        .scarpa-archive-cell:hover {
-          border-color: rgba(232, 182, 187, 0.42);
-          transform: translateY(-3px);
+        .scarpa-archive-header {
+          padding: 0 24px 34px;
+          text-align: center;
         }
-        .scarpa-archive-cell img {
-          width: 100%; height: 100%; object-fit: cover;
-          transition: transform 1200ms ease, filter 1200ms ease;
-          filter: brightness(0.92) saturate(0.95);
-        }
-        .scarpa-archive-cell:hover img { transform: scale(1.04); filter: brightness(1) saturate(1.05); }
-        .scarpa-archive-cell-label {
-          position: absolute; bottom: 14px; left: 14px;
+        .scarpa-archive-header span {
+          display: block;
+          margin-bottom: 16px;
           font-family: 'Inter', sans-serif;
-          font-size: 9px; letter-spacing: 0.38em;
-          color: rgba(245, 220, 215, 0.7);
+          font-size: 0.76rem;
+          letter-spacing: 0.42em;
           text-transform: uppercase;
-          background: rgba(26, 12, 15, 0.55);
-          padding: 6px 10px;
-          backdrop-filter: blur(6px);
+          color: rgba(92, 48, 47, 0.62);
+        }
+        .scarpa-archive-header p {
+          margin: 0;
+          font-family: 'Cormorant Garamond', serif;
+          font-size: clamp(1.5rem, 3vw, 2.6rem);
+          font-style: italic;
+          color: #5f2e2e;
+        }
+        .scarpa-archive-slider {
+          display: flex;
+          gap: 22px;
+          overflow-x: auto;
+          overscroll-behavior-x: contain;
+          scroll-snap-type: x mandatory;
+          scroll-padding-left: 24px;
+          padding: 0 24px 22px;
+          -webkit-overflow-scrolling: touch;
+        }
+        .scarpa-archive-slider::-webkit-scrollbar { height: 4px; }
+        .scarpa-archive-slider::-webkit-scrollbar-track {
+          background: rgba(95, 46, 46, 0.08);
+        }
+        .scarpa-archive-slider::-webkit-scrollbar-thumb {
+          background: rgba(137, 83, 75, 0.45);
+          border-radius: 999px;
+        }
+        .scarpa-archive-slide {
+          position: relative;
+          flex: 0 0 min(78vw, 460px);
+          aspect-ratio: 4 / 5;
+          border: 1px solid rgba(137, 83, 75, 0.22);
+          border-radius: 24px;
+          overflow: hidden;
+          padding: 0;
+          background: #1c0d0f;
+          cursor: pointer;
+          scroll-snap-align: center;
+          box-shadow: 0 28px 80px rgba(73, 34, 31, 0.14);
+        }
+        .scarpa-archive-slide img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transform: scale(1.01);
+          transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+                      filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .scarpa-archive-slide:hover img {
+          transform: scale(1.045);
+          filter: brightness(1.04) saturate(1.04);
+        }
+        .scarpa-slide-label {
+          position: absolute;
+          left: 18px; right: 18px; bottom: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 14px 16px;
+          border: 1px solid rgba(245, 214, 153, 0.22);
+          border-radius: 999px;
+          background: rgba(30, 12, 14, 0.48);
+          backdrop-filter: blur(14px);
+        }
+        .scarpa-slide-label span,
+        .scarpa-slide-label p {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.68rem;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: rgba(255, 246, 240, 0.78);
+        }
+        @media (max-width: 768px) {
+          .scarpa-archive-slider-section { padding: 82px 0 96px; }
+          .scarpa-archive-slider {
+            gap: 16px;
+            padding: 0 18px 20px;
+            scroll-padding-left: 18px;
+          }
+          .scarpa-archive-slide { flex-basis: 82vw; border-radius: 20px; }
+          .scarpa-slide-label {
+            left: 12px; right: 12px; bottom: 12px;
+            padding: 12px 14px;
+          }
         }
 
         /* ─── SPEC BLOCK ─────────────────────────────────── */
@@ -525,24 +566,33 @@ export default function LaScarpaPage() {
         </div>
       </div>
 
-      {/* ─── ARCHIVE GALLERY ───────────────────────────────── */}
-      <section className="scarpa-archive scarpa-reveal" data-testid="la-scarpa-archive" ref={galleryRef}>
-        <div className="scarpa-archive-head">
-          <p className="scarpa-archive-eyebrow">LA SCARPA · ARCHIVE</p>
-          <p className="scarpa-archive-title">Nine frames. One artifact.<br />Click any image to enter the viewing room.</p>
+      {/* ─── ARCHIVE — HORIZONTAL SWIPE SLIDER ─────────────── */}
+      <section className="scarpa-archive-slider-section scarpa-reveal" data-testid="la-scarpa-archive" ref={galleryRef}>
+        <div className="scarpa-archive-header">
+          <span>THE ARCHIVE</span>
+          <p>Nine frames. One artifact.</p>
         </div>
-        <div className="scarpa-archive-grid" data-testid="la-scarpa-archive-grid">
+
+        <div className="scarpa-archive-slider" aria-label="LA SCARPA gallery slider" data-testid="la-scarpa-archive-grid">
           {GALLERY.map((g, i) => (
             <button
               key={g.src}
               type="button"
-              className="scarpa-archive-cell"
-              aria-label={g.label}
+              className="scarpa-archive-slide"
               onClick={() => setLightboxIdx(i)}
+              aria-label={`Open ${g.label}`}
               data-testid={`la-scarpa-archive-cell-${i + 1}`}
             >
-              <img src={g.src} alt={g.alt} loading="eager" decoding="async" />
-              <span className="scarpa-archive-cell-label">{g.label.split("—")[1]?.trim() || g.label}</span>
+              <img
+                src={g.src}
+                alt={g.alt}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+              <div className="scarpa-slide-label">
+                <span>{String(i + 1).padStart(2, "0")}</span>
+                <p>{g.label.split("—")[1]?.trim() || g.label}</p>
+              </div>
             </button>
           ))}
         </div>
