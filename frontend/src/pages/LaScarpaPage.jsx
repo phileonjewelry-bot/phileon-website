@@ -554,22 +554,21 @@ export default function LaScarpaPage() {
           left: 18px; right: 18px; bottom: 18px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          gap: 16px;
-          padding: 14px 16px;
+          justify-content: flex-start;
+          gap: 0;
+          padding: 10px 14px;
           border: 1px solid rgba(245, 214, 153, 0.22);
           border-radius: 999px;
           background: rgba(30, 12, 14, 0.48);
           backdrop-filter: blur(14px);
         }
-        .scarpa-slide-label span,
-        .scarpa-slide-label p {
+        .scarpa-slide-label span {
           margin: 0;
           font-family: 'Inter', sans-serif;
-          font-size: 0.68rem;
-          letter-spacing: 0.32em;
+          font-size: 0.62rem;
+          letter-spacing: 0.28em;
           text-transform: uppercase;
-          color: rgba(255, 246, 240, 0.78);
+          color: rgba(255, 246, 240, 0.92);
         }
         @media (max-width: 768px) {
           .scarpa-archive-slider-section { padding: 82px 0 96px; }
@@ -766,6 +765,43 @@ export default function LaScarpaPage() {
             max-width: 260px !important;
           }
         }
+
+        /* ─── MOBILE ARCHIVE — REDUCE VISUAL WEIGHT ─────────
+           Keeps the cinematic swipe gallery secondary to the
+           hero video on mobile. */
+        @media (max-width: 768px) {
+          .scarpa-archive-slider-section {
+            padding: 48px 0 56px !important;
+          }
+          .scarpa-archive-header {
+            padding: 0 18px 22px !important;
+          }
+          .scarpa-archive-header span {
+            font-size: 0.62rem !important;
+            letter-spacing: 0.34em !important;
+            margin-bottom: 10px !important;
+          }
+          .scarpa-archive-header p {
+            font-size: 1.45rem !important;
+            line-height: 1.2 !important;
+          }
+          .scarpa-archive-slide {
+            flex: 0 0 68vw !important;
+            aspect-ratio: 4 / 5 !important;
+            border-radius: 18px !important;
+          }
+          .scarpa-slide-label {
+            left: 10px !important;
+            right: 10px !important;
+            bottom: 10px !important;
+            padding: 10px 14px !important;
+          }
+          .scarpa-slide-label span {
+            font-size: 0.62rem !important;
+            letter-spacing: 0.28em !important;
+            opacity: 0.92 !important;
+          }
+        }
       `}</style>
 
       <Link to="/shop?category=pendants&audience=ladies" className="scarpa-back" data-testid="la-scarpa-back-btn">
@@ -854,7 +890,6 @@ export default function LaScarpaPage() {
               />
               <div className="scarpa-slide-label">
                 <span>{String(i + 1).padStart(2, "0")}</span>
-                <p>{g.label.split("—")[1]?.trim() || g.label}</p>
               </div>
             </button>
           ))}
