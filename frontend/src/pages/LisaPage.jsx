@@ -519,6 +519,85 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           color: rgba(232, 230, 223, 0.4);
         }
 
+        /* ─── LISA SMALL EDITORIAL PAUSE ──────────────────── */
+        .lisa-essay {
+          position: relative;
+          padding: 140px 24px 130px;
+          background: #050706;
+          overflow: hidden;
+        }
+        .lisa-essay::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(circle at 50% 30%, rgba(20, 95, 70, 0.16), transparent 55%);
+          pointer-events: none;
+        }
+        .lisa-essay-inner {
+          position: relative;
+          max-width: 760px;
+          margin: 0 auto;
+          text-align: center;
+        }
+        .lisa-essay-eyebrow {
+          display: block;
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(54, 158, 118, 0.72);
+          margin-bottom: 38px;
+        }
+        .lisa-essay-headline {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 400;
+          font-size: clamp(2.2rem, 4.2vw, 3.8rem);
+          line-height: 1.06;
+          letter-spacing: 0.005em;
+          color: #f0ede4;
+          margin: 0 0 38px;
+        }
+        .lisa-essay-couplet {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1.3rem, 2vw, 1.8rem);
+          line-height: 1.5;
+          color: rgba(232, 230, 223, 0.78);
+          margin: 0 0 50px;
+        }
+        .lisa-essay-rule {
+          width: 0;
+          height: 1px;
+          margin: 0 auto 46px;
+          background: linear-gradient(
+            90deg,
+            rgba(54, 158, 118, 0) 0%,
+            rgba(120, 200, 160, 0.55) 50%,
+            rgba(54, 158, 118, 0) 100%
+          );
+          animation: lisaEssayRule 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          animation-delay: 0.4s;
+        }
+        @keyframes lisaEssayRule {
+          from { width: 0; opacity: 0; }
+          to   { width: 140px; opacity: 1; }
+        }
+        .lisa-essay-body {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          font-size: clamp(1.05rem, 1.3vw, 1.22rem);
+          line-height: 1.78;
+          color: rgba(232, 230, 223, 0.66);
+          max-width: 560px;
+          margin: 0 auto;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .lisa-essay-rule { animation: none !important; width: 140px; opacity: 1; }
+        }
+
         /* ─── ARCHIVE ─────────────────────────────────────── */
         .lisa-archive {
           position: relative;
@@ -702,6 +781,27 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           </div>
         </div>
       </section>
+
+      {/* ─── LISA SMALL — EDITORIAL PAUSE (small-only) ───── */}
+      {forceVariantId === "lisa-small" && (
+        <section className="lisa-essay lisa-reveal" data-testid="lisa-small-essay">
+          <div className="lisa-essay-inner">
+            <span className="lisa-essay-eyebrow">LISA SMALL</span>
+            <h2 className="lisa-essay-headline">
+              A hundred small emeralds.
+            </h2>
+            <p className="lisa-essay-couplet">
+              Like a room full of eyes<br />
+              pretending not to look.
+            </p>
+            <div className="lisa-essay-rule" aria-hidden="true" />
+            <p className="lisa-essay-body">
+              The tighter stone field changes the behavior of light entirely.
+              Nothing flashes at once. Everything moves in fragments.
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* ─── ARCHIVE GALLERY ─────────────────────────────── */}
       <section className="lisa-archive lisa-reveal" data-testid="lisa-archive">
