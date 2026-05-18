@@ -722,6 +722,8 @@ export default function LaScarpaPage() {
             width: 100% !important;
             object-fit: cover !important;
             object-position: center center !important;
+            transform: none !important;
+            inset: 0 !important;
           }
           section.scarpa-hero.scarpa-hero-compact .hero-content,
           section.scarpa-hero.scarpa-hero-compact .scarpa-hero-content,
