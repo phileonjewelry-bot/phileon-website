@@ -55,6 +55,7 @@ const SHOP_COLLECTION_MAP = {
   'midweek': 'editorial',
   'la-madonna': 'editorial',
   'la-scarpa-della-regina': 'editorial',
+  'lisa': 'signature',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',
@@ -554,6 +555,22 @@ const CORE_PRODUCTS = [
     isFeatured: true,
     displayOrder: 3,
     customCard: 'bape',
+  },
+  {
+    id: 'lisa',
+    name: 'LISA',
+    slug: 'lisa',
+    materialLine: 'Natural Emerald · 18K White Gold · Graduated Dome Band',
+    imageUrl: '/lisa/lisa-bold-hero.jpg',
+    href: '/lisa',
+    price_range: 'From $5,000 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['ladies', 'collective'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 4,
   },
 ];
 

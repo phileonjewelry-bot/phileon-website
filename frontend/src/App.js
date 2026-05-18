@@ -60,6 +60,7 @@ import LaMadonnaPage from "@/pages/LaMadonnaPage";
 import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
+import LisaPage from "@/pages/LisaPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -168,6 +169,7 @@ function App() {
             <Route path="/vault/drews-world" element={<VaultPage />} />
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
+            <Route path="/lisa" element={<LisaPage />} />
           </Route>
           
           {/* Admin Routes */}
