@@ -713,9 +713,9 @@ export default function LaScarpaPage() {
            bottom of the stylesheet so it wins the cascade. */
         @media (max-width: 1024px) {
           section.scarpa-hero.scarpa-hero-compact {
-            height: 390px !important;
-            min-height: 390px !important;
-            max-height: 390px !important;
+            height: 320px !important;
+            min-height: 320px !important;
+            max-height: 320px !important;
             overflow: hidden !important;
             position: relative !important;
           }
@@ -723,34 +723,47 @@ export default function LaScarpaPage() {
           section.scarpa-hero.scarpa-hero-compact .scarpa-hero-video-el,
           section.scarpa-hero.scarpa-hero-compact .hero-video,
           section.scarpa-hero.scarpa-hero-compact img {
-            height: 390px !important;
+            height: 320px !important;
             width: 100% !important;
             object-fit: cover !important;
             object-position: center center !important;
-            transform: none !important;
+            transform: scale(1.02) !important;
             inset: 0 !important;
           }
           section.scarpa-hero.scarpa-hero-compact .hero-content,
           section.scarpa-hero.scarpa-hero-compact .scarpa-hero-content,
           section.scarpa-hero.scarpa-hero-compact .scarpa-hero-center {
-            height: 390px !important;
-            min-height: 390px !important;
-            max-height: 390px !important;
-            padding: 28px 22px !important;
+            height: 320px !important;
+            min-height: 320px !important;
+            max-height: 320px !important;
+            padding: 56px 18px 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
             justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
           }
           section.scarpa-hero.scarpa-hero-compact h1,
           section.scarpa-hero.scarpa-hero-compact .hero-title,
           section.scarpa-hero.scarpa-hero-compact .scarpa-hero-title {
-            font-size: clamp(2.35rem, 9vw, 3.65rem) !important;
-            line-height: 0.88 !important;
-            margin: 10px 0 14px !important;
+            font-size: clamp(1.8rem, 7vw, 2.7rem) !important;
+            line-height: 0.9 !important;
+            letter-spacing: -0.03em !important;
+            margin-bottom: 10px !important;
+            max-width: 260px !important;
+          }
+          section.scarpa-hero.scarpa-hero-compact .hero-subtitle,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-subtitle,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-sub {
+            font-size: 0.6rem !important;
+            letter-spacing: 0.28em !important;
           }
           section.scarpa-hero.scarpa-hero-compact .hero-statement,
           section.scarpa-hero.scarpa-hero-compact .scarpa-hero-statement {
-            font-size: 0.95rem !important;
-            line-height: 1.45 !important;
-            margin-top: 14px !important;
+            font-size: 0.85rem !important;
+            line-height: 1.4 !important;
+            margin-top: 10px !important;
+            max-width: 260px !important;
           }
         }
       `}</style>
