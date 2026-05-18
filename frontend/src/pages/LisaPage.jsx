@@ -626,6 +626,24 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           font-size: clamp(1.5rem, 2vw, 2rem);
           color: rgba(232, 230, 223, 0.92);
         }
+        .lisa-archive-hallmark {
+          margin-top: 22px;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(0.92rem, 1.05vw, 1.05rem);
+          color: rgba(232, 230, 223, 0.6);
+          letter-spacing: 0.01em;
+        }
+        .lisa-archive-hallmark-mark {
+          font-family: 'Cinzel', serif;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 0.78em;
+          letter-spacing: 0.32em;
+          color: rgba(54, 158, 118, 0.95);
+          padding: 0 4px;
+        }
         .lisa-archive-grid {
           position: relative;
           max-width: 1200px;
@@ -808,6 +826,9 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
         <div className="lisa-archive-head">
           <p className="lisa-archive-eyebrow">THE ARCHIVE</p>
           <p className="lisa-archive-title">Six frames. One dome.</p>
+          <p className="lisa-archive-hallmark" data-testid="lisa-archive-hallmark">
+            Frame 02 — internal <span className="lisa-archive-hallmark-mark">PHILEON 18K</span> hallmark visible.
+          </p>
         </div>
         <div className="lisa-archive-grid" data-testid="lisa-archive-grid">
           {GALLERY.map((g, i) => (
