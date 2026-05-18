@@ -88,22 +88,54 @@ export default function LaScarpaPage() {
     video.defaultMuted = true;
     video.playsInline = true;
 
-    const attemptPlay = async () => {
-      try {
-        await video.play();
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.log("Autoplay blocked:", err);
+    let cancelled = false;
+    const attemptPlay = () => {
+      if (cancelled) return;
+      const p = video.play();
+      if (p && typeof p.catch === "function") {
+        p.catch(() => {
+          // Browser blocked autoplay — retry on next user interaction
+          // eslint-disable-next-line no-console
+          // console.log("autoplay blocked, will retry on interaction");
+        });
       }
     };
-    attemptPlay();
 
+    // 1. Try immediately
+    attemptPlay();
+    // 2. Try once metadata loads (some mobile browsers ignore the autoplay
+    //    attribute if the file hasn't initialised yet).
+    const onMeta = () => attemptPlay();
+    // 3. If anything pauses the video that wasn't user-initiated, restart.
+    const onPause = () => {
+      if (!video.ended) attemptPlay();
+    };
+    // 4. Defensive loop — covers browsers that strip native `loop`.
     const onEnded = () => {
       video.currentTime = 0;
-      video.play().catch(() => {});
+      attemptPlay();
     };
+    // 5. Retry on first user interaction (iOS low-power mode safety net).
+    const onUserGesture = () => {
+      attemptPlay();
+      document.removeEventListener("touchstart", onUserGesture);
+      document.removeEventListener("click", onUserGesture);
+    };
+
+    video.addEventListener("loadedmetadata", onMeta);
+    video.addEventListener("pause", onPause);
     video.addEventListener("ended", onEnded);
-    return () => video.removeEventListener("ended", onEnded);
+    document.addEventListener("touchstart", onUserGesture, { passive: true });
+    document.addEventListener("click", onUserGesture);
+
+    return () => {
+      cancelled = true;
+      video.removeEventListener("loadedmetadata", onMeta);
+      video.removeEventListener("pause", onPause);
+      video.removeEventListener("ended", onEnded);
+      document.removeEventListener("touchstart", onUserGesture);
+      document.removeEventListener("click", onUserGesture);
+    };
   }, []);
 
   // Reveal observer for editorial sections
@@ -321,9 +353,6 @@ export default function LaScarpaPage() {
         .scarpa-hero-fade-3 { animation-delay: 1.4s;  }
         .scarpa-hero-fade-4 { animation-delay: 2.0s;  }
 
-        @media (max-width: 1024px) and (min-width: 769px) {
-          .scarpa-hero-video { height: 82vh; }
-        }
         @media (max-width: 768px) {
           .scarpa-hero-video {
             position: relative;
@@ -677,7 +706,7 @@ export default function LaScarpaPage() {
         /* ─── FINAL MOBILE HERO LOCK ────────────────────────
            Highest-specificity override. Must remain at the very
            bottom of the stylesheet so it wins the cascade. */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           section.scarpa-hero.scarpa-hero-compact {
             height: 390px !important;
             min-height: 390px !important;
