@@ -19,6 +19,26 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — Mobile Hero 46vh + Autoplay Enforcement
+- Tightened mobile hero further: `46vh`, `min 420px`, `max 520px`.
+  Title + statement + transmission stamp now all visible above the
+  fold within a 420–520px frame.
+- Mobile video crop: `transform: scale(1.12)` for punchier
+  fashion-editorial framing.
+- Mobile content padding compressed to 20px top/bottom.
+- Title micro-tuned: `clamp(2.4rem, 9.5vw, 4rem)` to fit the tighter hero.
+- Subtitle/statement/rule margins re-spaced to land all editorial
+  copy within ~280px column.
+- Video element extended with WebView attributes to force autoplay on
+  Chinese/embedded browsers: `webkit-playsinline`, `x5-playsinline`,
+  `x5-video-player-type="h5"`, `disablePictureInPicture`.
+- Added `videoRef` + useEffect autoplay enforcement: explicitly sets
+  `muted`/`defaultMuted`/`playsInline`, calls `.play()` with promise
+  catch, and rebinds an `ended` listener that resets `currentTime: 0`
+  for any browser that strips native `loop`.
+- Verified at 390×844: hero=420px, archive begins at y=536 — first
+  CAMPAIGN slide visible at bottom of viewport on initial paint.
+
 ### 2026-02 — LA SCARPA — Final Mobile Hero Crop (54vh)
 - Replaced the 68vh mobile hero with the final luxury-editorial crop:
   `54vh`, `min 520px`, `max 620px`, `overflow: hidden`.

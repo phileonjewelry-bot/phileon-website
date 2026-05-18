@@ -72,10 +72,38 @@ export default function LaScarpaPage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
   const galleryRef = useRef(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
     return () => window.clearTimeout(t);
+  }, []);
+
+  // Force hero video to autoplay + loop reliably across mobile browsers
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const attemptPlay = async () => {
+      try {
+        await video.play();
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log("Autoplay blocked:", err);
+      }
+    };
+    attemptPlay();
+
+    const onEnded = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+    video.addEventListener("ended", onEnded);
+    return () => video.removeEventListener("ended", onEnded);
   }, []);
 
   // Reveal observer for editorial sections
@@ -298,43 +326,46 @@ export default function LaScarpaPage() {
         }
         @media (max-width: 768px) {
           .scarpa-hero-video {
-            height: 54vh !important;
-            min-height: 520px !important;
-            max-height: 620px !important;
+            position: relative;
+            height: 46vh !important;
+            min-height: 420px !important;
+            max-height: 520px !important;
             overflow: hidden;
           }
           .scarpa-hero-video-el {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             object-position: center center;
-            transform: scale(1.08);
+            transform: scale(1.12);
           }
           .scarpa-hero-center {
             justify-content: center !important;
-            padding-top: 40px !important;
-            padding-bottom: 40px !important;
+            padding-top: 20px !important;
+            padding-bottom: 20px !important;
           }
           .scarpa-hero-eyebrow  { top: 76px; left: 22px; font-size: 9.5px; letter-spacing: 0.4em; }
-          .scarpa-hero-stamp    { bottom: 24px; right: 22px; font-size: 8.5px; letter-spacing: 0.38em; }
+          .scarpa-hero-stamp    { bottom: 18px; right: 22px; font-size: 8.5px; letter-spacing: 0.38em; }
           .scarpa-hero-title {
-            font-size: clamp(2.7rem, 10vw, 4.4rem) !important;
+            font-size: clamp(2.4rem, 9.5vw, 4rem) !important;
             line-height: 0.9 !important;
             letter-spacing: -0.03em !important;
-            margin-bottom: 18px !important;
+            margin-bottom: 14px !important;
             max-width: 14ch;
           }
           .scarpa-hero-sub {
-            font-size: 0.82rem !important;
+            font-size: 0.78rem !important;
             letter-spacing: 0.34em !important;
-            margin-bottom: 20px !important;
+            margin-bottom: 16px !important;
             margin-top: 0 !important;
           }
-          .scarpa-hero-rule { margin: 0 auto 14px; }
+          .scarpa-hero-rule { margin: 0 auto 10px; }
           .scarpa-hero-statement {
-            font-size: 1.1rem !important;
-            line-height: 1.7 !important;
+            font-size: 1rem !important;
+            line-height: 1.55 !important;
             max-width: 280px;
             margin-inline: auto;
-            margin-top: 6px !important;
+            margin-top: 4px !important;
           }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -652,6 +683,7 @@ export default function LaScarpaPage() {
       {/* ─── HERO — CINEMATIC VIDEO ─────────────────────────── */}
       <section className="scarpa-hero-video" data-testid="la-scarpa-hero">
         <video
+          ref={videoRef}
           className="scarpa-hero-video-el"
           src="/videos/la-scarpa-hero.mp4"
           autoPlay
@@ -659,6 +691,10 @@ export default function LaScarpaPage() {
           loop
           playsInline
           preload="auto"
+          webkit-playsinline="true"
+          x5-playsinline="true"
+          x5-video-player-type="h5"
+          disablePictureInPicture
           aria-hidden="true"
           data-testid="la-scarpa-hero-video"
         />
