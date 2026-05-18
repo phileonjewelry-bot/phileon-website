@@ -19,6 +19,30 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LISA — Split into LISA SMALL / LISA BOLD + Site Placement
+- Split `/lisa` into two audience-targeted product pages:
+  - `/ladies/rings/lisa-small` — Ladies/Rings (LISA SMALL — Quiet Saturation)
+  - `/gents/rings/lisa-bold` — Gents/Rings (LISA BOLD — Deep Field)
+- Refactored `LisaPage` to accept `forceVariantId`, `audienceLabel`,
+  `returnHref` props. Single-variant pages hide the "other" variant
+  card, lock the cart, and reveal a cross-link CTA before FINAL WORD:
+  - LISA SMALL → "Prefer a heavier expression? View LISA BOLD →"
+  - LISA BOLD → "Prefer a finer grain? View LISA SMALL →"
+- `/lisa` legacy dual-config URL kept live (no `forceVariantId`).
+- Homepage discovery strip: inserted LISA tile directly after LA
+  SCARPA, LISA BOLD hero render, subtitle "Quiet seduction.", href
+  `/gents/rings/lisa-bold`. Verified 2 LISA images in marquee DOM.
+- Shop catalog: replaced single `lisa` entry with `lisa-small`
+  (ladies/collective · "Starting at CAD $6,800" · "Tighter saturation.
+  Softer pressure.") and `lisa-bold` (gentlemens-club/collective ·
+  "Starting at CAD $10,800" · "Weight without aggression.").
+- **Currency override**: shop card price strings display **CAD** per
+  explicit user instruction, deliberately overriding the sitewide USD
+  lock for these two cards only. Internal page acquisition prices
+  remain in USD (LISA SMALL $5,500 USD, LISA BOLD $9,000 USD).
+
+### 2026-02 — LISA — Initial Build
+
 ### 2026-02 — LA SCARPA — Mobile Hero 46vh + Autoplay Enforcement
 - Tightened mobile hero further: `46vh`, `min 420px`, `max 520px`.
   Title + statement + transmission stamp now all visible above the

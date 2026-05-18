@@ -387,6 +387,12 @@ const HomePage = () => {
             subtitle: "The crown was given. The shoe was earned."
           },
           { 
+            title: "LISA", 
+            image: "/lisa/lisa-bold-hero.jpg", 
+            href: "/gents/rings/lisa-bold",
+            subtitle: "Quiet seduction."
+          },
+          { 
             title: "DRAPE", 
             image: products.drape?.imageUrl, 
             href: "/products/drape" 

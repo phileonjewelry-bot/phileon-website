@@ -48,10 +48,15 @@ const VARIANTS = [
   },
 ];
 
-export default function LisaPage() {
+export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-  const [selectedId, setSelectedId] = useState("lisa-bold");
+  const initial = forceVariantId || "lisa-bold";
+  const [selectedId, setSelectedId] = useState(initial);
   const [isMounted, setIsMounted] = useState(false);
+
+  const isSingleVariant = !!forceVariantId;
+  const lockedId = forceVariantId || selectedId;
+  const otherVariant = VARIANTS.find((v) => v.id !== lockedId);
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
@@ -68,8 +73,17 @@ export default function LisaPage() {
     return () => obs.disconnect();
   }, []);
 
-  const selected = VARIANTS.find((v) => v.id === selectedId);
+  const selected = VARIANTS.find((v) => v.id === lockedId);
   const formattedPrice = `$${selected.priceUsd.toLocaleString("en-US")} USD`;
+
+  // Cross-link target (kept dynamic so the page reflects URL context)
+  const otherHref = otherVariant?.id === "lisa-small"
+    ? "/ladies/rings/lisa-small"
+    : "/gents/rings/lisa-bold";
+  const otherLabel = otherVariant?.label || "";
+  const crossLinkCopy = lockedId === "lisa-small"
+    ? "Prefer a heavier expression?"
+    : "Prefer a finer grain?";
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -83,6 +97,11 @@ export default function LisaPage() {
       image: "/lisa/lisa-bold-hero.jpg",
     });
   };
+
+  // Only show variants relevant to current page; default mode shows both
+  const visibleVariants = isSingleVariant
+    ? VARIANTS.filter((v) => v.id === forceVariantId)
+    : VARIANTS;
 
   return (
     <section
@@ -489,6 +508,39 @@ export default function LisaPage() {
           color: rgba(232, 230, 223, 0.4);
         }
 
+        /* ─── CROSS-LINK ─────────────────────────────────── */
+        .lisa-crosslink {
+          padding: 80px 24px 100px;
+          background: #050706;
+          text-align: center;
+          border-top: 1px solid rgba(54, 158, 118, 0.08);
+        }
+        .lisa-crosslink-eyebrow {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+          color: rgba(232, 230, 223, 0.7);
+          margin: 0 0 26px;
+        }
+        .lisa-crosslink-cta {
+          display: inline-block;
+          padding: 16px 36px;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: rgba(54, 158, 118, 0.95);
+          border: 1px solid rgba(54, 158, 118, 0.5);
+          text-decoration: none;
+          transition: background 320ms ease, color 320ms ease, letter-spacing 320ms ease;
+        }
+        .lisa-crosslink-cta:hover {
+          background: rgba(54, 158, 118, 0.15);
+          color: rgba(232, 230, 223, 1);
+          letter-spacing: 0.48em;
+        }
+
         @media (max-width: 768px) {
           .lisa-hero { min-height: 92vh; }
           .lisa-hero-text { padding-bottom: 56px; }
@@ -500,7 +552,7 @@ export default function LisaPage() {
         }
       `}</style>
 
-      <Link to="/shop?category=rings" className="lisa-back" data-testid="lisa-back-btn">
+      <Link to={returnHref || "/shop?category=rings"} className="lisa-back" data-testid="lisa-back-btn">
         <ArrowLeft className="w-3.5 h-3.5" />
         <span>RETURN</span>
       </Link>
@@ -518,8 +570,12 @@ export default function LisaPage() {
         <div className="lisa-hero-vignette" aria-hidden="true" />
 
         <div className="lisa-hero-text">
-          <p className="lisa-kicker" data-testid="lisa-kicker">PHILEON SIGNATURE OBJECTS</p>
-          <h1 className="lisa-title" data-testid="lisa-title">LISA</h1>
+          <p className="lisa-kicker" data-testid="lisa-kicker">
+            {audienceLabel || "PHILEON SIGNATURE OBJECTS"}
+          </p>
+          <h1 className="lisa-title" data-testid="lisa-title">
+            {isSingleVariant ? selected.label : "LISA"}
+          </h1>
           <p className="lisa-line" data-testid="lisa-line">
             Quiet seduction.<br />
             Saturation held under control.
@@ -568,16 +624,20 @@ export default function LisaPage() {
 
       {/* ─── DUAL CONFIG ─────────────────────────────────── */}
       <section className="lisa-dual lisa-reveal" data-testid="lisa-dual">
-        <div className="lisa-dual-inner">
-          {VARIANTS.map((v, idx) => {
-            const isSelected = v.id === selectedId;
+        <div
+          className="lisa-dual-inner"
+          style={isSingleVariant ? { gridTemplateColumns: "1fr", maxWidth: 720 } : undefined}
+        >
+          {visibleVariants.map((v, idx) => {
+            const isSelected = v.id === lockedId;
+            const trueIdx = VARIANTS.findIndex((x) => x.id === v.id);
             return (
               <div
                 key={v.id}
                 className={`lisa-config${isSelected ? " is-selected" : ""}`}
                 data-testid={`lisa-config-${v.id}`}
               >
-                <div className="lisa-config-index">{idx === 0 ? "I" : "II"}</div>
+                <div className="lisa-config-index">{trueIdx === 0 ? "I" : "II"}</div>
                 <p className="lisa-config-for">{v.label}</p>
                 <h3 className="lisa-config-name">{v.name}</h3>
                 <p className="lisa-config-desc">{v.description}</p>
@@ -589,19 +649,31 @@ export default function LisaPage() {
                     </div>
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedId(v.id)}
-                  className="lisa-config-pick"
-                  data-testid={`lisa-pick-${v.id}`}
-                >
-                  {isSelected ? "SELECTED" : "SELECT"}
-                </button>
+                {!isSingleVariant && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedId(v.id)}
+                    className="lisa-config-pick"
+                    data-testid={`lisa-pick-${v.id}`}
+                  >
+                    {isSelected ? "SELECTED" : "SELECT"}
+                  </button>
+                )}
               </div>
             );
           })}
         </div>
       </section>
+
+      {/* ─── CROSS-LINK ─────────────────────────────────── */}
+      {isSingleVariant && otherVariant && (
+        <section className="lisa-crosslink lisa-reveal" data-testid="lisa-crosslink">
+          <p className="lisa-crosslink-eyebrow">{crossLinkCopy}</p>
+          <Link to={otherHref} className="lisa-crosslink-cta" data-testid="lisa-crosslink-cta">
+            View {otherLabel} <span aria-hidden="true">→</span>
+          </Link>
+        </section>
+      )}
 
       {/* ─── ACQUISITION ─────────────────────────────────── */}
       <section className="lisa-acquire lisa-reveal" id="acquisition" data-testid="lisa-acquire">
