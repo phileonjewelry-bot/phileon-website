@@ -128,8 +128,14 @@ export default function LaScarpaPage() {
     document.addEventListener("touchstart", onUserGesture, { passive: true });
     document.addEventListener("click", onUserGesture);
 
+    // Watchdog — every 1.5s, if the video is paused mid-stream, restart it.
+    const watchdog = window.setInterval(() => {
+      if (!cancelled && video.paused && !video.ended) attemptPlay();
+    }, 1500);
+
     return () => {
       cancelled = true;
+      window.clearInterval(watchdog);
       video.removeEventListener("loadedmetadata", onMeta);
       video.removeEventListener("pause", onPause);
       video.removeEventListener("ended", onEnded);
@@ -216,7 +222,6 @@ export default function LaScarpaPage() {
           height: 100%;
           object-fit: cover;
           object-position: center center;
-          transform: scale(1.01);
           z-index: 1;
         }
         /* Soft cinematic grain (SVG noise, very low opacity) */
