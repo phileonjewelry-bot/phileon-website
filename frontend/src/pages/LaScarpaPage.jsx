@@ -293,14 +293,36 @@ export default function LaScarpaPage() {
         .scarpa-hero-fade-3 { animation-delay: 1.4s;  }
         .scarpa-hero-fade-4 { animation-delay: 2.0s;  }
 
+        @media (max-width: 1024px) and (min-width: 769px) {
+          .scarpa-hero-video { height: 82vh; }
+        }
         @media (max-width: 768px) {
-          .scarpa-hero-video    { height: 88vh; }
+          .scarpa-hero-video {
+            height: 68vh;
+            min-height: 620px;
+            max-height: 760px;
+          }
+          .scarpa-hero-video-el { object-position: 72% center; }
+          .scarpa-hero-center {
+            justify-content: flex-start;
+            padding-top: 110px;
+            padding-bottom: 60px;
+          }
           .scarpa-hero-eyebrow  { top: 76px; left: 22px; font-size: 9.5px; letter-spacing: 0.4em; }
           .scarpa-hero-stamp    { bottom: 24px; right: 22px; font-size: 8.5px; letter-spacing: 0.38em; }
-          .scarpa-hero-title    { max-width: 14ch; }
+          .scarpa-hero-title {
+            font-size: clamp(3.2rem, 11vw, 5.4rem);
+            line-height: 0.92;
+            letter-spacing: -0.02em;
+            max-width: 14ch;
+          }
           .scarpa-hero-sub      { font-size: 0.66rem; letter-spacing: 0.4em; }
-          .scarpa-hero-rule     { margin: 22px auto; }
-          .scarpa-hero-statement { font-size: 0.95rem; max-width: 80vw; }
+          .scarpa-hero-rule     { margin: 14px auto; }
+          .scarpa-hero-statement {
+            margin-top: 28px;
+            font-size: 0.95rem;
+            max-width: 80vw;
+          }
         }
         @media (prefers-reduced-motion: reduce) {
           .scarpa-hero-fade { opacity: 1 !important; animation: none !important; }

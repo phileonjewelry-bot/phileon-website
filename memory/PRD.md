@@ -19,6 +19,26 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — Mobile Hero Tightened + New HD Video Edit
+- Swapped hero video for the new HD cinematic edit (4.6 MB) at the
+  same path (`/videos/la-scarpa-hero.mp4`).
+- Hero height tiers refined:
+  - Desktop (≥1025px): `100vh` (unchanged)
+  - Tablet (769–1024px): **`82vh`** (new tier)
+  - Mobile (≤768px): **`68vh`** with `min-height: 620px` and
+    `max-height: 760px` — clamps prevent ultra-tall or ultra-short
+    devices from breaking the editorial composition.
+- Mobile video crop: `object-position: 72% center` so the model face
+  and pendant stay on-frame even at narrow widths.
+- Mobile content stack moved up: `justify-content: flex-start`,
+  `padding-top: 110px`, `padding-bottom: 60px` — title + statement
+  now land above the visual midline, pendant frames reveal beneath.
+- Mobile title scale tightened: `clamp(3.2rem, 11vw, 5.4rem)`,
+  `line-height: 0.92`, `letter-spacing: -0.02em`.
+- Tagline gap tightened: rule margin `14px`, statement
+  `margin-top: 28px`.
+- Verified at 390/900/1920: heroes hit 620/984/1000px respectively.
+
 ### 2026-02 — LA SCARPA — Cinematic Video Hero (Milan Edit)
 - Replaced the static rose-silk split hero with a full-bleed cinematic
   video — Milan opening · window scene · pendant macro · nail-touch
