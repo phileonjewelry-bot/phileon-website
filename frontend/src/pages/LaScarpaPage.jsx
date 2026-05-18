@@ -673,6 +673,50 @@ export default function LaScarpaPage() {
         @media (prefers-reduced-motion: reduce) {
           .scarpa-archive-cell img { transition: none !important; }
         }
+
+        /* ─── FINAL MOBILE HERO LOCK ────────────────────────
+           Highest-specificity override. Must remain at the very
+           bottom of the stylesheet so it wins the cascade. */
+        @media (max-width: 768px) {
+          section.scarpa-hero.scarpa-hero-compact {
+            height: 390px !important;
+            min-height: 390px !important;
+            max-height: 390px !important;
+            overflow: hidden !important;
+            position: relative !important;
+          }
+          section.scarpa-hero.scarpa-hero-compact video,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-video-el,
+          section.scarpa-hero.scarpa-hero-compact .hero-video,
+          section.scarpa-hero.scarpa-hero-compact img {
+            height: 390px !important;
+            width: 100% !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+          }
+          section.scarpa-hero.scarpa-hero-compact .hero-content,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-content,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-center {
+            height: 390px !important;
+            min-height: 390px !important;
+            max-height: 390px !important;
+            padding: 28px 22px !important;
+            justify-content: center !important;
+          }
+          section.scarpa-hero.scarpa-hero-compact h1,
+          section.scarpa-hero.scarpa-hero-compact .hero-title,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-title {
+            font-size: clamp(2.35rem, 9vw, 3.65rem) !important;
+            line-height: 0.88 !important;
+            margin: 10px 0 14px !important;
+          }
+          section.scarpa-hero.scarpa-hero-compact .hero-statement,
+          section.scarpa-hero.scarpa-hero-compact .scarpa-hero-statement {
+            font-size: 0.95rem !important;
+            line-height: 1.45 !important;
+            margin-top: 14px !important;
+          }
+        }
       `}</style>
 
       <Link to="/shop?category=pendants&audience=ladies" className="scarpa-back" data-testid="la-scarpa-back-btn">
@@ -681,7 +725,7 @@ export default function LaScarpaPage() {
       </Link>
 
       {/* ─── HERO — CINEMATIC VIDEO ─────────────────────────── */}
-      <section className="scarpa-hero-video" data-testid="la-scarpa-hero">
+      <section className="scarpa-hero scarpa-hero-compact scarpa-hero-video" data-testid="la-scarpa-hero">
         <video
           ref={videoRef}
           className="scarpa-hero-video-el"
