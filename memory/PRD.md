@@ -19,6 +19,22 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — Final Mobile Hero Crop (54vh)
+- Replaced the 68vh mobile hero with the final luxury-editorial crop:
+  `54vh`, `min 520px`, `max 620px`, `overflow: hidden`.
+- Mobile video: `object-position: center center`, `transform: scale(1.08)`
+  — punchy fashion-editorial crop that keeps face + pendant
+  in-frame on every device.
+- Mobile content stack returned to centered with tight 40px top/bottom
+  padding (no flex-start push).
+- Title rescaled to `clamp(2.7rem, 10vw, 4.4rem)`, `line-height 0.9`,
+  `letter-spacing -0.03em`, `margin-bottom 18px`.
+- Subtitle: `0.82rem`, `letter-spacing 0.34em`, `margin-bottom 20px`.
+- Statement: `1.1rem`, `line-height 1.7`, `max-width 280px`,
+  `margin-inline: auto`, tight 6px above (rule margin: 14px below).
+- Verified at 390x844: hero=520px (clamp held), archive slider
+  begins at y=636 → first frame peeks just below the fold.
+
 ### 2026-02 — LA SCARPA — Mobile Hero Tightened + New HD Video Edit
 - Swapped hero video for the new HD cinematic edit (4.6 MB) at the
   same path (`/videos/la-scarpa-hero.mp4`).

@@ -298,30 +298,43 @@ export default function LaScarpaPage() {
         }
         @media (max-width: 768px) {
           .scarpa-hero-video {
-            height: 68vh;
-            min-height: 620px;
-            max-height: 760px;
+            height: 54vh !important;
+            min-height: 520px !important;
+            max-height: 620px !important;
+            overflow: hidden;
           }
-          .scarpa-hero-video-el { object-position: 72% center; }
+          .scarpa-hero-video-el {
+            object-fit: cover;
+            object-position: center center;
+            transform: scale(1.08);
+          }
           .scarpa-hero-center {
-            justify-content: flex-start;
-            padding-top: 110px;
-            padding-bottom: 60px;
+            justify-content: center !important;
+            padding-top: 40px !important;
+            padding-bottom: 40px !important;
           }
           .scarpa-hero-eyebrow  { top: 76px; left: 22px; font-size: 9.5px; letter-spacing: 0.4em; }
           .scarpa-hero-stamp    { bottom: 24px; right: 22px; font-size: 8.5px; letter-spacing: 0.38em; }
           .scarpa-hero-title {
-            font-size: clamp(3.2rem, 11vw, 5.4rem);
-            line-height: 0.92;
-            letter-spacing: -0.02em;
+            font-size: clamp(2.7rem, 10vw, 4.4rem) !important;
+            line-height: 0.9 !important;
+            letter-spacing: -0.03em !important;
+            margin-bottom: 18px !important;
             max-width: 14ch;
           }
-          .scarpa-hero-sub      { font-size: 0.66rem; letter-spacing: 0.4em; }
-          .scarpa-hero-rule     { margin: 14px auto; }
+          .scarpa-hero-sub {
+            font-size: 0.82rem !important;
+            letter-spacing: 0.34em !important;
+            margin-bottom: 20px !important;
+            margin-top: 0 !important;
+          }
+          .scarpa-hero-rule { margin: 0 auto 14px; }
           .scarpa-hero-statement {
-            margin-top: 28px;
-            font-size: 0.95rem;
-            max-width: 80vw;
+            font-size: 1.1rem !important;
+            line-height: 1.7 !important;
+            max-width: 280px;
+            margin-inline: auto;
+            margin-top: 6px !important;
           }
         }
         @media (prefers-reduced-motion: reduce) {
