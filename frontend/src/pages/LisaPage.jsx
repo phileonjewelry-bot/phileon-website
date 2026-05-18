@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import Lightbox from "../components/CinematicLightbox";
 
 /**
  * LISA — Phileon Signature Object
@@ -12,6 +13,15 @@ import { useAddToCart } from "../hooks/useAddToCart";
  *
  * Namespace: .lisa-  (no class bleed)
  */
+
+const GALLERY = [
+  { src: "/lisa/lisa-bold-hero.jpg",  label: "01 — HERO",         alt: "LISA — 18K white gold dome band, model in hand presentation" },
+  { src: "/lisa/lisa-02-in-hand.png", label: "02 — PROOF",        alt: "LISA — held in hand, PHILEON 18K engraving visible inside the band" },
+  { src: "/lisa/lisa-03-front.png",   label: "03 — FRONT",        alt: "LISA — front render of the graduated emerald dome on white studio ground" },
+  { src: "/lisa/lisa-04-macro.png",   label: "04 — MACRO",        alt: "LISA — extreme macro of the emerald field showing crown, milgrain rails, and prong-set crystals" },
+  { src: "/lisa/lisa-05-inside.png",  label: "05 — INSIDE TRACK", alt: "LISA — interior view showing the inset emerald track on the inside of the band" },
+  { src: "/lisa/lisa-06-top.png",     label: "06 — TOP",          alt: "LISA — top-down angle showing the full sculptural dome and saturation" },
+];
 
 const VARIANTS = [
   {
@@ -53,6 +63,7 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
   const initial = forceVariantId || "lisa-bold";
   const [selectedId, setSelectedId] = useState(initial);
   const [isMounted, setIsMounted] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState(null);
 
   const isSingleVariant = !!forceVariantId;
   const lockedId = forceVariantId || selectedId;
@@ -508,6 +519,76 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           color: rgba(232, 230, 223, 0.4);
         }
 
+        /* ─── ARCHIVE ─────────────────────────────────────── */
+        .lisa-archive {
+          position: relative;
+          padding: 100px 24px 110px;
+          background:
+            radial-gradient(circle at 50% 0%, rgba(20, 95, 70, 0.14), transparent 55%),
+            #050706;
+        }
+        .lisa-archive-head {
+          max-width: 1200px;
+          margin: 0 auto 50px;
+          text-align: center;
+        }
+        .lisa-archive-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(54, 158, 118, 0.78);
+          margin-bottom: 18px;
+        }
+        .lisa-archive-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1.5rem, 2vw, 2rem);
+          color: rgba(232, 230, 223, 0.92);
+        }
+        .lisa-archive-grid {
+          position: relative;
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        }
+        @media (max-width: 900px) { .lisa-archive-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .lisa-archive-grid { grid-template-columns: 1fr; } }
+        .lisa-archive-cell {
+          position: relative;
+          overflow: hidden;
+          aspect-ratio: 1 / 1;
+          background: #0c0f0e;
+          border: 1px solid rgba(54, 158, 118, 0.14);
+          cursor: pointer;
+          padding: 0;
+          transition: border-color 480ms ease, transform 480ms ease;
+        }
+        .lisa-archive-cell:hover {
+          border-color: rgba(54, 158, 118, 0.42);
+          transform: translateY(-3px);
+        }
+        .lisa-archive-cell img {
+          width: 100%; height: 100%;
+          object-fit: cover;
+          transition: transform 1200ms ease, filter 1200ms ease;
+          filter: brightness(0.96) saturate(0.98);
+        }
+        .lisa-archive-cell:hover img { transform: scale(1.04); filter: brightness(1) saturate(1.05); }
+        .lisa-archive-cell-label {
+          position: absolute; bottom: 14px; left: 14px;
+          font-family: 'Inter', sans-serif;
+          font-size: 9px; letter-spacing: 0.38em;
+          color: rgba(232, 230, 223, 0.75);
+          text-transform: uppercase;
+          background: rgba(0, 0, 0, 0.45);
+          padding: 6px 10px;
+          backdrop-filter: blur(6px);
+        }
+
         /* ─── CROSS-LINK ─────────────────────────────────── */
         .lisa-crosslink {
           padding: 80px 24px 100px;
@@ -621,6 +702,39 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           </div>
         </div>
       </section>
+
+      {/* ─── ARCHIVE GALLERY ─────────────────────────────── */}
+      <section className="lisa-archive lisa-reveal" data-testid="lisa-archive">
+        <div className="lisa-archive-head">
+          <p className="lisa-archive-eyebrow">THE ARCHIVE</p>
+          <p className="lisa-archive-title">Six frames. One dome.</p>
+        </div>
+        <div className="lisa-archive-grid" data-testid="lisa-archive-grid">
+          {GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              type="button"
+              className="lisa-archive-cell"
+              aria-label={`Open ${g.label}`}
+              onClick={() => setLightboxIdx(i)}
+              data-testid={`lisa-archive-cell-${i + 1}`}
+            >
+              <img src={g.src} alt={g.alt} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
+              <span className="lisa-archive-cell-label">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <Lightbox
+        items={GALLERY}
+        openIndex={lightboxIdx}
+        onClose={() => setLightboxIdx(null)}
+        onChange={(i) => setLightboxIdx(i)}
+        archiveLabel="LISA · ARCHIVE"
+      />
 
       {/* ─── DUAL CONFIG ─────────────────────────────────── */}
       <section className="lisa-dual lisa-reveal" data-testid="lisa-dual">
