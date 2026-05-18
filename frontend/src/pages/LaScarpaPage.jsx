@@ -129,25 +129,183 @@ export default function LaScarpaPage() {
         .scarpa-cinzel    { font-family: 'Cinzel', serif; }
         .scarpa-inter     { font-family: 'Inter', sans-serif; }
 
-        .scarpa-portrait-frame {
-          animation: scarpaFrameBreath 18s ease-in-out infinite alternate;
-          will-change: transform, filter;
-        }
-        @keyframes scarpaFrameBreath {
-          0%   { transform: scale(1)      translateY(0px);   filter: drop-shadow(0 36px 64px rgba(0,0,0,0.16)); }
-          100% { transform: scale(1.012)  translateY(-4px);  filter: drop-shadow(0 44px 78px rgba(0,0,0,0.22)); }
-        }
-
         .scarpa-back {
-          position: absolute; top: 28px; left: 28px; z-index: 20;
+          position: absolute; top: 28px; left: 28px; z-index: 30;
           display: inline-flex; align-items: center; gap: 10px;
           font-family: 'Inter', sans-serif; font-size: 11px;
           letter-spacing: 0.36em; text-transform: uppercase;
-          color: rgba(95, 46, 46, 0.6);
+          color: rgba(255, 246, 240, 0.78);
           text-decoration: none;
-          transition: color 320ms ease;
+          mix-blend-mode: difference;
+          transition: color 320ms ease, opacity 320ms ease;
         }
-        .scarpa-back:hover { color: rgba(95, 46, 46, 0.95); }
+        .scarpa-back:hover { color: rgba(255, 246, 240, 0.98); }
+
+        /* ─── HERO — CINEMATIC VIDEO ──────────────────────── */
+        .scarpa-hero-video {
+          position: relative;
+          width: 100%;
+          height: 100vh;
+          overflow: hidden;
+          background: #0a0606;
+        }
+        .scarpa-hero-video-el {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center center;
+          transform: scale(1.01);
+          z-index: 1;
+        }
+        /* Soft cinematic grain (SVG noise, very low opacity) */
+        .scarpa-hero-grain {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          opacity: 0.13;
+          mix-blend-mode: overlay;
+          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.86  0 0 0 0 0.72  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+          background-size: 240px 240px;
+        }
+        /* Warm champagne bloom — top-right corner */
+        .scarpa-hero-bloom {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
+          pointer-events: none;
+          background:
+            radial-gradient(circle at 75% 18%, rgba(245, 214, 153, 0.18), transparent 55%),
+            radial-gradient(circle at 18% 80%, rgba(212, 174, 145, 0.12), transparent 60%);
+          mix-blend-mode: soft-light;
+        }
+        /* Subtle vignette for editorial weight */
+        .scarpa-hero-vignette {
+          position: absolute;
+          inset: 0;
+          z-index: 4;
+          pointer-events: none;
+          background:
+            radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.32) 100%),
+            linear-gradient(180deg, rgba(0,0,0,0.18) 0%, transparent 22%, transparent 70%, rgba(0,0,0,0.35) 100%);
+        }
+
+        /* ─── HERO TEXT OVERLAYS ──────────────────────────── */
+        .scarpa-hero-eyebrow {
+          position: absolute;
+          top: 44px;
+          left: 44px;
+          z-index: 10;
+          font-family: 'Inter', sans-serif;
+          font-size: 10.5px;
+          letter-spacing: 0.46em;
+          text-transform: uppercase;
+          color: rgba(255, 246, 240, 0.82);
+          text-shadow: 0 1px 12px rgba(0,0,0,0.45);
+        }
+
+        .scarpa-hero-center {
+          position: absolute;
+          inset: 0;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding: 0 32px;
+          pointer-events: none;
+        }
+        .scarpa-hero-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 500;
+          font-size: clamp(2.2rem, 6vw, 5.4rem);
+          line-height: 1.02;
+          letter-spacing: 0.04em;
+          color: #fff6f0;
+          text-transform: uppercase;
+          text-shadow: 0 2px 28px rgba(0,0,0,0.45);
+          margin: 0;
+          max-width: 22ch;
+        }
+        .scarpa-hero-sub {
+          margin-top: 22px;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.74rem;
+          letter-spacing: 0.46em;
+          text-transform: uppercase;
+          color: rgba(255, 246, 240, 0.78);
+          text-shadow: 0 1px 14px rgba(0,0,0,0.45);
+        }
+        .scarpa-hero-rule {
+          width: 0;
+          height: 1px;
+          margin: 30px auto 30px;
+          background: linear-gradient(90deg,
+            rgba(212, 168, 92, 0) 0%,
+            rgba(245, 214, 153, 0.85) 50%,
+            rgba(212, 168, 92, 0) 100%
+          );
+          animation: scarpaHeroRule 3.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          animation-delay: 1.65s;
+        }
+        @keyframes scarpaHeroRule {
+          from { width: 0;     opacity: 0; }
+          to   { width: 180px; opacity: 1; }
+        }
+        .scarpa-hero-statement {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1rem, 1.5vw, 1.4rem);
+          line-height: 1.55;
+          color: rgba(255, 246, 240, 0.88);
+          text-shadow: 0 1px 18px rgba(0,0,0,0.5);
+          margin: 0;
+          max-width: 540px;
+        }
+        .scarpa-hero-stamp {
+          position: absolute;
+          bottom: 44px;
+          right: 44px;
+          z-index: 10;
+          font-family: 'Inter', sans-serif;
+          font-size: 9.5px;
+          letter-spacing: 0.46em;
+          text-transform: uppercase;
+          color: rgba(255, 246, 240, 0.62);
+          text-shadow: 0 1px 12px rgba(0,0,0,0.5);
+        }
+
+        /* ─── HERO FADE SEQUENCE ──────────────────────────── */
+        .scarpa-hero-fade {
+          opacity: 0;
+          animation: scarpaHeroFade 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes scarpaHeroFade {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .scarpa-hero-fade-1 { animation-delay: 0.45s; }
+        .scarpa-hero-fade-2 { animation-delay: 0.9s;  }
+        .scarpa-hero-fade-3 { animation-delay: 1.4s;  }
+        .scarpa-hero-fade-4 { animation-delay: 2.0s;  }
+
+        @media (max-width: 768px) {
+          .scarpa-hero-video    { height: 88vh; }
+          .scarpa-hero-eyebrow  { top: 76px; left: 22px; font-size: 9.5px; letter-spacing: 0.4em; }
+          .scarpa-hero-stamp    { bottom: 24px; right: 22px; font-size: 8.5px; letter-spacing: 0.38em; }
+          .scarpa-hero-title    { max-width: 14ch; }
+          .scarpa-hero-sub      { font-size: 0.66rem; letter-spacing: 0.4em; }
+          .scarpa-hero-rule     { margin: 22px auto; }
+          .scarpa-hero-statement { font-size: 0.95rem; max-width: 80vw; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .scarpa-hero-fade { opacity: 1 !important; animation: none !important; }
+          .scarpa-hero-rule { width: 180px; opacity: 1; animation: none !important; }
+        }
 
         /* ─── HERO STACK ──────────────────────────────────── */
         .scarpa-hero-cta {
@@ -447,7 +605,6 @@ export default function LaScarpaPage() {
           .scarpa-editorial-grid { grid-template-columns: 1fr; gap: 60px; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .scarpa-portrait-frame { animation: none !important; }
           .scarpa-archive-cell img { transition: none !important; }
         }
       `}</style>
@@ -457,98 +614,56 @@ export default function LaScarpaPage() {
         <span>RETURN</span>
       </Link>
 
-      {/* Rose silk atmosphere */}
-      <div className="absolute inset-0 opacity-90 pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-24 left-[-10%] h-[520px] w-[140%] rotate-[-8deg] bg-gradient-to-r from-[#f4d6d8] via-[#e8b6bb] to-[#f6e4e2] blur-3xl opacity-70" />
-        <div className="absolute bottom-[-15%] right-[-10%] h-[420px] w-[120%] rotate-[6deg] bg-gradient-to-r from-[#b76e79] via-[#d49aa4] to-[#f1d4d8] blur-3xl opacity-40" />
-      </div>
+      {/* ─── HERO — CINEMATIC VIDEO ─────────────────────────── */}
+      <section className="scarpa-hero-video" data-testid="la-scarpa-hero">
+        <video
+          className="scarpa-hero-video-el"
+          src="/videos/la-scarpa-hero.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          data-testid="la-scarpa-hero-video"
+        />
 
-      {/* Silk folds */}
-      <div className="absolute inset-0 opacity-[0.12] pointer-events-none" aria-hidden="true">
-        <div className="absolute left-[-10%] top-[15%] h-[2px] w-[140%] rotate-[-8deg] bg-white blur-sm" />
-        <div className="absolute left-[-10%] top-[28%] h-[2px] w-[140%] rotate-[-6deg] bg-white blur-sm" />
-        <div className="absolute left-[-10%] top-[42%] h-[2px] w-[140%] rotate-[-7deg] bg-white blur-sm" />
-        <div className="absolute left-[-10%] top-[58%] h-[2px] w-[140%] rotate-[-5deg] bg-white blur-sm" />
-      </div>
+        {/* Cinematic atmosphere — grain · bloom · vignette */}
+        <div className="scarpa-hero-grain" aria-hidden="true" />
+        <div className="scarpa-hero-bloom" aria-hidden="true" />
+        <div className="scarpa-hero-vignette" aria-hidden="true" />
 
-      {/* ─── HERO ─────────────────────────────────────────── */}
-      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-12 px-6 py-24 lg:grid-cols-[1fr_1.05fr] lg:gap-20 lg:py-32">
-        {/* LEFT — editorial copy */}
-        <div className="order-2 flex flex-col items-start text-left lg:order-1">
-          <span
-            className="mb-6 tracking-[0.45em] text-[#9b6b62] text-xs uppercase"
-            data-testid="la-scarpa-eyebrow"
-          >
-            PHILEON SIGNATURE OBJECTS
-          </span>
+        {/* Top-left — house mark */}
+        <span className="scarpa-hero-eyebrow scarpa-hero-fade scarpa-hero-fade-1" data-testid="la-scarpa-eyebrow">
+          PHILEON SIGNATURE OBJECTS
+        </span>
 
+        {/* Centered editorial stack */}
+        <div className="scarpa-hero-center">
           <h1
-            className="text-[#5f2e2e] uppercase leading-[0.88] tracking-[0.06em]"
-            style={{
-              fontSize: "clamp(3rem, 7.5vw, 7rem)",
-              fontFamily: "'Cormorant Garamond', serif",
-            }}
+            className="scarpa-hero-title scarpa-hero-fade scarpa-hero-fade-2"
             data-testid="la-scarpa-title"
           >
-            LA SCARPA
-            <br />
-            DELLA REGINA
+            LA SCARPA DELLA REGINA
           </h1>
-
-          <p
-            className="mt-5 tracking-[0.35em] uppercase text-[#9b6b62]"
-            style={{
-              fontSize: "clamp(0.75rem, 1vw, 0.9rem)",
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
+          <p className="scarpa-hero-sub scarpa-hero-fade scarpa-hero-fade-3" data-testid="la-scarpa-subtitle">
             THE QUEEN'S SHOE
           </p>
 
-          <div className="my-8 h-px w-40 bg-gradient-to-r from-transparent via-[#b9877d] to-[#b9877d]" />
+          <div className="scarpa-hero-rule scarpa-hero-fade scarpa-hero-fade-3" aria-hidden="true" />
 
-          <div className="space-y-4">
-            <p
-              className="text-[#5f2e2e] italic"
-              style={{
-                fontSize: "clamp(1.05rem, 1.6vw, 1.5rem)",
-                fontFamily: "'Cormorant Garamond', serif",
-              }}
-            >
-              Non chiede la stanza.
-              <br />
-              La stanza si riorganizza intorno a lei.
-            </p>
-
-            <p
-              className="max-w-2xl text-[#6a4b45] leading-relaxed"
-              style={{
-                fontSize: "clamp(0.95rem, 1.3vw, 1.15rem)",
-                fontFamily: "'Inter', sans-serif",
-              }}
-            >
-              A queen does not ask for the room.
-              <br />
-              The room rearranges itself.
-            </p>
-          </div>
-
+          <p className="scarpa-hero-statement scarpa-hero-fade scarpa-hero-fade-4" data-testid="la-scarpa-statement">
+            She does not ask for the room.
+            <br />
+            The room rearranges itself.
+          </p>
         </div>
 
-        {/* RIGHT — portrait hero */}
-        <div className="order-1 relative w-full lg:order-2">
-          <div className="absolute inset-0 rounded-[36px] bg-[#f0c8c1] blur-[120px] opacity-50" aria-hidden="true" />
-          <img
-            src="/la-scarpa/scarpa-portrait.jpg"
-            alt="LA SCARPA DELLA REGINA — model wearing the rose-gold stiletto pendant in baroque diamond frame"
-            className="scarpa-portrait-frame relative z-10 mx-auto block w-full max-w-[640px] rounded-[6px] object-cover cursor-pointer"
-            loading="eager"
-            decoding="async"
-            onClick={() => setLightboxIdx(0)}
-            data-testid="la-scarpa-portrait"
-          />
-        </div>
-      </div>
+        {/* Bottom-right — transmission stamp */}
+        <span className="scarpa-hero-stamp scarpa-hero-fade scarpa-hero-fade-4" data-testid="la-scarpa-transmission">
+          PHILEON PRIVATE TRANSMISSION
+        </span>
+      </section>
 
       {/* ─── ARCHIVE — HORIZONTAL SWIPE SLIDER ─────────────── */}
       <section className="scarpa-archive-slider-section scarpa-reveal" data-testid="la-scarpa-archive" ref={galleryRef}>

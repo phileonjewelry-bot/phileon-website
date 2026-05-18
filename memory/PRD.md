@@ -19,6 +19,35 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ## Implemented (Latest)
 
+### 2026-02 — LA SCARPA — Cinematic Video Hero (Milan Edit)
+- Replaced the static rose-silk split hero with a full-bleed cinematic
+  video — Milan opening · window scene · pendant macro · nail-touch
+  macro · black PHILEON outro. File: `/videos/la-scarpa-hero.mp4`
+  (5.2 MB, served with `Accept-Ranges: bytes` for streaming).
+- Desktop hero: `100vh`. Mobile: `88vh`. Video attributes locked to
+  `autoplay · muted · loop · playsInline · preload=auto · no controls`,
+  `object-fit: cover · object-position: center · transform: scale(1.01)`.
+- Cinematic atmosphere stack: soft SVG-noise grain (0.13 opacity,
+  overlay blend), warm champagne radial bloom (soft-light blend),
+  ellipse + top/bottom vignette band.
+- Text overlay system (Cormorant Garamond serif + restrained Inter):
+  - Top-left eyebrow: "PHILEON SIGNATURE OBJECTS"
+  - Centered: "LA SCARPA DELLA REGINA" (clamp 2.2 → 5.4rem,
+    weight 500) + sub "THE QUEEN'S SHOE"
+  - 180px gold hairline that draws on a delayed easing curve
+  - Italic statement: "She does not ask for the room. /
+    The room rearranges itself."
+  - Bottom-right stamp: "PHILEON PRIVATE TRANSMISSION"
+- Slow staggered fade-in sequence using `cubic-bezier(0.22, 1, 0.36, 1)`
+  over 2.2s with delays 0.45 → 0.9 → 1.4 → 2.0s.
+- Mobile crop tuned: eyebrow pushed to top: 76px so it never overlaps
+  the RETURN link; all text vertically centered so it never sits on
+  the pendant macro frames.
+- Reduced-motion respected (all fades and hairline draw disabled).
+- RETURN link converted from burgundy text to soft cream with
+  `mix-blend-mode: difference` so it stays legible across every frame
+  of the cinematic edit.
+
 ### 2026-02 — LA SCARPA — Hero CTA Removed (Single ADD TO CART)
 - Removed the inline price + ADD TO CART block that was duplicated inside
   the hero. The hero is now pure editorial: title, "THE QUEEN'S SHOE",
