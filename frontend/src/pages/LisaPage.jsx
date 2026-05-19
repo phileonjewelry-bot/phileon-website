@@ -21,6 +21,7 @@ const GALLERY = [
   { src: "/lisa/lisa-04-macro.png",   label: "04 — MACRO",        alt: "LISA — extreme macro of the emerald field showing crown, milgrain rails, and prong-set crystals" },
   { src: "/lisa/lisa-05-inside.png",  label: "05 — INSIDE TRACK", alt: "LISA — interior view showing the inset emerald track on the inside of the band" },
   { src: "/lisa/lisa-06-top.png",     label: "06 — TOP",          alt: "LISA — top-down angle showing the full sculptural dome and saturation" },
+  { src: "/lisa/lisa-07-campaign.png", label: "07 — CAMPAIGN",     alt: "LISA BOLD — campaign portrait, model in Sergio Tacchini green velour against art-deco backdrop, ring worn on hand at temple" },
 ];
 
 const VARIANTS = [
@@ -825,7 +826,7 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
       <section className="lisa-archive lisa-reveal" data-testid="lisa-archive">
         <div className="lisa-archive-head">
           <p className="lisa-archive-eyebrow">THE ARCHIVE</p>
-          <p className="lisa-archive-title">Six frames. One dome.</p>
+          <p className="lisa-archive-title">Seven frames. One dome.</p>
           <p className="lisa-archive-hallmark" data-testid="lisa-archive-hallmark">
             Frame 02 — internal <span className="lisa-archive-hallmark-mark">PHILEON 18K</span> hallmark visible.
           </p>
