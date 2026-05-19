@@ -31,7 +31,7 @@ const CAMPAIGN_BY_VARIANT = {
   },
   "lisa-bold": {
     src: "/lisa/lisa-07-campaign-bold.png",
-    label: "07 — CAMPAIGN",
+    label: "09 — CAMPAIGN",
     alt: "LISA BOLD — campaign portrait, model in Sergio Tacchini green velour against art-deco backdrop, ring worn on hand at temple",
   },
 };
@@ -45,7 +45,18 @@ const EXTRA_BY_VARIANT = {
       alt: "LISA SMALL — worn on hand, model resting hand against neutral upholstery with green-ombré stiletto nails, stacked rings on the other hand",
     },
   ],
-  "lisa-bold": [],
+  "lisa-bold": [
+    {
+      src: "/lisa/lisa-07-worn-bold.png",
+      label: "07 — WORN",
+      alt: "LISA BOLD — worn macro, single hand close-up against neutral grey ground showing the dome's full saturation against skin",
+    },
+    {
+      src: "/lisa/lisa-08-stillness-bold.png",
+      label: "08 — STILLNESS",
+      alt: "LISA BOLD — model's hand at rest on a stone ledge, denim cuff and watch visible, leather seating in the background",
+    },
+  ],
 };
 
 function buildGallery(variantId) {
@@ -858,7 +869,10 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
         <div className="lisa-archive-head">
           <p className="lisa-archive-eyebrow">THE ARCHIVE</p>
           <p className="lisa-archive-title">
-            {GALLERY.length === 8 ? "Eight frames. One dome." : "Seven frames. One dome."}
+            {(() => {
+              const words = { 7: "Seven", 8: "Eight", 9: "Nine" };
+              return `${words[GALLERY.length] || GALLERY.length} frames. One dome.`;
+            })()}
           </p>
           <p className="lisa-archive-hallmark" data-testid="lisa-archive-hallmark">
             Frame 02 — internal <span className="lisa-archive-hallmark-mark">PHILEON 18K</span> hallmark visible.
