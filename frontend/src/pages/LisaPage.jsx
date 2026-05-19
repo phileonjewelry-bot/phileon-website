@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
@@ -14,15 +14,32 @@ import Lightbox from "../components/CinematicLightbox";
  * Namespace: .lisa-  (no class bleed)
  */
 
-const GALLERY = [
+const GALLERY_BASE = [
   { src: "/lisa/lisa-bold-hero.jpg",  label: "01 — HERO",         alt: "LISA — 18K white gold dome band, model in hand presentation" },
   { src: "/lisa/lisa-02-in-hand.png", label: "02 — PROOF",        alt: "LISA — held in hand, PHILEON 18K engraving visible inside the band" },
   { src: "/lisa/lisa-03-front.png",   label: "03 — FRONT",        alt: "LISA — front render of the graduated emerald dome on white studio ground" },
   { src: "/lisa/lisa-04-macro.png",   label: "04 — MACRO",        alt: "LISA — extreme macro of the emerald field showing crown, milgrain rails, and prong-set crystals" },
   { src: "/lisa/lisa-05-inside.png",  label: "05 — INSIDE TRACK", alt: "LISA — interior view showing the inset emerald track on the inside of the band" },
   { src: "/lisa/lisa-06-top.png",     label: "06 — TOP",          alt: "LISA — top-down angle showing the full sculptural dome and saturation" },
-  { src: "/lisa/lisa-07-campaign.png", label: "07 — CAMPAIGN",     alt: "LISA BOLD — campaign portrait, model in Sergio Tacchini green velour against art-deco backdrop, ring worn on hand at temple" },
 ];
+
+const CAMPAIGN_BY_VARIANT = {
+  "lisa-small": {
+    src: "/lisa/lisa-07-campaign-small.png",
+    label: "07 — CAMPAIGN",
+    alt: "LISA SMALL — campaign portrait, model in emerald fur hood, ring worn on hand veiling her face",
+  },
+  "lisa-bold": {
+    src: "/lisa/lisa-07-campaign-bold.png",
+    label: "07 — CAMPAIGN",
+    alt: "LISA BOLD — campaign portrait, model in Sergio Tacchini green velour against art-deco backdrop, ring worn on hand at temple",
+  },
+};
+
+function buildGallery(variantId) {
+  const campaign = CAMPAIGN_BY_VARIANT[variantId] || CAMPAIGN_BY_VARIANT["lisa-bold"];
+  return [...GALLERY_BASE, campaign];
+}
 
 const VARIANTS = [
   {
@@ -69,6 +86,7 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
   const isSingleVariant = !!forceVariantId;
   const lockedId = forceVariantId || selectedId;
   const otherVariant = VARIANTS.find((v) => v.id !== lockedId);
+  const GALLERY = useMemo(() => buildGallery(lockedId), [lockedId]);
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
