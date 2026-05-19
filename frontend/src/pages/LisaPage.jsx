@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import Lightbox from "../components/CinematicLightbox";
@@ -100,17 +100,39 @@ const VARIANTS = [
   },
 ];
 
-export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) {
+// Hero image swaps with expression. SMALL → clean studio render.
+// BOLD → STILLNESS frame (lifestyle, environmental warmth, ownership energy).
+const HERO_BY_VARIANT = {
+  "lisa-small": "/lisa/lisa-bold-hero.jpg",
+  "lisa-bold":  "/lisa/lisa-08-stillness-bold.png",
+};
+
+export default function LisaPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-  const initial = forceVariantId || "lisa-bold";
-  const [selectedId, setSelectedId] = useState(initial);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const expressionParam = (searchParams.get("expression") || "").toLowerCase();
+  const initialId =
+    expressionParam === "bold" ? "lisa-bold" :
+    expressionParam === "small" ? "lisa-small" :
+    "lisa-small"; // default entry — intimate luxury
+
+  const [selectedId, setSelectedId] = useState(initialId);
   const [isMounted, setIsMounted] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(null);
 
-  const isSingleVariant = !!forceVariantId;
-  const lockedId = forceVariantId || selectedId;
-  const otherVariant = VARIANTS.find((v) => v.id !== lockedId);
+  const lockedId = selectedId;
   const GALLERY = useMemo(() => buildGallery(lockedId), [lockedId]);
+
+  // Sync URL with selection (shareable links / browser back).
+  useEffect(() => {
+    const desired = lockedId === "lisa-bold" ? "bold" : "small";
+    if (searchParams.get("expression") !== desired) {
+      const next = new URLSearchParams(searchParams);
+      next.set("expression", desired);
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lockedId]);
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
@@ -130,15 +152,6 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
   const selected = VARIANTS.find((v) => v.id === lockedId);
   const formattedPrice = `$${selected.priceUsd.toLocaleString("en-US")} USD`;
 
-  // Cross-link target (kept dynamic so the page reflects URL context)
-  const otherHref = otherVariant?.id === "lisa-small"
-    ? "/ladies/rings/lisa-small"
-    : "/gents/rings/lisa-bold";
-  const otherLabel = otherVariant?.label || "";
-  const crossLinkCopy = lockedId === "lisa-small"
-    ? "Prefer a heavier expression?"
-    : "Prefer a finer grain?";
-
   const onAddToCart = () => {
     handleAddToCart({
       id: selected.id,
@@ -148,14 +161,9 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
       tierKey: selected.id,
       metal: "18K White Gold · Natural Emerald",
       quantity: 1,
-      image: "/lisa/lisa-bold-hero.jpg",
+      image: HERO_BY_VARIANT[selected.id] || HERO_BY_VARIANT["lisa-small"],
     });
   };
-
-  // Only show variants relevant to current page; default mode shows both
-  const visibleVariants = isSingleVariant
-    ? VARIANTS.filter((v) => v.id === forceVariantId)
-    : VARIANTS;
 
   return (
     <section
@@ -218,7 +226,7 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           width: 90%;
           opacity: 0;
           transform: scale(0.96);
-          transition: opacity 1500ms cubic-bezier(0.22, 1, 0.36, 1), transform 1500ms cubic-bezier(0.22, 1, 0.36, 1);
+          transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1), transform 1500ms cubic-bezier(0.22, 1, 0.36, 1);
           filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.55))
                   drop-shadow(0 0 60px rgba(20, 95, 70, 0.18));
         }
@@ -303,6 +311,38 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           border: 1px solid rgba(232, 230, 223, 0.32);
         }
         .lisa-btn-g:hover { color: rgba(232, 230, 223, 1); border-color: rgba(232, 230, 223, 0.6); letter-spacing: 0.48em; }
+
+        /* ─── EXPRESSION SWITCHER ─────────────────────────── */
+        .lisa-expression-switch {
+          display: inline-flex;
+          gap: 0;
+          margin: 0 auto 32px;
+          padding: 6px;
+          background: rgba(20, 30, 26, 0.55);
+          border: 1px solid rgba(54, 158, 118, 0.32);
+          border-radius: 999px;
+          backdrop-filter: blur(10px);
+        }
+        .lisa-expression-btn {
+          font-family: 'Inter', sans-serif;
+          font-size: 10.5px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          padding: 12px 32px;
+          color: rgba(232, 230, 223, 0.55);
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          border-radius: 999px;
+          transition: background 320ms ease, color 320ms ease, letter-spacing 320ms ease;
+        }
+        .lisa-expression-btn:hover { color: rgba(232, 230, 223, 0.85); }
+        .lisa-expression-btn.is-active {
+          background: rgba(54, 158, 118, 0.85);
+          color: #f0ede4;
+          letter-spacing: 0.46em;
+        }
+        .lisa-expression-btn.is-active:hover { color: #fff; }
 
         /* ─── INTRO STRIP ─────────────────────────────────── */
         .lisa-intro-strip {
@@ -641,6 +681,14 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
           .lisa-essay-rule { animation: none !important; width: 140px; opacity: 1; }
         }
 
+        .lisa-config-fade {
+          animation: lisaConfigFade 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes lisaConfigFade {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
         /* ─── ARCHIVE ─────────────────────────────────────── */
         .lisa-archive {
           position: relative;
@@ -773,7 +821,7 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
         }
       `}</style>
 
-      <Link to={returnHref || "/shop?category=rings"} className="lisa-back" data-testid="lisa-back-btn">
+      <Link to="/shop?category=rings" className="lisa-back" data-testid="lisa-back-btn">
         <ArrowLeft className="w-3.5 h-3.5" />
         <span>RETURN</span>
       </Link>
@@ -782,9 +830,10 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
       <section className="lisa-hero" data-testid="lisa-hero">
         <div className="lisa-hero-glow" aria-hidden="true" />
         <img
+          key={lockedId}
           className="lisa-hero-ring"
-          src="/lisa/lisa-bold-hero.jpg"
-          alt="LISA — Phileon, 18K white gold band set with natural emerald dome"
+          src={HERO_BY_VARIANT[lockedId]}
+          alt={`LISA ${lockedId === "lisa-bold" ? "BOLD" : "SMALL"} — Phileon, 18K white gold band set with natural emerald dome`}
           onLoad={(e) => e.currentTarget.classList.add("in")}
           data-testid="lisa-hero-ring"
         />
@@ -792,15 +841,37 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
 
         <div className="lisa-hero-text">
           <p className="lisa-kicker" data-testid="lisa-kicker">
-            {audienceLabel || "PHILEON SIGNATURE OBJECTS"}
+            PHILEON SIGNATURE OBJECTS
           </p>
           <h1 className="lisa-title" data-testid="lisa-title">
-            {isSingleVariant ? selected.label : "LISA"}
+            LISA
           </h1>
           <p className="lisa-line" data-testid="lisa-line">
-            Quiet seduction.<br />
-            Saturation held under control.
+            One object.<br />
+            Two expressions of the same architecture.
           </p>
+
+          {/* EXPRESSION SWITCHER */}
+          <div className="lisa-expression-switch" role="tablist" aria-label="LISA expression" data-testid="lisa-expression-switch">
+            {VARIANTS.map((v) => {
+              const short = v.id === "lisa-bold" ? "BOLD" : "SMALL";
+              const isActive = v.id === lockedId;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`lisa-expression-btn${isActive ? " is-active" : ""}`}
+                  onClick={() => setSelectedId(v.id)}
+                  data-testid={`lisa-expression-${short.toLowerCase()}`}
+                >
+                  {short}
+                </button>
+              );
+            })}
+          </div>
+
           <div className="lisa-cta">
             <a href="#acquisition" className="lisa-btn-e" data-testid="lisa-hero-cta-add">ADD TO CART</a>
             <a href="#story" className="lisa-btn-g" data-testid="lisa-hero-cta-discover">DISCOVER</a>
@@ -843,8 +914,8 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
         </div>
       </section>
 
-      {/* ─── LISA SMALL — EDITORIAL PAUSE (small-only) ───── */}
-      {forceVariantId === "lisa-small" && (
+      {/* ─── LISA SMALL — EDITORIAL PAUSE (small expression only) ─ */}
+      {lockedId === "lisa-small" && (
         <section className="lisa-essay lisa-reveal" data-testid="lisa-small-essay">
           <div className="lisa-essay-inner">
             <span className="lisa-essay-eyebrow">LISA SMALL</span>
@@ -905,65 +976,39 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
         archiveLabel="LISA · ARCHIVE"
       />
 
-      {/* ─── DUAL CONFIG ─────────────────────────────────── */}
+      {/* ─── EXPRESSION DETAIL (current selection) ─────── */}
       <section className="lisa-dual lisa-reveal" data-testid="lisa-dual">
-        <div
-          className="lisa-dual-inner"
-          style={isSingleVariant ? { gridTemplateColumns: "1fr", maxWidth: 720 } : undefined}
-        >
-          {visibleVariants.map((v, idx) => {
-            const isSelected = v.id === lockedId;
-            const trueIdx = VARIANTS.findIndex((x) => x.id === v.id);
-            return (
-              <div
-                key={v.id}
-                className={`lisa-config${isSelected ? " is-selected" : ""}`}
-                data-testid={`lisa-config-${v.id}`}
-              >
-                <div className="lisa-config-index">{trueIdx === 0 ? "I" : "II"}</div>
-                <p className="lisa-config-for">{v.label}</p>
-                <h3 className="lisa-config-name">{v.name}</h3>
-                <p className="lisa-config-desc">{v.description}</p>
-                <div className="lisa-config-spec">
-                  {v.specs.map((s) => (
-                    <div key={s.k} className="lisa-cs-row">
-                      <span className="lisa-cs-k">{s.k}</span>
-                      <span className="lisa-cs-v">{s.v}</span>
-                    </div>
-                  ))}
+        <div className="lisa-dual-inner" style={{ gridTemplateColumns: "1fr", maxWidth: 720 }}>
+          <div
+            key={selected.id}
+            className="lisa-config is-selected lisa-config-fade"
+            data-testid={`lisa-config-${selected.id}`}
+          >
+            <div className="lisa-config-index">
+              {VARIANTS.findIndex((x) => x.id === selected.id) === 0 ? "I" : "II"}
+            </div>
+            <p className="lisa-config-for">{selected.label}</p>
+            <h3 className="lisa-config-name">{selected.name}</h3>
+            <p className="lisa-config-desc">{selected.description}</p>
+            <div className="lisa-config-spec">
+              {selected.specs.map((s) => (
+                <div key={s.k} className="lisa-cs-row">
+                  <span className="lisa-cs-k">{s.k}</span>
+                  <span className="lisa-cs-v">{s.v}</span>
                 </div>
-                {!isSingleVariant && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(v.id)}
-                    className="lisa-config-pick"
-                    data-testid={`lisa-pick-${v.id}`}
-                  >
-                    {isSelected ? "SELECTED" : "SELECT"}
-                  </button>
-                )}
-              </div>
-            );
-          })}
+              ))}
+            </div>
+          </div>
         </div>
       </section>
-
-      {/* ─── CROSS-LINK ─────────────────────────────────── */}
-      {isSingleVariant && otherVariant && (
-        <section className="lisa-crosslink lisa-reveal" data-testid="lisa-crosslink">
-          <p className="lisa-crosslink-eyebrow">{crossLinkCopy}</p>
-          <Link to={otherHref} className="lisa-crosslink-cta" data-testid="lisa-crosslink-cta">
-            View {otherLabel} <span aria-hidden="true">→</span>
-          </Link>
-        </section>
-      )}
 
       {/* ─── ACQUISITION ─────────────────────────────────── */}
       <section className="lisa-acquire lisa-reveal" id="acquisition" data-testid="lisa-acquire">
         <p className="lisa-acquire-eyebrow">ACQUISITION</p>
-        <h2 className="lisa-acquire-title" data-testid="lisa-acquire-title">
-          LISA — {selected.label.replace("LISA ", "")}
-        </h2>
+        <div key={selected.id} className="lisa-config-fade">
+          <h2 className="lisa-acquire-title" data-testid="lisa-acquire-title">
+            LISA — {selected.label.replace("LISA ", "")}
+          </h2>
         <p className="lisa-acquire-price" data-testid="lisa-acquire-price">{formattedPrice}</p>
         <p className="lisa-acquire-lead">Made to order · 6–8 weeks · Complimentary insured worldwide shipping</p>
         <button
@@ -975,6 +1020,7 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
         >
           {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
         </button>
+        </div>
       </section>
 
       {/* ─── FINAL WORD ──────────────────────────────────── */}

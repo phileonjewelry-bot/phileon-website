@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 
 // Public Pages
@@ -170,12 +170,8 @@ function App() {
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
             <Route path="/lisa" element={<LisaPage />} />
-            <Route path="/ladies/rings/lisa-small" element={
-              <LisaPage forceVariantId="lisa-small" audienceLabel="PHILEON · LADIES · RINGS" returnHref="/shop?category=rings&audience=ladies" />
-            } />
-            <Route path="/gents/rings/lisa-bold" element={
-              <LisaPage forceVariantId="lisa-bold" audienceLabel="PHILEON · GENTS · RINGS" returnHref="/shop?category=rings&audience=gentlemens-club" />
-            } />
+            <Route path="/ladies/rings/lisa-small" element={<Navigate to="/lisa?expression=small" replace />} />
+            <Route path="/gents/rings/lisa-bold" element={<Navigate to="/lisa?expression=bold" replace />} />
           </Route>
           
           {/* Admin Routes */}

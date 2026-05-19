@@ -389,7 +389,7 @@ const HomePage = () => {
           { 
             title: "LISA", 
             image: "/lisa/lisa-bold-hero.jpg", 
-            href: "/gents/rings/lisa-bold",
+            href: "/lisa",
             subtitle: "Quiet seduction."
           },
           { 
