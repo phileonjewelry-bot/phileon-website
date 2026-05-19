@@ -26,7 +26,7 @@ const GALLERY_BASE = [
 const CAMPAIGN_BY_VARIANT = {
   "lisa-small": {
     src: "/lisa/lisa-07-campaign-small.png",
-    label: "07 — CAMPAIGN",
+    label: "08 — CAMPAIGN",
     alt: "LISA SMALL — campaign portrait, model in emerald fur hood, ring worn on hand veiling her face",
   },
   "lisa-bold": {
@@ -36,9 +36,22 @@ const CAMPAIGN_BY_VARIANT = {
   },
 };
 
+// Variant-only frames inserted just before the closing CAMPAIGN slot.
+const EXTRA_BY_VARIANT = {
+  "lisa-small": [
+    {
+      src: "/lisa/lisa-08-on-body-small.png",
+      label: "07 — WORN",
+      alt: "LISA SMALL — worn on hand, model resting hand against neutral upholstery with green-ombré stiletto nails, stacked rings on the other hand",
+    },
+  ],
+  "lisa-bold": [],
+};
+
 function buildGallery(variantId) {
-  const campaign = CAMPAIGN_BY_VARIANT[variantId] || CAMPAIGN_BY_VARIANT["lisa-bold"];
-  return [...GALLERY_BASE, campaign];
+  const id = CAMPAIGN_BY_VARIANT[variantId] ? variantId : "lisa-bold";
+  const extras = EXTRA_BY_VARIANT[id] || [];
+  return [...GALLERY_BASE, ...extras, CAMPAIGN_BY_VARIANT[id]];
 }
 
 const VARIANTS = [
@@ -844,7 +857,9 @@ export default function LisaPage({ forceVariantId, audienceLabel, returnHref }) 
       <section className="lisa-archive lisa-reveal" data-testid="lisa-archive">
         <div className="lisa-archive-head">
           <p className="lisa-archive-eyebrow">THE ARCHIVE</p>
-          <p className="lisa-archive-title">Seven frames. One dome.</p>
+          <p className="lisa-archive-title">
+            {GALLERY.length === 8 ? "Eight frames. One dome." : "Seven frames. One dome."}
+          </p>
           <p className="lisa-archive-hallmark" data-testid="lisa-archive-hallmark">
             Frame 02 — internal <span className="lisa-archive-hallmark-mark">PHILEON 18K</span> hallmark visible.
           </p>
