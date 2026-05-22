@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
@@ -100,8 +100,14 @@ const VARIANTS = [
   },
 ];
 
-// Hero image swaps with expression. SMALL → clean studio render.
-// BOLD → STILLNESS frame (lifestyle, environmental warmth, ownership energy).
+// Hero video swaps with expression — paths below. Files are 1.6 MB H.264
+// Constrained Baseline + faststart with audio stripped for iOS autoplay.
+const HERO_VIDEO_BY_VARIANT = {
+  "lisa-small": "/videos/lisa-small-hero.mp4",
+  "lisa-bold":  "/videos/lisa-bold-hero.mp4",
+};
+
+// Still-image fallback (used as <video poster>).
 const HERO_BY_VARIANT = {
   "lisa-small": "/lisa/lisa-bold-hero.jpg",
   "lisa-bold":  "/lisa/lisa-08-stillness-bold.png",
@@ -119,6 +125,7 @@ export default function LisaPage() {
   const [selectedId, setSelectedId] = useState(initialId);
   const [isMounted, setIsMounted] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const videoRef = useRef(null);
 
   const lockedId = selectedId;
   const GALLERY = useMemo(() => buildGallery(lockedId), [lockedId]);
@@ -148,6 +155,49 @@ export default function LisaPage() {
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, []);
+
+  // Hero video autoplay watchdog — re-fires .play() on mount, after
+  // expression switch, and recovers from any unsolicited pause/end.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    let cancelled = false;
+    const attemptPlay = () => {
+      if (cancelled) return;
+      const p = video.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+    attemptPlay();
+    const onMeta = () => attemptPlay();
+    const onPause = () => { if (!video.ended) attemptPlay(); };
+    const onEnded = () => { video.currentTime = 0; attemptPlay(); };
+    const onUserGesture = () => {
+      attemptPlay();
+      document.removeEventListener("touchstart", onUserGesture);
+      document.removeEventListener("click", onUserGesture);
+    };
+    video.addEventListener("loadedmetadata", onMeta);
+    video.addEventListener("pause", onPause);
+    video.addEventListener("ended", onEnded);
+    document.addEventListener("touchstart", onUserGesture, { passive: true });
+    document.addEventListener("click", onUserGesture);
+    const watchdog = window.setInterval(() => {
+      if (!cancelled && video.paused && !video.ended) attemptPlay();
+    }, 1500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(watchdog);
+      video.removeEventListener("loadedmetadata", onMeta);
+      video.removeEventListener("pause", onPause);
+      video.removeEventListener("ended", onEnded);
+      document.removeEventListener("touchstart", onUserGesture);
+      document.removeEventListener("click", onUserGesture);
+    };
+  }, [lockedId]);
+
 
   const selected = VARIANTS.find((v) => v.id === lockedId);
   const formattedPrice = `$${selected.priceUsd.toLocaleString("en-US")} USD`;
@@ -204,55 +254,61 @@ export default function LisaPage() {
           width: 100%;
           min-height: 100vh;
           overflow: hidden;
-          background:
-            radial-gradient(circle at 50% 40%, #0e1f1a 0%, #060807 60%, #030404 100%);
+          background: #050606;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .lisa-hero-glow {
+        .lisa-hero-video-wrap {
           position: absolute;
           inset: 0;
-          background:
-            radial-gradient(circle at 50% 55%, rgba(20, 95, 70, 0.35), transparent 50%),
-            radial-gradient(circle at 60% 80%, rgba(10, 60, 45, 0.22), transparent 55%);
-          pointer-events: none;
           z-index: 1;
+          overflow: hidden;
+          background: #000;
         }
-        .lisa-hero-ring {
-          position: relative;
-          z-index: 2;
-          max-width: 760px;
-          width: 90%;
-          opacity: 0;
-          transform: scale(0.96);
-          transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1), transform 1500ms cubic-bezier(0.22, 1, 0.36, 1);
-          filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.55))
-                  drop-shadow(0 0 60px rgba(20, 95, 70, 0.18));
-        }
-        .lisa-hero-ring.in { opacity: 1; transform: scale(1); }
-        .lisa-hero-vignette {
+        .lisa-hero-video {
           position: absolute;
           inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center center;
+          opacity: 0.95;
+          transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
+          animation: lisaHeroFadeIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes lisaHeroFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 0.95; }
+        }
+        .lisa-hero-overlay-darken {
+          position: absolute; inset: 0; z-index: 2;
+          background: rgba(0, 0, 0, 0.40);
           pointer-events: none;
-          z-index: 3;
-          background:
-            radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%),
-            linear-gradient(180deg, rgba(0,0,0,0.18) 0%, transparent 18%, transparent 72%, rgba(0,0,0,0.4) 100%);
+        }
+        .lisa-hero-overlay-emerald {
+          position: absolute; inset: 0; z-index: 3;
+          background: rgba(6, 22, 18, 0.10);
+          mix-blend-mode: soft-light;
+          pointer-events: none;
+        }
+        .lisa-hero-overlay-edge {
+          position: absolute; inset: 0; z-index: 4;
+          background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.72) 100%);
+          pointer-events: none;
         }
 
         /* HERO TEXT */
         .lisa-hero-text {
-          position: absolute;
-          inset: 0;
+          position: relative;
           z-index: 10;
           display: flex;
           flex-direction: column;
-          justify-content: flex-end;
           align-items: center;
-          padding: 0 24px 88px;
+          padding: 0 24px;
           text-align: center;
           pointer-events: none;
+          max-width: 720px;
         }
         .lisa-hero-text > * { pointer-events: auto; }
         .lisa-kicker {
@@ -828,16 +884,32 @@ export default function LisaPage() {
 
       {/* ─── HERO ─────────────────────────────────────────── */}
       <section className="lisa-hero" data-testid="lisa-hero">
-        <div className="lisa-hero-glow" aria-hidden="true" />
-        <img
-          key={lockedId}
-          className="lisa-hero-ring"
-          src={HERO_BY_VARIANT[lockedId]}
-          alt={`LISA ${lockedId === "lisa-bold" ? "BOLD" : "SMALL"} — Phileon, 18K white gold band set with natural emerald dome`}
-          onLoad={(e) => e.currentTarget.classList.add("in")}
-          data-testid="lisa-hero-ring"
-        />
-        <div className="lisa-hero-vignette" aria-hidden="true" />
+        {/* Full-bleed cinematic video — expression-aware */}
+        <div className="lisa-hero-video-wrap" aria-hidden="true">
+          <video
+            key={lockedId}
+            ref={videoRef}
+            className="lisa-hero-video"
+            src={HERO_VIDEO_BY_VARIANT[lockedId]}
+            poster={HERO_BY_VARIANT[lockedId]}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            webkit-playsinline="true"
+            x5-playsinline="true"
+            x5-video-player-type="h5"
+            disablePictureInPicture
+            data-testid="lisa-hero-video"
+          />
+          {/* Dark cinematic vignette */}
+          <div className="lisa-hero-overlay-darken" />
+          {/* Emerald atmospheric wash */}
+          <div className="lisa-hero-overlay-emerald" />
+          {/* Edge vignette */}
+          <div className="lisa-hero-overlay-edge" />
+        </div>
 
         <div className="lisa-hero-text">
           <p className="lisa-kicker" data-testid="lisa-kicker">
@@ -873,7 +945,7 @@ export default function LisaPage() {
           </div>
 
           <div className="lisa-cta">
-            <a href="#acquisition" className="lisa-btn-e" data-testid="lisa-hero-cta-add">ADD TO CART</a>
+            <a href="#acquisition" className="lisa-btn-e" data-testid="lisa-hero-cta-add">ACQUIRE</a>
             <a href="#story" className="lisa-btn-g" data-testid="lisa-hero-cta-discover">DISCOVER</a>
           </div>
         </div>
