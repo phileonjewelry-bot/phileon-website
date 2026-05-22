@@ -20,19 +20,34 @@ const SPECS = [
   { k: "Stones",        v: "Blue Sapphire Pavé + White Diamond Pavé" },
   { k: "Form",          v: "Full wrap feather ring" },
   { k: "Series",        v: "Tribute Series" },
-  { k: "Availability",  v: "Available for the 2026 season only — retired at season's end, no reissue" },
+  { k: "Availability",  v: "Available for the 2026 season only — retires at the close of the 2026 MLB season, October 31, 2026. No reissue." },
 ];
 
 const MARQUEE_TEXT =
   "LADY JAY · TRIBUTE SERIES · 2026 SEASON ONLY · WHITE GOLD · BLUE SAPPHIRE · WHITE DIAMOND · NO REISSUE";
 
+const RETIRE_DATE = new Date("2026-10-31T23:59:59-04:00"); // End of 2026 MLB season
+
+function daysUntilRetire() {
+  const now = new Date();
+  const ms = RETIRE_DATE.getTime() - now.getTime();
+  return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+}
+
 export default function LadyJayPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [isMounted, setIsMounted] = useState(false);
+  const [daysLeft, setDaysLeft] = useState(() => daysUntilRetire());
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
     return () => window.clearTimeout(t);
+  }, []);
+
+  // Refresh countdown daily — no ticking, just a quiet recompute.
+  useEffect(() => {
+    const id = window.setInterval(() => setDaysLeft(daysUntilRetire()), 1000 * 60 * 60);
+    return () => window.clearInterval(id);
   }, []);
 
   useEffect(() => {
