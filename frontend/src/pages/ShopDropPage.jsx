@@ -56,6 +56,7 @@ const SHOP_COLLECTION_MAP = {
   'la-madonna': 'editorial',
   'la-scarpa-della-regina': 'editorial',
   'lisa': 'signature',
+  'lady-jay': 'editorial',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',
@@ -572,6 +573,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 4,
+  },
+  {
+    id: 'lady-jay',
+    name: 'LADY JAY',
+    slug: 'lady-jay',
+    materialLine: 'Tribute Series · 2026 Season Only · White Gold · Blue Sapphire + White Diamond',
+    imageUrl: '/lady-jay/lady-jay-hero.png',
+    href: '/lady-jay',
+    price_range: 'From $14,500 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['ladies', 'collective'],
+    tags: ['Ladies', 'Tribute Series', 'Sapphire', 'Diamond', 'Feather Ring', 'Season Only'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 5,
   },
 ];
 

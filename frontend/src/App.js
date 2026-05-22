@@ -61,6 +61,7 @@ import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
 import LisaPage from "@/pages/LisaPage";
+import LadyJayPage from "@/pages/LadyJayPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -170,6 +171,7 @@ function App() {
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
             <Route path="/lisa" element={<LisaPage />} />
+            <Route path="/lady-jay" element={<LadyJayPage />} />
             <Route path="/ladies/rings/lisa-small" element={<Navigate to="/lisa?expression=small" replace />} />
             <Route path="/gents/rings/lisa-bold" element={<Navigate to="/lisa?expression=bold" replace />} />
           </Route>
