@@ -550,7 +550,7 @@ const CORE_PRODUCTS = [
     inventory_count: 100,
     is_core: true,
     category: 'rings',
-    audience: ['gentlemens-club', 'ladies', 'collective'],
+    audience: ['gentlemens-club', 'collective'],
     isNew: true,
     isFeatured: true,
     displayOrder: 3,
