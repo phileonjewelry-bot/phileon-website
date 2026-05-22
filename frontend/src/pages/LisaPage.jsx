@@ -248,16 +248,13 @@ export default function LisaPage() {
         }
         .lisa-back:hover { color: rgba(232, 230, 223, 0.95); }
 
-        /* ─── HERO ─────────────────────────────────────────── */
+        /* ─── HERO ─ Video-only frame ──────────────────────── */
         .lisa-hero {
           position: relative;
           width: 100%;
-          min-height: 100vh;
+          height: 88vh;
           overflow: hidden;
           background: #050606;
-          display: flex;
-          align-items: center;
-          justify-content: center;
         }
         .lisa-hero-video-wrap {
           position: absolute;
@@ -273,17 +270,17 @@ export default function LisaPage() {
           height: 100%;
           object-fit: cover;
           object-position: center center;
-          opacity: 0.95;
+          opacity: 0.96;
           transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
           animation: lisaHeroFadeIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
         }
         @keyframes lisaHeroFadeIn {
           from { opacity: 0; }
-          to   { opacity: 0.95; }
+          to   { opacity: 0.96; }
         }
         .lisa-hero-overlay-darken {
           position: absolute; inset: 0; z-index: 2;
-          background: rgba(0, 0, 0, 0.40);
+          background: rgba(0, 0, 0, 0.18);
           pointer-events: none;
         }
         .lisa-hero-overlay-emerald {
@@ -292,56 +289,63 @@ export default function LisaPage() {
           mix-blend-mode: soft-light;
           pointer-events: none;
         }
-        .lisa-hero-overlay-edge {
+        .lisa-hero-overlay-seam {
           position: absolute; inset: 0; z-index: 4;
-          background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.72) 100%);
           pointer-events: none;
+          background:
+            linear-gradient(180deg, transparent 0%, transparent 75%, rgba(5, 7, 6, 0.85) 100%);
         }
 
-        /* HERO TEXT */
-        .lisa-hero-text {
+        /* ─── HERO COMPOSITION — separate editorial block ───── */
+        .lisa-hero-composition {
           position: relative;
-          z-index: 10;
+          background: #050706;
+          padding: 88px 24px 100px;
+          text-align: center;
+        }
+        .lisa-hero-comp-inner {
+          max-width: 720px;
+          margin: 0 auto;
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 0 24px;
-          text-align: center;
-          pointer-events: none;
-          max-width: 720px;
         }
-        .lisa-hero-text > * { pointer-events: auto; }
+
+        /* HERO COMP TEXT */
+        .lisa-hero-text {
+          /* legacy class — kept for any callers; new layout uses .lisa-hero-comp-inner */
+        }
         .lisa-kicker {
           font-family: 'Inter', sans-serif;
           font-size: 10.5px;
           letter-spacing: 0.46em;
           text-transform: uppercase;
-          color: rgba(232, 230, 223, 0.62);
-          margin-bottom: 18px;
+          color: rgba(54, 158, 118, 0.72);
+          margin: 0 0 22px;
         }
         .lisa-title {
           font-family: 'Cormorant Garamond', serif;
           font-weight: 500;
-          font-size: clamp(4rem, 11vw, 9rem);
-          line-height: 0.9;
+          font-size: clamp(3.6rem, 9vw, 7rem);
+          line-height: 0.92;
           letter-spacing: 0.06em;
           color: #f0ede4;
-          margin: 0 0 22px;
-          text-shadow: 0 2px 32px rgba(0, 0, 0, 0.45);
+          margin: 0 0 26px;
         }
         .lisa-line {
           font-family: 'Cormorant Garamond', serif;
           font-style: italic;
           font-weight: 300;
-          font-size: clamp(1rem, 1.55vw, 1.4rem);
-          line-height: 1.55;
-          color: rgba(232, 230, 223, 0.78);
-          margin: 0 0 36px;
-          max-width: 520px;
+          font-size: clamp(1rem, 1.4vw, 1.25rem);
+          line-height: 1.6;
+          color: rgba(232, 230, 223, 0.72);
+          margin: 0 0 44px;
+          max-width: 480px;
         }
         .lisa-cta {
+          margin-top: 36px;
           display: flex;
-          gap: 18px;
+          gap: 16px;
           flex-wrap: wrap;
           justify-content: center;
         }
@@ -372,20 +376,21 @@ export default function LisaPage() {
         .lisa-expression-switch {
           display: inline-flex;
           gap: 0;
-          margin: 0 auto 32px;
-          padding: 6px;
+          margin: 0 auto;
+          padding: 5px;
           background: rgba(20, 30, 26, 0.55);
-          border: 1px solid rgba(54, 158, 118, 0.32);
+          border: 1px solid rgba(54, 158, 118, 0.28);
           border-radius: 999px;
           backdrop-filter: blur(10px);
+          box-shadow: 0 0 24px rgba(54, 158, 118, 0.08);
         }
         .lisa-expression-btn {
           font-family: 'Inter', sans-serif;
-          font-size: 10.5px;
-          letter-spacing: 0.42em;
+          font-size: 10px;
+          letter-spacing: 0.4em;
           text-transform: uppercase;
-          padding: 12px 32px;
-          color: rgba(232, 230, 223, 0.55);
+          padding: 11px 28px;
+          color: rgba(232, 230, 223, 0.5);
           background: transparent;
           border: none;
           cursor: pointer;
@@ -394,9 +399,9 @@ export default function LisaPage() {
         }
         .lisa-expression-btn:hover { color: rgba(232, 230, 223, 0.85); }
         .lisa-expression-btn.is-active {
-          background: rgba(54, 158, 118, 0.85);
+          background: rgba(54, 158, 118, 0.78);
           color: #f0ede4;
-          letter-spacing: 0.46em;
+          letter-spacing: 0.44em;
         }
         .lisa-expression-btn.is-active:hover { color: #fff; }
 
@@ -866,10 +871,22 @@ export default function LisaPage() {
           letter-spacing: 0.48em;
         }
 
+        @media (max-width: 1024px) {
+          .lisa-hero { height: 78vh; }
+        }
         @media (max-width: 768px) {
-          .lisa-hero { min-height: 92vh; }
-          .lisa-hero-text { padding-bottom: 56px; }
-          .lisa-hero-ring { width: 78%; }
+          .lisa-hero {
+            height: 70vh;
+            min-height: 480px;
+            max-height: 620px;
+          }
+          .lisa-hero-composition { padding: 60px 22px 70px; }
+          .lisa-hero-comp-inner { max-width: 100%; }
+          .lisa-line { font-size: 1rem; line-height: 1.55; max-width: 80vw; }
+          .lisa-expression-btn { padding: 10px 22px; font-size: 9.5px; letter-spacing: 0.36em; }
+          .lisa-expression-btn.is-active { letter-spacing: 0.38em; }
+          .lisa-cta { flex-direction: column; gap: 12px; width: 100%; max-width: 280px; }
+          .lisa-cta a { width: 100%; padding: 16px 24px; }
           .lisa-config { padding: 48px 28px 40px; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -882,9 +899,8 @@ export default function LisaPage() {
         <span>RETURN</span>
       </Link>
 
-      {/* ─── HERO ─────────────────────────────────────────── */}
+      {/* ─── HERO ─ Video-only frame (no overlays) ───────── */}
       <section className="lisa-hero" data-testid="lisa-hero">
-        {/* Full-bleed cinematic video — expression-aware */}
         <div className="lisa-hero-video-wrap" aria-hidden="true">
           <video
             key={lockedId}
@@ -903,15 +919,17 @@ export default function LisaPage() {
             disablePictureInPicture
             data-testid="lisa-hero-video"
           />
-          {/* Dark cinematic vignette */}
+          {/* Subtle atmospheric layer — no text overlap */}
           <div className="lisa-hero-overlay-darken" />
-          {/* Emerald atmospheric wash */}
           <div className="lisa-hero-overlay-emerald" />
-          {/* Edge vignette */}
-          <div className="lisa-hero-overlay-edge" />
+          {/* Bottom seam — editorial hand-off into composition block */}
+          <div className="lisa-hero-overlay-seam" />
         </div>
+      </section>
 
-        <div className="lisa-hero-text">
+      {/* ─── HERO COMPOSITION ─ All UI, no video overlap ─── */}
+      <section className="lisa-hero-composition" data-testid="lisa-hero-composition">
+        <div className="lisa-hero-comp-inner">
           <p className="lisa-kicker" data-testid="lisa-kicker">
             PHILEON SIGNATURE OBJECTS
           </p>
@@ -923,7 +941,7 @@ export default function LisaPage() {
             Two expressions of the same architecture.
           </p>
 
-          {/* EXPRESSION SWITCHER */}
+          {/* EXPRESSION SWITCHER — below media */}
           <div className="lisa-expression-switch" role="tablist" aria-label="LISA expression" data-testid="lisa-expression-switch">
             {VARIANTS.map((v) => {
               const short = v.id === "lisa-bold" ? "BOLD" : "SMALL";
@@ -945,7 +963,7 @@ export default function LisaPage() {
           </div>
 
           <div className="lisa-cta">
-            <a href="#acquisition" className="lisa-btn-e" data-testid="lisa-hero-cta-add">ACQUIRE</a>
+            <a href="#acquisition" className="lisa-btn-e" data-testid="lisa-hero-cta-add">ADD TO CART</a>
             <a href="#story" className="lisa-btn-g" data-testid="lisa-hero-cta-discover">DISCOVER</a>
           </div>
         </div>
