@@ -252,7 +252,7 @@ export default function LisaPage() {
         .lisa-hero {
           position: relative;
           width: 100%;
-          height: 88vh;
+          height: 72vh;
           overflow: hidden;
           background: #050606;
         }
@@ -261,14 +261,16 @@ export default function LisaPage() {
           inset: 0;
           z-index: 1;
           overflow: hidden;
-          background: #000;
+          background: #050606;
         }
         .lisa-hero-video {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          /* Quality-first: respect native aspect, no aggressive upscale.
+             Source footage is ~1.74:1, contain frames it museum-style. */
+          object-fit: contain;
           object-position: center center;
           opacity: 0.96;
           transition: opacity 500ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -280,12 +282,12 @@ export default function LisaPage() {
         }
         .lisa-hero-overlay-darken {
           position: absolute; inset: 0; z-index: 2;
-          background: rgba(0, 0, 0, 0.18);
+          background: rgba(0, 0, 0, 0.10);
           pointer-events: none;
         }
         .lisa-hero-overlay-emerald {
           position: absolute; inset: 0; z-index: 3;
-          background: rgba(6, 22, 18, 0.10);
+          background: rgba(6, 22, 18, 0.06);
           mix-blend-mode: soft-light;
           pointer-events: none;
         }
@@ -293,7 +295,7 @@ export default function LisaPage() {
           position: absolute; inset: 0; z-index: 4;
           pointer-events: none;
           background:
-            linear-gradient(180deg, transparent 0%, transparent 75%, rgba(5, 7, 6, 0.85) 100%);
+            linear-gradient(180deg, transparent 0%, transparent 82%, rgba(5, 7, 6, 0.6) 100%);
         }
 
         /* ─── HERO COMPOSITION — separate editorial block ───── */
@@ -302,13 +304,48 @@ export default function LisaPage() {
           background: #050706;
           padding: 88px 24px 100px;
           text-align: center;
+          overflow: hidden;
         }
         .lisa-hero-comp-inner {
+          position: relative;
+          z-index: 2;
           max-width: 720px;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
           align-items: center;
+        }
+        /* Ambient emerald breathing glow — sits behind composition only.
+           Heavily diffused radial, ultra-low opacity, slow opacity+scale
+           cycle. Never touches type. */
+        .lisa-hero-glow {
+          position: absolute;
+          left: 50%;
+          top: 38%;
+          transform: translate(-50%, -50%) scale(1);
+          width: min(820px, 88%);
+          aspect-ratio: 1.2 / 1;
+          z-index: 1;
+          pointer-events: none;
+          background: radial-gradient(
+            circle at center,
+            rgba(15, 106, 82, 0.55) 0%,
+            rgba(15, 106, 82, 0.28) 28%,
+            rgba(15, 106, 82, 0.08) 55%,
+            transparent 75%
+          );
+          filter: blur(80px);
+          opacity: 0.045;
+          animation: lisaHeroGlowBreath 7s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+          will-change: opacity, transform;
+        }
+        @keyframes lisaHeroGlowBreath {
+          0%   { opacity: 0.035; transform: translate(-50%, -50%) scale(1); }
+          50%  { opacity: 0.065; transform: translate(-50%, -50%) scale(1.03); }
+          100% { opacity: 0.035; transform: translate(-50%, -50%) scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .lisa-hero-glow { animation: none !important; opacity: 0.05; }
         }
 
         /* HERO COMP TEXT */
@@ -872,15 +909,13 @@ export default function LisaPage() {
         }
 
         @media (max-width: 1024px) {
-          .lisa-hero { height: 78vh; }
+          .lisa-hero { height: 64vh; }
         }
         @media (max-width: 768px) {
           .lisa-hero {
-            height: 70vh;
-            min-height: 480px;
-            max-height: 620px;
+            height: clamp(340px, 54vh, 500px);
           }
-          .lisa-hero-composition { padding: 60px 22px 70px; }
+          .lisa-hero-composition { padding: 56px 22px 70px; }
           .lisa-hero-comp-inner { max-width: 100%; }
           .lisa-line { font-size: 1rem; line-height: 1.55; max-width: 80vw; }
           .lisa-expression-btn { padding: 10px 22px; font-size: 9.5px; letter-spacing: 0.36em; }
@@ -929,6 +964,7 @@ export default function LisaPage() {
 
       {/* ─── HERO COMPOSITION ─ All UI, no video overlap ─── */}
       <section className="lisa-hero-composition" data-testid="lisa-hero-composition">
+        <div className="lisa-hero-glow" aria-hidden="true" />
         <div className="lisa-hero-comp-inner">
           <p className="lisa-kicker" data-testid="lisa-kicker">
             PHILEON SIGNATURE OBJECTS
