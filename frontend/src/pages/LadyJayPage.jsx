@@ -164,12 +164,24 @@ export default function LadyJayPage() {
 
   useEffect(() => {
     const els = document.querySelectorAll(".ladyjay-reveal");
+    // Safety net: if IntersectionObserver is unsupported or never fires
+    // (e.g., flaky mobile rendering), reveal everything after a short delay.
+    const fallback = window.setTimeout(() => {
+      els.forEach((el) => el.classList.add("visible"));
+    }, 1200);
+
     const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("visible")),
-      { threshold: 0.18 }
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("visible");
+        }),
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
     );
     els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
+    return () => {
+      window.clearTimeout(fallback);
+      obs.disconnect();
+    };
   }, []);
 
   // Hero video autoplay watchdog — mobile Safari sometimes pauses on
@@ -1429,7 +1441,7 @@ export default function LadyJayPage() {
       {/* ─── CONFIGURATOR ─────────────────────────────────── */}
       <section
         id="lady-jay-configurator"
-        className="ladyjay-config ladyjay-reveal"
+        className="ladyjay-config"
         data-testid="lady-jay-configurator"
       >
         <div className="ladyjay-config-inner">
@@ -1587,7 +1599,7 @@ export default function LadyJayPage() {
       </section>
 
       {/* ─── ARCHIVE GALLERY ─────────────────────────────── */}
-      <section className="ladyjay-archive ladyjay-reveal" data-testid="lady-jay-archive">
+      <section className="ladyjay-archive" data-testid="lady-jay-archive">
         <div className="ladyjay-archive-head">
           <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
           <p className="ladyjay-archive-title">
