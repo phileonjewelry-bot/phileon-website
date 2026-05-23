@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
@@ -142,6 +142,7 @@ export default function LadyJayPage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [selectedTier, setSelectedTier] = useState("collector");
   const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
+  const heroVideoRef = useRef(null);
 
   const tierPricesLive = useLiveTierPrices("ladyJay");
   const currentTier = TIERS.find((t) => t.id === selectedTier) || TIERS[3];
@@ -168,6 +169,29 @@ export default function LadyJayPage() {
     );
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
+  }, []);
+
+  // Hero video autoplay watchdog — mobile Safari sometimes pauses on
+  // initial mount or after the page returns from background.
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return undefined;
+    const tryPlay = () => {
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+    tryPlay();
+    v.addEventListener("loadedmetadata", tryPlay);
+    v.addEventListener("pause", tryPlay);
+    v.addEventListener("ended", tryPlay);
+    const onVis = () => { if (!document.hidden) tryPlay(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      v.removeEventListener("loadedmetadata", tryPlay);
+      v.removeEventListener("pause", tryPlay);
+      v.removeEventListener("ended", tryPlay);
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, []);
 
   const onAddToCart = () => {
@@ -984,60 +1008,225 @@ export default function LadyJayPage() {
         </div>
       </div>
 
-      {/* ─── HERO ─────────────────────────────────────────── */}
-      <section className="ladyjay-hero" data-testid="lady-jay-hero">
-        <div className="ladyjay-hero-img-wrap">
-          <img
-            className="ladyjay-hero-img"
-            src="/lady-jay/lady-jay-hero.png"
-            alt="LADY JAY — Tribute Series feather ring in 18K white gold, blue sapphire and white diamond pavé, worn on hand"
-            data-testid="lady-jay-hero-img"
-          />
+      {/* ─── HERO — Cinematic video ────────────────────────── */}
+      <section
+        className="relative h-screen w-full overflow-hidden bg-black"
+        data-testid="lady-jay-hero"
+      >
+        {/* VIDEO */}
+        <video
+          ref={heroVideoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+          poster="/images/lady-jay/lady-jay-poster.jpg"
+          data-testid="lady-jay-hero-video"
+        >
+          <source src="/videos/lady-jay/lady-jay-hero.mp4" type="video/mp4" />
+        </video>
+
+        {/* DARK OVERLAY */}
+        <div className="absolute inset-0 bg-black/45" />
+
+        {/* SAPPHIRE GRADIENT */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at center, rgba(16,33,64,0.18) 0%, rgba(0,0,0,0.78) 72%)",
+          }}
+        />
+
+        {/* FILM GRAIN */}
+        <div
+          className="absolute inset-0 opacity-[0.08] mix-blend-soft-light pointer-events-none"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.85'/></svg>\")",
+          }}
+        />
+
+        {/* BACK LINK — preserved */}
+        <Link
+          to="/shop?category=rings"
+          className="absolute top-6 left-6 z-20 inline-flex items-center gap-2 text-[11px] tracking-[0.3em] uppercase"
+          style={{ color: "rgba(245,241,234,0.55)" }}
+          data-testid="lady-jay-back-btn"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>RETURN</span>
+        </Link>
+
+        {/* CONTENT */}
+        <div className="relative z-10 flex h-full items-end px-6 pb-14 md:px-16 md:pb-20">
+          <div className="max-w-2xl">
+            {/* EYEBROW */}
+            <div
+              className="mb-4 text-[10px] tracking-[0.45em] uppercase"
+              style={{ color: "rgba(201,162,77,0.72)" }}
+              data-testid="lady-jay-meta"
+            >
+              PHILEON — TRIBUTE SERIES
+            </div>
+
+            {/* TITLE */}
+            <h1
+              className="font-light uppercase leading-none"
+              style={{
+                fontSize: "clamp(4.5rem, 10vw, 10rem)",
+                letterSpacing: "-0.06em",
+                color: "#f5f1ea",
+                fontFamily: "'Cormorant Garamond', serif",
+              }}
+              data-testid="lady-jay-title"
+            >
+              LADY JAY
+            </h1>
+
+            {/* COPY */}
+            <p
+              className="mt-6 max-w-xl text-sm md:text-base leading-relaxed"
+              style={{
+                color: "rgba(245,241,234,0.72)",
+                letterSpacing: "0.02em",
+              }}
+              data-testid="lady-jay-tagline"
+            >
+              Some pieces celebrate a moment.
+              <br />
+              Others become part of the memory that survives it.
+            </p>
+
+            {/* FINAL LINE */}
+            <p
+              className="mt-5 text-[11px] uppercase tracking-[0.35em]"
+              style={{ color: "rgba(201,162,77,0.68)" }}
+            >
+              FOR THE CITY. FOR THE COLD NIGHTS. FOR THE ONES WHO STAYED.
+            </p>
+          </div>
         </div>
-        <div className="ladyjay-hero-text">
-          <p className="ladyjay-meta" data-testid="lady-jay-meta">
-            TRIBUTE SERIES — 2026 SEASON ONLY
-          </p>
-          <h1 className="ladyjay-title" data-testid="lady-jay-title">LADY JAY</h1>
-          <p className="ladyjay-collection">PHILEON · LADIES · TRIBUTE SERIES</p>
-          <p className="ladyjay-tagline" data-testid="lady-jay-tagline">
-            The Blue Jay doesn't ask permission to be the most beautiful thing in the room.
-          </p>
 
-          <div className="ladyjay-season" data-testid="lady-jay-season">
-            <p>Available for the 2026 season only.</p>
-            <p>Retired at season's end. No reissue.</p>
-          </div>
+        {/* BOTTOM FADE */}
+        <div
+          className="absolute bottom-0 left-0 h-48 w-full pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0))",
+          }}
+        />
+      </section>
 
-          <div className="ladyjay-countdown" data-testid="lady-jay-countdown">
-            {daysLeft > 0 ? (
-              <>
-                <span className="ladyjay-countdown-num" data-testid="lady-jay-countdown-days">
-                  {daysLeft}
-                </span>
-                <span className="ladyjay-countdown-label">
-                  {daysLeft === 1 ? "Day remaining" : "Days remaining"}
-                  <em>Closes October 31, 2026.</em>
-                </span>
-              </>
-            ) : (
-              <span className="ladyjay-countdown-closed" data-testid="lady-jay-countdown-closed">
-                The 2026 season has closed. Lady Jay is retired.
+      {/* ─── SEASON URGENCY STRIP ──────────────────────────── */}
+      <section
+        className="ladyjay-urgency"
+        data-testid="lady-jay-urgency"
+      >
+        <style>{`
+          .ladyjay-urgency {
+            background:
+              linear-gradient(180deg, rgba(0,0,0,1) 0%, #060a14 100%);
+            padding: 56px 24px 64px;
+            border-bottom: 1px solid rgba(99, 144, 220, 0.08);
+          }
+          .ladyjay-urgency-inner {
+            max-width: 760px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            text-align: center;
+          }
+          .ladyjay-urgency-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: rgba(150, 190, 240, 0.72);
+            margin: 0;
+          }
+          .ladyjay-urgency-line {
+            display: flex;
+            align-items: baseline;
+            gap: 18px;
+            padding: 18px 28px;
+            border-top: 1px solid rgba(99, 144, 220, 0.18);
+            border-bottom: 1px solid rgba(99, 144, 220, 0.18);
+          }
+          .ladyjay-urgency-num {
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            font-size: clamp(1.7rem, 2.5vw, 2.3rem);
+            letter-spacing: 0.04em;
+            color: #e6eef9;
+            line-height: 1;
+            min-width: 56px;
+          }
+          .ladyjay-urgency-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 10.5px;
+            letter-spacing: 0.42em;
+            text-transform: uppercase;
+            color: rgba(150, 185, 230, 0.82);
+            line-height: 1.4;
+            text-align: left;
+          }
+          .ladyjay-urgency-label em {
+            display: block;
+            margin-top: 6px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 1rem;
+            letter-spacing: 0.01em;
+            text-transform: none;
+            color: rgba(180, 205, 240, 0.65);
+          }
+          .ladyjay-urgency-note {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(180, 205, 240, 0.7);
+            margin: 0;
+          }
+          .ladyjay-urgency-closed {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 1.1rem;
+            letter-spacing: 0.01em;
+            color: rgba(180, 205, 240, 0.85);
+            padding: 18px 28px;
+            border-top: 1px solid rgba(99, 144, 220, 0.18);
+            border-bottom: 1px solid rgba(99, 144, 220, 0.18);
+          }
+        `}</style>
+        <div className="ladyjay-urgency-inner">
+          <p className="ladyjay-urgency-meta">TRIBUTE SERIES · 2026 SEASON ONLY</p>
+          {daysLeft > 0 ? (
+            <div className="ladyjay-urgency-line" data-testid="lady-jay-countdown">
+              <span className="ladyjay-urgency-num" data-testid="lady-jay-countdown-days">
+                {daysLeft}
               </span>
-            )}
-          </div>
-
-          <div className="ladyjay-hero-cta">
-            <p className="ladyjay-price" data-testid="lady-jay-price">
-              From {formattedPrice.replace(/\s?USD$/, "")}<span className="ladyjay-price-usd"> USD</span>
+              <span className="ladyjay-urgency-label">
+                {daysLeft === 1 ? "Day remaining" : "Days remaining"}
+                <em>Closes October 31, 2026.</em>
+              </span>
+            </div>
+          ) : (
+            <p className="ladyjay-urgency-closed" data-testid="lady-jay-countdown-closed">
+              The 2026 season has closed. Lady Jay is retired.
             </p>
-            <a href="#lady-jay-configurator" className="ladyjay-btn" data-testid="lady-jay-view-compositions-btn">
-              VIEW COMPOSITIONS
-            </a>
-            <p className="ladyjay-micro">
-              Available for the 2026 season only. When the season ends, Lady Jay retires.
-            </p>
-          </div>
+          )}
+          <p className="ladyjay-urgency-note">
+            Retired at season's end. No reissue.
+          </p>
         </div>
       </section>
 

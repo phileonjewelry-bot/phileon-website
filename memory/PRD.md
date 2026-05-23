@@ -17,6 +17,33 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — LADY JAY Cinematic Video Hero
+- Replaced the static image hero with a full-screen cinematic
+  H.264 MP4 video hero (`/videos/lady-jay/lady-jay-hero.mp4`,
+  4.5MB, 17.76s loop).
+- **Audio stream stripped via ffmpeg** (`-an`) so iOS Safari
+  honors autoplay. Verified `paused: false` on first load.
+- Added an aggressive autoplay watchdog (mount, loadedmetadata,
+  pause, ended, visibilitychange) — matches the mobile rules
+  documented in the handoff for THE CARAPACE / LA SCARPA / LISA.
+- New hero implements the user's exact JSX spec:
+  black canvas + 45% dark overlay + radial sapphire gradient
+  + SVG film grain + bottom black-to-transparent fade. Eyebrow
+  "PHILEON — TRIBUTE SERIES" at champagne `rgba(201,162,77,0.72)`.
+  Title "LADY JAY" at `clamp(4.5rem, 10vw, 10rem)` Cormorant
+  Garamond. Final-word copy as the hero's emotional payload.
+- Generated a poster frame at
+  `/images/lady-jay/lady-jay-poster.jpg` for SSR/initial paint.
+- Preserved the 162-day countdown + "No reissue" promise as a
+  quiet **SEASON URGENCY STRIP** between the hero and the
+  configurator — keeps the commercial pressure intact without
+  cluttering the cinematic moment.
+- **Note**: the new hero copy duplicates the page's existing
+  FINAL WORD section (same "Some pieces celebrate a moment /
+  For the city" stanzas). User decision pending: literary echo
+  vs. remove the bottom FINAL WORD vs. rewrite the closer.
+
+
 ### 2026-02-23 — Global ATELIER Access
 - Added quiet `ATELIER` text link to the desktop header, far-right
   of the icon row, low-contrast champagne `rgba(201,162,77,0.42)`,
