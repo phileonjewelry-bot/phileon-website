@@ -142,6 +142,7 @@ export default function LadyJayPage() {
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [selectedTier, setSelectedTier] = useState("collector");
   const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
+  const [sizeHelpOpen, setSizeHelpOpen] = useState(false);
   const heroVideoRef = useRef(null);
 
   const tierPricesLive = useLiveTierPrices("ladyJay");
@@ -562,6 +563,10 @@ export default function LadyJayPage() {
             #060a14;
           border-top: 1px solid rgba(99, 144, 220, 0.08);
         }
+        @media (max-width: 700px) {
+          .ladyjay-archive { padding: 60px 18px 70px; }
+          .ladyjay-archive-head { margin-bottom: 36px; }
+        }
         .ladyjay-archive-head {
           max-width: 1200px;
           margin: 0 auto 52px;
@@ -640,6 +645,16 @@ export default function LadyJayPage() {
           padding: 6px 10px;
           backdrop-filter: blur(6px);
         }
+        @media (max-width: 700px) {
+          .ladyjay-archive-cell-label {
+            bottom: 10px !important;
+            left: 10px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.32em !important;
+            padding: 6px 10px !important;
+            background: rgba(0, 0, 0, 0.42) !important;
+          }
+        }
 
         /* ─── HERO PRICE / CTA (refined) ───────────────────── */
         .ladyjay-price-usd {
@@ -653,11 +668,14 @@ export default function LadyJayPage() {
         /* ─── CONFIGURATOR ─────────────────────────────────── */
         .ladyjay-config {
           position: relative;
-          padding: 120px 28px 140px;
+          padding: 56px 28px 110px;
           background:
             radial-gradient(circle at 50% 0%, rgba(40, 70, 140, 0.18), transparent 55%),
             #060a14;
           border-top: 1px solid rgba(99, 144, 220, 0.10);
+        }
+        @media (min-width: 768px) {
+          .ladyjay-config { padding-top: 80px; padding-bottom: 130px; }
         }
         .ladyjay-config-inner {
           max-width: 1040px;
@@ -778,6 +796,143 @@ export default function LadyJayPage() {
 
         /* ─── SIZE SELECTOR ────────────────────────────────── */
         .ladyjay-size-block { margin: 0 0 56px; }
+
+        /* ─── LADY JAY · WIDE BAND NOTICE + GUIDANCE ────── */
+        .ladyjay-wideband,
+        .ladyjay-size-guidance {
+          margin-top: 28px;
+          padding-top: 22px;
+          border-top: 1px solid rgba(99, 144, 220, 0.18);
+        }
+        .ladyjay-wideband-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: rgba(150, 190, 240, 0.78);
+          margin: 0 0 12px;
+        }
+        .ladyjay-wideband p {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.98rem;
+          line-height: 1.6;
+          color: rgba(228, 234, 242, 0.85);
+          margin: 0 0 4px;
+        }
+        .ladyjay-wideband p:last-child { margin-bottom: 0; }
+        .ladyjay-guidance-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .ladyjay-guidance-list li {
+          position: relative;
+          padding-left: 18px;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.98rem;
+          line-height: 1.6;
+          color: rgba(228, 234, 242, 0.82);
+          margin: 0 0 8px;
+        }
+        .ladyjay-guidance-list li::before {
+          content: "•";
+          position: absolute;
+          left: 4px;
+          color: rgba(150, 190, 240, 0.75);
+        }
+        .ladyjay-size-help-link {
+          background: none;
+          border: none;
+          padding: 0;
+          margin-top: 16px;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: rgba(150, 190, 240, 0.85);
+          cursor: pointer;
+          border-bottom: 1px solid rgba(150, 190, 240, 0.35);
+          padding-bottom: 4px;
+          transition: color 240ms ease, border-color 240ms ease;
+        }
+        .ladyjay-size-help-link:hover {
+          color: #f0f4fb;
+          border-color: rgba(180, 205, 240, 0.85);
+        }
+
+        /* Size help modal */
+        .ladyjay-help-modal-backdrop {
+          position: fixed; inset: 0; z-index: 80;
+          background: rgba(2, 6, 14, 0.78);
+          backdrop-filter: blur(8px);
+          display: flex; align-items: center; justify-content: center;
+          padding: 24px;
+          animation: ljModalFade 240ms ease forwards;
+        }
+        @keyframes ljModalFade { from { opacity: 0; } to { opacity: 1; } }
+        .ladyjay-help-modal {
+          width: 100%;
+          max-width: 560px;
+          max-height: 86vh;
+          overflow-y: auto;
+          background: linear-gradient(180deg, rgba(10, 18, 35, 0.92) 0%, rgba(6, 10, 22, 0.96) 100%);
+          border: 1px solid rgba(99, 144, 220, 0.32);
+          padding: 36px 32px 32px;
+          color: #f0f4fb;
+          position: relative;
+        }
+        .ladyjay-help-close {
+          position: absolute; top: 12px; right: 14px;
+          background: none; border: none;
+          color: rgba(180, 205, 240, 0.7);
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          cursor: pointer;
+          padding: 6px 8px;
+          transition: color 220ms ease;
+        }
+        .ladyjay-help-close:hover { color: #f0f4fb; }
+        .ladyjay-help-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 500;
+          font-style: italic;
+          font-size: 1.5rem;
+          color: #f0f4fb;
+          margin: 0 0 18px;
+        }
+        .ladyjay-help-section {
+          margin-bottom: 22px;
+          padding-bottom: 18px;
+          border-bottom: 1px solid rgba(99, 144, 220, 0.14);
+        }
+        .ladyjay-help-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .ladyjay-help-section h4 {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: rgba(150, 190, 240, 0.78);
+          margin: 0 0 10px;
+        }
+        .ladyjay-help-section p,
+        .ladyjay-help-section li {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.98rem;
+          line-height: 1.65;
+          color: rgba(228, 234, 242, 0.85);
+          margin: 0 0 6px;
+        }
+        .ladyjay-help-section ol { padding-left: 20px; margin: 0; }
+        .ladyjay-help-section ol li::marker {
+          color: rgba(150, 190, 240, 0.7);
+        }
         .ladyjay-size-head {
           display: flex;
           align-items: baseline;
@@ -832,8 +987,10 @@ export default function LadyJayPage() {
           margin: 0 0 32px;
           padding: 26px 28px 22px;
           background: rgba(10, 18, 35, 0.55);
-          border-top: 1px solid rgba(99, 144, 220, 0.18);
-          border-bottom: 1px solid rgba(99, 144, 220, 0.18);
+          border-top: 1px solid rgba(198, 168, 107, 0.32);
+          border-bottom: 1px solid rgba(198, 168, 107, 0.32);
+          border-left: 1px solid rgba(198, 168, 107, 0.14);
+          border-right: 1px solid rgba(198, 168, 107, 0.14);
         }
         .ladyjay-summary-row {
           display: flex;
@@ -987,7 +1144,6 @@ export default function LadyJayPage() {
         }
 
         @media (max-width: 700px) {
-          .ladyjay-config { padding: 80px 22px 100px; }
           .ladyjay-config-head { margin-bottom: 44px; }
           .ladyjay-summary { padding: 22px 20px 18px; }
           .ladyjay-summary-row { font-size: 10px; }
@@ -1010,9 +1166,14 @@ export default function LadyJayPage() {
 
       {/* ─── HERO — Cinematic video ────────────────────────── */}
       <section
-        className="relative h-screen w-full overflow-hidden bg-black"
+        className="ladyjay-hero-section relative w-full overflow-hidden bg-black"
         data-testid="lady-jay-hero"
       >
+        <style>{`
+          .ladyjay-hero-section { height: 68vh; }
+          @media (min-width: 768px) { .ladyjay-hero-section { height: 82vh; } }
+          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(100vh, 920px); } }
+        `}</style>
         {/* VIDEO */}
         <video
           ref={heroVideoRef}
@@ -1061,7 +1222,7 @@ export default function LadyJayPage() {
         </Link>
 
         {/* CONTENT */}
-        <div className="relative z-10 flex h-full items-end px-6 pb-14 md:px-16 md:pb-20">
+        <div className="relative z-10 flex h-full items-end px-6 pb-6 md:px-16 md:pb-10">
           <div className="max-w-2xl">
             {/* EYEBROW */}
             <div
@@ -1118,6 +1279,40 @@ export default function LadyJayPage() {
               "linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0))",
           }}
         />
+
+        {/* SCROLL INDICATOR — discovered, not instructional */}
+        <div
+          className="ladyjay-scroll-cue"
+          aria-hidden="true"
+          data-testid="lady-jay-scroll-cue"
+        >
+          <style>{`
+            .ladyjay-scroll-cue {
+              position: absolute;
+              left: 50%;
+              bottom: 18px;
+              transform: translateX(-50%);
+              z-index: 11;
+              font-family: 'Inter', sans-serif;
+              font-size: 10px;
+              letter-spacing: 0.35em;
+              text-transform: uppercase;
+              color: rgba(245, 241, 234, 0.52);
+              animation: ladyjayScrollFloat 4s ease-in-out infinite;
+              pointer-events: none;
+              white-space: nowrap;
+            }
+            @keyframes ladyjayScrollFloat {
+              0%   { transform: translate(-50%, 0); opacity: 0.52; }
+              50%  { transform: translate(-50%, 6px); opacity: 0.75; }
+              100% { transform: translate(-50%, 0); opacity: 0.52; }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .ladyjay-scroll-cue { animation: none !important; }
+            }
+          `}</style>
+          DISCOVER THE TRIBUTE ↓
+        </div>
       </section>
 
       {/* ─── SEASON URGENCY STRIP ──────────────────────────── */}
@@ -1129,7 +1324,8 @@ export default function LadyJayPage() {
           .ladyjay-urgency {
             background:
               linear-gradient(180deg, rgba(0,0,0,1) 0%, #060a14 100%);
-            padding: 56px 24px 64px;
+            padding: 36px 24px 44px;
+            margin-top: 0;
             border-bottom: 1px solid rgba(99, 144, 220, 0.08);
           }
           .ladyjay-urgency-inner {
@@ -1276,12 +1472,14 @@ export default function LadyJayPage() {
             })}
           </div>
 
-          {/* Size selector — sitewide reusable component */}
+          {/* Size selector — selector only; product-specific notices below */}
           <div className="ladyjay-size-block">
             <RingSizeSelector
               value={selectedSize}
               onChange={setSelectedSize}
               bandWidthMm={RING_BAND_WIDTH_MM}
+              showSizingMicrocopy={false}
+              hideWideBandWarning
               testIdPrefix="lady-jay-ringsize"
               style={{
                 "--ring-accent": "#7fa8e6",
@@ -1290,6 +1488,34 @@ export default function LadyJayPage() {
                 "--ring-muted": "rgba(180, 205, 240, 0.6)",
               }}
             />
+
+            {/* WIDE BAND FIT NOTICE — LADY JAY specific */}
+            <div className="ladyjay-wideband" data-testid="lady-jay-wideband-notice">
+              <p className="ladyjay-wideband-eyebrow">WIDE BAND FIT NOTICE</p>
+              <p>LADY JAY measures approximately 22mm across the finger.</p>
+              <p>Wide rings typically fit tighter than traditional bands.</p>
+              <p>PHILEON recommends sizing up by 0.5 for a more comfortable fit.</p>
+            </div>
+
+            {/* RING SIZE GUIDANCE — LADY JAY specific bullets */}
+            <div className="ladyjay-size-guidance" data-testid="lady-jay-size-guidance">
+              <p className="ladyjay-wideband-eyebrow">RING SIZE GUIDANCE</p>
+              <ul className="ladyjay-guidance-list">
+                <li>Measure your finger at the end of the day when hands are naturally warmer.</li>
+                <li>Avoid measuring immediately after workouts or exposure to cold temperatures.</li>
+                <li>Wide rings fit tighter than narrow bands.</li>
+                <li>If between sizes, PHILEON recommends selecting the larger size.</li>
+                <li>Custom sizes above US 12 may require additional production time.</li>
+              </ul>
+              <button
+                type="button"
+                className="ladyjay-size-help-link"
+                onClick={() => setSizeHelpOpen(true)}
+                data-testid="lady-jay-size-help-link"
+              >
+                Need help determining your size?
+              </button>
+            </div>
           </div>
 
           {/* Live price summary */}
@@ -1400,23 +1626,64 @@ export default function LadyJayPage() {
         archiveLabel="LADY JAY · ARCHIVE"
       />
 
-      {/* ─── FINAL WORD ──────────────────────────────────── */}
-      <section className="ladyjay-final ladyjay-reveal" data-testid="lady-jay-final">
-        <p className="ladyjay-final-eyebrow">FINAL WORD</p>
-        <p className="ladyjay-final-text" data-testid="lady-jay-final-text">
-          Some pieces celebrate a moment.<br />
-          Others become part of the memory that survives it.
-        </p>
-        <p className="ladyjay-final-text ladyjay-final-attestation" data-testid="lady-jay-final-attestation">
-          LADY JAY was created for the latter.
-        </p>
-        <p className="ladyjay-final-text ladyjay-final-cadence" data-testid="lady-jay-final-cadence">
-          For the city.<br />
-          For the cold nights.<br />
-          For the ones who stayed.
-        </p>
-        <div className="ladyjay-final-rule" aria-hidden="true" />
-      </section>
+      {/* FINAL WORD section removed — hero now carries the emotional close.
+          Repeating the stanzas below weakens the restraint. */}
+
+      {sizeHelpOpen && (
+        <div
+          className="ladyjay-help-modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lady-jay-help-title"
+          onClick={() => setSizeHelpOpen(false)}
+          data-testid="lady-jay-size-help-modal"
+        >
+          <div
+            className="ladyjay-help-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="ladyjay-help-close"
+              onClick={() => setSizeHelpOpen(false)}
+              aria-label="Close"
+              data-testid="lady-jay-size-help-close"
+            >
+              CLOSE ✕
+            </button>
+            <h3 id="lady-jay-help-title" className="ladyjay-help-title">
+              Determining your size at home
+            </h3>
+
+            <div className="ladyjay-help-section">
+              <h4>METHOD ONE · STRING OR PAPER STRIP</h4>
+              <ol>
+                <li>Wrap a thin strip of paper or string around the base of the intended finger.</li>
+                <li>Mark where the strip meets itself with a fine pen.</li>
+                <li>Lay the strip flat and measure in millimeters from the start to the mark.</li>
+                <li>Compare the measurement to the US ring chart below.</li>
+              </ol>
+            </div>
+
+            <div className="ladyjay-help-section">
+              <h4>METHOD TWO · EXISTING RING</h4>
+              <p>Take a ring that already fits the same finger comfortably.</p>
+              <p>Measure the inner diameter (in mm) of that ring across its widest point.</p>
+              <p>Compare to the chart below.</p>
+            </div>
+
+            <div className="ladyjay-help-section">
+              <h4>US RING SIZE — INNER DIAMETER (MM)</h4>
+              <p>US 5 — 15.7 mm · US 6 — 16.5 mm · US 7 — 17.3 mm · US 8 — 18.2 mm · US 9 — 19.0 mm · US 10 — 19.8 mm · US 11 — 20.6 mm · US 12 — 21.4 mm</p>
+            </div>
+
+            <div className="ladyjay-help-section">
+              <h4>FOR LADY JAY · 22MM WIDE BAND</h4>
+              <p>Add 0.5 to your measured size for a more comfortable fit. If between two sizes, always select the larger.</p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

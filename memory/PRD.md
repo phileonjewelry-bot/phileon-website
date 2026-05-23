@@ -17,6 +17,33 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — LADY JAY Mobile Hero + PDP Refinement
+- **Hero height responsive** — 68vh mobile / 82vh tablet /
+  `min(100vh, 920px)` desktop. Cinematic on phones, capped on 4K.
+- **Scroll cue** added — "DISCOVER THE TRIBUTE ↓" centered at
+  bottom of hero, 4s float animation, low-opacity ivory. Respects
+  `prefers-reduced-motion`.
+- **Hero-to-configurator transition tightened**: pb-6/pb-10
+  on hero, urgency strip padding cut from 56/64 → 36/44, config
+  top padding 120 → 56/80. No dead space between film + acquisition.
+- **FINAL WORD section removed** — hero now carries the emotional
+  close. No more duplicated stanzas at the bottom.
+- **Bespoke ring size content** on LADY JAY:
+  - Default `RingSizeSelector` microcopy + built-in wide-band
+    warning suppressed via new `hideWideBandWarning` prop.
+  - Custom **WIDE BAND FIT NOTICE** block with LADY JAY's exact
+    22mm copy.
+  - Custom **RING SIZE GUIDANCE** with 5 bulleted points.
+  - "Need help determining your size?" link → modal with two
+    measurement methods, US ring size chart, and the 22mm-specific
+    fit recommendation.
+- **Summary card** updated to subtle champagne-gold border per spec.
+- **Mobile gallery labels** tightened with `!important` overrides:
+  font-size 10px, letter-spacing 0.32em, padding 6px 10px,
+  background rgba(0,0,0,0.42).
+- **Mobile archive section** padding reduced (120/130 → 60/70).
+
+
 ### 2026-02-23 — LADY JAY Cinematic Video Hero
 - Replaced the static image hero with a full-screen cinematic
   H.264 MP4 video hero (`/videos/lady-jay/lady-jay-hero.mp4`,

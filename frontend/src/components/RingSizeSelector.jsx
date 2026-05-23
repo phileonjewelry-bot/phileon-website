@@ -64,6 +64,7 @@ export default function RingSizeSelector({
   label = "RING SIZE",
   bandWidthMm = null,
   showSizingMicrocopy = true,
+  hideWideBandWarning = false,
   testIdPrefix = "ring-size",
   className = "",
   style = {},
@@ -320,7 +321,7 @@ export default function RingSizeSelector({
         </div>
       )}
 
-      {isWideBand && (
+      {isWideBand && !hideWideBandWarning && (
         <div className="rss-wideband" data-testid={`${testIdPrefix}-wideband-warning`}>
           <span className="rss-wideband-eyebrow">WIDE BAND FIT NOTICE</span>
           <p>Wide rings usually fit tighter than narrow bands due to increased skin contact across the finger.</p>
