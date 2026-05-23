@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import Lightbox from "../components/CinematicLightbox";
 
 /**
  * LADY JAY — Tribute Series · 2026 Season Only
@@ -26,6 +27,39 @@ const SPECS = [
 const MARQUEE_TEXT =
   "LADY JAY · TRIBUTE SERIES · 2026 SEASON ONLY · WHITE GOLD · BLUE SAPPHIRE · WHITE DIAMOND · NO REISSUE";
 
+const GALLERY = [
+  {
+    src: "/lady-jay/lady-jay-hero.png",
+    label: "PORTRAIT",
+    alt: "LADY JAY tribute series feather ring, full hand portrait",
+  },
+  {
+    src: "/lady-jay/lady-jay-02-pair-macro.png",
+    label: "PAIR · MACRO",
+    alt: "LADY JAY twin-feather pavé set, macro detail on hand",
+  },
+  {
+    src: "/lady-jay/lady-jay-03-twin-portrait.png",
+    label: "TWIN PORTRAIT",
+    alt: "LADY JAY symmetrical feather portrait, indigo backdrop",
+  },
+  {
+    src: "/lady-jay/lady-jay-04-pave-detail.png",
+    label: "PAVÉ DETAIL",
+    alt: "LADY JAY blue sapphire and white diamond pavé, macro close-up",
+  },
+  {
+    src: "/lady-jay/lady-jay-05-on-body.png",
+    label: "ON BODY",
+    alt: "LADY JAY ring worn on the hand against the collarbone, soft daylight",
+  },
+  {
+    src: "/lady-jay/lady-jay-06-campaign.png",
+    label: "CAMPAIGN",
+    alt: "LADY JAY campaign image, hand against a mosaic of blue tones",
+  },
+];
+
 const RETIRE_DATE = new Date("2026-10-31T23:59:59-04:00"); // End of 2026 MLB season
 
 function daysUntilRetire() {
@@ -38,6 +72,7 @@ export default function LadyJayPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [isMounted, setIsMounted] = useState(false);
   const [daysLeft, setDaysLeft] = useState(() => daysUntilRetire());
+  const [lightboxIdx, setLightboxIdx] = useState(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
@@ -351,6 +386,127 @@ export default function LadyJayPage() {
           .ladyjay-marquee-track { animation: none !important; }
           .ladyjay-final-rule { animation: none !important; width: 200px; opacity: 1; }
         }
+
+        /* ─── COUNTDOWN ─────────────────────────────────── */
+        .ladyjay-countdown {
+          display: flex;
+          align-items: baseline;
+          gap: 18px;
+          margin: 0 0 32px;
+          padding: 16px 22px 18px;
+          max-width: 480px;
+          border-top: 1px solid rgba(99, 144, 220, 0.18);
+          border-bottom: 1px solid rgba(99, 144, 220, 0.18);
+        }
+        .ladyjay-countdown-num {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: clamp(1.7rem, 2.5vw, 2.3rem);
+          letter-spacing: 0.04em;
+          color: #e6eef9;
+          line-height: 1;
+          min-width: 56px;
+        }
+        .ladyjay-countdown-label {
+          font-family: 'Inter', sans-serif;
+          font-size: 10.5px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: rgba(150, 185, 230, 0.82);
+          line-height: 1.4;
+        }
+        .ladyjay-countdown-label em {
+          display: block;
+          margin-top: 6px;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 1rem;
+          letter-spacing: 0.01em;
+          text-transform: none;
+          color: rgba(180, 205, 240, 0.65);
+        }
+        .ladyjay-countdown-closed {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 1rem;
+          letter-spacing: 0.01em;
+          text-transform: none;
+          color: rgba(180, 205, 240, 0.7);
+          line-height: 1.5;
+        }
+
+        /* ─── ARCHIVE ───────────────────────────────────── */
+        .ladyjay-archive {
+          position: relative;
+          padding: 120px 24px 130px;
+          background:
+            radial-gradient(circle at 50% 0%, rgba(40, 70, 140, 0.18), transparent 55%),
+            #060a14;
+          border-top: 1px solid rgba(99, 144, 220, 0.08);
+        }
+        .ladyjay-archive-head {
+          max-width: 1200px;
+          margin: 0 auto 52px;
+          text-align: center;
+        }
+        .ladyjay-archive-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(140, 175, 220, 0.78);
+          margin: 0 0 18px;
+        }
+        .ladyjay-archive-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1.4rem, 2vw, 2rem);
+          color: rgba(228, 234, 242, 0.92);
+          margin: 0;
+        }
+        .ladyjay-archive-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        }
+        @media (max-width: 900px) { .ladyjay-archive-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .ladyjay-archive-grid { grid-template-columns: 1fr; } }
+        .ladyjay-archive-cell {
+          position: relative;
+          overflow: hidden;
+          aspect-ratio: 1 / 1;
+          background: #0a121f;
+          border: 1px solid rgba(99, 144, 220, 0.14);
+          cursor: pointer;
+          padding: 0;
+          transition: border-color 480ms ease, transform 480ms ease;
+        }
+        .ladyjay-archive-cell:hover {
+          border-color: rgba(99, 144, 220, 0.45);
+          transform: translateY(-3px);
+        }
+        .ladyjay-archive-cell img {
+          width: 100%; height: 100%;
+          object-fit: cover;
+          transition: transform 1200ms ease, filter 1200ms ease;
+          filter: brightness(0.96) saturate(0.98);
+        }
+        .ladyjay-archive-cell:hover img { transform: scale(1.04); filter: brightness(1) saturate(1.05); }
+        .ladyjay-archive-cell-label {
+          position: absolute; bottom: 14px; left: 14px;
+          font-family: 'Inter', sans-serif;
+          font-size: 9px; letter-spacing: 0.38em;
+          color: rgba(228, 234, 242, 0.78);
+          text-transform: uppercase;
+          background: rgba(0, 0, 0, 0.45);
+          padding: 6px 10px;
+          backdrop-filter: blur(6px);
+        }
       `}</style>
 
       <Link to="/shop?category=rings&audience=ladies" className="ladyjay-back" data-testid="lady-jay-back-btn">
@@ -392,6 +548,24 @@ export default function LadyJayPage() {
             <p>Retired at season's end. No reissue.</p>
           </div>
 
+          <div className="ladyjay-countdown" data-testid="lady-jay-countdown">
+            {daysLeft > 0 ? (
+              <>
+                <span className="ladyjay-countdown-num" data-testid="lady-jay-countdown-days">
+                  {daysLeft}
+                </span>
+                <span className="ladyjay-countdown-label">
+                  {daysLeft === 1 ? "Day remaining" : "Days remaining"}
+                  <em>Closes October 31, 2026.</em>
+                </span>
+              </>
+            ) : (
+              <span className="ladyjay-countdown-closed" data-testid="lady-jay-countdown-closed">
+                The 2026 season has closed. Lady Jay is retired.
+              </span>
+            )}
+          </div>
+
           <div className="ladyjay-hero-cta">
             <p className="ladyjay-price" data-testid="lady-jay-price">{formattedPrice}</p>
             <button
@@ -422,6 +596,46 @@ export default function LadyJayPage() {
           ))}
         </div>
       </section>
+
+      {/* ─── ARCHIVE GALLERY ─────────────────────────────── */}
+      <section className="ladyjay-archive ladyjay-reveal" data-testid="lady-jay-archive">
+        <div className="ladyjay-archive-head">
+          <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
+          <p className="ladyjay-archive-title">
+            Six frames. One tribute.
+          </p>
+        </div>
+        <div className="ladyjay-archive-grid" data-testid="lady-jay-archive-grid">
+          {GALLERY.map((g, i) => (
+            <button
+              key={g.src}
+              type="button"
+              className="ladyjay-archive-cell"
+              aria-label={`Open ${g.label}`}
+              onClick={() => setLightboxIdx(i)}
+              data-testid={`lady-jay-archive-cell-${i + 1}`}
+            >
+              <img
+                src={g.src}
+                alt={g.alt}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+              <span className="ladyjay-archive-cell-label">
+                {String(i + 1).padStart(2, "0")} · {g.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <Lightbox
+        items={GALLERY}
+        openIndex={lightboxIdx}
+        onClose={() => setLightboxIdx(null)}
+        onChange={(i) => setLightboxIdx(i)}
+        archiveLabel="LADY JAY · ARCHIVE"
+      />
 
       {/* ─── FINAL WORD ──────────────────────────────────── */}
       <section className="ladyjay-final ladyjay-reveal" data-testid="lady-jay-final">

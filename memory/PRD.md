@@ -17,6 +17,18 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — LADY JAY — Archive Gallery + Countdown Surfaced
+- Added 6-frame editorial archive to `/lady-jay`:
+  01 PORTRAIT, 02 PAIR · MACRO, 03 TWIN PORTRAIT, 04 PAVÉ DETAIL,
+  05 ON BODY, 06 CAMPAIGN. 3×2 grid (2-col @ ≤900px, 1-col @ ≤560px).
+- Integrated `CinematicLightbox` with `LADY JAY · ARCHIVE` label.
+- Surfaced the previously-dangling `daysLeft` state as a quiet
+  editorial block beneath the season notice — "162 days remaining ·
+  Closes October 31, 2026". Falls back to "The 2026 season has closed.
+  Lady Jay is retired." when `daysLeft === 0`. No ticking clock.
+- Assets stored at `/app/frontend/public/lady-jay/lady-jay-0[2-6]-*.png`.
+
+
 ## Implemented (Latest)
 
 ### 2026-02 — LISA — Split into LISA SMALL / LISA BOLD + Site Placement
