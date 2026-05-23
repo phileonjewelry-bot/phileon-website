@@ -74,6 +74,11 @@ const GALLERY = [
     alt: "LADY JAY Phileon tribute campaign portrait, model resting hand at the cheek",
   },
   {
+    src: "/lady-jay/lady-jay-11-velvet.png",
+    label: "VELVET",
+    alt: "LADY JAY worn on the hand, model seated in a deep teal velvet chair in navy satin",
+  },
+  {
     src: "/lady-jay/lady-jay-10-provenance.png",
     label: "PROVENANCE",
     alt: "LADY JAY ring on navy velvet beside a worn baseball and a Phileon Tribute Series brass plate",
@@ -502,6 +507,16 @@ export default function LadyJayPage() {
           .ladyjay-archive-cell:last-child:nth-child(3n+1) {
             grid-column: 2 / 3;
           }
+          /* When two cells trail in the last row of a 3-col grid,
+             nudge the pair right by half a column so they read centered. */
+          .ladyjay-archive-cell:nth-last-child(2):nth-child(3n+1),
+          .ladyjay-archive-cell:last-child:nth-child(3n+2) {
+            transform: translateX(calc(50% + 9px));
+          }
+          .ladyjay-archive-cell:nth-last-child(2):nth-child(3n+1):hover,
+          .ladyjay-archive-cell:last-child:nth-child(3n+2):hover {
+            transform: translateX(calc(50% + 9px)) translateY(-3px);
+          }
         }
         .ladyjay-archive-cell {
           position: relative;
@@ -629,7 +644,7 @@ export default function LadyJayPage() {
         <div className="ladyjay-archive-head">
           <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
           <p className="ladyjay-archive-title">
-            Ten frames. One tribute.
+            Eleven frames. One tribute.
           </p>
         </div>
         <div className="ladyjay-archive-grid" data-testid="lady-jay-archive-grid">
