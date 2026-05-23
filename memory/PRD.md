@@ -17,6 +17,18 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — Global ATELIER Access
+- Added quiet `ATELIER` text link to the desktop header, far-right
+  of the icon row, low-contrast champagne `rgba(201,162,77,0.42)`,
+  no button, no glow — only a subtle color/opacity shift on hover.
+  Mobile-hidden via `ph-desktop-only`.
+- Replaced the old "Custom Jewelry" (→ `/custom-design`) footer link
+  with a spec-compliant "Atelier" (→ `/atelier`) link, same quiet
+  ivory-muted typography as siblings.
+- Single unified bespoke entry point sitewide. No competing or
+  duplicate language anywhere.
+
+
 ### 2026-02-23 — Sitewide Product Flow Separation
 **Finished products → Add to Cart. Bespoke work → Atelier.**
 

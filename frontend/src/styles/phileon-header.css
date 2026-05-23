@@ -35,6 +35,24 @@
   gap: 18px;
 }
 
+/* Atelier — quiet insider doorway. No button. No glow.
+   Discovered, not advertised. */
+.ph-atelier-link {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(201, 162, 77, 0.42);
+  text-decoration: none;
+  padding: 6px 4px;
+  margin-right: 6px;
+  transition: opacity 320ms ease, color 320ms ease;
+  white-space: nowrap;
+}
+.ph-atelier-link:hover {
+  color: rgba(201, 162, 77, 0.78);
+}
+
 .ph-center {
   display: flex;
   align-items: center;

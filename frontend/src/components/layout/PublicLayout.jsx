@@ -126,6 +126,14 @@ const Header = ({ onVaultOpen }) => {
           {/* RIGHT ICONS (inline row) */}
           <div className="ph-right">
             <Link
+              to="/atelier"
+              className="ph-atelier-link ph-desktop-only"
+              data-testid="header-atelier-link"
+            >
+              ATELIER
+            </Link>
+
+            <Link
               to="/wishlist"
               className="ph-icon-btn ph-desktop-only"
               aria-label="Wishlist"
@@ -199,13 +207,13 @@ const Footer = () => {
           <div className="md:col-span-3">
             <ul className="space-y-4">
               <li>
-                <Link to="/contact" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
-                  Contact
+                <Link to="/atelier" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-atelier-link">
+                  Atelier
                 </Link>
               </li>
               <li>
-                <Link to="/custom-design" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
-                  Custom Jewelry
+                <Link to="/contact" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
