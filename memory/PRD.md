@@ -17,6 +17,37 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — LADY JAY — Full Purchase Configurator
+- Replaced single-price hero CTA with full editorial configurator at
+  `#lady-jay-configurator`.
+- 4 metal tiers (FOUNDATION 925 / SIGNATURE 10K / HEIRLOOM 14K /
+  COLLECTOR 18K) wired into `useLiveTierPrices("ladyJay")` — added
+  matching entries to `livePricingConfig.js` and
+  `backend/pricing_engine.py` so cart validation accepts the SKUs.
+- Ring sizes 4–10 in 0.5 increments, default size 7. Selected size
+  encoded into SKU (e.g., `LJ-18W-SZ7`, `LJ-SS-SZ5_5`).
+- Live summary card surfaces Selection · SKU · Today's Price + a market-
+  movement disclosure line. Primary CTA "Commission Piece" (add to
+  cart), secondary CTA "Book Private Consultation" → `/contact?inquiry=
+  lady-jay-consultation`.
+- Trust line, 8-bullet specs grid, and 3-paragraph editorial note all
+  surfaced from the user's copy spec.
+- **Known rounding quirk**: the sitewide cadToUsdLuxury rule rounds to
+  nearest $500 for values ≥ $2,000, so the Sterling Silver tier displays
+  $5,000 instead of the brief's $4,800. 10K/14K/18K all land exactly on
+  spec. Awaiting user decision: accept $5,000, accept $4,500, or add a
+  fixed-price override for the silver tier.
+
+### 2026-02-23 — LADY JAY — Archive Tightened to 9 Frames
+- Reordered + pruned archive to the disciplined 9-frame sequence:
+  01 TORONTO → 02 PAVÉ DETAIL → 03 PORTRAIT → 04 PAIR · MACRO →
+  05 ON BODY → 06 PROVENANCE → 07 VELVET → 08 TAPESTRY →
+  09 CAMPAIGN · PORTRAIT.
+- Removed: TWIN PORTRAIT, CAMPAIGN (blue mosaic), STUDIO PORTRAIT.
+- Title updated to "Nine frames. One tribute." Natural 3×3 grid on
+  desktop, no trailing-pair centering needed.
+
+
 ### 2026-02-23 — LADY JAY — Archive Gallery + Countdown Surfaced
 - Added 6-frame editorial archive to `/lady-jay`:
   01 PORTRAIT, 02 PAIR · MACRO, 03 TWIN PORTRAIT, 04 PAVÉ DETAIL,

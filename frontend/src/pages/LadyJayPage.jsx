@@ -3,25 +3,73 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import Lightbox from "../components/CinematicLightbox";
+import { useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /**
  * LADY JAY — Tribute Series · 2026 Season Only
  *
  * PHILEON · Ladies · Rings · Tribute Series
- * Full wrap feather ring · 18K white gold · blue sapphire + white diamond pavé.
+ * Full wrap feather ring · white metal · blue sapphire + white diamond pavé.
  * Retired at season's end. No reissue.
  *
  * Namespace: .ladyjay-
  */
 
-const PRICE_USD = 14500;
+const TIERS = [
+  {
+    id: "foundation",
+    sku: "LJ-SS",
+    name: "Sterling Silver",
+    subtitle: "Blue sapphire + diamond pavé",
+    badge: "FOUNDATION",
+    metal: "Sterling Silver",
+    weight: "Approx. 10.5g",
+    fallbackUsd: 4800,
+  },
+  {
+    id: "signature",
+    sku: "LJ-10W",
+    name: "10K White Gold",
+    subtitle: "Blue sapphire + diamond pavé",
+    badge: "SIGNATURE",
+    metal: "10K White Gold",
+    weight: "Approx. 12.8g",
+    fallbackUsd: 8500,
+  },
+  {
+    id: "heirloom",
+    sku: "LJ-14W",
+    name: "14K White Gold",
+    subtitle: "Blue sapphire + diamond pavé",
+    badge: "HEIRLOOM",
+    metal: "14K White Gold",
+    weight: "Approx. 14.5g",
+    fallbackUsd: 11000,
+  },
+  {
+    id: "collector",
+    sku: "LJ-18W",
+    name: "18K White Gold",
+    subtitle: "Blue sapphire + diamond pavé",
+    badge: "COLLECTOR",
+    metal: "18K White Gold",
+    weight: "Approx. 17.2g",
+    fallbackUsd: 14500,
+  },
+];
+
+const RING_SIZES = ["4", "4.5", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"];
+const DEFAULT_RING_SIZE = "7";
 
 const SPECS = [
-  { k: "Metal",         v: "18K White Gold" },
-  { k: "Stones",        v: "Blue Sapphire Pavé + White Diamond Pavé" },
-  { k: "Form",          v: "Full wrap feather ring" },
-  { k: "Series",        v: "Tribute Series" },
-  { k: "Availability",  v: "Available for the 2026 season only — retires at the close of the 2026 MLB season, October 31, 2026. No reissue." },
+  "Approx. 364 total stones",
+  "Blue sapphires + white diamonds",
+  "Approx. 45mm feather span",
+  "Approx. 22mm width",
+  "Approx. 2.5mm band thickness",
+  "Open feather-wrap silhouette",
+  "Mirror-polished white metal finish",
+  "Hand-set pavé construction",
 ];
 
 const MARQUEE_TEXT =
@@ -88,6 +136,14 @@ export default function LadyJayPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [daysLeft, setDaysLeft] = useState(() => daysUntilRetire());
   const [lightboxIdx, setLightboxIdx] = useState(null);
+  const [selectedTier, setSelectedTier] = useState("collector");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
+
+  const tierPricesLive = useLiveTierPrices("ladyJay");
+  const currentTier = TIERS.find((t) => t.id === selectedTier) || TIERS[3];
+  const livePriceForTier = tierPricesLive[selectedTier]?.price;
+  const displayPrice = livePriceForTier || currentTier.fallbackUsd;
+  const formattedPrice = `$${displayPrice.toLocaleString("en-US")} USD`;
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
@@ -110,16 +166,16 @@ export default function LadyJayPage() {
     return () => obs.disconnect();
   }, []);
 
-  const formattedPrice = `$${PRICE_USD.toLocaleString("en-US")} USD`;
-
   const onAddToCart = () => {
     handleAddToCart({
-      id: "lady-jay",
-      name: "LADY JAY",
-      price: PRICE_USD,
-      productKey: "lady-jay",
-      tierKey: "tribute-2026",
-      metal: "18K White Gold · Blue Sapphire + White Diamond",
+      id: `lady-jay-${selectedTier}-sz${selectedSize}`,
+      name: `LADY JAY — ${currentTier.name} (Size ${selectedSize})`,
+      price: displayPrice,
+      productKey: "ladyJay",
+      tierKey: selectedTier,
+      metal: `${currentTier.metal} · Blue Sapphire + White Diamond Pavé`,
+      size: selectedSize,
+      sku: `${currentTier.sku}-SZ${selectedSize.replace(".", "_")}`,
       quantity: 1,
       image: "/lady-jay/lady-jay-hero.png",
     });
@@ -539,6 +595,359 @@ export default function LadyJayPage() {
           padding: 6px 10px;
           backdrop-filter: blur(6px);
         }
+
+        /* ─── HERO PRICE / CTA (refined) ───────────────────── */
+        .ladyjay-price-usd {
+          font-family: 'Inter', sans-serif;
+          font-size: 0.55em;
+          letter-spacing: 0.4em;
+          color: rgba(180, 205, 240, 0.7);
+          margin-left: 6px;
+        }
+
+        /* ─── CONFIGURATOR ─────────────────────────────────── */
+        .ladyjay-config {
+          position: relative;
+          padding: 120px 28px 140px;
+          background:
+            radial-gradient(circle at 50% 0%, rgba(40, 70, 140, 0.18), transparent 55%),
+            #060a14;
+          border-top: 1px solid rgba(99, 144, 220, 0.10);
+        }
+        .ladyjay-config-inner {
+          max-width: 1040px;
+          margin: 0 auto;
+        }
+        .ladyjay-config-head { text-align: center; margin-bottom: 64px; }
+        .ladyjay-config-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(140, 175, 220, 0.78);
+          margin: 0 0 18px;
+        }
+        .ladyjay-config-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 500;
+          font-size: clamp(2rem, 3.4vw, 3rem);
+          letter-spacing: 0.04em;
+          color: #f0f4fb;
+          margin: 0 0 18px;
+        }
+        .ladyjay-config-sub {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+          line-height: 1.5;
+          color: rgba(228, 234, 242, 0.82);
+          margin: 0 auto 22px;
+          max-width: 560px;
+        }
+        .ladyjay-config-trust {
+          font-family: 'Inter', sans-serif;
+          font-size: 10.5px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: rgba(150, 185, 230, 0.7);
+          margin: 0;
+        }
+
+        /* ─── METAL TIERS ──────────────────────────────────── */
+        .ladyjay-tiers {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin: 0 0 64px;
+        }
+        @media (max-width: 980px) { .ladyjay-tiers { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 520px) { .ladyjay-tiers { grid-template-columns: 1fr; } }
+        .ladyjay-tier {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+          padding: 26px 22px 24px;
+          background: rgba(15, 28, 56, 0.32);
+          border: 1px solid rgba(99, 144, 220, 0.18);
+          color: inherit;
+          cursor: pointer;
+          transition: border-color 420ms ease, background 420ms ease, transform 420ms ease;
+        }
+        .ladyjay-tier:hover {
+          border-color: rgba(99, 144, 220, 0.45);
+          background: rgba(20, 38, 78, 0.45);
+        }
+        .ladyjay-tier.is-selected {
+          border-color: rgba(150, 190, 240, 0.85);
+          background: rgba(25, 48, 96, 0.55);
+        }
+        .ladyjay-tier.is-selected::before {
+          content: ""; position: absolute; inset: -1px;
+          border: 1px solid rgba(150, 190, 240, 0.4);
+          pointer-events: none;
+        }
+        .ladyjay-tier-badge {
+          font-family: 'Inter', sans-serif;
+          font-size: 9px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: rgba(150, 190, 240, 0.85);
+          margin-bottom: 16px;
+        }
+        .ladyjay-tier-name {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 1.05rem;
+          letter-spacing: 0.06em;
+          color: #f0f4fb;
+          margin-bottom: 6px;
+        }
+        .ladyjay-tier-sub {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.92rem;
+          color: rgba(228, 234, 242, 0.72);
+          margin-bottom: 14px;
+          line-height: 1.4;
+        }
+        .ladyjay-tier-meta {
+          font-family: 'Inter', sans-serif;
+          font-size: 9.5px;
+          letter-spacing: 0.34em;
+          text-transform: uppercase;
+          color: rgba(140, 175, 220, 0.6);
+          margin-bottom: 16px;
+        }
+        .ladyjay-tier-price {
+          margin-top: auto;
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 1.1rem;
+          letter-spacing: 0.06em;
+          color: #f0f4fb;
+        }
+
+        /* ─── SIZE SELECTOR ────────────────────────────────── */
+        .ladyjay-size-block { margin: 0 0 56px; }
+        .ladyjay-size-head {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 18px;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+        .ladyjay-size-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(140, 175, 220, 0.78);
+          margin: 0;
+        }
+        .ladyjay-size-hint {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.95rem;
+          color: rgba(180, 205, 240, 0.7);
+          margin: 0;
+        }
+        .ladyjay-sizes {
+          display: grid;
+          grid-template-columns: repeat(13, 1fr);
+          gap: 8px;
+        }
+        @media (max-width: 900px) { .ladyjay-sizes { grid-template-columns: repeat(7, 1fr); } }
+        @media (max-width: 520px) { .ladyjay-sizes { grid-template-columns: repeat(5, 1fr); } }
+        .ladyjay-size {
+          font-family: 'Cinzel', serif;
+          font-size: 0.9rem;
+          letter-spacing: 0.06em;
+          padding: 12px 0;
+          background: rgba(15, 28, 56, 0.32);
+          border: 1px solid rgba(99, 144, 220, 0.18);
+          color: rgba(228, 234, 242, 0.85);
+          cursor: pointer;
+          transition: border-color 280ms ease, background 280ms ease, color 280ms ease;
+        }
+        .ladyjay-size:hover { border-color: rgba(99, 144, 220, 0.5); color: #f0f4fb; }
+        .ladyjay-size.is-selected {
+          border-color: rgba(150, 190, 240, 0.85);
+          background: rgba(25, 48, 96, 0.55);
+          color: #f0f4fb;
+        }
+
+        /* ─── SUMMARY ──────────────────────────────────────── */
+        .ladyjay-summary {
+          margin: 0 0 32px;
+          padding: 26px 28px 22px;
+          background: rgba(10, 18, 35, 0.55);
+          border-top: 1px solid rgba(99, 144, 220, 0.18);
+          border-bottom: 1px solid rgba(99, 144, 220, 0.18);
+        }
+        .ladyjay-summary-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 16px;
+          padding: 10px 0;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: rgba(180, 205, 240, 0.78);
+        }
+        .ladyjay-summary-row + .ladyjay-summary-row { border-top: 1px solid rgba(99, 144, 220, 0.10); }
+        .ladyjay-summary-label { flex: 0 0 auto; color: rgba(140, 175, 220, 0.7); }
+        .ladyjay-summary-value {
+          flex: 1 1 auto;
+          text-align: right;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 1rem;
+          letter-spacing: 0.01em;
+          text-transform: none;
+          color: rgba(228, 234, 242, 0.92);
+        }
+        .ladyjay-summary-sku { font-family: 'Inter', sans-serif; font-style: normal; font-size: 11px; letter-spacing: 0.28em; }
+        .ladyjay-summary-row--price { padding-top: 16px; padding-bottom: 4px; }
+        .ladyjay-summary-price {
+          font-family: 'Cinzel', serif;
+          font-size: clamp(1.4rem, 2vw, 1.7rem);
+          letter-spacing: 0.06em;
+          color: #f0f4fb;
+        }
+        .ladyjay-market-note {
+          margin: 14px 0 0;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.9rem;
+          color: rgba(150, 185, 230, 0.65);
+          text-align: right;
+        }
+
+        /* ─── ACTIONS ──────────────────────────────────────── */
+        .ladyjay-actions {
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 14px;
+          margin: 0 0 72px;
+        }
+        @media (max-width: 700px) { .ladyjay-actions { grid-template-columns: 1fr; } }
+        .ladyjay-cta-primary,
+        .ladyjay-cta-secondary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px 32px;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          border: none;
+          cursor: pointer;
+          text-decoration: none;
+          transition: background 320ms ease, letter-spacing 320ms ease, color 320ms ease, border-color 320ms ease;
+        }
+        .ladyjay-cta-primary {
+          background: rgba(60, 100, 180, 0.92);
+          color: #f0f4fb;
+        }
+        .ladyjay-cta-primary:hover { background: rgba(80, 130, 215, 1); letter-spacing: 0.48em; }
+        .ladyjay-cta-primary:disabled { opacity: 0.55; cursor: default; }
+        .ladyjay-cta-secondary {
+          background: transparent;
+          color: rgba(228, 234, 242, 0.85);
+          border: 1px solid rgba(150, 190, 240, 0.45);
+        }
+        .ladyjay-cta-secondary:hover {
+          color: #f0f4fb;
+          border-color: rgba(180, 205, 240, 0.85);
+          letter-spacing: 0.48em;
+        }
+
+        /* ─── SPECS ────────────────────────────────────────── */
+        .ladyjay-specs {
+          margin: 0 0 72px;
+          padding: 36px 0 0;
+          border-top: 1px solid rgba(99, 144, 220, 0.10);
+        }
+        .ladyjay-specs-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(140, 175, 220, 0.78);
+          margin: 0 0 24px;
+        }
+        .ladyjay-specs-list {
+          list-style: none; padding: 0; margin: 0;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px 32px;
+        }
+        @media (max-width: 700px) { .ladyjay-specs-list { grid-template-columns: 1fr; } }
+        .ladyjay-specs-item {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(0.95rem, 1.1vw, 1.08rem);
+          color: rgba(228, 234, 242, 0.88);
+          line-height: 1.5;
+        }
+        .ladyjay-specs-dot {
+          flex: 0 0 5px;
+          width: 5px; height: 5px;
+          border-radius: 50%;
+          background: rgba(99, 144, 220, 0.7);
+          transform: translateY(-2px);
+        }
+
+        /* ─── EDITORIAL NOTE ───────────────────────────────── */
+        .ladyjay-note {
+          padding: 40px 0 0;
+          border-top: 1px solid rgba(99, 144, 220, 0.10);
+        }
+        .ladyjay-note-eyebrow {
+          font-family: 'Inter', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.5em;
+          text-transform: uppercase;
+          color: rgba(140, 175, 220, 0.78);
+          margin: 0 0 22px;
+        }
+        .ladyjay-note-text {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+          line-height: 1.65;
+          color: rgba(228, 234, 242, 0.92);
+          margin: 0 0 14px;
+          max-width: 720px;
+        }
+        .ladyjay-note-text--mute {
+          color: rgba(180, 205, 240, 0.55);
+          font-size: 0.95rem;
+          margin-top: 22px;
+        }
+
+        @media (max-width: 700px) {
+          .ladyjay-config { padding: 80px 22px 100px; }
+          .ladyjay-config-head { margin-bottom: 44px; }
+          .ladyjay-summary { padding: 22px 20px 18px; }
+          .ladyjay-summary-row { font-size: 10px; }
+        }
       `}</style>
 
       <Link to="/shop?category=rings&audience=ladies" className="ladyjay-back" data-testid="lady-jay-back-btn">
@@ -599,16 +1008,12 @@ export default function LadyJayPage() {
           </div>
 
           <div className="ladyjay-hero-cta">
-            <p className="ladyjay-price" data-testid="lady-jay-price">{formattedPrice}</p>
-            <button
-              type="button"
-              onClick={onAddToCart}
-              disabled={isAdding}
-              className="ladyjay-btn"
-              data-testid="lady-jay-add-to-cart-btn"
-            >
-              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
-            </button>
+            <p className="ladyjay-price" data-testid="lady-jay-price">
+              From {formattedPrice.replace(/\s?USD$/, "")}<span className="ladyjay-price-usd"> USD</span>
+            </p>
+            <a href="#lady-jay-configurator" className="ladyjay-btn" data-testid="lady-jay-view-compositions-btn">
+              VIEW COMPOSITIONS
+            </a>
             <p className="ladyjay-micro">
               Available for the 2026 season only. When the season ends, Lady Jay retires.
             </p>
@@ -616,16 +1021,150 @@ export default function LadyJayPage() {
         </div>
       </section>
 
-      {/* ─── SPECIFICATION ───────────────────────────────── */}
-      <section className="ladyjay-spec ladyjay-reveal" data-testid="lady-jay-spec">
-        <div className="ladyjay-spec-inner">
-          <p className="ladyjay-spec-eyebrow">SPECIFICATION</p>
-          {SPECS.map((s) => (
-            <div key={s.k} className="ladyjay-spec-row" data-testid={`lady-jay-spec-${s.k.toLowerCase()}`}>
-              <span className="ladyjay-spec-k">{s.k}</span>
-              <span className="ladyjay-spec-v">{s.v}</span>
+      {/* ─── CONFIGURATOR ─────────────────────────────────── */}
+      <section
+        id="lady-jay-configurator"
+        className="ladyjay-config ladyjay-reveal"
+        data-testid="lady-jay-configurator"
+      >
+        <div className="ladyjay-config-inner">
+          <header className="ladyjay-config-head">
+            <p className="ladyjay-config-eyebrow">THE COMPOSITION</p>
+            <h2 className="ladyjay-config-title">Select your composition</h2>
+            <p className="ladyjay-config-sub">
+              A tribute in sapphire and diamond pavé.
+              <br />
+              Crafted to order in your chosen metal and size.
+            </p>
+            <p className="ladyjay-config-trust" data-testid="lady-jay-trust">
+              Made to order · 4–6 weeks · Complimentary insured shipping
+            </p>
+          </header>
+
+          {/* Metal selector */}
+          <div className="ladyjay-tiers" role="radiogroup" aria-label="Metal selection" data-testid="lady-jay-tiers">
+            {TIERS.map((tier) => {
+              const live = tierPricesLive[tier.id]?.formatted;
+              const display = live || `$${tier.fallbackUsd.toLocaleString("en-US")}`;
+              const isSel = selectedTier === tier.id;
+              return (
+                <button
+                  key={tier.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSel}
+                  onClick={() => setSelectedTier(tier.id)}
+                  className={`ladyjay-tier ${isSel ? "is-selected" : ""}`}
+                  data-testid={`lady-jay-tier-${tier.id}`}
+                >
+                  <span className="ladyjay-tier-badge">{tier.badge}</span>
+                  <span className="ladyjay-tier-name">{tier.name}</span>
+                  <span className="ladyjay-tier-sub">{tier.subtitle}</span>
+                  <span className="ladyjay-tier-meta">{tier.weight}</span>
+                  <span className="ladyjay-tier-price">{display}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Size selector */}
+          <div className="ladyjay-size-block">
+            <div className="ladyjay-size-head">
+              <p className="ladyjay-size-eyebrow">RING SIZE</p>
+              <p className="ladyjay-size-hint">US sizing · {selectedSize ? `Size ${selectedSize}` : "Select a size"}</p>
             </div>
-          ))}
+            <div className="ladyjay-sizes" role="radiogroup" aria-label="Ring size" data-testid="lady-jay-sizes">
+              {RING_SIZES.map((size) => {
+                const isSel = selectedSize === size;
+                return (
+                  <button
+                    key={size}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSel}
+                    onClick={() => setSelectedSize(size)}
+                    className={`ladyjay-size ${isSel ? "is-selected" : ""}`}
+                    data-testid={`lady-jay-size-${size.replace(".", "_")}`}
+                  >
+                    {size}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Live price summary */}
+          <div className="ladyjay-summary" data-testid="lady-jay-summary">
+            <div className="ladyjay-summary-row">
+              <span className="ladyjay-summary-label">Selection</span>
+              <span className="ladyjay-summary-value">
+                {currentTier.name} · Size {selectedSize}
+              </span>
+            </div>
+            <div className="ladyjay-summary-row">
+              <span className="ladyjay-summary-label">SKU</span>
+              <span className="ladyjay-summary-value ladyjay-summary-sku">
+                {currentTier.sku}-SZ{selectedSize.replace(".", "_")}
+              </span>
+            </div>
+            <div className="ladyjay-summary-row ladyjay-summary-row--price">
+              <span className="ladyjay-summary-label">Today's price</span>
+              <span className="ladyjay-summary-price" data-testid="lady-jay-summary-price">
+                {formattedPrice}
+              </span>
+            </div>
+            <p className="ladyjay-market-note" data-testid="lady-jay-market-note">
+              Price adjusts automatically with the live precious metals market.
+            </p>
+          </div>
+
+          {/* Buttons */}
+          <div className="ladyjay-actions">
+            <button
+              type="button"
+              onClick={onAddToCart}
+              disabled={isAdding}
+              className="ladyjay-cta-primary"
+              data-testid="lady-jay-commission-btn"
+            >
+              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "COMMISSION PIECE"}
+            </button>
+            <Link
+              to="/contact?inquiry=lady-jay-consultation"
+              className="ladyjay-cta-secondary"
+              data-testid="lady-jay-consult-btn"
+            >
+              BOOK PRIVATE CONSULTATION
+            </Link>
+          </div>
+
+          {/* Specs */}
+          <div className="ladyjay-specs" data-testid="lady-jay-specs">
+            <p className="ladyjay-specs-eyebrow">PIECE DETAILS</p>
+            <ul className="ladyjay-specs-list">
+              {SPECS.map((s) => (
+                <li key={s} className="ladyjay-specs-item">
+                  <span className="ladyjay-specs-dot" aria-hidden="true" />
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Editorial note */}
+          <div className="ladyjay-note" data-testid="lady-jay-editorial-note">
+            <p className="ladyjay-note-eyebrow">EDITORIAL NOTE</p>
+            <p className="ladyjay-note-text">
+              LADY JAY carries the rhythm of a city, a season, and a devotion to blue.
+            </p>
+            <p className="ladyjay-note-text">
+              Twin pavé feathers unfold across the hand while a wrapped sapphire quill coils
+              between them — suspended somewhere between high jewelry and personal ritual.
+            </p>
+            <p className="ladyjay-note-text ladyjay-note-text--mute">
+              Created as part of the Phileon Tribute Series.
+            </p>
+          </div>
         </div>
       </section>
 

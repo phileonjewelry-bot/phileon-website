@@ -203,6 +203,16 @@ const livePricingConfig = {
     gold_heirloom_away:     { lockedBasePriceCad: 14500, metalType: "18K", weightGrams: 14, lockedMetalReferenceCad: 1575 },
   },
 
+  // LADY JAY — Tribute Series (4 metal tiers, white metal, sapphire + diamond pavé)
+  // CAD bases reverse-calculated so cadToUsdLuxury produces the target USD:
+  //   $4,800 / $8,500 / $11,000 / $14,500
+  ladyJay: {
+    foundation: { lockedBasePriceCad: 6400,  metalType: "925", weightGrams: 10.5, lockedMetalReferenceCad: 12 },
+    signature:  { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 12.8, lockedMetalReferenceCad: 800 },
+    heirloom:   { lockedBasePriceCad: 14667, metalType: "14K", weightGrams: 14.5, lockedMetalReferenceCad: 1269 },
+    collector:  { lockedBasePriceCad: 19334, metalType: "18K", weightGrams: 17.2, lockedMetalReferenceCad: 1935 },
+  },
+
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)
   // pricingPending: lockedBasePriceCad placeholders below are NOT shown on the
   // page (page renders "Pricing on Inquiry") but the structure must exist so
