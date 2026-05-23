@@ -58,6 +58,26 @@ const GALLERY = [
     label: "CAMPAIGN",
     alt: "LADY JAY campaign image, hand against a mosaic of blue tones",
   },
+  {
+    src: "/lady-jay/lady-jay-07-studio-portrait.png",
+    label: "STUDIO PORTRAIT",
+    alt: "LADY JAY studio portrait, model resting hand bearing the ring against a dark panelled wall",
+  },
+  {
+    src: "/lady-jay/lady-jay-08-tapestry.png",
+    label: "TAPESTRY",
+    alt: "LADY JAY worn over a navy blazer, heraldic tapestry backdrop",
+  },
+  {
+    src: "/lady-jay/lady-jay-09-campaign-portrait.png",
+    label: "CAMPAIGN · PORTRAIT",
+    alt: "LADY JAY Phileon tribute campaign portrait, model resting hand at the cheek",
+  },
+  {
+    src: "/lady-jay/lady-jay-10-provenance.png",
+    label: "PROVENANCE",
+    alt: "LADY JAY ring on navy velvet beside a worn baseball and a Phileon Tribute Series brass plate",
+  },
 ];
 
 const RETIRE_DATE = new Date("2026-10-31T23:59:59-04:00"); // End of 2026 MLB season
@@ -476,6 +496,13 @@ export default function LadyJayPage() {
         }
         @media (max-width: 900px) { .ladyjay-archive-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 560px) { .ladyjay-archive-grid { grid-template-columns: 1fr; } }
+        /* When a single cell is left dangling at the end of a 3-col row,
+           center it in the middle column. Editorial closing frame. */
+        @media (min-width: 901px) {
+          .ladyjay-archive-cell:last-child:nth-child(3n+1) {
+            grid-column: 2 / 3;
+          }
+        }
         .ladyjay-archive-cell {
           position: relative;
           overflow: hidden;
@@ -602,7 +629,7 @@ export default function LadyJayPage() {
         <div className="ladyjay-archive-head">
           <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
           <p className="ladyjay-archive-title">
-            Six frames. One tribute.
+            Ten frames. One tribute.
           </p>
         </div>
         <div className="ladyjay-archive-grid" data-testid="lady-jay-archive-grid">
