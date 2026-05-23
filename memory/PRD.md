@@ -17,6 +17,35 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — Sitewide Product Flow Separation
+**Finished products → Add to Cart. Bespoke work → Atelier.**
+
+- **Removed** the secondary "BOOK PRIVATE CONSULTATION" button from
+  LADY JAY. Add to Cart is now the sole CTA on every finished
+  PHILEON object. Verified live: the word "consultation" no longer
+  appears anywhere on `/lady-jay`.
+- **Retired** `/consult/lady-jay` (deleted `LadyJayConsultPage.jsx`).
+- **New page**: `/atelier` (`AtelierPage.jsx`) with aliases `/custom`
+  and `/commission`. This is the ONLY page in the experience where
+  consultation / collaborative language lives.
+  - Warm ink + champagne gold palette (deliberately distinct from
+    the navy/sapphire LADY JAY world — bespoke ≠ finished).
+  - 4 project types as radio cards:
+    Custom Commission · Customize Your Old Gold · Heirloom Rebuild ·
+    VIP Private Project.
+  - Timeline select (Flexible / 8–12w / 4–8w rush / specific date).
+  - Budget select ($5–15k / $15–50k / $50–150k / $150k+ / discuss).
+  - Required project brief textarea (12+ characters).
+  - Posts to existing `/api/consultations/private` with
+    `product_slug="atelier-<projectType>"` so admin dashboard sees
+    everything in one place.
+- **Audit confirmed clean** — LISA, BAMBURGH, CYPHER, BLESSED,
+  RHYTHM MESH, COOGI, COURONNE, DON GORGON, LADY BAMBURGH,
+  CORINTHIANS, COCKTAIL JESSICA, BAPE all have Add to Cart as their
+  only acquisition CTA. No consultation gatekeeping on any finished
+  object sitewide.
+
+
 ### 2026-02-23 — LADY JAY Private Consultation + Sitewide Ring Size Pass
 **New page: `/consult/lady-jay`** (`LadyJayConsultPage.jsx`)
 - Private luxury appointment experience (not a contact form). Deep

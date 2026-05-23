@@ -62,7 +62,7 @@ import DrewFacePage from "@/pages/DrewFacePage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
 import LisaPage from "@/pages/LisaPage";
 import LadyJayPage from "@/pages/LadyJayPage";
-import LadyJayConsultPage from "@/pages/LadyJayConsultPage";
+import AtelierPage from "@/pages/AtelierPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
@@ -173,7 +173,9 @@ function App() {
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
             <Route path="/lisa" element={<LisaPage />} />
             <Route path="/lady-jay" element={<LadyJayPage />} />
-            <Route path="/consult/lady-jay" element={<LadyJayConsultPage />} />
+            <Route path="/atelier" element={<AtelierPage />} />
+            <Route path="/custom" element={<AtelierPage />} />
+            <Route path="/commission" element={<AtelierPage />} />
             <Route path="/ladies/rings/lisa-small" element={<Navigate to="/lisa?expression=small" replace />} />
             <Route path="/gents/rings/lisa-bold" element={<Navigate to="/lisa?expression=bold" replace />} />
           </Route>

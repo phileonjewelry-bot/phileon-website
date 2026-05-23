@@ -857,11 +857,10 @@ export default function LadyJayPage() {
         /* ─── ACTIONS ──────────────────────────────────────── */
         .ladyjay-actions {
           display: grid;
-          grid-template-columns: 1.2fr 1fr;
+          grid-template-columns: 1fr;
           gap: 14px;
           margin: 0 0 72px;
         }
-        @media (max-width: 700px) { .ladyjay-actions { grid-template-columns: 1fr; } }
         .ladyjay-cta-primary,
         .ladyjay-cta-secondary {
           display: inline-flex;
@@ -1129,7 +1128,7 @@ export default function LadyJayPage() {
             </p>
           </div>
 
-          {/* Buttons */}
+          {/* Sole CTA — finished object, immediate acquisition */}
           <div className="ladyjay-actions">
             <button
               type="button"
@@ -1138,15 +1137,8 @@ export default function LadyJayPage() {
               className="ladyjay-cta-primary"
               data-testid="lady-jay-commission-btn"
             >
-              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "COMMISSION PIECE"}
+              {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
             </button>
-            <Link
-              to="/consult/lady-jay"
-              className="ladyjay-cta-secondary"
-              data-testid="lady-jay-consult-btn"
-            >
-              BOOK PRIVATE CONSULTATION
-            </Link>
           </div>
 
           {/* Specs */}
