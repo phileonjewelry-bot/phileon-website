@@ -5,6 +5,12 @@ import { products } from "@/data/products";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLivePrice } from "@/hooks/useLivePrice";
 import SizeGuideModal from "@/components/SizeGuideModal";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 // Scroll-reveal helper — subtle fade up as each section enters the viewport
 const Reveal = ({ children, delay = 0, className = "" }) => {
@@ -46,7 +52,7 @@ export default function CocktailJessicaPage() {
 
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [sizeError, setSizeError] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
@@ -68,23 +74,22 @@ export default function CocktailJessicaPage() {
   );
 
   const onAddToCart = () => {
-    if (!selectedSize) {
-      setSizeError(true);
-      alert("Please select a ring size");
-      return;
-    }
     setSizeError(false);
     const tier = product.tiers.standard;
     const livePriceCad = ctaPriceNum || product.pricing.standard;
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `cocktail-jessica-standard-${selectedSize}`,
-      name: `Le Cocktail de Jessica (Size ${selectedSize})`,
+      id: `cocktail-jessica-standard-size-${sizeIdToken}`,
+      name: `Le Cocktail de Jessica — ${tier.metal} · ${sizeLabelText}`,
       price: livePriceCad,
       productKey: "cocktailJessica",
       tierKey: "standard",
       metal: tier.metal,
       stones: tier.stones,
-      size: selectedSize,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `CJ-STD-SZ${ringSizeSkuToken(selectedSize)}`,
       lockedPriceCad: livePriceCad,
       quantity: 1,
       image: product.imageUrl,
@@ -285,32 +290,17 @@ export default function CocktailJessicaPage() {
 
           <Reveal delay={120}>
             <div data-testid="cocktail-jessica-size-block">
-              <label className="cj-label">SIZE</label>
-              <select
+              <RingSizeSelector
                 value={selectedSize}
-                onChange={(e) => { setSelectedSize(e.target.value); setSizeError(false); }}
-                data-testid="cocktail-jessica-size-select"
-                className={`mt-3 w-full px-4 py-3 text-[15px] cj-body bg-transparent text-white focus:outline-none transition-colors ${
-                  sizeError ? "border border-red-400/60" : "border border-white/20 focus:border-[#c7a870]"
-                }`}
-              >
-                <option value="" disabled className="bg-[#1a1410]">Select size</option>
-                {sizeOptions.map((s) => (
-                  <option key={s} value={s} className="bg-[#1a1410]">{s}</option>
-                ))}
-                <option value="custom" className="bg-[#1a1410]">Custom Size</option>
-              </select>
-              <p className="text-xs text-[var(--cj-cream)]/50 mt-2 cj-body">
-                Need help?{' '}
-                <button
-                  type="button"
-                  onClick={() => setSizeGuideOpen(true)}
-                  data-testid="cocktail-jessica-size-guide-btn"
-                  className="underline hover:text-[#c7a870] transition-colors cursor-pointer"
-                >
-                  View our size guide.
-                </button>
-              </p>
+                onChange={setSelectedSize}
+                testIdPrefix="cocktail-jessica-ringsize"
+                style={{
+                  "--ring-accent": "#c7a870",
+                  "--ring-bg": "rgba(26, 20, 16, 0.85)",
+                  "--ring-fg": "#ffffff",
+                  "--ring-muted": "rgba(255, 248, 224, 0.5)",
+                }}
+              />
             </div>
           </Reveal>
 

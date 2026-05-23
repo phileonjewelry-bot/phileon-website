@@ -4,6 +4,12 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice } from "@/hooks/useLivePrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 // Stable, scoped utility for Don Gorgon pricing key shape
 const buildSkuKey = (metal, tier, variant) => `${metal}_${tier}_${variant}`;
@@ -26,6 +32,7 @@ export default function DonGorgonPage() {
   const [variant, setVariant] = useState(defaults.variant);
   const [metal, setMetal] = useState(defaults.metal);
   const [tier, setTier] = useState(defaults.tier);
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
 
   // If user switches to silver, lock tier to foundation (silver only has one tier)
   useEffect(() => {
@@ -41,14 +48,19 @@ export default function DonGorgonPage() {
   const onAddToCart = () => {
     const variantObj = product.variants[variant];
     const tierObj = product.metals[metal].tiers[tier];
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `theDonGorgon-${skuKey}`,
-      name: `The Don Gorgon — ${variantObj.name} (${product.metals[metal].name} · ${tierObj.name})`,
+      id: `theDonGorgon-${skuKey}-size-${sizeIdToken}`,
+      name: `The Don Gorgon — ${variantObj.name} · ${product.metals[metal].name} · ${tierObj.name} · ${sizeLabelText}`,
       price: ctaPriceNum || lockedPrice,
       productKey: "theDonGorgon",
       tierKey: skuKey,
       metal: product.metals[metal].name,
       variant: variantObj.name,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `DG-${variant.toUpperCase()}-${metal.toUpperCase()}-${tier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
       quantity: 1,
       image: product.gallery[variant][0]?.src,
     });
@@ -583,6 +595,27 @@ export default function DonGorgonPage() {
               </div>
             </div>
           )}
+
+          {/* STEP 4 — RING SIZE */}
+          <div data-testid="don-gorgon-step-size">
+            <p className="dg-cinzel text-[10px] tracking-[0.4em] text-white/45 mb-5 text-center">
+              {metal === "gold" ? "STEP 4 · RING SIZE" : "STEP 3 · RING SIZE"}
+            </p>
+            <div className="max-w-[440px] mx-auto">
+              <RingSizeSelector
+                value={selectedSize}
+                onChange={setSelectedSize}
+                bandWidthMm={11}
+                testIdPrefix="don-gorgon-ringsize"
+                style={{
+                  "--ring-accent": "#C6A86B",
+                  "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                  "--ring-fg": "#ffffff",
+                  "--ring-muted": "rgba(255, 255, 255, 0.5)",
+                }}
+              />
+            </div>
+          </div>
 
           {/* SUMMARY + LIVE PRICE + CTA */}
           <div className="text-center pt-6 space-y-7">

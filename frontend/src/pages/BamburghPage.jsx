@@ -3,6 +3,12 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import PhileonCarousel from "@/components/PhileonCarousel";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 const BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png";
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
@@ -10,7 +16,7 @@ const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced
 export default function BamburghPage() {
   const product = products.bamburgh;
   const [selectedTier, setSelectedTier] = useState("signature");
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [quantity, setQuantity] = useState(1);
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -30,13 +36,18 @@ export default function BamburghPage() {
   }, [activeThumb, isTransitioning]);
 
   const onAddToCart = () => {
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `bamburgh-${selectedTier}-${selectedSize}`,
-      name: `Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
+      id: `bamburgh-${selectedTier}-size-${sizeIdToken}`,
+      name: `Bamburgh — ${currentTier.metal} · ${sizeLabelText}`,
       price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
       productKey: "bamburgh",
       tierKey: selectedTier,
       metal: currentTier.metal,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `BAM-${selectedTier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
       quantity: quantity,
       image: BAMBURGH_IMG,
     });
@@ -187,16 +198,17 @@ export default function BamburghPage() {
 
           <div className="flex gap-2.5 mb-4">
             <div className="flex-1">
-              <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">SIZE</p>
-              <select
+              <RingSizeSelector
                 value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value)}
-                className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-white/20"
-              >
-                <option value="" disabled className="bg-black">Select size (6-12)</option>
-                {sizeOptions.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
-              </select>
-              <p className="text-[8px] text-white/20 mt-1">Half sizes &middot; Custom above 12</p>
+                onChange={setSelectedSize}
+                testIdPrefix="bamburgh-ringsize"
+                style={{
+                  "--ring-accent": "#ffffff",
+                  "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                  "--ring-fg": "rgba(255, 255, 255, 0.85)",
+                  "--ring-muted": "rgba(255, 255, 255, 0.4)",
+                }}
+              />
             </div>
             <div className="w-24">
               <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">QTY</p>

@@ -17,6 +17,67 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — LADY JAY Private Consultation + Sitewide Ring Size Pass
+**New page: `/consult/lady-jay`** (`LadyJayConsultPage.jsx`)
+- Private luxury appointment experience (not a contact form). Deep
+  navy + sapphire + soft gold + grain overlay. Glass shell with
+  blurred backdrop.
+- Form fields: Full Name, Email, Phone (optional), Preferred
+  Composition (Sterling / 10K / 14K / 18K White Gold), Ring Size
+  (uses sitewide `RingSizeSelector` with wide-band warning),
+  Preferred Consultation Type (Virtual / In-Person / Sizing /
+  Collector), Message.
+- CTA: REQUEST PRIVATE CONSULTATION → POSTs to
+  `/api/consultations/private` with `product_slug="lady-jay"`.
+- Success state: editorial thank-you panel + Return to LADY JAY link.
+- Lady Jay product page secondary CTA now routes to this page
+  instead of `/contact?inquiry=…`.
+
+**Backend: new endpoint** `POST /api/consultations/private`
+- New lightweight `PrivateConsultationRequest` model in `server.py`
+  (separate from existing strict admin `Consultation` schema).
+- Persists to `db.private_consultations`. Returns
+  `{ok: true, id, message}`.
+
+**`RingSizeSelector` — refactored sitewide**
+- Removed all "Book sizing appointment" / "Schedule sizing" language.
+- New microcopy: "Not sure of your size? We recommend visiting a
+  local jeweler to confirm your ring size before ordering. You may
+  also compare your fit against an existing ring worn on the same
+  finger. For wide-band rings, sizing up by 0.25–0.5 sizes is often
+  recommended depending on desired fit."
+- New WIDE BAND FIT NOTICE block (eyebrow + two italic paragraphs).
+- New custom-size lead-time note: "Custom sizes may require
+  additional production time." (fires only when "custom" selected).
+- Added `ringSizeSkuToken()` helper for SKU-safe size tokens.
+
+**Sitewide migration — ring pages now using the new component:**
+- LADY JAY (navy/sapphire, bw=22) → wide-band ON
+- LISA SMALL / LISA BOLD (emerald, bw=13) → wide-band ON
+- BAPE (luxe white/black, narrow)
+- CORINTHIANS 1514 (luxury gold/black)
+- PRISE DE COURONNE (luxury gold/black)
+- LADY BAMBURGH (luxury gold/black)
+- COOGI I (violet)
+- CYPHER (white/black)
+- BAMBURGH (white/black)
+- BLESSED (amber/black)
+- COCKTAIL JESSICA (champagne/wine)
+- THE DON GORGON (gold/black, bw=11) → wide-band ON
+- RHYTHM MESH RING (via shared `RingProductPage`, bw=11) → wide-band ON
+- 13 ring pages total now share one coherent luxury sizing UX.
+
+**Excluded — confirmed non-ring products:**
+- NERVATURA (earrings), ROSARIA (earrings), APEX (earrings),
+  DRAPE (pendants), BOUND (bangle).
+
+**Cart payload contract (sitewide):**
+- `name` → `PRODUCT NAME — METAL · US X.X` (or `Custom Above US 12`)
+- `id` → `{slug}-{tier}-size-{7-5|custom}`
+- `sku` → `PFX-TIER-SZ{7_5|CUSTOM}`
+- `ringSize` + `ringSizeLabel` fields included in every ring payload.
+
+
 ### 2026-02-23 — Sitewide RingSizeSelector + LADY JAY FINAL WORD
 - Created reusable `<RingSizeSelector>` component at
   `/app/frontend/src/components/RingSizeSelector.jsx` with the full

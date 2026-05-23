@@ -4,6 +4,12 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 import SizeGuideModal from "@/components/SizeGuideModal";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 const LADY_BAMBURGH_IMG = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png";
 const LADY_BAMBURGH_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gjr06mge_hf_20260419_224240_b1b530d9-43a4-4ed4-b0d0-16f3cc8b1826.mp4";
@@ -12,7 +18,7 @@ const LADY_BAMBURGH_HERO_POSTER = "https://customer-assets.emergentagent.com/job
 export default function LadyBamburghPage() {
   const product = products.ladyBamburgh;
   const [selectedTier, setSelectedTier] = useState("signature");
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [sizeProfile, setSizeProfile] = useState("ladies");
   const [quantity, setQuantity] = useState(1);
   const [activeThumb, setActiveThumb] = useState(0);
@@ -33,14 +39,18 @@ export default function LadyBamburghPage() {
   }, [activeThumb, isTransitioning]);
 
   const onAddToCart = () => {
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `lady-bamburgh-${selectedTier}-${selectedSize}`,
-      name: `Lady Bamburgh — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
+      id: `lady-bamburgh-${selectedTier}-size-${sizeIdToken}`,
+      name: `Lady Bamburgh — ${currentTier.metal} · ${sizeLabelText}`,
       price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
       productKey: "ladyBamburgh",
       tierKey: selectedTier,
       metal: currentTier.metal,
-      size: selectedSize,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `LBM-${selectedTier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
       quantity: quantity,
       image: LADY_BAMBURGH_IMG,
     });
@@ -223,7 +233,7 @@ export default function LadyBamburghPage() {
             </label>
             <select
               value={sizeProfile}
-              onChange={(e) => { setSizeProfile(e.target.value); setSelectedSize(""); }}
+              onChange={(e) => setSizeProfile(e.target.value)}
               className="mt-2 w-full border border-white/10 bg-black text-white p-4"
             >
               <option value="ladies">Ladies (4–9)</option>
@@ -233,33 +243,17 @@ export default function LadyBamburghPage() {
 
           {/* RING SIZE */}
           <div>
-            <label className="text-xs tracking-widest text-white/45">
-              RING SIZE
-            </label>
-            <input
-              type="number"
-              step="0.5"
-              min="4"
-              max="12"
-              placeholder="Enter size (e.g. 7.5)"
+            <RingSizeSelector
               value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-              className="mt-2 w-full border border-white/10 bg-black text-white p-4 placeholder:text-white/30"
+              onChange={setSelectedSize}
+              testIdPrefix="lady-bamburgh-ringsize"
+              style={{
+                "--ring-accent": "#D4AF37",
+                "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                "--ring-fg": "#ffffff",
+                "--ring-muted": "rgba(255, 255, 255, 0.5)",
+              }}
             />
-            <p className="text-xs text-white/45 mt-2">
-              Sizes above 12 are custom.
-            </p>
-            <p className="text-xs text-white/45 mt-1">
-              Need help?{' '}
-              <button
-                type="button"
-                onClick={() => setSizeGuideOpen(true)}
-                data-testid="lady-bamburgh-size-guide-btn"
-                className="underline hover:text-[#D4AF37] transition-colors"
-              >
-                View our size guide.
-              </button>
-            </p>
           </div>
 
           {/* CTA */}

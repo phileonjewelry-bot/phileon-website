@@ -2,13 +2,19 @@ import { useState, useCallback, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 const COOGI_HERO_VIDEO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ifs9jtbk_VIDEO_98d0aec8-1ca7-4b07-9e13-c0bb3baa740b.mp4";
 
 export default function CoogiPage() {
   const product = products.coogiI;
   const [selectedTier, setSelectedTier] = useState("signature");
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [quantity, setQuantity] = useState(1);
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -31,13 +37,18 @@ export default function CoogiPage() {
   }, [activeThumb, isTransitioning]);
 
   const onAddToCart = () => {
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `coogi-i-${selectedTier}-${selectedSize}`,
-      name: `COOGI I — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
+      id: `coogi-i-${selectedTier}-size-${sizeIdToken}`,
+      name: `COOGI I — ${currentTier.metal} · ${sizeLabelText}`,
       price: tierPrices[selectedTier]?.price || product.pricing[selectedTier],
       productKey: "coogiI",
       tierKey: selectedTier,
       metal: currentTier.metal,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `COO-${selectedTier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
       quantity: quantity,
       image: gallery[0].src,
     });
@@ -194,16 +205,17 @@ export default function CoogiPage() {
           {/* Size & Qty */}
           <div className="flex gap-2.5 mb-4">
             <div className="flex-1">
-              <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">SIZE</p>
-              <select
+              <RingSizeSelector
                 value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value)}
-                className="w-full bg-transparent border border-white/8 rounded-md px-2.5 py-2 text-[11px] text-white/55 focus:outline-none focus:border-violet-500/30"
-              >
-                <option value="" disabled className="bg-black">Select size (6-12)</option>
-                {sizeOptions.map(s => <option key={s} value={s} className="bg-black">{s}</option>)}
-              </select>
-              <p className="text-[8px] text-white/20 mt-1">Half sizes &middot; Custom above 12</p>
+                onChange={setSelectedSize}
+                testIdPrefix="coogi-ringsize"
+                style={{
+                  "--ring-accent": "#a78bfa",
+                  "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                  "--ring-fg": "rgba(255, 255, 255, 0.85)",
+                  "--ring-muted": "rgba(255, 255, 255, 0.4)",
+                }}
+              />
             </div>
             <div className="w-24">
               <p className="text-[8px] tracking-[0.35em] text-white/20 mb-1.5">QTY</p>

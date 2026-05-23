@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 /* ═══════════════════════════════════════════════════════════════
    CYPHER — Men's Statement Ring
@@ -12,7 +18,7 @@ import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 export default function CypherPage() {
   const product = products.cypher;
   const [selectedTier, setSelectedTier] = useState("signature");
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const currentPrice = product.pricing[selectedTier];
@@ -24,13 +30,19 @@ export default function CypherPage() {
   const gallery = product.gallery;
 
   const onAddToCart = () => {
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `cypher-${selectedTier}-${selectedSize}`,
-      name: `CYPHER — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
+      id: `cypher-${selectedTier}-size-${sizeIdToken}`,
+      name: `CYPHER — ${currentTier.metal} · ${sizeLabelText}`,
       price: tierPrices[selectedTier]?.price || currentPrice,
+      productKey: "cypher",
+      tierKey: selectedTier,
       metal: currentTier.metal,
-      size: selectedSize,
-      image: product.gallery[1].src, // Use angled black for cart
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `CYP-${selectedTier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
+      image: product.gallery[1].src,
       quantity: 1
     });
   };
@@ -162,36 +174,17 @@ export default function CypherPage() {
 
           {/* SIZE SELECTOR */}
           <div className="mt-6">
-            <p className="text-xs tracking-widest text-neutral-400 mb-3">
-              SIZE
-            </p>
-
-            <select
+            <RingSizeSelector
               value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-              data-testid="cypher-size-select"
-              className="w-full bg-black border border-neutral-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white"
-            >
-              <option value="" disabled>Select your size</option>
-
-              {/* Standard Gents Sizes */}
-              <option value="6">6</option>
-              <option value="6.5">6.5</option>
-              <option value="7">7</option>
-              <option value="7.5">7.5</option>
-              <option value="8">8</option>
-              <option value="8.5">8.5</option>
-              <option value="9">9</option>
-              <option value="9.5">9.5</option>
-              <option value="10">10</option>
-              <option value="10.5">10.5</option>
-              <option value="11">11</option>
-              <option value="11.5">11.5</option>
-              <option value="12">12</option>
-
-              {/* Custom */}
-              <option value="custom">Custom Size (Contact)</option>
-            </select>
+              onChange={setSelectedSize}
+              testIdPrefix="cypher-ringsize"
+              style={{
+                "--ring-accent": "#ffffff",
+                "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                "--ring-fg": "#ffffff",
+                "--ring-muted": "rgba(255, 255, 255, 0.5)",
+              }}
+            />
           </div>
 
           {/* CTA Button */}

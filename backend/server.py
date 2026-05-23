@@ -182,6 +182,48 @@ async def validate_cart(request: CartValidationRequest):
     }
 
 
+# ───────────────────────────────────────────────────────────────
+# PRIVATE CONSULTATION REQUESTS — bespoke product flows
+# (Separate, lightweight model — does not disturb the existing
+# admin /consultations endpoints which require strict date/time
+# fields.)
+# ───────────────────────────────────────────────────────────────
+
+class PrivateConsultationRequest(BaseModel):
+    product_slug: str            # e.g. "lady-jay"
+    full_name: str
+    email: str
+    phone: Optional[str] = None
+    preferred_metal: Optional[str] = None      # e.g. "18K White Gold"
+    ring_size: Optional[str] = None            # e.g. "7.5" or "custom"
+    consultation_type: Optional[str] = None    # virtual | in_person | sizing | collector
+    message: Optional[str] = None
+
+
+@api_router.post("/consultations/private")
+async def create_private_consultation(payload: PrivateConsultationRequest):
+    """Receive a bespoke / private consultation request and store it."""
+    doc = {
+        "id": str(uuid.uuid4()),
+        "product_slug": payload.product_slug,
+        "full_name": payload.full_name.strip(),
+        "email": payload.email.strip().lower(),
+        "phone": (payload.phone or "").strip() or None,
+        "preferred_metal": payload.preferred_metal,
+        "ring_size": payload.ring_size,
+        "consultation_type": payload.consultation_type,
+        "message": (payload.message or "").strip() or None,
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.private_consultations.insert_one(doc)
+    return {
+        "ok": True,
+        "id": doc["id"],
+        "message": "Your request has been received. A member of the PHILEON atelier will contact you directly.",
+    }
+
+
 @api_router.get("/metal-prices")
 async def get_metal_prices():
     """

@@ -2,6 +2,12 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLiveTierPrices } from "@/hooks/useLivePrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 /* ═══════════════════════════════════════════════════════════════
    BLESSED — DEUTERONOMY 28:3
@@ -21,7 +27,7 @@ const HERO_VIDEOS = {
 export default function BlessedPage() {
   const product = products.blessed;
   const [selectedTier, setSelectedTier] = useState("signature");
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -72,12 +78,18 @@ export default function BlessedPage() {
   }, [activeImage, isTransitioning]);
 
   const onAddToCart = () => {
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `blessed-${selectedTier}-${selectedSize}`,
-      name: `BLESSED — ${currentTier.name}${selectedSize ? ` (Size ${selectedSize})` : ""}`,
+      id: `blessed-${selectedTier}-size-${sizeIdToken}`,
+      name: `BLESSED — ${currentTier.metal} · ${sizeLabelText}`,
       price: tierPricesLive[selectedTier]?.price || product.pricing[selectedTier],
+      productKey: "blessed",
+      tierKey: selectedTier,
       metal: currentTier.metal,
-      size: selectedSize,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `BLE-${selectedTier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
       quantity: quantity,
       image: product.gallery[0].src,
     });
@@ -275,18 +287,17 @@ export default function BlessedPage() {
             {/* Size & Qty */}
             <div className="flex gap-3 mb-5">
               <div className="flex-1">
-                <p className="text-[8px] tracking-[0.35em] text-white/25 mb-2">SIZE</p>
-                <select
+                <RingSizeSelector
                   value={selectedSize}
-                  onChange={(e) => setSelectedSize(e.target.value)}
-                  className="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2.5 text-[12px] text-white/60 focus:outline-none focus:border-amber-500/30"
-                >
-                  <option value="" disabled className="bg-[#0a0a0a]">Select size</option>
-                  {sizeOptions.map(s => (
-                    <option key={s} value={s} className="bg-[#0a0a0a]">{s}</option>
-                  ))}
-                </select>
-                <p className="text-[9px] text-white/20 mt-1">Custom sizing on request</p>
+                  onChange={setSelectedSize}
+                  testIdPrefix="blessed-ringsize"
+                  style={{
+                    "--ring-accent": "#f59e0b",
+                    "--ring-bg": "rgba(10, 10, 10, 0.85)",
+                    "--ring-fg": "rgba(255, 255, 255, 0.85)",
+                    "--ring-muted": "rgba(255, 255, 255, 0.4)",
+                  }}
+                />
               </div>
               <div className="w-24">
                 <p className="text-[8px] tracking-[0.35em] text-white/25 mb-2">QTY</p>

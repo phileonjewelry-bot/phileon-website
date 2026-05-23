@@ -5,6 +5,12 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 import SizeGuideModal from "@/components/SizeGuideModal";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "@/components/RingSizeSelector";
 
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png";
@@ -12,7 +18,7 @@ const HERO_IMG =
 export default function CouronnePage() {
   const product = products.priseDeCouronne;
   const [selectedTier, setSelectedTier] = useState(product.defaultTier || "signature");
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [activeThumb, setActiveThumb] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
@@ -39,14 +45,18 @@ export default function CouronnePage() {
 
   const onAddToCart = () => {
     if (!selectedSize) return;
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
     handleAddToCart({
-      id: `prise-de-couronne-${selectedTier}-${selectedSize}`,
-      name: `Prise de Couronne — ${currentTier.name} (Size ${selectedSize})`,
+      id: `prise-de-couronne-${selectedTier}-size-${sizeIdToken}`,
+      name: `Prise de Couronne — ${currentTier.metal} · ${sizeLabelText}`,
       price: ctaPriceNum || product.pricing[selectedTier],
       productKey: "priseDeCouronne",
       tierKey: selectedTier,
       metal: currentTier.metal,
-      size: selectedSize,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `COU-${selectedTier.toUpperCase()}-SZ${ringSizeSkuToken(selectedSize)}`,
       quantity: 1,
       image: HERO_IMG,
     });
@@ -227,32 +237,17 @@ export default function CouronnePage() {
           </div>
 
           <div>
-            <label className="text-xs tracking-widest text-white/45">RING SIZE</label>
-            <select
+            <RingSizeSelector
               value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-              className="mt-2 w-full border border-white/10 bg-black text-white p-4"
-              data-testid="couronne-size-select"
-            >
-              <option value="">Select size</option>
-              {sizeOptions.map((s) => (
-                <option key={s} value={s}>
-                  Size {s}
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-white/45 mt-2">Sizes above 12 are custom.</p>
-            <p className="text-xs text-white/45 mt-1">
-              Need help?{' '}
-              <button
-                type="button"
-                onClick={() => setSizeGuideOpen(true)}
-                data-testid="couronne-size-guide-btn"
-                className="underline hover:text-[#D4AF37] transition-colors"
-              >
-                View our size guide.
-              </button>
-            </p>
+              onChange={setSelectedSize}
+              testIdPrefix="couronne-ringsize"
+              style={{
+                "--ring-accent": "#D4AF37",
+                "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                "--ring-fg": "#ffffff",
+                "--ring-muted": "rgba(255, 255, 255, 0.5)",
+              }}
+            />
           </div>
 
           <div>

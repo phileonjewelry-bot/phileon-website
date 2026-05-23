@@ -8,6 +8,12 @@ import { ringSizeProfiles } from "../data/ringSizes";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "../hooks/useLivePrice";
 import { slugToProductKey } from "../components/LiveFromPrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+  ringSizeSkuToken,
+} from "./RingSizeSelector";
 
 export default function RingProductPage({ product }) {
   const videoRef = useRef(null);
@@ -19,7 +25,7 @@ export default function RingProductPage({ product }) {
   const [selectedTier, setSelectedTier] = useState(
     product.defaultTier || "signature"
   );
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const [customSize, setCustomSize] = useState("");
 
   const sizeConfig = useMemo(() => {
@@ -55,26 +61,28 @@ export default function RingProductPage({ product }) {
     };
   }, [activeMedia]);
 
-  const isSizeValid =
-    selectedSize &&
-    (selectedSize !== "custom" || (customSize && customSize.trim().length > 0));
+  const isSizeValid = !!selectedSize;
 
   // Handle add to cart
   const onAddToCart = () => {
-    const sizeLabel = selectedSize === "custom" ? `Custom: ${customSize}` : `Size ${selectedSize}`;
+    const sizeLabelText = ringSizeLabel(selectedSize);
+    const sizeIdToken = ringSizeIdToken(selectedSize);
+    const skuToken = ringSizeSkuToken(selectedSize);
     const heroImage = product.media.find(m => m.type === "image")?.src || product.media[0]?.poster;
-    
+
     handleAddToCart({
-      id: `${product.id}-${selectedTier}-${selectedSize === "custom" ? customSize : selectedSize}`,
-      name: product.name,
+      id: `${product.id}-${selectedTier}-size-${sizeIdToken}`,
+      name: `${product.name} — ${currentTier.metal} · ${sizeLabelText}`,
       image: heroImage,
       price: tierPricesLive[selectedTier]?.price || currentTier.price,
       productKey: productKey,
       tierKey: selectedTier,
       slug: product.id,
       materials: [currentTier.metal],
-      size: sizeLabel
-    }, 1, `${currentTier.name} · ${currentTier.metal} · ${sizeLabel}`);
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `${(product.id || "ring").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6)}-${selectedTier.toUpperCase()}-SZ${skuToken}`,
+    }, 1, `${currentTier.name} · ${currentTier.metal} · ${sizeLabelText}`);
   };
 
   return (
@@ -208,62 +216,20 @@ export default function RingProductPage({ product }) {
             </div>
           </div>
 
-          {/* SIZE SELECTION */}
+          {/* SIZE SELECTION — sitewide reusable component */}
           <div className="mb-8">
-            <p className="text-xs tracking-[0.3em] text-[#8e8e8e] uppercase mb-3">
-              Select Size
-            </p>
-
-            <div className="grid grid-cols-4 gap-2">
-              {sizeConfig.sizes.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`py-3 rounded-lg border text-sm transition-all duration-200 ${
-                    selectedSize === size
-                      ? "border-[#C6A25D] bg-[#C6A25D]/10 text-white"
-                      : "border-[#2a2a2a] text-[#d0d0d0] hover:border-[#C6A25D]"
-                  }`}
-                  data-testid={`size-${size}`}
-                >
-                  {size}
-                </button>
-              ))}
-
-              <button
-                onClick={() => setSelectedSize("custom")}
-                className={`col-span-4 py-3 rounded-lg border text-sm tracking-[0.15em] transition-all duration-200 ${
-                  selectedSize === "custom"
-                    ? "border-[#C6A25D] bg-[#C6A25D]/10 text-white"
-                    : "border-[#2a2a2a] text-[#d0d0d0] hover:border-[#C6A25D]"
-                }`}
-                data-testid="size-custom"
-              >
-                CUSTOM SIZE
-              </button>
-            </div>
-
-            {selectedSize === "custom" && (
-              <div className="mt-4">
-                <input
-                  type="text"
-                  placeholder="Enter your ring size (e.g. 13, 14.5)"
-                  value={customSize}
-                  onChange={(e) => setCustomSize(e.target.value)}
-                  className="w-full p-3 bg-black border border-[#2a2a2a] rounded-lg text-white text-sm focus:border-[#C6A25D] outline-none transition-colors"
-                  data-testid="custom-size-input"
-                />
-                <p className="text-xs text-[#7f7f7f] mt-2">
-                  {sizeConfig.customRule}
-                </p>
-              </div>
-            )}
-
-            {selectedSize && selectedSize !== "custom" && (
-              <p className="text-xs text-[#7f7f7f] mt-3">
-                Between sizes? Choose the half size for a more precise fit.
-              </p>
-            )}
+            <RingSizeSelector
+              value={selectedSize}
+              onChange={setSelectedSize}
+              bandWidthMm={product.bandWidthMm ?? null}
+              testIdPrefix={`${product.id}-ringsize`}
+              style={{
+                "--ring-accent": "#C6A25D",
+                "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                "--ring-fg": "#ffffff",
+                "--ring-muted": "rgba(255, 255, 255, 0.5)",
+              }}
+            />
           </div>
 
           {/* ADD TO CART */}

@@ -1141,7 +1141,7 @@ export default function LadyJayPage() {
               {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "COMMISSION PIECE"}
             </button>
             <Link
-              to="/contact?inquiry=lady-jay-consultation"
+              to="/consult/lady-jay"
               className="ladyjay-cta-secondary"
               data-testid="lady-jay-consult-btn"
             >
