@@ -1182,9 +1182,9 @@ export default function LadyJayPage() {
         data-testid="lady-jay-hero"
       >
         <style>{`
-          .ladyjay-hero-section { height: 68vh; }
-          @media (min-width: 768px) { .ladyjay-hero-section { height: 82vh; } }
-          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(100vh, 920px); } }
+          .ladyjay-hero-section { height: 56vh; }
+          @media (min-width: 768px) { .ladyjay-hero-section { height: 74vh; } }
+          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(88vh, 820px); } }
         `}</style>
         {/* VIDEO */}
         <video
@@ -1249,8 +1249,8 @@ export default function LadyJayPage() {
             <h1
               className="font-light uppercase leading-none"
               style={{
-                fontSize: "clamp(4.5rem, 10vw, 10rem)",
-                letterSpacing: "-0.06em",
+                fontSize: "clamp(3rem, 13vw, 8.5rem)",
+                letterSpacing: "-0.04em",
                 color: "#f5f1ea",
                 fontFamily: "'Cormorant Garamond', serif",
               }}
