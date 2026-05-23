@@ -680,14 +680,14 @@ export default function LadyJayPage() {
         /* ─── CONFIGURATOR ─────────────────────────────────── */
         .ladyjay-config {
           position: relative;
-          padding: 56px 28px 110px;
+          padding: 32px 28px 110px;
           background:
             radial-gradient(circle at 50% 0%, rgba(40, 70, 140, 0.18), transparent 55%),
             #060a14;
           border-top: 1px solid rgba(99, 144, 220, 0.10);
         }
         @media (min-width: 768px) {
-          .ladyjay-config { padding-top: 80px; padding-bottom: 130px; }
+          .ladyjay-config { padding-top: 48px; padding-bottom: 130px; }
         }
         .ladyjay-config-inner {
           max-width: 1040px;
@@ -1182,9 +1182,9 @@ export default function LadyJayPage() {
         data-testid="lady-jay-hero"
       >
         <style>{`
-          .ladyjay-hero-section { height: 56vh; }
-          @media (min-width: 768px) { .ladyjay-hero-section { height: 74vh; } }
-          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(88vh, 820px); } }
+          .ladyjay-hero-section { height: 68vh; }
+          @media (min-width: 768px) { .ladyjay-hero-section { height: 82vh; } }
+          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(100vh, 920px); } }
         `}</style>
         {/* VIDEO */}
         <video
