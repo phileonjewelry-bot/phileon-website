@@ -4,6 +4,11 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import Lightbox from "../components/CinematicLightbox";
 import { useLiveTierPrices } from "@/hooks/useLivePrice";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+} from "../components/RingSizeSelector";
 
 /**
  * LADY JAY — Tribute Series · 2026 Season Only
@@ -58,8 +63,7 @@ const TIERS = [
   },
 ];
 
-const RING_SIZES = ["4", "4.5", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"];
-const DEFAULT_RING_SIZE = "7";
+const RING_BAND_WIDTH_MM = 22; // LADY JAY — full feather wrap
 
 const SPECS = [
   "Approx. 364 total stones",
@@ -167,15 +171,18 @@ export default function LadyJayPage() {
   }, []);
 
   const onAddToCart = () => {
+    const sizeIdToken = ringSizeIdToken(selectedSize);
+    const sizeLabelText = ringSizeLabel(selectedSize);
     handleAddToCart({
-      id: `lady-jay-${selectedTier}-sz${selectedSize}`,
-      name: `LADY JAY — ${currentTier.name} (Size ${selectedSize})`,
+      id: `lady-jay-${selectedTier}-size-${sizeIdToken}`,
+      name: `LADY JAY — ${currentTier.name} · ${sizeLabelText}`,
       price: displayPrice,
       productKey: "ladyJay",
       tierKey: selectedTier,
       metal: `${currentTier.metal} · Blue Sapphire + White Diamond Pavé`,
-      size: selectedSize,
-      sku: `${currentTier.sku}-SZ${selectedSize.replace(".", "_")}`,
+      ringSize: selectedSize,
+      ringSizeLabel: sizeLabelText,
+      sku: `${currentTier.sku}-SZ${selectedSize === "custom" ? "CUSTOM" : selectedSize.replace(".", "_")}`,
       quantity: 1,
       image: "/lady-jay/lady-jay-hero.png",
     });
@@ -439,6 +446,20 @@ export default function LadyJayPage() {
           color: #f0f4fb;
           margin: 0 auto;
           max-width: 640px;
+        }
+        .ladyjay-final-text + .ladyjay-final-text { margin-top: 36px; }
+        .ladyjay-final-attestation {
+          font-style: normal;
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+          letter-spacing: 0.18em;
+          color: rgba(180, 205, 240, 0.92);
+        }
+        .ladyjay-final-cadence {
+          font-size: clamp(1.3rem, 2.1vw, 1.95rem);
+          line-height: 1.55;
+          color: rgba(228, 234, 242, 0.88);
         }
         .ladyjay-final-rule {
           position: relative;
@@ -1067,30 +1088,20 @@ export default function LadyJayPage() {
             })}
           </div>
 
-          {/* Size selector */}
+          {/* Size selector — sitewide reusable component */}
           <div className="ladyjay-size-block">
-            <div className="ladyjay-size-head">
-              <p className="ladyjay-size-eyebrow">RING SIZE</p>
-              <p className="ladyjay-size-hint">US sizing · {selectedSize ? `Size ${selectedSize}` : "Select a size"}</p>
-            </div>
-            <div className="ladyjay-sizes" role="radiogroup" aria-label="Ring size" data-testid="lady-jay-sizes">
-              {RING_SIZES.map((size) => {
-                const isSel = selectedSize === size;
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    role="radio"
-                    aria-checked={isSel}
-                    onClick={() => setSelectedSize(size)}
-                    className={`ladyjay-size ${isSel ? "is-selected" : ""}`}
-                    data-testid={`lady-jay-size-${size.replace(".", "_")}`}
-                  >
-                    {size}
-                  </button>
-                );
-              })}
-            </div>
+            <RingSizeSelector
+              value={selectedSize}
+              onChange={setSelectedSize}
+              bandWidthMm={RING_BAND_WIDTH_MM}
+              testIdPrefix="lady-jay-ringsize"
+              style={{
+                "--ring-accent": "#7fa8e6",
+                "--ring-bg": "rgba(10, 18, 35, 0.65)",
+                "--ring-fg": "#f0f4fb",
+                "--ring-muted": "rgba(180, 205, 240, 0.6)",
+              }}
+            />
           </div>
 
           {/* Live price summary */}
@@ -1098,13 +1109,13 @@ export default function LadyJayPage() {
             <div className="ladyjay-summary-row">
               <span className="ladyjay-summary-label">Selection</span>
               <span className="ladyjay-summary-value">
-                {currentTier.name} · Size {selectedSize}
+                {currentTier.name} · {ringSizeLabel(selectedSize)}
               </span>
             </div>
             <div className="ladyjay-summary-row">
               <span className="ladyjay-summary-label">SKU</span>
               <span className="ladyjay-summary-value ladyjay-summary-sku">
-                {currentTier.sku}-SZ{selectedSize.replace(".", "_")}
+                {currentTier.sku}-SZ{selectedSize === "custom" ? "CUSTOM" : selectedSize.replace(".", "_")}
               </span>
             </div>
             <div className="ladyjay-summary-row ladyjay-summary-row--price">
@@ -1212,9 +1223,16 @@ export default function LadyJayPage() {
       <section className="ladyjay-final ladyjay-reveal" data-testid="lady-jay-final">
         <p className="ladyjay-final-eyebrow">FINAL WORD</p>
         <p className="ladyjay-final-text" data-testid="lady-jay-final-text">
-          The Blue Jay doesn't migrate.<br />
-          It stays through the cold.<br />
-          So does this ring.
+          Some pieces celebrate a moment.<br />
+          Others become part of the memory that survives it.
+        </p>
+        <p className="ladyjay-final-text ladyjay-final-attestation" data-testid="lady-jay-final-attestation">
+          LADY JAY was created for the latter.
+        </p>
+        <p className="ladyjay-final-text ladyjay-final-cadence" data-testid="lady-jay-final-cadence">
+          For the city.<br />
+          For the cold nights.<br />
+          For the ones who stayed.
         </p>
         <div className="ladyjay-final-rule" aria-hidden="true" />
       </section>

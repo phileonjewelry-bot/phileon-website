@@ -3,6 +3,11 @@ import { Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import Lightbox from "../components/CinematicLightbox";
+import RingSizeSelector, {
+  DEFAULT_RING_SIZE,
+  ringSizeLabel,
+  ringSizeIdToken,
+} from "../components/RingSizeSelector";
 
 /**
  * LISA — Phileon Signature Object
@@ -123,6 +128,7 @@ export default function LisaPage() {
     "lisa-small"; // default entry — intimate luxury
 
   const [selectedId, setSelectedId] = useState(initialId);
+  const [selectedRingSize, setSelectedRingSize] = useState(DEFAULT_RING_SIZE);
   const [isMounted, setIsMounted] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const videoRef = useRef(null);
@@ -203,13 +209,17 @@ export default function LisaPage() {
   const formattedPrice = `$${selected.priceUsd.toLocaleString("en-US")} USD`;
 
   const onAddToCart = () => {
+    const sizeLabelText = ringSizeLabel(selectedRingSize);
+    const sizeIdToken = ringSizeIdToken(selectedRingSize);
     handleAddToCart({
-      id: selected.id,
-      name: `LISA — ${selected.label.replace("LISA ", "")}`,
+      id: `${selected.id}-size-${sizeIdToken}`,
+      name: `LISA — ${selected.label.replace("LISA ", "")} · 18K White Gold · ${sizeLabelText}`,
       price: selected.priceUsd,
       productKey: "lisa",
       tierKey: selected.id,
       metal: "18K White Gold · Natural Emerald",
+      ringSize: selectedRingSize,
+      ringSizeLabel: sizeLabelText,
       quantity: 1,
       image: HERO_BY_VARIANT[selected.id] || HERO_BY_VARIANT["lisa-small"],
     });
@@ -647,6 +657,11 @@ export default function LisaPage() {
           letter-spacing: 0.32em;
           color: rgba(232, 230, 223, 0.6);
           text-transform: uppercase;
+        }
+        .lisa-acquire-size {
+          margin: 36px auto 0;
+          max-width: 420px;
+          text-align: left;
         }
         .lisa-acquire-btn {
           margin-top: 36px;
@@ -1137,10 +1152,26 @@ export default function LisaPage() {
           </h2>
         <p className="lisa-acquire-price" data-testid="lisa-acquire-price">{formattedPrice}</p>
         <p className="lisa-acquire-lead">Made to order · 6–8 weeks · Complimentary insured worldwide shipping</p>
+
+        <div className="lisa-acquire-size">
+          <RingSizeSelector
+            value={selectedRingSize}
+            onChange={setSelectedRingSize}
+            bandWidthMm={13}
+            testIdPrefix={`lisa-ringsize-${selected.id}`}
+            style={{
+              "--ring-accent": "#74c8a9",
+              "--ring-bg": "rgba(8, 12, 11, 0.78)",
+              "--ring-fg": "#e8e6df",
+              "--ring-muted": "rgba(232, 230, 223, 0.6)",
+            }}
+          />
+        </div>
+
         <button
           type="button"
           onClick={onAddToCart}
-          disabled={isAdding}
+          disabled={isAdding || !selectedRingSize}
           className="lisa-acquire-btn"
           data-testid="lisa-add-to-cart-btn"
         >

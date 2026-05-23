@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Lightbox from "../components/CinematicLightbox";
 import { useAddToCart } from "../hooks/useAddToCart";
+import RingSizeSelector, {
+  ringSizeLabel,
+  ringSizeIdToken,
+} from "../components/RingSizeSelector";
 
 /**
  * BAPE™ — TRIBUTE SERIES
@@ -168,15 +172,17 @@ export default function BapePage() {
   };
 
   const onAddToCart = () => {
-    const sizeLabel = selectedRingSize === "custom" ? "Custom (Above US 12)" : `US ${selectedRingSize}`;
+    const sizeLabelText = ringSizeLabel(selectedRingSize);
+    const sizeIdToken = ringSizeIdToken(selectedRingSize);
     handleAddToCart({
-      id: `bape-${selectedVariant.id}-size-${selectedRingSize}`,
-      name: `BAPE — ${selectedVariant.metal} · ${sizeLabel}`,
+      id: `bape-${selectedVariant.id}-size-${sizeIdToken}`,
+      name: `BAPE — ${selectedVariant.metal} · ${sizeLabelText}`,
       price: selectedVariant.priceUsd,
       productKey: "bape",
       tierKey: selectedVariant.id,
       metal: selectedVariant.metal,
       ringSize: selectedRingSize,
+      ringSizeLabel: sizeLabelText,
       image: "/homage/bape-ring.webp",
     });
   };
@@ -997,31 +1003,17 @@ export default function BapePage() {
           </div>
 
           <div className="bape-size-block">
-            <label htmlFor="bape-size-select" className="bape-size-label">
-              RING SIZE
-            </label>
-            <select
-              id="bape-size-select"
+            <RingSizeSelector
               value={selectedRingSize}
-              onChange={(e) => setSelectedRingSize(e.target.value)}
-              className="bape-size-select"
-              data-testid="bape-ring-size-select"
-            >
-              <option value="6">US 6</option>
-              <option value="6.5">US 6.5</option>
-              <option value="7">US 7</option>
-              <option value="7.5">US 7.5</option>
-              <option value="8">US 8</option>
-              <option value="8.5">US 8.5</option>
-              <option value="9">US 9</option>
-              <option value="9.5">US 9.5</option>
-              <option value="10">US 10</option>
-              <option value="10.5">US 10.5</option>
-              <option value="11">US 11</option>
-              <option value="11.5">US 11.5</option>
-              <option value="12">US 12</option>
-              <option value="custom">Custom Above 12</option>
-            </select>
+              onChange={setSelectedRingSize}
+              testIdPrefix="bape-ringsize"
+              style={{
+                "--ring-accent": "#1a1a1a",
+                "--ring-bg": "rgba(255, 255, 255, 0.85)",
+                "--ring-fg": "#1a1a1a",
+                "--ring-muted": "rgba(26, 26, 26, 0.55)",
+              }}
+            />
           </div>
 
           <div className="bp-cta">

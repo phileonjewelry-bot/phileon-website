@@ -17,6 +17,43 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-23 — Sitewide RingSizeSelector + LADY JAY FINAL WORD
+- Created reusable `<RingSizeSelector>` component at
+  `/app/frontend/src/components/RingSizeSelector.jsx` with the full
+  spec'd UX: dark glass field, custom chevron, uppercase tracked label,
+  no native `<select>` styling, US 4–12 in 0.5 increments + "Custom
+  Above US 12" option (18 options total), default `US 7`, sizing
+  microcopy ("Not sure of your size? / Book a sizing appointment or
+  request our sizing guide…"), and conditional **WIDE BAND** warning
+  block that fires when `bandWidthMm >= 10`.
+- Exposes `ringSizeLabel(v)` ("US 7.5" / "Custom Above US 12") and
+  `ringSizeIdToken(v)` ("7-5" / "custom") so cart line titles and
+  variant ids stay consistent across the catalog.
+- Themable via CSS custom properties (`--ring-accent`, `--ring-bg`,
+  `--ring-fg`, `--ring-muted`) so each ring page keeps its bespoke
+  palette without code duplication.
+- **Applied to** (this pass — explicitly named by user):
+  - LADY JAY → navy/sapphire theme, 22mm = wide-band warning ON.
+    SKU updates to `LJ-18W-SZ7_5` / `LJ-SS-SZCUSTOM`.
+  - LISA (small + bold) → emerald theme, 13mm = wide-band ON.
+    Cart line: `LISA — SMALL · 18K White Gold · US 7.5`.
+  - BAPE → luxe white-on-black theme, narrow band = no warning.
+    Sizes expanded from US 6–12 → full US 4–12 + Custom.
+- **FINAL WORD copy refresh** on LADY JAY: replaced the migration
+  metaphor with the user's new three-stanza editorial close
+  ("Some pieces celebrate a moment / Others become part of the memory
+  that survives it / LADY JAY was created for the latter / For the
+  city / For the cold nights / For the ones who stayed").
+- **Still on the rollout list** (ring pages with existing size UI that
+  need migration to the new component for consistency):
+  CORINTHIANS, COURONNE (both native `<select>`), LADY BAMBURGH
+  (free-form number input + separate `SizeGuideModal`).
+- **Ring pages with NO size selector yet** (need adding):
+  THE DON GORGON, NERVATURA, RHYTHM MESH RING, ROSARIA, BOUND,
+  COOGI, APEX, DRAPE, CYPHER, BAMBURGH, BLESSED, COCKTAIL JESSICA.
+  Listed for follow-up.
+
+
 ### 2026-02-23 — LADY JAY — Full Purchase Configurator
 - Replaced single-price hero CTA with full editorial configurator at
   `#lady-jay-configurator`.
