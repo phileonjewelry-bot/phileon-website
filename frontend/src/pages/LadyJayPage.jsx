@@ -1185,6 +1185,21 @@ export default function LadyJayPage() {
           .ladyjay-hero-section { height: 68vh; }
           @media (min-width: 768px) { .ladyjay-hero-section { height: 82vh; } }
           @media (min-width: 1024px) { .ladyjay-hero-section { height: min(100vh, 920px); } }
+
+          /* Mobile hero copy — quieter so the ring stays the hero */
+          .ladyjay-hero-copy {
+            font-size: 14px;
+            line-height: 1.45;
+          }
+          .ladyjay-hero-finalline {
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            line-height: 1.7;
+          }
+          @media (min-width: 768px) {
+            .ladyjay-hero-copy { font-size: 16px; line-height: 1.55; }
+            .ladyjay-hero-finalline { font-size: 11px; letter-spacing: 0.35em; }
+          }
         `}</style>
         {/* VIDEO */}
         <video
@@ -1201,15 +1216,15 @@ export default function LadyJayPage() {
           <source src="/videos/lady-jay/lady-jay-hero.mp4" type="video/mp4" />
         </video>
 
-        {/* DARK OVERLAY */}
-        <div className="absolute inset-0 bg-black/45" />
+        {/* DARK OVERLAY — lighter on mobile, slightly stronger on desktop */}
+        <div className="absolute inset-0 bg-black/22 md:bg-black/30" />
 
-        {/* SAPPHIRE GRADIENT */}
+        {/* SAPPHIRE GRADIENT — softer falloff so the ring stays alive */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(circle at center, rgba(16,33,64,0.18) 0%, rgba(0,0,0,0.78) 72%)",
+              "radial-gradient(circle at center, rgba(16,33,64,0.12) 0%, rgba(0,0,0,0.42) 72%)",
           }}
         />
 
@@ -1234,7 +1249,7 @@ export default function LadyJayPage() {
         </Link>
 
         {/* CONTENT */}
-        <div className="relative z-10 flex h-full items-end px-6 pb-6 md:px-16 md:pb-10">
+        <div className="relative z-10 flex h-full items-end px-6 pb-10 md:px-16 md:pb-16">
           <div className="max-w-2xl">
             {/* EYEBROW */}
             <div
@@ -1249,8 +1264,8 @@ export default function LadyJayPage() {
             <h1
               className="font-light uppercase leading-none"
               style={{
-                fontSize: "clamp(3rem, 13vw, 8.5rem)",
-                letterSpacing: "-0.04em",
+                fontSize: "clamp(2.6rem, 11vw, 7.5rem)",
+                letterSpacing: "-0.035em",
                 color: "#f5f1ea",
                 fontFamily: "'Cormorant Garamond', serif",
               }}
@@ -1261,7 +1276,7 @@ export default function LadyJayPage() {
 
             {/* COPY */}
             <p
-              className="mt-6 max-w-xl text-sm md:text-base leading-relaxed"
+              className="ladyjay-hero-copy mt-6 max-w-xl"
               style={{
                 color: "rgba(245,241,234,0.72)",
                 letterSpacing: "0.02em",
@@ -1275,7 +1290,7 @@ export default function LadyJayPage() {
 
             {/* FINAL LINE */}
             <p
-              className="mt-5 text-[11px] uppercase tracking-[0.35em]"
+              className="ladyjay-hero-finalline mt-5 uppercase"
               style={{ color: "rgba(201,162,77,0.68)" }}
             >
               FOR THE CITY. FOR THE COLD NIGHTS. FOR THE ONES WHO STAYED.
@@ -1283,12 +1298,12 @@ export default function LadyJayPage() {
           </div>
         </div>
 
-        {/* BOTTOM FADE */}
+        {/* BOTTOM FADE — shorter + softer so the video stays present */}
         <div
-          className="absolute bottom-0 left-0 h-48 w-full pointer-events-none"
+          className="absolute bottom-0 left-0 w-full pointer-events-none h-28 md:h-40"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0))",
+              "linear-gradient(to top, rgba(0,0,0,0.78), rgba(0,0,0,0))",
           }}
         />
 
