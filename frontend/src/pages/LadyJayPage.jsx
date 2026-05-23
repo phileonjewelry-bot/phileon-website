@@ -83,6 +83,11 @@ const GALLERY = [
     label: "PROVENANCE",
     alt: "LADY JAY ring on navy velvet beside a worn baseball and a Phileon Tribute Series brass plate",
   },
+  {
+    src: "/lady-jay/lady-jay-12-toronto.png",
+    label: "TORONTO",
+    alt: "LADY JAY worn in a Toronto Blue Jays cap and jersey inside the team dugout — the tribute, revealed",
+  },
 ];
 
 const RETIRE_DATE = new Date("2026-10-31T23:59:59-04:00"); // End of 2026 MLB season
@@ -644,7 +649,7 @@ export default function LadyJayPage() {
         <div className="ladyjay-archive-head">
           <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
           <p className="ladyjay-archive-title">
-            Eleven frames. One tribute.
+            Twelve frames. One tribute.
           </p>
         </div>
         <div className="ladyjay-archive-grid" data-testid="lady-jay-archive-grid">
