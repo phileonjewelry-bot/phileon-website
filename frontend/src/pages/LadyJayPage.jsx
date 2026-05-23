@@ -29,6 +29,16 @@ const MARQUEE_TEXT =
 
 const GALLERY = [
   {
+    src: "/lady-jay/lady-jay-12-toronto.png",
+    label: "TORONTO",
+    alt: "LADY JAY tribute portrait — the city, named",
+  },
+  {
+    src: "/lady-jay/lady-jay-04-pave-detail.png",
+    label: "PAVÉ DETAIL",
+    alt: "LADY JAY blue sapphire and white diamond pavé, macro close-up",
+  },
+  {
     src: "/lady-jay/lady-jay-hero.png",
     label: "PORTRAIT",
     alt: "LADY JAY tribute series feather ring, full hand portrait",
@@ -39,54 +49,29 @@ const GALLERY = [
     alt: "LADY JAY twin-feather pavé set, macro detail on hand",
   },
   {
-    src: "/lady-jay/lady-jay-03-twin-portrait.png",
-    label: "TWIN PORTRAIT",
-    alt: "LADY JAY symmetrical feather portrait, indigo backdrop",
-  },
-  {
-    src: "/lady-jay/lady-jay-04-pave-detail.png",
-    label: "PAVÉ DETAIL",
-    alt: "LADY JAY blue sapphire and white diamond pavé, macro close-up",
-  },
-  {
     src: "/lady-jay/lady-jay-05-on-body.png",
     label: "ON BODY",
-    alt: "LADY JAY ring worn on the hand against the collarbone, soft daylight",
-  },
-  {
-    src: "/lady-jay/lady-jay-06-campaign.png",
-    label: "CAMPAIGN",
-    alt: "LADY JAY campaign image, hand against a mosaic of blue tones",
-  },
-  {
-    src: "/lady-jay/lady-jay-07-studio-portrait.png",
-    label: "STUDIO PORTRAIT",
-    alt: "LADY JAY studio portrait, model resting hand bearing the ring against a dark panelled wall",
-  },
-  {
-    src: "/lady-jay/lady-jay-08-tapestry.png",
-    label: "TAPESTRY",
-    alt: "LADY JAY worn over a navy blazer, heraldic tapestry backdrop",
-  },
-  {
-    src: "/lady-jay/lady-jay-09-campaign-portrait.png",
-    label: "CAMPAIGN · PORTRAIT",
-    alt: "LADY JAY Phileon tribute campaign portrait, model resting hand at the cheek",
-  },
-  {
-    src: "/lady-jay/lady-jay-11-velvet.png",
-    label: "VELVET",
-    alt: "LADY JAY worn on the hand, model seated in a deep teal velvet chair in navy satin",
+    alt: "LADY JAY worn on the hand against the collarbone, soft daylight",
   },
   {
     src: "/lady-jay/lady-jay-10-provenance.png",
     label: "PROVENANCE",
-    alt: "LADY JAY ring on navy velvet beside a worn baseball and a Phileon Tribute Series brass plate",
+    alt: "LADY JAY on navy velvet beside a worn baseball and a Phileon Tribute Series brass plate",
   },
   {
-    src: "/lady-jay/lady-jay-12-toronto.png",
-    label: "TORONTO",
-    alt: "LADY JAY worn in a Toronto Blue Jays cap and jersey inside the team dugout — the tribute, revealed",
+    src: "/lady-jay/lady-jay-11-velvet.png",
+    label: "VELVET",
+    alt: "LADY JAY worn at rest, model seated in a deep teal velvet chair in navy satin",
+  },
+  {
+    src: "/lady-jay/lady-jay-08-tapestry.png",
+    label: "TAPESTRY",
+    alt: "LADY JAY worn over navy satin, heraldic tapestry backdrop",
+  },
+  {
+    src: "/lady-jay/lady-jay-09-campaign-portrait.png",
+    label: "CAMPAIGN · PORTRAIT",
+    alt: "LADY JAY Phileon tribute campaign portrait, hand at the cheek",
   },
 ];
 
@@ -649,7 +634,7 @@ export default function LadyJayPage() {
         <div className="ladyjay-archive-head">
           <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
           <p className="ladyjay-archive-title">
-            Twelve frames. One tribute.
+            Nine frames. One tribute.
           </p>
         </div>
         <div className="ladyjay-archive-grid" data-testid="lady-jay-archive-grid">
