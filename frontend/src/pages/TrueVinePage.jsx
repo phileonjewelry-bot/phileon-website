@@ -19,13 +19,18 @@ import { useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const HERO_IMG = "/the-true-vine/the-true-vine-hero.jpg";
 
-// 5-frame editorial archive — front · three-quarter · vine macro · on-body · in-hand
+// 9-frame editorial archive — disciplined 3×3 sequence.
+// Object views → detail macros → provenance & lifestyle.
 const GALLERY = [
-  { src: "/the-true-vine/tv-02-front.jpg",          label: "01 · FRONT",         alt: "THE TRUE VINE front view — open mesh arch with raised cross and vine relief." },
-  { src: "/the-true-vine/tv-03-three-quarter.jpg",  label: "02 · THREE-QUARTER", alt: "THE TRUE VINE three-quarter view showing depth of the mesh arch and dimensional bail." },
-  { src: "/the-true-vine/tv-04-vine-macro.png",     label: "03 · VINE · MACRO",  alt: "Macro view of the sculpted vine relief and ivy leaves climbing the cross." },
-  { src: "/the-true-vine/tv-05-on-body.png",        label: "04 · ON BODY",       alt: "THE TRUE VINE worn on a 22-inch rope chain over a dark hoodie." },
-  { src: "/the-true-vine/tv-06-in-hand.png",        label: "05 · IN HAND",       alt: "THE TRUE VINE pendant held to reveal its scale and finishing." },
+  { src: "/the-true-vine/tv-02-front.jpg",          alt: "THE TRUE VINE front view — open mesh arch with raised cross and vine relief." },
+  { src: "/the-true-vine/tv-03-three-quarter.jpg",  alt: "THE TRUE VINE three-quarter view showing depth of the mesh arch and dimensional bail." },
+  { src: "/the-true-vine/tv-07-side-profile.png",   alt: "THE TRUE VINE side profile revealing the relief depth of the cross against the arch." },
+  { src: "/the-true-vine/tv-08-profile-back.png",   alt: "THE TRUE VINE rear-quarter profile showing the open mesh field and arched silhouette." },
+  { src: "/the-true-vine/tv-04-vine-macro.png",     alt: "Macro view of the sculpted vine relief and ivy leaves climbing the cross." },
+  { src: "/the-true-vine/tv-09-bail-macro.png",     alt: "Macro view of the hand-finished mesh bail and jump-ring connection." },
+  { src: "/the-true-vine/tv-10-provenance.png",     alt: "THE TRUE VINE resting against a hardwood presentation box." },
+  { src: "/the-true-vine/tv-06-in-hand.png",        alt: "THE TRUE VINE pendant held to reveal its scale and finishing." },
+  { src: "/the-true-vine/tv-05-on-body.png",        alt: "THE TRUE VINE worn on a 22-inch rope chain over a dark hoodie." },
 ];
 
 // Inscription rules — uppercase serif/sans only, archival, restrained.
@@ -632,17 +637,6 @@ export default function TrueVinePage() {
           opacity: 0.92;
         }
         .vine-gallery-cell:hover img { transform: scale(1.025); opacity: 1; }
-        .vine-gallery-cell figcaption {
-          position: absolute; left: 14px; bottom: 12px;
-          padding: 6px 10px;
-          font-size: 9.5px;
-          letter-spacing: 0.42em;
-          text-transform: uppercase;
-          color: rgba(236, 229, 210, 0.92);
-          background: rgba(12, 10, 7, 0.55);
-          border: 1px solid rgba(198, 168, 107, 0.22);
-          backdrop-filter: blur(8px);
-        }
 
         /* SACRED INSCRIPTION */
         .vine-engraving-subtext {
@@ -834,13 +828,12 @@ export default function TrueVinePage() {
       <section className="vine-gallery" data-testid="vine-gallery" aria-label="The True Vine archive">
         <div className="vine-gallery-head">
           <p className="vine-gallery-eyebrow">THE ARCHIVE</p>
-          <h2 className="vine-gallery-title">Five frames. One sacred object.</h2>
+          <h2 className="vine-gallery-title">Nine frames. One sacred object.</h2>
         </div>
         <div className="vine-gallery-grid">
           {GALLERY.map((g) => (
             <figure key={g.src} className="vine-gallery-cell">
               <img src={g.src} alt={g.alt} loading="lazy" />
-              <figcaption>{g.label}</figcaption>
             </figure>
           ))}
         </div>
