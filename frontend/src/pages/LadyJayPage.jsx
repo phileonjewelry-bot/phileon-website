@@ -1231,8 +1231,8 @@ export default function LadyJayPage() {
         />
 
         {/* CONTENT — campaign film paused mid-scene */}
-        <div className="relative z-10 flex h-full items-end px-6 pb-14 md:px-16 md:pb-24">
-          <div className="max-w-2xl">
+        <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-16 md:pb-28">
+          <div className="mt-auto max-w-2xl">
             {/* TITLE */}
             <h1
               className="font-light uppercase"
@@ -1259,7 +1259,7 @@ export default function LadyJayPage() {
               }}
             />
 
-            {/* EYEBROW — now beneath the title */}
+            {/* EYEBROW — quietly beneath the title */}
             <div
               className="mt-3 uppercase"
               style={{
@@ -1271,19 +1271,6 @@ export default function LadyJayPage() {
             >
               PHILEON — TRIBUTE SERIES
             </div>
-
-            {/* SEASON LINE — quietest of all */}
-            <p
-              className="mt-3 uppercase"
-              style={{
-                fontSize: "9px",
-                letterSpacing: "0.28em",
-                color: "rgba(255,255,255,0.48)",
-              }}
-              data-testid="lady-jay-season-line"
-            >
-              2026 SEASON ONLY
-            </p>
           </div>
         </div>
 
