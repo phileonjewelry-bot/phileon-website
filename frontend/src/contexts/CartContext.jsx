@@ -41,6 +41,12 @@ export const CartProvider = ({ children }) => {
       lockedPriceCad: product.price || 0,
       productKey: product.productKey || null,
       tierKey: product.tierKey || null,
+      sku: product.sku || null,
+      // Optional engraving / personalisation fields — preserved through to
+      // checkout for any product page that supports inscription add-ons.
+      engravingEnabled: product.engravingEnabled || false,
+      engravingMethod: product.engravingMethod || null,
+      engravingText: product.engravingText || null,
       qty: quantity,
       variant,
       slug: product.slug,

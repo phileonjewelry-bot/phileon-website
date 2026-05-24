@@ -19,6 +19,27 @@ import { useLiveTierPrices } from "@/hooks/useLivePrice";
 
 const HERO_IMG = "/the-true-vine/the-true-vine-hero.jpg";
 
+// 5-frame editorial archive — front · three-quarter · vine macro · on-body · in-hand
+const GALLERY = [
+  { src: "/the-true-vine/tv-02-front.jpg",          label: "01 · FRONT",         alt: "THE TRUE VINE front view — open mesh arch with raised cross and vine relief." },
+  { src: "/the-true-vine/tv-03-three-quarter.jpg",  label: "02 · THREE-QUARTER", alt: "THE TRUE VINE three-quarter view showing depth of the mesh arch and dimensional bail." },
+  { src: "/the-true-vine/tv-04-vine-macro.png",     label: "03 · VINE · MACRO",  alt: "Macro view of the sculpted vine relief and ivy leaves climbing the cross." },
+  { src: "/the-true-vine/tv-05-on-body.png",        label: "04 · ON BODY",       alt: "THE TRUE VINE worn on a 22-inch rope chain over a dark hoodie." },
+  { src: "/the-true-vine/tv-06-in-hand.png",        label: "05 · IN HAND",       alt: "THE TRUE VINE pendant held to reveal its scale and finishing." },
+];
+
+// Inscription rules — uppercase serif/sans only, archival, restrained.
+const ENGRAVING_PRICE_USD = 250;
+const ENGRAVING_MAX_CHARS = 40;
+const ENGRAVING_ALLOWED = /^[A-Z0-9 :./-]*$/;
+const ENGRAVING_PLACEHOLDERS = [
+  "JOHN 15:1",
+  "ABIDE IN ME",
+  "PSALM 91",
+  "IN HIS NAME",
+  "FOR THE ONES WHO STAYED",
+];
+
 const METAL_TIERS = [
   {
     id: "foundation",
@@ -95,6 +116,11 @@ export default function TrueVinePage() {
   // Default per brief: 14K Yellow Gold · 22" Rope Chain
   const [selectedTier, setSelectedTier] = useState("heirloom");
   const [selectedChain, setSelectedChain] = useState("rope-22");
+  const [engravingEnabled, setEngravingEnabled] = useState(false);
+  const [engravingText, setEngravingText] = useState("");
+  const [engravingPlaceholder] = useState(
+    () => ENGRAVING_PLACEHOLDERS[Math.floor(Math.random() * ENGRAVING_PLACEHOLDERS.length)]
+  );
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
@@ -109,30 +135,63 @@ export default function TrueVinePage() {
   const pendantOnlyKey = `${selectedTier}__pendant-only`;
 
   // USD price for current combo, falling back to pendant-only if hook not yet ready
-  const totalUsd = tierPricesLive?.[compoundTierKey]?.price || 0;
+  const baseUsd = tierPricesLive?.[compoundTierKey]?.price || 0;
   const pendantUsd = tierPricesLive?.[pendantOnlyKey]?.price || 0;
+  const engravingUsd = engravingEnabled ? ENGRAVING_PRICE_USD : 0;
+  const totalUsd = baseUsd + engravingUsd;
+
+  // Trimmed, uppercased inscription text (what we actually engrave / pass to cart)
+  const sanitizedEngraving = engravingText
+    .toUpperCase()
+    .replace(/[^A-Z0-9 :./-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, ENGRAVING_MAX_CHARS);
+
+  const handleEngravingChange = (e) => {
+    const raw = e.target.value.toUpperCase();
+    // Strip disallowed characters live so the field never holds bad input.
+    const cleaned = raw.replace(/[^A-Z0-9 :./-]/g, "").slice(0, ENGRAVING_MAX_CHARS);
+    setEngravingText(cleaned);
+  };
 
   const sku = useMemo(() => {
     const chainToken =
       selectedChain === "pendant-only"
         ? "PO"
-        : selectedChain.replace("rope-", "R");
-    return `${currentTier.sku}-${chainToken}`;
-  }, [currentTier.sku, selectedChain]);
+        : selectedChain.replace("rope-", "ROPE");
+    const base = `${currentTier.sku}-${chainToken}`;
+    return engravingEnabled ? `${base}-ENGRAVED` : base;
+  }, [currentTier.sku, selectedChain, engravingEnabled]);
 
   const onAddToCart = () => {
-    handleAddToCart({
-      id: `the-true-vine-${selectedTier}-${selectedChain}`,
-      name: `THE TRUE VINE — ${currentTier.metal} · ${currentChain.label}`,
-      price: totalUsd,
-      productKey: "theTrueVine",
-      tierKey: compoundTierKey,
-      metal: currentTier.metal,
-      chain: currentChain.label,
-      sku,
-      quantity: 1,
-      image: HERO_IMG,
-    });
+    const engravingFinal = engravingEnabled ? sanitizedEngraving : "";
+    // Cart drawer renders `variant` as a human-readable line. We keep
+    // the structured engraving fields on the product payload itself
+    // (they're propagated through CartContext spread for downstream
+    // order processing).
+    const variant = engravingEnabled
+      ? `Laser engraved: ${engravingFinal || "(awaiting text)"}`
+      : null;
+    handleAddToCart(
+      {
+        id: `the-true-vine-${selectedTier}-${selectedChain}${engravingEnabled ? "-engraved" : ""}`,
+        name: `THE TRUE VINE — ${currentTier.metal} · ${currentChain.label}${engravingEnabled ? ` · Engraved "${engravingFinal}"` : ""}`,
+        price: totalUsd,
+        productKey: "theTrueVine",
+        tierKey: compoundTierKey,
+        metal: currentTier.metal,
+        chain: currentChain.label,
+        sku,
+        engravingEnabled,
+        engravingMethod: engravingEnabled ? "laser" : null,
+        engravingText: engravingFinal,
+        quantity: 1,
+        image: HERO_IMG,
+      },
+      1,
+      variant,
+    );
   };
 
   return (
@@ -528,6 +587,219 @@ export default function TrueVinePage() {
           letter-spacing: 0.52em;
         }
         .vine-cta:disabled { opacity: 0.55; cursor: default; letter-spacing: 0.46em !important; }
+
+        /* GALLERY */
+        .vine-gallery {
+          padding: 80px 24px 70px;
+          border-top: 1px solid rgba(198, 168, 107, 0.10);
+        }
+        @media (min-width: 900px) { .vine-gallery { padding: 110px 60px 90px; } }
+        .vine-gallery-head { max-width: 1100px; margin: 0 auto 36px; }
+        @media (min-width: 900px) { .vine-gallery-head { margin-bottom: 48px; } }
+        .vine-gallery-eyebrow {
+          font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase;
+          color: rgba(198, 168, 107, 0.78);
+          margin: 0 0 12px;
+        }
+        .vine-gallery-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+          line-height: 1.15;
+          color: rgba(236, 229, 210, 0.92);
+          margin: 0;
+        }
+        .vine-gallery-grid {
+          max-width: 1100px; margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        @media (min-width: 700px) { .vine-gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+        @media (min-width: 1024px) { .vine-gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+        .vine-gallery-cell {
+          position: relative;
+          margin: 0;
+          aspect-ratio: 4 / 5;
+          overflow: hidden;
+          background: #0a0805;
+          border: 1px solid rgba(198, 168, 107, 0.12);
+        }
+        .vine-gallery-cell img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1),
+                      opacity 600ms ease;
+          opacity: 0.92;
+        }
+        .vine-gallery-cell:hover img { transform: scale(1.025); opacity: 1; }
+        .vine-gallery-cell figcaption {
+          position: absolute; left: 14px; bottom: 12px;
+          padding: 6px 10px;
+          font-size: 9.5px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: rgba(236, 229, 210, 0.92);
+          background: rgba(12, 10, 7, 0.55);
+          border: 1px solid rgba(198, 168, 107, 0.22);
+          backdrop-filter: blur(8px);
+        }
+
+        /* SACRED INSCRIPTION */
+        .vine-engraving-subtext {
+          margin: -4px 0 22px;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 0.98rem;
+          color: rgba(236, 229, 210, 0.7);
+        }
+        .vine-engraving { margin: 0 0 40px; }
+        .vine-engraving-toggle {
+          display: flex; align-items: center; gap: 14px;
+          padding: 18px 20px;
+          background: rgba(18, 14, 8, 0.55);
+          border: 1px solid rgba(198, 168, 107, 0.18);
+          cursor: pointer;
+          transition: border-color 320ms ease, background 320ms ease;
+        }
+        .vine-engraving-toggle:hover { border-color: rgba(198, 168, 107, 0.45); }
+        .vine-engraving-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .vine-engraving-box {
+          flex: 0 0 18px;
+          width: 18px; height: 18px;
+          display: inline-flex; align-items: center; justify-content: center;
+          border: 1px solid rgba(220, 190, 130, 0.55);
+          background: rgba(8, 6, 3, 0.5);
+          transition: border-color 220ms ease, background 220ms ease;
+        }
+        .vine-engraving-tick {
+          display: block;
+          width: 8px; height: 8px;
+          background: transparent;
+          transition: background 220ms ease;
+        }
+        .vine-engraving-toggle input:checked ~ .vine-engraving-box {
+          border-color: rgba(220, 190, 130, 0.95);
+          background: rgba(28, 20, 8, 0.85);
+        }
+        .vine-engraving-toggle input:checked ~ .vine-engraving-box .vine-engraving-tick {
+          background: rgba(220, 190, 130, 0.95);
+        }
+        .vine-engraving-toggle input:focus-visible ~ .vine-engraving-box {
+          outline: 2px solid rgba(220, 190, 130, 0.7);
+          outline-offset: 2px;
+        }
+        .vine-engraving-toggle-label {
+          flex: 1;
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 0.95rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #f5efdf;
+        }
+        .vine-engraving-toggle-price {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 1rem;
+          color: rgba(220, 190, 130, 0.85);
+        }
+        .vine-engraving-helper {
+          margin: 10px 4px 0;
+          font-size: 11px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: rgba(198, 168, 107, 0.58);
+        }
+        .vine-engraving-field {
+          margin-top: 22px;
+          padding: 22px 22px 20px;
+          background: rgba(10, 8, 5, 0.62);
+          border: 1px solid rgba(198, 168, 107, 0.18);
+          animation: vineFadeIn 420ms ease both;
+        }
+        @keyframes vineFadeIn {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .vine-engraving-field-label {
+          display: block;
+          font-size: 10px;
+          letter-spacing: 0.46em;
+          text-transform: uppercase;
+          color: rgba(198, 168, 107, 0.78);
+          margin: 0 0 12px;
+        }
+        .vine-engraving-textarea {
+          width: 100%;
+          background: rgba(4, 3, 2, 0.55);
+          border: 1px solid rgba(198, 168, 107, 0.22);
+          color: #f5efdf;
+          padding: 14px 16px;
+          font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+          font-weight: 400;
+          font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          line-height: 1.4;
+          resize: vertical;
+          min-height: 56px;
+          transition: border-color 280ms ease, background 280ms ease;
+        }
+        .vine-engraving-textarea::placeholder {
+          color: rgba(236, 229, 210, 0.32);
+          letter-spacing: 0.16em;
+          font-style: italic;
+        }
+        .vine-engraving-textarea:focus {
+          outline: none;
+          border-color: rgba(220, 190, 130, 0.7);
+          background: rgba(8, 6, 3, 0.75);
+        }
+        .vine-engraving-meta {
+          margin-top: 10px;
+          display: flex; justify-content: space-between; align-items: baseline;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+        .vine-engraving-rules {
+          margin: 0;
+          font-size: 10px;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: rgba(198, 168, 107, 0.55);
+          line-height: 1.7;
+        }
+        .vine-engraving-count {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.28em;
+          color: rgba(220, 190, 130, 0.65);
+          font-variant-numeric: tabular-nums;
+        }
+        .vine-engraving-production {
+          margin: 14px 0 0;
+          padding-top: 12px;
+          border-top: 1px solid rgba(198, 168, 107, 0.10);
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 0.92rem;
+          color: rgba(236, 229, 210, 0.6);
+        }
+
+        /* Summary inscription text */
+        .vine-summary-inscription {
+          font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-style: normal;
+        }
+        .vine-summary-inscription-empty {
+          font-style: italic;
+          letter-spacing: 0.04em;
+          text-transform: none;
+          color: rgba(236, 229, 210, 0.5);
+        }
       `}</style>
 
       <Link to="/shop?category=pendants" className="vine-back" data-testid="vine-back-btn">
@@ -555,6 +827,22 @@ export default function TrueVinePage() {
           <p className="vine-trust">
             Made to order · 3–4 weeks · Complimentary insured shipping
           </p>
+        </div>
+      </section>
+
+      {/* ─── ARCHIVE GALLERY ────────────────────────────────── */}
+      <section className="vine-gallery" data-testid="vine-gallery" aria-label="The True Vine archive">
+        <div className="vine-gallery-head">
+          <p className="vine-gallery-eyebrow">THE ARCHIVE</p>
+          <h2 className="vine-gallery-title">Five frames. One sacred object.</h2>
+        </div>
+        <div className="vine-gallery-grid">
+          {GALLERY.map((g) => (
+            <figure key={g.src} className="vine-gallery-cell">
+              <img src={g.src} alt={g.alt} loading="lazy" />
+              <figcaption>{g.label}</figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 
@@ -647,6 +935,65 @@ export default function TrueVinePage() {
             })}
           </div>
 
+          {/* Sacred Inscription */}
+          <p className="vine-section-label">SACRED INSCRIPTION</p>
+          <p className="vine-engraving-subtext">
+            Optional laser engraving on the reverse side of the pendant.
+          </p>
+
+          <div className="vine-engraving" data-testid="vine-engraving">
+            <label className="vine-engraving-toggle" data-testid="vine-engraving-toggle">
+              <input
+                type="checkbox"
+                checked={engravingEnabled}
+                onChange={(e) => setEngravingEnabled(e.target.checked)}
+                data-testid="vine-engraving-checkbox"
+              />
+              <span className="vine-engraving-box" aria-hidden="true">
+                <span className="vine-engraving-tick" />
+              </span>
+              <span className="vine-engraving-toggle-label">
+                Sacred Inscription
+              </span>
+              <span className="vine-engraving-toggle-price">+ $250 USD</span>
+            </label>
+            <p className="vine-engraving-helper">
+              Up to {ENGRAVING_MAX_CHARS} characters.
+            </p>
+
+            {engravingEnabled && (
+              <div className="vine-engraving-field" data-testid="vine-engraving-field">
+                <label htmlFor="vine-engraving-input" className="vine-engraving-field-label">
+                  Inscription
+                </label>
+                <textarea
+                  id="vine-engraving-input"
+                  className="vine-engraving-textarea"
+                  rows={2}
+                  value={engravingText}
+                  onChange={handleEngravingChange}
+                  placeholder={engravingPlaceholder}
+                  maxLength={ENGRAVING_MAX_CHARS}
+                  spellCheck={false}
+                  autoCapitalize="characters"
+                  data-testid="vine-engraving-input"
+                  aria-describedby="vine-engraving-rules vine-engraving-count"
+                />
+                <div className="vine-engraving-meta">
+                  <p id="vine-engraving-rules" className="vine-engraving-rules">
+                    Uppercase only. Permitted characters: A–Z · 0–9 · space · : . - /
+                  </p>
+                  <p id="vine-engraving-count" className="vine-engraving-count" data-testid="vine-engraving-count">
+                    {sanitizedEngraving.length} / {ENGRAVING_MAX_CHARS}
+                  </p>
+                </div>
+                <p className="vine-engraving-production">
+                  Laser engraved on the reverse side of the pendant before final finishing.
+                </p>
+              </div>
+            )}
+          </div>
+
           {/* Summary */}
           <div className="vine-summary" data-testid="vine-summary">
             <div className="vine-summary-row">
@@ -655,6 +1002,20 @@ export default function TrueVinePage() {
                 {currentTier.name} · {currentChain.label}
               </span>
             </div>
+            {engravingEnabled && (
+              <>
+                <div className="vine-summary-row" data-testid="vine-summary-engraving-line">
+                  <span className="vine-summary-label">Sacred Inscription</span>
+                  <span className="vine-summary-value">+ $250 USD</span>
+                </div>
+                <div className="vine-summary-row">
+                  <span className="vine-summary-label">Inscription</span>
+                  <span className="vine-summary-value vine-summary-inscription" data-testid="vine-summary-inscription-text">
+                    {sanitizedEngraving ? `"${sanitizedEngraving}"` : <em className="vine-summary-inscription-empty">— add text above —</em>}
+                  </span>
+                </div>
+              </>
+            )}
             <div className="vine-summary-row">
               <span className="vine-summary-label">SKU</span>
               <span className="vine-summary-value vine-summary-sku">{sku}</span>
