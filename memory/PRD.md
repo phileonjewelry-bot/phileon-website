@@ -17,6 +17,43 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-24 — THE TRUE VINE — Sacred Inscription (Laser Engraving) + Archive
+- **5-frame archive gallery** added between hero and craft notes
+  (`/the-true-vine/tv-02-front.jpg` · `tv-03-three-quarter.jpg` ·
+  `tv-04-vine-macro.png` · `tv-05-on-body.png` · `tv-06-in-hand.png`).
+  3-col desktop / 2-col tablet / 1-col mobile. Soft hover zoom +
+  bottom-left frame-index caption pills.
+- **Sacred Inscription** add-on configurator below CHAIN:
+  - Toggle: `Sacred Inscription · + $250 USD` (custom checkbox styling).
+  - Textarea (uppercase serif, 40-char cap) with rotating placeholder
+    drawn from JOHN 15:1 / ABIDE IN ME / PSALM 91 / IN HIS NAME /
+    FOR THE ONES WHO STAYED.
+  - Live sanitisation: auto-uppercase + strip everything except
+    `A–Z 0–9 space : . - /` + collapse repeat whitespace + trim.
+  - Character counter `12 / 40` + permitted-character rules line.
+  - Production note in-block: *"Laser engraved on the reverse side
+    of the pendant before final finishing."*
+- **Pricing**: $250 USD flat add-on layered on top of the live USD
+  tier price. Backend `pricing_engine.py` unchanged — engraving is
+  a frontend-only add-on (the sitewide cart validation already
+  operates with a $100 CAD tolerance and the USD-vs-CAD wiring is
+  a pre-existing global discrepancy out of scope).
+- **SKU**: `-ENGRAVED` suffix appended when active
+  (e.g. `TV-14Y-ROPE22-ENGRAVED`, `TV-18Y-ROPE24-ENGRAVED`).
+- **Cart payload** now carries `sku`, `engravingEnabled`,
+  `engravingMethod: "laser"`, `engravingText`. `variant` is a clean
+  display string (`"Laser engraved: JOHN 15:1"`) so the cart drawer
+  renders the inscription cleanly instead of an object dump.
+- **CartContext.addToCart** extended to preserve the new fields
+  (additive change; doesn't disturb other pages).
+- **Order summary** shows `Sacred Inscription · + $250 USD` and
+  `Inscription · "JOHN 15:1"` rows when active.
+- Testing agent iteration 7: 100% backend (20/20 cart validation
+  cases — no regression), 100% frontend (14/14 scenarios including
+  sanitisation, character counter, SKU suffix, price math,
+  localStorage payload).
+
+
 ### 2026-02-24 — THE TRUE VINE — Sacred Objects Pendant Live
 - New route `/the-true-vine` (alias `/products/the-true-vine`).
 - `TrueVinePage.jsx`: cinematic dark editorial pendant page. Hero image
