@@ -181,6 +181,32 @@ LIVE_PRICING_CONFIG = {
         "heirloom":   {"lockedBasePriceCad": 14667, "metalType": "14K", "weightGrams": 14.5, "lockedMetalReferenceCad": 1269},
         "collector":  {"lockedBasePriceCad": 19334, "metalType": "18K", "weightGrams": 17.2, "lockedMetalReferenceCad": 1935},
     },
+    # THE TRUE VINE — PHILEON Sacred Objects · Pendant
+    # 4 metal tiers × 4 chain options = 16 SKUs. Tier key format: "{metal}__{chain}".
+    # weightGrams=0 disables metal recalc; lockedBasePriceCad is the exact compound CAD total
+    # (pendant + chain add-on). Mirrors TrueVinePage.jsx METAL_TIERS + CHAIN_OPTIONS.
+    "theTrueVine": {
+        # FOUNDATION — Sterling Silver Vermeil ($2,200 pendant)
+        "foundation__pendant-only": {"lockedBasePriceCad": 2200, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "foundation__rope-20":      {"lockedBasePriceCad": 2650, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "foundation__rope-22":      {"lockedBasePriceCad": 2750, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "foundation__rope-24":      {"lockedBasePriceCad": 2850, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        # SIGNATURE — 10K Yellow Gold ($4,200 pendant)
+        "signature__pendant-only":  {"lockedBasePriceCad": 4200, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "signature__rope-20":       {"lockedBasePriceCad": 4850, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "signature__rope-22":       {"lockedBasePriceCad": 4950, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "signature__rope-24":       {"lockedBasePriceCad": 5100, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        # HEIRLOOM — 14K Yellow Gold ($5,200 pendant)
+        "heirloom__pendant-only":   {"lockedBasePriceCad": 5200, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "heirloom__rope-20":        {"lockedBasePriceCad": 6050, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "heirloom__rope-22":        {"lockedBasePriceCad": 6150, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "heirloom__rope-24":        {"lockedBasePriceCad": 6300, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        # COLLECTOR — 18K Yellow Gold ($6,800 pendant)
+        "collector__pendant-only":  {"lockedBasePriceCad": 6800, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "collector__rope-20":       {"lockedBasePriceCad": 8000, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "collector__rope-22":       {"lockedBasePriceCad": 8150, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "collector__rope-24":       {"lockedBasePriceCad": 8300, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
 }
 
 

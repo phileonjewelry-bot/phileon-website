@@ -137,13 +137,14 @@ export default function TrueVinePage() {
   }, [currentTier.sku, selectedChain]);
 
   const onAddToCart = () => {
+    const compoundTierKey = `${selectedTier}__${selectedChain}`;
     handleAddToCart({
       id: `the-true-vine-${selectedTier}-${selectedChain}`,
       name: `THE TRUE VINE — ${currentTier.metal} · ${currentChain.label}`,
       price: totalCad,
       currency: "CAD",
       productKey: "theTrueVine",
-      tierKey: selectedTier,
+      tierKey: compoundTierKey,
       metal: currentTier.metal,
       chain: currentChain.label,
       sku,

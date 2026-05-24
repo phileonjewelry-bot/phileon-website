@@ -65,6 +65,7 @@ const SHOP_COLLECTION_MAP = {
   'bamburgh': 'collective',
   'drape': 'collective',
   'bape': 'collective',
+  'the-true-vine': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -590,6 +591,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 5,
+  },
+  {
+    id: 'the-true-vine',
+    name: 'THE TRUE VINE',
+    slug: 'the-true-vine',
+    materialLine: 'Sacred Objects · Pendant · Open Mesh Arch · Raised Cross · Vine Relief',
+    imageUrl: '/the-true-vine/the-true-vine-hero.jpg',
+    href: '/the-true-vine',
+    price_range: 'From $1,650 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'pendants',
+    audience: ['gentlemens-club', 'collective'],
+    tags: ['Gents', 'Collective', 'Pendant', 'Sacred Objects', 'Yellow Gold', 'Cross'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 6,
   },
 ];
 

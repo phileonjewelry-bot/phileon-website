@@ -62,6 +62,7 @@ import DrewFacePage from "@/pages/DrewFacePage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
 import LisaPage from "@/pages/LisaPage";
 import LadyJayPage from "@/pages/LadyJayPage";
+import TrueVinePage from "@/pages/TrueVinePage";
 import AtelierPage from "@/pages/AtelierPage";
 import WishlistPage from "@/pages/WishlistPage";
 import Checkout from "@/pages/Checkout";
@@ -173,6 +174,8 @@ function App() {
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
             <Route path="/lisa" element={<LisaPage />} />
             <Route path="/lady-jay" element={<LadyJayPage />} />
+            <Route path="/the-true-vine" element={<TrueVinePage />} />
+            <Route path="/products/the-true-vine" element={<TrueVinePage />} />
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/custom" element={<AtelierPage />} />
             <Route path="/commission" element={<AtelierPage />} />
