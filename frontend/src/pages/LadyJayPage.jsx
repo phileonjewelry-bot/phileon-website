@@ -1216,15 +1216,15 @@ export default function LadyJayPage() {
           <source src="/videos/lady-jay/lady-jay-hero.mp4" type="video/mp4" />
         </video>
 
-        {/* DARK OVERLAY — lighter on mobile, slightly stronger on desktop */}
-        <div className="absolute inset-0 bg-black/22 md:bg-black/30" />
+        {/* DARK OVERLAY — let the footage breathe */}
+        <div className="absolute inset-0 bg-black/15 md:bg-black/22" />
 
         {/* SAPPHIRE GRADIENT — softer falloff so the ring stays alive */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(circle at center, rgba(16,33,64,0.12) 0%, rgba(0,0,0,0.42) 72%)",
+              "radial-gradient(circle at center, rgba(16,33,64,0.10) 0%, rgba(0,0,0,0.32) 75%)",
           }}
         />
 
@@ -1237,24 +1237,17 @@ export default function LadyJayPage() {
           }}
         />
 
-        {/* BACK LINK — preserved */}
-        <Link
-          to="/shop?category=rings"
-          className="absolute top-6 left-6 z-20 inline-flex items-center gap-2 text-[11px] tracking-[0.3em] uppercase"
-          style={{ color: "rgba(245,241,234,0.55)" }}
-          data-testid="lady-jay-back-btn"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>RETURN</span>
-        </Link>
-
-        {/* CONTENT */}
+        {/* CONTENT — campaign film paused mid-scene */}
         <div className="relative z-10 flex h-full items-end px-6 pb-10 md:px-16 md:pb-16">
           <div className="max-w-2xl">
             {/* EYEBROW */}
             <div
-              className="mb-4 text-[10px] tracking-[0.45em] uppercase"
-              style={{ color: "rgba(201,162,77,0.72)" }}
+              className="mb-4 uppercase"
+              style={{
+                fontSize: "11px",
+                letterSpacing: "0.32em",
+                color: "rgba(201,162,77,0.82)",
+              }}
               data-testid="lady-jay-meta"
             >
               PHILEON — TRIBUTE SERIES
@@ -1264,7 +1257,7 @@ export default function LadyJayPage() {
             <h1
               className="font-light uppercase leading-none"
               style={{
-                fontSize: "clamp(2.6rem, 11vw, 7.5rem)",
+                fontSize: "clamp(2.7rem, 10vw, 7rem)",
                 letterSpacing: "-0.035em",
                 color: "#f5f1ea",
                 fontFamily: "'Cormorant Garamond', serif",
@@ -1274,72 +1267,31 @@ export default function LadyJayPage() {
               LADY JAY
             </h1>
 
-            {/* COPY */}
+            {/* ONE LINE */}
             <p
-              className="ladyjay-hero-copy mt-6 max-w-xl"
+              className="mt-5 uppercase"
               style={{
-                color: "rgba(245,241,234,0.72)",
-                letterSpacing: "0.02em",
+                fontSize: "10px",
+                letterSpacing: "0.28em",
+                color: "rgba(255,255,255,0.58)",
               }}
-              data-testid="lady-jay-tagline"
+              data-testid="lady-jay-season-line"
             >
-              Some pieces celebrate a moment.
-              <br />
-              Others become part of the memory that survives it.
-            </p>
-
-            {/* FINAL LINE */}
-            <p
-              className="ladyjay-hero-finalline mt-5 uppercase"
-              style={{ color: "rgba(201,162,77,0.68)" }}
-            >
-              FOR THE CITY. FOR THE COLD NIGHTS. FOR THE ONES WHO STAYED.
+              2026 SEASON ONLY
             </p>
           </div>
         </div>
 
         {/* BOTTOM FADE — shorter + softer so the video stays present */}
         <div
-          className="absolute bottom-0 left-0 w-full pointer-events-none h-28 md:h-40"
+          className="absolute bottom-0 left-0 w-full pointer-events-none h-24 md:h-32"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.78), rgba(0,0,0,0))",
+              "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))",
           }}
         />
 
-        {/* SCROLL INDICATOR — discovered, not instructional */}
-        <div
-          className="ladyjay-scroll-cue"
-          aria-hidden="true"
-          data-testid="lady-jay-scroll-cue"
-        >
-          <style>{`
-            .ladyjay-scroll-cue {
-              position: absolute;
-              left: 50%;
-              bottom: 18px;
-              transform: translateX(-50%);
-              z-index: 11;
-              font-family: 'Inter', sans-serif;
-              font-size: 10px;
-              letter-spacing: 0.35em;
-              text-transform: uppercase;
-              color: rgba(245, 241, 234, 0.52);
-              animation: ladyjayScrollFloat 4s ease-in-out infinite;
-              pointer-events: none;
-              white-space: nowrap;
-            }
-            @keyframes ladyjayScrollFloat {
-              0%   { transform: translate(-50%, 0); opacity: 0.52; }
-              50%  { transform: translate(-50%, 6px); opacity: 0.75; }
-              100% { transform: translate(-50%, 0); opacity: 0.52; }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .ladyjay-scroll-cue { animation: none !important; }
-            }
-          `}</style>
-          DISCOVER THE TRIBUTE ↓
-        </div>
+        {/* SCROLL INDICATOR removed — hero now reads as a paused film, no instructional cues. */}
       </section>
 
       {/* ─── SEASON URGENCY STRIP ──────────────────────────── */}
