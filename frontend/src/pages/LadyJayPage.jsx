@@ -1167,14 +1167,7 @@ export default function LadyJayPage() {
         <span>RETURN</span>
       </Link>
 
-      {/* ─── MARQUEE ──────────────────────────────────────── */}
-      <div className="ladyjay-marquee" data-testid="lady-jay-marquee">
-        <div className="ladyjay-marquee-track">
-          {[0, 1, 2, 3].map((i) => (
-            <span key={i}>{MARQUEE_TEXT}</span>
-          ))}
-        </div>
-      </div>
+      {/* MARQUEE removed — same info already lives in the hero + urgency strip. */}
 
       {/* ─── HERO — Cinematic video ────────────────────────── */}
       <section
@@ -1182,9 +1175,9 @@ export default function LadyJayPage() {
         data-testid="lady-jay-hero"
       >
         <style>{`
-          .ladyjay-hero-section { height: 50vh; }
-          @media (min-width: 768px) { .ladyjay-hero-section { height: 64vh; } }
-          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(78vh, 720px); } }
+          .ladyjay-hero-section { height: 44vh; }
+          @media (min-width: 768px) { .ladyjay-hero-section { height: 60vh; } }
+          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(72vh, 680px); } }
 
           /* Mobile hero copy — quieter so the ring stays the hero */
           .ladyjay-hero-copy {
@@ -1217,7 +1210,7 @@ export default function LadyJayPage() {
         </video>
 
         {/* DARK OVERLAY — let the footage breathe */}
-        <div className="absolute inset-0 bg-black/15 md:bg-black/22" />
+        <div className="absolute inset-0 bg-black/10 md:bg-black/18" />
 
         {/* SAPPHIRE GRADIENT — softer falloff so the ring stays alive */}
         <div
@@ -1238,7 +1231,7 @@ export default function LadyJayPage() {
         />
 
         {/* CONTENT — campaign film paused mid-scene */}
-        <div className="relative z-10 flex h-full items-end px-6 pb-10 md:px-16 md:pb-16">
+        <div className="relative z-10 flex h-full items-end px-6 pb-12 md:px-16 md:pb-20">
           <div className="max-w-2xl">
             {/* EYEBROW */}
             <div
@@ -1266,19 +1259,6 @@ export default function LadyJayPage() {
             >
               LADY JAY
             </h1>
-
-            {/* ONE LINE */}
-            <p
-              className="mt-5 uppercase"
-              style={{
-                fontSize: "10px",
-                letterSpacing: "0.28em",
-                color: "rgba(255,255,255,0.58)",
-              }}
-              data-testid="lady-jay-season-line"
-            >
-              2026 SEASON ONLY
-            </p>
           </div>
         </div>
 
