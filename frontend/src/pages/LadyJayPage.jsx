@@ -1231,13 +1231,13 @@ export default function LadyJayPage() {
         />
 
         {/* CONTENT — campaign film paused mid-scene */}
-        <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-16 md:pb-28">
-          <div className="mt-auto max-w-2xl">
+        <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-8 md:px-16 md:pb-28">
+          <div className="mt-auto max-w-2xl translate-y-[12%] md:translate-y-0">
             {/* TITLE */}
             <h1
               className="font-light uppercase"
               style={{
-                fontSize: "clamp(2.25rem, 8vw, 6rem)",
+                fontSize: "clamp(2.2rem, 8.5vw, 6.5rem)",
                 lineHeight: "0.92",
                 letterSpacing: "-0.045em",
                 color: "#f5f1ea",
