@@ -17,6 +17,34 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-24 — THE TRUE VINE — Sacred Objects Pendant Live
+- New route `/the-true-vine` (alias `/products/the-true-vine`).
+- `TrueVinePage.jsx`: cinematic dark editorial pendant page. Hero image
+  + dual-column layout, three craft notes (THE ARCH · THE VINE · THE
+  COMPOSITION), 6 piece-detail specs, and a metal + chain configurator.
+- 4 metal tiers × 4 chain options = **16 compound SKUs**. Tier key
+  format: `{metal}__{chain}` (e.g. `heirloom__rope-22`).
+- CAD compound pricing locked in `livePricingConfig.js` AND mirrored
+  in `backend/pricing_engine.py` (16 entries each):
+  - Foundation (Sterling Vermeil) pendant CAD $2,200 → $1,650 USD
+  - Signature (10K) pendant CAD $4,200 → $3,000 USD
+  - Heirloom (14K) pendant CAD $5,200 → $4,000 USD
+  - Collector (18K) pendant CAD $6,800 → $5,000 USD
+  - Chain add-ons vary by tier (rope-20/22/24).
+- Displayed prices use sitewide USD lock via `useLiveTierPrices` →
+  `cadToUsdLuxury` (each compound SKU is its own tier in the config).
+- Cart payload posts the USD value as `price`/`lockedPriceCad` per
+  sitewide convention so the cart drawer's "USD" label is accurate.
+- Catalog wired into `ShopDropPage.jsx` CORE_PRODUCTS:
+  audience `['gentlemens-club','collective']`, category `pendants`,
+  card label `From $1,650 USD`, hero JPG as catalog image.
+- `SHOP_COLLECTION_MAP['the-true-vine']: 'collective'`.
+- Backend validation verified: all 16 SKUs return valid:true; tampered
+  $4,000 on `signature__rope-22` (real $4,950 CAD) correctly rejected.
+- Testing agent: 100% backend (20/20 pytest cases), 100% frontend
+  (`/app/backend/tests/test_true_vine.py`).
+
+
 ### 2026-02-23 — LADY JAY Mobile Hero + PDP Refinement
 - **Hero height responsive** — 68vh mobile / 82vh tablet /
   `min(100vh, 920px)` desktop. Cinematic on phones, capped on 4K.

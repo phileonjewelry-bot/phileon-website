@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { useLiveTierPrices } from "@/hooks/useLivePrice";
 
 /**
  * THE TRUE VINE — PHILEON Sacred Objects · Pendant
@@ -9,8 +10,9 @@ import { useAddToCart } from "../hooks/useAddToCart";
  * Finished object. Direct purchase, no consultation flow.
  * Open mesh arch · raised cross · vine relief.
  *
- * Hardcoded CAD pricing per brief — no live metals recalculation.
- * Cart payload posts CAD price; sitewide cart handles currency display.
+ * 4 metal tiers × 4 chain options = 16 compound SKUs in livePricingConfig.theTrueVine.
+ * SKU key format: "{tier}__{chain}" (e.g. "heirloom__rope-22").
+ * Displayed prices are USD via cadToUsdLuxury (sitewide USD lock).
  *
  * Namespace: .vine-
  */
@@ -25,7 +27,6 @@ const METAL_TIERS = [
     subtitle: "Sterling Silver + heavy yellow gold plating",
     badge: "FOUNDATION",
     metal: "Sterling Silver Vermeil",
-    pendantCad: 2200,
   },
   {
     id: "signature",
@@ -34,7 +35,6 @@ const METAL_TIERS = [
     subtitle: "Solid 10K yellow gold",
     badge: "SIGNATURE",
     metal: "10K Yellow Gold",
-    pendantCad: 4200,
   },
   {
     id: "heirloom",
@@ -43,7 +43,6 @@ const METAL_TIERS = [
     subtitle: "Solid 14K yellow gold",
     badge: "HEIRLOOM",
     metal: "14K Yellow Gold",
-    pendantCad: 5200,
   },
   {
     id: "collector",
@@ -52,36 +51,14 @@ const METAL_TIERS = [
     subtitle: "Solid 18K yellow gold",
     badge: "COLLECTOR",
     metal: "18K Yellow Gold",
-    pendantCad: 6800,
   },
 ];
 
-// Chain add-ons by tier id → addCad
 const CHAIN_OPTIONS = [
-  {
-    id: "pendant-only",
-    label: "Pendant Only",
-    short: "No chain",
-    addCad: { foundation: 0, signature: 0, heirloom: 0, collector: 0 },
-  },
-  {
-    id: "rope-20",
-    label: '20" Rope Chain',
-    short: "20 inches",
-    addCad: { foundation: 450, signature: 650, heirloom: 850, collector: 1200 },
-  },
-  {
-    id: "rope-22",
-    label: '22" Rope Chain',
-    short: "22 inches",
-    addCad: { foundation: 550, signature: 750, heirloom: 950, collector: 1350 },
-  },
-  {
-    id: "rope-24",
-    label: '24" Rope Chain',
-    short: "24 inches",
-    addCad: { foundation: 650, signature: 900, heirloom: 1100, collector: 1500 },
-  },
+  { id: "pendant-only", label: "Pendant Only", short: "No chain" },
+  { id: "rope-20",      label: '20" Rope Chain', short: "20 inches" },
+  { id: "rope-22",      label: '22" Rope Chain', short: "22 inches" },
+  { id: "rope-24",      label: '24" Rope Chain', short: "24 inches" },
 ];
 
 const SPECS = [
@@ -108,11 +85,12 @@ const CRAFT_NOTES = [
   },
 ];
 
-const fmtCad = (n) => `$${n.toLocaleString("en-CA")} CAD`;
+const fmtUsd = (n) => `$${Number(n || 0).toLocaleString("en-US")} USD`;
 
 export default function TrueVinePage() {
   const [isMounted, setIsMounted] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const tierPricesLive = useLiveTierPrices("theTrueVine");
 
   // Default per brief: 14K Yellow Gold · 22" Rope Chain
   const [selectedTier, setSelectedTier] = useState("heirloom");
@@ -125,8 +103,14 @@ export default function TrueVinePage() {
 
   const currentTier = METAL_TIERS.find((t) => t.id === selectedTier) || METAL_TIERS[2];
   const currentChain = CHAIN_OPTIONS.find((c) => c.id === selectedChain) || CHAIN_OPTIONS[2];
-  const chainAdd = currentChain.addCad[selectedTier] || 0;
-  const totalCad = currentTier.pendantCad + chainAdd;
+
+  // Compound SKU key for backend pricing config lookup
+  const compoundTierKey = `${selectedTier}__${selectedChain}`;
+  const pendantOnlyKey = `${selectedTier}__pendant-only`;
+
+  // USD price for current combo, falling back to pendant-only if hook not yet ready
+  const totalUsd = tierPricesLive?.[compoundTierKey]?.price || 0;
+  const pendantUsd = tierPricesLive?.[pendantOnlyKey]?.price || 0;
 
   const sku = useMemo(() => {
     const chainToken =
@@ -137,12 +121,10 @@ export default function TrueVinePage() {
   }, [currentTier.sku, selectedChain]);
 
   const onAddToCart = () => {
-    const compoundTierKey = `${selectedTier}__${selectedChain}`;
     handleAddToCart({
       id: `the-true-vine-${selectedTier}-${selectedChain}`,
       name: `THE TRUE VINE — ${currentTier.metal} · ${currentChain.label}`,
-      price: totalCad,
-      currency: "CAD",
+      price: totalUsd,
       productKey: "theTrueVine",
       tierKey: compoundTierKey,
       metal: currentTier.metal,
@@ -619,6 +601,7 @@ export default function TrueVinePage() {
           <div className="vine-tiers" role="radiogroup" aria-label="Metal selection" data-testid="vine-tiers">
             {METAL_TIERS.map((t) => {
               const isSel = selectedTier === t.id;
+              const tierPendantUsd = tierPricesLive?.[`${t.id}__pendant-only`]?.price || 0;
               return (
                 <button
                   key={t.id}
@@ -632,7 +615,7 @@ export default function TrueVinePage() {
                   <span className="vine-tier-badge">{t.badge}</span>
                   <span className="vine-tier-name">{t.name}</span>
                   <span className="vine-tier-sub">{t.subtitle}</span>
-                  <span className="vine-tier-price">{fmtCad(t.pendantCad)}</span>
+                  <span className="vine-tier-price">{fmtUsd(tierPendantUsd)}</span>
                 </button>
               );
             })}
@@ -643,7 +626,8 @@ export default function TrueVinePage() {
           <div className="vine-chains" role="radiogroup" aria-label="Chain selection" data-testid="vine-chains">
             {CHAIN_OPTIONS.map((c) => {
               const isSel = selectedChain === c.id;
-              const add = c.addCad[selectedTier] || 0;
+              const comboUsd = tierPricesLive?.[`${selectedTier}__${c.id}`]?.price || 0;
+              const addUsd = Math.max(0, comboUsd - pendantUsd);
               return (
                 <button
                   key={c.id}
@@ -655,8 +639,8 @@ export default function TrueVinePage() {
                   data-testid={`vine-chain-${c.id}`}
                 >
                   <p className="vine-chain-name">{c.label}</p>
-                  <p className={`vine-chain-add ${add === 0 ? "vine-chain-free" : ""}`}>
-                    {add === 0 ? "Included" : `+ ${fmtCad(add)}`}
+                  <p className={`vine-chain-add ${addUsd === 0 ? "vine-chain-free" : ""}`}>
+                    {addUsd === 0 ? "Included" : `+ ${fmtUsd(addUsd)}`}
                   </p>
                 </button>
               );
@@ -678,12 +662,11 @@ export default function TrueVinePage() {
             <div className="vine-summary-row vine-summary-row--price">
               <span className="vine-summary-label">Today's price</span>
               <span className="vine-summary-price" data-testid="vine-summary-price">
-                {fmtCad(totalCad)}
+                {fmtUsd(totalUsd)}
               </span>
             </div>
             <p className="vine-summary-note">
-              All prices in Canadian Dollars · pendant {fmtCad(currentTier.pendantCad)}
-              {chainAdd > 0 ? ` + chain ${fmtCad(chainAdd)}` : ""}
+              Prices reflect today's metals market · made to order in 3–4 weeks
             </p>
           </div>
 
