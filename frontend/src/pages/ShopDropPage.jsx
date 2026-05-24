@@ -1028,6 +1028,21 @@ const ShopDropPage = () => {
                         {product.price_range && (
                           <p className="shop-drop__card-price"><LiveFromPrice slug={product.slug} fallback={product.price_range} /></p>
                         )}
+                        {product.slug === 'the-true-vine' && (
+                          <p
+                            data-testid="vine-card-inscription-badge"
+                            style={{
+                              fontSize: '10px',
+                              letterSpacing: '0.18em',
+                              textTransform: 'uppercase',
+                              color: 'rgba(201,169,110,0.62)',
+                              marginTop: '6px',
+                              marginBottom: 0,
+                            }}
+                          >
+                            + Sacred Inscription available
+                          </p>
+                        )}
                       </div>
                     </a>
                   </div>
@@ -1160,6 +1175,21 @@ const ShopDropPage = () => {
                           <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                           {product.price_range && (
                             <p className="shop-drop__card-price">{product.price_range}</p>
+                          )}
+                          {product.slug === 'the-true-vine' && (
+                            <p
+                              data-testid="vine-card-inscription-badge"
+                              style={{
+                                fontSize: '10px',
+                                letterSpacing: '0.18em',
+                                textTransform: 'uppercase',
+                                color: 'rgba(201,169,110,0.62)',
+                                marginTop: '6px',
+                                marginBottom: 0,
+                              }}
+                            >
+                              + Sacred Inscription available
+                            </p>
                           )}
                         </div>
                       </a>
