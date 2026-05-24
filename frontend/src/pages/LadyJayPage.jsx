@@ -1231,27 +1231,15 @@ export default function LadyJayPage() {
         />
 
         {/* CONTENT — campaign film paused mid-scene */}
-        <div className="relative z-10 flex h-full items-end px-6 pb-12 md:px-16 md:pb-20">
+        <div className="relative z-10 flex h-full items-end px-6 pb-14 md:px-16 md:pb-24">
           <div className="max-w-2xl">
-            {/* EYEBROW */}
-            <div
-              className="mb-4 uppercase"
-              style={{
-                fontSize: "11px",
-                letterSpacing: "0.32em",
-                color: "rgba(201,162,77,0.82)",
-              }}
-              data-testid="lady-jay-meta"
-            >
-              PHILEON — TRIBUTE SERIES
-            </div>
-
             {/* TITLE */}
             <h1
-              className="font-light uppercase leading-none"
+              className="font-light uppercase"
               style={{
-                fontSize: "clamp(2.7rem, 10vw, 7rem)",
-                letterSpacing: "-0.035em",
+                fontSize: "clamp(2.25rem, 8vw, 6rem)",
+                lineHeight: "0.92",
+                letterSpacing: "-0.045em",
                 color: "#f5f1ea",
                 fontFamily: "'Cormorant Garamond', serif",
               }}
@@ -1259,6 +1247,43 @@ export default function LadyJayPage() {
             >
               LADY JAY
             </h1>
+
+            {/* DIVIDER */}
+            <div
+              aria-hidden="true"
+              className="mt-6"
+              style={{
+                width: "36px",
+                height: "1px",
+                background: "rgba(201,162,77,0.35)",
+              }}
+            />
+
+            {/* EYEBROW — now beneath the title */}
+            <div
+              className="mt-3 uppercase"
+              style={{
+                fontSize: "10px",
+                letterSpacing: "0.34em",
+                color: "rgba(201,162,77,0.72)",
+              }}
+              data-testid="lady-jay-meta"
+            >
+              PHILEON — TRIBUTE SERIES
+            </div>
+
+            {/* SEASON LINE — quietest of all */}
+            <p
+              className="mt-3 uppercase"
+              style={{
+                fontSize: "9px",
+                letterSpacing: "0.28em",
+                color: "rgba(255,255,255,0.48)",
+              }}
+              data-testid="lady-jay-season-line"
+            >
+              2026 SEASON ONLY
+            </p>
           </div>
         </div>
 
