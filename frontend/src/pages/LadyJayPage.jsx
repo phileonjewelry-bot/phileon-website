@@ -1182,9 +1182,9 @@ export default function LadyJayPage() {
         data-testid="lady-jay-hero"
       >
         <style>{`
-          .ladyjay-hero-section { height: 68vh; }
-          @media (min-width: 768px) { .ladyjay-hero-section { height: 82vh; } }
-          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(100vh, 920px); } }
+          .ladyjay-hero-section { height: 50vh; }
+          @media (min-width: 768px) { .ladyjay-hero-section { height: 64vh; } }
+          @media (min-width: 1024px) { .ladyjay-hero-section { height: min(78vh, 720px); } }
 
           /* Mobile hero copy — quieter so the ring stays the hero */
           .ladyjay-hero-copy {
@@ -1637,9 +1637,6 @@ export default function LadyJayPage() {
                 loading={i === 0 ? "eager" : "lazy"}
                 decoding="async"
               />
-              <span className="ladyjay-archive-cell-label">
-                {String(i + 1).padStart(2, "0")} · {g.label}
-              </span>
             </button>
           ))}
         </div>
