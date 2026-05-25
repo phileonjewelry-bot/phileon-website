@@ -17,6 +17,43 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-25 — PORTA AUREA — Signet Objects Ring Live
+- New product page `/porta-aurea` (alias `/products/porta-aurea`) —
+  `PortaAureaPage.jsx`. Cinematic dark editorial layout in warm gold
+  palette (champagne `#dcb86e` / ink `#0a0806`).
+- **Positioning**: PHILEON SIGNET OBJECTS · "The Golden Gate". Tagline:
+  *"Some doors open for everyone. This one doesn't."*
+- **Page flow**: Hero → Archive (1 frame live, 1 PENDING slot) →
+  Composition · Structure · Craft → Specifications (8 rows) →
+  Configurator → Final Word.
+- **Configurator** (3 metals × 2 stones × 18 sizes):
+  - Metal: SIGNATURE (10K) · **HEIRLOOM (14K, FEATURED, default)** ·
+    COLLECTOR (18K). USD via `useLiveTierPrices("portaAurea")` →
+    $5,500 / $7,000 / $8,500.
+  - Stone: **Lab Ruby (default)** · Natural Ruby (note "Natural ruby
+    available by custom quote." — no enquire gate, atelier confirms
+    natural-stone variance at fulfillment).
+  - Size: shared `RingSizeSelector`, default US 9, full US 4–12 + Custom,
+    wide-band notice suppressed in favour of the bespoke compact
+    `.porta-sizing-note` block (architectural profile guidance: 18×18mm
+    face · 28mm total height · 6.5mm band · "size up by 0.5 for a
+    relaxed fit").
+  - CTA: **ADD TO CART** (no consult/enquire path). Trust line below:
+    *"Made to order · 4–6 weeks · Complimentary insured shipping."*
+- **Pricing**: CAD bases $7,200 / $9,000 / $11,500 mirrored in
+  `livePricingConfig.js` + `pricing_engine.LIVE_PRICING_CONFIG`. All
+  3 SKUs validate via `/api/validate-cart` within tolerance; tampered
+  $5,000 on Heirloom correctly rejected ($4,000 diff).
+- **Catalog**: `ShopDropPage.jsx` CORE_PRODUCTS adds Porta Aurea
+  under Gents → Rings + Collective (audience
+  `['gentlemens-club','collective']`, category `rings`,
+  `From $5,500 USD`).
+- **SKU contract**: `PA-{10Y|14Y|18Y}-{LAB|NAT}-SZ{7_5|CUSTOM}`.
+  Cart payload carries `productKey`, `tierKey`, `metal`, `stone`,
+  `ringSize`, `ringSizeLabel`, clean variant string `"Lab Ruby · US 9"`.
+- **Pending**: hero image at `/porta-aurea/porta-aurea-hero.jpg` (folder
+  created; drop the file in to populate the hero + archive slot 01).
+
 ### 2026-02-24 — THE TRUE VINE — Sacred Inscription (Laser Engraving) + Archive
 - **5-frame archive gallery** added between hero and craft notes
   (`/the-true-vine/tv-02-front.jpg` · `tv-03-three-quarter.jpg` ·

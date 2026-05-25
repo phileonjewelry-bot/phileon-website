@@ -66,6 +66,7 @@ const SHOP_COLLECTION_MAP = {
   'drape': 'collective',
   'bape': 'collective',
   'the-true-vine': 'collective',
+  'porta-aurea': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -608,6 +609,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 6,
+  },
+  {
+    id: 'porta-aurea',
+    name: 'PORTA AUREA',
+    slug: 'porta-aurea',
+    materialLine: 'Signet Objects · Yellow Gold · Emerald-Cut Ruby · Greek Key Bezel',
+    imageUrl: '/porta-aurea/porta-aurea-hero.jpg',
+    href: '/porta-aurea',
+    price_range: 'From $5,500 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['gentlemens-club', 'collective'],
+    tags: ['Gents', 'Collective', 'Signet', 'Ring', 'Yellow Gold', 'Ruby'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 7,
   },
 ];
 

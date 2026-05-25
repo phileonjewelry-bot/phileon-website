@@ -207,6 +207,14 @@ LIVE_PRICING_CONFIG = {
         "collector__rope-22":       {"lockedBasePriceCad": 8150, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "collector__rope-24":       {"lockedBasePriceCad": 8300, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+    # PORTA AUREA — PHILEON Signet Objects · Ring
+    # 3 metal tiers (10K / 14K / 18K Yellow Gold), square emerald-cut ruby centre.
+    # CAD bases per brief → cadToUsdLuxury produces $5,500 / $7,000 / $8,500 USD.
+    "portaAurea": {
+        "signature": {"lockedBasePriceCad": 7200,  "metalType": "10K", "weightGrams": 23,   "lockedMetalReferenceCad": 1438},
+        "heirloom":  {"lockedBasePriceCad": 9000,  "metalType": "14K", "weightGrams": 25.5, "lockedMetalReferenceCad": 2231},
+        "collector": {"lockedBasePriceCad": 11500, "metalType": "18K", "weightGrams": 27.5, "lockedMetalReferenceCad": 3094},
+    },
 }
 
 
