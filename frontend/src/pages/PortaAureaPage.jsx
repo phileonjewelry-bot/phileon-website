@@ -744,7 +744,7 @@ export default function PortaAureaPage() {
       <section className="porta-archive" data-testid="porta-archive">
         <div className="porta-archive-head">
           <p className="porta-archive-eyebrow">THE ARCHIVE</p>
-          <h2 className="porta-archive-title">The signet, studied.</h2>
+          <h2 className="porta-archive-title">Ten frames. One gate.</h2>
         </div>
         <div className="porta-archive-grid">
           {GALLERY.map((g) => (
