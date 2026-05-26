@@ -67,6 +67,7 @@ const SHOP_COLLECTION_MAP = {
   'bape': 'collective',
   'the-true-vine': 'collective',
   'porta-aurea': 'collective',
+  'coogi-dna-tag': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -626,6 +627,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 7,
+  },
+  {
+    id: 'coogi-dna-tag',
+    name: 'COOGI DNA TAG',
+    slug: 'coogi-dna-tag',
+    materialLine: 'Tribute Series · Snow & Sand · 10K Gold · Multi-Stone · Diamond Pavé',
+    imageUrl: '/coogi-dna/coogi-dna-hero.png',
+    href: '/coogi-dna-tag',
+    price_range: '$10,000 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'pendants',
+    audience: ['gentlemens-club', 'collective'],
+    tags: ['Gents', 'Collective', 'Pendant', 'Tribute Series', 'COOGI', 'Multi-Stone'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 8,
   },
 ];
 

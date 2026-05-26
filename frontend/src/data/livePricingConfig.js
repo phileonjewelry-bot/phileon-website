@@ -249,6 +249,16 @@ const livePricingConfig = {
     collector: { lockedBasePriceCad: 11500, metalType: "18K", weightGrams: 27.5, lockedMetalReferenceCad: 3094 },
   },
 
+  // COOGI DNA TAG — PHILEON × COOGI · Tribute Series · Pendant
+  // Two static variants, both 10K with multi-stone baguette field + pavé
+  // diamond border. CAD base is identical for both variants ($13,334) →
+  // cadToUsdLuxury produces $10,000 USD each. weightGrams 0 disables metals
+  // recalc (the tribute price holds independent of daily metal swings).
+  coogiDnaTag: {
+    snow: { lockedBasePriceCad: 13334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    sand: { lockedBasePriceCad: 13334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)
   // pricingPending: lockedBasePriceCad placeholders below are NOT shown on the
   // page (page renders "Pricing on Inquiry") but the structure must exist so

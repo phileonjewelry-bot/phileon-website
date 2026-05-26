@@ -215,6 +215,14 @@ LIVE_PRICING_CONFIG = {
         "heirloom":  {"lockedBasePriceCad": 9000,  "metalType": "14K", "weightGrams": 25.5, "lockedMetalReferenceCad": 2231},
         "collector": {"lockedBasePriceCad": 11500, "metalType": "18K", "weightGrams": 27.5, "lockedMetalReferenceCad": 3094},
     },
+    # COOGI DNA TAG — PHILEON × COOGI · Tribute Series · Pendant
+    # Two static variants (Snow 10K white gold · Sand 10K rose gold) at the
+    # same CAD base ($13,334) → $10,000 USD each. weightGrams 0 disables
+    # metals recalc — tribute pricing holds independent of daily swings.
+    "coogiDnaTag": {
+        "snow": {"lockedBasePriceCad": 13334, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "sand": {"lockedBasePriceCad": 13334, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
 }
 
 

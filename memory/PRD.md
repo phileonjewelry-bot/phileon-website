@@ -17,6 +17,29 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 
 ---
 
+### 2026-02-25 — COOGI DNA TAG — Tribute Series Pendant Live
+- New product page `/coogi-dna-tag` (alias `/products/coogi-dna-tag`).
+- **Positioning**: PHILEON × COOGI · Tribute Series. Tagline:
+  *"The pattern remembers."*
+- **Variants** (2 static, both 10K, identical pricing):
+  - Snow · 10K White Gold (default) — SKU `CDT-SNOW-10W`.
+  - Sand · 10K Rose Gold — SKU `CDT-SAND-10R`.
+- **Pricing**: Both at CAD $13,334 → **$10,000 USD** each. Mirrored in
+  `livePricingConfig.coogiDnaTag` + `pricing_engine`. Validation works
+  (server $13,350 vs client $13,334 = $16 diff within tolerance;
+  tampered $5K Snow correctly rejected).
+- **Page flow**: Hero (dual image + variant column) → Spec Strip →
+  Composition (9-stone mosaic with natural colours) → The Two Runs
+  (side-by-side compare with snow/sand gradient accents) → Craft →
+  Final Word with repeat toggle + CTA.
+- **Hero treatment**: full dual image static — the side-by-side IS the
+  editorial. Variant toggle updates text + spec + applies a subtle
+  rose-warm filter on Sand.
+- **Skipped from mockup**: global custom cursor, corner brackets, bottom
+  marquee (would clash with sitewide UX / existing metals ticker).
+- **Catalog**: card live under Gents → Pendants + Collective with
+  image `/coogi-dna/coogi-dna-hero.png` and "$10,000 USD".
+
 ### 2026-02-25 — PORTA AUREA — Signet Objects Ring Live
 - New product page `/porta-aurea` (alias `/products/porta-aurea`) —
   `PortaAureaPage.jsx`. Cinematic dark editorial layout in warm gold
