@@ -533,7 +533,29 @@ export default function CoogiDnaTagPage() {
           letter-spacing: 0.18em;
           text-transform: uppercase;
           color: var(--cream);
-          margin: 0 0 30px;
+          margin: 0 0 14px;
+        }
+        .coogi-thermal-bar {
+          width: 140px;
+          height: 1px;
+          margin: 18px 0 28px;
+          background: linear-gradient(
+            90deg,
+            rgba(203, 213, 224, 0.75),
+            rgba(201, 168, 76, 0.55),
+            rgba(212, 149, 106, 0.75)
+          );
+          opacity: 0.55;
+          transform-origin: center;
+          animation: coogiTemperatureBreath 8s ease-in-out infinite;
+        }
+        @media (min-width: 700px) { .coogi-thermal-bar { width: 180px; } }
+        @media (prefers-reduced-motion: reduce) {
+          .coogi-thermal-bar { animation: none; opacity: 0.55; transform: none; }
+        }
+        @keyframes coogiTemperatureBreath {
+          0%, 100% { opacity: 0.42; transform: scaleX(0.96); }
+          50%      { opacity: 0.68; transform: scaleX(1); }
         }
         .coogi-standard-row {
           display: grid;
@@ -711,6 +733,7 @@ export default function CoogiDnaTagPage() {
           </p>
           <div className="coogi-standard-divider" />
           <p className="coogi-standard-rule">The difference is temperature.</p>
+          <div className="coogi-thermal-bar" aria-hidden="true" data-testid="coogi-thermal-bar" />
           <div className="coogi-standard-row">
             <div className="coogi-standard-cell" data-variant="snow">
               <span className="coogi-standard-cell-name">Snow</span>
