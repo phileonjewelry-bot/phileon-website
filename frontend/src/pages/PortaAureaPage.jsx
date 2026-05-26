@@ -29,12 +29,18 @@ const HERO_IMG = "/porta-aurea/porta-aurea-hero.jpg";
 const HERO_ALT =
   "PORTA AUREA gold square signet ring with emerald-cut ruby, Greek key bezel, scroll engraving, and Byzantine scale shank.";
 
-// 5-frame editorial archive — hero 3/4 → front → bezel macro → on-body → provenance.
+// 10-frame editorial archive — object views → details → context → provenance.
+// 2-col desktop / 2-col tablet / 1-col mobile (5 clean rows of two on large viewports).
 const GALLERY = [
   { src: HERO_IMG,                                  alt: HERO_ALT },
+  { src: "/porta-aurea/pa-06-alt-three-quarter.png", alt: "PORTA AUREA alternate three-quarter angle — Byzantine scale shank meeting the engraved bezel under low light." },
   { src: "/porta-aurea/pa-02-front.png",            alt: "PORTA AUREA front-on view showing the emerald-cut ruby framed by the Greek key crown border." },
-  { src: "/porta-aurea/pa-03-bezel-macro.png",      alt: "Macro view of the hand-finished scroll engraving and Byzantine scale shank meeting the bezel." },
+  { src: "/porta-aurea/pa-07-side-profile.png",     alt: "PORTA AUREA pure side profile — the scaled shank rises into the signet face in a single sweep." },
+  { src: "/porta-aurea/pa-08-velvet-top.png",       alt: "Top-down macro of the ruby and engraved bezel resting on deep wine velvet." },
+  { src: "/porta-aurea/pa-03-bezel-macro.png",      alt: "Macro view of the hand-finished scroll engraving where the bezel meets the Byzantine scale shank." },
   { src: "/porta-aurea/pa-04-on-body.png",          alt: "PORTA AUREA worn — tailored black, the ruby catching light against the hand." },
+  { src: "/porta-aurea/pa-09-hand-close.png",       alt: "Close hand portrait — PORTA AUREA resting beside crystal whiskey on dark wood." },
+  { src: "/porta-aurea/pa-10-lounge.png",           alt: "PORTA AUREA in context — gentleman with whiskey, paneled lounge, signet on a relaxed hand." },
   { src: "/porta-aurea/pa-05-provenance.png",       alt: "PORTA AUREA resting in a wine-velvet presentation box." },
 ];
 
@@ -318,8 +324,8 @@ export default function PortaAureaPage() {
           grid-template-columns: 1fr;
           gap: 18px;
         }
-        @media (min-width: 700px) { .porta-archive-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; } }
-        @media (min-width: 1024px) { .porta-archive-grid { grid-template-columns: repeat(3, 1fr); gap: 26px; } }
+        @media (min-width: 700px) { .porta-archive-grid { grid-template-columns: repeat(2, 1fr); gap: 26px; } }
+        @media (min-width: 1024px) { .porta-archive-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
         .porta-archive-cell {
           position: relative;
           margin: 0;
