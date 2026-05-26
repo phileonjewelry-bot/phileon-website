@@ -29,6 +29,15 @@ const HERO_IMG = "/porta-aurea/porta-aurea-hero.jpg";
 const HERO_ALT =
   "PORTA AUREA gold square signet ring with emerald-cut ruby, Greek key bezel, scroll engraving, and Byzantine scale shank.";
 
+// 5-frame editorial archive — hero 3/4 → front → bezel macro → on-body → provenance.
+const GALLERY = [
+  { src: HERO_IMG,                                  alt: HERO_ALT },
+  { src: "/porta-aurea/pa-02-front.png",            alt: "PORTA AUREA front-on view showing the emerald-cut ruby framed by the Greek key crown border." },
+  { src: "/porta-aurea/pa-03-bezel-macro.png",      alt: "Macro view of the hand-finished scroll engraving and Byzantine scale shank meeting the bezel." },
+  { src: "/porta-aurea/pa-04-on-body.png",          alt: "PORTA AUREA worn — tailored black, the ruby catching light against the hand." },
+  { src: "/porta-aurea/pa-05-provenance.png",       alt: "PORTA AUREA resting in a wine-velvet presentation box." },
+];
+
 const METAL_TIERS = [
   {
     id: "signature",
@@ -310,6 +319,7 @@ export default function PortaAureaPage() {
           gap: 18px;
         }
         @media (min-width: 700px) { .porta-archive-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; } }
+        @media (min-width: 1024px) { .porta-archive-grid { grid-template-columns: repeat(3, 1fr); gap: 26px; } }
         .porta-archive-cell {
           position: relative;
           margin: 0;
@@ -731,12 +741,11 @@ export default function PortaAureaPage() {
           <h2 className="porta-archive-title">The signet, studied.</h2>
         </div>
         <div className="porta-archive-grid">
-          <figure className="porta-archive-cell">
-            <img src={HERO_IMG} alt={HERO_ALT} loading="lazy" />
-          </figure>
-          <figure className="porta-archive-cell">
-            <div className="porta-archive-empty">ADDITIONAL FRAMES · PENDING</div>
-          </figure>
+          {GALLERY.map((g) => (
+            <figure key={g.src} className="porta-archive-cell">
+              <img src={g.src} alt={g.alt} loading="lazy" />
+            </figure>
+          ))}
         </div>
       </section>
 
