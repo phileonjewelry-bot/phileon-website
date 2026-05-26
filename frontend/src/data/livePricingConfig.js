@@ -251,12 +251,12 @@ const livePricingConfig = {
 
   // COOGI DNA TAG — PHILEON × COOGI · Tribute Series · Pendant
   // Two static variants, both 10K with multi-stone baguette field + pavé
-  // diamond border. CAD base is identical for both variants ($13,334) →
-  // cadToUsdLuxury produces $10,000 USD each. weightGrams 0 disables metals
-  // recalc (the tribute price holds independent of daily metal swings).
+  // diamond border. Standardized build: ~15g gold, lab diamonds + synthetic
+  // coloured stones, identical architecture across Snow & Sand.
+  // CAD base $11,334 → cadToUsdLuxury produces $8,500 USD each.
   coogiDnaTag: {
-    snow: { lockedBasePriceCad: 13334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    sand: { lockedBasePriceCad: 13334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    snow: { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    sand: { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)

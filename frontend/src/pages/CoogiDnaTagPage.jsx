@@ -29,7 +29,7 @@ const VARIANTS = [
     metal: "10K White Gold",
     sku: "CDT-SNOW-10W",
     accent: "rgba(203, 213, 224, 0.85)",
-    descriptor: "White gold · Lab-grown diamond border · Multi-stone baguette field",
+    descriptor: "White gold · Lab diamonds + synthetic stones · Cold spectrum",
     body:
       "Phileon's tribute to the house that dressed a generation. Snow renders the full COOGI spectrum — ruby, sapphire, amethyst, citrine, emerald, turquoise — set in vertical baguette columns across a white gold dog tag, diamond-bordered and built to last. This is not nostalgia. This is inheritance.",
     compareBody:
@@ -45,7 +45,7 @@ const VARIANTS = [
     metal: "10K Rose Gold",
     sku: "CDT-SAND-10R",
     accent: "rgba(212, 149, 106, 0.9)",
-    descriptor: "Rose gold · Lab-grown diamond border · Multi-stone baguette field",
+    descriptor: "Rose gold · Lab diamonds + synthetic stones · Warm spectrum",
     body:
       "Sand runs the same genetic code — ruby, garnet, citrine, emerald, amethyst, onyx — but rose gold shifts the warmth beneath every stone. The tribute holds the same weight. Phileon made two because COOGI never had just one season.",
     compareBody:
@@ -504,6 +504,74 @@ export default function CoogiDnaTagPage() {
           margin: 0;
         }
 
+        /* ── STANDARDIZED BUILD ── */
+        .coogi-standard {
+          background: var(--ink);
+          padding: 80px 24px 70px;
+          border-bottom: 1px solid rgba(201, 168, 76, 0.10);
+        }
+        @media (min-width: 900px) { .coogi-standard { padding: 110px 48px 90px; } }
+        .coogi-standard-inner { max-width: 880px; margin: 0 auto; }
+        .coogi-standard-body {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          font-size: clamp(1rem, 1.4vw, 1.2rem);
+          line-height: 1.85;
+          color: var(--cream-dim);
+          max-width: 720px;
+          margin: 0;
+        }
+        .coogi-standard-divider {
+          width: 48px; height: 1px;
+          background: linear-gradient(to right, var(--gold), transparent);
+          margin: 36px 0 30px;
+        }
+        .coogi-standard-rule {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: clamp(1rem, 1.4vw, 1.2rem);
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--cream);
+          margin: 0 0 30px;
+        }
+        .coogi-standard-row {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        @media (min-width: 700px) {
+          .coogi-standard-row { grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+        .coogi-standard-cell {
+          padding: 22px 24px;
+          background: var(--ink-mid);
+          border-left: 2px solid;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .coogi-standard-cell[data-variant="snow"] { border-left-color: var(--snow); }
+        .coogi-standard-cell[data-variant="sand"] { border-left-color: var(--sand); }
+        .coogi-standard-cell-name {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 1.1rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--cream);
+        }
+        .coogi-standard-cell[data-variant="snow"] .coogi-standard-cell-name { color: var(--snow); }
+        .coogi-standard-cell[data-variant="sand"] .coogi-standard-cell-name { color: var(--sand); }
+        .coogi-standard-cell-desc {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-weight: 300;
+          font-size: 0.98rem;
+          letter-spacing: 0.04em;
+          color: var(--text-mid);
+        }
+
         /* ── FINAL WORD ── */
         .coogi-final {
           position: relative;
@@ -590,7 +658,7 @@ export default function CoogiDnaTagPage() {
 
           <div className="coogi-price-row">
             <span className="coogi-price" data-testid="coogi-price">{formattedPrice}</span>
-            <span className="coogi-price-note">{current.metal} · Lab-Grown Diamond</span>
+            <span className="coogi-price-note">{current.metal} · Lab Diamonds + Synthetic Stones</span>
           </div>
 
           <button
@@ -603,7 +671,7 @@ export default function CoogiDnaTagPage() {
             {isAdding ? "ADDING…" : "ADD TO CART"}
           </button>
           <p className="coogi-trust">
-            Made to order · 4–6 weeks · Complimentary insured shipping
+            Made to order · 3–5 weeks · Complimentary insured shipping
           </p>
 
           <div className="coogi-divider" />
@@ -620,7 +688,7 @@ export default function CoogiDnaTagPage() {
         </div>
         <div className="coogi-spec-item">
           <span className="coogi-spec-label">Stones</span>
-          <span className="coogi-spec-value">Lab-Grown Diamond + Multi-Stone</span>
+          <span className="coogi-spec-value">Lab Diamonds + Synthetic Stones</span>
         </div>
         <div className="coogi-spec-item">
           <span className="coogi-spec-label">Setting</span>
@@ -631,6 +699,30 @@ export default function CoogiDnaTagPage() {
           <span className="coogi-spec-value">Dog Tag Pendant</span>
         </div>
       </div>
+
+      {/* ─── STANDARDIZED BUILD ──────────────────────────────── */}
+      <section className="coogi-standard" data-testid="coogi-standard">
+        <div className="coogi-standard-inner">
+          <p className="coogi-section-label">STANDARDIZED BUILD</p>
+          <p className="coogi-standard-body">
+            Both variants share identical dimensions, identical stone count,
+            identical gold weight, and identical construction. ~15g of 10K
+            gold, lab-grown diamonds, synthetic coloured stones.
+          </p>
+          <div className="coogi-standard-divider" />
+          <p className="coogi-standard-rule">The difference is temperature.</p>
+          <div className="coogi-standard-row">
+            <div className="coogi-standard-cell" data-variant="snow">
+              <span className="coogi-standard-cell-name">Snow</span>
+              <span className="coogi-standard-cell-desc">Cold spectrum</span>
+            </div>
+            <div className="coogi-standard-cell" data-variant="sand">
+              <span className="coogi-standard-cell-name">Sand</span>
+              <span className="coogi-standard-cell-desc">Warm spectrum</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ─── COMPOSITION ──────────────────────────────────────── */}
       <section className="coogi-copy" data-testid="coogi-composition">

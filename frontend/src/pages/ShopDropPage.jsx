@@ -635,7 +635,7 @@ const CORE_PRODUCTS = [
     materialLine: 'Tribute Series · Snow & Sand · 10K Gold · Multi-Stone · Diamond Pavé',
     imageUrl: '/coogi-dna/coogi-dna-hero.png',
     href: '/coogi-dna-tag',
-    price_range: '$10,000 USD',
+    price_range: '$8,500 USD',
     inventory_count: 100,
     is_core: true,
     category: 'pendants',
