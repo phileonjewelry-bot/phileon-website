@@ -29,6 +29,9 @@ const VARIANTS = [
     metal: "10K White Gold",
     sku: "CDT-SNOW-10W",
     accent: "rgba(203, 213, 224, 0.85)",
+    image: "/coogi-dna/coogi-dna-snow.png",
+    imageAlt:
+      "COOGI DNA Tag — Snow. 10K white gold dog-tag pendant with cold-spectrum baguette columns (sapphire, amethyst, citrine, turquoise) framed by a pavé diamond border, photographed nestled in fresh snow.",
     descriptor: "White gold · Lab diamonds + synthetic stones · Cold spectrum",
     body:
       "Phileon's tribute to the house that dressed a generation. Snow renders the full COOGI spectrum — ruby, sapphire, amethyst, citrine, emerald, turquoise — set in vertical baguette columns across a white gold dog tag, diamond-bordered and built to last. This is not nostalgia. This is inheritance.",
@@ -45,6 +48,9 @@ const VARIANTS = [
     metal: "10K Rose Gold",
     sku: "CDT-SAND-10R",
     accent: "rgba(212, 149, 106, 0.9)",
+    image: "/coogi-dna/coogi-dna-sand.png",
+    imageAlt:
+      "COOGI DNA Tag — Sand. 10K rose gold dog-tag pendant with warm-spectrum baguette columns (ruby, garnet, citrine, emerald, amethyst, onyx) framed by a pavé diamond border, photographed half-submerged in golden sand.",
     descriptor: "Rose gold · Lab diamonds + synthetic stones · Warm spectrum",
     body:
       "Sand runs the same genetic code — ruby, garnet, citrine, emerald, amethyst, onyx — but rose gold shifts the warmth beneath every stone. The tribute holds the same weight. Phileon made two because COOGI never had just one season.",
@@ -107,7 +113,7 @@ export default function CoogiDnaTagPage() {
         metal: current.metal,
         sku: current.sku,
         quantity: 1,
-        image: HERO_IMG,
+        image: current.image,
       },
       1,
       `${current.name} · ${current.metal}`,
@@ -189,10 +195,14 @@ export default function CoogiDnaTagPage() {
           height: auto;
           object-fit: contain;
           filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.7));
-          transition: filter 700ms ease, transform 700ms ease;
+          animation: coogiHeroFade 700ms ease both;
         }
-        .coogi-room[data-variant="sand"] .coogi-hero-img {
-          filter: drop-shadow(0 40px 80px rgba(212, 149, 106, 0.18)) saturate(1.06);
+        @keyframes coogiHeroFade {
+          from { opacity: 0.3; transform: scale(0.985); }
+          to   { opacity: 1;   transform: scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .coogi-hero-img { animation: none; }
         }
 
         .coogi-hero-text {
@@ -645,10 +655,11 @@ export default function CoogiDnaTagPage() {
       <section className="coogi-hero" data-testid="coogi-hero">
         <div className="coogi-hero-img-wrap">
           <img
-            src={HERO_IMG}
-            alt={HERO_ALT}
+            src={current.image}
+            alt={current.imageAlt}
             className="coogi-hero-img"
             data-testid="coogi-hero-img"
+            key={current.id}
           />
         </div>
         <div className="coogi-hero-text">
