@@ -32,6 +32,9 @@ const VARIANTS = [
     image: "/coogi-dna/coogi-dna-snow.png",
     imageAlt:
       "COOGI DNA Tag — Snow. 10K white gold dog-tag pendant with cold-spectrum baguette columns (sapphire, amethyst, citrine, turquoise) framed by a pavé diamond border, photographed nestled in fresh snow.",
+    galleryImage: "/coogi-dna/coogi-dna-snow-pair.png",
+    galleryAlt:
+      "COOGI DNA Tag — Snow & Sand together on rose ball chain, white gold Snow leading the composition against dark velvet.",
     descriptor: "White gold · Lab diamonds + synthetic stones · Cold spectrum",
     body:
       "Phileon's tribute to the house that dressed a generation. Snow renders the full COOGI spectrum — ruby, sapphire, amethyst, citrine, emerald, turquoise — set in vertical baguette columns across a white gold dog tag, diamond-bordered and built to last. This is not nostalgia. This is inheritance.",
@@ -51,6 +54,9 @@ const VARIANTS = [
     image: "/coogi-dna/coogi-dna-sand.png",
     imageAlt:
       "COOGI DNA Tag — Sand. 10K rose gold dog-tag pendant with warm-spectrum baguette columns (ruby, garnet, citrine, emerald, amethyst, onyx) framed by a pavé diamond border, photographed half-submerged in golden sand.",
+    galleryImage: "/coogi-dna/coogi-dna-sand-pair.png",
+    galleryAlt:
+      "COOGI DNA Tag — Sand & Snow together on yellow curb chain, rose gold Sand leading the composition against dark velvet.",
     descriptor: "Rose gold · Lab diamonds + synthetic stones · Warm spectrum",
     body:
       "Sand runs the same genetic code — ruby, garnet, citrine, emerald, amethyst, onyx — but rose gold shifts the warmth beneath every stone. The tribute holds the same weight. Phileon made two because COOGI never had just one season.",
@@ -604,6 +610,31 @@ export default function CoogiDnaTagPage() {
           color: var(--text-mid);
         }
 
+        /* ── GALLERY (per-variant paired study) ── */
+        .coogi-gallery {
+          background: var(--ink);
+          padding: 0 24px 70px;
+          display: flex; justify-content: center;
+        }
+        @media (min-width: 900px) { .coogi-gallery { padding: 0 48px 90px; } }
+        .coogi-gallery-frame {
+          margin: 0;
+          width: 100%;
+          max-width: 880px;
+          aspect-ratio: 1 / 1;
+          overflow: hidden;
+          background: #0a0805;
+          border: 1px solid rgba(201, 168, 76, 0.10);
+          position: relative;
+        }
+        .coogi-gallery-frame img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          animation: coogiHeroFade 800ms ease both;
+        }
+
         /* ── FINAL WORD ── */
         .coogi-final {
           position: relative;
@@ -756,6 +787,19 @@ export default function CoogiDnaTagPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ─── GALLERY (per-variant editorial frame) ──────────────── */}
+      <section className="coogi-gallery" data-testid="coogi-gallery" aria-label="COOGI DNA Tag — paired study">
+        <figure className="coogi-gallery-frame">
+          <img
+            src={current.galleryImage}
+            alt={current.galleryAlt}
+            key={`gallery-${current.id}`}
+            loading="lazy"
+            data-testid="coogi-gallery-img"
+          />
+        </figure>
       </section>
 
       {/* ─── COMPOSITION ──────────────────────────────────────── */}
