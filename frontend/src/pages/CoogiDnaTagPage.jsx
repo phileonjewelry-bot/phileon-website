@@ -38,6 +38,7 @@ const VARIANTS = [
       { src: "/coogi-dna/coogi-dna-snow-tilt.png",    alt: "COOGI DNA Tag — Snow tilted angle, exposing the depth of the baguette columns and the rise of the diamond pavé border." },
       { src: "/coogi-dna/coogi-dna-snow-bail.png",    alt: "COOGI DNA Tag — Snow bail study. The pavé-set diamond bail at the top of the pendant, seen from a low angle." },
       { src: "/coogi-dna/coogi-dna-snow-macro.png",   alt: "COOGI DNA Tag — Snow macro. Extreme close detail of the pavé diamond bail meeting the multi-stone field, photographed against black for absolute focus on craft." },
+      { src: "/coogi-dna/coogi-dna-snow-back.png",    alt: "COOGI DNA Tag — Snow reverse. The polished 10K white gold back face — a clean canvas, the architecture turned inward." },
       { src: "/coogi-dna/coogi-dna-snow-atelier.png", alt: "COOGI DNA Tag — Snow at the atelier. The white gold pendant hanging on a fine chain inside a private viewing room, soft daylight." },
       { src: "/coogi-dna/coogi-dna-snow-box.png",     alt: "COOGI DNA Tag — Snow at provenance. 10K white gold pendant resting in a dark ebony presentation box on black velvet." },
     ],
@@ -61,8 +62,11 @@ const VARIANTS = [
     imageAlt:
       "COOGI DNA Tag — Sand. 10K rose gold dog-tag pendant with warm-spectrum baguette columns (ruby, garnet, citrine, emerald, amethyst, onyx) framed by a pavé diamond border, photographed half-submerged in golden sand.",
     archive: [
-      { src: "/coogi-dna/coogi-dna-sand-pair.png", alt: "COOGI DNA Tag — Sand & Snow together on yellow curb chain, rose gold Sand leading the composition against dark velvet." },
-      { src: "/coogi-dna/coogi-dna-sand-box.png",  alt: "COOGI DNA Tag — Sand at provenance. 10K rose gold pendant resting in a gold-framed presentation box on black velvet." },
+      { src: "/coogi-dna/coogi-dna-sand-pair.png",    alt: "COOGI DNA Tag — Sand & Snow together on yellow curb chain, rose gold Sand leading the composition against dark velvet." },
+      { src: "/coogi-dna/coogi-dna-sand-prop.png",    alt: "COOGI DNA Tag — Sand leaning. The rose gold pendant resting against a neutral display block inside the atelier, soft warm daylight." },
+      { src: "/coogi-dna/coogi-dna-sand-atelier.png", alt: "COOGI DNA Tag — Sand at the atelier. The rose gold pendant suspended on a fine rose chain inside a private viewing room." },
+      { src: "/coogi-dna/coogi-dna-sand-back.png",    alt: "COOGI DNA Tag — Sand reverse. The polished 10K rose gold back face — a clean canvas, the architecture turned inward." },
+      { src: "/coogi-dna/coogi-dna-sand-box.png",     alt: "COOGI DNA Tag — Sand at provenance. 10K rose gold pendant resting in a gold-framed presentation box on black velvet." },
     ],
     descriptor: "Rose gold · Lab diamonds + synthetic stones · Warm spectrum",
     body:
