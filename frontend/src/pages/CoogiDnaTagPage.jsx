@@ -66,7 +66,7 @@ const VARIANTS = [
       { src: "/coogi-dna/coogi-dna-sand-tilt.png",     alt: "COOGI DNA Tag — Sand tilted study. The full architecture suspended in cream studio light: rose gold frame, pavé diamond border, vertical baguette columns of ruby, amethyst, citrine, garnet, emerald, onyx, split by a central diamond gallery." },
       { src: "/coogi-dna/coogi-dna-sand-macro.png",    alt: "COOGI DNA Tag — Sand macro. Extreme close angle on the warm-spectrum baguette field, exposing the depth of each column and the rose-gold prong work between stones." },
       { src: "/coogi-dna/coogi-dna-sand-diamonds.png", alt: "COOGI DNA Tag — Sand central gallery. Vertical macro of the round-diamond column running between the two baguette columns, every prong cut and finished by hand in rose gold." },
-      { src: "/coogi-dna/coogi-dna-sand-back.png",     alt: "COOGI DNA Tag — Sand reverse. The polished 10K rose gold back face — a clean canvas, the architecture turned inward." },
+      { src: "/coogi-dna/coogi-dna-sand-canvas.png",  alt: "COOGI DNA Tag — Sand reverse. The soft sand-finish 10K rose gold back face inside its polished bezel — the canvas reserved for personal laser engraving, set against a warm champagne backdrop." },
       { src: "/coogi-dna/coogi-dna-sand-prop.png",     alt: "COOGI DNA Tag — Sand leaning. The rose gold pendant resting against a neutral display block inside the atelier, soft warm daylight." },
       { src: "/coogi-dna/coogi-dna-sand-atelier.png",  alt: "COOGI DNA Tag — Sand at the atelier. The rose gold pendant suspended on a fine rose chain inside a private viewing room." },
       { src: "/coogi-dna/coogi-dna-sand-on-body.png",  alt: "COOGI DNA Tag — Sand worn. A gentleman in charcoal suit and open white shirt at golden hour beside a reflecting pool, the rose gold pendant catching the desert light against his chest." },
@@ -97,12 +97,30 @@ const STONE_COLOR = {
   "Diamond Pavé": { fg: "#e8d6a8", border: "rgba(232,214,168,0.55)" },
 };
 
+// Personal laser engraving — sand-finish reverse, opt-in add-on.
+// Allowed character set is broader than True Vine to support initials,
+// dates, coordinates, names, and short phrases.
+const ENGRAVING_PRICE_USD = 150;
+const ENGRAVING_MAX_CHARS = 50;
+const ENGRAVING_PLACEHOLDERS = [
+  "AJM · 06.12.2026",
+  "33.7488°N 84.3877°W",
+  "FOR THE ONES WHO STAYED",
+  "ABIDE",
+  "EST. 1995",
+];
+
 export default function CoogiDnaTagPage() {
   const [isMounted, setIsMounted] = useState(false);
   const { isAdding, handleAddToCart } = useAddToCart();
   const tierPricesLive = useLiveTierPrices("coogiDnaTag");
 
   const [selectedVariant, setSelectedVariant] = useState("snow");
+  const [engravingEnabled, setEngravingEnabled] = useState(false);
+  const [engravingText, setEngravingText] = useState("");
+  const [engravingPlaceholder] = useState(
+    () => ENGRAVING_PLACEHOLDERS[Math.floor(Math.random() * ENGRAVING_PLACEHOLDERS.length)]
+  );
 
   useEffect(() => {
     const t = window.setTimeout(() => setIsMounted(true), 60);
@@ -111,10 +129,29 @@ export default function CoogiDnaTagPage() {
 
   const current =
     VARIANTS.find((v) => v.id === selectedVariant) || VARIANTS[0];
-  const displayPrice = tierPricesLive?.[selectedVariant]?.price || 0;
+  const baseUsd = tierPricesLive?.[selectedVariant]?.price || 0;
+  const engravingUsd = engravingEnabled ? ENGRAVING_PRICE_USD : 0;
+  const displayPrice = baseUsd + engravingUsd;
   const formattedPrice = displayPrice
     ? `$${displayPrice.toLocaleString("en-US")} USD`
     : "—";
+
+  // Trimmed, uppercased inscription text — A–Z, 0–9, space, . , ' - / ° "
+  // Supports initials, dates, coordinates, names, and short phrases per brief.
+  const sanitizedEngraving = engravingText
+    .toUpperCase()
+    .replace(/[^A-Z0-9 .,'°"\-\/]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, ENGRAVING_MAX_CHARS);
+
+  const handleEngravingChange = (e) => {
+    const cleaned = e.target.value
+      .toUpperCase()
+      .replace(/[^A-Z0-9 .,'°"\-\/]/g, "")
+      .slice(0, ENGRAVING_MAX_CHARS);
+    setEngravingText(cleaned);
+  };
 
   // Union of stones across both variants for the Composition mosaic.
   const allStones = useMemo(() => {
@@ -124,20 +161,28 @@ export default function CoogiDnaTagPage() {
   }, []);
 
   const onAddToCart = () => {
+    const engravingFinal = engravingEnabled ? sanitizedEngraving : "";
+    const sku = engravingEnabled ? `${current.sku}-ENGRAVED` : current.sku;
+    const variant = engravingEnabled
+      ? `${current.name} · ${current.metal} · Engraved: ${engravingFinal || "(awaiting text)"}`
+      : `${current.name} · ${current.metal}`;
     handleAddToCart(
       {
-        id: `coogi-dna-tag-${current.id}`,
-        name: `COOGI DNA TAG — ${current.name} · ${current.metal}`,
+        id: `coogi-dna-tag-${current.id}${engravingEnabled ? "-engraved" : ""}`,
+        name: `COOGI DNA TAG — ${current.name} · ${current.metal}${engravingEnabled ? ` · Engraved "${engravingFinal}"` : ""}`,
         price: displayPrice,
         productKey: "coogiDnaTag",
         tierKey: current.id,
         metal: current.metal,
-        sku: current.sku,
+        sku,
+        engravingEnabled,
+        engravingMethod: engravingEnabled ? "laser" : null,
+        engravingText: engravingFinal,
         quantity: 1,
         image: current.image,
       },
       1,
-      `${current.name} · ${current.metal}`,
+      variant,
     );
   };
 
@@ -365,6 +410,142 @@ export default function CoogiDnaTagPage() {
           letter-spacing: 0.32em;
           text-transform: uppercase;
           color: var(--gold-dim);
+        }
+
+        /* ── PERSONAL LASER ENGRAVING ── */
+        .coogi-engraving {
+          margin: 8px 0 22px;
+          max-width: 480px;
+        }
+        .coogi-engraving-toggle {
+          display: flex; align-items: center; gap: 14px;
+          padding: 16px 18px;
+          background: rgba(20, 16, 10, 0.55);
+          border: 1px solid rgba(201, 168, 76, 0.20);
+          cursor: pointer;
+          transition: border-color 320ms ease, background 320ms ease;
+        }
+        .coogi-engraving-toggle:hover { border-color: rgba(201, 168, 76, 0.5); }
+        .coogi-engraving-toggle input {
+          position: absolute; opacity: 0; width: 0; height: 0;
+        }
+        .coogi-engraving-box {
+          flex: 0 0 16px;
+          width: 16px; height: 16px;
+          display: inline-flex; align-items: center; justify-content: center;
+          border: 1px solid rgba(220, 190, 130, 0.55);
+          background: rgba(8, 6, 3, 0.55);
+          transition: border-color 220ms ease, background 220ms ease;
+        }
+        .coogi-engraving-tick {
+          display: block; width: 7px; height: 7px;
+          background: transparent;
+          transition: background 220ms ease;
+        }
+        .coogi-engraving-toggle input:checked ~ .coogi-engraving-box {
+          border-color: var(--gold);
+          background: rgba(28, 20, 8, 0.85);
+        }
+        .coogi-engraving-toggle input:checked ~ .coogi-engraving-box .coogi-engraving-tick {
+          background: var(--gold);
+        }
+        .coogi-engraving-toggle input:focus-visible ~ .coogi-engraving-box {
+          outline: 2px solid rgba(220, 190, 130, 0.7);
+          outline-offset: 2px;
+        }
+        .coogi-engraving-toggle-label {
+          flex: 1;
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 0.9rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--cream);
+        }
+        .coogi-engraving-toggle-price {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 0.98rem;
+          color: var(--gold-light);
+        }
+        .coogi-engraving-helper {
+          margin: 10px 4px 0;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 0.92rem;
+          line-height: 1.65;
+          color: var(--text-mid);
+        }
+        .coogi-engraving-field {
+          margin-top: 18px;
+          padding: 20px 20px 18px;
+          background: rgba(10, 8, 5, 0.62);
+          border: 1px solid rgba(201, 168, 76, 0.18);
+          animation: coogiFadeUp 420ms ease both;
+        }
+        @keyframes coogiFadeUp {
+          from { opacity: 0; transform: translateY(4px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .coogi-engraving-field { animation: none; }
+        }
+        .coogi-engraving-field-label {
+          display: block;
+          font-family: 'Cinzel', serif;
+          font-size: 9px;
+          letter-spacing: 0.46em;
+          text-transform: uppercase;
+          color: var(--gold-dim);
+          margin: 0 0 10px;
+        }
+        .coogi-engraving-textarea {
+          width: 100%;
+          background: rgba(4, 3, 2, 0.6);
+          border: 1px solid rgba(201, 168, 76, 0.22);
+          color: var(--cream);
+          padding: 12px 14px;
+          font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+          font-weight: 400;
+          font-size: clamp(1rem, 1.3vw, 1.15rem);
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          line-height: 1.4;
+          resize: vertical;
+          min-height: 52px;
+          transition: border-color 280ms ease, background 280ms ease;
+        }
+        .coogi-engraving-textarea::placeholder {
+          color: rgba(238, 230, 210, 0.32);
+          letter-spacing: 0.14em;
+          font-style: italic;
+        }
+        .coogi-engraving-textarea:focus {
+          outline: none;
+          border-color: rgba(220, 190, 130, 0.7);
+          background: rgba(8, 6, 3, 0.78);
+        }
+        .coogi-engraving-meta {
+          margin-top: 10px;
+          display: flex; justify-content: space-between; align-items: baseline;
+          gap: 14px; flex-wrap: wrap;
+        }
+        .coogi-engraving-rules {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          font-size: 9.5px;
+          letter-spacing: 0.26em;
+          text-transform: uppercase;
+          color: var(--gold-dim);
+          line-height: 1.7;
+        }
+        .coogi-engraving-count {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          font-size: 10.5px;
+          letter-spacing: 0.26em;
+          color: var(--gold-light);
+          font-variant-numeric: tabular-nums;
         }
 
         .coogi-divider {
@@ -759,6 +940,57 @@ export default function CoogiDnaTagPage() {
           <div className="coogi-price-row">
             <span className="coogi-price" data-testid="coogi-price">{formattedPrice}</span>
             <span className="coogi-price-note">{current.metal} · Lab Diamonds + Synthetic Stones</span>
+          </div>
+
+          {/* Personal Laser Engraving — opt-in add-on, sand-finish reverse */}
+          <div className="coogi-engraving" data-testid="coogi-engraving">
+            <label className="coogi-engraving-toggle" data-testid="coogi-engraving-toggle">
+              <input
+                type="checkbox"
+                checked={engravingEnabled}
+                onChange={(e) => setEngravingEnabled(e.target.checked)}
+                data-testid="coogi-engraving-checkbox"
+              />
+              <span className="coogi-engraving-box" aria-hidden="true">
+                <span className="coogi-engraving-tick" />
+              </span>
+              <span className="coogi-engraving-toggle-label">
+                Personal Laser Engraving
+              </span>
+              <span className="coogi-engraving-toggle-price">+ $150 USD</span>
+            </label>
+            <p className="coogi-engraving-helper">
+              The reverse side features a soft sand finish reserved for custom
+              laser engraving. Available for initials · dates · coordinates ·
+              names · short phrases.
+            </p>
+            {engravingEnabled && (
+              <div className="coogi-engraving-field" data-testid="coogi-engraving-field">
+                <label htmlFor="coogi-engraving-input" className="coogi-engraving-field-label">
+                  Inscription
+                </label>
+                <textarea
+                  id="coogi-engraving-input"
+                  className="coogi-engraving-textarea"
+                  rows={2}
+                  value={engravingText}
+                  onChange={handleEngravingChange}
+                  placeholder={engravingPlaceholder}
+                  maxLength={ENGRAVING_MAX_CHARS}
+                  spellCheck={false}
+                  autoCapitalize="characters"
+                  data-testid="coogi-engraving-input"
+                />
+                <div className="coogi-engraving-meta">
+                  <p className="coogi-engraving-rules">
+                    Uppercase only · A–Z · 0–9 · space · . , ' ° " - /
+                  </p>
+                  <p className="coogi-engraving-count" data-testid="coogi-engraving-count">
+                    {sanitizedEngraving.length} / {ENGRAVING_MAX_CHARS}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <button
