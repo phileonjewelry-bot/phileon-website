@@ -69,6 +69,7 @@ const VARIANTS = [
       { src: "/coogi-dna/coogi-dna-sand-back.png",     alt: "COOGI DNA Tag — Sand reverse. The polished 10K rose gold back face — a clean canvas, the architecture turned inward." },
       { src: "/coogi-dna/coogi-dna-sand-prop.png",     alt: "COOGI DNA Tag — Sand leaning. The rose gold pendant resting against a neutral display block inside the atelier, soft warm daylight." },
       { src: "/coogi-dna/coogi-dna-sand-atelier.png",  alt: "COOGI DNA Tag — Sand at the atelier. The rose gold pendant suspended on a fine rose chain inside a private viewing room." },
+      { src: "/coogi-dna/coogi-dna-sand-on-body.png",  alt: "COOGI DNA Tag — Sand worn. A gentleman in charcoal suit and open white shirt at golden hour beside a reflecting pool, the rose gold pendant catching the desert light against his chest." },
       { src: "/coogi-dna/coogi-dna-sand-box.png",      alt: "COOGI DNA Tag — Sand at provenance. 10K rose gold pendant resting in a gold-framed presentation box on black velvet." },
     ],
     descriptor: "Rose gold · Lab diamonds + synthetic stones · Warm spectrum",
