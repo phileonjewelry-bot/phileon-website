@@ -863,6 +863,44 @@ export default function CoogiDnaTagPage() {
         }
         .coogi-gallery-frame:hover img { transform: scale(1.025); }
 
+        /* ── ACQUIRE (dedicated configurator + CTA after gallery) ── */
+        .coogi-acquire {
+          background: var(--ink);
+          padding: 90px 24px 110px;
+          border-top: 1px solid rgba(201, 168, 76, 0.10);
+        }
+        @media (min-width: 900px) { .coogi-acquire { padding: 120px 48px 140px; } }
+        .coogi-acquire-inner {
+          max-width: 560px;
+          margin: 0 auto;
+        }
+        .coogi-acquire .coogi-section-heading {
+          margin-bottom: 36px;
+        }
+        .coogi-acquire-toggle-row {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          margin: 0 0 32px;
+        }
+        @media (min-width: 700px) {
+          .coogi-acquire-toggle-row {
+            flex-direction: row;
+            align-items: center;
+            gap: 24px;
+          }
+        }
+        .coogi-acquire-descriptor {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 0.98rem;
+          letter-spacing: 0.04em;
+          color: var(--text-mid);
+          margin: 0;
+          flex: 1;
+        }
+        .coogi-acquire .coogi-cta { max-width: none; }
+
         /* ── FINAL WORD ── */
         .coogi-final {
           position: relative;
@@ -896,12 +934,6 @@ export default function CoogiDnaTagPage() {
           text-transform: uppercase;
           color: var(--gold);
           margin: 0;
-        }
-        .coogi-final-cta-block {
-          position: relative;
-          margin: 56px auto 0;
-          max-width: 340px;
-          display: flex; flex-direction: column; align-items: center; gap: 18px;
         }
       `}</style>
 
@@ -946,75 +978,6 @@ export default function CoogiDnaTagPage() {
 
           <p className="coogi-variant-descriptor" data-testid="coogi-variant-descriptor">
             {current.descriptor}
-          </p>
-
-          <div className="coogi-price-row">
-            <span className="coogi-price" data-testid="coogi-price">{formattedPrice}</span>
-            <span className="coogi-price-note">{current.metal} · Lab Diamonds + Synthetic Stones</span>
-          </div>
-
-          {/* Personal Laser Engraving — opt-in add-on, sand-finish reverse */}
-          <div className="coogi-engraving" data-testid="coogi-engraving">
-            <label className="coogi-engraving-toggle" data-testid="coogi-engraving-toggle">
-              <input
-                type="checkbox"
-                checked={engravingEnabled}
-                onChange={(e) => setEngravingEnabled(e.target.checked)}
-                data-testid="coogi-engraving-checkbox"
-              />
-              <span className="coogi-engraving-box" aria-hidden="true">
-                <span className="coogi-engraving-tick" />
-              </span>
-              <span className="coogi-engraving-toggle-label">
-                Personal Laser Engraving
-              </span>
-              <span className="coogi-engraving-toggle-price">+ $150 USD</span>
-            </label>
-            <p className="coogi-engraving-helper">
-              The reverse side features a soft sand finish reserved for custom
-              laser engraving. Available for initials · dates · coordinates ·
-              names · short phrases.
-            </p>
-            {engravingEnabled && (
-              <div className="coogi-engraving-field" data-testid="coogi-engraving-field">
-                <label htmlFor="coogi-engraving-input" className="coogi-engraving-field-label">
-                  Inscription
-                </label>
-                <textarea
-                  id="coogi-engraving-input"
-                  className="coogi-engraving-textarea"
-                  rows={2}
-                  value={engravingText}
-                  onChange={handleEngravingChange}
-                  placeholder={engravingPlaceholder}
-                  maxLength={ENGRAVING_MAX_CHARS}
-                  spellCheck={false}
-                  autoCapitalize="characters"
-                  data-testid="coogi-engraving-input"
-                />
-                <div className="coogi-engraving-meta">
-                  <p className="coogi-engraving-rules">
-                    Uppercase only · A–Z · 0–9 · space · . , ' ° " - /
-                  </p>
-                  <p className="coogi-engraving-count" data-testid="coogi-engraving-count">
-                    {sanitizedEngraving.length} / {ENGRAVING_MAX_CHARS}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={onAddToCart}
-            disabled={isAdding || !displayPrice}
-            className="coogi-cta"
-            data-testid="coogi-add-to-cart-btn"
-          >
-            {isAdding ? "ADDING…" : "ADD TO CART"}
-          </button>
-          <p className="coogi-trust">
-            Made to order · 3–5 weeks · Complimentary insured shipping
           </p>
 
           <div className="coogi-divider" />
@@ -1146,36 +1109,111 @@ export default function CoogiDnaTagPage() {
         </p>
       </section>
 
-      {/* ─── FINAL WORD ───────────────────────────────────────── */}
-      <div className="coogi-final" data-testid="coogi-final">
-        <p className="coogi-final-quote">"The pattern remembers."</p>
-        <p className="coogi-final-attribution">Phileon Fine Jewelry — Tribute Series</p>
-        <div className="coogi-final-cta-block">
-          <div className="coogi-variant-toggle" role="radiogroup" aria-label="Variant selection (footer)">
-            {VARIANTS.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                role="radio"
-                aria-checked={selectedVariant === v.id}
-                onClick={() => setSelectedVariant(v.id)}
-                className={`coogi-variant-btn ${selectedVariant === v.id ? "is-selected" : ""}`}
-                data-testid={`coogi-variant-footer-${v.id}`}
-              >
-                {v.name}
-              </button>
-            ))}
+      {/* ─── ACQUIRE (configurator + CTA) ─────────────────────── */}
+      <section className="coogi-acquire" data-testid="coogi-acquire">
+        <div className="coogi-acquire-inner">
+          <p className="coogi-section-label">ACQUIRE</p>
+          <h2 className="coogi-section-heading">Choose your spectrum.</h2>
+
+          <div className="coogi-acquire-toggle-row">
+            <div
+              className="coogi-variant-toggle"
+              role="radiogroup"
+              aria-label="Variant selection"
+              data-testid="coogi-acquire-variant-toggle"
+            >
+              {VARIANTS.map((v) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={selectedVariant === v.id}
+                  onClick={() => setSelectedVariant(v.id)}
+                  className={`coogi-variant-btn ${selectedVariant === v.id ? "is-selected" : ""}`}
+                  data-testid={`coogi-acquire-variant-${v.id}`}
+                >
+                  {v.name}
+                </button>
+              ))}
+            </div>
+            <p className="coogi-acquire-descriptor">{current.descriptor}</p>
           </div>
+
+          <div className="coogi-price-row">
+            <span className="coogi-price" data-testid="coogi-price">{formattedPrice}</span>
+            <span className="coogi-price-note">{current.metal} · Lab Diamonds + Synthetic Stones</span>
+          </div>
+
+          {/* Personal Laser Engraving — opt-in add-on, sand-finish reverse */}
+          <div className="coogi-engraving" data-testid="coogi-engraving">
+            <label className="coogi-engraving-toggle" data-testid="coogi-engraving-toggle">
+              <input
+                type="checkbox"
+                checked={engravingEnabled}
+                onChange={(e) => setEngravingEnabled(e.target.checked)}
+                data-testid="coogi-engraving-checkbox"
+              />
+              <span className="coogi-engraving-box" aria-hidden="true">
+                <span className="coogi-engraving-tick" />
+              </span>
+              <span className="coogi-engraving-toggle-label">
+                Personal Laser Engraving
+              </span>
+              <span className="coogi-engraving-toggle-price">+ $150 USD</span>
+            </label>
+            <p className="coogi-engraving-helper">
+              The reverse side features a soft sand finish reserved for custom
+              laser engraving. Available for initials · dates · coordinates ·
+              names · short phrases.
+            </p>
+            {engravingEnabled && (
+              <div className="coogi-engraving-field" data-testid="coogi-engraving-field">
+                <label htmlFor="coogi-engraving-input" className="coogi-engraving-field-label">
+                  Inscription
+                </label>
+                <textarea
+                  id="coogi-engraving-input"
+                  className="coogi-engraving-textarea"
+                  rows={2}
+                  value={engravingText}
+                  onChange={handleEngravingChange}
+                  placeholder={engravingPlaceholder}
+                  maxLength={ENGRAVING_MAX_CHARS}
+                  spellCheck={false}
+                  autoCapitalize="characters"
+                  data-testid="coogi-engraving-input"
+                />
+                <div className="coogi-engraving-meta">
+                  <p className="coogi-engraving-rules">
+                    Uppercase only · A–Z · 0–9 · space · . , ' ° " - /
+                  </p>
+                  <p className="coogi-engraving-count" data-testid="coogi-engraving-count">
+                    {sanitizedEngraving.length} / {ENGRAVING_MAX_CHARS}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={onAddToCart}
             disabled={isAdding || !displayPrice}
             className="coogi-cta"
-            data-testid="coogi-add-to-cart-footer-btn"
+            data-testid="coogi-add-to-cart-btn"
           >
             {isAdding ? "ADDING…" : "ADD TO CART"}
           </button>
+          <p className="coogi-trust">
+            Made to order · 3–5 weeks · Complimentary insured shipping
+          </p>
         </div>
+      </section>
+
+      {/* ─── FINAL WORD ───────────────────────────────────────── */}
+      <div className="coogi-final" data-testid="coogi-final">
+        <p className="coogi-final-quote">"The pattern remembers."</p>
+        <p className="coogi-final-attribution">Phileon Fine Jewelry — Tribute Series</p>
       </div>
     </section>
   );
