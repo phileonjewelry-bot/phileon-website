@@ -187,18 +187,6 @@ export default function CypherPage() {
             />
           </div>
 
-          {/* CTA Button */}
-          <div className="mt-8">
-            <button 
-              onClick={onAddToCart}
-              disabled={isAdding}
-              data-testid="cypher-add-to-cart"
-              className="w-full bg-white text-black rounded-xl py-4 tracking-[0.12em] text-sm font-medium hover:bg-white/90 transition-colors disabled:opacity-50"
-            >
-              {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED!" : "CLAIM YOURS"}
-            </button>
-          </div>
-
           {/* Composition */}
           <div className="mt-10">
             <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">COMPOSITION</h3>
@@ -222,6 +210,18 @@ export default function CypherPage() {
           <div className="mt-10">
             <h3 className="text-sm tracking-[0.2em] text-white/60 mb-3">CRAFT</h3>
             <p className="text-white/80 leading-7 whitespace-pre-line">{product.craft}</p>
+          </div>
+
+          {/* CTA Button */}
+          <div className="mt-10">
+            <button 
+              onClick={onAddToCart}
+              disabled={isAdding}
+              data-testid="cypher-add-to-cart"
+              className="w-full bg-white text-black rounded-xl py-4 tracking-[0.12em] text-sm font-medium hover:bg-white/90 transition-colors disabled:opacity-50"
+            >
+              {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED!" : "CLAIM YOURS"}
+            </button>
           </div>
 
           {/* Final Word */}

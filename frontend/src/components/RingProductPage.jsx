@@ -232,6 +232,28 @@ export default function RingProductPage({ product }) {
             />
           </div>
 
+          {/* STORY — Composition sits BEFORE the configurator CTA per SITEWIDE ORDER RULE */}
+          <div className="mb-10">
+            <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
+              The {product.name} Story
+            </h2>
+            <p className="text-[#d2d2d2] leading-7 lg:leading-8 text-base lg:text-lg">
+              {product.story}
+            </p>
+          </div>
+
+          {/* SPECIFICATIONS */}
+          <div className="mb-10">
+            <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
+              Specifications
+            </h2>
+            <ul className="space-y-4 lg:space-y-5 text-[#d2d2d2] text-sm lg:text-base">
+              {product.specs.map((spec, index) => (
+                <li key={index}>— {spec}</li>
+              ))}
+            </ul>
+          </div>
+
           {/* ADD TO CART */}
           <button
             disabled={!isSizeValid || isAdding}
@@ -246,31 +268,9 @@ export default function RingProductPage({ product }) {
             {isAdding ? buttonText : (isSizeValid ? "ADD TO CART" : "SELECT A SIZE")}
           </button>
 
-          <p className="text-center text-sm text-[#7f7f7f] mt-4">
+          <p className="text-center text-sm text-[#7f7f7f] mt-4 pb-16">
             Complimentary insured shipping within Canada
           </p>
-
-          {/* STORY */}
-          <div className="mt-14">
-            <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
-              The {product.name} Story
-            </h2>
-            <p className="text-[#d2d2d2] leading-7 lg:leading-8 text-base lg:text-lg">
-              {product.story}
-            </p>
-          </div>
-
-          {/* SPECIFICATIONS */}
-          <div className="mt-14 pb-16">
-            <h2 className="text-2xl lg:text-3xl font-serif text-[#C6A25D] mb-6">
-              Specifications
-            </h2>
-            <ul className="space-y-4 lg:space-y-5 text-[#d2d2d2] text-sm lg:text-base">
-              {product.specs.map((spec, index) => (
-                <li key={index}>— {spec}</li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
     </div>

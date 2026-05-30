@@ -1,0 +1,74 @@
+{
+  "summary": "Frontend DOM order verification for SITEWIDE PRODUCT PAGE ORDER RULE across 10 product pages (Hero -> Gallery/Archive -> Composition/Specs/Craft -> Configurator -> ADD TO CART -> Final Word). All 10 pages comply with the order rule. Routes in the original request used '/product/<slug>' but actual routes are '/products/<slug>' or root paths (e.g. /lady-jay, /lisa) — corrected during testing.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_results": {
+    "LadyJay (/lady-jay)": {
+      "single_archive_only": true,
+      "archive_count": 1,
+      "archive_y": 945.39,
+      "configurator_y": 2523.33,
+      "commission_btn_y": 3968.98,
+      "order_archive_before_configurator_before_cta": true,
+      "verdict": "PASS — no duplicate archive, correct order"
+    },
+    "Couronne (/products/prise-de-couronne)": {
+      "ys": {"gallery": 788, "composition": 1400, "detail": 1859.5, "craft": 2341.47, "specifications": 2764.84, "add-to-bag-btn": 4486.94, "final-word": 4674.94},
+      "order_correct": true,
+      "verdict": "PASS — gallery, composition, detail, craft, specifications all before add-to-bag; final-word after"
+    },
+    "Cypher (/products/cypher)": {
+      "composition_y": 1620.13, "structure_y": 1804.13, "craft_y": 2069.69,
+      "cta_y": 2197.69, "final_word_y": 2289.69,
+      "order_correct": true,
+      "verdict": "PASS — composition/structure/craft before CTA in sidebar; final word after CTA"
+    },
+    "RhythmMeshRing (/products/rhythm-mesh-ring)": {
+      "story_y": 1394.81, "specs_y": 1718.81, "cta_y": 2018.81,
+      "order_correct": true,
+      "verdict": "PASS — story (The Rhythm Mesh Story) and Specifications before ADD TO CART button"
+    },
+    "Blessed Desktop (1280x800)": {
+      "visible_craft_y": 1528.33, "visible_claim_yours_y": 1885.09,
+      "order_correct": true,
+      "verdict": "PASS — CRAFT before CLAIM YOURS (note: 2 craft+claim DOM nodes exist, one hidden via responsive CSS for the other layout — visibility-aware check confirms order in visible layout)"
+    },
+    "Blessed Mobile (375x812)": {
+      "visible_craft_y": 1828.05, "visible_claim_yours_y": 2506.44,
+      "order_correct": true,
+      "verdict": "PASS — CRAFT before CLAIM YOURS"
+    },
+    "TrueVine (/the-true-vine)": {"vine_gallery_y": 865.59, "vine_configurator_y": 3205.58, "order_correct": true, "verdict": "PASS"},
+    "PortaAurea (/porta-aurea)": {"porta_archive_y": 881.59, "porta_configurator_y": 5384.67, "order_correct": true, "verdict": "PASS"},
+    "Lisa (/lisa)": {"lisa_archive_y": 2653.84, "lisa_acquire_y": 4973.70, "order_correct": true, "verdict": "PASS"},
+    "Coogi (/coogi-dna-tag)": {"coogi_gallery_y": 1730.22, "coogi_acquire_y": 4526.89, "order_correct": true, "verdict": "PASS"},
+    "Bamburgh (/products/bamburgh)": {
+      "gallery_testid_present": false,
+      "gallery_present_in_dom": true,
+      "gallery_location_in_source": "BamburghPage.jsx lines 99-131 (image browser section)",
+      "add_to_bag_y": 2912.56,
+      "order_correct_structurally": true,
+      "verdict": "PASS structurally — gallery section (image browser) is rendered between hero and Add to Bag, but lacks a data-testid attribute for explicit verification (see action items)"
+    }
+  },
+  "test_report_links": [],
+  "action_items": [
+    "OPTIONAL/MINOR: Add a data-testid (e.g. 'bamburgh-gallery') to the gallery <section> in /app/frontend/src/pages/BamburghPage.jsx (line 102) to enable explicit DOM-order test assertions. Order is currently correct but not directly testable via data-testid.",
+    "OPTIONAL: Original review_request used '/product/<slug>' URLs but the routes are configured as '/products/<slug>' (and a few root paths). Consider documenting the correct URL pattern for future testing agents."
+  ],
+  "critical_code_review_comments": [
+    "BlessedPage.jsx renders both mobile and desktop layouts in the DOM simultaneously (responsive CSS toggles visibility). This means screen readers and DOM-order tests must use visibility-aware queries. The visible layout in each viewport DOES have CRAFT before CLAIM YOURS so the rule is satisfied, but consider a CSS-only approach or single conditional render to reduce DOM duplication.",
+    "BamburghPage.jsx gallery section has no data-testid — the SITEWIDE ORDER RULE should be testable via data-testid for every product page to enable consistent automated regression testing."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (not requested)", "frontend": "100% (10/10 pages compliant with SITEWIDE PRODUCT PAGE ORDER RULE)"},
+  "test_credentials": "N/A — no auth required for product pages (test_credentials.md is empty by design)",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Product page routes are '/products/<slug>' (with 's'). LadyJay is at '/lady-jay' (root, no /products prefix). Lisa is at '/lisa'. PortaAurea/TrueVine/CoogiDnaTag have BOTH /products/<slug> and root /<slug> routes. BlessedPage renders mobile AND desktop layouts both in DOM (one hidden via CSS) — always use visibility-aware DOM queries for that page. Playwright Chromium cannot decode H.264 hero videos — black frames in screenshots are normal, not a bug. SITEWIDE ORDER RULE: Hero -> Intro -> Gallery/Archive -> Composition/Specs/Craft -> Configurator -> ADD TO CART -> Final Word. All 10 verified pages comply."
+}

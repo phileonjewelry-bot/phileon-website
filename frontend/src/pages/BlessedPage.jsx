@@ -284,6 +284,23 @@ export default function BlessedPage() {
               </div>
             </div>
 
+            {/* Craft Section — sits BEFORE the configurator CTA per SITEWIDE ORDER RULE */}
+            <div className="border-t border-white/[0.05] pt-8 mb-10">
+              <p className="text-[9px] tracking-[0.35em] text-white/25 mb-6">CRAFT</p>
+              <div className="space-y-6">
+                {product.craft.map((item, idx) => (
+                  <div key={idx}>
+                    <p className="text-[10px] text-amber-500/50 mb-1">{item.number} — {item.title}</p>
+                    <p className="text-[12px] text-white/35 leading-relaxed">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8 pt-6 border-t border-white/[0.03]">
+                <p className="text-[11px] text-white/25 italic mb-2">Not read.</p>
+                <p className="text-[11px] text-white/40">Worn.</p>
+              </div>
+            </div>
+
             {/* Size & Qty */}
             <div className="flex gap-3 mb-5">
               <div className="flex-1">
@@ -322,23 +339,6 @@ export default function BlessedPage() {
               Made to order · Limited production
             </p>
             <p className="text-[8px] text-white/12 text-center mb-10">Price adjusts automatically with the live precious metals market.</p>
-            
-            {/* Craft Section */}
-            <div className="border-t border-white/[0.05] pt-8 mb-10">
-              <p className="text-[9px] tracking-[0.35em] text-white/25 mb-6">CRAFT</p>
-              <div className="space-y-6">
-                {product.craft.map((item, idx) => (
-                  <div key={idx}>
-                    <p className="text-[10px] text-amber-500/50 mb-1">{item.number} — {item.title}</p>
-                    <p className="text-[12px] text-white/35 leading-relaxed">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 pt-6 border-t border-white/[0.03]">
-                <p className="text-[11px] text-white/25 italic mb-2">Not read.</p>
-                <p className="text-[11px] text-white/40">Worn.</p>
-              </div>
-            </div>
           </div>
 
           {/* Desktop Layout */}
@@ -464,6 +464,23 @@ export default function BlessedPage() {
                 </div>
               </div>
 
+              {/* Craft Section — sits BEFORE the configurator CTA per SITEWIDE ORDER RULE */}
+              <div className="border-t border-white/[0.04] pt-8 mb-8">
+                <p className="text-[9px] tracking-[0.35em] text-white/20 mb-5">CRAFT</p>
+                <div className="space-y-5">
+                  {product.craft.map((item, idx) => (
+                    <div key={idx}>
+                      <p className="text-[10px] text-amber-500/50 mb-1">{item.number} — {item.title}</p>
+                      <p className="text-[12px] text-white/30 leading-relaxed">{item.description}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-8 pt-5 border-t border-white/[0.03]">
+                  <p className="text-[11px] text-white/20 italic mb-1">Not read.</p>
+                  <p className="text-[11px] text-white/35">Worn.</p>
+                </div>
+              </div>
+
               {/* Size & Qty */}
               <div className="flex gap-3 mb-5">
                 <div className="flex-1">
@@ -503,23 +520,6 @@ export default function BlessedPage() {
                 Made to order · Limited production
               </p>
               <p className="text-[8px] text-white/12 mb-10">Price adjusts automatically with the live precious metals market.</p>
-
-              {/* Craft Section */}
-              <div className="border-t border-white/[0.04] pt-8">
-                <p className="text-[9px] tracking-[0.35em] text-white/20 mb-5">CRAFT</p>
-                <div className="space-y-5">
-                  {product.craft.map((item, idx) => (
-                    <div key={idx}>
-                      <p className="text-[10px] text-amber-500/50 mb-1">{item.number} — {item.title}</p>
-                      <p className="text-[12px] text-white/30 leading-relaxed">{item.description}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8 pt-5 border-t border-white/[0.03]">
-                  <p className="text-[11px] text-white/20 italic mb-1">Not read.</p>
-                  <p className="text-[11px] text-white/35">Worn.</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

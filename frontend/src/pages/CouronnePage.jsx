@@ -180,99 +180,9 @@ export default function CouronnePage() {
         </div>
       </section>
 
-      {/* PURCHASE BLOCK */}
-      <section className="py-10 md:py-14">
-        <div className="max-w-[560px] mx-auto px-5 md:px-8 space-y-6 text-white">
-          <div>
-            <h2
-              className="font-serif text-3xl md:text-4xl tracking-wide"
-              data-testid="couronne-purchase-title"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              PRISE DE COURONNE
-            </h2>
-            <p className="text-white/60 text-sm mt-1">Signature Ring</p>
-          </div>
-
-          <div>
-            <label className="text-xs tracking-widest text-white/45">METAL</label>
-
-            <div className="mt-3 space-y-3">
-              {[
-                { key: "signature",  label: "Signature",  note: "Most Popular" },
-                { key: "foundation", label: "Foundation", note: null },
-              ].map(({ key, label, note }) => {
-                const isSelected = selectedTier === key;
-                const priceStr =
-                  tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`;
-                const tier = product.tiers[key];
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSelectedTier(key)}
-                    data-testid={`couronne-tier-${key}-btn`}
-                    className={`w-full text-left p-4 transition border ${
-                      isSelected
-                        ? "border-[#D4AF37] bg-[#D4AF37]/10"
-                        : "border-white/10 hover:border-white/30"
-                    }`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className={isSelected ? "text-white tracking-wide" : "text-white/80"}>
-                        {label}
-                      </span>
-                      <span className={isSelected ? "text-white" : "text-white/80"}>
-                        {priceStr} USD
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-white/55 mt-1">
-                      {tier.metal}
-                      {note ? ` · ${note}` : ""}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <RingSizeSelector
-              value={selectedSize}
-              onChange={setSelectedSize}
-              testIdPrefix="couronne-ringsize"
-              style={{
-                "--ring-accent": "#D4AF37",
-                "--ring-bg": "rgba(0, 0, 0, 0.85)",
-                "--ring-fg": "#ffffff",
-                "--ring-muted": "rgba(255, 255, 255, 0.5)",
-              }}
-            />
-          </div>
-
-          <div>
-            <p className="text-xs tracking-widest text-white/45 mb-2">DETAILS</p>
-            <p className="text-white/80 text-sm leading-relaxed">{product.specs}</p>
-          </div>
-
-          <button
-            onClick={onAddToCart}
-            disabled={isAdding || !selectedSize}
-            data-testid="couronne-add-to-bag-btn"
-            className="w-full bg-[#D4AF37] text-black py-4 tracking-[0.2em] text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
-          >
-            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} USD`}
-          </button>
-
-          <p className="text-[10px] text-white/35 text-center">
-            Price adjusts automatically with the live precious metals market.
-          </p>
-
-          <p className="text-xs text-white/45 text-center">
-            Made to order • 3–4 weeks • Complimentary insured shipping within Canada
-          </p>
-        </div>
-      </section>
+      {/* ═══ COMPOSITION → DETAIL → CRAFT → SPECS sit BEFORE the configurator
+             per the SITEWIDE PRODUCT PAGE ORDER RULE:
+             SEE → UNDERSTAND → CHOOSE → BUY ═══ */}
 
       {/* COMPOSITION */}
       <section
@@ -368,6 +278,100 @@ export default function CouronnePage() {
               loading="lazy"
             />
           </div>
+        </div>
+      </section>
+
+      {/* PURCHASE BLOCK */}
+      <section className="py-10 md:py-14 border-t border-white/[0.04]">
+        <div className="max-w-[560px] mx-auto px-5 md:px-8 space-y-6 text-white">
+          <div>
+            <h2
+              className="font-serif text-3xl md:text-4xl tracking-wide"
+              data-testid="couronne-purchase-title"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              PRISE DE COURONNE
+            </h2>
+            <p className="text-white/60 text-sm mt-1">Signature Ring</p>
+          </div>
+
+          <div>
+            <label className="text-xs tracking-widest text-white/45">METAL</label>
+
+            <div className="mt-3 space-y-3">
+              {[
+                { key: "signature",  label: "Signature",  note: "Most Popular" },
+                { key: "foundation", label: "Foundation", note: null },
+              ].map(({ key, label, note }) => {
+                const isSelected = selectedTier === key;
+                const priceStr =
+                  tierPrices[key]?.formatted || `$${product.pricing[key].toLocaleString()}`;
+                const tier = product.tiers[key];
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedTier(key)}
+                    data-testid={`couronne-tier-${key}-btn`}
+                    className={`w-full text-left p-4 transition border ${
+                      isSelected
+                        ? "border-[#D4AF37] bg-[#D4AF37]/10"
+                        : "border-white/10 hover:border-white/30"
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className={isSelected ? "text-white tracking-wide" : "text-white/80"}>
+                        {label}
+                      </span>
+                      <span className={isSelected ? "text-white" : "text-white/80"}>
+                        {priceStr} USD
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-white/55 mt-1">
+                      {tier.metal}
+                      {note ? ` · ${note}` : ""}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <RingSizeSelector
+              value={selectedSize}
+              onChange={setSelectedSize}
+              testIdPrefix="couronne-ringsize"
+              style={{
+                "--ring-accent": "#D4AF37",
+                "--ring-bg": "rgba(0, 0, 0, 0.85)",
+                "--ring-fg": "#ffffff",
+                "--ring-muted": "rgba(255, 255, 255, 0.5)",
+              }}
+            />
+          </div>
+
+          <div>
+            <p className="text-xs tracking-widest text-white/45 mb-2">DETAILS</p>
+            <p className="text-white/80 text-sm leading-relaxed">{product.specs}</p>
+          </div>
+
+          <button
+            onClick={onAddToCart}
+            disabled={isAdding || !selectedSize}
+            data-testid="couronne-add-to-bag-btn"
+            className="w-full bg-[#D4AF37] text-black py-4 tracking-[0.2em] text-sm font-medium hover:bg-[#C19B2E] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+          >
+            {isAdding ? "ADDING..." : buttonText === "Added!" ? "ADDED" : `ADD TO BAG — ${ctaPrice} USD`}
+          </button>
+
+          <p className="text-[10px] text-white/35 text-center">
+            Price adjusts automatically with the live precious metals market.
+          </p>
+
+          <p className="text-xs text-white/45 text-center">
+            Made to order • 3–4 weeks • Complimentary insured shipping within Canada
+          </p>
         </div>
       </section>
 

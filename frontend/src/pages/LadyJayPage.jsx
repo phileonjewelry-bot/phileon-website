@@ -1586,35 +1586,6 @@ export default function LadyJayPage() {
         </div>
       </section>
 
-      {/* ─── ARCHIVE GALLERY ─────────────────────────────── */}
-      <section className="ladyjay-archive" data-testid="lady-jay-archive">
-        <div className="ladyjay-archive-head">
-          <p className="ladyjay-archive-eyebrow">THE ARCHIVE</p>
-          <p className="ladyjay-archive-title">
-            Nine frames. One tribute.
-          </p>
-        </div>
-        <div className="ladyjay-archive-grid" data-testid="lady-jay-archive-grid">
-          {GALLERY.map((g, i) => (
-            <button
-              key={g.src}
-              type="button"
-              className="ladyjay-archive-cell"
-              aria-label={`Open ${g.label}`}
-              onClick={() => setLightboxIdx(i)}
-              data-testid={`lady-jay-archive-cell-${i + 1}`}
-            >
-              <img
-                src={g.src}
-                alt={g.alt}
-                loading={i === 0 ? "eager" : "lazy"}
-                decoding="async"
-              />
-            </button>
-          ))}
-        </div>
-      </section>
-
       <Lightbox
         items={GALLERY}
         openIndex={lightboxIdx}
