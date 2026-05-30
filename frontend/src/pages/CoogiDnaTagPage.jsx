@@ -40,6 +40,7 @@ const VARIANTS = [
       { src: "/coogi-dna/coogi-dna-snow-macro.png",   alt: "COOGI DNA Tag — Snow macro. Extreme close detail of the pavé diamond bail meeting the multi-stone field, photographed against black for absolute focus on craft." },
       { src: "/coogi-dna/coogi-dna-snow-back.png",    alt: "COOGI DNA Tag — Snow reverse. The polished 10K white gold back face — a clean canvas, the architecture turned inward." },
       { src: "/coogi-dna/coogi-dna-snow-atelier.png", alt: "COOGI DNA Tag — Snow at the atelier. The white gold pendant hanging on a fine chain inside a private viewing room, soft daylight." },
+      { src: "/coogi-dna/coogi-dna-snow-on-body.png", alt: "COOGI DNA Tag — Snow worn. A gentleman in white fur and open white shirt against alpine snow peaks, the 10K white gold pendant resting on his chest, multi-stone columns catching the cold light." },
       { src: "/coogi-dna/coogi-dna-snow-box.png",     alt: "COOGI DNA Tag — Snow at provenance. 10K white gold pendant resting in a dark ebony presentation box on black velvet." },
     ],
     descriptor: "White gold · Lab diamonds + synthetic stones · Cold spectrum",
