@@ -25,26 +25,48 @@ import { useAddToCart } from "../hooks/useAddToCart";
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cutpv1k0_1000156263.jpg";
 const HERO_ALT =
-  "BATTENTI DELLA VILLA — pair of 18K yellow gold villa door knocker earrings with rope-twist treccia body and omega closure.";
+  "BATTENTI DELLA VILLA — pair of yellow gold villa door knocker earrings with rope-twist treccia body and omega closure.";
 
-// Editorial archive — single SKU, placeholder gallery using the hero
-// asset until further frames are supplied. Order documented for the
-// production sequence: front-on, three-quarter, omega macro, treccia macro,
-// on-ear, villa lifestyle, provenance.
+// Production archive — 6 frames, sequenced front-on → atelier study →
+// form study → detail macro → boutique context → provenance reveal.
 const GALLERY = [
-  { src: HERO_IMG, alt: HERO_ALT, label: "Pair, front-on" },
-  { src: HERO_IMG, alt: HERO_ALT, label: "Pair, three-quarter" },
-  { src: HERO_IMG, alt: HERO_ALT, label: "Omega closure detail" },
-  { src: HERO_IMG, alt: HERO_ALT, label: "Rope twist macro" },
-  { src: HERO_IMG, alt: HERO_ALT, label: "On-ear editorial" },
-  { src: HERO_IMG, alt: HERO_ALT, label: "Villa lifestyle" },
+  {
+    src: HERO_IMG,
+    label: "Pair, front-on",
+    alt: "BATTENTI DELLA VILLA pair, photographed front-on on a clean studio field.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3y5q48g9_1000156321.png",
+    label: "Atelier sketch",
+    alt: "BATTENTI DELLA VILLA pair resting on the original atelier sketch with rulers and pencil.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/crkypfpc_1000156335.png",
+    label: "Form study",
+    alt: "Mirrored reflection of a single Battenti drop, four-way form study of the rope-twist silhouette.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/riqmkzri_1000156325.png",
+    label: "Omega closure detail",
+    alt: "Macro of the textured omega top suspending the polished link into the rope-twist body.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png",
+    label: "Boutique reveal",
+    alt: "BATTENTI DELLA VILLA pair set in a black velvet boutique display.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/0bzh1n34_1000156313.png",
+    label: "Provenance",
+    alt: "Single Battenti earring lifted into a cream provenance box by a white-gloved hand.",
+  },
 ];
 
 const EDITORIAL = [
   {
     head: "COMPOSITION",
     sub: "Gold That Moves Like Water",
-    body: "Cast in 18K yellow gold, each earring is a study in controlled opulence. The warm richness of the alloy deepens the rope-twist texture, catching light at every coil and shifting with every turn of the head. This is gold that does not simply sit on the ear. It lives there.",
+    body: "Cast in the alloy of your choice, each earring is a study in controlled opulence. Warmth deepens the rope-twist texture, catching light at every coil and shifting with every turn of the head. This is gold that does not simply sit on the ear. It lives there.",
   },
   {
     head: "STRUCTURE",
@@ -66,24 +88,64 @@ const EDITORIAL = [
 const SPECS = [
   ["Piece", "Battenti della Villa"],
   ["Type", "Drop Earrings — Pair"],
-  ["Metal", "18K Yellow Gold"],
+  ["Dimensions", "45mm × 30mm"],
+  ["Total Weight", "Approx. 25g"],
   ["Texture", "Rope Twist / Treccia"],
   ["Closure", "Omega Back"],
   ["Finish", "High Polish + Textured"],
   ["Origin", "PHILEON Fine Jewelry"],
-  ["Hallmark", "750 / 18K"],
+  ["Hallmark", "925 / 10K / 14K / 750 (18K)"],
   ["Fulfillment", "Made to order"],
   ["Timeline", "4–6 weeks"],
+  ["Shipping", "Complimentary insured"],
 ];
 
-// Fixed-price piece: $6,800 USD displayed verbatim per brief.
-// CAD basis 6800 mirrors what is sent to backend cart validation.
-const PRICE_USD = 6800;
-const PRICE_DISPLAY = "$6,800 USD";
+// Four hand-set metal tiers. Prices render verbatim — they do not pass
+// through the sitewide luxury rounding (the user has hand-priced this
+// piece outside the $500-step rule).
+const METAL_TIERS = [
+  {
+    id: "silver",
+    sku: "BDV-925",
+    badge: "FOUNDATION",
+    name: "Sterling Silver",
+    priceUsd: 2800,
+    description: "925 sterling, high-polish + textured. The piece in its quietest voice.",
+  },
+  {
+    id: "gold10k",
+    sku: "BDV-10Y",
+    badge: "SIGNATURE",
+    name: "10K Yellow Gold",
+    priceUsd: 5800,
+    description: "Solid 10K yellow. Warmer tone, lasting weight on the ear.",
+  },
+  {
+    id: "gold14k",
+    sku: "BDV-14Y",
+    badge: "HEIRLOOM",
+    name: "14K Yellow Gold",
+    priceUsd: 7200,
+    description: "Richer hue, deeper saturation. The Mediterranean read.",
+  },
+  {
+    id: "gold18k",
+    sku: "BDV-18Y",
+    badge: "COLLECTOR",
+    name: "18K Yellow Gold",
+    featured: true,
+    priceUsd: 7800,
+    description: "Maximum gold density. The villa hardware as it was always intended.",
+  },
+];
+
+const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 export default function BattentiDellaVillaPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [activeFrame, setActiveFrame] = useState(0);
+  // Default to 18K — the piece as it was always intended.
+  const [selectedTier, setSelectedTier] = useState("gold18k");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
@@ -91,21 +153,26 @@ export default function BattentiDellaVillaPage() {
     return () => window.clearTimeout(t);
   }, []);
 
+  const currentTier =
+    METAL_TIERS.find((t) => t.id === selectedTier) || METAL_TIERS[3];
+  const priceUsd = currentTier.priceUsd;
+  const priceDisplay = formatUsd(priceUsd);
+
   const onAddToCart = () => {
     handleAddToCart(
       {
-        id: "battenti-della-villa-18y",
-        name: "BATTENTI DELLA VILLA — 18K Yellow Gold",
-        price: PRICE_USD,
+        id: `battenti-della-villa-${currentTier.id}`,
+        name: `BATTENTI DELLA VILLA — ${currentTier.name}`,
+        price: priceUsd,
         productKey: "battentiDellaVilla",
-        tierKey: "signature",
-        metal: "18K Yellow Gold",
-        sku: "BDV-18Y",
+        tierKey: currentTier.id,
+        metal: currentTier.name,
+        sku: currentTier.sku,
         quantity: 1,
         image: HERO_IMG,
       },
       1,
-      "18K Yellow Gold · Pair · Omega Back",
+      `${currentTier.name} · Pair · Omega Back`,
     );
   };
 
@@ -504,43 +571,134 @@ export default function BattentiDellaVillaPage() {
           color: var(--limestone);
           margin: 0 0 38px;
         }
-        .bdv-config-sku-card {
-          border: 1px solid rgba(220, 184, 110, 0.30);
-          padding: 30px 32px;
-          background:
-            linear-gradient(180deg,
-              rgba(220, 184, 110, 0.05),
-              rgba(220, 184, 110, 0.02));
+        /* ── Tier radiogroup ── */
+        .bdv-tiers {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
           margin: 0 0 32px;
-        }
-        .bdv-config-sku-line {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
-          gap: 22px;
-        }
-        .bdv-config-sku-name {
-          font-family: 'Cinzel', serif;
-          font-weight: 500;
-          font-size: 12px;
-          letter-spacing: 0.34em;
-          color: var(--limestone);
           text-align: left;
         }
-        .bdv-config-sku-price {
+        @media (min-width: 760px) {
+          .bdv-tiers { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        }
+        .bdv-tier {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding: 22px 22px 24px;
+          background: rgba(220, 184, 110, 0.025);
+          border: 1px solid rgba(220, 184, 110, 0.18);
+          color: var(--text);
+          cursor: pointer;
+          text-align: left;
+          transition:
+            border-color 320ms ease,
+            background 320ms ease,
+            transform 320ms ease;
+          font-family: 'Cinzel', serif;
+        }
+        .bdv-tier:hover {
+          border-color: rgba(220, 184, 110, 0.45);
+          background: rgba(220, 184, 110, 0.05);
+        }
+        .bdv-tier.is-selected {
+          border-color: var(--gold);
+          background: rgba(220, 184, 110, 0.08);
+          transform: translateY(-1px);
+        }
+        .bdv-tier-featured {
+          position: absolute;
+          top: 14px; right: 16px;
           font-family: 'Cinzel', serif;
           font-weight: 500;
-          font-size: 1.45rem;
+          font-size: 9px;
+          letter-spacing: 0.32em;
+          color: #1a1106;
+          background: var(--gold);
+          padding: 3px 8px;
+        }
+        .bdv-tier-badge {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 9.5px;
+          letter-spacing: 0.36em;
+          color: var(--gold-soft);
+          margin-bottom: 4px;
+        }
+        .bdv-tier.is-selected .bdv-tier-badge { color: var(--gold); }
+        .bdv-tier-name {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 13px;
+          letter-spacing: 0.18em;
+          color: var(--limestone);
+        }
+        .bdv-tier-desc {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic; font-weight: 300;
+          font-size: 14px;
+          line-height: 1.55;
+          color: rgba(238, 230, 210, 0.65);
+          margin: 4px 0 8px;
+        }
+        .bdv-tier-price {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 1.05rem;
           letter-spacing: 0.06em;
           color: var(--gold);
         }
-        .bdv-config-sku-note {
-          font-family: 'Cormorant Garamond', serif;
-          font-style: italic; font-weight: 300;
-          font-size: 13px;
-          color: var(--gold-soft);
-          margin: 10px 0 0;
+        /* ── Summary card above CTA ── */
+        .bdv-summary {
+          border-top: 1px solid rgba(220, 184, 110, 0.18);
+          border-bottom: 1px solid rgba(220, 184, 110, 0.18);
+          padding: 22px 4px;
+          margin: 0 0 28px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
           text-align: left;
+        }
+        .bdv-summary-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 18px;
+        }
+        .bdv-summary-row--price {
+          padding-top: 6px;
+          border-top: 1px dashed rgba(220, 184, 110, 0.18);
+        }
+        .bdv-summary-label {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 10px;
+          letter-spacing: 0.34em;
+          color: var(--gold-soft);
+          text-transform: uppercase;
+        }
+        .bdv-summary-value {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          font-size: 1rem;
+          color: rgba(238, 230, 210, 0.85);
+          text-align: right;
+        }
+        .bdv-summary-sku {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 11px;
+          letter-spacing: 0.22em;
+          color: var(--text-dim);
+        }
+        .bdv-summary-price {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 1.4rem;
+          letter-spacing: 0.06em;
+          color: var(--gold);
         }
         .bdv-cta {
           display: inline-block;
@@ -642,9 +800,11 @@ export default function BattentiDellaVillaPage() {
             <span>Silence in sunlight.</span>
           </p>
           <p className="bdv-hero-price" data-testid="bdv-hero-price">
-            {PRICE_DISPLAY}
+            {priceDisplay}
           </p>
-          <p className="bdv-hero-material">18K Yellow Gold</p>
+          <p className="bdv-hero-material" data-testid="bdv-hero-material">
+            {currentTier.name}
+          </p>
           <button
             type="button"
             onClick={onAddToCart}
@@ -727,27 +887,58 @@ export default function BattentiDellaVillaPage() {
       {/* ─── 6. ADD TO CART (within configurator block) ───────── */}
       <section className="bdv-config" data-testid="bdv-configurator">
         <div className="bdv-config-inner">
-          <p className="bdv-config-eyebrow">ACQUIRE</p>
-          <h2 className="bdv-config-title">A single composition.</h2>
+          <p className="bdv-config-eyebrow">SELECT METAL</p>
+          <h2 className="bdv-config-title">Four weights of the same villa.</h2>
 
           <div
-            className="bdv-config-sku-card"
-            data-testid="bdv-sku-card"
+            className="bdv-tiers"
+            role="radiogroup"
+            aria-label="Metal selection"
+            data-testid="bdv-tiers"
           >
-            <div className="bdv-config-sku-line">
-              <span className="bdv-config-sku-name">
-                18K YELLOW GOLD · PAIR
-              </span>
-              <span
-                className="bdv-config-sku-price"
-                data-testid="bdv-sku-price"
-              >
-                {PRICE_DISPLAY}
+            {METAL_TIERS.map((t) => {
+              const isSel = selectedTier === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSel}
+                  onClick={() => setSelectedTier(t.id)}
+                  className={`bdv-tier${isSel ? " is-selected" : ""}`}
+                  data-testid={`bdv-tier-${t.id}`}
+                >
+                  {t.featured && (
+                    <span className="bdv-tier-featured">FEATURED</span>
+                  )}
+                  <span className="bdv-tier-badge">{t.badge}</span>
+                  <span className="bdv-tier-name">{t.name}</span>
+                  <span className="bdv-tier-desc">{t.description}</span>
+                  <span className="bdv-tier-price">{formatUsd(t.priceUsd)}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="bdv-summary" data-testid="bdv-summary">
+            <div className="bdv-summary-row">
+              <span className="bdv-summary-label">Selection</span>
+              <span className="bdv-summary-value">
+                {currentTier.name} · Pair · Omega Back
               </span>
             </div>
-            <p className="bdv-config-sku-note">
-              SKU BDV-18Y · Rope twist · Omega back · Made to order
-            </p>
+            <div className="bdv-summary-row">
+              <span className="bdv-summary-label">SKU</span>
+              <span className="bdv-summary-value bdv-summary-sku">
+                {currentTier.sku}
+              </span>
+            </div>
+            <div className="bdv-summary-row bdv-summary-row--price">
+              <span className="bdv-summary-label">Today's price</span>
+              <span className="bdv-summary-price" data-testid="bdv-sku-price">
+                {priceDisplay}
+              </span>
+            </div>
           </div>
 
           <button

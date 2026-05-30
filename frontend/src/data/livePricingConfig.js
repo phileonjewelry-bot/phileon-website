@@ -259,12 +259,16 @@ const livePricingConfig = {
     sand: { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
-  // BATTENTI DELLA VILLA — Ladies Earrings · 18K Yellow Gold
-  // Single SKU, fixed-price piece (no metal market adjustment). Page renders
-  // a literal "$6,800 USD" — value below mirrors what is sent to backend
-  // /api/validate-cart so server_price == client_price on validation.
+  // BATTENTI DELLA VILLA — Ladies Earrings · 4 Metal Tiers
+  // Villa Door Knocker Earrings · 45×30mm · ~25g · Omega back.
+  // Prices are hand-set (do not pass through cadToUsdLuxury rounding).
+  // lockedBasePriceCad mirrors USD display value so backend /validate-cart
+  // returns diff=0 against the client_price the page sends.
   battentiDellaVilla: {
-    signature: { lockedBasePriceCad: 6800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver:   { lockedBasePriceCad: 2800, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k:  { lockedBasePriceCad: 5800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold14k:  { lockedBasePriceCad: 7200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold18k:  { lockedBasePriceCad: 7800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)

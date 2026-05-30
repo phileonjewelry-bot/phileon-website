@@ -16,7 +16,34 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 - Strict 5-frame Carapace gallery, never auto-regenerated without user approval
 
 ---
-### 2026-02-26 — BATTENTI DELLA VILLA — Earrings Live
+### 2026-02-26 — BATTENTI DELLA VILLA — Expanded to 4 Metal Tiers + Production Gallery
+- **Tier expansion**: page now offers four metal tiers with hand-set USD prices
+  (these are intentionally outside the sitewide $500-step rounding rule —
+  the user has hand-priced this piece):
+  - `silver`  · 925 Sterling Silver  · **$2,800 USD** · SKU `BDV-925`
+  - `gold10k` · 10K Yellow Gold       · **$5,800 USD** · SKU `BDV-10Y`
+  - `gold14k` · 14K Yellow Gold       · **$7,200 USD** · SKU `BDV-14Y`
+  - `gold18k` · 18K Yellow Gold       · **$7,800 USD** · SKU `BDV-18Y` · default · `FEATURED`
+- Tier selector (radiogroup) renders below specs; hero price + material line
+  + summary SKU/price re-render on click. Confirmed reactive via Playwright
+  (silver→`$2,800`, 14K→`$7,200`, 18K default `$7,800`).
+- **Live archive**: gallery replaced from placeholder-of-hero to 6 production
+  frames — `01 Pair, front-on`, `02 Atelier sketch`, `03 Form study`,
+  `04 Omega closure detail`, `05 Boutique reveal`, `06 Provenance`.
+- **Spec sheet** expanded: added Dimensions `45mm × 30mm`, Total Weight
+  `Approx. 25g`, Shipping `Complimentary insured`, Hallmark updated to
+  `925 / 10K / 14K / 750 (18K)` to reflect all 4 tiers.
+- **Pricing engine**: backend `pricing_engine.battentiDellaVilla` rewritten
+  to 4 keyed tiers. `/api/validate-cart` returns `diff=0` for every tier;
+  tampering (e.g. sending $2,800 against `gold18k`) is correctly rejected
+  with the proper server price returned.
+- **Catalog**: `ShopDropPage.jsx` card updated to `From $2,800 USD`, hero
+  swapped to the black-velvet boutique frame, tags expanded with `Silver`.
+- **Cross-collection carousel**: `PhileonCarousel.jsx` (used on the Bamburgh
+  page as the cross-product collection band) now includes a BATTENTI tile
+  pointing to `/products/battenti-della-villa`.
+
+
 - New product page `/battenti-della-villa` (alias
   `/products/battenti-della-villa`) — `BattentiDellaVillaPage.jsx`.
 - **Positioning**: PHILEON · Ladies → Earrings → Collective.
