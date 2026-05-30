@@ -99,7 +99,7 @@ export default function BamburghPage() {
       {/* ═══════════════════════════════════════════════════════
           2. GALLERY — Image browser
       ═══════════════════════════════════════════════════════ */}
-      <section className="w-full mt-2 md:mt-4">
+      <section className="w-full mt-2 md:mt-4" data-testid="bamburgh-gallery">
         <div className="max-w-[420px] md:max-w-[520px] mx-auto px-3 md:px-5">
 
           <div className="w-full overflow-hidden rounded-[10px] bg-black mb-2">

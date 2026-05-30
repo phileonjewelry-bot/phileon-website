@@ -16,6 +16,36 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 - Strict 5-frame Carapace gallery, never auto-regenerated without user approval
 
 ---
+### 2026-02-26 — SITEWIDE PRODUCT PAGE ORDER RULE — Enforced Across All Pages
+- Rule: every product page MUST follow the canonical funnel order
+  **SEE → UNDERSTAND → CHOOSE → BUY**:
+  1. Hero  →  2. Intro/Editorial  →  3. Archive Gallery  →
+  4. Composition / Specs / Craft  →  5. Configurator (tier + size)  →
+  6. ADD TO CART  →  7. Final Word.
+- The Archive Gallery and the Composition/Specs/Craft blocks must
+  **never** appear AFTER the ADD TO CART CTA.
+- **Fixes applied this session**:
+  - `LadyJayPage.jsx` — removed a duplicated `<section ladyjay-archive>`
+    that the prior agent had left at the bottom after the swap. Page
+    now has a single archive, correctly placed before the configurator.
+  - `CouronnePage.jsx` — moved COMPOSITION → DETAIL → CRAFT →
+    SPECIFICATIONS sections from below the purchase block to above it.
+  - `CypherPage.jsx` — within the sticky sidebar, moved COMPOSITION,
+    STRUCTURE and CRAFT blocks above the CLAIM YOURS CTA. Final Word
+    remains last.
+  - `RingProductPage.jsx` (used by `RhythmMeshRingPage`) — moved Story
+    and Specifications above the ADD TO CART button on the right column.
+  - `BlessedPage.jsx` — moved the CRAFT section above the CLAIM YOURS
+    button in **both** mobile and desktop layouts.
+  - `BamburghPage.jsx` — added `data-testid="bamburgh-gallery"` for
+    automated order verification (already in compliant order).
+- **Audit verified compliant (no change required)**: TrueVine, PortaAurea,
+  Lisa, CoogiDnaTag, Bamburgh.
+- **Testing**: `testing_agent_v3_fork` ran DOM-order regression across
+  10 product pages. All 10 PASS (100%). Report
+  `/app/test_reports/iteration_8.json`.
+
+
 
 ### 2026-02-25 — COOGI DNA TAG — Tribute Series Pendant Live
 - New product page `/coogi-dna-tag` (alias `/products/coogi-dna-tag`).
