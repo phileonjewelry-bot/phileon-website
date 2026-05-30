@@ -16,6 +16,33 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 - Strict 5-frame Carapace gallery, never auto-regenerated without user approval
 
 ---
+### 2026-02-26 — BATTENTI DELLA VILLA — Earrings Live
+- New product page `/battenti-della-villa` (alias
+  `/products/battenti-della-villa`) — `BattentiDellaVillaPage.jsx`.
+- **Positioning**: PHILEON · Ladies → Earrings → Collective.
+  Tagline: *"Villa Door Knocker Earrings · Portofino, Italia."*
+- **Single SKU**: `BDV-18Y` · 18K Yellow Gold · Rope Twist (Treccia) ·
+  Omega Back · Pair · Made to order, 4–6 weeks.
+- **Price**: **$6,800 USD** (fixed, no live metal adjustment — page
+  renders the value literally; cart sends `client_price=6800` and
+  backend `pricing_engine.battentiDellaVilla.signature` returns
+  `server_price=6800` so validation diff is `$0`).
+- **Page flow** (sitewide rule, verified by Playwright DOM-order
+  capture, hero=116 → editorial=997 → archive=1817 → specs=3000 →
+  config=3541 → CTA=3953 → final=4156):
+  Hero (split, image-left/editorial-right) → Editorial thesis
+  (Composition · Structure · Craft · Wear) → The Villa Archive
+  (6-cell placeholder grid until production frames arrive) →
+  Specifications (10 rows) → Configurator (single SKU card) →
+  ADD TO BAG → Final word.
+- **Palette**: ink/charcoal background with warm gold + limestone
+  cream accents; Cinzel for labels, Cormorant Garamond italic for
+  editorial. No custom cursor, no bottom marquee, no engraving, no
+  stones, no metal variants per brief.
+- **Catalog**: card registered in `ShopDropPage.jsx` under
+  Ladies → Earrings + Collective with featured + new flags.
+
+
 ### 2026-02-26 — SITEWIDE PRODUCT PAGE ORDER RULE — Enforced Across All Pages
 - Rule: every product page MUST follow the canonical funnel order
   **SEE → UNDERSTAND → CHOOSE → BUY**:

@@ -223,6 +223,13 @@ LIVE_PRICING_CONFIG = {
         "snow": {"lockedBasePriceCad": 11334, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "sand": {"lockedBasePriceCad": 11334, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+    # BATTENTI DELLA VILLA — Ladies Earrings · 18K Yellow Gold
+    # Single SKU, fixed-price piece (no live metal adjustment).
+    # client_price (USD 6800) == server_price (CAD 6800 via weightGrams=0)
+    # so /api/validate-cart returns diff=0 within tolerance.
+    "battentiDellaVilla": {
+        "signature": {"lockedBasePriceCad": 6800, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
 }
 
 

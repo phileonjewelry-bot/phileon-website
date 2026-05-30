@@ -64,6 +64,7 @@ import LisaPage from "@/pages/LisaPage";
 import LadyJayPage from "@/pages/LadyJayPage";
 import TrueVinePage from "@/pages/TrueVinePage";
 import PortaAureaPage from "@/pages/PortaAureaPage";
+import BattentiDellaVillaPage from "@/pages/BattentiDellaVillaPage";
 import CoogiDnaTagPage from "@/pages/CoogiDnaTagPage";
 import AtelierPage from "@/pages/AtelierPage";
 import WishlistPage from "@/pages/WishlistPage";
@@ -182,6 +183,8 @@ function App() {
             <Route path="/products/porta-aurea" element={<PortaAureaPage />} />
             <Route path="/coogi-dna-tag" element={<CoogiDnaTagPage />} />
             <Route path="/products/coogi-dna-tag" element={<CoogiDnaTagPage />} />
+            <Route path="/battenti-della-villa" element={<BattentiDellaVillaPage />} />
+            <Route path="/products/battenti-della-villa" element={<BattentiDellaVillaPage />} />
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/custom" element={<AtelierPage />} />
             <Route path="/commission" element={<AtelierPage />} />

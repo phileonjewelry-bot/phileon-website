@@ -68,6 +68,7 @@ const SHOP_COLLECTION_MAP = {
   'the-true-vine': 'collective',
   'porta-aurea': 'collective',
   'coogi-dna-tag': 'collective',
+  'battenti-della-villa': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -644,6 +645,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 8,
+  },
+  {
+    id: 'battenti-della-villa',
+    name: 'BATTENTI DELLA VILLA',
+    slug: 'battenti-della-villa',
+    materialLine: 'Villa Door Knocker Earrings · 18K Yellow Gold · Rope Twist · Omega Back',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cutpv1k0_1000156263.jpg',
+    href: '/battenti-della-villa',
+    price_range: '$6,800 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: ['ladies', 'collective'],
+    tags: ['Ladies', 'Collective', 'Earrings', '18K', 'Yellow Gold', 'Italia'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 9,
   },
 ];
 

@@ -259,6 +259,14 @@ const livePricingConfig = {
     sand: { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // BATTENTI DELLA VILLA — Ladies Earrings · 18K Yellow Gold
+  // Single SKU, fixed-price piece (no metal market adjustment). Page renders
+  // a literal "$6,800 USD" — value below mirrors what is sent to backend
+  // /api/validate-cart so server_price == client_price on validation.
+  battentiDellaVilla: {
+    signature: { lockedBasePriceCad: 6800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)
   // pricingPending: lockedBasePriceCad placeholders below are NOT shown on the
   // page (page renders "Pricing on Inquiry") but the structure must exist so
