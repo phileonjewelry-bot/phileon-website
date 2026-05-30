@@ -32,15 +32,18 @@ const VARIANTS = [
     image: "/coogi-dna/coogi-dna-snow.png",
     imageAlt:
       "COOGI DNA Tag — Snow. 10K white gold dog-tag pendant with cold-spectrum baguette columns (sapphire, amethyst, citrine, turquoise) framed by a pavé diamond border, photographed nestled in fresh snow.",
+    // 9-frame archive, prescribed sequence (mirrored across both variants):
+    //  1 pair · 2 architecture · 3 tilted depth · 4 bail · 5 macro detail
+    //  6 reverse canvas · 7 atelier · 8 on-body · 9 provenance
     archive: [
       { src: "/coogi-dna/coogi-dna-snow-pair.png",    alt: "COOGI DNA Tag — Snow & Sand together on rose ball chain, white gold Snow leading the composition against dark velvet." },
-      { src: "/coogi-dna/coogi-dna-snow-front.png",   alt: "COOGI DNA Tag — Snow front-on study. The full architecture: pavé diamond border framing two vertical multi-stone baguette columns split by a central diamond gallery." },
-      { src: "/coogi-dna/coogi-dna-snow-tilt.png",    alt: "COOGI DNA Tag — Snow tilted angle, exposing the depth of the baguette columns and the rise of the diamond pavé border." },
+      { src: "/coogi-dna/coogi-dna-snow-front.png",   alt: "COOGI DNA Tag — Snow front-on architecture. The full pendant: pavé diamond border framing two vertical multi-stone baguette columns split by a central diamond gallery." },
+      { src: "/coogi-dna/coogi-dna-snow-tilt.png",    alt: "COOGI DNA Tag — Snow tilted depth angle, exposing the depth of the baguette columns and the rise of the diamond pavé border." },
       { src: "/coogi-dna/coogi-dna-snow-bail.png",    alt: "COOGI DNA Tag — Snow bail study. The pavé-set diamond bail at the top of the pendant, seen from a low angle." },
-      { src: "/coogi-dna/coogi-dna-snow-macro.png",   alt: "COOGI DNA Tag — Snow macro. Extreme close detail of the pavé diamond bail meeting the multi-stone field, photographed against black for absolute focus on craft." },
-      { src: "/coogi-dna/coogi-dna-snow-back.png",    alt: "COOGI DNA Tag — Snow reverse. The polished 10K white gold back face — a clean canvas, the architecture turned inward." },
+      { src: "/coogi-dna/coogi-dna-snow-macro.png",   alt: "COOGI DNA Tag — Snow macro on black. Extreme close detail of the pavé diamond bail meeting the multi-stone field, photographed against black for absolute focus on craft." },
+      { src: "/coogi-dna/coogi-dna-snow-back.png",    alt: "COOGI DNA Tag — Snow reverse. The polished 10K white gold back face — a clean canvas reserved for personal laser engraving, the architecture turned inward." },
       { src: "/coogi-dna/coogi-dna-snow-atelier.png", alt: "COOGI DNA Tag — Snow at the atelier. The white gold pendant hanging on a fine chain inside a private viewing room, soft daylight." },
-      { src: "/coogi-dna/coogi-dna-snow-on-body.png", alt: "COOGI DNA Tag — Snow worn. A gentleman in white fur and open white shirt against alpine snow peaks, the 10K white gold pendant resting on his chest, multi-stone columns catching the cold light." },
+      { src: "/coogi-dna/coogi-dna-snow-on-body.png", alt: "COOGI DNA Tag — Snow worn. A gentleman in white fur and open white shirt against alpine snow peaks, the 10K white gold pendant resting on his chest, multi-stone columns catching the cold light.", objectPosition: "center 40%" },
       { src: "/coogi-dna/coogi-dna-snow-box.png",     alt: "COOGI DNA Tag — Snow at provenance. 10K white gold pendant resting in a dark ebony presentation box on black velvet." },
     ],
     descriptor: "White gold · Lab diamonds + synthetic stones · Cold spectrum",
@@ -62,15 +65,18 @@ const VARIANTS = [
     image: "/coogi-dna/coogi-dna-sand.png",
     imageAlt:
       "COOGI DNA Tag — Sand. 10K rose gold dog-tag pendant with warm-spectrum baguette columns (ruby, garnet, citrine, emerald, amethyst, onyx) framed by a pavé diamond border, photographed half-submerged in golden sand.",
+    // 9-frame archive, mirrored to Snow's sequence:
+    //  1 pair · 2 architecture · 3 tilted depth · 4 bail · 5 macro detail
+    //  6 reverse canvas · 7 atelier · 8 on-body · 9 provenance
     archive: [
       { src: "/coogi-dna/coogi-dna-sand-pair.png",     alt: "COOGI DNA Tag — Sand & Snow together on yellow curb chain, rose gold Sand leading the composition against dark velvet." },
-      { src: "/coogi-dna/coogi-dna-sand-tilt.png",     alt: "COOGI DNA Tag — Sand tilted study. The full architecture suspended in cream studio light: rose gold frame, pavé diamond border, vertical baguette columns of ruby, amethyst, citrine, garnet, emerald, onyx, split by a central diamond gallery." },
-      { src: "/coogi-dna/coogi-dna-sand-macro.png",    alt: "COOGI DNA Tag — Sand macro. Extreme close angle on the warm-spectrum baguette field, exposing the depth of each column and the rose-gold prong work between stones." },
-      { src: "/coogi-dna/coogi-dna-sand-diamonds.png", alt: "COOGI DNA Tag — Sand central gallery. Vertical macro of the round-diamond column running between the two baguette columns, every prong cut and finished by hand in rose gold." },
-      { src: "/coogi-dna/coogi-dna-sand-canvas.png",  alt: "COOGI DNA Tag — Sand reverse. The soft sand-finish 10K rose gold back face inside its polished bezel — the canvas reserved for personal laser engraving, set against a warm champagne backdrop." },
-      { src: "/coogi-dna/coogi-dna-sand-prop.png",     alt: "COOGI DNA Tag — Sand leaning. The rose gold pendant resting against a neutral display block inside the atelier, soft warm daylight." },
+      { src: "/coogi-dna/coogi-dna-sand-tilt.png",     alt: "COOGI DNA Tag — Sand front-on architecture. The full pendant suspended in cream studio light: rose gold frame, pavé diamond border, vertical baguette columns of ruby, amethyst, citrine, garnet, emerald, onyx, split by a central diamond gallery." },
+      { src: "/coogi-dna/coogi-dna-sand-macro.png",    alt: "COOGI DNA Tag — Sand tilted depth. Angled macro exposing the rise of the warm-spectrum baguette columns and the depth of the rose-gold prong work between stones." },
+      { src: "/coogi-dna/coogi-dna-sand-diamonds.png", alt: "COOGI DNA Tag — Sand bail study. Vertical macro of the round-diamond column climbing from the bail through the central gallery, every prong cut and finished by hand in rose gold." },
+      { src: "/coogi-dna/coogi-dna-sand-prop.png",     alt: "COOGI DNA Tag — Sand studio detail. The rose gold pendant resting against a neutral display block inside the atelier, soft warm daylight on the multi-stone field." },
+      { src: "/coogi-dna/coogi-dna-sand-canvas.png",   alt: "COOGI DNA Tag — Sand reverse. The soft sand-finish 10K rose gold back face inside its polished bezel — the canvas reserved for personal laser engraving, set against a warm champagne backdrop." },
       { src: "/coogi-dna/coogi-dna-sand-atelier.png",  alt: "COOGI DNA Tag — Sand at the atelier. The rose gold pendant suspended on a fine rose chain inside a private viewing room." },
-      { src: "/coogi-dna/coogi-dna-sand-on-body.png",  alt: "COOGI DNA Tag — Sand worn. A gentleman in charcoal suit and open white shirt at golden hour beside a reflecting pool, the rose gold pendant catching the desert light against his chest." },
+      { src: "/coogi-dna/coogi-dna-sand-on-body.png",  alt: "COOGI DNA Tag — Sand worn. A gentleman in charcoal suit and open white shirt at golden hour beside a reflecting pool, the rose gold pendant catching the desert light against his chest.", objectPosition: "center 28%" },
       { src: "/coogi-dna/coogi-dna-sand-box.png",      alt: "COOGI DNA Tag — Sand at provenance. 10K rose gold pendant resting in a gold-framed presentation box on black velvet." },
     ],
     descriptor: "Rose gold · Lab diamonds + synthetic stones · Warm spectrum",
@@ -847,9 +853,13 @@ export default function CoogiDnaTagPage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
           display: block;
           animation: coogiHeroFade 800ms ease both;
           transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .coogi-gallery-frame img { animation: none; transition: none; }
         }
         .coogi-gallery-frame:hover img { transform: scale(1.025); }
 
@@ -1067,6 +1077,7 @@ export default function CoogiDnaTagPage() {
                 src={frame.src}
                 alt={frame.alt}
                 loading="lazy"
+                style={frame.objectPosition ? { objectPosition: frame.objectPosition } : undefined}
                 data-testid={`coogi-gallery-img-${idx}`}
               />
             </figure>
