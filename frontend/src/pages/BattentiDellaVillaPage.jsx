@@ -27,8 +27,9 @@ const HERO_IMG =
 const HERO_ALT =
   "BATTENTI DELLA VILLA — pair of yellow gold villa door knocker earrings with rope-twist treccia body and omega closure.";
 
-// Production archive — 6 frames, sequenced front-on → atelier study →
-// form study → detail macro → boutique context → provenance reveal.
+// Production archive — 11 frames, sequenced as a full editorial:
+//   identity → atelier → form study → detail / craft macro →
+//   on-ear → Portofino → limestone → boutique → provenance.
 const GALLERY = [
   {
     src: HERO_IMG,
@@ -41,6 +42,11 @@ const GALLERY = [
     alt: "BATTENTI DELLA VILLA pair resting on the original atelier sketch with rulers and pencil.",
   },
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/exzlluk4_1000156354.jpg",
+    label: "Side profile",
+    alt: "Side profile of the BATTENTI pair showing the omega clasp mechanism and full treccia drop.",
+  },
+  {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/crkypfpc_1000156335.png",
     label: "Form study",
     alt: "Mirrored reflection of a single Battenti drop, four-way form study of the rope-twist silhouette.",
@@ -49,6 +55,26 @@ const GALLERY = [
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/riqmkzri_1000156325.png",
     label: "Omega closure detail",
     alt: "Macro of the textured omega top suspending the polished link into the rope-twist body.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/520zkvsv_1000156365.png",
+    label: "Treccia macro",
+    alt: "Close macro of the rope-twist treccia weave wrapping the BATTENTI body.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yqdl1k1q_1000156456.jpg",
+    label: "On-ear editorial",
+    alt: "BATTENTI DELLA VILLA worn on-ear, dusk portrait against deep architectural shadow.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/evv9bkwc_1000156454.jpg",
+    label: "Portofino",
+    alt: "BATTENTI DELLA VILLA worn at a villa terrace overlooking the Mediterranean coastline.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wky2slfl_1000156457.jpg",
+    label: "Limestone",
+    alt: "BATTENTI DELLA VILLA pair hung against a sunlit limestone backdrop of an old estate.",
   },
   {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png",
@@ -843,10 +869,7 @@ export default function BattentiDellaVillaPage() {
         <div className="bdv-archive-head">
           <p className="bdv-archive-eyebrow">THE VILLA ARCHIVE</p>
           <p className="bdv-archive-title">
-            Gold, photographed like old hardware in afternoon light.
-          </p>
-          <p className="bdv-archive-sub">
-            Sequence to be completed as production frames arrive.
+            Eleven frames. Gold photographed like old hardware in afternoon light.
           </p>
         </div>
         <div className="bdv-archive-grid" data-testid="bdv-archive-grid">

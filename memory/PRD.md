@@ -16,6 +16,20 @@ prices render in USD (CAD * 0.75 with luxury rounding rules).
 - Strict 5-frame Carapace gallery, never auto-regenerated without user approval
 
 ---
+### 2026-02-26 — BATTENTI DELLA VILLA — Editorial Archive Completed (11 Frames)
+- Villa Archive expanded from 6 → **11 production frames**, completing the
+  editorial sequence:
+  `01 Pair, front-on` · `02 Atelier sketch` · `03 Side profile` ·
+  `04 Form study` · `05 Omega closure detail` · `06 Treccia macro` ·
+  `07 On-ear editorial` · `08 Portofino` · `09 Limestone` ·
+  `10 Boutique reveal` · `11 Provenance`.
+- New on-ear + Mediterranean lifestyle frames fill the wear/context slots
+  that were earlier flagged as missing. Subtitle "Sequence to be completed…"
+  removed; archive heading now reads "Eleven frames."
+- Verified: 11 cells in DOM, every image's `naturalWidth > 0` (no broken
+  URLs), archive still sits BEFORE the configurator CTA
+  (archive y=1817 < cta y=5264).
+
 ### 2026-02-26 — BATTENTI DELLA VILLA — Expanded to 4 Metal Tiers + Production Gallery
 - **Tier expansion**: page now offers four metal tiers with hand-set USD prices
   (these are intentionally outside the sitewide $500-step rounding rule —
