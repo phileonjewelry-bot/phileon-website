@@ -37,47 +37,30 @@ const HERO_ALT =
   "GENT — PHILEON architectural signet ring in yellow gold, oversized elevated GENT typography over a deep woven lattice body.";
 
 // Production archive — 11-frame editorial shot list per brief.
-// Frames 01–06 are AI-generated editorial campaign renders (Gemini Nano
-// Banana, generated via /app/backend/scripts/generate_gent_editorial.py).
-// Frames 07–11 fall back to the hero image until campaign photography
-// for those slots is delivered.
-const GALLERY = [
-  {
-    src: "/gent/01-hero.jpg",
-    label: "Hero render",
-    alt: "GENT — hero editorial render: polished yellow gold signet with woven lattice sidewalls and raised GENT typography on a black mirror surface.",
-  },
-  {
-    src: "/gent/02-front.jpg",
-    label: "Front editorial",
-    alt: "GENT — front-facing editorial frame, raised GENT lettering symmetrically composed against a black reflective background.",
-  },
-  {
-    src: "/gent/03-low-angle.jpg",
-    label: "Low-angle dominance",
-    alt: "GENT — low-angle cinematic macro of the signet, oversized gold lettering towering above the woven sidewalls.",
-  },
-  {
-    src: "/gent/04-side.jpg",
-    label: "Side profile",
-    alt: "GENT — side profile of the signet revealing the woven lattice sidewall architecture and braided edge detailing.",
-  },
-  {
-    src: "/gent/05-top.jpg",
-    label: "Top-down",
-    alt: "GENT — overhead luxury macro render, oversized GENT block letters filling the frame.",
-  },
-  {
-    src: "/gent/06-cigar-lounge.jpg",
-    label: "Cigar lounge",
-    alt: "GENT photographed in an elite cigar lounge beside crystal whiskey and dark wood, warm amber light catching the gold.",
-  },
-  { src: HERO_IMG, label: "On-hand editorial", alt: HERO_ALT },
-  { src: HERO_IMG, label: "Tailored black suit", alt: HERO_ALT },
-  { src: HERO_IMG, label: "Open interior gallery", alt: HERO_ALT },
-  { src: HERO_IMG, label: "Museum pedestal", alt: HERO_ALT },
-  { src: HERO_IMG, label: "Campaign silhouette", alt: HERO_ALT },
+// Live frame uses the hero asset; remaining slots remain pinned to
+// the hero until the editorial shoot is delivered. The grid still
+// reads as a disciplined sequence even before the campaign lands.
+const GALLERY_SHOTS = [
+  "Hero, three-quarter",
+  "Low-angle dominance",
+  "Macro lattice detail",
+  "Typography shadow",
+  "Open interior gallery",
+  "Black lacquer reflection",
+  "On-hand editorial",
+  "Tailored black suit",
+  "Cigar-room lighting",
+  "Museum pedestal",
+  "Campaign silhouette",
 ];
+const GALLERY = GALLERY_SHOTS.map((label, i) => ({
+  src: HERO_IMG,
+  label,
+  alt:
+    i === 0
+      ? HERO_ALT
+      : `GENT — ${label}. Editorial frame ${String(i + 1).padStart(2, "0")} of 11.`,
+}));
 
 const EDITORIAL = [
   {
