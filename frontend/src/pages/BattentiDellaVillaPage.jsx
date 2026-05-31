@@ -67,6 +67,11 @@ const GALLERY = [
     alt: "Side-profile portrait of the BATTENTI worn against a sleek chignon and black neckline.",
   },
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/bbzr4wvj_1000156458.png",
+    label: "Portofino harbour",
+    alt: "BATTENTI DELLA VILLA worn at a Portofino harbour-side restaurant, yachts and limestone villa in the background.",
+  },
+  {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wky2slfl_1000156457.jpg",
     label: "Limestone",
     alt: "BATTENTI DELLA VILLA pair hung against a sunlit limestone backdrop of an old estate.",
@@ -864,7 +869,7 @@ export default function BattentiDellaVillaPage() {
         <div className="bdv-archive-head">
           <p className="bdv-archive-eyebrow">THE VILLA ARCHIVE</p>
           <p className="bdv-archive-title">
-            Ten frames. Gold photographed like old hardware in afternoon light.
+            Eleven frames. Gold photographed like old hardware in afternoon light.
           </p>
         </div>
         <div className="bdv-archive-grid" data-testid="bdv-archive-grid">
