@@ -37,11 +37,6 @@ const GALLERY = [
     alt: "BATTENTI DELLA VILLA pair, photographed front-on on a clean studio field.",
   },
   {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3y5q48g9_1000156321.png",
-    label: "Atelier sketch",
-    alt: "BATTENTI DELLA VILLA pair resting on the original atelier sketch with rulers and pencil.",
-  },
-  {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/exzlluk4_1000156354.jpg",
     label: "Side profile",
     alt: "Side profile of the BATTENTI pair showing the omega clasp mechanism and full treccia drop.",
@@ -70,11 +65,6 @@ const GALLERY = [
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f7a31ubx_1000156355.jpg",
     label: "Profile, on-ear",
     alt: "Side-profile portrait of the BATTENTI worn against a sleek chignon and black neckline.",
-  },
-  {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/evv9bkwc_1000156454.jpg",
-    label: "Portofino",
-    alt: "BATTENTI DELLA VILLA worn at a villa terrace overlooking the Mediterranean coastline.",
   },
   {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wky2slfl_1000156457.jpg",
@@ -874,7 +864,7 @@ export default function BattentiDellaVillaPage() {
         <div className="bdv-archive-head">
           <p className="bdv-archive-eyebrow">THE VILLA ARCHIVE</p>
           <p className="bdv-archive-title">
-            Twelve frames. Gold photographed like old hardware in afternoon light.
+            Ten frames. Gold photographed like old hardware in afternoon light.
           </p>
         </div>
         <div className="bdv-archive-grid" data-testid="bdv-archive-grid">
