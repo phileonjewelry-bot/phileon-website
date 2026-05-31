@@ -67,6 +67,11 @@ const GALLERY = [
     alt: "BATTENTI DELLA VILLA worn on-ear, dusk portrait against deep architectural shadow.",
   },
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f7a31ubx_1000156355.jpg",
+    label: "Profile, on-ear",
+    alt: "Side-profile portrait of the BATTENTI worn against a sleek chignon and black neckline.",
+  },
+  {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/evv9bkwc_1000156454.jpg",
     label: "Portofino",
     alt: "BATTENTI DELLA VILLA worn at a villa terrace overlooking the Mediterranean coastline.",
@@ -869,7 +874,7 @@ export default function BattentiDellaVillaPage() {
         <div className="bdv-archive-head">
           <p className="bdv-archive-eyebrow">THE VILLA ARCHIVE</p>
           <p className="bdv-archive-title">
-            Eleven frames. Gold photographed like old hardware in afternoon light.
+            Twelve frames. Gold photographed like old hardware in afternoon light.
           </p>
         </div>
         <div className="bdv-archive-grid" data-testid="bdv-archive-grid">
