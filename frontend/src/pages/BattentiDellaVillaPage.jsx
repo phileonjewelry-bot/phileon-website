@@ -341,48 +341,6 @@ export default function BattentiDellaVillaPage() {
         }
         .bdv-hero-stanza span { display: block; }
 
-        .bdv-hero-price {
-          font-family: 'Cinzel', serif;
-          font-weight: 500;
-          font-size: 1.5rem;
-          letter-spacing: 0.08em;
-          color: var(--gold);
-          margin: 0 0 6px;
-        }
-        .bdv-hero-material {
-          font-family: 'Inter', sans-serif;
-          font-size: 11px;
-          letter-spacing: 0.3em;
-          text-transform: uppercase;
-          color: var(--text-dim);
-          margin: 0 0 28px;
-        }
-        .bdv-hero-cta {
-          display: inline-block;
-          padding: 16px 36px;
-          background: var(--gold);
-          color: #1a1106;
-          font-family: 'Cinzel', serif;
-          font-weight: 500;
-          font-size: 11px;
-          letter-spacing: 0.32em;
-          border: none;
-          cursor: pointer;
-          transition: background 280ms ease, transform 280ms ease;
-        }
-        .bdv-hero-cta:hover:not(:disabled) {
-          background: var(--limestone);
-          transform: translateY(-1px);
-        }
-        .bdv-hero-cta:disabled { opacity: 0.4; cursor: not-allowed; }
-        .bdv-hero-trust {
-          font-family: 'Cormorant Garamond', serif;
-          font-style: italic; font-weight: 300;
-          font-size: 13px;
-          color: var(--gold-soft);
-          margin: 14px 0 0;
-        }
-
         /* ── EDITORIAL THESIS ── */
         .bdv-editorial {
           padding: 100px 24px 80px;
@@ -815,24 +773,6 @@ export default function BattentiDellaVillaPage() {
             <span>Weighted curves.</span>
             <span>Twisted gold.</span>
             <span>Silence in sunlight.</span>
-          </p>
-          <p className="bdv-hero-price" data-testid="bdv-hero-price">
-            {priceDisplay}
-          </p>
-          <p className="bdv-hero-material" data-testid="bdv-hero-material">
-            {currentTier.name}
-          </p>
-          <button
-            type="button"
-            onClick={onAddToCart}
-            disabled={isAdding}
-            className="bdv-hero-cta"
-            data-testid="bdv-hero-cta"
-          >
-            {isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO BAG"}
-          </button>
-          <p className="bdv-hero-trust">
-            Made to order · Allow 4–6 weeks · Complimentary insured shipping
           </p>
         </div>
       </section>
