@@ -266,8 +266,8 @@ const livePricingConfig = {
   // returns diff=0 against the client_price the page sends.
   battentiDellaVilla: {
     silver:   { lockedBasePriceCad: 2800, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold10k:  { lockedBasePriceCad: 5800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold14k:  { lockedBasePriceCad: 7200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k:  { lockedBasePriceCad: 4800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold14k:  { lockedBasePriceCad: 6200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
     gold18k:  { lockedBasePriceCad: 7800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 

@@ -120,7 +120,7 @@ const SPECS = [
   ["Closure", "Omega Back"],
   ["Finish", "High Polish + Textured"],
   ["Origin", "PHILEON Fine Jewelry"],
-  ["Hallmark", "925 / 10K / 14K / 750 (18K)"],
+  ["Hallmark", "925 Vermeil / 10K / 14K / 750 (18K)"],
   ["Fulfillment", "Made to order"],
   ["Timeline", "4–6 weeks"],
   ["Shipping", "Complimentary insured"],
@@ -132,27 +132,30 @@ const SPECS = [
 const METAL_TIERS = [
   {
     id: "silver",
-    sku: "BDV-925",
+    sku: "BDV-925V",
     badge: "FOUNDATION",
-    name: "Sterling Silver",
+    name: "Sterling Silver · Vermeil",
     priceUsd: 2800,
-    description: "925 sterling, high-polish + textured. The piece in its quietest voice.",
+    description:
+      "Warm gold vermeil over sterling silver · Rope-twist construction · Omega back closure.",
   },
   {
     id: "gold10k",
     sku: "BDV-10Y",
     badge: "SIGNATURE",
     name: "10K Yellow Gold",
-    priceUsd: 5800,
-    description: "Solid 10K yellow. Warmer tone, lasting weight on the ear.",
+    priceUsd: 4800,
+    description:
+      "Solid 10K yellow gold · Substantial everyday luxury weight · Rope-twist architecture · Omega back closure.",
   },
   {
     id: "gold14k",
     sku: "BDV-14Y",
     badge: "HEIRLOOM",
     name: "14K Yellow Gold",
-    priceUsd: 7200,
-    description: "Richer hue, deeper saturation. The Mediterranean read.",
+    priceUsd: 6200,
+    description:
+      "Solid 14K yellow gold · Elevated richness and density · Rope-twist architecture · Omega back closure.",
   },
   {
     id: "gold18k",
@@ -161,7 +164,8 @@ const METAL_TIERS = [
     name: "18K Yellow Gold",
     featured: true,
     priceUsd: 7800,
-    description: "Maximum gold density. The villa hardware as it was always intended.",
+    description:
+      "Solid 18K yellow gold · Full house-spec edition · Deep gold saturation · Rope-twist architecture · Omega back closure.",
   },
 ];
 

@@ -650,7 +650,7 @@ const CORE_PRODUCTS = [
     id: 'battenti-della-villa',
     name: 'BATTENTI DELLA VILLA',
     slug: 'battenti-della-villa',
-    materialLine: 'Villa Door Knocker Earrings · Sterling Silver → 18K Yellow Gold · Rope Twist · Omega Back',
+    materialLine: 'Villa Door Knocker Earrings · Sterling Silver Vermeil → 18K Yellow Gold · Rope Twist · Omega Back',
     imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png',
     href: '/battenti-della-villa',
     price_range: 'From $2,800 USD',
