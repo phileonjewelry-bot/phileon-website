@@ -69,6 +69,7 @@ const SHOP_COLLECTION_MAP = {
   'porta-aurea': 'collective',
   'coogi-dna-tag': 'collective',
   'battenti-della-villa': 'collective',
+  'gent': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -662,6 +663,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 9,
+  },
+  {
+    id: 'gent',
+    name: 'GENT',
+    slug: 'gent',
+    materialLine: 'Architectural Signet Ring · Sterling Silver Vermeil → 18K Yellow Gold · Woven Lattice · Monumental Typography',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/87u8o3vp_1000156494.jpg',
+    href: '/gent',
+    price_range: 'From $2,800 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['gentlemens-club', 'collective'],
+    tags: ['Gents', 'Collective', 'Signet', 'Ring', 'Architectural', 'House Signature', 'Yellow Gold'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 10,
   },
 ];
 

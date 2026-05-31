@@ -271,6 +271,16 @@ const livePricingConfig = {
     gold18k:  { lockedBasePriceCad: 7800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // GENT — Gentlemen's Club · Architectural Signet Ring
+  // Oversized architectural signet · woven lattice · elevated GENT typography.
+  // 4 metal tiers, hand-set USD prices (same as Battenti della Villa).
+  gent: {
+    silver:   { lockedBasePriceCad: 2800, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k:  { lockedBasePriceCad: 4800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold14k:  { lockedBasePriceCad: 6200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold18k:  { lockedBasePriceCad: 7800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)
   // pricingPending: lockedBasePriceCad placeholders below are NOT shown on the
   // page (page renders "Pricing on Inquiry") but the structure must exist so
