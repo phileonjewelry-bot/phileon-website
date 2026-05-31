@@ -235,13 +235,14 @@ LIVE_PRICING_CONFIG = {
         "gold18k": {"lockedBasePriceCad": 7800, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     # GENT — Gentlemen's Club · Architectural Signet Ring
-    # Mirrors Battenti tier pricing. Hand-set USD; weightGrams=0 disables
-    # live metal adjustment so server_price == client_price on /validate-cart.
+    # 4 hand-set metal tiers (Sterling Silver, Vermeil, 10K, 14K — no 18K).
+    # weightGrams=0 disables live metal adjustment so server_price ==
+    # client_price on /validate-cart.
     "gent": {
-        "silver":  {"lockedBasePriceCad": 2800, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
-        "gold10k": {"lockedBasePriceCad": 4800, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
-        "gold14k": {"lockedBasePriceCad": 6200, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
-        "gold18k": {"lockedBasePriceCad": 7800, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver":  {"lockedBasePriceCad": 1850, "metalType": "925",         "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "vermeil": {"lockedBasePriceCad": 2400, "metalType": "925-vermeil", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k": {"lockedBasePriceCad": 4800, "metalType": "10K",         "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k": {"lockedBasePriceCad": 6800, "metalType": "14K",         "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
 }
 

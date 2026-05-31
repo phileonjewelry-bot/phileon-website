@@ -93,7 +93,7 @@ const SPECS = [
   ["Body", "Woven lattice construction"],
   ["Finish", "Mirror-polished · Dimensional shadow channels"],
   ["Origin", "PHILEON · Gentlemen's Club"],
-  ["Hallmark", "925 Vermeil / 10K / 14K / 750 (18K)"],
+  ["Hallmark", "925 / 925 Vermeil / 10K / 14K"],
   ["Fulfillment", "Made to order"],
   ["Timeline", "4–6 weeks"],
   ["Shipping", "Complimentary insured"],
@@ -105,17 +105,26 @@ const SPECS = [
 const METAL_TIERS = [
   {
     id: "silver",
-    sku: "GNT-925V",
+    sku: "GNT-925",
     badge: "FOUNDATION",
-    name: "Sterling Silver · Vermeil",
-    priceUsd: 2800,
+    name: "Sterling Silver",
+    priceUsd: 1850,
     description:
-      "Warm gold vermeil over sterling silver · Architectural lattice body · Mirror-polished GENT typography.",
+      "Solid 925 sterling silver · Architectural lattice body · Mirror-polished GENT typography.",
+  },
+  {
+    id: "vermeil",
+    sku: "GNT-925V",
+    badge: "SIGNATURE",
+    name: "Vermeil",
+    priceUsd: 2400,
+    description:
+      "Warm gold vermeil over sterling silver · House-finish gilt tone · Deep shadow channels through the lattice.",
   },
   {
     id: "gold10k",
     sku: "GNT-10Y",
-    badge: "SIGNATURE",
+    badge: "HEIRLOOM",
     name: "10K Yellow Gold",
     priceUsd: 4800,
     description:
@@ -124,21 +133,12 @@ const METAL_TIERS = [
   {
     id: "gold14k",
     sku: "GNT-14Y",
-    badge: "HEIRLOOM",
-    name: "14K Yellow Gold",
-    priceUsd: 6200,
-    description:
-      "Solid 14K yellow gold · Elevated richness and density · Deep shadow channels through the lattice.",
-  },
-  {
-    id: "gold18k",
-    sku: "GNT-18Y",
     badge: "COLLECTOR",
-    name: "18K Yellow Gold",
+    name: "14K Yellow Gold",
     featured: true,
-    priceUsd: 7800,
+    priceUsd: 6800,
     description:
-      "Solid 18K yellow gold · Full house-spec edition · Maximum gold saturation · The piece as it was always intended.",
+      "Solid 14K yellow gold · Full house-spec edition · Elevated richness and density · The piece as it was always intended.",
   },
 ];
 
@@ -147,7 +147,7 @@ const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 export default function GentPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [activeFrame, setActiveFrame] = useState(0);
-  const [selectedTier, setSelectedTier] = useState("gold18k");
+  const [selectedTier, setSelectedTier] = useState("gold14k");
   const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
@@ -892,7 +892,6 @@ export default function GentPage() {
             })}
           </div>
 
-          <p className="gent-size-label">RING SIZE</p>
           <div className="gent-size-wrap">
             <RingSizeSelector
               value={selectedSize}

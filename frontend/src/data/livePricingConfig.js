@@ -273,12 +273,12 @@ const livePricingConfig = {
 
   // GENT — Gentlemen's Club · Architectural Signet Ring
   // Oversized architectural signet · woven lattice · elevated GENT typography.
-  // 4 metal tiers, hand-set USD prices (same as Battenti della Villa).
+  // 4 hand-set metal tiers (Sterling Silver, Vermeil, 10K, 14K — no 18K).
   gent: {
-    silver:   { lockedBasePriceCad: 2800, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold10k:  { lockedBasePriceCad: 4800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold14k:  { lockedBasePriceCad: 6200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold18k:  { lockedBasePriceCad: 7800, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver:   { lockedBasePriceCad: 1850, metalType: "925",         weightGrams: 0, lockedMetalReferenceCad: 0 },
+    vermeil:  { lockedBasePriceCad: 2400, metalType: "925-vermeil", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k:  { lockedBasePriceCad: 4800, metalType: "10K",         weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold14k:  { lockedBasePriceCad: 6800, metalType: "14K",         weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)
