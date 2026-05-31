@@ -67,7 +67,7 @@ const GALLERY = [
     alt: "Side-profile portrait of the BATTENTI worn against a sleek chignon and black neckline.",
   },
   {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/bbzr4wvj_1000156458.png",
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hktmq1ht_1000156459.jpg",
     label: "Portofino harbour",
     alt: "BATTENTI DELLA VILLA worn at a Portofino harbour-side restaurant, yachts and limestone villa in the background.",
   },
@@ -504,19 +504,6 @@ export default function BattentiDellaVillaPage() {
           transform: scale(1.02);
           opacity: 1;
         }
-        .bdv-archive-cell-label {
-          position: absolute;
-          left: 14px; bottom: 12px;
-          font-family: 'Cinzel', serif;
-          font-weight: 500;
-          font-size: 9px;
-          letter-spacing: 0.3em;
-          color: rgba(40, 28, 12, 0.55);
-          text-transform: uppercase;
-          background: rgba(245, 236, 215, 0.6);
-          padding: 4px 8px;
-          backdrop-filter: blur(2px);
-        }
 
         /* ── SPECS ── */
         .bdv-specs {
@@ -880,12 +867,9 @@ export default function BattentiDellaVillaPage() {
               className="bdv-archive-cell"
               data-testid={`bdv-archive-cell-${i + 1}`}
               onClick={() => setActiveFrame(i)}
-              aria-label={`Open ${g.label}`}
+              aria-label={`Open frame ${i + 1} — ${g.label}`}
             >
               <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
-              <span className="bdv-archive-cell-label">
-                {String(i + 1).padStart(2, "0")} · {g.label}
-              </span>
             </button>
           ))}
         </div>
