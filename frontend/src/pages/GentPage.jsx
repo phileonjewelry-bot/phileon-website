@@ -47,6 +47,21 @@ const GALLERY = [
     alt: "GENT — museum-grade front-on identity frame: oversized raised GENT lettering against a deep black mirror surface with full reflection.",
   },
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ky917qdb_1000156629.png",
+    label: "Front, on mirror",
+    alt: "GENT — head-on letterform composition over the woven lattice base, reflected on a deep grey mirror surface.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4g2cx6by_1000156628.png",
+    label: "Letterform front",
+    alt: "GENT — close front study of the raised block letters set into the rope-twist top architecture.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4z5mevst_1000156623.png",
+    label: "Architecture, three-quarter",
+    alt: "GENT — three-quarter architectural study showing the full woven sidewall body and the open interior lattice gallery.",
+  },
+  {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/85zdaqq3_1000156589.png",
     label: "Letterform macro",
     alt: "GENT — extreme macro of the cast block letters, showing the raised G and E topography over the woven gold lattice base.",
@@ -75,6 +90,16 @@ const GALLERY = [
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tq008flf_3529fadd-d014-4602-99f9-c9d9bc433022-1_all_70434.jpg",
     label: "Cigar lounge, on-hand",
     alt: "GENT worn on-hand in an elite cigar lounge, gentlemen in tailoring seated in the background, hand resting beside a crystal whiskey on dark wood.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q44qg8pb_1000156636.png",
+    label: "Boutique showcase",
+    alt: "GENT presented on a black velvet pedestal inside a glass boutique vitrine, sibling PHILEON signet pieces visible in the background.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jv30ebb8_1000156637.png",
+    label: "Provenance",
+    alt: "GENT photographed top-down on a black leather provenance box, the woven lattice and raised letterform framed by stitched leather edges.",
   },
 ];
 
@@ -836,7 +861,7 @@ export default function GentPage() {
         <div className="gent-archive-head">
           <p className="gent-archive-eyebrow">THE ARCHIVE</p>
           <p className="gent-archive-title">
-            Seven frames. Architectural mesh under museum-object light.
+            Twelve frames. Architectural mesh under museum-object light.
           </p>
         </div>
         <div className="gent-archive-grid" data-testid="gent-archive-grid">
