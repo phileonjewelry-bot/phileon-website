@@ -36,31 +36,37 @@ const HERO_IMG =
 const HERO_ALT =
   "GENT — PHILEON architectural signet ring in yellow gold, oversized elevated GENT typography over a deep woven lattice body.";
 
-// Production archive — 11-frame editorial shot list per brief.
-// Live frame uses the hero asset; remaining slots remain pinned to
-// the hero until the editorial shoot is delivered. The grid still
-// reads as a disciplined sequence even before the campaign lands.
-const GALLERY_SHOTS = [
-  "Hero, three-quarter",
-  "Low-angle dominance",
-  "Macro lattice detail",
-  "Typography shadow",
-  "Open interior gallery",
-  "Black lacquer reflection",
-  "On-hand editorial",
-  "Tailored black suit",
-  "Cigar-room lighting",
-  "Museum pedestal",
-  "Campaign silhouette",
+// Production archive — 5 delivered editorial frames, sequenced as a
+// campaign arc: identity → typography scale → fashion drama →
+// atmospheric wear → lifestyle / on-hand. Additional frames can be
+// appended to this array as the campaign expands.
+const GALLERY = [
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ekuji1ql_1000156546.jpg",
+    label: "Museum identity",
+    alt: "GENT — museum-grade front-on identity frame: oversized raised GENT lettering against a deep black mirror surface with full reflection.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qd0g5ruk_1000156542.png",
+    label: "Typography macro",
+    alt: "GENT — macro of the raised GENT typography and woven lattice on a dark wood surface, soft whiskey-glass bokeh in the background.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/vj5430dl_1000156545.jpg",
+    label: "Leather, in hand",
+    alt: "GENT held in a black leather-gloved hand against a black void — high-fashion editorial frame showing the interior PHILEON stamp.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/6tmtekjl_1000156537.png",
+    label: "By the fire",
+    alt: "GENT resting on dark wood beside a crystal whiskey glass, fireplace and Chesterfield leather in the background.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tq008flf_3529fadd-d014-4602-99f9-c9d9bc433022-1_all_70434.jpg",
+    label: "Cigar lounge, on-hand",
+    alt: "GENT worn on-hand in an elite cigar lounge, gentlemen in tailoring seated in the background, hand resting beside a crystal whiskey on dark wood.",
+  },
 ];
-const GALLERY = GALLERY_SHOTS.map((label, i) => ({
-  src: HERO_IMG,
-  label,
-  alt:
-    i === 0
-      ? HERO_ALT
-      : `GENT — ${label}. Editorial frame ${String(i + 1).padStart(2, "0")} of 11.`,
-}));
 
 const EDITORIAL = [
   {
@@ -820,7 +826,7 @@ export default function GentPage() {
         <div className="gent-archive-head">
           <p className="gent-archive-eyebrow">THE ARCHIVE</p>
           <p className="gent-archive-title">
-            Eleven frames. Architectural mesh under museum-object light.
+            Five frames. Architectural mesh under museum-object light.
           </p>
         </div>
         <div className="gent-archive-grid" data-testid="gent-archive-grid">
