@@ -47,6 +47,16 @@ const GALLERY = [
     alt: "GENT — museum-grade front-on identity frame: oversized raised GENT lettering against a deep black mirror surface with full reflection.",
   },
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/85zdaqq3_1000156589.png",
+    label: "Letterform macro",
+    alt: "GENT — extreme macro of the cast block letters, showing the raised G and E topography over the woven gold lattice base.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j6u5vtn9_1000156566.png",
+    label: "Lattice macro",
+    alt: "GENT — extreme macro of the woven lattice sidewall meeting the polished block-letter top architecture, hand-finished gold catching the light.",
+  },
+  {
     src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qd0g5ruk_1000156542.png",
     label: "Typography macro",
     alt: "GENT — macro of the raised GENT typography and woven lattice on a dark wood surface, soft whiskey-glass bokeh in the background.",
@@ -826,7 +836,7 @@ export default function GentPage() {
         <div className="gent-archive-head">
           <p className="gent-archive-eyebrow">THE ARCHIVE</p>
           <p className="gent-archive-title">
-            Five frames. Architectural mesh under museum-object light.
+            Seven frames. Architectural mesh under museum-object light.
           </p>
         </div>
         <div className="gent-archive-grid" data-testid="gent-archive-grid">
