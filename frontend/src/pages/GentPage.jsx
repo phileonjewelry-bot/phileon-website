@@ -92,12 +92,22 @@ const GALLERY = [
     alt: "GENT worn on-hand in an elite cigar lounge, gentlemen in tailoring seated in the background, hand resting beside a crystal whiskey on dark wood.",
   },
   {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q44qg8pb_1000156636.png",
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yvzkmhn8_1000156741.webp",
+    label: "Fist, navy tailoring",
+    alt: "GENT worn on a closed fist held forward against a midnight-navy tailored suit — campaign on-hand frame.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hzlk1wyn_1000156743.jpg",
+    label: "Fist, in close",
+    alt: "GENT on a closed fist in intimate close-up, raised gold typography reading from the ring finger across the frame.",
+  },
+  {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/chqaq67f_1000156636.png",
     label: "Boutique showcase",
     alt: "GENT presented on a black velvet pedestal inside a glass boutique vitrine, sibling PHILEON signet pieces visible in the background.",
   },
   {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jv30ebb8_1000156637.png",
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c7u2dhhw_1000156637.png",
     label: "Provenance",
     alt: "GENT photographed top-down on a black leather provenance box, the woven lattice and raised letterform framed by stitched leather edges.",
   },
@@ -861,7 +871,7 @@ export default function GentPage() {
         <div className="gent-archive-head">
           <p className="gent-archive-eyebrow">THE ARCHIVE</p>
           <p className="gent-archive-title">
-            Twelve frames. Architectural mesh under museum-object light.
+            Fourteen frames. Architectural mesh under museum-object light.
           </p>
         </div>
         <div className="gent-archive-grid" data-testid="gent-archive-grid">
