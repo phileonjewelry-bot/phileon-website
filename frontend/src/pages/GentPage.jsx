@@ -33,6 +33,8 @@ import RingSizeSelector, {
 
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/87u8o3vp_1000156494.jpg";
+const HERO_VIDEO =
+  "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/6kfqdtcn_hf_20260602_044434_ad3c889a-59ff-4bab-b336-c7f09d9bbb8e.mp4";
 const HERO_ALT =
   "GENT — PHILEON architectural signet ring in yellow gold, oversized elevated GENT typography over a deep woven lattice body.";
 
@@ -817,12 +819,17 @@ export default function GentPage() {
       {/* ─── 1. HERO (editorial only — no CTA / no price) ───────── */}
       <section className="gent-hero" data-testid="gent-hero">
         <div className="gent-hero-img-wrap">
-          <img
-            src={HERO_IMG}
-            alt={HERO_ALT}
+          <video
+            src={HERO_VIDEO}
+            poster={HERO_IMG}
             className="gent-hero-img"
-            data-testid="gent-hero-img"
-            loading="eager"
+            data-testid="gent-hero-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            aria-label={HERO_ALT}
           />
         </div>
         <div className="gent-hero-text">
