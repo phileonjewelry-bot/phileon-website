@@ -122,6 +122,11 @@ const PROFILES = {
 
 const GALLERY = [
   {
+    src: "/stackrats/separated.png",
+    label: "The trio, separated",
+    alt: "STACKRATS — the three bangles arranged side-by-side on a warm ivory studio sweep: Dinah in 14K rose gold (left), Valerie in 14K white gold (centre), Dominique in 18K yellow gold (right).",
+  },
+  {
     src: STACK_STILL,
     label: "The stack, still life",
     alt: "STACKRATS — the three bangles stacked vertically: rose, white and yellow micro-bead mesh on warm ivory.",
@@ -981,7 +986,7 @@ export default function StackratsPage() {
         <div className="sr-archive-head">
           <p className="sr-archive-eyebrow">THE ARCHIVE</p>
           <p className="sr-archive-title">
-            Two frames. The stack, still — and unstacked.
+            Three frames. The stack, still — separated and unstacked.
           </p>
         </div>
         <div className="sr-archive-grid" data-testid="sr-archive-grid">
