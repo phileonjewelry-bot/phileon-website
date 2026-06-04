@@ -244,6 +244,18 @@ LIVE_PRICING_CONFIG = {
         "gold10k": {"lockedBasePriceCad": 4800, "metalType": "10K",         "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "gold14k": {"lockedBasePriceCad": 6800, "metalType": "14K",         "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+    # STACKRATS — Ladies · Bangles · Collective
+    # 3 characters × 2 profiles + 2 full-stack bundles.
+    "stackrats": {
+        "dinah_wide":     {"lockedBasePriceCad": 2400, "metalType": "14K",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "dinah_thin":     {"lockedBasePriceCad": 1800, "metalType": "14K",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "valerie_wide":   {"lockedBasePriceCad": 2600, "metalType": "14K",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "valerie_thin":   {"lockedBasePriceCad": 1950, "metalType": "14K",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "dominique_wide": {"lockedBasePriceCad": 2900, "metalType": "18K",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "dominique_thin": {"lockedBasePriceCad": 2200, "metalType": "18K",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "fullstack_wide": {"lockedBasePriceCad": 7500, "metalType": "mixed", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "fullstack_thin": {"lockedBasePriceCad": 5700, "metalType": "mixed", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
 }
 
 

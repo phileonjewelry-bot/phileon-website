@@ -6,6 +6,7 @@ const carouselItems = [
   { name: "DRAPE", slug: "drape", image: products.drape?.imageUrl, tagline: "The dress left. The bones remain." },
   { name: "BATTENTI DELLA VILLA", slug: "battenti-della-villa", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png", tagline: "Cast like the hardware of an old world estate." },
   { name: "GENT", slug: "gent", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/87u8o3vp_1000156494.jpg", tagline: "The mark of the Gentlemen's Club." },
+  { name: "STACKRATS", slug: "stackrats", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dgp6tl9l_1000156925.jpg", tagline: "Three girls. One wrist." },
   { name: "LE COCKTAIL DE JESSICA", slug: "le-cocktail-de-jessica", image: products.cocktailJessica?.imageUrl, tagline: "In rest." },
   { name: "PRISE DE COURONNE", slug: "prise-de-couronne", image: products.priseDeCouronne?.imageUrl, tagline: "The crown was never given. It was taken." },
   { name: "COOGI I", slug: "coogi-i", image: products.coogiI?.imageUrl },

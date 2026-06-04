@@ -281,6 +281,21 @@ const livePricingConfig = {
     gold14k:  { lockedBasePriceCad: 6800, metalType: "14K",         weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // STACKRATS — Ladies · Bangles · Collective
+  // Three characters × two profiles = 6 single-piece tiers, plus two
+  // Full Stack bundles. Hand-set USD prices (weightGrams=0 so server
+  // mirrors client exactly on /validate-cart).
+  stackrats: {
+    dinah_wide:     { lockedBasePriceCad: 2400, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    dinah_thin:     { lockedBasePriceCad: 1800, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    valerie_wide:   { lockedBasePriceCad: 2600, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    valerie_thin:   { lockedBasePriceCad: 1950, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    dominique_wide: { lockedBasePriceCad: 2900, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    dominique_thin: { lockedBasePriceCad: 2200, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    fullstack_wide: { lockedBasePriceCad: 7500, metalType: "mixed", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    fullstack_thin: { lockedBasePriceCad: 5700, metalType: "mixed", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // THE GRAND DAME — Cuff (rose gold, 3 tiers)
   // pricingPending: lockedBasePriceCad placeholders below are NOT shown on the
   // page (page renders "Pricing on Inquiry") but the structure must exist so

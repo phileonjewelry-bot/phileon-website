@@ -66,6 +66,7 @@ import TrueVinePage from "@/pages/TrueVinePage";
 import PortaAureaPage from "@/pages/PortaAureaPage";
 import BattentiDellaVillaPage from "@/pages/BattentiDellaVillaPage";
 import GentPage from "@/pages/GentPage";
+import StackratsPage from "@/pages/StackratsPage";
 import CoogiDnaTagPage from "@/pages/CoogiDnaTagPage";
 import AtelierPage from "@/pages/AtelierPage";
 import WishlistPage from "@/pages/WishlistPage";
@@ -188,6 +189,8 @@ function App() {
             <Route path="/products/battenti-della-villa" element={<BattentiDellaVillaPage />} />
             <Route path="/gent" element={<GentPage />} />
             <Route path="/products/gent" element={<GentPage />} />
+            <Route path="/stackrats" element={<StackratsPage />} />
+            <Route path="/products/stackrats" element={<StackratsPage />} />
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/custom" element={<AtelierPage />} />
             <Route path="/commission" element={<AtelierPage />} />

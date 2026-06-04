@@ -70,6 +70,7 @@ const SHOP_COLLECTION_MAP = {
   'coogi-dna-tag': 'collective',
   'battenti-della-villa': 'collective',
   'gent': 'collective',
+  'stackrats': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -680,6 +681,23 @@ const CORE_PRODUCTS = [
     isNew: true,
     isFeatured: true,
     displayOrder: 10,
+  },
+  {
+    id: 'stackrats',
+    name: 'STACKRATS',
+    slug: 'stackrats',
+    materialLine: 'Micro-bead Mesh Bangles · Dinah · Valerie · Dominique · Wide 10mm or Thin 7mm',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dgp6tl9l_1000156925.jpg',
+    href: '/stackrats',
+    price_range: 'From $1,800 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'bracelets',
+    audience: ['ladies', 'collective'],
+    tags: ['Ladies', 'Collective', 'Bangle', 'Bracelet', 'Mesh', 'Rose Gold', 'White Gold', 'Yellow Gold', 'Stack'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 11,
   },
 ];
 
