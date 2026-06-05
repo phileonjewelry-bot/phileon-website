@@ -122,9 +122,9 @@ const PROFILES = {
 
 const GALLERY = [
   {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i1jijblu_1000157024.jpg",
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hhd9o4gw_1000157086.png",
     label: "The configuration matrix",
-    alt: "STACKRATS — full configuration matrix: top row Dinah / Valerie / Dominique in the Wide 10mm profile, bottom row the same three girls in the Thin 7mm profile.",
+    alt: "STACKRATS — full configuration matrix on a warm ivory field: top row Wide 10mm, bottom row Thin 7mm; Dinah (14K rose gold), Valerie (14K white gold) and Dominique (18K yellow gold) across both profiles.",
   },
   {
     src: "/stackrats/separated.png",
