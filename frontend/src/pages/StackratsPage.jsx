@@ -97,6 +97,31 @@ const PRICES = {
 const FULL_STACK_WIDE = 7500; // = 2400 + 2600 + 2900 - small bundle break
 const FULL_STACK_THIN = 5700; // = 1800 + 1950 + 2200 - small bundle break
 
+// Per-character / per-profile image catalog (the configurator is
+// visual — clicking a bangle IS the selector).
+const TILE_IMAGES = {
+  dinah: {
+    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yumbxpr3_1000157081.jpg",
+    thin: "/stackrats/dinah-thin.png",
+  },
+  valerie: {
+    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j1le8fx_1000157079.jpg",
+    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jj4t1672_1000157085.jpg",
+  },
+  dominique: {
+    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/aehzp06y_1000157078.jpg",
+    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i82zaat0_1000157083.jpg",
+  },
+};
+
+// Per-character weights are profile-aware: 14K girls share the same
+// numbers, Dominique (18K) sits slightly heavier per the brief.
+const WEIGHTS = {
+  dinah:     { wide: "Approx. 21g", thin: "Approx. 15g" },
+  valerie:   { wide: "Approx. 21g", thin: "Approx. 15g" },
+  dominique: { wide: "Approx. 23g", thin: "Approx. 16g" },
+};
+
 const PROFILES = {
   wide: {
     id: "wide",
@@ -105,7 +130,6 @@ const PROFILES = {
     blurb:
       "The signature profile. A substantial wrist read with the full mesh halo.",
     width_label: "10mm",
-    weight_text: "Approx. 22g per bangle",
     inner_d: "Inner Ø ~62mm",
   },
   thin: {
@@ -115,7 +139,6 @@ const PROFILES = {
     blurb:
       "Finer profile — slip onto the wrist as a pair, layer three for the full stack.",
     width_label: "7mm",
-    weight_text: "Approx. 15g per bangle",
     inner_d: "Inner Ø ~62mm",
   },
 };
@@ -145,7 +168,8 @@ const GALLERY = [
 
 const fmt = (n) => `$${n.toLocaleString("en-US")}`;
 const fmtUsd = (n) => `${fmt(n)} USD`;
-const skuFor = (cKey, pKey) => `SR-${cKey.slice(0, 3).toUpperCase()}-${pKey.toUpperCase()}`;
+const skuFor = (cKey, pKey) =>
+  `STACKRATS-${cKey.toUpperCase()}-${pKey.toUpperCase()}`;
 
 export default function StackratsPage() {
   const [isMounted, setIsMounted] = useState(false);
@@ -532,143 +556,123 @@ export default function StackratsPage() {
           text-align: left;
           margin: 0 0 14px;
         }
-        /* Character cards */
-        .sr-chars {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 14px;
-          margin: 0 0 38px;
+        /* ── Visual tile grid ── two rows: WIDE then THIN
+              The jewelry is the selector. ── */
+        .sr-tilerow {
+          margin: 0 0 56px;
           text-align: left;
         }
-        @media (min-width: 760px) {
-          .sr-chars { grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        }
-        .sr-char {
-          position: relative;
-          padding: 22px 22px 24px;
-          background: rgba(255, 250, 235, 0.65);
-          border: 1px solid var(--gold-soft);
-          color: var(--ink);
-          cursor: pointer;
-          text-align: left;
-          transition:
-            border-color 320ms ease,
-            background 320ms ease,
-            transform 320ms ease,
-            box-shadow 320ms ease;
-          font-family: 'Cinzel', serif;
+        .sr-tilerow:last-of-type { margin-bottom: 44px; }
+        .sr-tilerow-label {
           display: flex;
-          flex-direction: column;
-          gap: 6px;
+          align-items: baseline;
+          gap: 10px;
+          justify-content: center;
+          margin: 0 0 28px;
+          padding-bottom: 14px;
+          border-bottom: 1px solid var(--rule);
         }
-        .sr-char:hover {
-          border-color: var(--gold);
-          background: rgba(255, 250, 235, 0.92);
-        }
-        .sr-char.is-selected {
-          border-color: var(--gold-deeper);
-          background: linear-gradient(180deg, #FFF7E5 0%, #F5E5BD 100%);
-          transform: translateY(-1px);
-          box-shadow: 0 14px 28px -16px rgba(140, 110, 58, 0.4);
-        }
-        .sr-char-halo {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          background: var(--halo, #C9C9C9);
-          border: 1px solid rgba(0,0,0,0.06);
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.18);
-          margin-bottom: 6px;
-        }
-        .sr-char-name {
+        .sr-tilerow-eyebrow {
           font-family: 'Cinzel', serif;
           font-weight: 500;
-          font-size: 14px;
-          letter-spacing: 0.22em;
+          font-size: 12px;
+          letter-spacing: 0.42em;
           color: var(--ink);
+          text-transform: uppercase;
         }
-        .sr-char-metal {
+        .sr-tilerow-width {
           font-family: 'Cormorant Garamond', serif;
           font-style: italic; font-weight: 300;
-          font-size: 14px;
+          font-size: 16px;
           color: var(--gold-deeper);
         }
-        .sr-char-tagline {
-          font-family: 'Cormorant Garamond', serif;
-          font-weight: 300;
-          font-size: 14px;
-          line-height: 1.55;
-          color: var(--ink-soft);
-          margin: 4px 0 0;
-        }
-
-        /* Profile pills */
-        .sr-profiles {
+        .sr-tilerow-grid {
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 14px;
-          margin: 0 0 30px;
-          text-align: left;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 28px;
         }
-        @media (min-width: 600px) {
-          .sr-profiles { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        @media (max-width: 640px) {
+          .sr-tilerow-grid { gap: 16px; }
         }
-        .sr-profile {
-          position: relative;
-          padding: 20px 22px;
-          background: rgba(255, 250, 235, 0.65);
-          border: 1px solid var(--gold-soft);
-          color: var(--ink);
+        .sr-tile {
+          background: transparent;
+          border: none;
+          padding: 12px 8px 16px;
           cursor: pointer;
-          text-align: left;
-          font-family: 'Cinzel', serif;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          text-align: center;
+          color: var(--ink);
           transition:
-            border-color 320ms ease,
-            background 320ms ease,
-            transform 320ms ease,
-            box-shadow 320ms ease;
+            transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 250ms ease;
+          position: relative;
         }
-        .sr-profile:hover {
-          border-color: var(--gold);
-          background: rgba(255, 250, 235, 0.92);
+        .sr-tile-img-wrap {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          overflow: hidden;
+          border-radius: 6px;
+          background:
+            radial-gradient(ellipse 65% 55% at 50% 60%,
+              rgba(232, 211, 167, 0.45), transparent 70%),
+            linear-gradient(180deg, #FBF4E5 0%, #F2E7CE 100%);
+          transition: box-shadow 280ms ease;
         }
-        .sr-profile.is-selected {
-          border-color: var(--gold-deeper);
-          background: linear-gradient(180deg, #FFF7E5 0%, #F5E5BD 100%);
-          transform: translateY(-1px);
-          box-shadow: 0 14px 28px -16px rgba(140, 110, 58, 0.4);
+        .sr-tile-img {
+          position: absolute; inset: 0;
+          width: 100%; height: 100%;
+          object-fit: contain;
+          object-position: center;
+          transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .sr-profile-featured {
+        .sr-tile:hover { transform: scale(1.02); }
+        .sr-tile.is-selected {
+          transform: scale(1.03);
+        }
+        .sr-tile.is-selected .sr-tile-img-wrap {
+          box-shadow:
+            0 16px 36px -18px rgba(184, 148, 91, 0.55),
+            0 0 0 1px rgba(184, 148, 91, 0.45),
+            inset 0 0 40px rgba(232, 211, 167, 0.35);
+        }
+        .sr-tile.is-selected::after {
+          content: "";
           position: absolute;
-          top: 12px; right: 14px;
-          font-family: 'Cinzel', serif;
-          font-weight: 500;
-          font-size: 9px;
-          letter-spacing: 0.32em;
-          color: var(--ivory);
-          background: var(--gold-deeper);
-          padding: 3px 8px;
+          left: 25%; right: 25%;
+          bottom: 0;
+          height: 1px;
+          background: linear-gradient(to right,
+            transparent,
+            var(--gold-deeper),
+            transparent);
         }
-        .sr-profile-name {
+        .sr-tile-name {
           font-family: 'Cinzel', serif;
           font-weight: 500;
           font-size: 13px;
-          letter-spacing: 0.22em;
+          letter-spacing: 0.28em;
+          color: var(--ink);
+          margin: 14px 0 0;
         }
-        .sr-profile-width {
-          font-family: 'Cinzel', serif;
-          font-weight: 500;
-          font-size: 22px;
-          letter-spacing: 0.08em;
-          color: var(--gold-deeper);
-          margin: 4px 0 6px;
-        }
-        .sr-profile-blurb {
+        .sr-tile-metal {
           font-family: 'Cormorant Garamond', serif;
           font-style: italic; font-weight: 300;
-          font-size: 13.5px;
-          color: var(--ink-soft);
-          line-height: 1.55;
+          font-size: 14px;
+          color: var(--gold-deeper);
+          margin: 0;
+        }
+        .sr-tile-width {
+          font-family: 'Cinzel', serif;
+          font-weight: 500;
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          color: var(--ink-muted);
+          margin: 4px 0 0;
+          text-transform: uppercase;
         }
 
         /* Summary */
@@ -1022,7 +1026,7 @@ export default function StackratsPage() {
             <li><strong>Surface</strong><span>Micro-bead mesh</span></li>
             <li><strong>Profile</strong><span data-testid="sr-spec-profile">{profile.name} · {profile.width}</span></li>
             <li><strong>Inner diameter</strong><span>{profile.inner_d.replace("Inner Ø ", "")}</span></li>
-            <li><strong>Weight</strong><span data-testid="sr-spec-weight">{profile.weight_text}</span></li>
+            <li><strong>Weight</strong><span data-testid="sr-spec-weight">{WEIGHTS[selectedChar][selectedProfile]} per bangle</span></li>
             <li><strong>Metal</strong><span>{character.metal}</span></li>
             <li><strong>Closure</strong><span>Slip-on — no clasp</span></li>
             <li><strong>Hallmark</strong><span>14K / 18K stamped</span></li>
@@ -1031,72 +1035,65 @@ export default function StackratsPage() {
         </div>
       </section>
 
-      {/* ─── 5–7. CONFIGURATOR · METAL · PROFILE · SUMMARY · CTA ── */}
+      {/* ─── 5–7. CONFIGURATOR · VISUAL TILES · SUMMARY · CTA ── */}
       <section className="sr-config" data-testid="sr-configurator">
         <div className="sr-config-inner">
-          <p className="sr-config-eyebrow">CHOOSE YOUR GIRL</p>
-          <h2 className="sr-config-title">Three sisters. Two profiles.</h2>
+          <p className="sr-config-eyebrow">STACKRATS CONFIGURATOR</p>
+          <h2 className="sr-config-title">
+            Choose your girl. Choose your thickness.
+          </h2>
 
-          {/* Character */}
-          <p className="sr-section-label">CHARACTER</p>
-          <div
-            className="sr-chars"
-            role="radiogroup"
-            aria-label="Character selection"
-            data-testid="sr-chars"
-          >
-            {Object.values(CHARACTERS).map((c) => {
-              const isSel = selectedChar === c.id;
-              return (
-                <button
-                  key={c.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSel}
-                  onClick={() => setSelectedChar(c.id)}
-                  className={`sr-char${isSel ? " is-selected" : ""}`}
-                  style={{ "--halo": c.halo }}
-                  data-testid={`sr-char-${c.id}`}
-                >
-                  <span className="sr-char-halo" aria-hidden="true" />
-                  <span className="sr-char-name">{c.name.toUpperCase()}</span>
-                  <span className="sr-char-metal">{c.metal}</span>
-                  <span className="sr-char-tagline">{c.tagline}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Profile */}
-          <p className="sr-section-label">PROFILE</p>
-          <div
-            className="sr-profiles"
-            role="radiogroup"
-            aria-label="Profile selection"
-            data-testid="sr-profiles"
-          >
-            {Object.values(PROFILES).map((p) => {
-              const isSel = selectedProfile === p.id;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSel}
-                  onClick={() => setSelectedProfile(p.id)}
-                  className={`sr-profile${isSel ? " is-selected" : ""}`}
-                  data-testid={`sr-profile-${p.id}`}
-                >
-                  {p.id === "wide" && (
-                    <span className="sr-profile-featured">FEATURED</span>
-                  )}
-                  <span className="sr-profile-name">{p.name.toUpperCase()}</span>
-                  <span className="sr-profile-width">{p.width_label}</span>
-                  <span className="sr-profile-blurb">{p.blurb}</span>
-                </button>
-              );
-            })}
-          </div>
+          {Object.values(PROFILES).map((p) => (
+            <div
+              key={p.id}
+              className="sr-tilerow"
+              data-testid={`sr-tilerow-${p.id}`}
+            >
+              <p className="sr-tilerow-label">
+                <span className="sr-tilerow-eyebrow">
+                  {p.name.toUpperCase()}
+                </span>
+                <span className="sr-tilerow-width">· {p.width_label}</span>
+              </p>
+              <div
+                className="sr-tilerow-grid"
+                role="radiogroup"
+                aria-label={`${p.name} ${p.width_label} characters`}
+              >
+                {Object.values(CHARACTERS).map((c) => {
+                  const isSel =
+                    selectedChar === c.id && selectedProfile === p.id;
+                  return (
+                    <button
+                      key={`${c.id}-${p.id}`}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSel}
+                      onClick={() => {
+                        setSelectedChar(c.id);
+                        setSelectedProfile(p.id);
+                      }}
+                      className={`sr-tile${isSel ? " is-selected" : ""}`}
+                      data-testid={`sr-tile-${c.id}-${p.id}`}
+                    >
+                      <div className="sr-tile-img-wrap">
+                        <img
+                          src={TILE_IMAGES[c.id][p.id]}
+                          alt={`${c.name} — ${c.metal} — ${p.width_label}`}
+                          className="sr-tile-img"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                      <p className="sr-tile-name">{c.name.toUpperCase()}</p>
+                      <p className="sr-tile-metal">{c.metal}</p>
+                      <p className="sr-tile-width">{p.width_label}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
           {/* Summary */}
           <div className="sr-summary" data-testid="sr-summary">
