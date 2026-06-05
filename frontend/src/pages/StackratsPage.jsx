@@ -122,6 +122,11 @@ const PROFILES = {
 
 const GALLERY = [
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i1jijblu_1000157024.jpg",
+    label: "The configuration matrix",
+    alt: "STACKRATS — full configuration matrix: top row Dinah / Valerie / Dominique in the Wide 10mm profile, bottom row the same three girls in the Thin 7mm profile.",
+  },
+  {
     src: "/stackrats/separated.png",
     label: "The trio, separated",
     alt: "STACKRATS — the three bangles arranged side-by-side on a warm ivory studio sweep: Dinah in 14K rose gold (left), Valerie in 14K white gold (centre), Dominique in 18K yellow gold (right).",
@@ -986,7 +991,7 @@ export default function StackratsPage() {
         <div className="sr-archive-head">
           <p className="sr-archive-eyebrow">THE ARCHIVE</p>
           <p className="sr-archive-title">
-            Three frames. The stack, still — separated and unstacked.
+            Four frames. The matrix, the trio, the stack, the row.
           </p>
         </div>
         <div className="sr-archive-grid" data-testid="sr-archive-grid">
