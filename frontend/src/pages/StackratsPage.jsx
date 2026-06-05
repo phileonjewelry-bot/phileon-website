@@ -155,6 +155,11 @@ const GALLERY = [
     alt: "STACKRATS — the three bangles arranged side-by-side on a warm ivory studio sweep: Dinah in 14K rose gold (left), Valerie in 14K white gold (centre), Dominique in 18K yellow gold (right).",
   },
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b4uwsq34_1000157076.jpg",
+    label: "Mesh macro, rose",
+    alt: "STACKRATS — extreme macro of the 14K rose-gold micro-bead mesh: continuous bead rows wrapping the donut form, the surface texture reading as a fine architecture up close.",
+  },
+  {
     src: STACK_STILL,
     label: "The stack, still life",
     alt: "STACKRATS — the three bangles stacked vertically: rose, white and yellow micro-bead mesh on warm ivory.",
@@ -995,7 +1000,7 @@ export default function StackratsPage() {
         <div className="sr-archive-head">
           <p className="sr-archive-eyebrow">THE ARCHIVE</p>
           <p className="sr-archive-title">
-            Four frames. The matrix, the trio, the stack, the row.
+            Five frames. Matrix, trio, mesh macro, stack, row.
           </p>
         </div>
         <div className="sr-archive-grid" data-testid="sr-archive-grid">
