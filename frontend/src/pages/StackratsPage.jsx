@@ -105,12 +105,12 @@ const TILE_IMAGES = {
     thin: "/stackrats/dinah-thin.png",
   },
   valerie: {
-    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j1le8fx_1000157079.jpg",
-    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jj4t1672_1000157085.jpg",
-  },
-  dominique: {
     wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/aehzp06y_1000157078.jpg",
     thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i82zaat0_1000157083.jpg",
+  },
+  dominique: {
+    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j1le8fx_1000157079.jpg",
+    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jj4t1672_1000157085.jpg",
   },
 };
 
