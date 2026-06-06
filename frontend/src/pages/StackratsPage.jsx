@@ -526,9 +526,10 @@ export default function StackratsPage() {
         }
         @media (min-width: 900px) { .sr-config { padding: 120px 60px 110px; } }
         .sr-config-inner {
-          max-width: 780px;
+          max-width: 980px;
           margin: 0 auto;
           text-align: center;
+          overflow: visible;
         }
         .sr-config-eyebrow {
           font-family: 'Cinzel', serif;
@@ -588,16 +589,30 @@ export default function StackratsPage() {
         }
         .sr-tilerow-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 28px;
+          grid-template-columns: repeat(3, minmax(220px, 1fr));
+          gap: clamp(24px, 4vw, 56px);
+          align-items: start;
+          width: 100%;
+          overflow: visible;
         }
-        @media (max-width: 640px) {
-          .sr-tilerow-grid { gap: 16px; }
+        @media (max-width: 768px) {
+          .sr-tilerow-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 24px;
+            padding: 0 20px 20px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+          }
+          .sr-tile {
+            flex: 0 0 72vw;
+            scroll-snap-align: center;
+          }
         }
         .sr-tile {
           background: transparent;
           border: none;
-          padding: 12px 8px 16px;
+          padding: 12px 4px 18px;
           cursor: pointer;
           display: flex;
           flex-direction: column;
@@ -605,6 +620,7 @@ export default function StackratsPage() {
           gap: 6px;
           text-align: center;
           color: var(--ink);
+          min-width: 0;
           transition:
             transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
             filter 250ms ease;
@@ -613,8 +629,12 @@ export default function StackratsPage() {
         .sr-tile-img-wrap {
           position: relative;
           width: 100%;
-          aspect-ratio: 1 / 1;
-          overflow: hidden;
+          aspect-ratio: 1 / 1.12;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: visible;
+          padding: 18px;
           border-radius: 6px;
           background:
             radial-gradient(ellipse 65% 55% at 50% 60%,
@@ -623,12 +643,16 @@ export default function StackratsPage() {
           transition: box-shadow 280ms ease;
         }
         .sr-tile-img {
-          position: absolute; inset: 0;
-          width: 100%; height: 100%;
+          width: 100%;
+          height: 100%;
           object-fit: contain;
           object-position: center;
+          display: block;
           transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
         }
+        /* Wide row reads heavier; thin row reads visibly lighter */
+        [data-testid="sr-tilerow-wide"] .sr-tile-img { transform: scale(1.00); }
+        [data-testid="sr-tilerow-thin"] .sr-tile-img { transform: scale(0.86); }
         .sr-tile:hover { transform: scale(1.02); }
         .sr-tile.is-selected {
           transform: scale(1.03);
@@ -649,6 +673,16 @@ export default function StackratsPage() {
             transparent,
             var(--gold-deeper),
             transparent);
+        }
+        .sr-tile-name,
+        .sr-tile-metal,
+        .sr-tile-width {
+          white-space: normal;
+          overflow: visible;
+          text-overflow: unset;
+          text-align: center;
+          max-width: 100%;
+          word-break: normal;
         }
         .sr-tile-name {
           font-family: 'Cinzel', serif;
