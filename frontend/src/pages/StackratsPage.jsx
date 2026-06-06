@@ -101,16 +101,16 @@ const FULL_STACK_THIN = 5700; // = 1800 + 1950 + 2200 - small bundle break
 // visual — clicking a bangle IS the selector).
 const TILE_IMAGES = {
   dinah: {
-    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yumbxpr3_1000157081.jpg",
-    thin: "/stackrats/dinah-thin.png",
+    wide: "/stackrats/dinah-thin.png",
+    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j910hw57_1000157125.jpg",
   },
   valerie: {
-    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/aehzp06y_1000157078.jpg",
-    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i82zaat0_1000157083.jpg",
+    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i82zaat0_1000157083.jpg",
+    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/aehzp06y_1000157078.jpg",
   },
   dominique: {
-    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j1le8fx_1000157079.jpg",
-    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jj4t1672_1000157085.jpg",
+    wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jj4t1672_1000157085.jpg",
+    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j1le8fx_1000157079.jpg",
   },
 };
 
