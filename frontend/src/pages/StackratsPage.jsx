@@ -145,12 +145,12 @@ const PROFILES = {
 
 const GALLERY = [
   {
-    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hhd9o4gw_1000157086.png",
+    src: "/stackrats/archive-matrix.png",
     label: "The configuration matrix",
     alt: "STACKRATS — full configuration matrix on a warm ivory field: top row Wide 10mm, bottom row Thin 7mm; Dinah (14K rose gold), Valerie (14K white gold) and Dominique (18K yellow gold) across both profiles.",
   },
   {
-    src: "/stackrats/separated.png",
+    src: "/stackrats/archive-trio.png",
     label: "The trio, separated",
     alt: "STACKRATS — the three bangles arranged side-by-side on a warm ivory studio sweep: Dinah in 14K rose gold (left), Valerie in 14K white gold (centre), Dominique in 18K yellow gold (right).",
   },
@@ -464,7 +464,7 @@ export default function StackratsPage() {
         .sr-archive-cell img {
           position: absolute; inset: 0;
           width: 100%; height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           object-position: center;
           transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1),
                       opacity 600ms ease;
@@ -1029,7 +1029,7 @@ export default function StackratsPage() {
         <div className="sr-archive-head">
           <p className="sr-archive-eyebrow">THE ARCHIVE</p>
           <p className="sr-archive-title">
-            Five frames. Matrix, trio, mesh macro, stack, row.
+            Four frames. Matrix, trio, stack, row.
           </p>
         </div>
         <div className="sr-archive-grid" data-testid="sr-archive-grid">
