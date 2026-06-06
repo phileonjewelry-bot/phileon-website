@@ -102,7 +102,7 @@ const FULL_STACK_THIN = 5700; // = 1800 + 1950 + 2200 - small bundle break
 const TILE_IMAGES = {
   dinah: {
     wide: "/stackrats/dinah-thin.png",
-    thin: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j910hw57_1000157125.jpg",
+    thin: "/stackrats/dinah-thin-full.png",
   },
   valerie: {
     wide: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i82zaat0_1000157083.jpg",
