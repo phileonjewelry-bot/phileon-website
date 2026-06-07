@@ -957,7 +957,7 @@ export default function StackratsPage() {
           <video
             className="sr-hero-img"
             data-testid="sr-hero-video"
-            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dd3hyyhz_XiaoYing_Video_1780808684550_HD.mp4"
+            src="/stackrats/hero.mp4"
             poster={STACK_STILL}
             autoPlay
             loop
