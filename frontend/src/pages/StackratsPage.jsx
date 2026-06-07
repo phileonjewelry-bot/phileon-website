@@ -958,12 +958,22 @@ export default function StackratsPage() {
             className="sr-hero-img"
             data-testid="sr-hero-video"
             src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dd3hyyhz_XiaoYing_Video_1780808684550_HD.mp4"
+            poster={STACK_STILL}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
             aria-label="STACKRATS — the three bangles in motion: rose, white and yellow micro-bead mesh on warm ivory."
+            ref={(el) => {
+              if (el) {
+                el.muted = true;
+                const tryPlay = () => el.play().catch(() => {});
+                tryPlay();
+                el.addEventListener("loadedmetadata", tryPlay, { once: true });
+                el.addEventListener("canplay", tryPlay, { once: true });
+              }
+            }}
           />
         </div>
         <div className="sr-hero-text">
