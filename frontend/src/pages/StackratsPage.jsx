@@ -954,12 +954,16 @@ export default function StackratsPage() {
       {/* ─── 1. HERO ──────────────────────────────────────────── */}
       <section className="sr-hero" data-testid="sr-hero">
         <div className="sr-hero-img-wrap">
-          <img
-            src={STACK_STILL}
-            alt="STACKRATS — the three bangles stacked vertically: rose, white and yellow micro-bead mesh on warm ivory."
+          <video
             className="sr-hero-img"
-            data-testid="sr-hero-img"
-            loading="eager"
+            data-testid="sr-hero-video"
+            src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dd3hyyhz_XiaoYing_Video_1780808684550_HD.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            aria-label="STACKRATS — the three bangles in motion: rose, white and yellow micro-bead mesh on warm ivory."
           />
         </div>
         <div className="sr-hero-text">
