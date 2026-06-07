@@ -145,6 +145,11 @@ const PROFILES = {
 
 const GALLERY = [
   {
+    src: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wn7d148q_1000157282.png",
+    label: "The configuration poster",
+    alt: "STACKRATS — full configuration poster on a warm ivory field: WIDE 10MM top row, THIN 7MM bottom row, with DINAH (14K rose gold), VALERIE (14K white gold) and DOMINIQUE (18K yellow gold) across both profiles, each label set in elegant serif.",
+  },
+  {
     src: "/stackrats/archive-matrix.png",
     label: "The configuration matrix",
     alt: "STACKRATS — full configuration matrix on a warm ivory field: top row Wide 10mm, bottom row Thin 7mm; Dinah (14K rose gold), Valerie (14K white gold) and Dominique (18K yellow gold) across both profiles.",
@@ -1029,7 +1034,7 @@ export default function StackratsPage() {
         <div className="sr-archive-head">
           <p className="sr-archive-eyebrow">THE ARCHIVE</p>
           <p className="sr-archive-title">
-            Four frames. Matrix, trio, stack, row.
+            Five frames. Poster, matrix, trio, stack, row.
           </p>
         </div>
         <div className="sr-archive-grid" data-testid="sr-archive-grid">
