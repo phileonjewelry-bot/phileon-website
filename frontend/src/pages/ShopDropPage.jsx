@@ -71,6 +71,7 @@ const SHOP_COLLECTION_MAP = {
   'battenti-della-villa': 'collective',
   'gent': 'collective',
   'stackrats': 'collective',
+  'wynette-palette': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -83,6 +84,19 @@ const SHOP_COLLECTIONS = [
 // Core collection products - Always shown first
 // Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
 const CORE_PRODUCTS = [
+  {
+    id: 'wynette-palette',
+    name: "WYNETTE'S PALETTE",
+    slug: 'wynette-palette',
+    materialLine: 'Collector Cocktail Ring · 18K White Gold',
+    imageUrl: '/wynette/hero.jpg',
+    href: '/products/wynette-palette',
+    price_range: 'Price upon request',
+    inventory_count: 1,
+    is_core: true,
+    category: 'rings',
+    audience: 'ladies',
+  },
   {
     id: 'la-marva',
     name: 'La Marva',

@@ -369,6 +369,12 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           { 
+            title: "WYNETTE'S PALETTE", 
+            image: "/wynette/hero.jpg", 
+            href: "/products/wynette-palette",
+            subtitle: "Every island brought a colour."
+          },
+          { 
             title: "LA MADONNA", 
             image: "/images/la-madonna-hand-category.png", 
             href: "/la-madonna",

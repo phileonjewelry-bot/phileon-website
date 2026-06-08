@@ -2579,6 +2579,32 @@ This is expression — under control.`,
     },
 
     shipping: "Complimentary insured shipping within Canada."
+  },
+
+  // ==========================================
+  // WYNETTE'S PALETTE
+  // Collector Cocktail Ring — black rose-cut centre stone,
+  // multi-colour gemstone halo, hand-engraved white-gold gallery.
+  // Made to order. Price upon request.
+  // ==========================================
+  wynettePalette: {
+    name: "WYNETTE'S PALETTE",
+    slug: "wynette-palette",
+    category: "rings",
+    audience: ["ladies", "collective"],
+    collections: ["rings", "collective", "ladies"],
+    subtitle: "Collector Cocktail Ring",
+    tagline: "Every island brought a colour.",
+    priceFrom: "Price upon request",
+    basePrice: null,
+    inquireOnly: true,
+
+    // Hero image for shop cards & carousel
+    imageUrl: "/wynette/hero.jpg",
+
+    // Pricing Configuration
+    dynamicPricing: false,
+    currency: "USD",
   }
 
 };
