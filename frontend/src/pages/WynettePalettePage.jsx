@@ -26,7 +26,7 @@ const HERO_IMG = "/wynette/hero.jpg";
 const HERO_ALT =
   "WYNETTE'S PALETTE — collector cocktail ring with a rose-cut black centre stone surrounded by a halo of ruby, emerald, sapphire, amethyst, topaz, citrine and aquamarine; hand-engraved white-gold openwork gallery.";
 
-// Archive editorial — five frames of the piece itself, each named after
+// Archive editorial — ten frames of the piece itself, each named after
 // a moment from Wynette's evenings.
 const GALLERY = [
   {
@@ -54,19 +54,74 @@ const GALLERY = [
     label: "After the music",
     alt: "WYNETTE'S PALETTE — direct top-down view of the perfect circular halo: a black rose-cut stone held by a ring of colour, quiet and complete.",
   },
+  {
+    src: "/wynette/archive-6.png",
+    label: "The gallery",
+    alt: "WYNETTE'S PALETTE — looking through the openwork architecture from beneath, the entire colour-set gallery visible through the dome.",
+  },
+  {
+    src: "/wynette/archive-7.png",
+    label: "The architecture",
+    alt: "WYNETTE'S PALETTE — head-on elevation of the dome and shank, the layered tiers of colour-set white-gold openwork revealed in profile.",
+  },
+  {
+    src: "/wynette/archive-8.png",
+    label: "On the stone",
+    alt: "WYNETTE'S PALETTE — the ring photographed resting on a carved stone surface, three-quarter view, evening light catching the rainbow halo around the black centre stone.",
+  },
+  {
+    src: "/wynette/archive-9.png",
+    label: "The crown",
+    alt: "WYNETTE'S PALETTE — extreme macro of the gold prong setting around the black rose-cut centre, gem-set crown beads of ruby, citrine, topaz and emerald.",
+  },
+  {
+    src: "/wynette/archive-10.jpg",
+    label: "Wynette herself",
+    alt: "WYNETTE'S PALETTE — lifestyle frame of a woman wearing the ring at a Caribbean garden party at dusk: string lights, palm shadow, a cocktail in her hand, laughter in the room.",
+  },
 ];
 
 const SPECS = [
-  ["Collection", "PHILEON"],
+  ["Collection", "PHILEON — Collector Series"],
   ["Piece", "Wynette's Palette"],
-  ["Category", "Collector Cocktail Ring"],
-  ["Metal", "18K White Gold"],
-  ["Centre Stone", "Black Rose-Cut Stone"],
-  ["Accent Stones", "Multi-Colour Gemstone Halo"],
-  ["Gallery", "Hand-Engraved Openwork Architecture"],
+  ["Category", "Ladies Cocktail Ring"],
+  ["Ring Size", "7"],
+  ["Top Diameter", "Approx. 22mm"],
+  ["Top Height", "Approx. 12mm"],
+  ["Overall Face", "Approx. 22mm"],
+  ["Shank Width", "Approx. 4.5mm tapering to 4mm"],
+  ["Shank Thickness", "Approx. 2.0–2.5mm"],
+  ["Centre Stone", "1 × Black Onyx · Approx. 12mm Round"],
+  ["Halo Stones", "20 × Natural Multicolour Gemstones · Approx. 2.5mm Round"],
+  ["Gallery & Shank", "Approx. 80 Natural Multicolour Gemstones · Approx. 1.5mm Round"],
+  ["Total Stone Count", "Approx. 101 Stones"],
   ["Availability", "Made To Order"],
   ["Lead Time", "4–6 Weeks"],
-  ["Price", "Price upon request"],
+  ["Shipping", "International Shipping Available"],
+];
+
+const METAL_TIERS = [
+  {
+    name: "Signature",
+    metal: "Sterling Silver",
+    stones: "Synthetic Colour Stones · Black Onyx Centre",
+    weight: null,
+    price: "$2,400 CAD",
+  },
+  {
+    name: "Foundation",
+    metal: "10K White Gold",
+    stones: "Natural Colour Gemstones · Black Onyx Centre",
+    weight: "Approx. 16.5 g",
+    price: "$6,900 CAD",
+  },
+  {
+    name: "Heirloom",
+    metal: "14K White Gold",
+    stones: "Natural Colour Gemstones · Black Onyx Centre",
+    weight: "Approx. 18.6 g",
+    price: "$8,500 CAD",
+  },
 ];
 
 export default function WynettePalettePage() {
@@ -332,7 +387,7 @@ export default function WynettePalettePage() {
           max-width: 1240px;
           margin: 0 auto;
         }
-        .wp-archive-grid > :nth-child(5) { grid-column: 1 / -1; }
+        .wp-archive-grid > :nth-child(5) { grid-column: auto; }
         @media (max-width: 720px) {
           .wp-archive-grid { grid-template-columns: 1fr; }
           .wp-archive-grid > :nth-child(5) { grid-column: auto; }
@@ -617,11 +672,11 @@ export default function WynettePalettePage() {
       <section className="wp-archive" data-testid="wp-archive">
         <div className="wp-archive-head">
           <p className="wp-eyebrow">THE ARCHIVE</p>
-          <h2 className="wp-section-title">Five frames from her evenings.</h2>
+        <h2 className="wp-section-title">Ten frames from her evenings.</h2>
           <p className="wp-stanza dim">
-            The garden party, the last toast, the moon over Barbados, carnival
-            royalty, and after the music — five frames where colour, light and
-            laughter held the room together.
+            The garden party, the last toast, the moon over Barbados,
+            carnival royalty, after the music, and Wynette herself — ten
+            frames where colour, light and laughter held the room together.
           </p>
         </div>
         <div className="wp-archive-grid">
@@ -644,7 +699,17 @@ export default function WynettePalettePage() {
         <h2 className="wp-section-title" style={{ textAlign: "center" }}>
           The piece, in detail.
         </h2>
-        <div style={{ marginTop: 40 }}>
+        <p className="wp-stanza" style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 28px" }}>
+          A celebration of colour, memory, and movement. Wynette&apos;s Palette
+          is built around a commanding black onyx centre surrounded by a
+          spectrum of natural gemstones inspired by Caribbean gardens, evening
+          gatherings, and moonlit coastlines.
+        </p>
+        <p className="wp-stanza dim" style={{ textAlign: "center", maxWidth: 720, margin: "0 auto" }}>
+          The openwork gallery carries colour throughout the piece, creating
+          a ring that reveals something new from every angle.
+        </p>
+        <div style={{ marginTop: 56 }}>
           {SPECS.map(([k, v]) => (
             <div key={k} className="wp-spec-row">
               <div className="wp-spec-key">{k}</div>
@@ -654,9 +719,115 @@ export default function WynettePalettePage() {
         </div>
       </section>
 
+      {/* ─── 7B. METAL OPTIONS ───────────────────────────────── */}
+      <section className="wp-tiers" data-testid="wp-metal-tiers">
+        <style>{`
+          .wp-tiers {
+            padding: clamp(60px, 9vw, 110px) clamp(20px, 4vw, 60px) clamp(80px, 12vw, 140px);
+            max-width: 1120px;
+            margin: 0 auto;
+          }
+          .wp-tiers-head { text-align: center; margin-bottom: 56px; }
+          .wp-tier-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(20px, 3vw, 40px);
+          }
+          @media (max-width: 880px) {
+            .wp-tier-grid { grid-template-columns: 1fr; }
+          }
+          .wp-tier {
+            border: 1px solid var(--rule);
+            background: rgba(255,255,255,0.015);
+            padding: clamp(28px, 3vw, 40px);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: border-color 320ms ease, transform 320ms ease;
+          }
+          .wp-tier:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+          }
+          .wp-tier-name {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 0.42em;
+            color: var(--gold);
+            margin: 0;
+          }
+          .wp-tier-metal {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--ink-strong);
+            margin: 0;
+            line-height: 1.15;
+          }
+          .wp-tier-stones {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 16px;
+            color: var(--ink-muted);
+            line-height: 1.5;
+            margin: 0;
+          }
+          .wp-tier-weight {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 0.32em;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            margin-top: 4px;
+          }
+          .wp-tier-price {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--rule);
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            letter-spacing: 0.18em;
+            color: var(--gold);
+          }
+        `}</style>
+        <div className="wp-tiers-head">
+          <p className="wp-eyebrow">METAL OPTIONS</p>
+          <h2 className="wp-section-title">Three ways to wear her.</h2>
+        </div>
+        <div className="wp-tier-grid">
+          {METAL_TIERS.map((t) => (
+            <article key={t.name} className="wp-tier" data-testid={`wp-tier-${t.name.toLowerCase()}`}>
+              <p className="wp-tier-name">{t.name}</p>
+              <p className="wp-tier-metal">{t.metal}</p>
+              <p className="wp-tier-stones">{t.stones}</p>
+              {t.weight && <p className="wp-tier-weight">{t.weight}</p>}
+              <p className="wp-tier-price">{t.price}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── 7C. CRAFT ───────────────────────────────────────── */}
+      <section className="wp-editorial" data-testid="wp-craft" style={{ paddingTop: 0 }}>
+        <p className="wp-eyebrow">THE CRAFT</p>
+        <h2 className="wp-section-title">Light moves through colour.</h2>
+        <p className="wp-stanza">
+          The elevated gallery is fully openworked, allowing light to move
+          through the coloured stones from every direction.
+        </p>
+        <p className="wp-stanza dim">
+          The broad 22mm face is balanced by a tapered shank, keeping the
+          ring wearable while maintaining its dramatic presence.
+        </p>
+        <p className="wp-stanza">
+          Every gemstone is individually set by hand throughout the crown
+          and gallery.
+        </p>
+      </section>
+
       {/* ─── 8. INQUIRE ──────────────────────────────────────── */}
       <section className="wp-cta-block" data-testid="wp-cta-block">
-        <p className="wp-cta-price" data-testid="wp-price">PRICE UPON REQUEST</p>
+        <p className="wp-cta-price" data-testid="wp-price">FROM $2,400 CAD · MADE TO ORDER</p>
         <p className="wp-cta-sub">Created individually for each collector.</p>
         <button
           type="button"
