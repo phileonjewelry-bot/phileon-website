@@ -26,16 +26,34 @@ const HERO_IMG = "/wynette/hero.jpg";
 const HERO_ALT =
   "WYNETTE'S PALETTE — collector cocktail ring with a rose-cut black centre stone surrounded by a halo of ruby, emerald, sapphire, amethyst, topaz, citrine and aquamarine; hand-engraved white-gold openwork gallery.";
 
-// Temporary archive — same hero asset as placeholder across five named
-// frames per current creative direction. Will be replaced by bespoke
-// editorial shoots (garden party, last toast, moon over Barbados,
-// carnival royalty, after the music).
+// Archive editorial — five frames of the piece itself, each named after
+// a moment from Wynette's evenings.
 const GALLERY = [
-  { src: HERO_IMG, label: "The garden party", alt: HERO_ALT },
-  { src: HERO_IMG, label: "The last toast", alt: HERO_ALT },
-  { src: HERO_IMG, label: "Moon over Barbados", alt: HERO_ALT },
-  { src: HERO_IMG, label: "Carnival royalty", alt: HERO_ALT },
-  { src: HERO_IMG, label: "After the music", alt: HERO_ALT },
+  {
+    src: "/wynette/archive-1.png",
+    label: "The garden party",
+    alt: "WYNETTE'S PALETTE — side profile of the ring revealing the gem-encrusted shoulders, the multi-colour halo and the black rose-cut centre stone seen from the elevation; the architecture of the gallery is fully visible.",
+  },
+  {
+    src: "/wynette/archive-2.png",
+    label: "The last toast",
+    alt: "WYNETTE'S PALETTE — three-quarter view from above, the rainbow halo of ruby, emerald, sapphire, amethyst, topaz, citrine and aquamarine circling the rose-cut black centre stone.",
+  },
+  {
+    src: "/wynette/archive-3.png",
+    label: "Moon over Barbados",
+    alt: "WYNETTE'S PALETTE — rear view with the openwork gallery reflected beneath; light catching the engraved white-gold lacework like moonlight on the Atlantic.",
+  },
+  {
+    src: "/wynette/archive-4.png",
+    label: "Carnival royalty",
+    alt: "WYNETTE'S PALETTE — extreme macro of the shoulder, a riot of ruby, emerald, sapphire and amethyst set into hand-engraved white gold.",
+  },
+  {
+    src: "/wynette/archive-5.png",
+    label: "After the music",
+    alt: "WYNETTE'S PALETTE — direct top-down view of the perfect circular halo: a black rose-cut stone held by a ring of colour, quiet and complete.",
+  },
 ];
 
 const SPECS = [
