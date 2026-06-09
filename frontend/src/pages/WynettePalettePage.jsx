@@ -23,6 +23,12 @@ import { ArrowLeft } from "lucide-react";
  */
 
 const HERO_IMG = "/wynette/hero.jpg";
+
+// When the real collector-unboxing footage lands, set HERO_VIDEO_SRC to
+// "/wynette/hero.mp4". The chassis below renders a faststart-friendly
+// autoplay/loop/muted/playsInline <video> with a 25 % black scrim and
+// end-frame overlay copy. Until then, the still image is shown.
+const HERO_VIDEO_SRC = null;
 const HERO_ALT =
   "WYNETTE'S PALETTE — collector cocktail ring with a rose-cut black centre stone surrounded by a halo of ruby, emerald, sapphire, amethyst, topaz, citrine and aquamarine; hand-engraved white-gold openwork gallery.";
 
@@ -267,10 +273,78 @@ export default function WynettePalettePage() {
           transition: transform 1400ms cubic-bezier(0.22, 1, 0.36, 1);
         }
         .is-loaded .wp-hero-img { animation: wpFloat 14s ease-in-out infinite alternate; }
+        .wp-hero-video { animation: none !important; }
         @keyframes wpFloat {
           0%   { transform: translateY(0) scale(1.00); }
           100% { transform: translateY(-14px) scale(1.012); }
         }
+
+        /* Video chassis: 25% black scrim for text readability,
+           and the end-frame overlay copy that fades in over the last
+           ~3.5 s of the 15 s loop. */
+        .wp-hero-scrim {
+          position: absolute; inset: 0;
+          background: rgba(5, 3, 9, 0.25);
+          pointer-events: none;
+          z-index: 2;
+        }
+        .wp-hero-endframe {
+          position: absolute; inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: clamp(24px, 4vw, 56px);
+          text-align: center;
+          z-index: 3;
+          pointer-events: none;
+          opacity: 0;
+          animation: wpEndframe 15s ease-in-out infinite;
+        }
+        @keyframes wpEndframe {
+          0%, 76%   { opacity: 0; }
+          82%, 96%  { opacity: 1; }
+          100%      { opacity: 0; }
+        }
+        .wp-hero-endframe-eyebrow {
+          font-family: 'Cinzel', serif;
+          font-size: 11px;
+          letter-spacing: 0.5em;
+          color: var(--gold);
+          margin: 0 0 6px;
+        }
+        .wp-hero-endframe-title {
+          font-family: 'Playfair Display', serif;
+          font-weight: 500;
+          font-size: clamp(34px, 4.6vw, 64px);
+          letter-spacing: -0.005em;
+          line-height: 1.0;
+          color: var(--ink-strong);
+          margin: 0 0 14px;
+        }
+        .wp-hero-endframe-tag {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: clamp(16px, 1.4vw, 20px);
+          color: var(--gold);
+          margin: 0 0 18px;
+        }
+        .wp-hero-endframe-rule {
+          width: 48px; height: 1px;
+          background: var(--gold);
+          opacity: 0.55;
+          margin: 6px 0 18px;
+        }
+        .wp-hero-endframe-final {
+          font-family: 'Playfair Display', serif;
+          font-style: italic;
+          font-weight: 400;
+          font-size: clamp(16px, 1.4vw, 20px);
+          color: var(--ink);
+          margin: 0;
+          line-height: 1.55;
+        }
+        .wp-hero-endframe-final.gold { color: var(--gold); }
 
         .wp-hero-text { color: var(--ink); }
         .wp-collection {
@@ -544,13 +618,50 @@ export default function WynettePalettePage() {
             ref={heroRef}
             style={{ transform: `translateY(${heroParallax * 0.3}px)` }}
           >
-            <img
-              src={HERO_IMG}
-              alt={HERO_ALT}
-              className="wp-hero-img"
-              data-testid="wp-hero-img"
-              loading="eager"
-            />
+            {HERO_VIDEO_SRC ? (
+              <>
+                <video
+                  className="wp-hero-img wp-hero-video"
+                  data-testid="wp-hero-video"
+                  src={HERO_VIDEO_SRC}
+                  poster={HERO_IMG}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  aria-label={HERO_ALT}
+                  ref={(el) => {
+                    if (el) {
+                      el.muted = true;
+                      const tryPlay = () => el.play().catch(() => {});
+                      tryPlay();
+                      el.addEventListener("loadedmetadata", tryPlay, { once: true });
+                      el.addEventListener("canplay", tryPlay, { once: true });
+                    }
+                  }}
+                />
+                <div className="wp-hero-scrim" aria-hidden="true" />
+                <div className="wp-hero-endframe" data-testid="wp-hero-endframe">
+                  <p className="wp-hero-endframe-eyebrow">PHILEON</p>
+                  <p className="wp-hero-endframe-title">WYNETTE&apos;S PALETTE</p>
+                  <p className="wp-hero-endframe-tag">
+                    <em>Every island brought a colour.</em>
+                  </p>
+                  <div className="wp-hero-endframe-rule" />
+                  <p className="wp-hero-endframe-final">Some women wear colour.</p>
+                  <p className="wp-hero-endframe-final gold">Wynette collected it.</p>
+                </div>
+              </>
+            ) : (
+              <img
+                src={HERO_IMG}
+                alt={HERO_ALT}
+                className="wp-hero-img"
+                data-testid="wp-hero-img"
+                loading="eager"
+              />
+            )}
           </div>
           <div className="wp-hero-text" data-testid="wp-hero-text">
             <p className="wp-collection">PHILEON</p>
