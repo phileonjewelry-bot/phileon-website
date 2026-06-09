@@ -798,7 +798,6 @@ export default function WynettePalettePage() {
               data-testid={`wp-archive-cell-${i + 1}`}
             >
               <img src={g.src} alt={g.alt} loading="lazy" />
-              <figcaption className="wp-archive-caption">{g.label}</figcaption>
             </figure>
           ))}
         </div>
