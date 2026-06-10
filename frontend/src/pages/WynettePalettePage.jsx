@@ -24,11 +24,14 @@ import { ArrowLeft } from "lucide-react";
 
 const HERO_IMG = "/wynette/hero.jpg";
 
-// When the real collector-unboxing footage lands, set HERO_VIDEO_SRC to
-// "/wynette/hero.mp4". The chassis below renders a faststart-friendly
-// autoplay/loop/muted/playsInline <video> with a 25 % black scrim and
-// end-frame overlay copy. Until then, the still image is shown.
-const HERO_VIDEO_SRC = null;
+// Live cinematic unboxing video. 13.631 s total.
+// Overlay phases keyed to absolute seconds inside the loop:
+//   0.0 –  3.0 s : PHILEON
+//   3.0 –  8.5 s : WYNETTE'S PALETTE
+//   8.5 – 11.5 s : Every island brought a colour.
+//  11.5 – 13.631 s : Some women wear colour. / Wynette collected it.
+const HERO_VIDEO_SRC = "/wynette/hero.mp4";
+const HERO_VIDEO_DURATION = 13.631;
 const HERO_ALT =
   "WYNETTE'S PALETTE — collector cocktail ring with a rose-cut black centre stone surrounded by a halo of ruby, emerald, sapphire, amethyst, topaz, citrine and aquamarine; hand-engraved white-gold openwork gallery.";
 
@@ -200,175 +203,142 @@ export default function WynettePalettePage() {
         }
         .wp-return:hover { opacity: 1; }
 
-        /* ── HERO ── */
+        /* ── HERO (full-bleed cinematic video) ── */
         .wp-hero {
           position: relative;
           width: 100%;
-          background: var(--bg-deep);
-          padding: 48px 0 96px;
+          min-height: 100vh;
+          height: 100vh;
+          background: #000;
           overflow: hidden;
-        }
-        .wp-hero::before,
-        .wp-hero::after {
-          content: "";
-          position: absolute; inset: 0;
-          pointer-events: none;
-          z-index: 0;
-        }
-        .wp-hero::before {
-          background:
-            radial-gradient(ellipse 60% 55% at 50% 48%,
-              rgba(201, 169, 97, 0.10) 0%,
-              transparent 65%),
-            radial-gradient(ellipse 80% 60% at 50% 100%,
-              rgba(46, 79, 138, 0.08),
-              transparent 70%);
-        }
-        .wp-hero::after {
-          /* slow spotlight shimmer */
-          background: radial-gradient(
-            circle 240px at var(--shimmer-x, 50%) var(--shimmer-y, 38%),
-            rgba(247, 240, 221, 0.10) 0%,
-            transparent 70%
-          );
-          mix-blend-mode: screen;
-          animation: wpShimmer 9s ease-in-out infinite alternate;
-        }
-        @keyframes wpShimmer {
-          0%   { --shimmer-x: 38%; --shimmer-y: 34%; opacity: 0.65; }
-          50%  { --shimmer-x: 56%; --shimmer-y: 42%; opacity: 0.95; }
-          100% { --shimmer-x: 46%; --shimmer-y: 38%; opacity: 0.55; }
-        }
-
-        .wp-hero-grid {
-          position: relative;
-          z-index: 2;
-          display: grid;
-          grid-template-columns: 1.05fr 0.95fr;
-          gap: clamp(40px, 6vw, 96px);
-          max-width: 1380px;
-          margin: 0 auto;
-          padding: 0 clamp(20px, 4vw, 60px);
-          align-items: center;
+          padding: 0;
+          margin: 0;
         }
         @media (max-width: 880px) {
-          .wp-hero-grid { grid-template-columns: 1fr; gap: 48px; }
+          .wp-hero { min-height: 85vh; height: 85vh; }
         }
-        .wp-hero-img-wrap {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 1 / 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          will-change: transform;
-        }
-        .wp-hero-img {
+        .wp-hero-bg-video {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center;
-          filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.85));
-          transform: translateY(0);
-          transition: transform 1400ms cubic-bezier(0.22, 1, 0.36, 1);
+          z-index: 0;
+          background: #000;
         }
-        .is-loaded .wp-hero-img { animation: wpFloat 14s ease-in-out infinite alternate; }
-        .wp-hero-video { animation: none !important; }
-        @keyframes wpFloat {
-          0%   { transform: translateY(0) scale(1.00); }
-          100% { transform: translateY(-14px) scale(1.012); }
-        }
-
-        /* Video chassis: 25% black scrim for text readability,
-           and the end-frame overlay copy that fades in over the last
-           ~3.5 s of the 15 s loop. */
         .wp-hero-scrim {
           position: absolute; inset: 0;
           background: rgba(5, 3, 9, 0.25);
           pointer-events: none;
-          z-index: 2;
+          z-index: 1;
         }
-        .wp-hero-endframe {
+        .wp-hero-overlay {
           position: absolute; inset: 0;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 6px;
-          padding: clamp(24px, 4vw, 56px);
-          text-align: center;
-          z-index: 3;
+          padding: clamp(24px, 5vw, 80px);
+          z-index: 2;
           pointer-events: none;
+        }
+        .wp-hero-phase {
+          position: absolute;
+          left: 0; right: 0;
+          margin: 0 auto;
+          text-align: center;
+          padding: 0 clamp(20px, 5vw, 80px);
           opacity: 0;
-          animation: wpEndframe 15s ease-in-out infinite;
+          color: var(--ink-strong);
+          will-change: opacity;
+          /* Each phase shares the same animation duration (= video duration).
+             The keyframe set defines when each phase is visible. */
+          animation-duration: 13.631s;
+          animation-iteration-count: infinite;
+          animation-timing-function: ease-in-out;
+          animation-fill-mode: both;
         }
-        @keyframes wpEndframe {
-          0%, 76%   { opacity: 0; }
-          82%, 96%  { opacity: 1; }
-          100%      { opacity: 0; }
+        /* PHASE 1 — 0.0s → 3.0s (PHILEON) */
+        .wp-hero-phase--1 { animation-name: wpPhase1; }
+        @keyframes wpPhase1 {
+          0%      { opacity: 0; }
+          3.67%   { opacity: 1; }   /* 0.5s fade-in done */
+          18.34%  { opacity: 1; }   /* hold until 2.5s */
+          22.01%  { opacity: 0; }   /* fade-out done at 3.0s */
+          100%    { opacity: 0; }
         }
-        .wp-hero-endframe-eyebrow {
+        /* PHASE 2 — 3.0s → 8.5s (WYNETTE'S PALETTE) */
+        .wp-hero-phase--2 { animation-name: wpPhase2; }
+        @keyframes wpPhase2 {
+          0%, 22.01%  { opacity: 0; }
+          25.68%      { opacity: 1; }   /* 3.5s */
+          58.69%      { opacity: 1; }   /* 8.0s */
+          62.36%      { opacity: 0; }   /* 8.5s */
+          100%        { opacity: 0; }
+        }
+        /* PHASE 3 — 8.5s → 11.5s (Every island brought a colour.) */
+        .wp-hero-phase--3 { animation-name: wpPhase3; }
+        @keyframes wpPhase3 {
+          0%, 62.36%  { opacity: 0; }
+          66.03%      { opacity: 1; }   /* 9.0s */
+          80.70%      { opacity: 1; }   /* 11.0s */
+          84.37%      { opacity: 0; }   /* 11.5s */
+          100%        { opacity: 0; }
+        }
+        /* PHASE 4 — 11.5s → end (Some women wear colour. / Wynette collected it.) */
+        .wp-hero-phase--4 { animation-name: wpPhase4; }
+        @keyframes wpPhase4 {
+          0%, 84.37%  { opacity: 0; }
+          88.04%      { opacity: 1; }   /* 12.0s */
+          96.33%      { opacity: 1; }   /* 13.131s */
+          100%        { opacity: 0; }   /* 13.631s — fade to black before video loops */
+        }
+
+        .wp-hero-eyebrow {
+          display: inline-block;
           font-family: 'Cinzel', serif;
-          font-size: 11px;
-          letter-spacing: 0.5em;
+          font-size: clamp(13px, 1.4vw, 18px);
+          letter-spacing: 0.62em;
           color: var(--gold);
-          margin: 0 0 6px;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.85);
         }
-        .wp-hero-endframe-title {
+        .wp-hero-title-overlay {
+          display: inline-block;
           font-family: 'Playfair Display', serif;
           font-weight: 500;
-          font-size: clamp(34px, 4.6vw, 64px);
+          font-size: clamp(40px, 6.4vw, 96px);
+          line-height: 0.96;
           letter-spacing: -0.005em;
-          line-height: 1.0;
           color: var(--ink-strong);
-          margin: 0 0 14px;
+          text-shadow: 0 4px 24px rgba(0,0,0,0.9);
         }
-        .wp-hero-endframe-tag {
+        .wp-hero-tag-overlay {
+          display: inline-block;
           font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(16px, 1.4vw, 20px);
+          font-style: italic;
+          font-weight: 300;
+          font-size: clamp(20px, 2.2vw, 34px);
           color: var(--gold);
-          margin: 0 0 18px;
+          text-shadow: 0 2px 16px rgba(0,0,0,0.9);
         }
-        .wp-hero-endframe-rule {
-          width: 48px; height: 1px;
-          background: var(--gold);
-          opacity: 0.55;
-          margin: 6px 0 18px;
-        }
-        .wp-hero-endframe-final {
+        .wp-hero-final-overlay {
+          display: block;
           font-family: 'Playfair Display', serif;
           font-style: italic;
           font-weight: 400;
-          font-size: clamp(16px, 1.4vw, 20px);
-          color: var(--ink);
-          margin: 0;
-          line-height: 1.55;
-        }
-        .wp-hero-endframe-final.gold { color: var(--gold); }
-
-        .wp-hero-text { color: var(--ink); }
-        .wp-collection {
-          font-family: 'Cinzel', serif;
-          font-size: 11px;
-          letter-spacing: 0.42em;
-          color: var(--gold);
-          margin: 0 0 20px;
-        }
-        .wp-hero-title {
-          font-family: 'Playfair Display', serif;
-          font-weight: 500;
-          font-size: clamp(48px, 6.2vw, 84px);
-          line-height: 0.96;
-          letter-spacing: -0.005em;
-          margin: 0 0 14px;
+          font-size: clamp(18px, 2.0vw, 28px);
           color: var(--ink-strong);
+          line-height: 1.6;
+          text-shadow: 0 2px 16px rgba(0,0,0,0.9);
         }
-        .wp-tagline {
-          font-style: italic;
-          font-weight: 300;
-          font-size: clamp(20px, 1.6vw, 24px);
-          color: var(--gold);
-          margin: 0 0 36px;
+        .wp-hero-final-overlay.gold { color: var(--gold); }
+
+        /* ── 1B. OPENING STANZA ── */
+        .wp-opening {
+          padding: clamp(80px, 12vw, 160px) clamp(20px, 5vw, 80px);
+          max-width: 720px;
+          margin: 0 auto;
+          text-align: center;
         }
         .wp-hero-stanza {
           font-size: clamp(16px, 1.15vw, 18px);
@@ -610,86 +580,68 @@ export default function WynettePalettePage() {
         <ArrowLeft size={14} /> RETURN
       </Link>
 
-      {/* ─── 1. HERO ─────────────────────────────────────────── */}
-      <section className="wp-hero" data-testid="wp-hero">
-        <div className="wp-hero-grid">
-          <div
-            className="wp-hero-img-wrap"
-            ref={heroRef}
-            style={{ transform: `translateY(${heroParallax * 0.3}px)` }}
-          >
-            {HERO_VIDEO_SRC ? (
-              <>
-                <video
-                  className="wp-hero-img wp-hero-video"
-                  data-testid="wp-hero-video"
-                  src={HERO_VIDEO_SRC}
-                  poster={HERO_IMG}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="auto"
-                  aria-label={HERO_ALT}
-                  ref={(el) => {
-                    if (el) {
-                      el.muted = true;
-                      const tryPlay = () => el.play().catch(() => {});
-                      tryPlay();
-                      el.addEventListener("loadedmetadata", tryPlay, { once: true });
-                      el.addEventListener("canplay", tryPlay, { once: true });
-                    }
-                  }}
-                />
-                <div className="wp-hero-scrim" aria-hidden="true" />
-                <div className="wp-hero-endframe" data-testid="wp-hero-endframe">
-                  <p className="wp-hero-endframe-eyebrow">PHILEON</p>
-                  <p className="wp-hero-endframe-title">WYNETTE&apos;S PALETTE</p>
-                  <p className="wp-hero-endframe-tag">
-                    <em>Every island brought a colour.</em>
-                  </p>
-                  <div className="wp-hero-endframe-rule" />
-                  <p className="wp-hero-endframe-final">Some women wear colour.</p>
-                  <p className="wp-hero-endframe-final gold">Wynette collected it.</p>
-                </div>
-              </>
-            ) : (
-              <img
-                src={HERO_IMG}
-                alt={HERO_ALT}
-                className="wp-hero-img"
-                data-testid="wp-hero-img"
-                loading="eager"
-              />
-            )}
-          </div>
-          <div className="wp-hero-text" data-testid="wp-hero-text">
-            <p className="wp-collection">PHILEON</p>
-            <h1 className="wp-hero-title" data-testid="wp-hero-title">
-              WYNETTE&apos;S<br />PALETTE
-            </h1>
-            <p className="wp-tagline">Every island brought a colour.</p>
-            <p className="wp-hero-stanza">
-              She never returned from an island with souvenirs.
-            </p>
-            <p className="wp-hero-stanza">She returned with colour.</p>
-            <p className="wp-hero-stanza muted">Ruby from one memory.</p>
-            <p className="wp-hero-stanza muted">Emerald from another.</p>
-            <p className="wp-hero-stanza muted">
-              Sapphire from somewhere she never spoke about.
-            </p>
-            <p className="wp-hero-stanza">
-              Years later they gathered around a black centre stone like
-              stories around a table.
-            </p>
-            <p className="wp-hero-stanza" style={{ marginTop: 24 }}>
-              <em>Not matching.</em>
-            </p>
-            <p className="wp-hero-stanza">
-              <em style={{ color: "var(--gold)" }}>Belonging.</em>
-            </p>
-          </div>
+      {/* ─── 1. HERO (full-bleed cinematic video) ──────────────── */}
+      <section className="wp-hero wp-hero--video" data-testid="wp-hero">
+        <video
+          className="wp-hero-bg-video"
+          data-testid="wp-hero-video"
+          src={HERO_VIDEO_SRC}
+          poster={HERO_IMG}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          aria-label={HERO_ALT}
+          ref={(el) => {
+            if (el) {
+              el.muted = true;
+              const tryPlay = () => el.play().catch(() => {});
+              tryPlay();
+              el.addEventListener("loadedmetadata", tryPlay, { once: true });
+              el.addEventListener("canplay", tryPlay, { once: true });
+            }
+          }}
+        />
+        <div className="wp-hero-scrim" aria-hidden="true" />
+        <div className="wp-hero-overlay" data-testid="wp-hero-overlay">
+          <p className="wp-hero-phase wp-hero-phase--1" data-testid="wp-hero-phase-1">
+            <span className="wp-hero-eyebrow">PHILEON</span>
+          </p>
+          <p className="wp-hero-phase wp-hero-phase--2" data-testid="wp-hero-phase-2">
+            <span className="wp-hero-title-overlay">WYNETTE&apos;S PALETTE</span>
+          </p>
+          <p className="wp-hero-phase wp-hero-phase--3" data-testid="wp-hero-phase-3">
+            <em className="wp-hero-tag-overlay">Every island brought a colour.</em>
+          </p>
+          <p className="wp-hero-phase wp-hero-phase--4" data-testid="wp-hero-phase-4">
+            <span className="wp-hero-final-overlay">Some women wear colour.</span>
+            <span className="wp-hero-final-overlay gold">Wynette collected it.</span>
+          </p>
         </div>
+      </section>
+
+      {/* ─── 1B. OPENING STANZA ─────────────────────────────── */}
+      <section className="wp-opening" data-testid="wp-opening">
+        <p className="wp-stanza">
+          She never returned from an island with souvenirs.
+        </p>
+        <p className="wp-stanza">She returned with colour.</p>
+        <p className="wp-stanza dim">Ruby from one memory.</p>
+        <p className="wp-stanza dim">Emerald from another.</p>
+        <p className="wp-stanza dim">
+          Sapphire from somewhere she never spoke about.
+        </p>
+        <p className="wp-stanza">
+          Years later they gathered around a black centre stone like
+          stories around a table.
+        </p>
+        <p className="wp-stanza" style={{ marginTop: 24 }}>
+          <em>Not matching.</em>
+        </p>
+        <p className="wp-stanza">
+          <em style={{ color: "var(--gold)" }}>Belonging.</em>
+        </p>
       </section>
 
       {/* ─── 2. THE WOMAN ─────────────────────────────────────── */}
