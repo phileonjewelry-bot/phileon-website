@@ -2585,7 +2585,7 @@ This is expression — under control.`,
   // WYNETTE'S PALETTE
   // Collector Cocktail Ring — black rose-cut centre stone,
   // multi-colour gemstone halo, hand-engraved white-gold gallery.
-  // Made to order. Price upon request.
+  // Made to order. From $2,000 USD (Sterling Silver tier).
   // ==========================================
   wynettePalette: {
     name: "WYNETTE'S PALETTE",
@@ -2595,15 +2595,14 @@ This is expression — under control.`,
     collections: ["rings", "collective", "ladies"],
     subtitle: "Collector Cocktail Ring",
     tagline: "Every island brought a colour.",
-    priceFrom: "Price upon request",
-    basePrice: null,
-    inquireOnly: true,
+    priceFrom: "From $2,000 USD",
+    basePrice: 2000,
 
     // Hero image for shop cards & carousel
     imageUrl: "/wynette/hero.jpg",
 
     // Pricing Configuration
-    dynamicPricing: false,
+    dynamicPricing: true,
     currency: "USD",
   }
 

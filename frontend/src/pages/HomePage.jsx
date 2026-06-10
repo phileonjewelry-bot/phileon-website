@@ -676,6 +676,37 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
             <ScrollReveal delay={0}>
               <Link
+                to="/products/wynette-palette"
+                className="group block"
+                data-testid="product-card-wynette-palette"
+              >
+                <div className="aspect-square overflow-hidden bg-phileon-charcoal relative">
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.2) 100%)'
+                    }}
+                  />
+                  <img
+                    src="/wynette/shop-card.png"
+                    alt="Wynette's Palette"
+                    className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-8 text-center">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
+                    Wynette&apos;s Palette
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
+                    Collector Cocktail Ring · Dynamic Pricing
+                  </p>
+                  <p className="text-sm text-phileon-gold/80 mt-2">From <LiveFromPrice slug="wynette-palette" fallback="$2,000 USD" /></p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0}>
+              <Link
                 to="/products/la-marva"
                 className="group block"
                 data-testid="product-card-la-marva"
