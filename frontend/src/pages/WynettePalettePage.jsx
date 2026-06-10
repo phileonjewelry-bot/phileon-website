@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useLiveTierPrices } from "@/hooks/useLivePrice";
+import { useAddToCart } from "@/hooks/useAddToCart";
 
 /**
  * WYNETTE'S PALETTE — PHILEON Fine Jewelry
@@ -91,52 +93,29 @@ const GALLERY = [
 ];
 
 const SPECS = [
-  ["Collection", "PHILEON — Collector Series"],
   ["Piece", "Wynette's Palette"],
   ["Category", "Ladies Cocktail Ring"],
-  ["Ring Size", "7"],
   ["Top Diameter", "Approx. 22mm"],
   ["Top Height", "Approx. 12mm"],
   ["Overall Face", "Approx. 22mm"],
-  ["Shank Width", "Approx. 4.5mm tapering to 4mm"],
-  ["Shank Thickness", "Approx. 2.0–2.5mm"],
-  ["Centre Stone", "1 × Black Onyx · Approx. 12mm Round"],
-  ["Halo Stones", "20 × Natural Multicolour Gemstones · Approx. 2.5mm Round"],
-  ["Gallery & Shank", "Approx. 80 Natural Multicolour Gemstones · Approx. 1.5mm Round"],
-  ["Total Stone Count", "Approx. 101 Stones"],
-  ["Availability", "Made To Order"],
-  ["Lead Time", "4–6 Weeks"],
-  ["Shipping", "International Shipping Available"],
 ];
 
-const METAL_TIERS = [
-  {
-    name: "Signature",
-    metal: "Sterling Silver",
-    stones: "Synthetic Colour Stones · Black Onyx Centre",
-    weight: null,
-    price: "$2,400 CAD",
-  },
-  {
-    name: "Foundation",
-    metal: "10K White Gold",
-    stones: "Natural Colour Gemstones · Black Onyx Centre",
-    weight: "Approx. 16.5 g",
-    price: "$6,900 CAD",
-  },
-  {
-    name: "Heirloom",
-    metal: "14K White Gold",
-    stones: "Natural Colour Gemstones · Black Onyx Centre",
-    weight: "Approx. 18.6 g",
-    price: "$8,500 CAD",
-  },
+const METAL_OPTIONS = [
+  { id: "silver",  label: "Sterling Silver",   tierKey: "silver"  },
+  { id: "gold10k", label: "10K White Gold",    tierKey: "gold10k" },
+  { id: "gold14k", label: "14K White Gold",    tierKey: "gold14k" },
 ];
+const RING_SIZES = ["4", "4.5", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"];
 
 export default function WynettePalettePage() {
   const heroRef = useRef(null);
   const [scrollY, setScrollY] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [metalId, setMetalId] = useState("gold14k");
+  const [ringSize, setRingSize] = useState("7");
+
+  const tierPricesLive = useLiveTierPrices("wynettePalette");
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   // Slow floating parallax on the hero image
   useEffect(() => {
@@ -152,16 +131,28 @@ export default function WynettePalettePage() {
   // Hero parallax translate (small, slow)
   const heroParallax = Math.min(scrollY * 0.18, 120);
 
-  const handleInquire = () => {
-    const subject = encodeURIComponent(
-      "Inquiry — Wynette's Palette (Collector Cocktail Ring)"
+  const currentMetal = METAL_OPTIONS.find((m) => m.id === metalId) || METAL_OPTIONS[2];
+  const priceUsd = tierPricesLive?.[currentMetal.tierKey]?.price || 0;
+  const priceFormatted = tierPricesLive?.[currentMetal.tierKey]?.formatted || "—";
+
+  const onAddToCart = () => {
+    const variant = `${currentMetal.label} · Size ${ringSize}`;
+    handleAddToCart(
+      {
+        id: `wynette-palette-${metalId}-${ringSize}`,
+        name: `WYNETTE'S PALETTE — ${currentMetal.label} · Size ${ringSize}`,
+        price: priceUsd,
+        productKey: "wynettePalette",
+        tierKey: currentMetal.tierKey,
+        metal: currentMetal.label,
+        ringSize,
+        sku: `WP-${currentMetal.tierKey.toUpperCase()}-S${ringSize.replace(".", "")}`,
+        quantity: 1,
+        image: HERO_IMG,
+      },
+      1,
+      variant,
     );
-    const body = encodeURIComponent(
-      "Hello PHILEON,\n\nI'm interested in commissioning Wynette's Palette. " +
-        "Could you share availability, pricing and lead time for my ring size?\n\n" +
-        "Thank you."
-    );
-    window.location.href = `mailto:atelier@phileon.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -781,91 +772,221 @@ export default function WynettePalettePage() {
         </div>
       </section>
 
-      {/* ─── 7B. METAL OPTIONS ───────────────────────────────── */}
-      <section className="wp-tiers" data-testid="wp-metal-tiers">
+      {/* ─── 7B. CONFIGURATOR + PURCHASE ─────────────────────── */}
+      <section className="wp-configurator" data-testid="wp-configurator">
         <style>{`
-          .wp-tiers {
-            padding: clamp(60px, 9vw, 110px) clamp(20px, 4vw, 60px) clamp(80px, 12vw, 140px);
-            max-width: 1120px;
+          .wp-configurator {
+            padding: clamp(60px, 9vw, 110px) clamp(20px, 4vw, 60px) clamp(40px, 6vw, 80px);
+            max-width: 720px;
             margin: 0 auto;
           }
-          .wp-tiers-head { text-align: center; margin-bottom: 56px; }
-          .wp-tier-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: clamp(20px, 3vw, 40px);
+          .wp-config-head { text-align: center; margin-bottom: 56px; }
+          .wp-live-price {
+            margin: 28px 0 0;
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            font-size: clamp(28px, 3.4vw, 44px);
+            letter-spacing: -0.005em;
+            color: var(--gold);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            transition: opacity 320ms ease;
           }
-          @media (max-width: 880px) {
-            .wp-tier-grid { grid-template-columns: 1fr; }
-          }
-          .wp-tier {
-            border: 1px solid var(--rule);
-            background: rgba(255,255,255,0.015);
-            padding: clamp(28px, 3vw, 40px);
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            transition: border-color 320ms ease, transform 320ms ease;
-          }
-          .wp-tier:hover {
-            border-color: var(--gold);
-            transform: translateY(-3px);
-          }
-          .wp-tier-name {
+          .wp-config-block { margin: 0 0 36px; }
+          .wp-config-label {
             font-family: 'Cinzel', serif;
             font-size: 11px;
             letter-spacing: 0.42em;
             color: var(--gold);
-            margin: 0;
+            text-transform: uppercase;
+            margin: 0 0 16px;
           }
-          .wp-tier-metal {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            font-weight: 500;
+          .wp-metal-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+          }
+          .wp-metal-opt {
+            flex: 1 1 200px;
+            min-width: 0;
+            padding: 16px 20px;
+            background: transparent;
+            border: 1px solid var(--rule);
+            color: var(--ink);
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition:
+              border-color 220ms ease,
+              color 220ms ease,
+              background 220ms ease,
+              letter-spacing 220ms ease;
+          }
+          .wp-metal-opt:hover {
+            border-color: var(--gold-deeper);
             color: var(--ink-strong);
-            margin: 0;
-            line-height: 1.15;
           }
-          .wp-tier-stones {
+          .wp-metal-opt.is-active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201,169,97,0.06);
+            letter-spacing: 0.32em;
+          }
+          @media (max-width: 540px) {
+            .wp-metal-row { flex-direction: column; }
+            .wp-metal-opt { flex: 1 1 auto; width: 100%; }
+          }
+          .wp-size-select {
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: 1px solid var(--rule);
+            color: var(--ink-strong);
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image:
+              linear-gradient(45deg, transparent 50%, var(--gold) 50%),
+              linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+            background-position:
+              calc(100% - 22px) 50%,
+              calc(100% - 14px) 50%;
+            background-size: 8px 8px, 8px 8px;
+            background-repeat: no-repeat;
+            transition: border-color 220ms ease;
+          }
+          .wp-size-select:hover,
+          .wp-size-select:focus { border-color: var(--gold); outline: none; }
+          .wp-size-select option {
+            background: var(--bg);
+            color: var(--ink-strong);
+          }
+
+          .wp-purchase {
+            margin-top: 48px;
+            padding-top: 36px;
+            border-top: 1px solid var(--rule);
+            text-align: center;
+          }
+          .wp-purchase-eyebrow {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            letter-spacing: 0.42em;
+            color: var(--gold);
+            margin: 0 0 4px;
+          }
+          .wp-purchase-lead {
+            font-family: 'Cinzel', serif;
+            font-size: 10.5px;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin: 0 0 24px;
+          }
+          .wp-purchase-copy {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 16px;
-            color: var(--ink-muted);
-            line-height: 1.5;
-            margin: 0;
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--ink);
+            max-width: 520px;
+            margin: 0 auto 14px;
           }
-          .wp-tier-weight {
+          .wp-purchase-copy.dim { color: var(--ink-muted); }
+          .wp-quote-btn {
+            margin-top: 36px;
+            display: inline-block;
+            padding: 20px 56px;
             font-family: 'Cinzel', serif;
-            font-size: 10px;
-            letter-spacing: 0.32em;
-            color: var(--ink-muted);
-            text-transform: uppercase;
-            margin-top: 4px;
+            font-size: 13px;
+            letter-spacing: 0.48em;
+            color: var(--ink-strong);
+            background: transparent;
+            border: 1px solid var(--gold);
+            cursor: pointer;
+            transition:
+              background 260ms ease,
+              color 260ms ease,
+              letter-spacing 260ms ease,
+              box-shadow 320ms ease;
           }
-          .wp-tier-price {
-            margin-top: auto;
-            padding-top: 14px;
-            border-top: 1px solid var(--rule);
-            font-family: 'Cinzel', serif;
-            font-size: 15px;
-            letter-spacing: 0.18em;
-            color: var(--gold);
+          .wp-quote-btn:hover {
+            background: var(--gold);
+            color: #0A0708;
+            letter-spacing: 0.52em;
+            box-shadow: 0 12px 32px -10px rgba(201,169,97,0.55);
+          }
+          .wp-quote-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
           }
         `}</style>
-        <div className="wp-tiers-head">
-          <p className="wp-eyebrow">METAL OPTIONS</p>
-          <h2 className="wp-section-title">Three ways to wear her.</h2>
+
+        <div className="wp-config-head">
+          <p className="wp-eyebrow">CONFIGURE YOUR PIECE</p>
+          <h2 className="wp-section-title">Three metals, one centre stone.</h2>
+          <p className="wp-live-price" data-testid="wp-live-price">{priceFormatted}</p>
         </div>
-        <div className="wp-tier-grid">
-          {METAL_TIERS.map((t) => (
-            <article key={t.name} className="wp-tier" data-testid={`wp-tier-${t.name.toLowerCase()}`}>
-              <p className="wp-tier-name">{t.name}</p>
-              <p className="wp-tier-metal">{t.metal}</p>
-              <p className="wp-tier-stones">{t.stones}</p>
-              {t.weight && <p className="wp-tier-weight">{t.weight}</p>}
-              <p className="wp-tier-price">{t.price}</p>
-            </article>
-          ))}
+
+        <div className="wp-config-block">
+          <p className="wp-config-label">Metal</p>
+          <div className="wp-metal-row" role="radiogroup" aria-label="Metal">
+            {METAL_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                role="radio"
+                aria-checked={metalId === opt.id}
+                className={`wp-metal-opt${metalId === opt.id ? " is-active" : ""}`}
+                data-testid={`wp-metal-${opt.id}`}
+                onClick={() => setMetalId(opt.id)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="wp-config-block">
+          <label htmlFor="wp-ring-size" className="wp-config-label">Ring Size</label>
+          <select
+            id="wp-ring-size"
+            className="wp-size-select"
+            data-testid="wp-ring-size"
+            value={ringSize}
+            onChange={(e) => setRingSize(e.target.value)}
+          >
+            {RING_SIZES.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="wp-purchase" data-testid="wp-purchase">
+          <p className="wp-purchase-eyebrow">MADE TO ORDER</p>
+          <p className="wp-purchase-lead">Lead Time · 4–6 Weeks</p>
+          <p className="wp-purchase-copy">
+            Each Wynette&apos;s Palette ring is individually produced and
+            finished to order.
+          </p>
+          <p className="wp-purchase-copy dim">
+            Select your preferred metal and ring size.
+          </p>
+          <button
+            type="button"
+            className="wp-quote-btn"
+            data-testid="wp-add-to-cart"
+            onClick={onAddToCart}
+            disabled={isAdding || !priceUsd}
+          >
+            {buttonText}
+          </button>
         </div>
       </section>
 
@@ -885,20 +1006,6 @@ export default function WynettePalettePage() {
           Every gemstone is individually set by hand throughout the crown
           and gallery.
         </p>
-      </section>
-
-      {/* ─── 8. INQUIRE ──────────────────────────────────────── */}
-      <section className="wp-cta-block" data-testid="wp-cta-block">
-        <p className="wp-cta-price" data-testid="wp-price">FROM $2,400 CAD · MADE TO ORDER</p>
-        <p className="wp-cta-sub">Created individually for each collector.</p>
-        <button
-          type="button"
-          className="wp-inquire-btn"
-          data-testid="wp-inquire-btn"
-          onClick={handleInquire}
-        >
-          INQUIRE
-        </button>
       </section>
 
       {/* ─── 9. FINAL WORD ───────────────────────────────────── */}
