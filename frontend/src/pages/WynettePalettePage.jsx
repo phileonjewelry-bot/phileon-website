@@ -207,15 +207,15 @@ export default function WynettePalettePage() {
         .wp-hero {
           position: relative;
           width: 100%;
-          min-height: 100vh;
-          height: 100vh;
+          min-height: 78vh;
+          height: 78vh;
           background: #000;
           overflow: hidden;
           padding: 0;
           margin: 0;
         }
         @media (max-width: 880px) {
-          .wp-hero { min-height: 85vh; height: 85vh; }
+          .wp-hero { min-height: 68vh; height: 68vh; }
         }
         .wp-hero-bg-video {
           position: absolute;
