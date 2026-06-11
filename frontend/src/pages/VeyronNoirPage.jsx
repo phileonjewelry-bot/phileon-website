@@ -15,11 +15,11 @@ const HERO_ALT =
   "VEYRON NOIR — gentleman's tribute signet ring in 14K white gold with black diamond pavé shoulders, a sculptural horseshoe grille bed of black diamonds at centre, and a single ruby pavé horizon beneath the band.";
 
 const GALLERY = [
-  { src: HERO_IMG, label: "The grille", caption: "Macro of the centre grille and black diamond field." },
-  { src: HERO_IMG, label: "The ruby horizon", caption: "Close-up of the red pavé line beneath the band." },
-  { src: HERO_IMG, label: "Carbon field", caption: "Side / shoulder detail showing black diamond pavé." },
-  { src: HERO_IMG, label: "Midnight machine", caption: "Full ring beauty shot." },
-  { src: HERO_IMG, label: "On the hand", caption: "Lifestyle frame. Black tie, late hour." },
+  { src: "/veyron-noir/archive-1.png", alt: "VEYRON NOIR — macro of the centre grille and black diamond field, ruby horizon along the base." },
+  { src: "/veyron-noir/archive-2.jpg", alt: "VEYRON NOIR — side / shoulder detail showing black diamond pavé moving into the grille." },
+  { src: "/veyron-noir/archive-3.jpg", alt: "VEYRON NOIR — direct top-down of the four-bar grille over the bed of black stones." },
+  { src: "/veyron-noir/archive-4.png", alt: "VEYRON NOIR — close-up of the red pavé line beneath the band." },
+  { src: "/veyron-noir/archive-5.png", alt: "VEYRON NOIR — full beauty shot, the ring on polished black with its own reflection." },
 ];
 
 const SPECS = [
@@ -472,8 +472,7 @@ export default function VeyronNoirPage() {
         <div className="vn-archive-grid">
           {GALLERY.map((g, i) => (
             <figure key={i} className="vn-archive-cell" data-testid={`vn-archive-cell-${i + 1}`}>
-              <img src={g.src} alt={`${g.label} — ${g.caption}`} loading="lazy" />
-              <figcaption className="vn-archive-cap">{g.label}</figcaption>
+              <img src={g.src} alt={g.alt} loading="lazy" />
             </figure>
           ))}
         </div>
