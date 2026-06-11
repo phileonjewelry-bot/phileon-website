@@ -15,11 +15,18 @@ const HERO_ALT =
   "VEYRON NOIR — gentleman's tribute signet ring in 14K white gold with black diamond pavé shoulders, a sculptural horseshoe grille bed of black diamonds at centre, and a single ruby pavé horizon beneath the band.";
 
 const GALLERY = [
-  { src: "/veyron-noir/archive-1.png", alt: "VEYRON NOIR — macro of the centre grille and black diamond field, ruby horizon along the base." },
+  { src: "/veyron-noir/archive-1.jpg", alt: "VEYRON NOIR — three-quarter macro on suede: the grille of black diamonds, pavé shoulders, and the ruby horizon caught in studio light." },
   { src: "/veyron-noir/archive-2.jpg", alt: "VEYRON NOIR — side / shoulder detail showing black diamond pavé moving into the grille." },
   { src: "/veyron-noir/archive-3.jpg", alt: "VEYRON NOIR — direct top-down of the four-bar grille over the bed of black stones." },
   { src: "/veyron-noir/archive-4.png", alt: "VEYRON NOIR — close-up of the red pavé line beneath the band." },
   { src: "/veyron-noir/archive-5.png", alt: "VEYRON NOIR — full beauty shot, the ring on polished black with its own reflection." },
+  { src: "/veyron-noir/archive-6.png", alt: "VEYRON NOIR — alternate three-quarter angle, grille catching directional light." },
+  { src: "/veyron-noir/archive-7.png", alt: "VEYRON NOIR — opposite shoulder study, pavé field across the white gold band." },
+  { src: "/veyron-noir/archive-8.png", alt: "VEYRON NOIR — low-angle hero, ruby horizon reading hot against the black diamond bed." },
+  { src: "/veyron-noir/archive-9.png", alt: "VEYRON NOIR — detail of the polished gold frame containing the grille." },
+  { src: "/veyron-noir/archive-10.jpg", alt: "VEYRON NOIR — studio editorial frame, full ring composed on reflective black." },
+  { src: "/veyron-noir/archive-11.jpg", alt: "VEYRON NOIR — worn at the members' lounge, whiskey on the table, jacket dark, ring resting in the half-light." },
+  { src: "/veyron-noir/archive-12.jpg", alt: "VEYRON NOIR — at the wheel of the car it was named for, hand on Alcantara, the grille reading in profile." },
 ];
 
 const SPECS = [
@@ -233,10 +240,27 @@ export default function VeyronNoirPage() {
           gap: clamp(20px, 3vw, 40px);
           max-width: 1240px; margin: 0 auto;
         }
-        .vn-archive-grid > :nth-child(5) { grid-column: 1 / -1; }
+        .vn-archive-grid > :nth-child(5),
+        .vn-archive-grid > :nth-child(10),
+        .vn-archive-grid > :nth-child(11),
+        .vn-archive-grid > :nth-child(12) { grid-column: 1 / -1; }
+        .vn-archive-grid > :nth-child(11),
+        .vn-archive-grid > :nth-child(12) {
+          aspect-ratio: 16 / 9;
+        }
+        .vn-archive-grid > :nth-child(11) img,
+        .vn-archive-grid > :nth-child(12) img {
+          object-fit: cover;
+          object-position: center;
+        }
         @media (max-width: 720px) {
           .vn-archive-grid { grid-template-columns: 1fr; }
-          .vn-archive-grid > :nth-child(5) { grid-column: auto; }
+          .vn-archive-grid > :nth-child(5),
+          .vn-archive-grid > :nth-child(10),
+          .vn-archive-grid > :nth-child(11),
+          .vn-archive-grid > :nth-child(12) { grid-column: auto; }
+          .vn-archive-grid > :nth-child(11),
+          .vn-archive-grid > :nth-child(12) { aspect-ratio: 1 / 1; }
         }
         .vn-archive-cell {
           position: relative;
@@ -467,7 +491,7 @@ export default function VeyronNoirPage() {
       <section className="vn-archive" data-testid="vn-archive">
         <div className="vn-archive-head">
           <p className="vn-eyebrow">THE ARCHIVE</p>
-          <h2 className="vn-h2">Five frames from the garage.</h2>
+          <h2 className="vn-h2">Frames from the garage.</h2>
         </div>
         <div className="vn-archive-grid">
           {GALLERY.map((g, i) => (
