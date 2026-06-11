@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { products } from "@/data/products";
 
 const carouselItems = [
+  { name: "VEYRON NOIR", slug: "veyron-noir", image: products.veyronNoir?.imageUrl, tagline: "Not every tribute is a memory. Some are machines." },
   { name: "WYNETTE'S PALETTE", slug: "wynette-palette", image: products.wynettePalette?.imageUrl, tagline: "Every island brought a colour." },
   { name: "DRAPE", slug: "drape", image: products.drape?.imageUrl, tagline: "The dress left. The bones remain." },
   { name: "BATTENTI DELLA VILLA", slug: "battenti-della-villa", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png", tagline: "Cast like the hardware of an old world estate." },

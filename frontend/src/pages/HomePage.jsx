@@ -368,6 +368,12 @@ const HomePage = () => {
       {(() => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
+          {
+            title: "VEYRON NOIR",
+            image: "/veyron-noir/hero.png",
+            href: "/products/veyron-noir",
+            subtitle: "Tribute Series. 14K white gold."
+          },
           { 
             title: "WYNETTE'S PALETTE", 
             image: "/wynette/hero.jpg", 
@@ -674,6 +680,35 @@ const HomePage = () => {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+            <ScrollReveal delay={0}>
+              <Link
+                to="/products/veyron-noir"
+                className="group block"
+                data-testid="product-card-veyron-noir"
+              >
+                <div className="aspect-square overflow-hidden bg-black relative">
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(192,20,46,0.18) 100%)' }}
+                  />
+                  <img
+                    src="/veyron-noir/hero.png"
+                    alt="Veyron Noir"
+                    className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-8 text-center">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
+                    Veyron Noir
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
+                    Tribute Series · 14K White Gold
+                  </p>
+                  <p className="text-sm mt-2" style={{ color: '#C0142E', letterSpacing: '0.18em' }}>PRICE COMING SOON</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
             <ScrollReveal delay={0}>
               <Link
                 to="/products/wynette-palette"

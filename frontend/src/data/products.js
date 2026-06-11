@@ -2604,6 +2604,30 @@ This is expression — under control.`,
     // Pricing Configuration
     dynamicPricing: true,
     currency: "USD",
+  },
+
+  // ==========================================
+  // VEYRON NOIR — PHILEON Tribute Series
+  // Gentlemen's cocktail signet. 14K white gold, black diamond pavé,
+  // ruby horizon. Bugatti-inspired grille architecture. Made to order.
+  // Pricing TBD — displays "PRICE COMING SOON" across discovery surfaces.
+  // ==========================================
+  veyronNoir: {
+    name: "VEYRON NOIR",
+    slug: "veyron-noir",
+    category: "rings",
+    audience: ["gentlemens-club", "collective"],
+    collections: ["rings", "tribute", "collective", "gentlemens-club"],
+    subtitle: "Tribute Series · 14K White Gold",
+    tagline: "Not every tribute is a memory. Some are machines.",
+    priceFrom: "PRICE COMING SOON",
+    basePrice: null,
+    comingSoon: true,
+
+    imageUrl: "/veyron-noir/hero.png",
+
+    dynamicPricing: false,
+    currency: "USD",
   }
 
 };

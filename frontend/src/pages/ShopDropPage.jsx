@@ -72,6 +72,7 @@ const SHOP_COLLECTION_MAP = {
   'gent': 'collective',
   'stackrats': 'collective',
   'wynette-palette': 'collective',
+  'veyron-noir': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -84,6 +85,19 @@ const SHOP_COLLECTIONS = [
 // Core collection products - Always shown first
 // Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
 const CORE_PRODUCTS = [
+  {
+    id: 'veyron-noir',
+    name: 'VEYRON NOIR',
+    slug: 'veyron-noir',
+    materialLine: 'Tribute Series · 14K White Gold',
+    imageUrl: '/veyron-noir/hero.png',
+    href: '/products/veyron-noir',
+    price_range: 'PRICE COMING SOON',
+    inventory_count: 1,
+    is_core: true,
+    category: 'rings',
+    audience: 'gentlemens-club',
+  },
   {
     id: 'wynette-palette',
     name: "WYNETTE'S PALETTE",

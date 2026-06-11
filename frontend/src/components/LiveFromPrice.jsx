@@ -27,6 +27,7 @@ const SLUG_TO_KEY = {
   "the-bamburgh": "bamburgh",
   "lady-bamburgh": "ladyBamburgh",
   "wynette-palette": "wynettePalette",
+  "veyron-noir": "veyronNoir",
 };
 
 export function slugToProductKey(slug) {

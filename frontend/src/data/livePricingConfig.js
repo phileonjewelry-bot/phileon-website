@@ -36,6 +36,11 @@ const livePricingConfig = {
     gold10k:   { lockedBasePriceCad: 7500, metalType: "10K", weightGrams: 16.5, lockedMetalReferenceCad: 619 },
     gold14k:   { lockedBasePriceCad: 9950, metalType: "14K", weightGrams: 18.6, lockedMetalReferenceCad: 977 },
   },
+  // VEYRON NOIR — Tribute Series cocktail signet (14K WG / black diamond / ruby)
+  // Pricing locked at $0 placeholder until atelier costing finalises.
+  veyronNoir: {
+    gold14k: { lockedBasePriceCad: 0, metalType: "14K", weightGrams: 22, lockedMetalReferenceCad: 1155 },
+  },
 
   // MONIKA COUTURE
   monikaCouture: {
