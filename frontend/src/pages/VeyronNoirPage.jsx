@@ -461,11 +461,6 @@ export default function VeyronNoirPage() {
               <span className="vn-spec-chip">BLACK DIAMOND PAVÉ</span>
               <span className="vn-spec-chip">RUBY ACCENT HORIZON</span>
             </div>
-            <div className="vn-cta-row">
-              <button type="button" className="vn-btn" data-testid="vn-hero-cta" onClick={onAddToCart} disabled={isAdding}>
-                {buttonText}
-              </button>
-            </div>
           </div>
         </div>
       </section>
