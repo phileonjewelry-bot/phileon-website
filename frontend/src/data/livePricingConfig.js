@@ -36,10 +36,19 @@ const livePricingConfig = {
     gold10k:   { lockedBasePriceCad: 7500, metalType: "10K", weightGrams: 16.5, lockedMetalReferenceCad: 619 },
     gold14k:   { lockedBasePriceCad: 9950, metalType: "14K", weightGrams: 18.6, lockedMetalReferenceCad: 977 },
   },
-  // VEYRON NOIR — Tribute Series cocktail signet (14K WG / black diamond / ruby)
-  // Pricing locked at $0 placeholder until atelier costing finalises.
+  // VEYRON NOIR — Tribute Series cocktail signet · 4 metal tiers
+  // Entry (Sterling Silver · synthetic), Foundation (10K WG · lab),
+  // Signature (14K WG · lab · default), Heirloom (18K WG · natural).
+  // Hand-set USD prices per atelier brief. lockedBasePriceCad numerically
+  // mirrors USD display value so server_price == client_price on
+  // /validate-cart (weightGrams=0 disables live metal recalc).
+  // User CAD-spec → USD-mirrored: $1,950→$1,450 · $4,800→$3,500
+  // · $6,800→$5,000 · $9,500→$7,000 (cadToUsdLuxury rounding).
   veyronNoir: {
-    gold14k: { lockedBasePriceCad: 0, metalType: "14K", weightGrams: 22, lockedMetalReferenceCad: 1155 },
+    silver:  { lockedBasePriceCad: 1450, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k: { lockedBasePriceCad: 3500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold14k: { lockedBasePriceCad: 5000, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold18k: { lockedBasePriceCad: 7000, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // MONIKA COUTURE

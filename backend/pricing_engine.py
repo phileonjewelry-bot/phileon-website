@@ -39,8 +39,14 @@ LIVE_PRICING_CONFIG = {
         "gold10k": {"lockedBasePriceCad": 7500, "metalType": "10K", "weightGrams": 16.5, "lockedMetalReferenceCad": 619},
         "gold14k": {"lockedBasePriceCad": 9950, "metalType": "14K", "weightGrams": 18.6, "lockedMetalReferenceCad": 977},
     },
+    # VEYRON NOIR — Tribute Series cocktail signet · 4 metal tiers
+    # Hand-set USD prices (lockedBasePriceCad numerically mirrors
+    # priceUsd so server_price == client_price on /validate-cart).
     "veyronNoir": {
-        "gold14k": {"lockedBasePriceCad": 0, "metalType": "14K", "weightGrams": 22, "lockedMetalReferenceCad": 1155},
+        "silver":  {"lockedBasePriceCad": 1450, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k": {"lockedBasePriceCad": 3500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k": {"lockedBasePriceCad": 5000, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold18k": {"lockedBasePriceCad": 7000, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},

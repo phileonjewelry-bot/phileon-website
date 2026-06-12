@@ -2608,9 +2608,10 @@ This is expression — under control.`,
 
   // ==========================================
   // VEYRON NOIR — PHILEON Tribute Series
-  // Gentlemen's cocktail signet. 14K white gold, black diamond pavé,
-  // ruby horizon. Bugatti-inspired grille architecture. Made to order.
-  // Pricing TBD — displays "PRICE COMING SOON" across discovery surfaces.
+  // Gentlemen's cocktail signet. Black diamond pavé, ruby horizon,
+  // Bugatti-inspired grille architecture. 4 metal tiers
+  // (Sterling Silver · 10K · 14K · 18K White Gold). Made to order.
+  // From $1,450 USD (Sterling Silver Entry tier).
   // ==========================================
   veyronNoir: {
     name: "VEYRON NOIR",
@@ -2618,15 +2619,14 @@ This is expression — under control.`,
     category: "rings",
     audience: ["gentlemens-club", "collective"],
     collections: ["rings", "tribute", "collective", "gentlemens-club"],
-    subtitle: "Tribute Series · 14K White Gold",
+    subtitle: "Tribute Series · 4 Metal Tiers",
     tagline: "Not every tribute is a memory. Some are machines.",
-    priceFrom: "PRICE COMING SOON",
-    basePrice: null,
-    comingSoon: true,
+    priceFrom: "From $1,450 USD",
+    basePrice: 1450,
 
     imageUrl: "/veyron-noir/hero.png",
 
-    dynamicPricing: false,
+    dynamicPricing: true,
     currency: "USD",
   }
 

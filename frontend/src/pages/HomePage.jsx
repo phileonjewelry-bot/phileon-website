@@ -702,9 +702,9 @@ const HomePage = () => {
                     Veyron Noir
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
-                    Tribute Series · 14K White Gold
+                    Tribute Series · 4 Metal Tiers
                   </p>
-                  <p className="text-sm mt-2" style={{ color: '#C0142E', letterSpacing: '0.18em' }}>PRICE COMING SOON</p>
+                  <p className="text-sm mt-2" style={{ color: '#C0142E', letterSpacing: '0.18em' }}>FROM $1,450 USD</p>
                 </div>
               </Link>
             </ScrollReveal>

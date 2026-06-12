@@ -31,19 +31,35 @@ const SPECS = [
   ["Collection", "Tribute Series"],
   ["Piece", "Veyron Noir"],
   ["Category", "Gentlemen Statement Ring"],
-  ["Metal", "14K White Gold"],
-  ["Stones", "Black Diamond Pavé"],
-  ["Accent", "Ruby Pavé Horizon"],
+  ["Metal", "Sterling Silver · 10K · 14K · 18K White Gold"],
+  ["Stones", "172 Total · 146 Black Diamond · 26 Ruby"],
+  ["Stone Detail", "50 shoulder line · 60 side pavé · 36 grille · 26 ruby horizon"],
+  ["Approx. Weight", "15g in 14K White Gold (Size 11)"],
   ["Design", "Bugatti-Inspired Grille Architecture"],
   ["Finish", "High Polish White Gold"],
   ["Availability", "Made To Order"],
-  ["Lead Time", "4–6 Weeks"],
+  ["Lead Time", "3–4 Weeks"],
+  ["Shipping", "Insured · Included"],
 ];
+
+// Four hand-set metal tiers. Prices render verbatim — they do not pass
+// through the sitewide cadToUsdLuxury rounding (the user has hand-priced
+// this piece). lockedBasePriceCad in livePricingConfig + pricing_engine
+// numerically mirrors priceUsd so /api/validate-cart returns diff=0.
+const METAL_OPTIONS = [
+  { id: "silver",  label: "Sterling Silver", short: "SILVER", tierKey: "silver",  stones: "Synthetic Stones",  tier: "ENTRY",      priceUsd: 1450 },
+  { id: "gold10k", label: "10K White Gold",  short: "10K",    tierKey: "gold10k", stones: "Lab-Grown Stones",  tier: "FOUNDATION", priceUsd: 3500 },
+  { id: "gold14k", label: "14K White Gold",  short: "14K",    tierKey: "gold14k", stones: "Lab-Grown Stones",  tier: "SIGNATURE",  priceUsd: 5000 },
+  { id: "gold18k", label: "18K White Gold",  short: "18K",    tierKey: "gold18k", stones: "Natural Stones",    tier: "HEIRLOOM",   priceUsd: 7000 },
+];
+
+const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 const RING_SIZES = ["8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13"];
 
 export default function VeyronNoirPage() {
   const [scrollY, setScrollY] = useState(0);
+  const [metalId, setMetalId] = useState("gold14k");
   const [ringSize, setRingSize] = useState("9.5");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
@@ -55,18 +71,22 @@ export default function VeyronNoirPage() {
 
   const heroParallax = Math.min(scrollY * 0.18, 120);
 
+  const currentMetal = METAL_OPTIONS.find((m) => m.id === metalId) || METAL_OPTIONS[2];
+  const priceUsd = currentMetal.priceUsd;
+  const priceFormatted = formatUsd(priceUsd);
+
   const onAddToCart = () => {
-    const variant = `14K White Gold · Size ${ringSize}`;
+    const variant = `${currentMetal.label} · Size ${ringSize}`;
     handleAddToCart(
       {
-        id: `veyron-noir-gold14k-${ringSize}`,
-        name: `VEYRON NOIR — 14K White Gold · Size ${ringSize}`,
-        price: 0,
+        id: `veyron-noir-${metalId}-${ringSize}`,
+        name: `VEYRON NOIR — ${currentMetal.label} · Size ${ringSize}`,
+        price: priceUsd,
         productKey: "veyronNoir",
-        tierKey: "gold14k",
-        metal: "14K White Gold",
+        tierKey: currentMetal.tierKey,
+        metal: currentMetal.label,
         ringSize,
-        sku: `VN-14K-S${ringSize.replace(".", "")}`,
+        sku: `VN-${currentMetal.short.replace(/\s+/g, "")}-S${ringSize.replace(".", "")}`,
         quantity: 1,
         image: HERO_IMG,
       },
@@ -331,6 +351,53 @@ export default function VeyronNoirPage() {
           background-repeat: no-repeat;
         }
         .vn-size-select option { background: var(--bg); color: var(--ink-strong); }
+
+        .vn-metal-row {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 12px;
+        }
+        @media (max-width: 720px) { .vn-metal-row { grid-template-columns: 1fr 1fr; } }
+        .vn-metal-opt {
+          appearance: none;
+          background: transparent;
+          color: var(--ink-muted);
+          border: 1px solid var(--rule-soft);
+          padding: 18px 14px 16px;
+          cursor: pointer;
+          text-align: center;
+          transition: border-color 220ms ease, color 220ms ease, background 220ms ease;
+        }
+        .vn-metal-opt:hover { border-color: var(--rule); color: var(--ink); }
+        .vn-metal-opt.is-active {
+          border-color: var(--ruby);
+          color: var(--ink-strong);
+          background: rgba(192,20,46,0.05);
+          box-shadow: 0 0 0 1px var(--ruby) inset, 0 12px 32px -16px rgba(192,20,46,0.5);
+        }
+        .vn-metal-tier {
+          font-family: 'Cinzel', serif;
+          font-size: 10px;
+          letter-spacing: 0.42em;
+          color: var(--ruby);
+          margin: 0 0 6px;
+        }
+        .vn-metal-label {
+          font-family: 'Cinzel', serif;
+          font-size: 12px;
+          letter-spacing: 0.28em;
+          color: inherit;
+          margin: 0 0 4px;
+          text-transform: uppercase;
+        }
+        .vn-metal-stones {
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 12px;
+          color: var(--ink-muted);
+          margin: 0;
+        }
+        .vn-config-group { margin-top: 32px; }
         .vn-purchase {
           margin-top: 48px; padding-top: 32px;
           border-top: 1px solid var(--rule);
@@ -513,10 +580,32 @@ export default function VeyronNoirPage() {
       <section className="vn-config" data-testid="vn-configurator">
         <div className="vn-config-head">
           <p className="vn-eyebrow">CONFIGURE YOUR PIECE</p>
-          <h2 className="vn-h2">14K white gold. One configuration.</h2>
-          <p className="vn-price-line" data-testid="vn-price">PRICE COMING SOON</p>
+          <h2 className="vn-h2">Four metals. One silhouette.</h2>
+          <p className="vn-price-line" data-testid="vn-price">{priceFormatted}</p>
         </div>
-        <div>
+
+        <div className="vn-config-group">
+          <label className="vn-config-label">Metal</label>
+          <div className="vn-metal-row" role="radiogroup" aria-label="Metal">
+            {METAL_OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                role="radio"
+                aria-checked={metalId === opt.id}
+                className={`vn-metal-opt${metalId === opt.id ? " is-active" : ""}`}
+                data-testid={`vn-metal-${opt.id}`}
+                onClick={() => setMetalId(opt.id)}
+              >
+                <p className="vn-metal-tier">{opt.tier}</p>
+                <p className="vn-metal-label">{opt.label}</p>
+                <p className="vn-metal-stones">{opt.stones}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="vn-config-group">
           <label htmlFor="vn-ring-size" className="vn-config-label">Ring Size</label>
           <select
             id="vn-ring-size"
@@ -528,9 +617,10 @@ export default function VeyronNoirPage() {
             {RING_SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
+
         <div className="vn-purchase">
           <p className="vn-purchase-eyebrow">MADE TO ORDER</p>
-          <p className="vn-purchase-lead">Lead Time · 4–6 Weeks</p>
+          <p className="vn-purchase-lead">Lead Time · 3–4 Weeks · Insured Shipping Included</p>
           <button
             type="button"
             className="vn-btn"
