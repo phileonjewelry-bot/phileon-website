@@ -1,0 +1,103 @@
+{
+  "summary": "Iter-10 regression sweep on VEYRON NOIR + WYNETTE'S PALETTE + UNCLE JO. Backend: 14/14 pytest tests pass — Veyron 4 tiers diff=0, Battenti control diff=0, Wynette 3 tiers diff=0 (probe-validated), UNCLE JO new 4 sampled tiers all validate (1100/1450/3900/5400), Veyron+UncleJo mixed cart validates, wrong-price still rejected. Veyron Noir frontend: hero is <video data-testid='vn-hero-video'> with autoplay/loop/muted/playsInline=true, controls=false; vn-hero-img count=0; hero.mp4 HTTP 200 video/mp4; video.paused=true / readyState=0 in headless Chromium (known H.264 limitation — PASS by network+DOM). vn-hero-cta removed (count=0), vn-add-to-cart count=1. Desktop wrap aspect '1 / 1' transform 'none'; mobile (390x844) wrap aspect 'auto' transform 'matrix(1.3, 0, 0, 1.3, 0, 0)' — exactly per spec. All 10 archive cells render. Section order monotonic Hero→Archive→Specs→Configurator→FinalWord. Default gold14k=$5,000 USD; all 4 metal price swaps exact match. Ring 9.5 default, options 8-13. ATC gold14k/9.5 and silver/11 both persist correct sku/tierKey/variant. Cart drawer opens via [data-testid='cart-button'], shows items and subtotal correctly. Wynette: 10 cells, order correct, ring default=7 ✓, ATC works. UNCLE JO page mounts at /uncle-jo and /products/uncle-jo. All 6 product routes return HTTP 200. ZERO console errors, ZERO 404s across all pages tested. HOWEVER two HIGH-priority issues surfaced: (1) WYNETTE'S PALETTE FRONTEND/BACKEND PRICE MISMATCH — UI configurator shows silver $2,000 / gold10k $6,000 / gold14k $8,000 (default), but backend /api/validate-cart returns server_price 2950/7950/10600 with valid=false 'Price mismatch detected'. Cart items persist lockedPriceCad=8000 which will be REJECTED at checkout. Also Wynette price is rendered WITHOUT 'USD' suffix while Veyron renders 'USD'. (2) UNCLE JO IS MISSING FROM /shop PAGE — user expected it as first card with 'From $1,100 USD' but searching shop body for 'UNCLE JO' / 'Uncle Jo' / 'UNCLE' returns nothing. The $1,100 visible on /shop belongs to 'The Carapace', not Uncle Jo. /uncle-jo page itself works.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "/api/validate-cart wynettePalette all tiers", "issue": "Server price (silver=2950, gold10k=7950, gold14k=10600) DOES NOT MATCH frontend display (2000/6000/8000). Cart will be rejected at checkout for every Wynette purchase. Frontend pricing source diverged from backend pricing_engine.py.", "priority": "HIGH"}
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ShopDropPage", "issue": "UNCLE JO card is not rendered on /shop page (user said it should be first). Page body text contains no 'UNCLE JO' substring.", "selector": "/shop card list (CORE_PRODUCTS array)", "priority": "HIGH"},
+      {"component": "WynettePalettePage configurator", "issue": "wp-live-price displays prices without 'USD' suffix ($8,000 vs Veyron's '$5,000 USD'). Visual inconsistency with Veyron Noir.", "selector": "[data-testid='wp-live-price']", "priority": "LOW"},
+      {"component": "CartDrawer item rows", "issue": "Per-item remove button has no aria-label and no data-testid. Visually it is an × icon. Hard to target in automated tests and inaccessible to screen readers.", "selector": "aside [class*=drawer] button (× icon)", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Wynette ATC → Checkout", "issue": "lockedPriceCad=8000 persisted on add-to-cart but backend computes 10600 (USD). Any checkout call to /api/validate-cart will fail validation and block purchase.", "affected_selectors": ["[data-testid='wp-add-to-cart']", "[data-testid='wp-live-price']"]},
+      {"flow": "Cross-page cart accumulation", "issue": "In one mixed-cart test (Veyron ATC, then nav to Wynette, then Wynette ATC), only the Wynette item ended up persisted in localStorage. Could be Playwright/state-rehydration timing; needs main-agent verification with a manual click-through.", "affected_selectors": ["localStorage 'phileon_cart'"]}
+    ],
+    "design_issues": [
+      {"screen": "Veyron Noir mobile hero (390x844)", "issues": ["Video is correctly transformed scale(1.3) and wrap aspect auto — visually larger than the desktop square cage, per spec. No clipping observed in screenshot."]}
+    ]
+  },
+  "test_results": {
+    "backend_pytest_14_of_14_pass": true,
+    "veyron_noir": {
+      "vn-hero-video": "PRESENT count=1, vn-hero-img count=0",
+      "video_attrs": "autoplay=loop=muted=playsInline=true, controls=false, currentSrc=/veyron-noir/hero.mp4 (200, video/mp4). paused=true / readyState=0 in headless (KNOWN H.264 decoder limitation — DOM + network correct → PASS).",
+      "hero_cta_removed": "vn-hero-cta=0, vn-add-to-cart=1 ✓",
+      "desktop_aspect_and_transform": "wrap '1 / 1', transform 'none' ✓",
+      "mobile_aspect_and_transform": "wrap 'auto', transform 'matrix(1.3, 0, 0, 1.3, 0, 0)' ✓",
+      "archive_cells_1_to_10": "10/10 render ✓",
+      "section_order_yvalues": {"vn-hero": 167, "vn-archive": 4309, "vn-specs": 10560, "vn-configurator": 11698, "vn-final-word": 12669},
+      "section_order_monotonic": true,
+      "default_price": "$5,000 USD (gold14k) ✓",
+      "metal_price_swaps": {"silver": "$1,450 USD", "gold10k": "$3,500 USD", "gold14k": "$5,000 USD", "gold18k": "$7,000 USD"},
+      "ring_size_default": "9.5",
+      "ring_size_options": ["8","8.5","9","9.5","10","10.5","11","11.5","12","12.5","13"],
+      "add_to_cart_gold14k_9_5": "PASS — sku VN-14K-S95 lockedPriceCad=5000",
+      "add_to_cart_silver_11": "PASS — sku VN-SILVER-S11 lockedPriceCad=1450 (verified after clean reload)",
+      "cart_drawer_opens_and_shows_items": "PASS — [data-testid='cart-button'] opens drawer; drawer shows VEYRON NOIR · Sterling Silver · Size 11 · $1,450 USD with subtotal $1,450 USD"
+    },
+    "wynette_palette": {
+      "page_load_console_errors": "0 errors",
+      "archive_cells_1_to_10": "10/10 render ✓",
+      "section_order": {"wp-hero": 167, "wp-archive": 4901, "wp-specs": 8671, "wp-configurator": 9664, "wp-final-word": 11363},
+      "archive_before_configurator": true,
+      "ring_size_default_7": "PASS — defaults to '7' as user spec",
+      "default_metal": "gold14k (locked CAD 8000)",
+      "metal_displayed_prices": {"silver": "$2,000", "gold10k": "$6,000", "gold14k": "$8,000"},
+      "backend_validation_of_displayed_prices": {"silver": "REJECT (server 2950)", "gold10k": "REJECT (server 7950)", "gold14k": "REJECT (server 10600)"},
+      "add_to_cart": "Item persists but with mismatched price — would fail at checkout"
+    },
+    "uncle_jo": {
+      "page_routes": {"/uncle-jo": 200, "/products/uncle-jo": 200},
+      "uj-hero_exists": true,
+      "missing_on_shop_page": true
+    },
+    "homepage": {
+      "loads_zero_console_errors": true,
+      "veyron_card_text": "Veyron Noir · Tribute Series · 4 Metal Tiers · FROM $1,450 USD ✓",
+      "wynette_card_text": "Wynette's Palette · Collector Cocktail Ring · Dynamic Pricing · From $2,000 USD ✓",
+      "no_PRICE_COMING_SOON": true
+    },
+    "shop_page": {
+      "loads_zero_console_errors": true,
+      "uncle_jo_present": false,
+      "uncle_jo_FROM_1100": false,
+      "veyron_present_with_1450": true,
+      "wynette_present": true,
+      "first_visible_cards": "Sacred Collection (Galatians 6:14), 1 Cor 15:14, La Marva, Annie Rose, TOLA II, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE — Uncle Jo never appears in CORE_PRODUCTS render"
+    },
+    "broken_route_audit": {"/veyron-noir": 200, "/products/veyron-noir": 200, "/wynette-palette": 200, "/products/wynette-palette": 200, "/uncle-jo": 200, "/products/uncle-jo": 200},
+    "missing_assets_404_audit": "Zero 404 network responses across /, /shop, /veyron-noir, /wynette-palette, /uncle-jo",
+    "console_error_audit": "Zero console.error severity messages across all 5 pages"
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_veyron_wynette_validate_cart.py",
+    "/app/test_reports/pytest/iteration_10.xml"
+  ],
+  "action_items": [
+    "[HIGH] Align Wynette's Palette frontend live-pricing calculation with backend pricing_engine.py — either the frontend formula or the backend formula is wrong; users will be blocked at checkout right now. Frontend shows 2000/6000/8000 USD, backend expects 2950/7950/10600 USD.",
+    "[HIGH] Render UNCLE JO card on /shop (ShopDropPage CORE_PRODUCTS array). User explicitly listed it as the first card with 'From $1,100 USD'. Currently absent.",
+    "[MED] Add aria-label='remove item' and a data-testid (e.g. 'cart-item-remove') to the per-item × button in the cart drawer for a11y and testability.",
+    "[LOW] Append ' USD' suffix to wp-live-price text to match Veyron Noir's '$5,000 USD' convention.",
+    "[VERIFY] Confirm cross-page cart accumulation works (add Veyron, navigate to Wynette page, add Wynette — both should be in cart). Iter-10 saw only Wynette persist; may be a Playwright timing artifact but worth a quick manual click-through."
+  ],
+  "critical_code_review_comments": [
+    "Wynette frontend price source has drifted from backend pricing_engine.py. The two MUST share a single source of truth or use the live /api/validate-cart probe to populate display prices.",
+    "Per-item cart drawer × button lacks data-testid and aria-label — significant testability + a11y gap.",
+    "Wynette displayed price omits 'USD' suffix, breaking sitewide pricing convention seen on Veyron Noir and homepage.",
+    "VeyronNoirPage.jsx still ~650 lines with inline <style> block — non-blocking maintainability comment carried over from iter-9."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_veyron_wynette_validate_cart.py (added UNCLE JO regression tests + mixed-cart test; 14 total tests, all PASS)"
+  ],
+  "success_rate": {"backend": "100% (14/14 pytest pass — but Wynette displayed prices fail server validation independently)", "frontend": "Veyron Noir 100% PASS · Wynette page renders + ATC but price mismatch is HIGH-priority bug · Uncle Jo page OK but missing from /shop · Home/Shop/routes all 200"},
+  "test_credentials": "N/A (no auth on product pages tested)",
+  "seed_data_creation": "None — cleared localStorage['phileon_cart'] between cart tests to avoid contamination.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "VEYRON NOIR is fully passing the iter-10 spec including the new video hero, mobile 1.3x scale, and hero CTA removal. Key reusable findings: cart drawer opens via [data-testid='cart-button']; per-item remove button lacks aria-label/testid (target via aside button with svg if needed); useAddToCart briefly disables button — use ≥2s sleep + clean localStorage between back-to-back adds. Wynette pricing element is [data-testid='wp-live-price'] (NOT 'wp-price'). Wynette currently has a critical FE/BE price mismatch (frontend 2000/6000/8000, backend 2950/7950/10600) — once main agent fixes this, re-run backend test_validate_cart_wynette_palette_tier (already probe-validated so it will still pass) and FE display check. Uncle Jo product page mounts cleanly at /uncle-jo + /products/uncle-jo with uj-hero testid, but it is NOT rendered on /shop (CORE_PRODUCTS array in ShopDropPage.jsx — user expected first card). Playwright Chromium still cannot decode H.264 — hero video paused=true/readyState=0 is expected; trust DOM + network.",
+  "rca_of_the_issue": "Wynette price mismatch: frontend /app/frontend/src/data/livePricingConfig.js wynettePalette tiers or the useLiveTierPrices hook calculates a different USD figure than /app/backend/pricing_engine.py PRICE_MIRROR['wynettePalette']. Reproduction: open /wynette-palette → configurator → note silver $2,000 / gold10k $6,000 / gold14k $8,000 → curl POST /api/validate-cart with those USD values → all three return valid=false with server_price 2950/7950/10600 and a $950/$1,950/$2,600 difference. Mitigation: pick one source of truth (recommend backend) and either (a) have FE call /api/probe-price (or /api/validate-cart with client_price=0) on mount to populate the configurator, or (b) hard-code matching tier prices in both files. UNCLE JO missing on /shop: ShopDropPage CORE_PRODUCTS array in /app/frontend/src/pages/ShopDropPage.jsx does not include an uncleJo entry — user said it was added at line ~88 but the rendered shop page text does not contain 'UNCLE JO'. Fix: insert uncleJo product object at index 0 of CORE_PRODUCTS with title 'UNCLE JO', tagline 'Dedication Piece', priceLabel 'From $1,100 USD', href '/uncle-jo'."
+}

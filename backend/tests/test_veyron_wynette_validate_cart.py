@@ -68,6 +68,44 @@ EXISTING_CONTROLS = [
 ]
 
 
+# --- UNCLE JO regression: new 16-SKU entry; verify it doesn't break others ---
+UNCLE_JO_PROBES = [
+    ("silver_amethyst_synthetic", 1100),
+    ("silver_sapphire_genuine",   1450),
+    ("gold14k_sapphire_genuine",  3900),
+    ("gold18k_sapphire_genuine",  5400),
+]
+
+
+@pytest.mark.parametrize("tier_key,client_price", UNCLE_JO_PROBES)
+def test_validate_cart_uncle_jo_tier(tier_key, client_price):
+    """UNCLE JO has 16 SKUs (4 metals x 2 stones x 2 qualities). Validate a sample."""
+    r = _post({"items": [{"product_key": "uncleJo", "tier_key": tier_key, "quantity": 1, "client_price": client_price}]})
+    assert r.status_code == 200, f"HTTP {r.status_code}: {r.text}"
+    data = r.json()
+    assert data.get("valid") is True, f"Expected valid=true: {data}"
+    item = data["items"][0]
+    assert item["valid"] is True
+    assert abs(float(item["difference"])) < 0.01
+    assert float(item["server_price"]) == float(client_price)
+
+
+def test_validate_cart_mixed_cart_veyron_plus_uncle_jo():
+    """Mixed cart: Veyron Noir gold14k + Uncle Jo silver_amethyst_synthetic — both must validate."""
+    payload = {"items": [
+        {"product_key": "veyronNoir", "tier_key": "gold14k", "quantity": 1, "client_price": 5000},
+        {"product_key": "uncleJo",    "tier_key": "silver_amethyst_synthetic", "quantity": 1, "client_price": 1100},
+    ]}
+    r = _post(payload)
+    assert r.status_code == 200
+    data = r.json()
+    assert data["valid"] is True
+    assert len(data["items"]) == 2
+    for it in data["items"]:
+        assert it["valid"] is True
+        assert abs(float(it["difference"])) < 0.01
+
+
 def test_validate_cart_rejects_wrong_price():
     """Sanity: sending wrong price should return valid=false with non-zero difference."""
     r = _post({"items": [{"product_key": "veyronNoir", "tier_key": "silver", "quantity": 1, "client_price": 999}]})
