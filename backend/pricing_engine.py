@@ -48,6 +48,28 @@ LIVE_PRICING_CONFIG = {
         "gold14k": {"lockedBasePriceCad": 5000, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "gold18k": {"lockedBasePriceCad": 7000, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+
+    # UNCLE JO — Dedication Piece · 16-SKU permutation matrix
+    # 4 metals × 2 stones × 2 qualities. Composite tier key:
+    # `${metal}_${stone}_${quality}`. Mirrors frontend config.
+    "uncleJo": {
+        "silver_amethyst_synthetic":  {"lockedBasePriceCad": 1100, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver_amethyst_genuine":    {"lockedBasePriceCad": 1350, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver_sapphire_synthetic":  {"lockedBasePriceCad": 1250, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver_sapphire_genuine":    {"lockedBasePriceCad": 1450, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_amethyst_synthetic": {"lockedBasePriceCad": 2100, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_amethyst_genuine":   {"lockedBasePriceCad": 2550, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_sapphire_synthetic": {"lockedBasePriceCad": 2350, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_sapphire_genuine":   {"lockedBasePriceCad": 2950, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k_amethyst_synthetic": {"lockedBasePriceCad": 2850, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k_amethyst_genuine":   {"lockedBasePriceCad": 3450, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k_sapphire_synthetic": {"lockedBasePriceCad": 3150, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k_sapphire_genuine":   {"lockedBasePriceCad": 3900, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold18k_amethyst_synthetic": {"lockedBasePriceCad": 3900, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold18k_amethyst_genuine":   {"lockedBasePriceCad": 4800, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold18k_sapphire_synthetic": {"lockedBasePriceCad": 4350, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold18k_sapphire_genuine":   {"lockedBasePriceCad": 5400, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

@@ -86,6 +86,19 @@ const SHOP_COLLECTIONS = [
 // Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
 const CORE_PRODUCTS = [
   {
+    id: 'uncle-jo',
+    name: 'UNCLE JO',
+    slug: 'uncle-jo',
+    materialLine: 'Dedication Piece · Sterling Silver',
+    imageUrl: '/uncle-jo/hero-amethyst.jpg',
+    href: '/products/uncle-jo',
+    price_range: 'From $1,100 USD',
+    inventory_count: 1,
+    is_core: true,
+    category: 'rings',
+    audience: 'gentlemens-club',
+  },
+  {
     id: 'veyron-noir',
     name: 'VEYRON NOIR',
     slug: 'veyron-noir',

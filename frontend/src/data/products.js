@@ -2628,6 +2628,30 @@ This is expression — under control.`,
 
     dynamicPricing: true,
     currency: "USD",
+  },
+
+  // ==========================================
+  // UNCLE JO — PHILEON Fine Jewelry · Dedication Piece
+  // Chain-link statement ring · bezel-set emerald-cut center stone.
+  // Stone: Purple Amethyst or Blue Sapphire (synthetic or genuine).
+  // 4 metals × 2 stones × 2 qualities = 16-SKU permutation matrix.
+  // From $1,100 USD (Sterling Silver · Amethyst · Synthetic).
+  // ==========================================
+  uncleJo: {
+    name: "UNCLE JO",
+    slug: "uncle-jo",
+    category: "rings",
+    audience: ["gentlemens-club", "collective"],
+    collections: ["rings", "dedication", "collective", "gentlemens-club"],
+    subtitle: "Dedication Piece · Sterling Silver · Amethyst or Sapphire",
+    tagline: "Made for Uncle Jo.",
+    priceFrom: "From $1,100 USD",
+    basePrice: 1100,
+
+    imageUrl: "/uncle-jo/hero-amethyst.jpg",
+
+    dynamicPricing: true,
+    currency: "USD",
   }
 
 };
