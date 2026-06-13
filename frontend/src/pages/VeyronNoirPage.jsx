@@ -169,6 +169,25 @@ export default function VeyronNoirPage() {
           filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)) drop-shadow(0 0 24px rgba(192,20,46,0.18));
           pointer-events: none;
         }
+
+        /* MOBILE — Veyron motion sequence dominates above the fold.
+           Drop the square aspect-cage so the contained video no longer
+           sits inside a tall dark letterbox, then scale ~1.3x so the
+           grille reads with luxury weight. No crop — the section
+           padding absorbs the bleed. Desktop sizing untouched. */
+        @media (max-width: 768px) {
+          .vn-hero-img-wrap {
+            aspect-ratio: auto;
+            min-height: 65vw;
+            background: transparent;
+          }
+          .vn-hero-video {
+            height: auto;
+            transform: scale(1.3);
+            transform-origin: center center;
+            will-change: transform;
+          }
+        }
         .vn-collection {
           font-family: 'Cinzel', serif;
           font-size: 11px;
