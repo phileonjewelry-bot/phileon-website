@@ -73,6 +73,7 @@ const SHOP_COLLECTION_MAP = {
   'stackrats': 'collective',
   'wynette-palette': 'collective',
   'veyron-noir': 'collective',
+  'uncle-jo': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
