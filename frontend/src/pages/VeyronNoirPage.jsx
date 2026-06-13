@@ -11,6 +11,7 @@ import { useAddToCart } from "@/hooks/useAddToCart";
  */
 
 const HERO_IMG = "/veyron-noir/hero.png";
+const HERO_VIDEO = "/veyron-noir/hero.mp4";
 const HERO_ALT =
   "VEYRON NOIR — gentleman's tribute signet ring in 14K white gold with black diamond pavé shoulders, a sculptural horseshoe grille bed of black diamonds at centre, and a single ruby pavé horizon beneath the band.";
 
@@ -160,6 +161,13 @@ export default function VeyronNoirPage() {
           width: 100%; height: 100%;
           object-fit: contain; object-position: center;
           filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)) drop-shadow(0 0 24px rgba(192,20,46,0.18));
+        }
+        .vn-hero-video {
+          width: 100%; height: 100%;
+          object-fit: contain; object-position: center;
+          background: var(--bg-deep);
+          filter: drop-shadow(0 30px 60px rgba(0,0,0,0.9)) drop-shadow(0 0 24px rgba(192,20,46,0.18));
+          pointer-events: none;
         }
         .vn-collection {
           font-family: 'Cinzel', serif;
@@ -449,7 +457,27 @@ export default function VeyronNoirPage() {
       <section className="vn-hero" data-testid="vn-hero">
         <div className="vn-hero-grid">
           <div className="vn-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
-            <img src={HERO_IMG} alt={HERO_ALT} className="vn-hero-img" data-testid="vn-hero-img" />
+            <video
+              className="vn-hero-video"
+              data-testid="vn-hero-video"
+              src={HERO_VIDEO}
+              poster={HERO_IMG}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              aria-label={HERO_ALT}
+              ref={(el) => {
+                if (el) {
+                  el.muted = true;
+                  const tryPlay = () => el.play().catch(() => {});
+                  tryPlay();
+                  el.addEventListener("loadedmetadata", tryPlay, { once: true });
+                  el.addEventListener("canplay", tryPlay, { once: true });
+                }
+              }}
+            />
           </div>
           <div>
             <p className="vn-collection">PHILEON</p>
