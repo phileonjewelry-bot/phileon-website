@@ -34,10 +34,13 @@ LIVE_PRICING_CONFIG = {
         "silver":  {"lockedBasePriceCad": 6400, "metalType": "925",  "weightGrams": 35, "lockedMetalReferenceCad": 41},
         "gold10k": {"lockedBasePriceCad": 9200, "metalType": "10K",  "weightGrams": 30, "lockedMetalReferenceCad": 1875},
     },
+    # WYNETTE'S PALETTE — USD-mirrored convention (matches Veyron Noir,
+    # Uncle Jo, Battenti). Hand-set USD prices; weightGrams=0 disables
+    # live metal recalc so server_price == client_price on /validate-cart.
     "wynettePalette": {
-        "silver":  {"lockedBasePriceCad": 2950, "metalType": "925", "weightGrams": 18.0, "lockedMetalReferenceCad": 17},
-        "gold10k": {"lockedBasePriceCad": 7500, "metalType": "10K", "weightGrams": 16.5, "lockedMetalReferenceCad": 619},
-        "gold14k": {"lockedBasePriceCad": 9950, "metalType": "14K", "weightGrams": 18.6, "lockedMetalReferenceCad": 977},
+        "silver":  {"lockedBasePriceCad": 2000, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k": {"lockedBasePriceCad": 6000, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold14k": {"lockedBasePriceCad": 8000, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     # VEYRON NOIR — Tribute Series cocktail signet · 4 metal tiers
     # Hand-set USD prices (lockedBasePriceCad numerically mirrors

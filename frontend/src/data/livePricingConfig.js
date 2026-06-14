@@ -31,10 +31,14 @@ const livePricingConfig = {
   },
 
   // WYNETTE'S PALETTE — Collector cocktail ring (black onyx + multi-colour halo)
+  // Hand-set USD prices · USD-mirrored convention (matches Veyron Noir,
+  // Uncle Jo, Battenti). lockedBasePriceCad numerically mirrors priceUsd
+  // so /validate-cart returns diff=0. weightGrams=0 disables live metal
+  // recalc — Wynette pricing is locked, not market-tracked.
   wynettePalette: {
-    silver:    { lockedBasePriceCad: 2950, metalType: "925", weightGrams: 18.0, lockedMetalReferenceCad: 17 },
-    gold10k:   { lockedBasePriceCad: 7500, metalType: "10K", weightGrams: 16.5, lockedMetalReferenceCad: 619 },
-    gold14k:   { lockedBasePriceCad: 9950, metalType: "14K", weightGrams: 18.6, lockedMetalReferenceCad: 977 },
+    silver:    { lockedBasePriceCad: 2000, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k:   { lockedBasePriceCad: 6000, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold14k:   { lockedBasePriceCad: 8000, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
   // VEYRON NOIR — Tribute Series cocktail signet · 4 metal tiers
   // Entry (Sterling Silver · synthetic), Foundation (10K WG · lab),

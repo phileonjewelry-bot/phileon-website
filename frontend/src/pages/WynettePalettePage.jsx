@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { useLiveTierPrices } from "@/hooks/useLivePrice";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
 /**
@@ -100,11 +99,16 @@ const SPECS = [
   ["Overall Face", "Approx. 22mm"],
 ];
 
+// Hand-set USD prices · USD-mirrored convention (matches Veyron Noir,
+// Uncle Jo, Battenti). lockedBasePriceCad in livePricingConfig +
+// pricing_engine numerically mirrors priceUsd so /validate-cart returns
+// diff=0. No live metal recalc (weightGrams=0).
 const METAL_OPTIONS = [
-  { id: "silver",  label: "Sterling Silver",   tierKey: "silver"  },
-  { id: "gold10k", label: "10K White Gold",    tierKey: "gold10k" },
-  { id: "gold14k", label: "14K White Gold",    tierKey: "gold14k" },
+  { id: "silver",  label: "Sterling Silver",   tierKey: "silver",  priceUsd: 2000 },
+  { id: "gold10k", label: "10K White Gold",    tierKey: "gold10k", priceUsd: 6000 },
+  { id: "gold14k", label: "14K White Gold",    tierKey: "gold14k", priceUsd: 8000 },
 ];
+const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 const RING_SIZES = ["4", "4.5", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"];
 
 export default function WynettePalettePage() {
@@ -114,7 +118,6 @@ export default function WynettePalettePage() {
   const [metalId, setMetalId] = useState("gold14k");
   const [ringSize, setRingSize] = useState("7");
 
-  const tierPricesLive = useLiveTierPrices("wynettePalette");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   // Slow floating parallax on the hero image
@@ -132,8 +135,8 @@ export default function WynettePalettePage() {
   const heroParallax = Math.min(scrollY * 0.18, 120);
 
   const currentMetal = METAL_OPTIONS.find((m) => m.id === metalId) || METAL_OPTIONS[2];
-  const priceUsd = tierPricesLive?.[currentMetal.tierKey]?.price || 0;
-  const priceFormatted = tierPricesLive?.[currentMetal.tierKey]?.formatted || "—";
+  const priceUsd = currentMetal.priceUsd;
+  const priceFormatted = formatUsd(priceUsd);
 
   const onAddToCart = () => {
     const variant = `${currentMetal.label} · Size ${ringSize}`;
