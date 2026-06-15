@@ -917,6 +917,177 @@ const HomePage = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
+          THE INSPIRATION VAULT — Homepage advertisement block
+          Archive atmosphere · dark luxury · floating sketches · ember glow
+      ═══════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative py-28 md:py-36 px-6 md:px-12 overflow-hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 65% 55% at 50% 30%, rgba(164,116,51,0.10), transparent 65%), radial-gradient(ellipse 45% 40% at 50% 95%, rgba(164,116,51,0.05), transparent 65%), #030305',
+        }}
+        data-testid="home-vault-block"
+      >
+        {/* Floating technical sketches as atmospheric backdrop */}
+        <svg className="absolute" style={{ top: '12%', left: '6%', opacity: 0.10, color: '#a47433' }} width="140" height="140" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <circle cx="60" cy="60" r="40" stroke="currentColor" strokeWidth="0.7" strokeDasharray="2 3" />
+          <circle cx="60" cy="60" r="22" stroke="currentColor" strokeWidth="0.7" />
+          <path d="M60 20 L60 100 M20 60 L100 60" stroke="currentColor" strokeWidth="0.4" />
+        </svg>
+        <svg className="absolute hidden md:block" style={{ top: '14%', right: '7%', opacity: 0.10, color: '#a47433', transform: 'rotate(11deg)' }} width="110" height="150" viewBox="0 0 100 140" fill="none" aria-hidden="true">
+          <rect x="20" y="30" width="60" height="80" stroke="currentColor" strokeWidth="0.6" strokeDasharray="3 2" />
+          <path d="M30 50 L70 50 M30 70 L70 70 M30 90 L70 90" stroke="currentColor" strokeWidth="0.4" />
+        </svg>
+        <svg className="absolute hidden md:block" style={{ bottom: '12%', left: '9%', opacity: 0.10, color: '#a47433', transform: 'rotate(6deg)' }} width="160" height="120" viewBox="0 0 140 100" fill="none" aria-hidden="true">
+          <ellipse cx="70" cy="50" rx="55" ry="30" stroke="currentColor" strokeWidth="0.6" strokeDasharray="4 3" />
+        </svg>
+        <svg className="absolute" style={{ bottom: '10%', right: '8%', opacity: 0.10, color: '#a47433', transform: 'rotate(-13deg)' }} width="120" height="120" viewBox="0 0 110 110" fill="none" aria-hidden="true">
+          <polygon points="55,15 95,85 15,85" stroke="currentColor" strokeWidth="0.6" strokeDasharray="2 4" />
+          <circle cx="55" cy="65" r="14" stroke="currentColor" strokeWidth="0.4" />
+        </svg>
+
+        <ScrollReveal delay={0}>
+          <div className="relative z-10 max-w-3xl mx-auto text-center">
+            {/* Eyebrow */}
+            <p
+              className="mb-5"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 11,
+                letterSpacing: '0.45em',
+                color: '#a47433',
+                textTransform: 'uppercase',
+              }}
+            >
+              THE INSPIRATION VAULT
+            </p>
+
+            {/* Headline */}
+            <h2
+              className="mb-8"
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 400,
+                fontSize: 'clamp(34px, 5vw, 64px)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.01em',
+                color: '#f5efe1',
+              }}
+            >
+              The Ideas Before The Icons.
+            </h2>
+
+            {/* Body */}
+            <p
+              className="mx-auto mb-4"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 'clamp(17px, 1.5vw, 21px)',
+                lineHeight: 1.6,
+                color: '#dcd5c4',
+                maxWidth: 620,
+              }}
+            >
+              Explore prototypes, retired concepts, one-off creations, and archive pieces from the Phileon design vault.
+            </p>
+            <p
+              className="mx-auto mb-2"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: 'italic',
+                fontSize: 'clamp(16px, 1.4vw, 19px)',
+                lineHeight: 1.6,
+                color: '#7f7866',
+                maxWidth: 580,
+              }}
+            >
+              Some were experiments. Some were stepping stones. Some were never released at all.
+            </p>
+            <p
+              className="mx-auto mb-10"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: 'italic',
+                fontSize: 'clamp(16px, 1.4vw, 19px)',
+                color: '#7f7866',
+              }}
+            >
+              All are available in limited quantities.
+            </p>
+
+            {/* Price callout */}
+            <p
+              className="mb-2"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 14,
+                letterSpacing: '0.42em',
+                color: '#a47433',
+              }}
+            >
+              FROM $50 USD
+            </p>
+            <p
+              className="mb-10"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: 'italic',
+                fontSize: 14,
+                color: '#7f7866',
+              }}
+            >
+              Most archive pieces range from $50–$200 USD.
+            </p>
+
+            {/* Button */}
+            <Link
+              to="/vault"
+              data-testid="home-vault-cta"
+              className="inline-block"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 12,
+                letterSpacing: '0.42em',
+                color: '#f5efe1',
+                background: 'transparent',
+                border: '1px solid #a47433',
+                padding: '18px 44px',
+                textTransform: 'uppercase',
+                transition: 'background 280ms ease, color 280ms ease, letter-spacing 280ms ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#a47433';
+                e.currentTarget.style.color = '#030305';
+                e.currentTarget.style.letterSpacing = '0.48em';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = '#f5efe1';
+                e.currentTarget.style.letterSpacing = '0.42em';
+              }}
+            >
+              ENTER THE VAULT →
+            </Link>
+
+            {/* Footnote */}
+            <p
+              className="mt-12"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: 'italic',
+                fontSize: 12,
+                color: '#7f7866',
+                letterSpacing: '0.04em',
+                lineHeight: 1.8,
+              }}
+            >
+              Archive pieces. Alternative materials. Limited availability.
+            </p>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
           BRAND STATEMENT
           Minimal text interlude
       ═══════════════════════════════════════════════════════════════ */}

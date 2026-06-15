@@ -70,6 +70,7 @@ import StackratsPage from "@/pages/StackratsPage";
 import WynettePalettePage from "@/pages/WynettePalettePage";
 import VeyronNoirPage from "@/pages/VeyronNoirPage";
 import UncleJoPage from "@/pages/UncleJoPage";
+import InspirationVaultPage from "@/pages/InspirationVaultPage";
 import CoogiDnaTagPage from "@/pages/CoogiDnaTagPage";
 import AtelierPage from "@/pages/AtelierPage";
 import WishlistPage from "@/pages/WishlistPage";
@@ -200,6 +201,8 @@ function App() {
             <Route path="/products/veyron-noir" element={<VeyronNoirPage />} />
             <Route path="/uncle-jo" element={<UncleJoPage />} />
             <Route path="/products/uncle-jo" element={<UncleJoPage />} />
+            <Route path="/vault" element={<InspirationVaultPage />} />
+            <Route path="/inspiration-vault" element={<InspirationVaultPage />} />
             <Route path="/atelier" element={<AtelierPage />} />
             <Route path="/custom" element={<AtelierPage />} />
             <Route path="/commission" element={<AtelierPage />} />

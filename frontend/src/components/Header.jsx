@@ -45,6 +45,7 @@ const Header = () => {
         { name: 'Alejandra Heels', path: '/products/alejandra-heels' },
       ]
     },
+    { name: 'The Inspiration Vault', path: '/vault' },
     { name: 'Contact', path: '/contact' },
   ];
 
@@ -246,8 +247,20 @@ const Header = () => {
                 </div>
               ))}
               
-              {/* Contact Link */}
+              {/* The Inspiration Vault Link */}
               <div className="pt-6">
+                <Link
+                  to="/vault"
+                  onClick={handleMobileNavClick}
+                  className="block text-[#C6A24A] text-lg tracking-[0.15em] uppercase font-medium py-4 hover:text-[#D4B45A] transition-colors"
+                  data-testid="mobile-vault-link"
+                >
+                  The Inspiration Vault
+                </Link>
+              </div>
+
+              {/* Contact Link */}
+              <div className="pt-2">
                 <Link
                   to="/contact"
                   onClick={handleMobileNavClick}

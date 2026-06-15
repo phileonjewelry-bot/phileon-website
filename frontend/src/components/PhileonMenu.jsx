@@ -200,6 +200,27 @@ const PhileonMenu = ({ isOpen, onClose }) => {
           Bamburgh Circle
         </Link>
 
+        {/* The Inspiration Vault — standalone (not nested under any category) */}
+        <Link
+          to="/vault"
+          onClick={handleLinkClick}
+          data-testid="menu-vault-link"
+          style={{
+            display: 'block',
+            padding: '18px 0',
+            color: '#a47433',
+            fontSize: '18px',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            fontFamily: "'Playfair Display', serif",
+            textDecoration: 'none',
+            borderTop: '1px solid rgba(164,116,51,0.18)',
+            marginTop: '8px',
+          }}
+        >
+          The Inspiration Vault
+        </Link>
+
         {/* Contact */}
         <Link
           to="/contact"
