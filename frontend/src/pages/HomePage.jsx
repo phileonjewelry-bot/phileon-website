@@ -369,6 +369,12 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           {
+            title: "UNCLE JO",
+            image: "/uncle-jo/hero.png",
+            href: "/products/uncle-jo",
+            subtitle: "Gentlemen's ring. Made for Uncle Jo."
+          },
+          {
             title: "VEYRON NOIR",
             image: "/veyron-noir/hero.png",
             href: "/products/veyron-noir",
@@ -680,6 +686,35 @@ const HomePage = () => {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+            <ScrollReveal delay={0}>
+              <Link
+                to="/products/uncle-jo"
+                className="group block"
+                data-testid="product-card-uncle-jo"
+              >
+                <div className="aspect-square overflow-hidden bg-black relative">
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(199,200,204,0.14) 100%)' }}
+                  />
+                  <img
+                    src="/uncle-jo/hero.png"
+                    alt="Uncle Jo"
+                    className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-8 text-center">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
+                    Uncle Jo
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
+                    Gentlemen's Ring
+                  </p>
+                  <p className="text-sm mt-2" style={{ color: '#C0142E', letterSpacing: '0.18em' }}>FROM $1,100 USD</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
             <ScrollReveal delay={0}>
               <Link
                 to="/products/veyron-noir"
