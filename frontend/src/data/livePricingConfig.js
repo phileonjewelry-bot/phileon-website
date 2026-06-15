@@ -55,14 +55,17 @@ const livePricingConfig = {
     gold18k: { lockedBasePriceCad: 7000, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
-  // UNCLE JO — Gentlemen's Collection · solid-metal chain-link statement ring
-  // Repositioned: NO stones, NO quality axis. Just 2 metal tiers.
-  // Hand-set USD prices · USD-mirrored convention (matches Veyron Noir,
-  // Wynette's Palette, Battenti). lockedBasePriceCad mirrors priceUsd so
-  // /validate-cart returns diff=0.
+  // UNCLE JO — Signature Mesh Collection · Gentlemen's Ring + matching Cuff
+  // 2 metals × 3 product selections (ring/cuff/set) = 6 SKUs.
+  // Hand-set USD prices · USD-mirrored convention.
+  // lockedBasePriceCad mirrors priceUsd so /validate-cart returns diff=0.
   uncleJo: {
-    silver:  { lockedBasePriceCad: 1100, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold10k: { lockedBasePriceCad: 2800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver_ring:  { lockedBasePriceCad: 1100, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver_cuff:  { lockedBasePriceCad: 2200, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver_set:   { lockedBasePriceCad: 3000, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_ring: { lockedBasePriceCad: 2800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_cuff: { lockedBasePriceCad: 5500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_set:  { lockedBasePriceCad: 7800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // MONIKA COUTURE

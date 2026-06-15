@@ -370,9 +370,9 @@ const HomePage = () => {
         const stripItems = [
           {
             title: "UNCLE JO",
-            image: "/uncle-jo/hero.png",
+            image: "/uncle-jo/hero.jpg",
             href: "/products/uncle-jo",
-            subtitle: "Gentlemen's ring. Made for Uncle Jo."
+            subtitle: "Signature Mesh Collection. A matching ring and cuff forged from woven metal architecture."
           },
           {
             title: "VEYRON NOIR",
@@ -698,7 +698,7 @@ const HomePage = () => {
                     style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(199,200,204,0.14) 100%)' }}
                   />
                   <img
-                    src="/uncle-jo/hero.png"
+                    src="/uncle-jo/hero.jpg"
                     alt="Uncle Jo"
                     className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
                   />
@@ -708,7 +708,7 @@ const HomePage = () => {
                     Uncle Jo
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
-                    Gentlemen's Ring
+                    Signature Mesh Collection
                   </p>
                   <p className="text-sm mt-2" style={{ color: '#C0142E', letterSpacing: '0.18em' }}>FROM $1,100 USD</p>
                 </div>

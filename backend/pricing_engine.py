@@ -52,11 +52,15 @@ LIVE_PRICING_CONFIG = {
         "gold18k": {"lockedBasePriceCad": 7000, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
 
-    # UNCLE JO — Gentlemen's Collection · solid-metal chain-link ring
-    # Repositioned (no stones, no quality axis). Just 2 metal tiers.
+    # UNCLE JO — Signature Mesh Collection · ring + matching cuff
+    # 2 metals × 3 selections (ring/cuff/set) = 6 SKUs.
     "uncleJo": {
-        "silver":  {"lockedBasePriceCad": 1100, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
-        "gold10k": {"lockedBasePriceCad": 2800, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver_ring":  {"lockedBasePriceCad": 1100, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver_cuff":  {"lockedBasePriceCad": 2200, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver_set":   {"lockedBasePriceCad": 3000, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_ring": {"lockedBasePriceCad": 2800, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_cuff": {"lockedBasePriceCad": 5500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_set":  {"lockedBasePriceCad": 7800, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},

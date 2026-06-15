@@ -73,7 +73,6 @@ const SHOP_COLLECTION_MAP = {
   'stackrats': 'collective',
   'wynette-palette': 'collective',
   'veyron-noir': 'collective',
-  'uncle-jo': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -90,8 +89,8 @@ const CORE_PRODUCTS = [
     id: 'uncle-jo',
     name: 'UNCLE JO',
     slug: 'uncle-jo',
-    materialLine: "Gentlemen's Ring",
-    imageUrl: '/uncle-jo/hero.png',
+    materialLine: 'Signature Mesh Collection',
+    imageUrl: '/uncle-jo/hero.jpg',
     href: '/products/uncle-jo',
     price_range: 'From $1,100 USD',
     inventory_count: 1,

@@ -2631,25 +2631,25 @@ This is expression — under control.`,
   },
 
   // ==========================================
-  // UNCLE JO — PHILEON · Gentlemen's Collection
-  // Chain-link statement ring. Solid metal. No stones. Sterling Silver
-  // or 10K White Gold. Made to order.
-  // From $1,100 USD (Sterling Silver).
+  // UNCLE JO — PHILEON · Signature Mesh Collection
+  // Handwoven mesh statement ring + matching cuff. Solid metal, no stones.
+  // 2 metals × 3 selections (Ring/Cuff/Set) = 6 SKUs.
+  // From $1,100 USD (Sterling Silver · Ring Only).
   // ==========================================
   uncleJo: {
     name: "UNCLE JO",
     slug: "uncle-jo",
     category: "rings",
-    audience: ["gentlemens-club", "collective"],
-    collections: ["rings", "gentlemen", "collective", "gentlemens-club", "new-arrivals", "featured"],
-    subtitle: "Gentlemen's Ring",
-    tagline: "Made for Uncle Jo.",
+    audience: ["gentlemens-club"],
+    collections: ["rings", "gentlemen", "gentlemens-club", "signature-mesh", "new-arrivals", "featured"],
+    subtitle: "Signature Mesh Collection",
+    tagline: "Built for the man who never needed an introduction.",
     priceFrom: "From $1,100 USD",
     basePrice: 1100,
     featured: true,
     newArrival: true,
 
-    imageUrl: "/uncle-jo/hero.png",
+    imageUrl: "/uncle-jo/hero.jpg",
 
     dynamicPricing: true,
     currency: "USD",
