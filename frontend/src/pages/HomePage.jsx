@@ -694,6 +694,35 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
             <ScrollReveal delay={0}>
               <Link
+                to="/products/rose-of-sharon"
+                className="group block"
+                data-testid="product-card-rose-of-sharon"
+              >
+                <div className="aspect-square overflow-hidden bg-black relative">
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(211,160,133,0.18) 100%)' }}
+                  />
+                  <img
+                    src="/rose-of-sharon/hero.png"
+                    alt="Rose of Sharon — floral cross pendant in rose gold"
+                    className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-8 text-center">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
+                    Rose of Sharon
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
+                    Floral Cross Pendant · 10K &amp; 14K Rose Gold
+                  </p>
+                  <p className="text-sm mt-2" style={{ color: '#d3a085', letterSpacing: '0.18em' }}>FROM $2,800 USD</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0}>
+              <Link
                 to="/products/uncle-jo"
                 className="group block"
                 data-testid="product-card-uncle-jo"
