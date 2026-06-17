@@ -372,7 +372,7 @@ const HomePage = () => {
             title: "ROSE OF SHARON",
             image: "/rose-of-sharon/hero.png",
             href: "/products/rose-of-sharon",
-            subtitle: "Sacred Collection. Faith blooms through the thorns. Available in Small and Signature sizes."
+            subtitle: "A cross formed entirely from blooming roses, climbing vines, and sculpted petals. Created in rose gold and designed as a symbol of faith, beauty, and remembrance. FROM $2,800 USD"
           },
           {
             title: "UNCLE JO",

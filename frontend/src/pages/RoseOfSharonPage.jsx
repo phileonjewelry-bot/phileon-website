@@ -8,12 +8,14 @@ const HERO_ALT = "ROSE OF SHARON — three-dimensional floral cross pendant in 1
 
 // 2 sizes × 2 metals = 4 SKUs. Hand-set USD prices · USD-mirrored.
 const PRICE_MATRIX = {
-  small:     { gold10k: 950,  gold14k: 1250 },
-  signature: { gold10k: 1350, gold14k: 1750 },
+  classic: { gold10k: 2800, gold14k: 3800 },
+  grand:   { gold10k: 4200, gold14k: 5600 },
 };
 const SIZE_OPTIONS = [
-  { id: "small",     label: "Small",     short: "SM",  dims: "28mm × 18mm" },
-  { id: "signature", label: "Signature", short: "SIG", dims: "40mm × 25mm" },
+  { id: "classic", label: "Classic", short: "CLA", dims: "28mm × 18mm",
+    desc: "A delicate interpretation of Rose of Sharon designed for everyday wear." },
+  { id: "grand",   label: "Grand",   short: "GRD", dims: "40mm × 25mm",
+    desc: "An enlarged statement version allowing every rose, vine, leaf, and petal to be experienced in greater detail." },
 ];
 const METAL_OPTIONS = [
   { id: "gold10k", label: "10K Rose Gold", short: "10K" },
@@ -22,32 +24,46 @@ const METAL_OPTIONS = [
 const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 const SPECS = [
-  ["Collection", "Sacred Collection"],
+  ["Collection", "The Collective"],
   ["Category", "Ladies → Pendants"],
+  ["Construction", "Openwork Floral Architecture"],
+  ["Motif", "Rose Cross"],
+  ["Finish", "High Polish"],
   ["Metal Options", "10K Rose Gold · 14K Rose Gold"],
-  ["Construction", "Three-dimensional floral architecture · openwork vine structure"],
-  ["Center", "Raised central rose cluster"],
-  ["Finish", "High Polish · decorative engraved bail"],
-  ["Sizes", "Small (28mm × 18mm) · Signature (40mm × 25mm)"],
+  ["Size Options", "Classic (28mm × 18mm) · Grand (40mm × 25mm)"],
   ["Availability", "Made To Order"],
   ["Lead Time", "3–4 Weeks"],
   ["Shipping", "Insured · Included"],
-  ["Note", "Chain Sold Separately"],
+  ["Note", "Chain Sold Separately · Crafted in Rose Gold"],
 ];
 
 const GALLERY = [
-  { src: "/rose-of-sharon/archive-1.png", alt: "ROSE OF SHARON — studio hero: full pendant on black, every rose and vine catching light." },
-  { src: "/rose-of-sharon/archive-2.jpg", alt: "ROSE OF SHARON — chain detail on linen, the engraved bail and rose cluster in directional light." },
-  { src: "/rose-of-sharon/archive-3.jpg", alt: "ROSE OF SHARON — held between fingers, scale revealed against the hand." },
-  { src: "/rose-of-sharon/archive-4.jpg", alt: "ROSE OF SHARON — resting in an open palm, full silhouette on warm wood." },
-  { src: "/rose-of-sharon/archive-5.jpg", alt: "ROSE OF SHARON — worn at the décolletage, the cross blooming through everyday wear." },
-  { src: "/rose-of-sharon/archive-6.png", alt: "ROSE OF SHARON — macro: vine cluster at the base of the cross, leaves and rose-buds wrapping the openwork shaft, hallmark stamp visible." },
-  { src: "/rose-of-sharon/archive-7.png", alt: "ROSE OF SHARON — close detail of the central rose cluster, every petal sculpted in rose gold." },
+  { src: "/rose-of-sharon/archive-1.png", title: "The Bloom",
+    desc: "The first encounter. A floral cross sculpted entirely from roses, vines, and petals.",
+    alt: "ROSE OF SHARON — hero on black background: full pendant catching directional light." },
+  { src: "/rose-of-sharon/archive-2.jpg", title: "Light Across Gold",
+    desc: "Soft light reveals the depth of every bloom and the architecture hidden within the cross.",
+    alt: "ROSE OF SHARON — editorial on fabric: rose-gold detail glowing under soft light." },
+  { src: "/rose-of-sharon/archive-3.jpg", title: "Scale",
+    desc: "Held in the hand, Rose of Sharon reveals the precision of its construction and the delicacy of its proportions.",
+    alt: "ROSE OF SHARON — held between fingers showing scale and precision." },
+  { src: "/rose-of-sharon/archive-4.jpg", title: "Suspended",
+    desc: "Viewed in motion, the pendant reveals the openness of the design and the movement of the climbing vines.",
+    alt: "ROSE OF SHARON — suspended from chain, full silhouette visible." },
+  { src: "/rose-of-sharon/archive-5.jpg", title: "Worn",
+    desc: "Designed to rest naturally at the center of the chest, becoming both adornment and statement.",
+    alt: "ROSE OF SHARON — worn at the décolletage in everyday context." },
+  { src: "/rose-of-sharon/archive-6.png", title: "Climbing Grace",
+    desc: "Every vine, bud, and leaf is individually sculpted into the structure of the cross, creating movement while allowing light to pass through the design.",
+    alt: "ROSE OF SHARON — vine cluster macro at the base of the cross." },
+  { src: "/rose-of-sharon/archive-7.png", title: "At The Center",
+    desc: "The central rose serves as the heart of the piece. Layered petals rise above the surrounding blooms, creating depth and giving the cross its unmistakable identity.",
+    alt: "ROSE OF SHARON — central rose cluster macro, layered petals in rose gold." },
 ];
 
 export default function RoseOfSharonPage() {
   const [scrollY, setScrollY] = useState(0);
-  const [sizeId, setSizeId] = useState("signature");
+  const [sizeId, setSizeId] = useState("grand");
   const [metalId, setMetalId] = useState("gold14k");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
@@ -217,10 +233,21 @@ export default function RoseOfSharonPage() {
             <img src={HERO_IMG} alt={HERO_ALT} className="ros-hero-img" data-testid="ros-hero-img" />
           </div>
           <div>
-            <p className="ros-collection">PHILEON · SACRED COLLECTION</p>
+            <p className="ros-collection">THE COLLECTIVE</p>
             <h1 className="ros-hero-title" data-testid="ros-hero-title">ROSE OF SHARON</h1>
             <p className="ros-subtitle" data-testid="ros-subtitle">Floral Cross Pendant</p>
-            <p className="ros-tagline" data-testid="ros-tagline">Faith does not bloom despite the thorns. Faith blooms through them.</p>
+            <p className="ros-tagline" data-testid="ros-tagline">A cross formed entirely from blooming roses, climbing vines, and sculpted petals.</p>
+            <p className="ros-tagline" style={{ marginTop: 12, fontSize: 'clamp(15px,1.3vw,18px)', color: 'var(--ink-muted)' }}>
+              Created in rose gold and designed as a symbol of faith, beauty, remembrance, and devotion. Available in two sizes.
+            </p>
+            <div style={{ display: 'flex', gap: 16, marginTop: 32, flexWrap: 'wrap' }}>
+              <button type="button" className="ros-btn" data-testid="ros-hero-craft"
+                onClick={() => document.querySelector('[data-testid="ros-configurator"]')?.scrollIntoView({ behavior: 'smooth' })}
+                style={{ padding: '14px 32px', fontSize: 11 }}>CRAFT YOURS</button>
+              <button type="button" className="ros-btn" data-testid="ros-hero-details"
+                onClick={() => document.querySelector('[data-testid="ros-specs"]')?.scrollIntoView({ behavior: 'smooth' })}
+                style={{ padding: '14px 32px', fontSize: 11, borderColor: 'var(--rule)', color: 'var(--ink-muted)' }}>VIEW DETAILS</button>
+            </div>
           </div>
         </div>
       </section>
@@ -245,9 +272,35 @@ export default function RoseOfSharonPage() {
           {GALLERY.map((g, i) => (
             <div key={g.src} className="ros-archive-cell" data-testid={`ros-archive-cell-${i + 1}`}>
               <img src={g.src} alt={g.alt} loading="lazy" />
+              <div style={{
+                position: 'absolute', left: 0, right: 0, bottom: 0,
+                padding: '14px 18px',
+                background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.75) 70%)',
+                color: 'var(--ink)',
+              }}>
+                <p style={{ margin: 0, fontFamily: "'Cinzel', serif", fontSize: 10.5,
+                  letterSpacing: '0.32em', textTransform: 'uppercase', color: 'var(--rose)' }}>
+                  Archive {i + 1} · {g.title}
+                </p>
+                <p style={{ margin: '6px 0 0', fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: 'italic', fontSize: 14, lineHeight: 1.4, color: 'var(--ink-strong)' }}>
+                  {g.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>
+      </section>
+
+      {/* THE MAKING OF A BLOOMING CROSS */}
+      <section className="ros-section" data-testid="ros-making">
+        <p className="ros-eyebrow">THE MAKING</p>
+        <h2 className="ros-h2">The making of a blooming cross.</h2>
+        <p className="ros-p">Most crosses begin with lines.</p>
+        <p className="ros-p"><em>Rose of Sharon begins with a flower.</em></p>
+        <p className="ros-p">The design grows outward from a sculpted central rose, surrounded by additional blooms, climbing vines, leaves, and buds.</p>
+        <p className="ros-p">Rather than placing flowers onto a cross, the flowers <em>become</em> the cross itself.</p>
+        <p className="ros-p">The result is a piece that feels both symbolic and alive.</p>
       </section>
 
       {/* SPECS */}
@@ -310,15 +363,16 @@ export default function RoseOfSharonPage() {
         </div>
       </section>
 
-      {/* FINAL WORD */}
+      {/* FINAL WORD — The Rose Endures */}
       <section className="ros-final" data-testid="ros-final-word">
-        <p className="ros-final-stanza">There are crosses that remind us what we believe.</p>
-        <p className="ros-final-stanza"><em>And there are crosses that remind us why.</em></p>
-        <p className="ros-final-stanza">Rose of Sharon was created for those who understand that faith is not merely carried through life — it grows through it.</p>
-        <p className="ros-final-stanza">Every rose blooms because it endured.</p>
-        <p className="ros-final-stanza">Every vine climbs because it continues.</p>
+        <p style={{ fontFamily: "'Cinzel', serif", fontSize: 11, letterSpacing: '0.45em',
+          color: 'var(--rose)', textTransform: 'uppercase', margin: '0 0 22px' }}>FINAL WORD</p>
+        <h2 className="ros-h2" style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 36px' }}>The Rose Endures.</h2>
+        <p className="ros-final-stanza">The Rose of Sharon has long symbolized beauty, renewal, and devotion.</p>
+        <p className="ros-final-stanza"><em>Here, those ideas are translated into gold.</em></p>
+        <p className="ros-final-stanza">Every bloom, every vine, and every petal contributes to a cross that speaks quietly yet carries meaning far beyond its size.</p>
         <p className="ros-final-stanza">
-          <em>And every prayer leaves something beautiful behind.</em>
+          <em>Designed to be worn. Created to be remembered.</em>
           <strong>BLOOM THROUGH.</strong>
         </p>
       </section>
