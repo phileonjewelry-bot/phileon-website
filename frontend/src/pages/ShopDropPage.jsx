@@ -99,7 +99,7 @@ const CORE_PRODUCTS = [
     is_new_arrival: true,
     is_featured: true,
     category: 'pendants',
-    audience: 'ladies-first',
+    audience: 'ladies',
   },
   {
     id: 'uncle-jo',
