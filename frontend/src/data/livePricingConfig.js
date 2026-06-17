@@ -68,6 +68,15 @@ const livePricingConfig = {
     gold10k_set:  { lockedBasePriceCad: 7800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // ROSE OF SHARON — Sacred Collection · Floral Cross Pendant
+  // 2 sizes × 2 rose-gold metals = 4 SKUs · USD-mirrored convention.
+  roseOfSharon: {
+    small_gold10k:     { lockedBasePriceCad: 950,  metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    small_gold14k:     { lockedBasePriceCad: 1250, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    signature_gold10k: { lockedBasePriceCad: 1350, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    signature_gold14k: { lockedBasePriceCad: 1750, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

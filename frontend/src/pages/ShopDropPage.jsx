@@ -73,6 +73,7 @@ const SHOP_COLLECTION_MAP = {
   'stackrats': 'collective',
   'wynette-palette': 'collective',
   'veyron-noir': 'collective',
+  'rose-of-sharon': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -85,6 +86,21 @@ const SHOP_COLLECTIONS = [
 // Core collection products - Always shown first
 // Each product has category (rings, earrings, pendants, bracelets) and audience (ladies, gentlemens-club, collective)
 const CORE_PRODUCTS = [
+  {
+    id: 'rose-of-sharon',
+    name: 'ROSE OF SHARON',
+    slug: 'rose-of-sharon',
+    materialLine: 'Sacred Collection · Floral Cross Pendant',
+    imageUrl: '/rose-of-sharon/hero.png',
+    href: '/products/rose-of-sharon',
+    price_range: 'From $950 USD',
+    inventory_count: 1,
+    is_core: true,
+    is_new_arrival: true,
+    is_featured: true,
+    category: 'pendants',
+    audience: 'ladies-first',
+  },
   {
     id: 'uncle-jo',
     name: 'UNCLE JO',

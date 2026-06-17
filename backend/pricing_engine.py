@@ -62,6 +62,14 @@ LIVE_PRICING_CONFIG = {
         "gold10k_cuff": {"lockedBasePriceCad": 5500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "gold10k_set":  {"lockedBasePriceCad": 7800, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+
+    # ROSE OF SHARON — Sacred Collection · Floral Cross Pendant
+    "roseOfSharon": {
+        "small_gold10k":     {"lockedBasePriceCad": 950,  "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "small_gold14k":     {"lockedBasePriceCad": 1250, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "signature_gold10k": {"lockedBasePriceCad": 1350, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "signature_gold14k": {"lockedBasePriceCad": 1750, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

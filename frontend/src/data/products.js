@@ -2648,9 +2648,31 @@ This is expression — under control.`,
     basePrice: 1100,
     featured: true,
     newArrival: true,
-
     imageUrl: "/uncle-jo/hero.jpg",
+    dynamicPricing: true,
+    currency: "USD",
+  },
 
+  // ==========================================
+  // ROSE OF SHARON — Sacred Collection · Floral Cross Pendant
+  // 10K or 14K Rose Gold · Small (28×18mm) or Signature (40×25mm).
+  // From $950 USD. Chain sold separately.
+  // ==========================================
+  roseOfSharon: {
+    name: "ROSE OF SHARON",
+    slug: "rose-of-sharon",
+    category: "pendants",
+    audience: ["ladies-first", "collective"],
+    collections: ["pendants", "ladies", "sacred", "collective", "ladies-first", "new-arrivals", "featured"],
+    subtitle: "Floral Cross Pendant · Sacred Collection",
+    tagline: "Faith does not bloom despite the thorns. Faith blooms through them.",
+    priceFrom: "From $950 USD",
+    basePrice: 950,
+    featured: true,
+    newArrival: true,
+    isSacredCollection: true,
+    isCollective: true,
+    imageUrl: "/rose-of-sharon/hero.png",
     dynamicPricing: true,
     currency: "USD",
   }

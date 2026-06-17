@@ -369,6 +369,12 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           {
+            title: "ROSE OF SHARON",
+            image: "/rose-of-sharon/hero.png",
+            href: "/products/rose-of-sharon",
+            subtitle: "Sacred Collection. Faith blooms through the thorns. Available in Small and Signature sizes."
+          },
+          {
             title: "UNCLE JO",
             image: "/uncle-jo/hero.jpg",
             href: "/products/uncle-jo",
