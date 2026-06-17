@@ -41,6 +41,8 @@ const GALLERY = [
   { src: "/rose-of-sharon/archive-3.jpg", alt: "ROSE OF SHARON — held between fingers, scale revealed against the hand." },
   { src: "/rose-of-sharon/archive-4.jpg", alt: "ROSE OF SHARON — resting in an open palm, full silhouette on warm wood." },
   { src: "/rose-of-sharon/archive-5.jpg", alt: "ROSE OF SHARON — worn at the décolletage, the cross blooming through everyday wear." },
+  { src: "/rose-of-sharon/archive-6.png", alt: "ROSE OF SHARON — macro: vine cluster at the base of the cross, leaves and rose-buds wrapping the openwork shaft, hallmark stamp visible." },
+  { src: "/rose-of-sharon/archive-7.png", alt: "ROSE OF SHARON — close detail of the central rose cluster, every petal sculpted in rose gold." },
 ];
 
 export default function RoseOfSharonPage() {
@@ -319,6 +321,64 @@ export default function RoseOfSharonPage() {
           <em>And every prayer leaves something beautiful behind.</em>
           <strong>BLOOM THROUGH.</strong>
         </p>
+      </section>
+
+      {/* THE GIVING — the final chapter */}
+      <section className="ros-giving" data-testid="ros-giving">
+        <style>{`
+          .ros-giving {
+            background: var(--bg-deep);
+            padding: clamp(72px,10vw,144px) clamp(20px,4vw,60px);
+            border-top: 1px solid var(--rule-soft);
+          }
+          .ros-giving-grid {
+            max-width: 1180px; margin: 0 auto;
+            display: grid; grid-template-columns: 1.05fr 0.95fr;
+            gap: clamp(40px,6vw,96px); align-items: center;
+          }
+          @media (max-width: 880px) { .ros-giving-grid { grid-template-columns: 1fr; gap: 48px; } }
+          .ros-giving-img {
+            width: 100%; height: auto; display: block;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.85));
+          }
+          .ros-giving-eyebrow {
+            font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.45em;
+            color: var(--rose); text-transform: uppercase; margin: 0 0 22px;
+          }
+          .ros-giving-h2 {
+            font-family: 'Playfair Display', serif; font-weight: 400;
+            font-size: clamp(30px,3.6vw,46px); line-height: 1.1;
+            letter-spacing: -0.01em; color: var(--ink-strong); margin: 0 0 28px;
+          }
+          .ros-giving-line {
+            font-family: 'Cormorant Garamond', serif; font-style: italic;
+            font-size: clamp(17px,1.4vw,21px); line-height: 1.6;
+            color: var(--ink); margin: 0 0 14px;
+          }
+          .ros-giving-coda {
+            margin-top: 28px; padding-top: 24px;
+            border-top: 1px solid var(--rule-soft);
+            font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.32em;
+            color: var(--ink-muted); line-height: 1.9; text-transform: uppercase;
+          }
+        `}</style>
+        <div className="ros-giving-grid">
+          <div>
+            <img src="/rose-of-sharon/giving.png" alt="ROSE OF SHARON — the giving: a hand holding open a black velvet jewelry box revealing the rose-gold cross, warm window light." className="ros-giving-img" loading="lazy" />
+          </div>
+          <div>
+            <p className="ros-giving-eyebrow">THE FINAL CHAPTER</p>
+            <h2 className="ros-giving-h2">The final chapter is not the making. It is the giving.</h2>
+            <p className="ros-giving-line">A bloom cast in gold.</p>
+            <p className="ros-giving-line">A cross shaped by roses.</p>
+            <p className="ros-giving-line">A keepsake intended to outlive the moment it was given.</p>
+            <div className="ros-giving-coda">
+              MADE TO ORDER<br />
+              CRAFTED IN ROSE GOLD<br />
+              CREATED TO BE TREASURED
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );
