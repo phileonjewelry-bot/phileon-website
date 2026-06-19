@@ -2678,6 +2678,34 @@ This is expression — under control.`,
     imageUrl: "/rose-of-sharon/hero.png",
     dynamicPricing: true,
     currency: "USD",
+  },
+
+  // ==========================================
+  // BOSS KNOT — Gentleman's Club · Tribute to Power · Pendant
+  // Gold/silver lattice tie pendant with woven mesh knot detail + short cable chain.
+  // 3 metal tiers (Sterling Silver, 10K White Gold, 10K Yellow Gold).
+  // Unisex. From $750 USD.
+  // ==========================================
+  bossKnot: {
+    name: "BOSS KNOT",
+    slug: "boss-knot",
+    category: "pendants",
+    audience: ["gentlemens-club", "collective"],
+    collections: ["pendants", "gentlemen", "gentlemens-club", "collective", "tribute-to-power", "new-arrivals", "featured"],
+    subtitle: "Gold Lattice Tie Pendant · Unisex",
+    tagline: "From the boardroom to the ballroom.",
+    priceFrom: "From $750 USD",
+    basePrice: 750,
+    featured: true,
+    newArrival: true,
+    displayOrder: 2,
+    showOnHomepage: true,
+    showInCarousel: true,
+    showInCollective: true,
+    seoDescription: "BOSS KNOT is a tie-silhouette pendant in sterling silver, 10K white gold, or 10K yellow gold. Hand-woven lattice, bevelled edge, short cable chain. Unisex. From the boardroom to the ballroom.",
+    imageUrl: "/boss-knot/hero.png",
+    dynamicPricing: true,
+    currency: "USD",
   }
 
 };

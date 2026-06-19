@@ -74,6 +74,7 @@ const SHOP_COLLECTION_MAP = {
   'wynette-palette': 'collective',
   'veyron-noir': 'collective',
   'rose-of-sharon': 'collective',
+  'boss-knot': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -100,6 +101,21 @@ const CORE_PRODUCTS = [
     is_featured: true,
     category: 'pendants',
     audience: 'ladies',
+  },
+  {
+    id: 'boss-knot',
+    name: 'BOSS KNOT',
+    slug: 'boss-knot',
+    materialLine: 'Gold Lattice Tie Pendant · Silver & 10K Gold',
+    imageUrl: '/boss-knot/hero.png',
+    href: '/products/boss-knot',
+    price_range: 'From $750 USD',
+    inventory_count: 1,
+    is_core: true,
+    is_new_arrival: true,
+    is_featured: true,
+    category: 'pendants',
+    audience: 'gentlemens-club',
   },
   {
     id: 'uncle-jo',

@@ -375,6 +375,12 @@ const HomePage = () => {
             subtitle: "A cross formed entirely from blooming roses, climbing vines, and sculpted petals. Created in rose gold and designed as a symbol of faith, beauty, and remembrance. FROM $2,800 USD"
           },
           {
+            title: "BOSS KNOT",
+            image: "/boss-knot/hero.png",
+            href: "/products/boss-knot",
+            subtitle: "From the boardroom to the ballroom. A tie cast in metal — sterling silver, 10K white gold, or 10K yellow gold. Unisex. FROM $750 USD"
+          },
+          {
             title: "UNCLE JO",
             image: "/uncle-jo/hero.jpg",
             href: "/products/uncle-jo",
@@ -717,6 +723,35 @@ const HomePage = () => {
                     Floral Cross Pendant · 10K &amp; 14K Rose Gold
                   </p>
                   <p className="text-sm mt-2" style={{ color: '#d3a085', letterSpacing: '0.18em' }}>FROM $2,800 USD</p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0}>
+              <Link
+                to="/products/boss-knot"
+                className="group block"
+                data-testid="product-card-boss-knot"
+              >
+                <div className="aspect-square overflow-hidden bg-black relative">
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(212,175,55,0.18) 100%)' }}
+                  />
+                  <img
+                    src="/boss-knot/hero.png"
+                    alt="Boss Knot — gold lattice tie pendant"
+                    className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-8 text-center">
+                  <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
+                    Boss Knot
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
+                    Gold Lattice Tie Pendant · Silver &amp; 10K Gold
+                  </p>
+                  <p className="text-sm mt-2" style={{ color: '#d4af37', letterSpacing: '0.18em' }}>FROM $750 USD</p>
                 </div>
               </Link>
             </ScrollReveal>

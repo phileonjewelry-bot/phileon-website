@@ -272,21 +272,6 @@ export default function RoseOfSharonPage() {
           {GALLERY.map((g, i) => (
             <div key={g.src} className="ros-archive-cell" data-testid={`ros-archive-cell-${i + 1}`}>
               <img src={g.src} alt={g.alt} loading="lazy" />
-              <div style={{
-                position: 'absolute', left: 0, right: 0, bottom: 0,
-                padding: '14px 18px',
-                background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.75) 70%)',
-                color: 'var(--ink)',
-              }}>
-                <p style={{ margin: 0, fontFamily: "'Cinzel', serif", fontSize: 10.5,
-                  letterSpacing: '0.32em', textTransform: 'uppercase', color: 'var(--rose)' }}>
-                  Archive {i + 1} · {g.title}
-                </p>
-                <p style={{ margin: '6px 0 0', fontFamily: "'Cormorant Garamond', serif",
-                  fontStyle: 'italic', fontSize: 14, lineHeight: 1.4, color: 'var(--ink-strong)' }}>
-                  {g.desc}
-                </p>
-              </div>
             </div>
           ))}
         </div>
