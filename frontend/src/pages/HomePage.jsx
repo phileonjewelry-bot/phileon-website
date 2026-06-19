@@ -378,7 +378,7 @@ const HomePage = () => {
             title: "BOSS KNOT",
             image: "/boss-knot/hero.png",
             href: "/products/boss-knot",
-            subtitle: "From the boardroom to the ballroom. A tie cast in metal — sterling silver, 10K white gold, or 10K yellow gold. Unisex. FROM $750 USD"
+            subtitle: "Inspired by formalwear, influence, and the quiet confidence of people who no longer need introductions. Includes matching 18\" chain. FROM $3,200 USD"
           },
           {
             title: "UNCLE JO",
@@ -749,9 +749,9 @@ const HomePage = () => {
                     Boss Knot
                   </h3>
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
-                    Gold Lattice Tie Pendant · Silver &amp; 10K Gold
+                    Executive Pendant · 18&quot; Chain Included
                   </p>
-                  <p className="text-sm mt-2" style={{ color: '#d4af37', letterSpacing: '0.18em' }}>FROM $750 USD</p>
+                  <p className="text-sm mt-2" style={{ color: '#d4af37', letterSpacing: '0.18em' }}>FROM $3,200 USD</p>
                 </div>
               </Link>
             </ScrollReveal>

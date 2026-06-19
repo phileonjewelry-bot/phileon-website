@@ -2681,28 +2681,27 @@ This is expression — under control.`,
   },
 
   // ==========================================
-  // BOSS KNOT — Gentleman's Club · Tribute to Power · Pendant
-  // Gold/silver lattice tie pendant with woven mesh knot detail + short cable chain.
-  // 3 metal tiers (Sterling Silver, 10K White Gold, 10K Yellow Gold).
-  // Unisex. From $750 USD.
+  // BOSS KNOT — Gentleman's Club · Executive Pendant · The Collective
+  // Woven mesh architecture · 70mm × 25mm · 18" matching chain included.
+  // 3 SKUs: Sterling Silver $3,200 · 10K Yellow Gold $8,500 · 10K White Gold $8,500.
   // ==========================================
   bossKnot: {
     name: "BOSS KNOT",
     slug: "boss-knot",
     category: "pendants",
     audience: ["gentlemens-club", "collective"],
-    collections: ["pendants", "gentlemen", "gentlemens-club", "collective", "tribute-to-power", "new-arrivals", "featured"],
-    subtitle: "Gold Lattice Tie Pendant · Unisex",
-    tagline: "From the boardroom to the ballroom.",
-    priceFrom: "From $750 USD",
-    basePrice: 750,
+    collections: ["pendants", "gentlemen", "gentlemens-club", "collective", "the-collective", "new-arrivals", "featured"],
+    subtitle: "Executive Pendant · 18\" Chain Included",
+    tagline: "For those who don't get out often. But when they do, they arrive.",
+    priceFrom: "From $3,200 USD",
+    basePrice: 3200,
     featured: true,
     newArrival: true,
     displayOrder: 2,
     showOnHomepage: true,
     showInCarousel: true,
     showInCollective: true,
-    seoDescription: "BOSS KNOT is a tie-silhouette pendant in sterling silver, 10K white gold, or 10K yellow gold. Hand-woven lattice, bevelled edge, short cable chain. Unisex. From the boardroom to the ballroom.",
+    seoDescription: "BOSS KNOT is an executive pendant — woven mesh architecture translating the necktie into precious metal. Sterling Silver, 10K Yellow Gold, or 10K White Gold. 18\" matching chain included. Made for arrival.",
     imageUrl: "/boss-knot/hero.png",
     dynamicPricing: true,
     currency: "USD",

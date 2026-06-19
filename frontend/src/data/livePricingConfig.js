@@ -82,9 +82,9 @@ const livePricingConfig = {
   // Hand-set USD prices · USD-mirrored (weightGrams=0 disables live metal recalc).
   // lockedBasePriceCad numerically mirrors priceUsd so /validate-cart returns diff=0.
   bossKnot: {
-    silver:         { lockedBasePriceCad: 750,  metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold10k_white:  { lockedBasePriceCad: 1800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold10k_yellow: { lockedBasePriceCad: 1800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver:         { lockedBasePriceCad: 3200, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_white:  { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_yellow: { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // MONIKA COUTURE
