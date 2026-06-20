@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
-const HERO_IMG = "/boss-knot/hero.png";
-const HERO_ALT = "BOSS KNOT — three-dimensional woven mesh tie pendant, 70mm × 25mm, sculptural executive pendant.";
+const HERO_ALT = "BOSS KNOT — woven mesh executive pendant, 70mm × 25mm, 18\" matching chain included.";
+
+// Imagery pending upload — page uses a typographic placeholder until BOSS KNOT shots arrive.
+const HAS_IMAGERY = false;
 
 // 3 metal tiers · Hand-set USD prices · USD-mirrored convention.
 // SKU keys must mirror livePricingConfig.js + pricing_engine.py.
@@ -68,15 +70,7 @@ const SPECS = [
   ["Presentation", "Luxury Presentation Box · Included"],
 ];
 
-const GALLERY = [
-  { src: "/boss-knot/archive-1.png", alt: "BOSS KNOT — front-on pendant view." },
-  { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT — three-quarter angle: bevelled edge." },
-  { src: "/boss-knot/archive-3.png", alt: "BOSS KNOT — woven mesh knot detail macro." },
-  { src: "/boss-knot/archive-4.jpg", alt: "BOSS KNOT — lifestyle: pendant worn at the collar." },
-  { src: "/boss-knot/archive-5.jpg", alt: "BOSS KNOT — lifestyle: catching evening light." },
-  { src: "/boss-knot/archive-6.jpg", alt: "BOSS KNOT — macro: lattice texture." },
-  { src: "/boss-knot/archive-7.jpg", alt: "BOSS KNOT — editorial: scale in hand." },
-];
+const GALLERY = []; // Imagery pending upload — gallery hidden until BOSS KNOT shots arrive.
 
 export default function BossKnotPage() {
   const [scrollY, setScrollY] = useState(0);
@@ -109,7 +103,7 @@ export default function BossKnotPage() {
         metal: variant,
         sku: `BSK-${SHORT_FOR[tierKey]}`,
         quantity: 1,
-        image: HERO_IMG,
+        image: null,
       },
       1,
       variant,
@@ -144,6 +138,33 @@ export default function BossKnotPage() {
           line-height: 1.62; color: var(--ink); margin: 0 0 18px; }
         .bsk-p em { font-style: italic; color: var(--ink-strong); }
         .bsk-divider { width: 64px; height: 1px; background: var(--rule); margin: 56px 0; }
+
+        /* HERO — typographic placeholder (no imagery yet) */
+        .bsk-hero-placeholder {
+          width: 100%; aspect-ratio: 1/1;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          gap: 32px; text-align: center;
+          background: radial-gradient(ellipse at center, rgba(212,175,55,0.10), transparent 70%), var(--bg-deep);
+          border: 1px solid var(--rule-soft);
+          position: relative; overflow: hidden;
+        }
+        .bsk-hero-placeholder::before {
+          content: ''; position: absolute; inset: 0;
+          background-image:
+            linear-gradient(rgba(212,175,55,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(212,175,55,0.05) 1px, transparent 1px);
+          background-size: 32px 32px;
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+        }
+        .bsk-hero-placeholder-line { font-family: 'Cinzel', serif; font-size: 11px;
+          letter-spacing: 0.45em; color: var(--gold-dim); text-transform: uppercase; position: relative; }
+        .bsk-hero-placeholder-mono { font-family: 'Playfair Display', serif; font-weight: 400;
+          font-size: clamp(48px,7.5vw,96px); letter-spacing: 0.06em; line-height: 0.95;
+          color: var(--gold-light); text-transform: uppercase; position: relative;
+          text-shadow: 0 0 24px rgba(212,175,55,0.25); }
+        @media (max-width: 768px) {
+          .bsk-hero-placeholder { aspect-ratio: auto; min-height: 65vw; padding: 56px 24px; }
+        }
 
         /* HERO */
         .bsk-hero { position: relative; padding: 56px 0 104px;
@@ -289,7 +310,11 @@ export default function BossKnotPage() {
       <section className="bsk-hero" data-testid="bsk-hero">
         <div className="bsk-hero-grid">
           <div className="bsk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
-            <img src={HERO_IMG} alt={HERO_ALT} className="bsk-hero-img" data-testid="bsk-hero-img" />
+            <div className="bsk-hero-placeholder" data-testid="bsk-hero-placeholder" aria-label={HERO_ALT}>
+              <span className="bsk-hero-placeholder-line">PHILEON</span>
+              <span className="bsk-hero-placeholder-mono">BOSS<br />KNOT</span>
+              <span className="bsk-hero-placeholder-line">THE COLLECTIVE</span>
+            </div>
           </div>
           <div>
             <p className="bsk-collection">THE COLLECTIVE</p>
@@ -325,18 +350,20 @@ export default function BossKnotPage() {
         <p className="bsk-p"><em>Others wear arrival.</em></p>
       </section>
 
-      {/* GALLERY */}
-      <section className="bsk-section" data-testid="bsk-archive">
-        <p className="bsk-eyebrow">ARCHIVE</p>
-        <h2 className="bsk-h2">Woven mesh. Sculpted presence.</h2>
-        <div className="bsk-archive-grid">
-          {GALLERY.map((g, i) => (
-            <div key={g.src} className="bsk-archive-cell" data-testid={`bsk-archive-cell-${i + 1}`}>
-              <img src={g.src} alt={g.alt} loading="lazy" />
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* GALLERY — hidden until BOSS KNOT imagery is uploaded */}
+      {HAS_IMAGERY && GALLERY.length > 0 && (
+        <section className="bsk-section" data-testid="bsk-archive">
+          <p className="bsk-eyebrow">ARCHIVE</p>
+          <h2 className="bsk-h2">Woven mesh. Sculpted presence.</h2>
+          <div className="bsk-archive-grid">
+            {GALLERY.map((g, i) => (
+              <div key={g.src} className="bsk-archive-cell" data-testid={`bsk-archive-cell-${i + 1}`}>
+                <img src={g.src} alt={g.alt} loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* COMPOSITION */}
       <section className="bsk-section" data-testid="bsk-composition">

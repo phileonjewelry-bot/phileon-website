@@ -2702,7 +2702,7 @@ This is expression — under control.`,
     showInCarousel: true,
     showInCollective: true,
     seoDescription: "BOSS KNOT is an executive pendant — woven mesh architecture translating the necktie into precious metal. Sterling Silver, 10K Yellow Gold, or 10K White Gold. 18\" matching chain included. Made for arrival.",
-    imageUrl: "/boss-knot/hero.png",
+    imageUrl: "/placeholder/boss-knot-text.svg",
     dynamicPricing: true,
     currency: "USD",
   }

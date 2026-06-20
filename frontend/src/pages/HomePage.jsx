@@ -375,12 +375,6 @@ const HomePage = () => {
             subtitle: "A cross formed entirely from blooming roses, climbing vines, and sculpted petals. Created in rose gold and designed as a symbol of faith, beauty, and remembrance. FROM $2,800 USD"
           },
           {
-            title: "BOSS KNOT",
-            image: "/boss-knot/hero.png",
-            href: "/products/boss-knot",
-            subtitle: "Inspired by formalwear, influence, and the quiet confidence of people who no longer need introductions. Includes matching 18\" chain. FROM $3,200 USD"
-          },
-          {
             title: "UNCLE JO",
             image: "/uncle-jo/hero.jpg",
             href: "/products/uncle-jo",
@@ -733,16 +727,13 @@ const HomePage = () => {
                 className="group block"
                 data-testid="product-card-boss-knot"
               >
-                <div className="aspect-square overflow-hidden bg-black relative">
-                  <div
-                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(212,175,55,0.18) 100%)' }}
-                  />
-                  <img
-                    src="/boss-knot/hero.png"
-                    alt="Boss Knot — gold lattice tie pendant"
-                    className="w-full h-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03]"
-                  />
+                <div className="aspect-square overflow-hidden bg-black relative flex items-center justify-center"
+                  style={{ background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.10), transparent 70%), #050505', border: '1px solid rgba(212,175,55,0.15)' }}>
+                  <div className="text-center px-6">
+                    <p style={{ fontFamily: "'Cinzel', serif", fontSize: 10, letterSpacing: '0.42em', color: '#8a7027', textTransform: 'uppercase', marginBottom: 14 }}>THE COLLECTIVE</p>
+                    <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 400, fontSize: 'clamp(28px,4vw,42px)', letterSpacing: '0.06em', color: '#f0d98c', lineHeight: 1, textTransform: 'uppercase' }}>BOSS<br />KNOT</p>
+                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 12, color: '#8a8378', marginTop: 14 }}>Imagery coming soon</p>
+                  </div>
                 </div>
                 <div className="mt-8 text-center">
                   <h3 className="font-serif text-lg tracking-[0.06em] text-phileon-ivory/90 group-hover:text-phileon-gold transition-colors duration-300 font-light">
