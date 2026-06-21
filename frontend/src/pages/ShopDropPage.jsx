@@ -107,7 +107,7 @@ const CORE_PRODUCTS = [
     name: 'BOSS KNOT',
     slug: 'boss-knot',
     materialLine: 'Executive Pendant · 18" Chain Included',
-    imageUrl: '/placeholder/boss-knot-text.svg',
+    imageUrl: '/boss-knot/hero.jpg',
     href: '/products/boss-knot',
     price_range: 'From $3,200 USD',
     inventory_count: 1,

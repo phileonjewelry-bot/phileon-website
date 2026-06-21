@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
-const HERO_ALT = "BOSS KNOT — woven mesh executive pendant, 70mm × 25mm, 18\" matching chain included.";
+const HERO_IMG = "/boss-knot/hero.jpg";
+const HERO_ALT = "BOSS KNOT — woven mesh executive pendant in gold, 70mm × 25mm, 18\" matching chain included.";
 
-// Imagery pending upload — page uses a typographic placeholder until BOSS KNOT shots arrive.
-const HAS_IMAGERY = false;
+const HAS_IMAGERY = true;
 
 // 3 metal tiers · Hand-set USD prices · USD-mirrored convention.
 // SKU keys must mirror livePricingConfig.js + pricing_engine.py.
@@ -70,7 +70,9 @@ const SPECS = [
   ["Presentation", "Luxury Presentation Box · Included"],
 ];
 
-const GALLERY = []; // Imagery pending upload — gallery hidden until BOSS KNOT shots arrive.
+const GALLERY = [
+  { src: "/boss-knot/hero.jpg", alt: "BOSS KNOT — gold woven mesh tie pendant on chain over black velvet." },
+];
 
 export default function BossKnotPage() {
   const [scrollY, setScrollY] = useState(0);
@@ -193,18 +195,13 @@ export default function BossKnotPage() {
           font-size: clamp(18px,1.7vw,24px); color: var(--ink); margin: 0; line-height: 1.4; }
 
         /* GALLERY */
-        .bsk-archive-grid { display: grid; grid-template-columns: 1fr 1fr;
-          gap: clamp(16px,2vw,28px); margin-top: 28px; }
+        .bsk-archive-grid { display: grid; grid-template-columns: 1fr;
+          gap: clamp(16px,2vw,28px); margin-top: 28px; max-width: 900px; margin-left: auto; margin-right: auto; }
         .bsk-archive-cell { position: relative; aspect-ratio: 1/1; overflow: hidden;
           background: var(--bg-deep); border: 1px solid var(--rule-soft); }
         .bsk-archive-cell img { width: 100%; height: 100%; object-fit: cover;
           transition: transform 600ms ease; }
         .bsk-archive-cell:hover img { transform: scale(1.02); }
-        .bsk-archive-grid > :nth-child(5) { grid-column: 1 / -1; aspect-ratio: 16/9; }
-        @media (max-width: 720px) {
-          .bsk-archive-grid { grid-template-columns: 1fr; }
-          .bsk-archive-grid > :nth-child(5) { grid-column: auto; aspect-ratio: 1/1; }
-        }
 
         /* COMPOSITION */
         .bsk-comp-grid { display: grid; grid-template-columns: repeat(4, 1fr);
@@ -310,11 +307,15 @@ export default function BossKnotPage() {
       <section className="bsk-hero" data-testid="bsk-hero">
         <div className="bsk-hero-grid">
           <div className="bsk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
-            <div className="bsk-hero-placeholder" data-testid="bsk-hero-placeholder" aria-label={HERO_ALT}>
-              <span className="bsk-hero-placeholder-line">PHILEON</span>
-              <span className="bsk-hero-placeholder-mono">BOSS<br />KNOT</span>
-              <span className="bsk-hero-placeholder-line">THE COLLECTIVE</span>
-            </div>
+            {HAS_IMAGERY ? (
+              <img src={HERO_IMG} alt={HERO_ALT} className="bsk-hero-img" data-testid="bsk-hero-img" />
+            ) : (
+              <div className="bsk-hero-placeholder" data-testid="bsk-hero-placeholder" aria-label={HERO_ALT}>
+                <span className="bsk-hero-placeholder-line">PHILEON</span>
+                <span className="bsk-hero-placeholder-mono">BOSS<br />KNOT</span>
+                <span className="bsk-hero-placeholder-line">THE COLLECTIVE</span>
+              </div>
+            )}
           </div>
           <div>
             <p className="bsk-collection">THE COLLECTIVE</p>
