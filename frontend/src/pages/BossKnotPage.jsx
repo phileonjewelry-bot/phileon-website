@@ -71,7 +71,11 @@ const SPECS = [
 ];
 
 const GALLERY = [
-  { src: "/boss-knot/hero.jpg", alt: "BOSS KNOT — gold woven mesh tie pendant on chain over black velvet." },
+  { src: "/boss-knot/archive-1.jpg", alt: "BOSS KNOT — pendant detail on chain.", span: "half" },
+  { src: "/boss-knot/archive-3.jpg", alt: "BOSS KNOT — woven mesh tie pendant, studio shot.", span: "half" },
+  { src: "/boss-knot/archive-5.jpg", alt: "BOSS KNOT — close detail of weave and clasp.", span: "full" },
+  { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT — worn lifestyle: tailored arrival.", span: "full" },
+  { src: "/boss-knot/archive-4.png", alt: "BOSS KNOT — worn lifestyle: entrance, gallery, presence.", span: "full" },
 ];
 
 export default function BossKnotPage() {
@@ -358,7 +362,7 @@ export default function BossKnotPage() {
           <h2 className="bsk-h2">Woven mesh. Sculpted presence.</h2>
           <div className="bsk-archive-grid">
             {GALLERY.map((g, i) => (
-              <div key={g.src} className="bsk-archive-cell" data-testid={`bsk-archive-cell-${i + 1}`}>
+              <div key={g.src} className={`bsk-archive-cell ${g.span || 'half'}`} data-testid={`bsk-archive-cell-${i + 1}`}>
                 <img src={g.src} alt={g.alt} loading="lazy" />
               </div>
             ))}
