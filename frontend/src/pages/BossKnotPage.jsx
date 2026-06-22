@@ -192,7 +192,7 @@ export default function BossKnotPage() {
         .bsk-hero-img-wrap { position: relative; }
         .bsk-metal-pill {
           position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
-          display: inline-block;
+          display: inline-flex; align-items: center; gap: 10px;
           padding: 8px 14px;
           border: 1px solid rgba(255,255,255,0.18);
           background: rgba(0,0,0,0.35);
@@ -207,6 +207,28 @@ export default function BossKnotPage() {
           white-space: nowrap;
           pointer-events: none;
           z-index: 4;
+        }
+        .bsk-metal-pill-dot {
+          width: 6px; height: 6px; border-radius: 999px;
+          background: #d4af37;
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 6px rgba(212,175,55,0.45);
+          flex-shrink: 0;
+        }
+        .bsk-metal-pill-dot.is-yellow {
+          background: linear-gradient(135deg, #f0d98c 0%, #d4af37 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 6px rgba(212,175,55,0.50);
+        }
+        .bsk-metal-pill-dot.is-silver {
+          background: linear-gradient(135deg, #f0f1f3 0%, #c9cdd2 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.14), 0 0 6px rgba(216,221,226,0.45);
+        }
+        .bsk-metal-pill-dot.is-white-gold {
+          background: linear-gradient(135deg, #ffffff 0%, #d8dde2 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 0 6px rgba(232,235,239,0.50);
+        }
+        .bsk-metal-pill-dot.is-rose {
+          background: linear-gradient(135deg, #e8b4a5 0%, #b87968 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 6px rgba(184,121,104,0.45);
         }
         @media (max-width: 720px) { .bsk-metal-pill { bottom: 14px; font-size: 9px; padding: 7px 12px; } }
 
@@ -371,6 +393,16 @@ export default function BossKnotPage() {
                     className="bsk-metal-pill bsk-fade-in"
                     data-testid="bsk-metal-badge"
                   >
+                    <span
+                      className={`bsk-metal-pill-dot ${
+                        metalChoice === "gold10k_yellow" ? "is-yellow"
+                          : metalChoice === "gold10k_white" ? "is-white-gold"
+                          : metalChoice === "silver" ? "is-silver"
+                          : "is-rose"
+                      }`}
+                      aria-hidden="true"
+                      data-testid="bsk-metal-pill-dot"
+                    />
                     Currently Viewing · {metalLabel}
                   </span>
                 )}
