@@ -85,6 +85,8 @@ export default function BossKnotPage() {
   const [scrollY, setScrollY] = useState(0);
   // Default selection = Yellow Gold (marquee).
   const [metalChoice, setMetalChoice] = useState("gold10k_yellow");
+  // Pill is hidden on initial load; only confirms imagery match after user clicks a metal.
+  const [hasUserSelected, setHasUserSelected] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
@@ -104,6 +106,11 @@ export default function BossKnotPage() {
   const priceFormatted = formatUsd(priceUsd);
   const heroParallax = Math.min(scrollY * 0.18, 120);
   const metalLabel = LABEL_FOR[metalChoice];
+
+  const pickMetal = (id) => {
+    setMetalChoice(id);
+    setHasUserSelected(true);
+  };
 
   const onAddToCart = () => {
     if (!metalChoice) return;
@@ -181,25 +188,34 @@ export default function BossKnotPage() {
           .bsk-hero-placeholder { aspect-ratio: auto; min-height: 65vw; padding: 56px 24px; }
         }
 
-        /* METAL BADGE — animates when metal changes */
-        .bsk-metal-badge {
-          display: inline-flex; align-items: center; gap: 10px;
-          padding: 8px 16px;
-          border: 1px solid var(--rule);
-          background: rgba(212,175,55,0.06);
+        /* METAL PILL — floats over hero image, glass blur, fades in on selection */
+        .bsk-hero-img-wrap { position: relative; }
+        .bsk-metal-pill {
+          position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+          display: inline-block;
+          padding: 8px 14px;
+          border: 1px solid rgba(255,255,255,0.18);
+          background: rgba(0,0,0,0.35);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          color: #f5f5f5;
           font-family: 'Cinzel', serif;
-          font-size: 10px; letter-spacing: 0.42em;
-          color: var(--gold-light); text-transform: uppercase;
-          margin: 0 0 18px;
-          transition: opacity 380ms ease, transform 380ms ease;
+          font-size: 10px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          border-radius: 999px;
+          white-space: nowrap;
+          pointer-events: none;
+          z-index: 4;
         }
-        .bsk-metal-badge::before {
-          content: ''; width: 8px; height: 8px; border-radius: 999px;
-          background: var(--gold-light);
-          box-shadow: 0 0 0 2px rgba(212,175,55,0.18);
+        @media (max-width: 720px) { .bsk-metal-pill { bottom: 14px; font-size: 9px; padding: 7px 12px; } }
+
+        /* 200ms fade — applied to hero image, pill, gallery imgs, eyebrow */
+        @keyframes bsk-fade-in {
+          0%   { opacity: 0; }
+          100% { opacity: 1; }
         }
-        .bsk-metal-badge.is-silver::before { background: #d8dde2; box-shadow: 0 0 0 2px rgba(216,221,226,0.18); }
-        .bsk-metal-badge.is-silver { color: #e8eaee; }
+        .bsk-fade-in { animation: bsk-fade-in 200ms ease both; }
 
         /* HERO */
         .bsk-hero { position: relative; padding: 56px 0 104px;
@@ -341,7 +357,24 @@ export default function BossKnotPage() {
         <div className="bsk-hero-grid">
           <div className="bsk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
             {HAS_IMAGERY ? (
-              <img src={heroImg} alt={HERO_ALT} className="bsk-hero-img" data-testid="bsk-hero-img" />
+              <>
+                <img
+                  key={heroImg}
+                  src={heroImg}
+                  alt={HERO_ALT}
+                  className="bsk-hero-img bsk-fade-in"
+                  data-testid="bsk-hero-img"
+                />
+                {hasUserSelected && (
+                  <span
+                    key={`pill-${metalChoice}`}
+                    className="bsk-metal-pill bsk-fade-in"
+                    data-testid="bsk-metal-badge"
+                  >
+                    Currently Viewing · {metalLabel}
+                  </span>
+                )}
+              </>
             ) : (
               <div className="bsk-hero-placeholder" data-testid="bsk-hero-placeholder" aria-label={HERO_ALT}>
                 <span className="bsk-hero-placeholder-line">PHILEON</span>
@@ -353,9 +386,6 @@ export default function BossKnotPage() {
           <div>
             <p className="bsk-collection">THE COLLECTIVE</p>
             <h1 className="bsk-hero-title" data-testid="bsk-hero-title">BOSS KNOT</h1>
-            <p className={`bsk-metal-badge${isSilverTone ? " is-silver" : ""}`} data-testid="bsk-metal-badge">
-              Currently Viewing · {metalLabel}
-            </p>
             <p className="bsk-subtitle" data-testid="bsk-subtitle">Executive Pendant · 18&quot; Chain Included</p>
             <p className="bsk-tagline" data-testid="bsk-tagline">For those who don&apos;t get out often. But when they do, they arrive.</p>
             <p className="bsk-tagline" style={{ marginTop: 12, fontSize: 'clamp(15px,1.3vw,18px)', color: 'var(--ink-muted)' }}>
@@ -461,7 +491,7 @@ export default function BossKnotPage() {
               <button key={opt.id} type="button" role="radio" aria-checked={metalChoice === opt.id}
                 className={`bsk-opt${metalChoice === opt.id ? " is-active" : ""}`}
                 data-testid={`bsk-metal-${opt.id}`}
-                onClick={() => setMetalChoice(opt.id)}>
+                onClick={() => pickMetal(opt.id)}>
                 <p className="bsk-opt-label">{opt.label}</p>
                 <p className="bsk-opt-sub">{opt.sub}</p>
                 <p className="bsk-opt-price">{formatUsd(opt.price)}</p>
