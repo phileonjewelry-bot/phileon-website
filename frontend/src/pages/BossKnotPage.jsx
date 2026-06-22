@@ -71,9 +71,18 @@ const SPECS = [
 ];
 
 const GALLERY = [
+  // Pair 1 — woven mesh macros (new)
+  { src: "/boss-knot/archive-6.png", alt: "BOSS KNOT — macro woven mesh body, light catching the lattice.", span: "half" },
+  { src: "/boss-knot/archive-7.png", alt: "BOSS KNOT — macro bevelled tip showing weave terminus.", span: "half" },
+  // Pair 2 — product details (originals)
   { src: "/boss-knot/archive-1.jpg", alt: "BOSS KNOT — pendant detail on chain.", span: "half" },
   { src: "/boss-knot/archive-3.jpg", alt: "BOSS KNOT — woven mesh tie pendant, studio shot.", span: "half" },
+  // Pair 3 — chain + knot detail (new)
+  { src: "/boss-knot/archive-8.jpg", alt: "BOSS KNOT — 18\" matching cable chain coiled on black silk.", span: "half" },
+  { src: "/boss-knot/archive-9.jpg", alt: "BOSS KNOT — knot bezel and chain articulation, macro.", span: "half" },
+  // Close-up reveal — full-width
   { src: "/boss-knot/archive-5.jpg", alt: "BOSS KNOT — close detail of weave and clasp.", span: "full" },
+  // Lifestyle pair — full-width "arrival" frames
   { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT — worn lifestyle: tailored arrival.", span: "full" },
   { src: "/boss-knot/archive-4.png", alt: "BOSS KNOT — worn lifestyle: entrance, gallery, presence.", span: "full" },
 ];
