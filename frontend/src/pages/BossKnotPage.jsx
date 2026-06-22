@@ -18,9 +18,9 @@ const PRICE_MATRIX = {
 
 // Flat 3-option configurator. Default selection = Yellow Gold (marquee).
 const METAL_CHOICES = [
-  { id: "silver",         label: "Sterling Silver",  sub: "925 · Solid Cast",      price: 3200 },
-  { id: "gold10k_yellow", label: "10K Yellow Gold",  sub: "Solid · Hand-Finished", price: 8500 },
-  { id: "gold10k_white",  label: "10K White Gold",   sub: "Solid · High Polish",   price: 8500 },
+  { id: "silver",         label: "Sterling Silver",  sub: "925 · Solid Cast",      price: 3200, swatch: "is-silver" },
+  { id: "gold10k_yellow", label: "10K Yellow Gold",  sub: "Solid · Hand-Finished", price: 8500, swatch: "is-yellow" },
+  { id: "gold10k_white",  label: "10K White Gold",   sub: "Solid · High Polish",   price: 8500, swatch: "is-white-gold" },
 ];
 
 const LABEL_FOR = {
@@ -186,6 +186,33 @@ export default function BossKnotPage() {
           text-shadow: 0 0 24px rgba(212,175,55,0.25); }
         @media (max-width: 768px) {
           .bsk-hero-placeholder { aspect-ratio: auto; min-height: 65vw; padding: 56px 24px; }
+        }
+
+        /* CONFIGURATOR SWATCH — 4px metal indicator on configurator button */
+        .bsk-opt-swatch {
+          display: inline-block;
+          width: 4px; height: 4px;
+          border-radius: 999px;
+          margin: 0 8px 2px 0;
+          background: #d4af37;
+          vertical-align: middle;
+          flex-shrink: 0;
+        }
+        .bsk-opt-swatch.is-yellow {
+          background: linear-gradient(135deg, #f0d98c 0%, #d4af37 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.10), 0 0 4px rgba(212,175,55,0.55);
+        }
+        .bsk-opt-swatch.is-silver {
+          background: linear-gradient(135deg, #f0f1f3 0%, #c9cdd2 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 4px rgba(216,221,226,0.45);
+        }
+        .bsk-opt-swatch.is-white-gold {
+          background: linear-gradient(135deg, #ffffff 0%, #d9dde2 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 0 4px rgba(232,235,239,0.55);
+        }
+        .bsk-opt-swatch.is-rose {
+          background: linear-gradient(135deg, #f0c3b0 0%, #d79a86 100%);
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 0 4px rgba(215,154,134,0.50);
         }
 
         /* METAL PILL — floats over hero image, glass blur, fades in on selection */
@@ -524,7 +551,10 @@ export default function BossKnotPage() {
                 className={`bsk-opt${metalChoice === opt.id ? " is-active" : ""}`}
                 data-testid={`bsk-metal-${opt.id}`}
                 onClick={() => pickMetal(opt.id)}>
-                <p className="bsk-opt-label">{opt.label}</p>
+                <p className="bsk-opt-label">
+                  <span className={`bsk-opt-swatch ${opt.swatch}`} aria-hidden="true" data-testid={`bsk-opt-swatch-${opt.id}`} />
+                  {opt.label}
+                </p>
                 <p className="bsk-opt-sub">{opt.sub}</p>
                 <p className="bsk-opt-price">{formatUsd(opt.price)}</p>
               </button>
