@@ -378,7 +378,7 @@ const HomePage = () => {
             title: "BOSS KNOT",
             image: "/boss-knot/hero.jpg",
             href: "/products/boss-knot",
-            subtitle: "Inspired by formalwear, influence, and the quiet confidence of people who no longer need introductions. Includes matching 18\" chain. FROM $3,200 USD"
+            subtitle: "Inspired by formalwear, influence, and the quiet confidence of people who no longer need introductions. Includes matching 18\" chain. FROM $1,950 USD"
           },
           {
             title: "UNCLE JO",
@@ -751,7 +751,7 @@ const HomePage = () => {
                   <p className="text-xs text-phileon-ivory/40 mt-3 tracking-wide">
                     Executive Pendant · 18&quot; Chain Included
                   </p>
-                  <p className="text-sm mt-2" style={{ color: '#d4af37', letterSpacing: '0.18em' }}>FROM $3,200 USD</p>
+                  <p className="text-sm mt-2" style={{ color: '#d4af37', letterSpacing: '0.18em' }}>FROM $1,950 USD</p>
                 </div>
               </Link>
             </ScrollReveal>

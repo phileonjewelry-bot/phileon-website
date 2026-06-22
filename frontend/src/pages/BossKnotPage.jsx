@@ -1,49 +1,32 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
-const HERO_IMG = "/boss-knot/hero.jpg";
-const HERO_ALT = "BOSS KNOT — woven mesh executive pendant in gold, 70mm × 25mm, 18\" matching chain included.";
+const HERO_IMG_GOLD = "/boss-knot/hero.jpg";        // Marquee gold shot — default landing
+const HERO_IMG_SILVER = "/boss-knot/archive-10.png"; // Silver variant hero
+const HERO_ALT = "BOSS KNOT — woven mesh executive pendant, 70mm × 25mm, 18\" matching chain included.";
 
 const HAS_IMAGERY = true;
 
-// 3 metal tiers · Hand-set USD prices · USD-mirrored convention.
-// SKU keys must mirror livePricingConfig.js + pricing_engine.py.
+// 2 SKUs · Hand-set USD prices · USD-mirrored convention.
 const PRICE_MATRIX = {
-  silver:         3200,
-  gold10k_yellow: 8500,
-  gold10k_white:  8500,
+  silver:        1950,
+  gold10k_white: 4200,
 };
 
-// Cascading configurator: metal → (if Gold) colour + karat.
+// Flat 2-option configurator.
 const METAL_CHOICES = [
-  { id: "silver", label: "Sterling Silver" },
-  { id: "gold",   label: "Gold" },
+  { id: "silver",         label: "Sterling Silver",  sub: "925 · Solid Cast",     price: 1950 },
+  { id: "gold10k_white",  label: "10K White Gold",   sub: "Solid · High Polish",  price: 4200 },
 ];
-const COLOUR_CHOICES = [
-  { id: "yellow", label: "Yellow Gold" },
-  { id: "white",  label: "White Gold" },
-];
-const KARAT_CHOICES = [
-  { id: "10K", label: "10K" },
-];
-
-const SKU_FOR = (metal, colour) => {
-  if (metal === "silver") return "silver";
-  if (metal === "gold" && colour === "yellow") return "gold10k_yellow";
-  if (metal === "gold" && colour === "white")  return "gold10k_white";
-  return "silver";
-};
 
 const LABEL_FOR = {
   silver:         "Sterling Silver",
-  gold10k_yellow: "10K Yellow Gold",
   gold10k_white:  "10K White Gold",
 };
 const SHORT_FOR = {
   silver:         "SLV",
-  gold10k_yellow: "10Y",
   gold10k_white:  "10W",
 };
 
@@ -58,7 +41,6 @@ const SPECS = [
   ["Pendant Length", "70 mm"],
   ["Pendant Width", "25 mm"],
   ["Weight · Sterling Silver", "36–38 g"],
-  ["Weight · 10K Yellow Gold", "37.48 g"],
   ["Weight · 10K White Gold", "36.50 g"],
   ["Chain", "18\" Matching Chain · Included"],
   ["Finish", "High Polish"],
@@ -70,35 +52,31 @@ const SPECS = [
   ["Presentation", "Luxury Presentation Box · Included"],
 ];
 
-const GALLERY = [
-  // Pair 1 — woven mesh macros (gold)
-  { src: "/boss-knot/archive-6.png", alt: "BOSS KNOT — macro woven mesh body, light catching the lattice.", span: "half" },
-  { src: "/boss-knot/archive-7.png", alt: "BOSS KNOT — macro bevelled tip showing weave terminus.", span: "half" },
-  // Pair 2 — Silver / White Gold variant — product views (new)
-  { src: "/boss-knot/archive-10.png", alt: "BOSS KNOT — Sterling Silver / 10K White Gold variant, studio front view.", span: "half" },
-  { src: "/boss-knot/archive-11.jpg", alt: "BOSS KNOT — Silver variant 3/4 angle showing engraved chevron weave.", span: "half" },
-  // Pair 3 — gold product details (originals)
-  { src: "/boss-knot/archive-1.jpg", alt: "BOSS KNOT — pendant detail on chain.", span: "half" },
-  { src: "/boss-knot/archive-3.jpg", alt: "BOSS KNOT — woven mesh tie pendant, studio shot.", span: "half" },
-  // Pair 4 — chain + knot detail (gold)
-  { src: "/boss-knot/archive-8.jpg", alt: "BOSS KNOT — 18\" matching cable chain coiled on black silk.", span: "half" },
-  { src: "/boss-knot/archive-9.jpg", alt: "BOSS KNOT — knot bezel and chain articulation, macro.", span: "half" },
-  // Silver close-up detail (new) — full-width
-  { src: "/boss-knot/archive-14.jpg", alt: "BOSS KNOT — Silver variant knot bezel and chain articulation macro.", span: "full" },
-  // Gold close-up reveal — full-width
-  { src: "/boss-knot/archive-5.jpg", alt: "BOSS KNOT — close detail of weave and clasp.", span: "full" },
-  // Lifestyle — gold variant (existing)
-  { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT (Gold) — worn lifestyle: tailored arrival.", span: "full" },
-  { src: "/boss-knot/archive-4.png", alt: "BOSS KNOT (Gold) — worn lifestyle: entrance, gallery, presence.", span: "full" },
-  // Lifestyle — silver variant (new)
+// Two metal-themed galleries — swap based on selectedMetal.
+const SILVER_GALLERY = [
+  { src: "/boss-knot/archive-10.png", alt: "BOSS KNOT (Silver) — studio front view.", span: "half" },
+  { src: "/boss-knot/archive-11.jpg", alt: "BOSS KNOT (Silver) — 3/4 angle with chevron weave.", span: "half" },
+  { src: "/boss-knot/archive-14.jpg", alt: "BOSS KNOT (Silver) — knot bezel and chain detail.", span: "full" },
   { src: "/boss-knot/archive-12.png", alt: "BOSS KNOT (Silver) — worn lifestyle: cityscape, executive presence.", span: "full" },
   { src: "/boss-knot/archive-13.png", alt: "BOSS KNOT (Silver) — worn lifestyle: tailored suit, marble interior.", span: "full" },
 ];
 
+const GOLD_GALLERY = [
+  { src: "/boss-knot/archive-6.png", alt: "BOSS KNOT (Gold) — macro woven mesh body.", span: "half" },
+  { src: "/boss-knot/archive-7.png", alt: "BOSS KNOT (Gold) — macro bevelled tip showing weave terminus.", span: "half" },
+  { src: "/boss-knot/archive-1.jpg", alt: "BOSS KNOT (Gold) — pendant detail on chain.", span: "half" },
+  { src: "/boss-knot/archive-3.jpg", alt: "BOSS KNOT (Gold) — woven mesh tie, studio shot.", span: "half" },
+  { src: "/boss-knot/archive-8.jpg", alt: "BOSS KNOT (Gold) — 18\" cable chain coiled on black silk.", span: "half" },
+  { src: "/boss-knot/archive-9.jpg", alt: "BOSS KNOT (Gold) — knot bezel and chain articulation macro.", span: "half" },
+  { src: "/boss-knot/archive-5.jpg", alt: "BOSS KNOT (Gold) — close detail of weave and clasp.", span: "full" },
+  { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT (Gold) — worn lifestyle: tailored arrival.", span: "full" },
+  { src: "/boss-knot/archive-4.png", alt: "BOSS KNOT (Gold) — worn lifestyle: entrance, gallery, presence.", span: "full" },
+];
+
 export default function BossKnotPage() {
   const [scrollY, setScrollY] = useState(0);
-  const [metalChoice,  setMetalChoice]  = useState("gold");
-  const [colourChoice, setColourChoice] = useState("yellow");
+  // Default landing = gold imagery (marquee). Once a metal is chosen, gallery + hero swap.
+  const [metalChoice, setMetalChoice] = useState(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
@@ -108,13 +86,17 @@ export default function BossKnotPage() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const tierKey = useMemo(() => SKU_FOR(metalChoice, colourChoice), [metalChoice, colourChoice]);
-  const priceUsd = PRICE_MATRIX[tierKey];
-  const priceFormatted = formatUsd(priceUsd);
+  // Silver + White Gold both render the silver-tone gallery; otherwise (no selection) → gold.
+  const isSilverTone = metalChoice === "silver" || metalChoice === "gold10k_white";
+  const galleryImages = isSilverTone ? SILVER_GALLERY : GOLD_GALLERY;
+  const heroImg = isSilverTone ? HERO_IMG_SILVER : HERO_IMG_GOLD;
+  const tierKey = metalChoice;
+  const priceUsd = metalChoice ? PRICE_MATRIX[metalChoice] : null;
+  const priceFormatted = priceUsd ? formatUsd(priceUsd) : "Select Metal";
   const heroParallax = Math.min(scrollY * 0.18, 120);
-  const colourDisabled = metalChoice === "silver";
 
   const onAddToCart = () => {
+    if (!metalChoice) return;
     const variant = LABEL_FOR[tierKey];
     handleAddToCart(
       {
@@ -329,7 +311,7 @@ export default function BossKnotPage() {
         <div className="bsk-hero-grid">
           <div className="bsk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
             {HAS_IMAGERY ? (
-              <img src={HERO_IMG} alt={HERO_ALT} className="bsk-hero-img" data-testid="bsk-hero-img" />
+              <img src={heroImg} alt={HERO_ALT} className="bsk-hero-img" data-testid="bsk-hero-img" />
             ) : (
               <div className="bsk-hero-placeholder" data-testid="bsk-hero-placeholder" aria-label={HERO_ALT}>
                 <span className="bsk-hero-placeholder-line">PHILEON</span>
@@ -373,12 +355,12 @@ export default function BossKnotPage() {
       </section>
 
       {/* GALLERY — hidden until BOSS KNOT imagery is uploaded */}
-      {HAS_IMAGERY && GALLERY.length > 0 && (
+      {HAS_IMAGERY && galleryImages.length > 0 && (
         <section className="bsk-section" data-testid="bsk-archive">
-          <p className="bsk-eyebrow">ARCHIVE</p>
+          <p className="bsk-eyebrow">ARCHIVE {isSilverTone ? "· SILVER" : "· GOLD"}</p>
           <h2 className="bsk-h2">Woven mesh. Sculpted presence.</h2>
           <div className="bsk-archive-grid">
-            {GALLERY.map((g, i) => (
+            {galleryImages.map((g, i) => (
               <div key={g.src} className={`bsk-archive-cell ${g.span || 'half'}`} data-testid={`bsk-archive-cell-${i + 1}`}>
                 <img src={g.src} alt={g.alt} loading="lazy" />
               </div>
@@ -405,7 +387,7 @@ export default function BossKnotPage() {
           <div data-testid="bsk-comp-3">
             <p className="bsk-comp-num">03</p>
             <p className="bsk-comp-h">Metal</p>
-            <p className="bsk-comp-p">Solid Sterling Silver, 10K Yellow Gold, or 10K White Gold. Cast, hand-finished, high polish.</p>
+            <p className="bsk-comp-p">Solid Sterling Silver or 10K White Gold. Cast, hand-finished, high polish.</p>
           </div>
           <div data-testid="bsk-comp-4">
             <p className="bsk-comp-num">04</p>
@@ -433,12 +415,12 @@ export default function BossKnotPage() {
       <section className="bsk-config" data-testid="bsk-configurator">
         <div className="bsk-config-head">
           <p className="bsk-eyebrow">CRAFT YOUR BOSS KNOT</p>
-          <h2 className="bsk-h2">Three options. One verdict.</h2>
+          <h2 className="bsk-h2">Two metals. One verdict.</h2>
           <p className="bsk-price-line" data-testid="bsk-price">{priceFormatted}</p>
           <p className="bsk-price-sub">Includes matching 18&quot; chain</p>
         </div>
 
-        {/* METAL */}
+        {/* METAL — flat 2-option configurator */}
         <div className="bsk-config-group">
           <label className="bsk-config-label">Metal</label>
           <div className="bsk-opt-row cols-2" role="radiogroup" aria-label="Metal">
@@ -448,40 +430,8 @@ export default function BossKnotPage() {
                 data-testid={`bsk-metal-${opt.id}`}
                 onClick={() => setMetalChoice(opt.id)}>
                 <p className="bsk-opt-label">{opt.label}</p>
-                <p className="bsk-opt-price">
-                  {opt.id === "silver" ? formatUsd(PRICE_MATRIX.silver) : `From ${formatUsd(PRICE_MATRIX.gold10k_yellow)}`}
-                </p>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* COLOUR (gold only) */}
-        <div className="bsk-config-group">
-          <label className="bsk-config-label">Colour</label>
-          <div className="bsk-opt-row cols-2" role="radiogroup" aria-label="Colour">
-            {COLOUR_CHOICES.map((opt) => (
-              <button key={opt.id} type="button" role="radio" aria-checked={!colourDisabled && colourChoice === opt.id}
-                className={`bsk-opt${!colourDisabled && colourChoice === opt.id ? " is-active" : ""}`}
-                data-testid={`bsk-colour-${opt.id}`}
-                disabled={colourDisabled}
-                onClick={() => setColourChoice(opt.id)}>
-                <p className="bsk-opt-label">{opt.label}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* KARAT (gold only) */}
-        <div className="bsk-config-group">
-          <label className="bsk-config-label">Karat</label>
-          <div className="bsk-opt-row cols-1" role="radiogroup" aria-label="Karat">
-            {KARAT_CHOICES.map((opt) => (
-              <button key={opt.id} type="button" role="radio" aria-checked={!colourDisabled}
-                className={`bsk-opt${!colourDisabled ? " is-active" : ""}`}
-                data-testid={`bsk-karat-${opt.id}`}
-                disabled={colourDisabled}>
-                <p className="bsk-opt-label">{opt.label}</p>
+                <p className="bsk-opt-sub">{opt.sub}</p>
+                <p className="bsk-opt-price">{formatUsd(opt.price)}</p>
               </button>
             ))}
           </div>
@@ -504,8 +454,8 @@ export default function BossKnotPage() {
           <p className="bsk-purchase-eyebrow">MADE TO ORDER</p>
           <p className="bsk-purchase-lead">Lead Time · 3–4 Weeks · Insured Shipping · Luxury Box Included</p>
           <button type="button" className="bsk-btn" data-testid="bsk-add-to-cart"
-            onClick={onAddToCart} disabled={isAdding}>
-            {buttonText}
+            onClick={onAddToCart} disabled={isAdding || !metalChoice}>
+            {metalChoice ? buttonText : "SELECT A METAL"}
           </button>
         </div>
       </section>
