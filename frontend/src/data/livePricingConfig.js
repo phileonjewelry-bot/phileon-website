@@ -78,12 +78,13 @@ const livePricingConfig = {
   },
 
   // BOSS KNOT — Gentleman's Club · Tribute to Power · Pendant
-  // 2 metal tiers (Sterling Silver / 10K White Gold).
+  // 3 metal tiers (Sterling Silver / 10K Yellow / 10K White).
   // Hand-set USD prices · USD-mirrored (weightGrams=0 disables live metal recalc).
   // lockedBasePriceCad numerically mirrors priceUsd so /validate-cart returns diff=0.
   bossKnot: {
-    silver:         { lockedBasePriceCad: 1950, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    gold10k_white:  { lockedBasePriceCad: 4200, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    silver:         { lockedBasePriceCad: 3200, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_yellow: { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10k_white:  { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // MONIKA COUTURE

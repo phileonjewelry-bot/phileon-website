@@ -72,10 +72,11 @@ LIVE_PRICING_CONFIG = {
     },
 
     # BOSS KNOT — Gentleman's Club · Tribute to Power · Pendant
-    # 2 metal tiers · Hand-set USD prices · USD-mirrored (weightGrams=0).
+    # 3 metal tiers · Hand-set USD prices · USD-mirrored (weightGrams=0).
     "bossKnot": {
-        "silver":         {"lockedBasePriceCad": 1950, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
-        "gold10k_white":  {"lockedBasePriceCad": 4200, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "silver":         {"lockedBasePriceCad": 3200, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_yellow": {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_white":  {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
