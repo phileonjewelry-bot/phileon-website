@@ -101,6 +101,7 @@ const CORE_PRODUCTS = [
     is_featured: true,
     category: 'pendants',
     audience: 'ladies',
+    metals: ['rose'],
   },
   {
     id: 'boss-knot',
