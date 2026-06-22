@@ -116,6 +116,7 @@ const CORE_PRODUCTS = [
     is_featured: true,
     category: 'pendants',
     audience: 'gentlemens-club',
+    metals: ['silver', 'yellow', 'white'],
   },
   {
     id: 'uncle-jo',
@@ -1338,6 +1339,28 @@ const ShopDropPage = () => {
                         <div style={{ padding: '12px 0 8px' }}>
                           <h3 className="shop-drop__card-name">{product.name}</h3>
                           <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                          {Array.isArray(product.metals) && product.metals.length > 0 && (
+                            <div
+                              className="shop-drop__card-metals"
+                              data-testid={`card-metals-${product.slug}`}
+                              aria-label="Available metals"
+                            >
+                              {product.metals.map((m) => (
+                                <span
+                                  key={m}
+                                  className={`shop-drop__metal-chip is-${m === 'white' ? 'white-gold' : m}`}
+                                  data-testid={`card-metal-${product.slug}-${m}`}
+                                  title={
+                                    m === 'silver' ? 'Sterling Silver'
+                                    : m === 'yellow' ? '10K Yellow Gold'
+                                    : m === 'white'  ? '10K White Gold'
+                                    : m === 'rose'   ? 'Rose Gold'
+                                    : m
+                                  }
+                                />
+                              ))}
+                            </div>
+                          )}
                           {product.price_range && (
                             <p className="shop-drop__card-price">{product.price_range}</p>
                           )}
