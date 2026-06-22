@@ -71,20 +71,28 @@ const SPECS = [
 ];
 
 const GALLERY = [
-  // Pair 1 — woven mesh macros (new)
+  // Pair 1 — woven mesh macros (gold)
   { src: "/boss-knot/archive-6.png", alt: "BOSS KNOT — macro woven mesh body, light catching the lattice.", span: "half" },
   { src: "/boss-knot/archive-7.png", alt: "BOSS KNOT — macro bevelled tip showing weave terminus.", span: "half" },
-  // Pair 2 — product details (originals)
+  // Pair 2 — Silver / White Gold variant — product views (new)
+  { src: "/boss-knot/archive-10.png", alt: "BOSS KNOT — Sterling Silver / 10K White Gold variant, studio front view.", span: "half" },
+  { src: "/boss-knot/archive-11.jpg", alt: "BOSS KNOT — Silver variant 3/4 angle showing engraved chevron weave.", span: "half" },
+  // Pair 3 — gold product details (originals)
   { src: "/boss-knot/archive-1.jpg", alt: "BOSS KNOT — pendant detail on chain.", span: "half" },
   { src: "/boss-knot/archive-3.jpg", alt: "BOSS KNOT — woven mesh tie pendant, studio shot.", span: "half" },
-  // Pair 3 — chain + knot detail (new)
+  // Pair 4 — chain + knot detail (gold)
   { src: "/boss-knot/archive-8.jpg", alt: "BOSS KNOT — 18\" matching cable chain coiled on black silk.", span: "half" },
   { src: "/boss-knot/archive-9.jpg", alt: "BOSS KNOT — knot bezel and chain articulation, macro.", span: "half" },
-  // Close-up reveal — full-width
+  // Silver close-up detail (new) — full-width
+  { src: "/boss-knot/archive-14.jpg", alt: "BOSS KNOT — Silver variant knot bezel and chain articulation macro.", span: "full" },
+  // Gold close-up reveal — full-width
   { src: "/boss-knot/archive-5.jpg", alt: "BOSS KNOT — close detail of weave and clasp.", span: "full" },
-  // Lifestyle pair — full-width "arrival" frames
-  { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT — worn lifestyle: tailored arrival.", span: "full" },
-  { src: "/boss-knot/archive-4.png", alt: "BOSS KNOT — worn lifestyle: entrance, gallery, presence.", span: "full" },
+  // Lifestyle — gold variant (existing)
+  { src: "/boss-knot/archive-2.png", alt: "BOSS KNOT (Gold) — worn lifestyle: tailored arrival.", span: "full" },
+  { src: "/boss-knot/archive-4.png", alt: "BOSS KNOT (Gold) — worn lifestyle: entrance, gallery, presence.", span: "full" },
+  // Lifestyle — silver variant (new)
+  { src: "/boss-knot/archive-12.png", alt: "BOSS KNOT (Silver) — worn lifestyle: cityscape, executive presence.", span: "full" },
+  { src: "/boss-knot/archive-13.png", alt: "BOSS KNOT (Silver) — worn lifestyle: tailored suit, marble interior.", span: "full" },
 ];
 
 export default function BossKnotPage() {
