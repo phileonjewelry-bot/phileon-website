@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 
 /**
@@ -257,6 +258,36 @@ export default function RingSizeSelector({
         }
         .rss-wideband p { margin: 0 0 6px; }
         .rss-wideband p:last-child { margin-bottom: 0; }
+
+        /* Ring Size Guide CTA — auto-rendered for every ring product
+         * (any product using RingSizeSelector is, by definition, a ring). */
+        .rss-sizeguide-cta {
+          margin-top: 14px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px 10px;
+          align-items: baseline;
+          font-family: 'Cormorant Garamond', serif;
+          font-style: italic;
+          font-size: 0.92rem;
+          color: var(--rss-muted);
+        }
+        .rss-sizeguide-cta-link {
+          color: var(--rss-accent);
+          font-family: 'Cinzel', serif;
+          font-style: normal;
+          font-size: 10px;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          text-decoration: none;
+          border-bottom: 1px solid color-mix(in srgb, var(--rss-accent) 35%, transparent);
+          padding-bottom: 2px;
+          transition: color 220ms ease, border-color 220ms ease;
+        }
+        .rss-sizeguide-cta-link:hover {
+          color: var(--rss-fg);
+          border-color: var(--rss-accent);
+        }
       `}</style>
 
       <label className="rss-label" htmlFor={`${testIdPrefix}-button`}>
@@ -311,6 +342,18 @@ export default function RingSizeSelector({
           Custom sizes may require additional production time.
         </p>
       )}
+
+      {/* Auto-rendered for every ring product using this selector. */}
+      <div className="rss-sizeguide-cta" data-testid={`${testIdPrefix}-guide-cta`}>
+        <span>Need help finding your size?</span>
+        <Link
+          to="/ring-size-guide"
+          className="rss-sizeguide-cta-link"
+          data-testid={`${testIdPrefix}-guide-link`}
+        >
+          View our Ring Size Guide <span aria-hidden="true">→</span>
+        </Link>
+      </div>
 
       {showSizingMicrocopy && (
         <div className="rss-help" data-testid={`${testIdPrefix}-help`}>
