@@ -116,6 +116,25 @@ export default function LadyBossKnotPage() {
         .lbk-archive-cell img { width:100%;height:100%;object-fit:cover;transition:transform 900ms cubic-bezier(.22,.61,.36,1),opacity 200ms ease;display:block; }
         .lbk-archive-cell:hover img { transform:scale(1.02); }
         @media (max-width:640px){ .lbk-archive-grid{grid-template-columns:1fr;} .lbk-archive-cell.full{aspect-ratio:4/5;} }
+        /* HIS COUNTERPART — His & Hers cross-sell */
+        .lbk-counterpart { background:var(--bg-deep);border-top:1px solid var(--rule);
+          padding:clamp(72px,8vw,120px) clamp(20px,4vw,60px); }
+        .lbk-counterpart-grid { max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(40px,5vw,80px);align-items:center; }
+        @media (max-width:880px){ .lbk-counterpart-grid{grid-template-columns:1fr;gap:40px;} }
+        .lbk-counterpart-img-wrap { position:relative;aspect-ratio:4/5;overflow:hidden;background:#0a0a0a;border:1px solid var(--rule-soft);
+          transition:transform 600ms cubic-bezier(.22,.61,.36,1),box-shadow 600ms ease;display:block; }
+        .lbk-counterpart-img-wrap:hover { transform:translateY(-6px);box-shadow:0 32px 60px -28px rgba(212,175,55,.35),0 0 0 1px var(--rule); }
+        .lbk-counterpart-img { width:100%;height:100%;object-fit:cover;display:block;transition:transform 900ms cubic-bezier(.22,.61,.36,1); }
+        .lbk-counterpart-img-wrap:hover .lbk-counterpart-img { transform:scale(1.03); }
+        .lbk-counterpart-title { font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(36px,4.6vw,60px);line-height:1.04;letter-spacing:.02em;color:var(--ink-strong);margin:0 0 28px;text-transform:uppercase; }
+        .lbk-counterpart-body { font-family:'Cormorant Garamond',serif;font-size:clamp(17px,1.4vw,21px);line-height:1.62;color:var(--ink);margin:0 0 14px; }
+        .lbk-counterpart-body em { font-style:italic;color:var(--ink-strong); }
+        .lbk-counterpart-cta { display:inline-flex;align-items:center;gap:14px;margin-top:36px;font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;text-decoration:none;padding-bottom:8px;position:relative;transition:color 280ms ease,gap 280ms ease; }
+        .lbk-counterpart-cta::after { content:'';position:absolute;left:0;bottom:0;height:1px;width:32px;background:var(--gold);transition:width 380ms cubic-bezier(.22,.61,.36,1); }
+        .lbk-counterpart-cta:hover { color:var(--gold-light);gap:22px; }
+        .lbk-counterpart-cta:hover::after { width:100%; }
+        .lbk-counterpart-arrow { display:inline-block;transition:transform 280ms ease; }
+        .lbk-counterpart-cta:hover .lbk-counterpart-arrow { transform:translateX(6px); }
       `}</style>
 
       <Link to="/shop" className="lbk-return" data-testid="lbk-return"><ArrowLeft size={14} /> RETURN</Link>
@@ -205,6 +224,32 @@ export default function LadyBossKnotPage() {
           <p style={{ fontFamily:"'Cinzel',serif",fontSize:10.5,letterSpacing:'.46em',color:'var(--ink-muted)',margin:'0 0 6px' }}>MADE TO ORDER</p>
           <p style={{ fontStyle:'italic',fontSize:15,color:'var(--ink-muted)',margin:'0 0 24px' }}>Includes matching statement chain · Made to order · Allow 3–4 weeks for production</p>
           <button type="button" className="lbk-btn" data-testid="lbk-add-to-cart" onClick={onAddToCart} disabled={isAdding}>{buttonText}</button>
+        </div>
+      </section>
+
+      {/* HIS COUNTERPART — Cross-sell to Boss Knot */}
+      <section className="lbk-counterpart" data-testid="lbk-counterpart">
+        <div className="lbk-counterpart-grid">
+          <Link to="/boss-knot" className="lbk-counterpart-img-wrap" aria-label="View Boss Knot" data-testid="lbk-counterpart-image-link">
+            <img
+              src="/boss-knot/hero.jpg"
+              alt="BOSS KNOT — his counterpart, woven mesh executive pendant."
+              className="lbk-counterpart-img"
+              loading="lazy"
+              data-testid="lbk-counterpart-image"
+            />
+          </Link>
+          <div>
+            <p className="lbk-eyebrow" data-testid="lbk-counterpart-eyebrow">HIS COUNTERPART</p>
+            <h2 className="lbk-counterpart-title" data-testid="lbk-counterpart-title">BOSS KNOT</h2>
+            <p className="lbk-counterpart-body">The original statement.</p>
+            <p className="lbk-counterpart-body"><em>Built for the room.</em></p>
+            <p className="lbk-counterpart-body"><em>Built for the arrival.</em></p>
+            <p className="lbk-counterpart-body"><em>Built for the man who never needed an introduction.</em></p>
+            <Link to="/boss-knot" className="lbk-counterpart-cta" data-testid="lbk-counterpart-cta">
+              HE WEARS IT TOO <span className="lbk-counterpart-arrow" aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 

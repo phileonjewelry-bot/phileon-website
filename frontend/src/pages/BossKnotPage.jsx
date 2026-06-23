@@ -397,6 +397,36 @@ export default function BossKnotPage() {
         .bsk-final-stanza strong { font-style: normal; font-family: 'Cinzel', serif;
           font-size: 14px; letter-spacing: 0.42em; color: var(--gold);
           display: block; margin-top: 14px; }
+        /* HER COUNTERPART — His & Hers cross-sell */
+        .bsk-counterpart { background: var(--bg-deep); border-top: 1px solid var(--rule);
+          padding: clamp(72px,8vw,120px) clamp(20px,4vw,60px); }
+        .bsk-counterpart-grid { max-width: 1180px; margin: 0 auto;
+          display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(40px,5vw,80px); align-items: center; }
+        @media (max-width:880px){ .bsk-counterpart-grid { grid-template-columns: 1fr; gap: 40px; } }
+        .bsk-counterpart-img-wrap { position: relative; aspect-ratio: 4/5; overflow: hidden;
+          background: #0a0a0a; border: 1px solid var(--rule-soft); transition: transform 600ms cubic-bezier(.22,.61,.36,1), box-shadow 600ms ease; }
+        .bsk-counterpart-img-wrap:hover { transform: translateY(-6px);
+          box-shadow: 0 32px 60px -28px rgba(212,175,55,.35), 0 0 0 1px var(--rule); }
+        .bsk-counterpart-img { width: 100%; height: 100%; object-fit: cover; display: block;
+          transition: transform 900ms cubic-bezier(.22,.61,.36,1); }
+        .bsk-counterpart-img-wrap:hover .bsk-counterpart-img { transform: scale(1.03); }
+        .bsk-counterpart-copy .bsk-eyebrow { margin: 0 0 18px; }
+        .bsk-counterpart-title { font-family: 'Playfair Display', serif; font-weight: 400;
+          font-size: clamp(36px,4.6vw,60px); line-height: 1.04; letter-spacing: .02em;
+          color: var(--ink-strong); margin: 0 0 28px; text-transform: uppercase; }
+        .bsk-counterpart-body { font-family: 'Cormorant Garamond', serif;
+          font-size: clamp(17px,1.4vw,21px); line-height: 1.62; color: var(--ink); margin: 0 0 14px; }
+        .bsk-counterpart-body em { font-style: italic; color: var(--ink-strong); }
+        .bsk-counterpart-cta { display: inline-flex; align-items: center; gap: 14px;
+          margin-top: 36px; font-family: 'Cinzel', serif; font-size: 11.5px; letter-spacing: .42em;
+          color: var(--gold); text-transform: uppercase; text-decoration: none;
+          padding-bottom: 8px; position: relative; transition: color 280ms ease, gap 280ms ease; }
+        .bsk-counterpart-cta::after { content: ''; position: absolute; left: 0; bottom: 0;
+          height: 1px; width: 32px; background: var(--gold); transition: width 380ms cubic-bezier(.22,.61,.36,1); }
+        .bsk-counterpart-cta:hover { color: var(--gold-light); gap: 22px; }
+        .bsk-counterpart-cta:hover::after { width: 100%; }
+        .bsk-counterpart-arrow { display: inline-block; transition: transform 280ms ease; }
+        .bsk-counterpart-cta:hover .bsk-counterpart-arrow { transform: translateX(6px); }
       `}</style>
 
       <Link to="/shop" className="bsk-return" data-testid="bsk-return"><ArrowLeft size={14} /> RETURN</Link>
@@ -598,6 +628,33 @@ export default function BossKnotPage() {
           <p>Not everyone gets access.</p>
           <p style={{ marginTop: 32 }} className="solid">But when the doors open — presence matters.</p>
           <p><em>Boss Knot was designed for that moment.</em></p>
+        </div>
+      </section>
+
+      {/* HER COUNTERPART — Cross-sell to Lady Boss Knot */}
+      <section className="bsk-counterpart" data-testid="bsk-counterpart">
+        <div className="bsk-counterpart-grid">
+          <Link to="/lady-boss-knot" className="bsk-counterpart-img-wrap" aria-label="View Lady Boss Knot" data-testid="bsk-counterpart-image-link">
+            <img
+              src="/lady-boss-knot/hero.jpg"
+              alt="LADY BOSS KNOT — her counterpart, woven knot pendant on Cuban-link chain."
+              className="bsk-counterpart-img"
+              loading="lazy"
+              data-testid="bsk-counterpart-image"
+            />
+          </Link>
+          <div className="bsk-counterpart-copy">
+            <p className="bsk-eyebrow" data-testid="bsk-counterpart-eyebrow">HER COUNTERPART</p>
+            <h2 className="bsk-counterpart-title" data-testid="bsk-counterpart-title">LADY BOSS KNOT</h2>
+            <p className="bsk-counterpart-body">A different expression of the same idea.</p>
+            <p className="bsk-counterpart-body"><em>The confidence.</em></p>
+            <p className="bsk-counterpart-body"><em>The structure.</em></p>
+            <p className="bsk-counterpart-body"><em>The arrival.</em></p>
+            <p className="bsk-counterpart-body">Reimagined for her.</p>
+            <Link to="/lady-boss-knot" className="bsk-counterpart-cta" data-testid="bsk-counterpart-cta">
+              SHE WEARS IT TOO <span className="bsk-counterpart-arrow" aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
