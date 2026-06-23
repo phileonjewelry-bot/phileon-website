@@ -29,6 +29,16 @@ export function SizeGuideContent({ showLogo = true }) {
         </div>
       )}
 
+      {/* OPENING NOTE */}
+      <p
+        className="text-center text-sm mb-10 max-w-[420px] mx-auto leading-relaxed"
+        style={{ color: '#3c2c1f' }}
+      >
+        The most accurate method is to have your finger measured at a local jeweller.
+        <br />
+        For at-home sizing, follow the steps below.
+      </p>
+
       {/* STEP 1 */}
       <div className="mb-12 text-center">
         <p
@@ -48,7 +58,7 @@ export function SizeGuideContent({ showLogo = true }) {
           className="text-sm leading-relaxed max-w-[360px] mx-auto"
           style={{ color: '#3c2c1f' }}
         >
-          Wrap a strip of paper or ribbon around the base of your finger.
+          Wrap a strip of paper or measuring tape around the base of your finger.
           <br />
           Mark where the ends meet.
         </p>
@@ -73,37 +83,107 @@ export function SizeGuideContent({ showLogo = true }) {
           className="text-sm leading-relaxed max-w-[360px] mx-auto"
           style={{ color: '#3c2c1f' }}
         >
-          Measure the length in millimeters.
+          Measure the length in millimetres.
           <br />
-          Match this measurement to your size.
+          Compare your measurement to the chart below.
         </p>
       </div>
 
-      {/* Size Ranges */}
+      {/* COMMON PHILEON SIZES CHART */}
       <div
-        className="text-center pt-8 space-y-3"
+        className="pt-8 pb-2"
         style={{ borderTop: '1px solid rgba(60, 44, 31, 0.18)' }}
       >
-        <p className="text-sm" style={{ color: '#3c2c1f' }}>
-          Ladies — Sizes 4–9 (half sizes)
+        <p
+          className="text-center text-[11px] tracking-[0.3em] mb-6"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          COMMON PHILEON SIZES
         </p>
-        <p className="text-sm" style={{ color: '#3c2c1f' }}>
-          Gents — Sizes 6–12 (half sizes)
+        <div className="max-w-[360px] mx-auto" data-testid="ring-size-chart">
+          <div
+            className="grid grid-cols-2 text-xs tracking-[0.18em] uppercase pb-3 mb-2"
+            style={{ color: 'rgba(60, 44, 31, 0.6)', borderBottom: '1px solid rgba(60, 44, 31, 0.18)' }}
+          >
+            <span>US Size</span>
+            <span className="text-right">Circumference (mm)</span>
+          </div>
+          {[
+            ['5', '49.3'], ['6', '51.9'], ['7', '54.4'], ['8', '57.0'], ['9', '59.5'],
+            ['10', '62.1'], ['11', '64.6'], ['12', '67.2'], ['13', '69.7'],
+          ].map(([size, mm]) => (
+            <div
+              key={size}
+              className="grid grid-cols-2 text-sm py-2"
+              style={{ color: '#3c2c1f', borderBottom: '1px solid rgba(60, 44, 31, 0.08)' }}
+              data-testid={`ring-size-row-${size}`}
+            >
+              <span>{size}</span>
+              <span className="text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>{mm}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* BEFORE YOU ORDER */}
+      <div className="mt-12">
+        <p
+          className="text-center text-[11px] tracking-[0.3em] mb-5"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          BEFORE YOU ORDER
         </p>
-        <p className="text-sm" style={{ color: '#3c2c1f' }}>
-          Custom — Available on request
+        <ul
+          className="text-sm leading-relaxed max-w-[420px] mx-auto space-y-2"
+          style={{ color: '#3c2c1f' }}
+        >
+          <li>Measure at the end of the day when fingers are at their largest.</li>
+          <li>Avoid measuring immediately after exercise.</li>
+          <li>Wider bands typically fit tighter than narrow bands.</li>
+          <li>If you are between sizes, choose the larger size.</li>
+          <li>Custom-sized pieces may not be eligible for return or exchange.</li>
+        </ul>
+      </div>
+
+      {/* NEED HELP */}
+      <div className="mt-10 text-center">
+        <p
+          className="text-[11px] tracking-[0.3em] mb-3"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          NEED HELP?
+        </p>
+        <p
+          className="text-sm leading-relaxed max-w-[420px] mx-auto"
+          style={{ color: '#3c2c1f' }}
+        >
+          Email our team before ordering if you&apos;re unsure of your size.
+        </p>
+        <p
+          className="text-sm italic leading-relaxed max-w-[420px] mx-auto mt-4"
+          style={{ color: 'rgba(60, 44, 31, 0.78)' }}
+        >
+          A properly fitted ring should slide over the knuckle with slight resistance and sit comfortably without spinning excessively.
         </p>
       </div>
 
-      {/* Notes */}
+      {/* SIGN-OFF */}
       <div
-        className="mt-10 text-center text-xs leading-relaxed space-y-1.5"
-        style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        className="mt-12 pt-8 text-center"
+        style={{ borderTop: '1px solid rgba(60, 44, 31, 0.18)' }}
       >
-        <p>Measure your finger at the end of the day.</p>
-        <p>Avoid measuring when hands are cold or warm.</p>
-        <p>If between sizes, choose the larger.</p>
-        <p>Wider rings should be worn slightly looser for comfort.</p>
+        <p
+          className="text-[10px] tracking-[0.4em] mb-1"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          PHILEON
+        </p>
+        <p
+          className="text-xs italic"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          Not Jewelry. Identity.
+        </p>
       </div>
     </div>
   );
