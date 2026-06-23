@@ -2705,6 +2705,30 @@ This is expression — under control.`,
     imageUrl: "/boss-knot/hero.jpg",
     dynamicPricing: true,
     currency: "USD",
+  },
+
+  // LADY BOSS KNOT — Ladies First · Executive Statement Pendant · The Collective
+  // Feminine counterpart to BOSS KNOT. Same 3-metal matrix. Cuban-link chain included.
+  ladyBossKnot: {
+    name: "LADY BOSS KNOT",
+    slug: "lady-boss-knot",
+    category: "pendants",
+    audience: ["ladies-first", "collective"],
+    collections: ["pendants", "ladies", "ladies-first", "collective", "the-collective", "new-arrivals", "featured"],
+    subtitle: "Executive Statement Pendant",
+    tagline: "She doesn't wear power. She ties it around her neck.",
+    priceFrom: "From $3,200 USD",
+    basePrice: 3200,
+    featured: true,
+    newArrival: true,
+    displayOrder: 3,
+    showOnHomepage: true,
+    showInCarousel: true,
+    showInCollective: true,
+    seoDescription: "LADY BOSS KNOT — sculptural necktie pendant with handwoven knot architecture, suspended from a statement Cuban-link chain. Sterling Silver, 10K Yellow Gold, or 10K White Gold. Reimagined through the lens of feminine power.",
+    imageUrl: "/lady-boss-knot/hero.jpg",
+    dynamicPricing: true,
+    currency: "USD",
   }
 
 };

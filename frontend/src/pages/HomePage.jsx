@@ -381,6 +381,12 @@ const HomePage = () => {
             subtitle: "Inspired by formalwear, influence, and the quiet confidence of people who no longer need introductions. Includes matching 18\" chain. FROM $3,200 USD"
           },
           {
+            title: "LADY BOSS KNOT",
+            image: "/lady-boss-knot/hero.jpg",
+            href: "/products/lady-boss-knot",
+            subtitle: "She doesn't wear power. She ties it around her neck. A sculptural necktie pendant reimagined through the lens of feminine power. Cuban-link chain included. FROM $3,200 USD"
+          },
+          {
             title: "UNCLE JO",
             image: "/uncle-jo/hero.jpg",
             href: "/products/uncle-jo",

@@ -78,6 +78,14 @@ LIVE_PRICING_CONFIG = {
         "gold10k_yellow": {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "gold10k_white":  {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+
+    # LADY BOSS KNOT — Ladies First · Executive Statement Pendant · The Collective
+    # Same 3-metal matrix as BOSS KNOT · feminine counterpart.
+    "ladyBossKnot": {
+        "silver":         {"lockedBasePriceCad": 3200, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_yellow": {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10k_white":  {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

@@ -75,6 +75,7 @@ const SHOP_COLLECTION_MAP = {
   'veyron-noir': 'collective',
   'rose-of-sharon': 'collective',
   'boss-knot': 'collective',
+  'lady-boss-knot': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -117,6 +118,22 @@ const CORE_PRODUCTS = [
     is_featured: true,
     category: 'pendants',
     audience: 'gentlemens-club',
+    metals: ['silver', 'yellow', 'white'],
+  },
+  {
+    id: 'lady-boss-knot',
+    name: 'LADY BOSS KNOT',
+    slug: 'lady-boss-knot',
+    materialLine: 'Executive Statement Pendant · Cuban-Link Chain Included',
+    imageUrl: '/lady-boss-knot/hero.jpg',
+    href: '/products/lady-boss-knot',
+    price_range: 'From $3,200 USD',
+    inventory_count: 1,
+    is_core: true,
+    is_new_arrival: true,
+    is_featured: true,
+    category: 'pendants',
+    audience: 'ladies',
     metals: ['silver', 'yellow', 'white'],
   },
   {

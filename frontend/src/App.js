@@ -73,6 +73,7 @@ import UncleJoPage from "@/pages/UncleJoPage";
 import InspirationVaultPage from "@/pages/InspirationVaultPage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
+import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
 import RingSizeGuidePage from "@/pages/RingSizeGuidePage";
 import CoogiDnaTagPage from "@/pages/CoogiDnaTagPage";
 import AtelierPage from "@/pages/AtelierPage";
@@ -210,6 +211,8 @@ function App() {
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />
             <Route path="/products/boss-knot" element={<BossKnotPage />} />
+            <Route path="/lady-boss-knot" element={<LadyBossKnotPage />} />
+            <Route path="/products/lady-boss-knot" element={<LadyBossKnotPage />} />
             <Route path="/ring-size-guide" element={<RingSizeGuidePage />} />
             <Route path="/size-guide" element={<RingSizeGuidePage />} />
             <Route path="/atelier" element={<AtelierPage />} />
