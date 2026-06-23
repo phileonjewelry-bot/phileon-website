@@ -110,6 +110,12 @@ export default function LadyBossKnotPage() {
         .lbk-btn:disabled { opacity:.55;cursor:not-allowed; }
         .lbk-final { background:var(--bg-deep);padding:clamp(72px,9vw,128px) clamp(20px,4vw,60px);text-align:center;border-top:1px solid var(--rule-soft); }
         .lbk-archive-line { font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(22px,2.2vw,30px);color:var(--gold-light);line-height:1.5;max-width:680px;margin:0 auto; }
+        .lbk-archive-grid { display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.6vw,22px);margin-top:36px; }
+        .lbk-archive-cell { position:relative;aspect-ratio:1/1;overflow:hidden;background:#0a0a0a;border:1px solid var(--rule-soft); }
+        .lbk-archive-cell.full { grid-column:1 / -1;aspect-ratio:16/10; }
+        .lbk-archive-cell img { width:100%;height:100%;object-fit:cover;transition:transform 900ms cubic-bezier(.22,.61,.36,1),opacity 200ms ease;display:block; }
+        .lbk-archive-cell:hover img { transform:scale(1.02); }
+        @media (max-width:640px){ .lbk-archive-grid{grid-template-columns:1fr;} .lbk-archive-cell.full{aspect-ratio:4/5;} }
       `}</style>
 
       <Link to="/shop" className="lbk-return" data-testid="lbk-return"><ArrowLeft size={14} /> RETURN</Link>
@@ -142,6 +148,22 @@ export default function LadyBossKnotPage() {
         <p className="lbk-p">Not borrowed.</p>
         <p className="lbk-p">Not inherited.</p>
         <p className="lbk-p"><em>Claimed.</em></p>
+      </section>
+
+      <section className="lbk-section" data-testid="lbk-archive">
+        <p className="lbk-eyebrow">THE ARCHIVE</p>
+        <h2 className="lbk-h2">Worn in her world.</h2>
+        <div className="lbk-archive-grid">
+          <div className="lbk-archive-cell full" data-testid="lbk-archive-cell-1">
+            <img src="/lady-boss-knot/archive-1.jpg" alt="LADY BOSS KNOT — editorial portrait, the tie reimagined as her crown." loading="lazy" />
+          </div>
+          <div className="lbk-archive-cell" data-testid="lbk-archive-cell-2">
+            <img src="/lady-boss-knot/archive-2.jpg" alt="LADY BOSS KNOT — woven knot architecture detail, sculptural close-up." loading="lazy" />
+          </div>
+          <div className="lbk-archive-cell" data-testid="lbk-archive-cell-3">
+            <img src="/lady-boss-knot/archive-3.jpg" alt="LADY BOSS KNOT — worn with intention, Cuban-link chain at the collar." loading="lazy" />
+          </div>
+        </div>
       </section>
 
       <section className="lbk-section" data-testid="lbk-composition">
