@@ -631,7 +631,7 @@ export default function BossKnotPage() {
         </div>
       </section>
 
-      {/* HER COUNTERPART — Cross-sell to Lady Boss Knot */}
+      {/* HIS COUNTERPART — Cross-sell to Lady Boss Knot (Boss Knot's pairing) */}
       <section className="bsk-counterpart" data-testid="bsk-counterpart">
         <div className="bsk-counterpart-grid">
           <Link to="/lady-boss-knot" className="bsk-counterpart-img-wrap" aria-label="View Lady Boss Knot" data-testid="bsk-counterpart-image-link">
@@ -644,7 +644,7 @@ export default function BossKnotPage() {
             />
           </Link>
           <div className="bsk-counterpart-copy">
-            <p className="bsk-eyebrow" data-testid="bsk-counterpart-eyebrow">HER COUNTERPART</p>
+            <p className="bsk-eyebrow" data-testid="bsk-counterpart-eyebrow">HIS COUNTERPART</p>
             <h2 className="bsk-counterpart-title" data-testid="bsk-counterpart-title">LADY BOSS KNOT</h2>
             <p className="bsk-counterpart-body">A different expression of the same idea.</p>
             <p className="bsk-counterpart-body"><em>The confidence.</em></p>

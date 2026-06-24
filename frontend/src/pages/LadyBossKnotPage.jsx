@@ -227,7 +227,7 @@ export default function LadyBossKnotPage() {
         </div>
       </section>
 
-      {/* HIS COUNTERPART — Cross-sell to Boss Knot */}
+      {/* HER COUNTERPART — Cross-sell to Boss Knot (Lady Boss Knot's pairing) */}
       <section className="lbk-counterpart" data-testid="lbk-counterpart">
         <div className="lbk-counterpart-grid">
           <Link to="/boss-knot" className="lbk-counterpart-img-wrap" aria-label="View Boss Knot" data-testid="lbk-counterpart-image-link">
@@ -240,7 +240,7 @@ export default function LadyBossKnotPage() {
             />
           </Link>
           <div>
-            <p className="lbk-eyebrow" data-testid="lbk-counterpart-eyebrow">HIS COUNTERPART</p>
+            <p className="lbk-eyebrow" data-testid="lbk-counterpart-eyebrow">HER COUNTERPART</p>
             <h2 className="lbk-counterpart-title" data-testid="lbk-counterpart-title">BOSS KNOT</h2>
             <p className="lbk-counterpart-body">The original statement.</p>
             <p className="lbk-counterpart-body"><em>Built for the room.</em></p>
