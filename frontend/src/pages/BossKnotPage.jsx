@@ -427,6 +427,9 @@ export default function BossKnotPage() {
         .bsk-counterpart-cta:hover::after { width: 100%; }
         .bsk-counterpart-arrow { display: inline-block; transition: transform 280ms ease; }
         .bsk-counterpart-cta:hover .bsk-counterpart-arrow { transform: translateX(6px); }
+        /* HERO VIDEO — luxury campaign film treatment */
+        .bsk-hero-video { width: 100%; height: 100%; object-fit: cover; object-position: center;
+          display: block; pointer-events: none; background: var(--bg-deep); }
       `}</style>
 
       <Link to="/shop" className="bsk-return" data-testid="bsk-return"><ArrowLeft size={14} /> RETURN</Link>
@@ -437,13 +440,30 @@ export default function BossKnotPage() {
           <div className="bsk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
             {HAS_IMAGERY ? (
               <>
-                <img
-                  key={heroImg}
-                  src={heroImg}
-                  alt={HERO_ALT}
-                  className="bsk-hero-img bsk-fade-in"
-                  data-testid="bsk-hero-img"
-                />
+                {isSilverTone ? (
+                  <img
+                    key={heroImg}
+                    src={heroImg}
+                    alt={HERO_ALT}
+                    className="bsk-hero-img bsk-fade-in"
+                    data-testid="bsk-hero-img"
+                  />
+                ) : (
+                  <video
+                    key="bsk-hero-video"
+                    src="/boss-knot/hero-video.mp4"
+                    className="bsk-hero-img bsk-hero-video bsk-fade-in"
+                    data-testid="bsk-hero-video"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    poster={HERO_IMG_GOLD}
+                    aria-label={HERO_ALT}
+                    onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
+                  />
+                )}
                 {hasUserSelected && (
                   <span
                     key={`pill-${metalChoice}`}
