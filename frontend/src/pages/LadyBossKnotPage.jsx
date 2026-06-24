@@ -146,6 +146,7 @@ export default function LadyBossKnotPage() {
           <div className="lbk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
             <video
               key="lbk-hero-video"
+              src="/lady-boss-knot/hero-video.mp4"
               className="lbk-hero-img lbk-hero-video lbk-fade-in"
               data-testid="lbk-hero-video"
               autoPlay
@@ -155,9 +156,8 @@ export default function LadyBossKnotPage() {
               preload="auto"
               poster={HERO_IMG}
               aria-label={HERO_ALT}
-            >
-              <source src="/lady-boss-knot/hero-video.mp4" type="video/mp4" />
-            </video>
+              onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
+            />
             {hasUserSelected && (
               <span key={`pill-${metalChoice}`} className="lbk-metal-pill lbk-fade-in" data-testid="lbk-metal-badge">
                 <span className={`lbk-metal-pill-dot ${dotClass}`} aria-hidden="true" />
