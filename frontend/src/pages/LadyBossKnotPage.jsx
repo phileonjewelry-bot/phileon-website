@@ -135,6 +135,8 @@ export default function LadyBossKnotPage() {
         .lbk-counterpart-cta:hover::after { width:100%; }
         .lbk-counterpart-arrow { display:inline-block;transition:transform 280ms ease; }
         .lbk-counterpart-cta:hover .lbk-counterpart-arrow { transform:translateX(6px); }
+        /* HERO VIDEO — luxury campaign film treatment */
+        .lbk-hero-video { width:100%;height:100%;object-fit:cover;object-position:center;display:block;pointer-events:none;background:var(--bg-deep); }
       `}</style>
 
       <Link to="/shop" className="lbk-return" data-testid="lbk-return"><ArrowLeft size={14} /> RETURN</Link>
@@ -142,7 +144,20 @@ export default function LadyBossKnotPage() {
       <section className="lbk-hero" data-testid="lbk-hero">
         <div className="lbk-hero-grid">
           <div className="lbk-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
-            <img key={HERO_IMG} src={HERO_IMG} alt={HERO_ALT} className="lbk-hero-img lbk-fade-in" data-testid="lbk-hero-img" />
+            <video
+              key="lbk-hero-video"
+              className="lbk-hero-img lbk-hero-video lbk-fade-in"
+              data-testid="lbk-hero-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={HERO_IMG}
+              aria-label={HERO_ALT}
+            >
+              <source src="/lady-boss-knot/hero-video.mp4" type="video/mp4" />
+            </video>
             {hasUserSelected && (
               <span key={`pill-${metalChoice}`} className="lbk-metal-pill lbk-fade-in" data-testid="lbk-metal-badge">
                 <span className={`lbk-metal-pill-dot ${dotClass}`} aria-hidden="true" />
