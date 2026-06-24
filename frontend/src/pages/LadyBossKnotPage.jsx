@@ -200,6 +200,18 @@ export default function LadyBossKnotPage() {
           <div className="lbk-archive-cell full" data-testid="lbk-archive-cell-4">
             <img src="/lady-boss-knot/archive-4.jpg" alt="LADY BOSS KNOT — close macro of the woven knot pendant suspended from the Cuban-link chain." loading="lazy" />
           </div>
+          <div className="lbk-archive-cell full" data-testid="lbk-archive-cell-5">
+            <img src="/lady-boss-knot/archive-5.jpg" alt="LADY BOSS KNOT — extreme macro of the woven knot architecture against the Cuban-link chain." loading="lazy" />
+          </div>
+          <div className="lbk-archive-cell" data-testid="lbk-archive-cell-6">
+            <img src="/lady-boss-knot/archive-6.jpg" alt="LADY BOSS KNOT — sculptural close of the engraved chevron tip, soft blue-sky bokeh." loading="lazy" />
+          </div>
+          <div className="lbk-archive-cell" data-testid="lbk-archive-cell-7">
+            <img src="/lady-boss-knot/archive-7.jpg" alt="LADY BOSS KNOT — pendant resting on a glass shelf, mirrored reflection at the base." loading="lazy" />
+          </div>
+          <div className="lbk-archive-cell full" data-testid="lbk-archive-cell-8">
+            <img src="/lady-boss-knot/archive-8.jpg" alt="LADY BOSS KNOT — complete necklace coiled on black velvet, full presentation closer." loading="lazy" />
+          </div>
         </div>
       </section>
 

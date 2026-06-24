@@ -79,10 +79,6 @@ const GOLD_GALLERY = [
   { src: "/boss-knot/archive-5.jpg",  alt: "BOSS KNOT (Gold) — close detail of weave and clasp.", span: "full" },
   { src: "/boss-knot/archive-8.jpg",  alt: "BOSS KNOT (Gold) — 18\" cable chain coiled on black silk.", span: "full" },
   { src: "/boss-knot/archive-3.jpg",  alt: "BOSS KNOT (Gold) — woven mesh tie, studio shot.", span: "half" },
-  { src: "/boss-knot/archive-18.jpg", alt: "BOSS KNOT (Gold) — complete necklace coiled on black velvet, full presentation.", span: "full" },
-  { src: "/boss-knot/archive-15.jpg", alt: "BOSS KNOT (Gold) — extreme macro of the woven knot architecture against the Cuban-link chain.", span: "full" },
-  { src: "/boss-knot/archive-16.jpg", alt: "BOSS KNOT (Gold) — sculptural close of the engraved chevron tip, blue-sky bokeh.", span: "half" },
-  { src: "/boss-knot/archive-17.jpg", alt: "BOSS KNOT (Gold) — pendant resting on a glass shelf, mirrored reflection at base.", span: "half" },
 ];
 
 export default function BossKnotPage() {
