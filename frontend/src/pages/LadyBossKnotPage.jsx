@@ -182,6 +182,9 @@ export default function LadyBossKnotPage() {
           <div className="lbk-archive-cell" data-testid="lbk-archive-cell-3">
             <img src="/lady-boss-knot/archive-3.jpg" alt="LADY BOSS KNOT — worn with intention, Cuban-link chain at the collar." loading="lazy" />
           </div>
+          <div className="lbk-archive-cell full" data-testid="lbk-archive-cell-4">
+            <img src="/lady-boss-knot/archive-4.jpg" alt="LADY BOSS KNOT — close macro of the woven knot pendant suspended from the Cuban-link chain." loading="lazy" />
+          </div>
         </div>
       </section>
 
