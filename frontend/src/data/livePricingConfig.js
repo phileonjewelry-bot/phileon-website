@@ -95,6 +95,11 @@ const livePricingConfig = {
     gold10k_white:  { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // KATRINA CASCATA — tribute earrings (placeholder pricing pending)
+  katrinaCascata: {
+    default: { lockedBasePriceCad: 1500, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

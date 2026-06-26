@@ -449,6 +449,11 @@ const HomePage = () => {
             href: "/products/monika-couture" 
           },
           { 
+            title: "KATRINA CASCATA", 
+            image: "/katrina-cascata/main.jpg", 
+            href: "/katrina-cascata" 
+          },
+          { 
             title: "TOLA II", 
             image: "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png", 
             href: "/products/tola-ii" 

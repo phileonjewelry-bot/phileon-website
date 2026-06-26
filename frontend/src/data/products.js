@@ -161,6 +161,29 @@ export const products = {
   },
 
   // ==========================================
+  // KATRINA CASCATA
+  // Tribute drop earrings — 18K Yellow Gold, hand-wound coiled cord
+  // Single-tier with PLACEHOLDER pricing (final pricing pending atelier confirmation)
+  // ==========================================
+  katrinaCascata: {
+    name: "Katrina Cascata",
+    slug: "katrina-cascata",
+    category: "earrings",
+    audience: "ladies",
+    collection: "collective",
+    weight: "Hand-wound · lightweight",
+    basePrice: 1500, // Placeholder — to be replaced when atelier confirms final pricing
+    isPlaceholderPrice: true,
+    isNewArrival: true,
+    imageUrl: "/katrina-cascata/main.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 1500,
+    },
+  },
+
+  // ==========================================
   // ALEJANDRA HEELS
   // Sculptural heel earrings with three-tier pricing
   // Fixed pricing (no dynamic gold adjustments)
