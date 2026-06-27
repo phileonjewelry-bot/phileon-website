@@ -6,10 +6,27 @@ import { useAddToCart } from "@/hooks/useAddToCart";
 // Soft sacred luxury — cream + warm gold + sand
 const HERO_IMG = "/katrina-cascata/main.jpg";
 const HERO_ALT = "KATRINA CASCATA — drop earrings, woven 18K gold cord cascading from bar to open hoop.";
-const PLACEHOLDER_PRICE = 1500; // Internal cart price (server-rounded); display reads "$XXX"
+
+const METAL_TIERS = [
+  {
+    key: "vermeil",
+    label: "Vermeil",
+    sku: "KCC-VER",
+    price: 495,
+    swatch: "linear-gradient(135deg,#f5d99a 0%,#e8c275 45%,#b9913e 100%)",
+  },
+  {
+    key: "gold10kYellow",
+    label: "10K Yellow Gold",
+    sku: "KCC-10Y",
+    price: 2950,
+    swatch: "linear-gradient(135deg,#f4d27a 0%,#d6a93a 45%,#a07514 100%)",
+  },
+];
 
 export default function KatrinaCascataPage() {
   const [scrollY, setScrollY] = useState(0);
+  const [selectedTier, setSelectedTier] = useState(METAL_TIERS[0]);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
@@ -23,16 +40,16 @@ export default function KatrinaCascataPage() {
 
   const onAddToCart = () => {
     handleAddToCart({
-      id: "katrina-cascata-18k",
-      name: "KATRINA CASCATA — 18K Yellow Gold",
-      price: PLACEHOLDER_PRICE,
+      id: `katrina-cascata-${selectedTier.key}`,
+      name: `KATRINA CASCATA — ${selectedTier.label}`,
+      price: selectedTier.price,
       productKey: "katrinaCascata",
-      tierKey: "default",
-      metal: "18K Yellow Gold",
-      sku: "KCC-18Y",
+      tierKey: selectedTier.key,
+      metal: selectedTier.label,
+      sku: selectedTier.sku,
       quantity: 1,
       image: HERO_IMG,
-    }, 1, "18K Yellow Gold");
+    }, 1, selectedTier.label);
   };
 
   return (
@@ -202,6 +219,49 @@ export default function KatrinaCascataPage() {
         }
         .kcc-add-btn:hover { background:var(--gold);color:var(--cream);transform:translateY(-2px); }
         .kcc-add-btn:disabled { opacity:.6;cursor:wait; }
+        /* CONFIGURATOR — 2 metal tiers */
+        .kcc-tiers { display:flex;justify-content:center;gap:14px;margin:0 auto 24px;flex-wrap:wrap; }
+        .kcc-tier-btn {
+          display:inline-flex;align-items:center;gap:12px;padding:14px 26px;
+          background:transparent;border:1px solid var(--rule);cursor:pointer;
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.36em;
+          color:var(--ink);text-transform:uppercase;
+          transition:all 320ms cubic-bezier(.22,.61,.36,1);
+        }
+        .kcc-tier-btn:hover { border-color:var(--gold);color:var(--gold-deep); }
+        .kcc-tier-btn[aria-pressed="true"] {
+          background:var(--cream);border-color:var(--gold);color:var(--gold-deep);
+          box-shadow:0 8px 24px -12px rgba(176,136,56,.4);
+        }
+        .kcc-tier-swatch {
+          width:14px;height:14px;border-radius:50%;
+          box-shadow:0 0 0 1px rgba(0,0,0,.06) inset,0 1px 2px rgba(0,0,0,.12);
+        }
+        .kcc-tier-price-line {
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.32em;
+          color:var(--ink-muted);text-transform:uppercase;margin:0 0 8px;
+        }
+        /* CUSTOM ATELIER */
+        .kcc-atelier { background:var(--cream);border-top:1px solid var(--rule-soft); text-align:center; }
+        .kcc-atelier-body {
+          font-family:'Cormorant Garamond',serif;font-size:clamp(17px,1.4vw,21px);
+          line-height:1.66;color:var(--ink);max-width:680px;margin:0 auto 16px;
+        }
+        .kcc-atelier-body em { font-style:italic;color:var(--ink-strong); }
+        .kcc-atelier-list {
+          list-style:none;padding:0;margin:20px auto 28px;display:inline-flex;flex-direction:column;
+          font-family:'Playfair Display',serif;font-size:18px;color:var(--ink-strong);text-align:left;
+        }
+        .kcc-atelier-list li { padding:6px 0;letter-spacing:.01em; }
+        .kcc-atelier-list li::before { content:'·';color:var(--gold);margin-right:14px; }
+        .kcc-atelier-cta {
+          display:inline-flex;align-items:center;gap:12px;
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.42em;
+          color:var(--gold-deep);text-transform:uppercase;text-decoration:none;
+          padding:14px 32px;border:1px solid var(--gold);
+          transition:background 320ms ease,color 320ms ease,gap 320ms ease;
+        }
+        .kcc-atelier-cta:hover { background:var(--gold);color:var(--cream);gap:18px; }
 
         /* FINAL WORD */
         .kcc-final {
@@ -267,10 +327,11 @@ export default function KatrinaCascataPage() {
             <p className="kcc-eyebrow">THE CRAFT</p>
             <h2 className="kcc-story-h2">Hand-wound. Unbroken.</h2>
             <dl className="kcc-craft-list">
-              <li><dt>Metal</dt><dd>18K Yellow Gold</dd></li>
-              <li><dt>Construction</dt><dd>Hand-wound coiled cord, woven bar-to-hoop drop</dd></li>
+              <li><dt>Metal</dt><dd>Vermeil &nbsp;·&nbsp; 10K Yellow Gold</dd></li>
+              <li><dt>Construction</dt><dd>Hand-wound sculptural woven design — coiled cord, bar-to-hoop drop</dd></li>
               <li><dt>Closure</dt><dd>Post with secure butterfly back</dd></li>
-              <li><dt>Fit</dt><dd>Lightweight despite density; everyday wearable</dd></li>
+              <li><dt>Dimensions</dt><dd>28.5 mm H · 16.8 mm W &nbsp;<span style={{ color: 'var(--ink-muted)' }}>(1.12" × 0.66")</span></dd></li>
+              <li><dt>Fit</dt><dd>Lightweight for everyday wear · sold as a pair</dd></li>
             </dl>
           </div>
         </div>
@@ -302,20 +363,72 @@ export default function KatrinaCascataPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA — Configurator + ADD TO CART */}
       <section className="kcc-section kcc-cta" data-testid="kcc-cta">
         <p className="kcc-cta-line">Some grace overflows.<br /><em>This one's gold.</em></p>
-        <p className="kcc-price-display" data-testid="kcc-price">$XXX USD</p>
-        <p className="kcc-price-note">Final pricing pending — placeholder while atelier confirms</p>
+
+        <p className="kcc-tier-price-line">Choose your metal</p>
+        <div className="kcc-tiers" role="radiogroup" aria-label="Choose metal" data-testid="kcc-tiers">
+          {METAL_TIERS.map((tier) => (
+            <button
+              key={tier.key}
+              type="button"
+              role="radio"
+              aria-pressed={selectedTier.key === tier.key}
+              aria-checked={selectedTier.key === tier.key}
+              onClick={() => setSelectedTier(tier)}
+              className="kcc-tier-btn"
+              data-testid={`kcc-tier-${tier.key}`}
+            >
+              <span className="kcc-tier-swatch" aria-hidden="true" style={{ background: tier.swatch }} />
+              <span>{tier.label} · ${tier.price.toLocaleString()}</span>
+            </button>
+          ))}
+        </div>
+
+        <p
+          className="kcc-price-display"
+          data-testid="kcc-price"
+          style={{ marginTop: 24, marginBottom: 8 }}
+        >
+          ${selectedTier.price.toLocaleString()} USD
+        </p>
+        <p className="kcc-price-note">{selectedTier.label} · Sold as a pair</p>
         <button
           onClick={onAddToCart}
           disabled={isAdding}
           className="kcc-add-btn"
           data-testid="kcc-add-to-cart"
-          aria-label="Add Katrina Cascata earrings to cart"
+          aria-label={`Add Katrina Cascata earrings in ${selectedTier.label} to cart`}
         >
           {buttonText || "ADD TO CART"}
         </button>
+      </section>
+
+      {/* CUSTOM ATELIER — Bespoke availability */}
+      <section className="kcc-section kcc-atelier" data-testid="kcc-atelier">
+        <p className="kcc-eyebrow">PHILEON — Custom Atelier</p>
+        <h2 className="kcc-story-h2">Made by request.</h2>
+        <p className="kcc-atelier-body">
+          Katrina Cascata is intentionally offered in only two standard editions:
+        </p>
+        <ul className="kcc-atelier-list">
+          <li>Vermeil</li>
+          <li>10K Yellow Gold</li>
+        </ul>
+        <p className="kcc-atelier-body">
+          Interested in <em>White Gold</em>, <em>Rose Gold</em>, <em>14K</em>, <em>18K</em>, or <em>Platinum</em>?
+        </p>
+        <p className="kcc-atelier-body" style={{ marginBottom: 32 }}>
+          Every Katrina Cascata can be handcrafted through the <em>PHILEON Custom Atelier</em> by special request.
+        </p>
+        <Link
+          to="/contact?subject=Katrina%20Cascata%20Custom%20Atelier"
+          className="kcc-atelier-cta"
+          data-testid="kcc-atelier-cta"
+        >
+          REQUEST A BESPOKE PAIR <span aria-hidden="true">→</span>
+        </Link>
       </section>
 
       {/* FINAL WORD */}

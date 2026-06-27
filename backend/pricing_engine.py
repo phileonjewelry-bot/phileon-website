@@ -87,7 +87,8 @@ LIVE_PRICING_CONFIG = {
         "gold10k_white":  {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     "katrinaCascata": {
-        "default": {"lockedBasePriceCad": 1500, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "vermeil":       {"lockedBasePriceCad": 495,  "metalType": "Vermeil", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "gold10kYellow": {"lockedBasePriceCad": 2950, "metalType": "10K",     "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},

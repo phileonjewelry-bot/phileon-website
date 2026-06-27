@@ -95,9 +95,10 @@ const livePricingConfig = {
     gold10k_white:  { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
-  // KATRINA CASCATA — tribute earrings (placeholder pricing pending)
+  // KATRINA CASCATA — tribute earrings (Vermeil + 10K Yellow Gold)
   katrinaCascata: {
-    default: { lockedBasePriceCad: 1500, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    vermeil:         { lockedBasePriceCad: 495,  metalType: "Vermeil", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    gold10kYellow:   { lockedBasePriceCad: 2950, metalType: "10K",     weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // MONIKA COUTURE

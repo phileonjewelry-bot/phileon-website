@@ -171,15 +171,16 @@ export const products = {
     category: "earrings",
     audience: "ladies",
     collection: "collective",
-    weight: "Hand-wound · lightweight",
-    basePrice: 1500, // Placeholder — to be replaced when atelier confirms final pricing
-    isPlaceholderPrice: true,
+    weight: "Hand-wound · lightweight · sold as a pair",
+    basePrice: 495, // Vermeil entry point
     isNewArrival: true,
     imageUrl: "/katrina-cascata/main.jpg",
+    dimensions: { height_mm: 28.5, width_mm: 16.8 },
 
     dynamicPricing: false,
     pricing: {
-      default: 1500,
+      vermeil: 495,
+      gold10kYellow: 2950,
     },
   },
 
