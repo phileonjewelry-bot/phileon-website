@@ -185,6 +185,28 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — FIRST DISCOVERY
+  // Curated design study · Rose Gold Vermeil · Limited Release
+  // Not part of the PHILEON Fine Jewelry collection
+  // ==========================================
+  inspirationVaultFirstDiscovery: {
+    name: "First Discovery",
+    slug: "inspiration-vault",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Limited release · plated",
+    basePrice: 75,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/first-discovery/hero.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 75,
+    },
+  },
+
+  // ==========================================
   // ALEJANDRA HEELS
   // Sculptural heel earrings with three-tier pricing
   // Fixed pricing (no dynamic gold adjustments)

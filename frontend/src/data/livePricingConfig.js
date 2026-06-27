@@ -101,6 +101,11 @@ const livePricingConfig = {
     gold10kYellow:   { lockedBasePriceCad: 2950, metalType: "10K",     weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — FIRST DISCOVERY (limited release, plated)
+  inspirationVaultFirstDiscovery: {
+    default: { lockedBasePriceCad: 75, metalType: "Vermeil", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },
