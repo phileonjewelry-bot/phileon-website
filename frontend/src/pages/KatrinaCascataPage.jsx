@@ -281,14 +281,23 @@ export default function KatrinaCascataPage() {
         <p className="kcc-eyebrow" style={{ textAlign: 'center' }}>THE ARCHIVE</p>
         <h2 className="kcc-story-h2" style={{ textAlign: 'center' }}>Caught mid-fall.</h2>
         <div className="kcc-archive-grid">
-          <div className="kcc-archive-cell full" data-testid="kcc-archive-cell-1">
-            <img src="/katrina-cascata/detail-1.jpg" alt="KATRINA CASCATA — angled studio macro of both earrings, woven gold bar dropping into open hoop." loading="lazy" />
+          <div className="kcc-archive-cell full" data-testid="kcc-archive-cell-lifestyle-1">
+            <img src="/katrina-cascata/lifestyle-1.jpg" alt="KATRINA CASCATA — worn through laughter in a softly-lit lounge, the woven gold drop catching warm light." loading="lazy" />
+          </div>
+          <div className="kcc-archive-cell" data-testid="kcc-archive-cell-lifestyle-2">
+            <img src="/katrina-cascata/lifestyle-2.jpg" alt="KATRINA CASCATA — worn on the grand staircase, woven gold drop against the wrought-iron banister." loading="lazy" />
           </div>
           <div className="kcc-archive-cell" data-testid="kcc-archive-cell-2">
             <img src="/katrina-cascata/detail-2.jpg" alt="KATRINA CASCATA — pair presented in a black velvet jewellery case." loading="lazy" />
           </div>
+          <div className="kcc-archive-cell full" data-testid="kcc-archive-cell-1">
+            <img src="/katrina-cascata/detail-1.jpg" alt="KATRINA CASCATA — angled studio macro of both earrings, woven gold bar dropping into open hoop." loading="lazy" />
+          </div>
           <div className="kcc-archive-cell" data-testid="kcc-archive-cell-3">
             <img src="/katrina-cascata/detail-4.jpg" alt="KATRINA CASCATA — close-up of the open coiled-wreath hoop." loading="lazy" />
+          </div>
+          <div className="kcc-archive-cell" data-testid="kcc-archive-cell-4">
+            <img src="/katrina-cascata/detail-3.jpg" alt="KATRINA CASCATA — macro of the woven 18K gold cord, coiled rope detail." loading="lazy" />
           </div>
         </div>
       </section>
