@@ -11,6 +11,16 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "liaison",
+    title: "Liaison",
+    subtitle: "Infinity Link Earrings",
+    price: 50,
+    href: "/liaison",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/liaison/hero.jpg",
+    releasedAt: "2026-02-14",
+  },
+  {
     slug: "noir-cadence",
     title: "Noir Cadence",
     subtitle: "Black Stone Pavé-Set Hoop Earrings",

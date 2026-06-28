@@ -96,6 +96,9 @@ LIVE_PRICING_CONFIG = {
     "inspirationVaultNoirCadence": {
         "default": {"lockedBasePriceCad": 100, "metalType": "Black Plated", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+    "inspirationVaultLiaison": {
+        "default": {"lockedBasePriceCad": 50, "metalType": "Gold-Plated Brass", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

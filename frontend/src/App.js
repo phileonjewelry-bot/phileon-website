@@ -73,6 +73,7 @@ import UncleJoPage from "@/pages/UncleJoPage";
 import InspirationVaultPage from "@/pages/InspirationVaultPage";
 import NoirCadencePage from "@/pages/NoirCadencePage";
 import FirstDiscoveryPage from "@/pages/FirstDiscoveryPage";
+import LiaisonPage from "@/pages/LiaisonPage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
 import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
@@ -214,6 +215,8 @@ function App() {
             <Route path="/inspiration-vault/first-discovery" element={<FirstDiscoveryPage />} />
             <Route path="/inspiration-vault/noir-cadence" element={<NoirCadencePage />} />
             <Route path="/noir-cadence" element={<NoirCadencePage />} />
+            <Route path="/liaison" element={<LiaisonPage />} />
+            <Route path="/inspiration-vault/liaison" element={<LiaisonPage />} />
             <Route path="/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />

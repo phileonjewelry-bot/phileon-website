@@ -111,6 +111,11 @@ const livePricingConfig = {
     default: { lockedBasePriceCad: 100, metalType: "Black Plated", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — LIAISON (gold-plated brass infinity-link earrings)
+  inspirationVaultLiaison: {
+    default: { lockedBasePriceCad: 50, metalType: "Gold-Plated Brass", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

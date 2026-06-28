@@ -228,6 +228,27 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — LIAISON
+  // Infinity Link Earrings · Lead-Free Gold-Plated Brass
+  // ==========================================
+  inspirationVaultLiaison: {
+    name: "Liaison",
+    slug: "liaison",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Lightweight · everyday wear",
+    basePrice: 50,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/liaison/hero.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 50,
+    },
+  },
+
+  // ==========================================
   // ALEJANDRA HEELS
   // Sculptural heel earrings with three-tier pricing
   // Fixed pricing (no dynamic gold adjustments)
