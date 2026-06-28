@@ -185,12 +185,12 @@ export const products = {
   },
 
   // ==========================================
-  // INSPIRATION VAULT — FIRST DISCOVERY
+  // INSPIRATION VAULT — PRIMA WAVE (formerly "First Discovery")
   // Curated design study · Rose Gold Vermeil · Limited Release
   // Not part of the PHILEON Fine Jewelry collection
   // ==========================================
   inspirationVaultFirstDiscovery: {
-    name: "First Discovery",
+    name: "Prima Wave",
     slug: "inspiration-vault",
     category: "earrings",
     audience: "ladies",

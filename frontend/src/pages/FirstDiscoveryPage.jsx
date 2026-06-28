@@ -6,7 +6,7 @@ import { useAddToCart } from "@/hooks/useAddToCart";
 const HERO_IMG = "/inspiration-vault/first-discovery/hero.jpg";
 const WORN_IMG = "/inspiration-vault/first-discovery/worn.jpg";
 const STUDIO_IMG = "/inspiration-vault/first-discovery/studio.jpg";
-const PRODUCT_NAME = "First Discovery";
+const PRODUCT_NAME = "Prima Wave";
 const PRICE = 75;
 
 export default function FirstDiscoveryPage() {
@@ -14,7 +14,7 @@ export default function FirstDiscoveryPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
-    document.title = "FIRST DISCOVERY — Inspiration Vault · PHILEON";
+    document.title = "PRIMA WAVE — Inspiration Vault · PHILEON";
     const onScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -23,7 +23,7 @@ export default function FirstDiscoveryPage() {
   const onAddToCart = () => {
     handleAddToCart({
       id: "inspiration-vault-first-discovery",
-      name: "FIRST DISCOVERY — Rose Gold Vermeil",
+      name: "PRIMA WAVE — Rose Gold Vermeil",
       price: PRICE,
       productKey: "inspirationVaultFirstDiscovery",
       tierKey: "default",
@@ -196,12 +196,12 @@ export default function FirstDiscoveryPage() {
       {/* HERO */}
       <section className="iv-hero" data-testid="iv-hero" style={{ opacity: 0.5 + heroParallax * 0.5 }}>
         <div className="iv-hero-img-wrap">
-          <img src={HERO_IMG} alt="FIRST DISCOVERY — woven chevron rose-gold vermeil drop earrings on dark studio backdrop." className="iv-hero-img" data-testid="iv-hero-img" />
+          <img src={HERO_IMG} alt="PRIMA WAVE — woven rose-gold vermeil drop earrings on dark studio backdrop." className="iv-hero-img" data-testid="iv-hero-img" />
         </div>
         <div>
           <p className="iv-eyebrow" data-testid="iv-eyebrow">Inspiration Vault</p>
-          <h1 className="iv-h1" data-testid="iv-title">First Discovery</h1>
-          <p className="iv-subhead" data-testid="iv-subhead">The beginning of something beautiful.</p>
+          <h1 className="iv-h1" data-testid="iv-title">Prima Wave</h1>
+          <p className="iv-subhead" data-testid="iv-subhead">The first movement.</p>
         </div>
       </section>
 
@@ -209,24 +209,25 @@ export default function FirstDiscoveryPage() {
       <section className="iv-section iv-intro d1" data-testid="iv-intro">
         <p className="iv-eyebrow">Introduction</p>
         <div className="iv-intro-body">
-          <p className="lead">Every collection begins with a single idea.</p>
-          <p>The Inspiration Vault is home to curated discoveries, plated pieces, design studies and creative experiments that help shape the PHILEON universe.</p>
+          <p className="lead">An elegant composition of flowing woven forms.</p>
+          <p>Prima Wave captures the beauty of continuous motion through sculptural design. Every curve transitions effortlessly into the next, creating a silhouette that feels soft, modern, and timeless.</p>
+          <p>Finished in warm Rose Gold Vermeil, Prima Wave brings everyday elegance to the Inspiration Vault — designed to inspire, created to be worn.</p>
         </div>
-        <p className="iv-intro-tagline">Accessible in price.<br />Unlimited in imagination.</p>
+        <p className="iv-intro-tagline">Designed to inspire.<br />Created to be worn.</p>
       </section>
 
       {/* FEATURED PIECE */}
       <section className="iv-section iv-featured d2" data-testid="iv-featured">
         <div className="iv-featured-grid">
           <div className="iv-featured-img-wrap">
-            <img src={WORN_IMG} alt="FIRST DISCOVERY — worn editorial portrait, warm side-light through linen curtains." className="iv-featured-img" loading="lazy" />
+            <img src={WORN_IMG} alt="PRIMA WAVE — worn editorial portrait, warm side-light through linen curtains." className="iv-featured-img" loading="lazy" />
           </div>
           <div>
             <p className="iv-featured-meta">Featured Piece · Inspiration Vault</p>
             <h2 className="iv-h2" data-testid="iv-featured-title">{PRODUCT_NAME}</h2>
-            <p className="iv-featured-sub">A design study, kept exactly as it first appeared.</p>
+            <p className="iv-featured-sub">Rose Gold Vermeil Earrings — Woven Drop Silhouette.</p>
             <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'19px', lineHeight:1.7, color:'var(--ink)', margin:0 }}>
-              Generous space. Editorial light. Held the way a curator holds a first sketch — not a product to be sold, but a story to be remembered.
+              A study in continuous motion. Every curve transitions effortlessly into the next — soft, modern, and timeless.
             </p>
           </div>
         </div>
@@ -235,12 +236,12 @@ export default function FirstDiscoveryPage() {
       {/* INSPIRATION STORY */}
       <section className="iv-section d3" data-testid="iv-story">
         <p className="iv-eyebrow">Inspiration Story</p>
-        <h2 className="iv-h2">Before silver. Before gold.</h2>
+        <h2 className="iv-h2">The first movement.</h2>
         <div className="iv-story-body">
-          <p>Some pieces don't enter the collection. <em>They precede it.</em></p>
-          <p>Before the atelier, before the case, before the first commission ever shipped — there was the woven chevron. A texture caught between architecture and tide. A study in repetition that quietly became the visual signature for what would later become COURONNE, the LADY BOSS KNOT, the cascade.</p>
-          <p>First Discovery is the artefact of that beginning. Rose gold vermeil over the original sculptural form, kept exactly as it first appeared on the workbench.</p>
-          <p><em>A reminder that every heirloom begins as a question.</em></p>
+          <p>Every collection begins with a single idea. <em>Prima Wave is ours.</em></p>
+          <p>An elegant composition of flowing woven forms, Prima Wave captures the beauty of continuous motion through sculptural design. Every curve transitions effortlessly into the next, creating a silhouette that feels soft, modern, and timeless.</p>
+          <p>Finished in warm Rose Gold Vermeil, Prima Wave brings everyday elegance to the Inspiration Vault — designed to inspire, created to be worn.</p>
+          <p><em>The first wave. The first movement. The beginning of the archive.</em></p>
         </div>
       </section>
 
@@ -248,17 +249,17 @@ export default function FirstDiscoveryPage() {
       <section className="iv-section iv-details d4" data-testid="iv-details">
         <div className="iv-details-grid">
           <div className="iv-details-img-wrap">
-            <img src={STUDIO_IMG} alt="FIRST DISCOVERY — clean studio top-down detail." className="iv-details-img" loading="lazy" />
+            <img src={STUDIO_IMG} alt="PRIMA WAVE — clean studio top-down detail." className="iv-details-img" loading="lazy" />
           </div>
           <div>
-            <p className="iv-eyebrow">Product Details</p>
-            <h2 className="iv-h2">A study in light.</h2>
+            <p className="iv-eyebrow">Specifications</p>
+            <h2 className="iv-h2">A study in motion.</h2>
             <dl className="iv-details-list">
-              <li><dt>Metal</dt><dd>Rose Gold Vermeil</dd></li>
+              <li><dt>Material</dt><dd>Rose Gold Vermeil</dd></li>
               <li><dt>Finish</dt><dd>High Polish</dd></li>
-              <li><dt>Style</dt><dd>Statement Earrings</dd></li>
-              <li><dt>Construction</dt><dd>Textured woven architecture</dd></li>
-              <li><dt>Availability</dt><dd>Limited Release</dd></li>
+              <li><dt>Style</dt><dd>Woven Drop Earrings</dd></li>
+              <li><dt>Collection</dt><dd>Inspiration Vault</dd></li>
+              <li><dt>Price</dt><dd>$75 USD</dd></li>
             </dl>
           </div>
         </div>
@@ -268,13 +269,13 @@ export default function FirstDiscoveryPage() {
       <section className="iv-section iv-cta" data-testid="iv-cta">
         <p className="iv-eyebrow">Pricing</p>
         <p className="iv-price-display" data-testid="iv-price">${PRICE} USD</p>
-        <p className="iv-price-note">Designed as an Inspiration Vault release.</p>
+        <p className="iv-price-note">An Inspiration Vault release — accessible, intentional, timeless.</p>
         <button
           onClick={onAddToCart}
           disabled={isAdding}
           className="iv-add-btn"
           data-testid="iv-add-to-cart"
-          aria-label="Add First Discovery to cart"
+          aria-label="Add Prima Wave to cart"
         >
           {buttonText || "ADD TO CART"}
         </button>
@@ -283,8 +284,8 @@ export default function FirstDiscoveryPage() {
       {/* FINAL EDITORIAL QUOTE */}
       <section className="iv-final" data-testid="iv-final-quote">
         <p className="iv-final-line">
-          Some ideas become heirlooms.<br />
-          <em>Others simply inspire what comes next.</em>
+          The first wave is always the one you remember.<br />
+          <em>Prima Wave is ours.</em>
         </p>
       </section>
     </div>

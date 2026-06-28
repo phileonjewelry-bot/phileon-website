@@ -213,6 +213,8 @@ function App() {
             <Route path="/inspiration-vault" element={<InspirationVaultPage />} />
             <Route path="/first-discovery" element={<FirstDiscoveryPage />} />
             <Route path="/inspiration-vault/first-discovery" element={<FirstDiscoveryPage />} />
+            <Route path="/prima-wave" element={<FirstDiscoveryPage />} />
+            <Route path="/inspiration-vault/prima-wave" element={<FirstDiscoveryPage />} />
             <Route path="/inspiration-vault/noir-cadence" element={<NoirCadencePage />} />
             <Route path="/noir-cadence" element={<NoirCadencePage />} />
             <Route path="/liaison" element={<LiaisonPage />} />

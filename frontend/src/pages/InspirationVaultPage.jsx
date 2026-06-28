@@ -32,10 +32,10 @@ const VAULT_PIECES = [
   },
   {
     slug: "first-discovery",
-    title: "First Discovery",
+    title: "Prima Wave",
     subtitle: "Rose Gold Vermeil Earrings",
     price: 75,
-    href: "/first-discovery",
+    href: "/prima-wave",
     heroVideo: null, // No video yet — gracefully falls back to poster image
     posterImage: "/inspiration-vault/first-discovery/hero.jpg",
     releasedAt: "2026-02-12",
