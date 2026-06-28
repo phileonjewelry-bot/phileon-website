@@ -106,6 +106,11 @@ const livePricingConfig = {
     default: { lockedBasePriceCad: 75, metalType: "Vermeil", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — NOIR CADENCE (black-plated pavé hoops)
+  inspirationVaultNoirCadence: {
+    default: { lockedBasePriceCad: 100, metalType: "Black Plated", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

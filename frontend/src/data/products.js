@@ -207,6 +207,27 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — NOIR CADENCE
+  // Black Stone Pavé-Set Hoop Earrings
+  // ==========================================
+  inspirationVaultNoirCadence: {
+    name: "Noir Cadence",
+    slug: "noir-cadence",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Lightweight · everyday wear",
+    basePrice: 100,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/noir-cadence/hero.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 100,
+    },
+  },
+
+  // ==========================================
   // ALEJANDRA HEELS
   // Sculptural heel earrings with three-tier pricing
   // Fixed pricing (no dynamic gold adjustments)

@@ -71,6 +71,7 @@ import WynettePalettePage from "@/pages/WynettePalettePage";
 import VeyronNoirPage from "@/pages/VeyronNoirPage";
 import UncleJoPage from "@/pages/UncleJoPage";
 import InspirationVaultPage from "@/pages/InspirationVaultPage";
+import NoirCadencePage from "@/pages/NoirCadencePage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
 import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
@@ -208,6 +209,8 @@ function App() {
             <Route path="/products/uncle-jo" element={<UncleJoPage />} />
             <Route path="/vault" element={<InspirationVaultPage />} />
             <Route path="/inspiration-vault" element={<InspirationVaultPage />} />
+            <Route path="/inspiration-vault/noir-cadence" element={<NoirCadencePage />} />
+            <Route path="/noir-cadence" element={<NoirCadencePage />} />
             <Route path="/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />
