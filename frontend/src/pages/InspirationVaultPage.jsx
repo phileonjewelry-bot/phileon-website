@@ -11,6 +11,16 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "noir-tide",
+    title: "Noir Tide",
+    subtitle: "Black & White Pavé Sculptural Earrings",
+    price: 100,
+    href: "/noir-tide",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/noir-tide/hero.jpg",
+    releasedAt: "2026-02-15",
+  },
+  {
     slug: "liaison",
     title: "Liaison",
     subtitle: "Infinity Link Earrings",

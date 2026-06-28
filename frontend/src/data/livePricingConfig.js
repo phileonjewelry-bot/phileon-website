@@ -116,6 +116,11 @@ const livePricingConfig = {
     default: { lockedBasePriceCad: 50, metalType: "Gold-Plated Brass", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — NOIR TIDE (white-rhodium plated sculptural pavé drop earrings)
+  inspirationVaultNoirTide: {
+    default: { lockedBasePriceCad: 100, metalType: "White Rhodium Plated Brass", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

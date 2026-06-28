@@ -99,6 +99,9 @@ LIVE_PRICING_CONFIG = {
     "inspirationVaultLiaison": {
         "default": {"lockedBasePriceCad": 50, "metalType": "Gold-Plated Brass", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+    "inspirationVaultNoirTide": {
+        "default": {"lockedBasePriceCad": 100, "metalType": "White Rhodium Plated Brass", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

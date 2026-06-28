@@ -185,6 +185,27 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — NOIR TIDE
+  // Sculptural pavé drop earrings · White Rhodium Plated Brass · Black & White CZ
+  // ==========================================
+  inspirationVaultNoirTide: {
+    name: "Noir Tide",
+    slug: "inspiration-vault",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Inspiration Vault · plated",
+    basePrice: 100,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/noir-tide/hero.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 100,
+    },
+  },
+
+  // ==========================================
   // INSPIRATION VAULT — PRIMA WAVE (formerly "First Discovery")
   // Curated design study · Rose Gold Vermeil · Limited Release
   // Not part of the PHILEON Fine Jewelry collection
