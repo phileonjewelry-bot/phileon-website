@@ -1,291 +1,308 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { useAddToCart } from "@/hooks/useAddToCart";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
-const HERO_IMG = "/inspiration-vault/first-discovery/hero.jpg";
-const WORN_IMG = "/inspiration-vault/first-discovery/worn.jpg";
-const STUDIO_IMG = "/inspiration-vault/first-discovery/studio.jpg";
-const PRODUCT_NAME = "First Discovery";
-const PRICE = 75;
+// ────────────────────────────────────────────────────────────────────────────────
+// VAULT MANIFEST — single source of truth for the archive index.
+// Future Inspiration Vault pieces append HERE, newest first.
+// The index auto-renders any piece with: title · subtitle · price · href ·
+//   posterImage · heroVideo? (optional · falls back to posterImage when absent).
+// No layout changes required for new releases.
+// ────────────────────────────────────────────────────────────────────────────────
+const VAULT_PIECES = [
+  {
+    slug: "noir-cadence",
+    title: "Noir Cadence",
+    subtitle: "Black Stone Pavé-Set Hoop Earrings",
+    price: 100,
+    href: "/noir-cadence",
+    heroVideo: "/inspiration-vault/noir-cadence/hero-video.mp4",
+    posterImage: "/inspiration-vault/noir-cadence/hero.jpg",
+    releasedAt: "2026-02-13",
+  },
+  {
+    slug: "first-discovery",
+    title: "First Discovery",
+    subtitle: "Rose Gold Vermeil Earrings",
+    price: 75,
+    href: "/first-discovery",
+    heroVideo: null, // No video yet — gracefully falls back to poster image
+    posterImage: "/inspiration-vault/first-discovery/hero.jpg",
+    releasedAt: "2026-02-12",
+  },
+];
 
 export default function InspirationVaultPage() {
-  const [scrollY, setScrollY] = useState(0);
-  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
-
   useEffect(() => {
-    document.title = "FIRST DISCOVERY — Inspiration Vault · PHILEON";
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    document.title = "INSPIRATION VAULT — The Archive · PHILEON";
   }, []);
 
-  const onAddToCart = () => {
-    handleAddToCart({
-      id: "inspiration-vault-first-discovery",
-      name: "FIRST DISCOVERY — Rose Gold Vermeil",
-      price: PRICE,
-      productKey: "inspirationVaultFirstDiscovery",
-      tierKey: "default",
-      metal: "Rose Gold Vermeil",
-      sku: "IV-FD-RGV",
-      quantity: 1,
-      image: HERO_IMG,
-    }, 1, "Rose Gold Vermeil");
-  };
-
-  const heroParallax = Math.max(0, 1 - scrollY / 600);
+  // Sort newest first by released date — future-proof for chronological appends
+  const pieces = [...VAULT_PIECES].sort((a, b) => (a.releasedAt < b.releasedAt ? 1 : -1));
 
   return (
-    <div className="iv-page" data-testid="inspiration-vault-page">
+    <div className="iv-index" data-testid="inspiration-vault-index">
       <style>{`
-        .iv-page {
-          --bg:#f9f1e6;--bg-deep:#f1e3cf;--ivory:#fcf6ec;--champagne:#e8d4b3;
-          --ink:#3d2f24;--ink-strong:#1f140d;--ink-muted:#a08868;
-          --rose:#b87355;--rose-light:#d8a890;--rose-deep:#8e4f33;
-          --rule:rgba(184,115,85,.32);--rule-soft:rgba(184,115,85,.14);
-          background:linear-gradient(180deg,var(--ivory) 0%,var(--bg) 38%,var(--bg-deep) 100%);
-          color:var(--ink);font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden;
+        .iv-index {
+          --bg:#050505;--bg-soft:#0a0908;--ink:#cfc8be;--ink-strong:#f4ede0;
+          --ink-muted:#7a716a;--gold:#c8a24a;--gold-deep:#8b7339;
+          --rule:rgba(200,162,74,.34);--rule-soft:rgba(200,162,74,.12);
+          background:var(--bg);color:var(--ink);
+          font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden;
         }
-        .iv-page .iv-return {
+        .iv-index .iv-return {
           display:inline-flex;align-items:center;gap:10px;padding:18px 26px;
           font-family:'Cinzel',serif;font-size:11px;letter-spacing:.42em;
           color:var(--ink-muted);text-decoration:none;text-transform:uppercase;
           transition:color 280ms ease,gap 280ms ease;
         }
-        .iv-page .iv-return:hover { color:var(--rose-deep);gap:16px; }
-        .iv-page .iv-eyebrow {
-          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.46em;
-          color:var(--rose-deep);text-transform:uppercase;margin:0 0 18px;
+        .iv-index .iv-return:hover { color:var(--gold);gap:16px; }
+        .iv-eyebrow {
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.48em;
+          color:var(--gold);text-transform:uppercase;margin:0 0 24px;
         }
-        .iv-page .iv-h1 {
-          font-family:'Playfair Display',serif;font-weight:400;
-          font-size:clamp(48px,7.2vw,100px);line-height:.98;letter-spacing:.018em;
-          color:var(--ink-strong);margin:0 0 22px;text-transform:uppercase;
-        }
-        .iv-page .iv-subhead {
-          font-family:'Playfair Display',serif;font-style:italic;font-weight:400;
-          font-size:clamp(20px,2vw,28px);color:var(--rose-deep);margin:0;line-height:1.45;
-        }
-        .iv-section {
-          max-width:1180px;margin:0 auto;padding:clamp(72px,8vw,140px) clamp(20px,4vw,60px);
-          opacity:0;transform:translateY(20px);animation:ivFade 1s cubic-bezier(.22,.61,.36,1) forwards;
-        }
-        @keyframes ivFade { to { opacity:1;transform:translateY(0); } }
-        .iv-section.d1 { animation-delay:.15s; } .iv-section.d2 { animation-delay:.28s; }
-        .iv-section.d3 { animation-delay:.4s; }  .iv-section.d4 { animation-delay:.52s; }
+        /* HERO — museum entrance */
         .iv-hero {
-          position:relative;padding:clamp(40px,6vw,90px) clamp(20px,4vw,60px) clamp(60px,8vw,120px);
-          display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(48px,6vw,96px);
-          align-items:center;max-width:1320px;margin:0 auto;
+          position:relative;text-align:center;
+          padding:clamp(100px,12vw,200px) clamp(20px,4vw,60px) clamp(80px,10vw,160px);
+          max-width:1080px;margin:0 auto;
+          opacity:0;transform:translateY(20px);
+          animation:ivFade 1.2s cubic-bezier(.22,.61,.36,1) forwards;
         }
-        @media (max-width:880px){ .iv-hero { grid-template-columns:1fr;gap:48px; } }
-        .iv-hero-img-wrap {
-          position:relative;aspect-ratio:1/1;overflow:hidden;background:#0a0807;
-          border:1px solid var(--rule-soft);box-shadow:0 36px 100px -32px rgba(184,115,85,.4);
+        .iv-hero::before {
+          content:'';position:absolute;left:50%;top:30%;
+          width:880px;height:880px;transform:translateX(-50%);
+          background:radial-gradient(50% 50% at 50% 50%,rgba(200,162,74,.10) 0%,transparent 70%);
+          filter:blur(70px);pointer-events:none;z-index:0;
         }
-        .iv-hero-img-wrap::after {
-          content:'';position:absolute;inset:-50px;
-          background:radial-gradient(60% 60% at 50% 50%,rgba(216,168,144,.5) 0%,transparent 70%);
-          z-index:0;filter:blur(50px);pointer-events:none;
+        .iv-hero > * { position:relative;z-index:1; }
+        @keyframes ivFade { to { opacity:1;transform:translateY(0); } }
+        .iv-h1 {
+          font-family:'Playfair Display',serif;font-weight:400;
+          font-size:clamp(48px,7vw,104px);line-height:1.0;letter-spacing:.012em;
+          color:var(--ink-strong);margin:0 0 44px;
         }
-        .iv-hero-img {
-          position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block;
-          animation:ivRise 1.6s cubic-bezier(.22,.61,.36,1) both;
-        }
-        @keyframes ivRise { from{transform:translateY(56px);opacity:0;} to{transform:translateY(0);opacity:1;} }
-        .iv-intro { text-align:center; }
-        .iv-intro-body p {
+        .iv-h1 em { font-style:italic;color:var(--gold); }
+        .iv-hero-body p {
           font-family:'Cormorant Garamond',serif;font-size:clamp(19px,1.55vw,24px);
-          line-height:1.7;color:var(--ink);margin:0 auto 18px;max-width:720px;
+          line-height:1.78;color:var(--ink);margin:0 auto 14px;max-width:680px;
         }
-        .iv-intro-body p.lead {
+        .iv-hero-body p.lead {
           font-family:'Playfair Display',serif;font-style:italic;
-          font-size:clamp(22px,2.2vw,30px);color:var(--rose-deep);margin-bottom:30px;
+          font-size:clamp(22px,2.2vw,28px);color:var(--gold);margin-bottom:28px;
         }
-        .iv-intro-tagline {
-          font-family:'Cinzel',serif;font-size:12px;letter-spacing:.42em;
-          color:var(--ink-muted);text-transform:uppercase;margin-top:36px;line-height:2;
-        }
-        .iv-featured {
-          background:linear-gradient(180deg,var(--bg) 0%,var(--ivory) 100%);
-          border-top:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);
-        }
-        .iv-featured-grid {
-          display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,80px);align-items:center;
-        }
-        @media (max-width:880px){ .iv-featured-grid { grid-template-columns:1fr;gap:36px; } }
-        .iv-featured-img-wrap {
-          aspect-ratio:3/4;overflow:hidden;background:var(--ivory);border:1px solid var(--rule-soft);
-          box-shadow:0 28px 60px -28px rgba(184,115,85,.25);
-        }
-        .iv-featured-img { width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.2s cubic-bezier(.22,.61,.36,1); }
-        .iv-featured-img-wrap:hover .iv-featured-img { transform:scale(1.02); }
-        .iv-featured-meta {
+        .iv-hero-tag {
           font-family:'Cinzel',serif;font-size:11px;letter-spacing:.42em;
-          color:var(--rose-deep);text-transform:uppercase;margin-bottom:14px;
+          color:var(--ink-muted);text-transform:uppercase;margin-top:40px;line-height:2;
         }
-        .iv-h2 {
-          font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(34px,4.6vw,58px);
-          line-height:1.05;color:var(--ink-strong);margin:0 0 12px;text-transform:uppercase;letter-spacing:.018em;
+
+        /* DIVIDER */
+        .iv-divider {
+          display:flex;align-items:center;justify-content:center;gap:30px;
+          max-width:1080px;margin:0 auto;padding:0 clamp(20px,4vw,60px) 60px;
+          opacity:0;animation:ivFade 1s ease .25s forwards;
         }
-        .iv-featured-sub {
-          font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(18px,1.6vw,22px);
-          color:var(--ink-muted);margin:0 0 28px;
+        .iv-divider-rule {
+          flex:1;height:1px;
+          background:linear-gradient(90deg,transparent 0%,var(--gold) 50%,transparent 100%);
+          opacity:.5;
         }
-        .iv-story-body p {
-          font-family:'Cormorant Garamond',serif;font-size:clamp(18px,1.5vw,22px);
-          line-height:1.72;color:var(--ink);margin:0 0 22px;max-width:680px;
+        .iv-divider-label {
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.5em;
+          color:var(--gold);text-transform:uppercase;white-space:nowrap;
         }
-        .iv-story-body p em { font-style:italic;color:var(--ink-strong); }
-        .iv-details { background:var(--ivory);border-top:1px solid var(--rule-soft); }
-        .iv-details-grid {
-          display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(40px,5vw,80px);align-items:start;
+
+        /* COLLECTION GRID */
+        .iv-collection {
+          max-width:1400px;margin:0 auto;
+          padding:clamp(40px,5vw,80px) clamp(20px,4vw,60px) clamp(120px,12vw,200px);
+          display:grid;grid-template-columns:1fr;gap:clamp(80px,10vw,160px);
         }
-        @media (max-width:880px){ .iv-details-grid { grid-template-columns:1fr;gap:36px; } }
-        .iv-details-img-wrap {
-          aspect-ratio:4/5;overflow:hidden;background:var(--bg-deep);border:1px solid var(--rule-soft);
+
+        /* CARD */
+        .iv-card {
+          display:block;text-decoration:none;color:inherit;
+          opacity:0;transform:translateY(28px);
+          animation:ivFade 1.1s cubic-bezier(.22,.61,.36,1) forwards;
         }
-        .iv-details-img { width:100%;height:100%;object-fit:cover;display:block; }
-        .iv-details-list { list-style:none;padding:0;margin:24px 0 0; }
-        .iv-details-list li {
-          display:grid;grid-template-columns:140px 1fr;gap:18px;padding:14px 0;
-          border-bottom:1px solid var(--rule-soft);
+        .iv-card.idx-1 { animation-delay:.42s; }
+        .iv-card.idx-2 { animation-delay:.58s; }
+        .iv-card.idx-3 { animation-delay:.74s; }
+        .iv-card.idx-4 { animation-delay:.9s; }
+        .iv-card-media {
+          position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;
+          background:#020100;border:1px solid var(--rule-soft);
+          transition:box-shadow 700ms ease;
         }
-        .iv-details-list dt {
-          font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.36em;
-          color:var(--rose-deep);text-transform:uppercase;padding-top:2px;
+        .iv-card:hover .iv-card-media {
+          box-shadow:0 40px 100px -32px rgba(200,162,74,.4),0 0 0 1px var(--rule);
         }
-        .iv-details-list dd { margin:0;font-size:17px;line-height:1.5;color:var(--ink); }
-        .iv-cta { text-align:center; }
-        .iv-price-display {
-          font-family:'Cinzel',serif;font-size:22px;letter-spacing:.32em;
-          color:var(--ink-strong);margin:0 0 10px;
+        .iv-card-video,
+        .iv-card-img {
+          position:relative;z-index:1;width:100%;height:100%;object-fit:cover;
+          object-position:center;display:block;
+          transition:transform .7s ease;
+          pointer-events:none;
         }
-        .iv-price-note {
-          font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;
-          color:var(--ink-muted);margin:0 0 38px;
+        .iv-card:hover .iv-card-video,
+        .iv-card:hover .iv-card-img { transform:scale(1.03); }
+        .iv-card-media::after {
+          content:'';position:absolute;inset:-40px;
+          background:radial-gradient(60% 60% at 50% 50%,rgba(200,162,74,.0) 0%,transparent 70%);
+          z-index:0;filter:blur(50px);pointer-events:none;
+          transition:background 700ms ease;
         }
-        .iv-add-btn {
-          display:inline-flex;align-items:center;justify-content:center;gap:12px;
-          padding:18px 64px;border:1.5px solid var(--rose);background:transparent;
-          font-family:'Cinzel',serif;font-size:12px;letter-spacing:.42em;
-          color:var(--rose-deep);text-transform:uppercase;cursor:pointer;
-          transition:background 380ms ease,color 380ms ease,border-color 380ms ease,transform 280ms ease;
+        .iv-card:hover .iv-card-media::after {
+          background:radial-gradient(60% 60% at 50% 50%,rgba(200,162,74,.28) 0%,transparent 70%);
         }
-        .iv-add-btn:hover { background:var(--rose);color:var(--ivory);transform:translateY(-2px); }
-        .iv-add-btn:disabled { opacity:.6;cursor:wait; }
-        .iv-final {
-          text-align:center;padding:clamp(80px,9vw,140px) clamp(20px,4vw,60px);
-          background:var(--ivory);border-top:1px solid var(--rule);
+        .iv-card-meta {
+          display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;
+          padding:32px clamp(8px,1vw,16px) 0;
         }
-        .iv-final-line {
+        .iv-card-title-block .iv-card-eyebrow {
+          font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.46em;
+          color:var(--gold);text-transform:uppercase;margin:0 0 10px;
+        }
+        .iv-card-title {
+          font-family:'Playfair Display',serif;font-weight:400;
+          font-size:clamp(36px,4.6vw,64px);line-height:1.04;letter-spacing:.012em;
+          color:var(--ink-strong);margin:0 0 10px;text-transform:uppercase;
+          position:relative;display:inline-block;padding-bottom:8px;
+        }
+        .iv-card-title::after {
+          content:'';position:absolute;left:0;bottom:0;
+          height:1px;width:0;background:var(--gold);
+          transition:width .7s cubic-bezier(.22,.61,.36,1);
+        }
+        .iv-card:hover .iv-card-title::after { width:100%; }
+        .iv-card-subtitle {
+          font-family:'Playfair Display',serif;font-style:italic;
+          font-size:clamp(18px,1.7vw,22px);color:var(--ink-muted);margin:0;
+        }
+        .iv-card-side {
+          text-align:right;
+          display:flex;flex-direction:column;align-items:flex-end;gap:18px;
+        }
+        .iv-card-price {
+          font-family:'Cinzel',serif;font-size:14px;letter-spacing:.32em;
+          color:var(--ink-strong);
+        }
+        .iv-card-cta {
+          display:inline-flex;align-items:center;gap:10px;
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.42em;
+          color:var(--gold);text-transform:uppercase;
+          opacity:0;transform:translateX(-6px);
+          transition:opacity .55s ease,transform .55s ease,gap .35s ease;
+        }
+        .iv-card:hover .iv-card-cta { opacity:1;transform:translateX(0);gap:16px; }
+
+        @media (max-width:680px){
+          .iv-card-meta { grid-template-columns:1fr;gap:18px;padding-top:24px; }
+          .iv-card-side { text-align:left;align-items:flex-start; }
+        }
+
+        /* FINAL QUOTE */
+        .iv-quote {
+          text-align:center;padding:clamp(100px,12vw,180px) clamp(20px,4vw,60px);
+          border-top:1px solid var(--rule-soft);background:#020100;
+        }
+        .iv-quote-text {
           font-family:'Playfair Display',serif;font-style:italic;font-weight:400;
-          font-size:clamp(24px,2.8vw,38px);line-height:1.5;color:var(--rose-deep);
-          max-width:720px;margin:0 auto;
+          font-size:clamp(22px,2.6vw,34px);line-height:1.5;color:var(--gold);
+          max-width:780px;margin:0 auto 22px;
         }
+        .iv-quote-attr {
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.46em;
+          color:var(--ink-muted);text-transform:uppercase;
+        }
+
         @media (prefers-reduced-motion: reduce){
-          .iv-section,.iv-hero-img { animation:none !important;transform:none !important;opacity:1 !important; }
+          .iv-hero,.iv-divider,.iv-card { animation:none !important;transform:none !important;opacity:1 !important; }
+          .iv-card:hover .iv-card-video,.iv-card:hover .iv-card-img { transform:none; }
         }
       `}</style>
 
-      <Link to="/" className="iv-return" data-testid="iv-return">
+      <Link to="/" className="iv-return" data-testid="iv-index-return">
         <ArrowLeft size={14} /> RETURN
       </Link>
 
       {/* HERO */}
-      <section className="iv-hero" data-testid="iv-hero" style={{ opacity: 0.5 + heroParallax * 0.5 }}>
-        <div className="iv-hero-img-wrap">
-          <img src={HERO_IMG} alt="FIRST DISCOVERY — woven chevron rose-gold vermeil drop earrings on dark studio backdrop." className="iv-hero-img" data-testid="iv-hero-img" />
+      <section className="iv-hero" data-testid="iv-index-hero">
+        <p className="iv-eyebrow" data-testid="iv-index-eyebrow">Inspiration Vault</p>
+        <h1 className="iv-h1" data-testid="iv-index-title">
+          The Archive Is <em>Growing.</em>
+        </h1>
+        <div className="iv-hero-body">
+          <p className="lead">Not every design begins as a collection.</p>
+          <p>Some begin as an idea worth preserving.</p>
+          <p>The Inspiration Vault houses ready-to-wear Phileon creations — pieces released simply because they deserved to exist.</p>
+          <p>Every addition expands the archive.</p>
         </div>
-        <div>
-          <p className="iv-eyebrow" data-testid="iv-eyebrow">Inspiration Vault</p>
-          <h1 className="iv-h1" data-testid="iv-title">First Discovery</h1>
-          <p className="iv-subhead" data-testid="iv-subhead">The beginning of something beautiful.</p>
-        </div>
+        <p className="iv-hero-tag">No countdowns. &nbsp;·&nbsp; No pressure. &nbsp;·&nbsp; Just inspiration.</p>
       </section>
 
-      {/* INTRO */}
-      <section className="iv-section iv-intro d1" data-testid="iv-intro">
-        <p className="iv-eyebrow">Introduction</p>
-        <div className="iv-intro-body">
-          <p className="lead">Every collection begins with a single idea.</p>
-          <p>The Inspiration Vault is home to curated discoveries, plated pieces, design studies and creative experiments that help shape the PHILEON universe.</p>
-        </div>
-        <p className="iv-intro-tagline">Accessible in price.<br />Unlimited in imagination.</p>
+      {/* DIVIDER */}
+      <div className="iv-divider" aria-hidden="true">
+        <span className="iv-divider-rule"></span>
+        <span className="iv-divider-label">The Collection</span>
+        <span className="iv-divider-rule"></span>
+      </div>
+
+      {/* COLLECTION */}
+      <section className="iv-collection" data-testid="iv-collection">
+        {pieces.map((piece, idx) => (
+          <Link
+            key={piece.slug}
+            to={piece.href}
+            className={`iv-card idx-${idx + 1}`}
+            data-testid={`iv-card-${piece.slug}`}
+            aria-label={`Enter ${piece.title} piece`}
+          >
+            <div className="iv-card-media">
+              {piece.heroVideo ? (
+                <video
+                  src={piece.heroVideo}
+                  className="iv-card-video"
+                  data-testid={`iv-card-${piece.slug}-video`}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  controls={false}
+                  poster={piece.posterImage}
+                  aria-hidden="true"
+                  onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
+                />
+              ) : (
+                <img
+                  src={piece.posterImage}
+                  alt={`${piece.title} — ${piece.subtitle}`}
+                  className="iv-card-img"
+                  loading="lazy"
+                  data-testid={`iv-card-${piece.slug}-img`}
+                />
+              )}
+            </div>
+            <div className="iv-card-meta">
+              <div className="iv-card-title-block">
+                <p className="iv-card-eyebrow">Inspiration Vault</p>
+                <h2 className="iv-card-title" data-testid={`iv-card-${piece.slug}-title`}>{piece.title}</h2>
+                <p className="iv-card-subtitle">{piece.subtitle}</p>
+              </div>
+              <div className="iv-card-side">
+                <span className="iv-card-price" data-testid={`iv-card-${piece.slug}-price`}>${piece.price} USD</span>
+                <span className="iv-card-cta">Enter Piece <ArrowRight size={14} aria-hidden="true" /></span>
+              </div>
+            </div>
+          </Link>
+        ))}
       </section>
 
-      {/* FEATURED PIECE */}
-      <section className="iv-section iv-featured d2" data-testid="iv-featured">
-        <div className="iv-featured-grid">
-          <div className="iv-featured-img-wrap">
-            <img src={WORN_IMG} alt="FIRST DISCOVERY — worn editorial portrait, warm side-light through linen curtains." className="iv-featured-img" loading="lazy" />
-          </div>
-          <div>
-            <p className="iv-featured-meta">Featured Piece · Inspiration Vault</p>
-            <h2 className="iv-h2" data-testid="iv-featured-title">{PRODUCT_NAME}</h2>
-            <p className="iv-featured-sub">A design study, kept exactly as it first appeared.</p>
-            <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'19px', lineHeight:1.7, color:'var(--ink)', margin:0 }}>
-              Generous space. Editorial light. Held the way a curator holds a first sketch — not a product to be sold, but a story to be remembered.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* INSPIRATION STORY */}
-      <section className="iv-section d3" data-testid="iv-story">
-        <p className="iv-eyebrow">Inspiration Story</p>
-        <h2 className="iv-h2">Before silver. Before gold.</h2>
-        <div className="iv-story-body">
-          <p>Some pieces don't enter the collection. <em>They precede it.</em></p>
-          <p>Before the atelier, before the case, before the first commission ever shipped — there was the woven chevron. A texture caught between architecture and tide. A study in repetition that quietly became the visual signature for what would later become COURONNE, the LADY BOSS KNOT, the cascade.</p>
-          <p>First Discovery is the artefact of that beginning. Rose gold vermeil over the original sculptural form, kept exactly as it first appeared on the workbench.</p>
-          <p><em>A reminder that every heirloom begins as a question.</em></p>
-        </div>
-      </section>
-
-      {/* PRODUCT DETAILS */}
-      <section className="iv-section iv-details d4" data-testid="iv-details">
-        <div className="iv-details-grid">
-          <div className="iv-details-img-wrap">
-            <img src={STUDIO_IMG} alt="FIRST DISCOVERY — clean studio top-down detail." className="iv-details-img" loading="lazy" />
-          </div>
-          <div>
-            <p className="iv-eyebrow">Product Details</p>
-            <h2 className="iv-h2">A study in light.</h2>
-            <dl className="iv-details-list">
-              <li><dt>Metal</dt><dd>Rose Gold Vermeil</dd></li>
-              <li><dt>Finish</dt><dd>High Polish</dd></li>
-              <li><dt>Style</dt><dd>Statement Earrings</dd></li>
-              <li><dt>Construction</dt><dd>Textured woven architecture</dd></li>
-              <li><dt>Availability</dt><dd>Limited Release</dd></li>
-            </dl>
-          </div>
-        </div>
-      </section>
-
-      {/* PRICING + ADD TO CART */}
-      <section className="iv-section iv-cta" data-testid="iv-cta">
-        <p className="iv-eyebrow">Pricing</p>
-        <p className="iv-price-display" data-testid="iv-price">${PRICE} USD</p>
-        <p className="iv-price-note">Designed as an Inspiration Vault release.</p>
-        <button
-          onClick={onAddToCart}
-          disabled={isAdding}
-          className="iv-add-btn"
-          data-testid="iv-add-to-cart"
-          aria-label="Add First Discovery to cart"
-        >
-          {buttonText || "ADD TO CART"}
-        </button>
-      </section>
-
-      {/* FINAL EDITORIAL QUOTE */}
-      <section className="iv-final" data-testid="iv-final-quote">
-        <p className="iv-final-line">
-          Some ideas become heirlooms.<br />
-          <em>Others simply inspire what comes next.</em>
-        </p>
+      {/* BOTTOM QUOTE */}
+      <section className="iv-quote" data-testid="iv-index-quote">
+        <p className="iv-quote-text">“The archive grows one idea at a time.”</p>
+        <p className="iv-quote-attr">— PHILEON</p>
       </section>
     </div>
   );
