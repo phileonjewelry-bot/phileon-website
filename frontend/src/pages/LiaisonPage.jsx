@@ -4,10 +4,12 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
 const HERO_IMG = "/inspiration-vault/liaison/hero.jpg";
+const HERO_VIDEO = "/inspiration-vault/liaison/hero-video.mp4";
 const LIFESTYLE_IMG = "/inspiration-vault/liaison/lifestyle.jpg";
 const INBOX_IMG = "/inspiration-vault/liaison/in-box.jpg";
 const PACKAGING_IMG = "/inspiration-vault/liaison/packaging.jpg";
 const BUST_IMG = "/inspiration-vault/liaison/bust.jpg";
+const FLATLAY_IMG = "/inspiration-vault/liaison/flatlay.jpg";
 const PRODUCT_NAME = "Liaison";
 const PRICE = 50;
 
@@ -17,6 +19,7 @@ const GALLERY = [
   { src: INBOX_IMG,     span: "half", alt: "LIAISON — real product in black presentation box, top-down view." },
   { src: PACKAGING_IMG, span: "full", alt: "LIAISON — Phileon branded packaging with product alongside the logo box." },
   { src: BUST_IMG,      span: "half", alt: "LIAISON — black display bust showing the earrings worn at scale." },
+  { src: FLATLAY_IMG,   span: "half", alt: "LIAISON — overhead flat-lay composition, infinity-link earrings staged with linen and warm light." },
 ];
 
 export default function LiaisonPage() {
@@ -190,7 +193,20 @@ export default function LiaisonPage() {
       {/* HERO */}
       <section className="lia-hero" data-testid="lia-hero" style={{ opacity: 0.5 + Math.max(0, 1 - scrollY / 600) * 0.5 }}>
         <div className="lia-hero-media">
-          <img src={HERO_IMG} alt="LIAISON — editorial hero render against warm marble + black velvet." className="lia-hero-img" data-testid="lia-hero-img" />
+          <video
+            src={HERO_VIDEO}
+            className="lia-hero-img"
+            data-testid="lia-hero-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            controls={false}
+            poster={HERO_IMG}
+            aria-hidden="true"
+            onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
+          />
         </div>
         <div>
           <p className="lia-eyebrow" data-testid="lia-eyebrow">Inspiration Vault</p>
