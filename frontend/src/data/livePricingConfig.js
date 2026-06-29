@@ -121,6 +121,11 @@ const livePricingConfig = {
     default: { lockedBasePriceCad: 100, metalType: "White Rhodium Plated Brass", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — PRISMATIC LAUREL (rhodium-plated alloy · multicolour emerald-cut CZ)
+  inspirationVaultPrismaticLaurel: {
+    default: { lockedBasePriceCad: 70, metalType: "Rhodium-Plated Alloy", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

@@ -185,6 +185,27 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — PRISMATIC LAUREL
+  // Sculptural drop earrings · Rhodium-Plated Alloy · Multicolour Emerald-Cut CZ
+  // ==========================================
+  inspirationVaultPrismaticLaurel: {
+    name: "Prismatic Laurel",
+    slug: "inspiration-vault",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Inspiration Vault · plated",
+    basePrice: 70,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/prismatic-laurel/hero.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 70,
+    },
+  },
+
+  // ==========================================
   // INSPIRATION VAULT — NOIR TIDE
   // Sculptural pavé drop earrings · White Rhodium Plated Brass · Black & White CZ
   // ==========================================

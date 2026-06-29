@@ -11,6 +11,16 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "prismatic-laurel",
+    title: "Prismatic Laurel",
+    subtitle: "Multicolour Emerald-Cut Sculptural Earrings",
+    price: 70,
+    href: "/prismatic-laurel",
+    heroVideo: "/inspiration-vault/prismatic-laurel/hero-video.mp4",
+    posterImage: "/inspiration-vault/prismatic-laurel/hero.jpg",
+    releasedAt: "2026-02-16",
+  },
+  {
     slug: "noir-tide",
     title: "Noir Tide",
     subtitle: "Black & White Pavé Sculptural Earrings",
