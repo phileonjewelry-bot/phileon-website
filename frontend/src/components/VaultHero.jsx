@@ -138,6 +138,28 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
           margin: 0;
           line-height: 1.45;
         }
+        .iv-product-hero-scarcity {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          margin: 18px auto 0;
+          padding: 7px 14px;
+          border: 1px solid rgba(200,162,74,.32);
+          font-family: 'Cinzel', serif;
+          font-size: 10px;
+          letter-spacing: .42em;
+          color: rgba(200,162,74,.78);
+          text-transform: uppercase;
+          background: rgba(0,0,0,.35);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+        }
+        .iv-product-hero-scarcity::before {
+          content: '';
+          width: 6px; height: 6px; border-radius: 50%;
+          background: #c8a24a;
+          box-shadow: 0 0 8px rgba(200,162,74,.6);
+        }
         @media (prefers-reduced-motion: reduce) {
           .iv-product-hero-image { animation: none; }
           .iv-product-hero-image,
@@ -177,6 +199,11 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
           {eyebrow && <p className="iv-product-hero-eyebrow" data-testid="iv-product-hero-eyebrow">{eyebrow}</p>}
           {title && <h1 className="iv-product-hero-title" data-testid="iv-product-hero-title">{title}</h1>}
           {subhead && <p className="iv-product-hero-subhead" data-testid="iv-product-hero-subhead">{subhead}</p>}
+          <div>
+            <span className="iv-product-hero-scarcity" data-testid="iv-product-hero-scarcity">
+              Available until the Vault closes.
+            </span>
+          </div>
         </div>
       )}
     </section>

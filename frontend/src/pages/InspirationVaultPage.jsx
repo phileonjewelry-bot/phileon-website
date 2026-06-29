@@ -51,7 +51,7 @@ const VAULT_PIECES = [
     subtitle: "Infinity Link Earrings",
     price: 50,
     href: "/liaison",
-    heroVideo: null,
+    heroVideo: "/inspiration-vault/liaison/hero-video.mp4",
     posterImage: "/inspiration-vault/liaison/hero.jpg",
     releasedAt: "2026-02-14",
     category: "Earrings",
@@ -278,6 +278,35 @@ export default function InspirationVaultPage() {
         .iv-card:hover .iv-card-media::after {
           background:radial-gradient(60% 60% at 50% 50%,rgba(200,162,74,.28) 0%,transparent 70%);
         }
+        /* EDITORIAL FILM badge — only on cards with motion/video assets */
+        .iv-card-film-badge {
+          position:absolute;top:14px;right:14px;z-index:3;
+          display:inline-flex;align-items:center;gap:7px;
+          padding:6px 10px 6px 9px;
+          background:rgba(0,0,0,.55);
+          border:1px solid rgba(200,162,74,.45);
+          backdrop-filter:blur(6px);
+          -webkit-backdrop-filter:blur(6px);
+          font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:.32em;
+          color:var(--gold);text-transform:uppercase;
+          opacity:.62;
+          transition:opacity 420ms ease,border-color 420ms ease,background 420ms ease;
+          pointer-events:none;
+        }
+        .iv-card:hover .iv-card-film-badge {
+          opacity:1;
+          border-color:rgba(200,162,74,.85);
+          background:rgba(0,0,0,.7);
+        }
+        .iv-card-film-glyph {
+          width:7px;height:8px;
+          clip-path:polygon(0 0,100% 50%,0 100%);
+          background:var(--gold);
+          flex-shrink:0;
+        }
+        @media (max-width:520px){
+          .iv-card-film-badge { font-size:8.5px;padding:5px 8px;letter-spacing:.28em; }
+        }
         .iv-card-meta {
           display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;
           padding:32px clamp(8px,1vw,16px) 0;
@@ -422,6 +451,16 @@ export default function InspirationVaultPage() {
                 loading="lazy"
                 data-testid={`iv-card-${piece.slug}-img`}
               />
+              {piece.heroVideo && (
+                <span
+                  className="iv-card-film-badge"
+                  data-testid={`iv-card-${piece.slug}-film-badge`}
+                  aria-label="Editorial film inside the product page"
+                >
+                  <span className="iv-card-film-glyph" aria-hidden="true" />
+                  Editorial Film
+                </span>
+              )}
             </div>
             <div className="iv-card-meta">
               <div className="iv-card-title-block">
