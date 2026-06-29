@@ -115,6 +115,11 @@ export default function InspirationVaultPage() {
           font-family:'Cinzel',serif;font-size:11px;letter-spacing:.42em;
           color:var(--ink-muted);text-transform:uppercase;margin-top:40px;line-height:2;
         }
+        .iv-hero-signature {
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;
+          color:var(--gold);text-align:center;margin:1.5rem auto 0;
+          font-weight:400;font-style:normal;
+        }
 
         /* DIVIDER */
         .iv-divider {
@@ -258,6 +263,7 @@ export default function InspirationVaultPage() {
           <p>They&rsquo;re the pieces that inspired mine.</p>
           <p>Instead of collecting dust on a shelf, they&rsquo;re being released to inspire someone else&mdash;or to become the perfect finishing touch to an already amazing outfit.</p>
         </div>
+        <p className="iv-hero-signature" data-testid="iv-curator-signature">— Curated by Phill Wilson</p>
         <p className="iv-hero-tag">No countdowns. &nbsp;·&nbsp; No pressure. &nbsp;·&nbsp; Just inspiration.</p>
       </section>
 
