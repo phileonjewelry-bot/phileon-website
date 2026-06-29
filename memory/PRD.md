@@ -1,59 +1,105 @@
-# PHILEON — Luxury Jewelry Platform (PRD)
+# PHILEON — Luxury Jewelry Platform
+
+> *The project has moved beyond building pages. Current development focuses on refining the experience.*
+
+---
 
 ## Original Problem Statement
-High-end, cinematic, editorial e-commerce for bespoke jewelry. Strict sitewide page rhythm: SEE → UNDERSTAND → CHOOSE → BUY (Hero → Intro → Archive Gallery → Composition/Specs → Configurator → ADD TO CART → Final Word). Sitewide dynamic pricing computed from CAD base, displayed strictly in USD. Typography: Playfair Display, Cinzel, Cormorant Garamond.
+High-end, cinematic, editorial e-commerce for bespoke jewelry. Strict sitewide page rhythm:
+**SEE → UNDERSTAND → CHOOSE → BUY** (Hero → Intro → Archive Gallery → Composition/Specs → Configurator → ADD TO CART → Final Word).
+Sitewide dynamic pricing computed from CAD base, displayed strictly in USD. Typography: Playfair Display · Cinzel · Cormorant Garamond.
 
-## Core Rules
-- **Sitewide Page Order** (non-negotiable): Hero → Editorial/Intro → Archive Gallery → Specs → Configurator → Add to Cart → Final Word. Gallery NEVER below Configurator.
-- **Pricing Sync**: Any tier/SKU change must mirror in BOTH `/app/frontend/src/data/livePricingConfig.js` AND `/app/backend/pricing_engine.py`.
-- **Video Codecs**: Playwright headless cannot decode H.264 MP4 → ignore black-frame test artifacts when `ffprobe` confirms valid encoding.
+---
 
-## Product Pages (Bespoke)
-LADY JAY, COURONNE, CYPHER, RHYTHM MESH, BLESSED, BATTENTI DELLA VILLA, GENT, STACKRATS, WYNETTE'S PALETTE, VEYRON NOIR, NERVATURA.
+## ✅ Completed (Do Not Redesign Without Explicit Request)
 
-## Architecture
-- Frontend: `/app/frontend/src/pages/` (bespoke per-product pages)
-- Pricing config (FE): `/app/frontend/src/data/livePricingConfig.js`
-- Pricing validator (BE): `/app/backend/pricing_engine.py`
-- Catalog: `/app/frontend/src/data/products.js` + `/app/frontend/src/pages/ShopDropPage.jsx`
+- **Ladies First** — bespoke product pages (Wynette's Palette, Lady Boss Knot, Annie Rose, La Marva, Monika Couture, Alejandra Heels, Rosaria, Désir Corset, Forme Cuff, Cypher, Trace, Bound, Apex, Homage, DRAPE, Le Cocktail de Jessica, Nervatura, The Grand Dame, The Carapace, Battenti della Villa, Stackrats, Lady Jay, Lisa)
+- **The Gentleman's Club** — Uncle Jo, Veyron Noir, Boss Knot, Cypher, Il Morso del Re, La Bête, Blessed, COOGI I, Galatians 6:14, Tola II, PTP Cuff, Rhythm Mesh, Midweek, Gent, Porta Aurea, COOGI DNA Tag, The True Vine, The Don Gorgon, Prise de Couronne
+- **The Collective** — cross-audience editorial pieces
+- **Bamburgh Circle** — collector enclave (Bamburgh, Lady Bamburgh)
+- **Sacred Collection** — Rose of Sharon, Galatians 6:14, Corinthians 15:14, The True Vine, Blessed
+- **Inspiration Vault** — archival "found, not created" curatorial mode:
+  - Category nav (All · Earrings · Rings · Bangles & Bracelets · Pendants & Necklaces)
+  - Universal `VaultHero` (image → 1.7s hold → crossfade → looping muted video; graceful image-only fallback; museum sizing `object-fit: contain`, 85vh stage)
+  - Editorial Film badge on cards with motion assets
+  - Scarcity line "Available until the Vault closes." in every product page
+  - Curator signature ("— Curated by Phill Wilson")
+  - Pieces: Prima Wave · Noir Cadence · Liaison · Noir Tide · Prismatic Laurel · Viridian Teardrops
+- **Shop Catalog Consolidation** (Single Source of Truth) — `catalogProducts` array + deep `products` object both live in `/app/frontend/src/data/products.js`. `ShopDropPage.jsx` reduced 1,454 → 689 lines.
 
-## CHANGELOG
-- 2026-02-13 — **NEW PAGE — INSPIRATION VAULT · FIRST DISCOVERY** (`/inspiration-vault`, `/vault`): A separate **NOT-fine-jewelry** archive page for curated inspiration pieces, plated jewelry, prototypes, design studies. Distinct warm artistic identity — **ivory / champagne / rose-gold palette** (different from Phileon fine-jewelry noir or Katrina cream/sand). Sections per spec: RETURN → Hero (image rise + radial rose glow + parallax fade) → Introduction *"Every collection begins with a single idea…"* → Featured Piece (worn editorial portrait + meta) → Inspiration Story *"Before silver. Before gold."* (links the woven chevron to COURONNE / Lady Boss Knot lineage) → Product Details (Metal · Finish · Style · Construction · Availability) → Pricing **$75 USD · "Designed as an Inspiration Vault release."** → **ADD TO CART** (functional) → Final Editorial Quote *"Some ideas become heirlooms. Others simply inspire what comes next."*. Typography: Cinzel + Playfair + Cormorant. Subtle fade-ins only · `prefers-reduced-motion` respected. **No SALE language, no countdowns, no discount badges, no percentage labels.** Assets: hero (1024×1024 dark studio macro), worn (lifestyle portrait), studio (overhead detail), in-box (Phileon box). Pricing engines wired: `inspirationVaultFirstDiscovery.default = $75`; cart valid (server $50-quantizes to $100, within $100 tolerance, cart accepts $75 client price). Routes pre-registered. **No existing PHILEON Fine Jewelry products affected.**
-- 2026-02-13 — **KATRINA CASCATA — Real pricing + dimensions + Custom Atelier section**: Replaced placeholder pricing ($XXX / $1500) with **2-metal configurator** — Vermeil $495 + 10K Yellow Gold $2,950 (live swatch pills, gold-gradient dots, aria-pressed state). Pricing synced across `livePricingConfig.js`, `pricing_engine.py`, `products.js`, page UI, and shop card. Cart validation: Vermeil tolerated within $5 of server's $50-quantized $500 (within $100 tolerance); 10K Yellow Gold diff $0 ✓. Craft spec list updated with **Dimensions 28.5 mm H × 16.8 mm W (1.12" × 0.66")** + "Sold as a pair". New **PHILEON Custom Atelier** section ("Made by request") added above Final Word — explains the two-edition policy + bespoke CTA linking to `/contact?subject=Katrina%20Cascata%20Custom%20Atelier`. Shop card `price_range` reads "From $495".
-- 2026-02-13 — **KATRINA CASCATA — 2 lifestyle frames added (worn editorial)**: Added `/katrina-cascata/lifestyle-1.jpg` (joy-lit laughing portrait in softly-lit lounge — full-width opener) and `/katrina-cascata/lifestyle-2.jpg` (worn on grand staircase against wrought-iron banister). New archive rhythm: lifestyle-1 full → lifestyle-2 + detail-2 half/half → detail-1 full-width studio macro → detail-4 + detail-3 closing pair. Archive cell count: 3 → 6. Lifestyle shots lead the editorial narrative — "grace caught mid-fall, worn in life".
-- 2026-02-13 — **NEW PRODUCT — KATRINA CASCATA** (Tribute Drop Earrings · Ladies First → Earrings · Collective): Created bespoke `/katrina-cascata` page (`KatrinaCascataPage.jsx`) in soft sacred luxury palette (cream + warm gold + sand) — distinct from Boss Knot's noir. Sections: Hero (image rise + radial gold glow + center cascade thread animation) → Scripture *"Out of his heart will flow rivers of living water — John 7:38"* → For Katrina story → The Craft (4-spec list) → Archive (3 detail shots) → CTA *"Some grace overflows. This one's gold."* + price "$XXX USD" + "Final pricing pending" + **ADD TO CART (functional)** → Final Word. Cinzel/Playfair/Cormorant typography; `prefers-reduced-motion` respected. Assets: `main.jpg` + 4 details. Wired into `products.js`, `ShopDropPage.jsx` (Ladies → Earrings card with `is_new: true`), `HomePage.jsx` carousel, `App.js` routes. Pricing: `katrinaCascata.default = $1500 CAD` synced across `livePricingConfig.js` + `pricing_engine.py`; cart validation tested `valid: true, difference: 0.0`. **No existing products affected** (Boss Knot, Lady Boss Knot, Rose of Sharon, Uncle Jo, Veyron Noir, Wynette, DRAPE all untouched).
-- 2026-02-13 — **Gallery shots — MOVED from Boss Knot → Lady Boss Knot (correction)**: The 4 most recent product macros (originally placed in Boss Knot's GOLD_GALLERY) were Lady Boss Knot product shots. Removed `archive-15/16/17/18` entries from `BossKnotPage.jsx` (back to 10 cells); moved & renamed files: `/boss-knot/archive-15.jpg→/lady-boss-knot/archive-5.jpg`, `…-16.jpg→…/archive-6.jpg`, `…-17.jpg→…/archive-7.jpg`, `…-18.jpg→…/archive-8.jpg`. Appended 4 new cells to `LadyBossKnotPage.jsx` archive with full/half/half/full rhythm. Lady Boss Knot gallery: 4 → 8 cells.
-- 2026-02-13 — **Hero Video — MOVED from Boss Knot → Lady Boss Knot (correction)**: The campaign film was originally implemented on Boss Knot in error. Reverted `BossKnotPage.jsx` to the original static `<img>` hero (no video). Moved asset `/boss-knot/hero-video.mp4` → `/lady-boss-knot/hero-video.mp4`. Added the looping campaign-film treatment to `LadyBossKnotPage.jsx` with all required attributes (`autoPlay`, `muted`, `loop`, `playsInline`, `preload="auto"`, no controls / progress / fullscreen, `object-fit: cover`, center focus). Poster fallback wired to existing `/lady-boss-knot/hero.jpg`. Hero copy, configurator, gallery, pricing, cart, counterpart, and final word untouched.
-- 2026-02-13 — **BOSS KNOT — 4 new gold archive frames**: Added `archive-15.jpg` (extreme macro of the woven knot architecture against Cuban-link), `archive-16.jpg` (sculptural close of the engraved chevron tip with sky bokeh), `archive-17.jpg` (pendant on glass shelf with mirrored reflection), and `archive-18.jpg` (complete necklace coiled on black velvet). Appended to `GOLD_GALLERY` with full/full/half/half cadence — establishing-shot → macro-detail → sculptural-texture → product-still. Gallery cell count: 10 → 14. Silver/white-gold gallery untouched. Hero video and pricing unaffected.
-- 2026-02-13 — **BOSS KNOT — Hero Video (Luxury Campaign Film)**: Replaced the static gold hero image on `BossKnotPage.jsx` with a looping campaign film. Attributes: `autoPlay`, `muted`, `loop`, `playsInline`, `preload="auto"`, no controls, no progress bar, no fullscreen. Object-fit: cover, center focus, no letterboxing. Poster fallback set to existing `/boss-knot/hero.jpg`. Conditional render preserved — silver/white-gold metal selection still swaps to the static silver hero. Hero copy, configurator, gallery, pricing, cart, counterpart, and final word untouched. Asset saved to `/boss-knot/hero-video.mp4` (4.6 MB).
-- 2026-02-13 — **His & Hers Cross-Sell — Eyebrow correction**: Swapped eyebrows to read as possessive ownership of the page's product. **Boss Knot** now reads *"HIS COUNTERPART · LADY BOSS KNOT"* (his = Boss Knot's pairing). **Lady Boss Knot** now reads *"HER COUNTERPART · BOSS KNOT"* (her = Lady Boss Knot's pairing). Reads naturally into the CTA: "His counterpart · Lady Boss Knot · she wears it too →".
-- 2026-02-13 — **His & Hers Cross-Sell Pairing** (Boss Knot ↔ Lady Boss Knot): Added a cinematic counterpart block to both pages, placed immediately above Final Word per directive. Two-column editorial layout (1.05fr / .95fr) — large 4:5 product portrait on the left, copy + CTA on the right. **Boss Knot** surfaces "HER COUNTERPART · LADY BOSS KNOT" with copy *"A different expression of the same idea. The confidence. The structure. The arrival. Reimagined for her."* and CTA **SHE WEARS IT TOO →** → `/lady-boss-knot`. **Lady Boss Knot** surfaces "HIS COUNTERPART · BOSS KNOT" with copy *"The original statement. Built for the room. Built for the arrival. Built for the man who never needed an introduction."* and CTA **HE WEARS IT TOO →** → `/boss-knot`. Treatment: thin gold rule top divider, dark luxury bg, image hover lift (-6px translate + gold-tinged shadow + 1.03 scale), CTA gold underline animates 32px → 100% on hover with 6px arrow shift. Stacks (image above / copy below) on mobile <880px. Reads as a pairing moment, not an upsell.
-- 2026-02-13 — **LADY BOSS KNOT — Archive Gallery wired**: Inserted "THE ARCHIVE" section between Intro and Composition on `LadyBossKnotPage.jsx` per sitewide page order rule. Stacked editorial layout: `archive-1.jpg` full-width (16:10 editorial portrait) + `archive-2.jpg` & `archive-3.jpg` half/half row beneath. Mirrors `bsk-archive-grid` rhythm — 200ms fade, hover scale 1.02, subtle gold-rule borders. Verified via screenshot — 3 cells visible, all images loaded.
-- 2026-02-12 — **Ring Size Guide** page created at `/ring-size-guide` (alias `/size-guide`). Cinematic gold-on-black hero ("PHILEON · SIZING" → *RING SIZE GUIDE* → italic intro line), warm-cream paper panel below containing: step 1/step 2 illustrations, full Common Phileon Sizes chart (US 5–13 ↔ 49.3–69.7mm), Before You Order checklist (5 items), Need Help block, and Phileon "Not Jewelry. Identity." sign-off. Shared `SizeGuideContent` component updated — modal in product pages picks up the new copy + chart automatically.
-- 2026-02-12 — **BOSS KNOT hero metal pill + 200ms cross-fade**: Added luxury glass-blur pill over the hero image — hidden on initial load, fades in only after the user clicks a metal. Text: *"CURRENTLY VIEWING · {METAL}"*. Style: 1px white/18 border · rgba(0,0,0,0.35) bg · 10px blur · 999px radius · 8px/14px padding · 0.18em tracking. Removed the old badge from the text column. Added 200ms `bsk-fade-in` keyframe animation (opacity 0 → 1) applied via React `key` swap to: hero image, pill, gallery grid, archive eyebrow — all imagery now cross-fades elegantly when metal changes. No layout shift, no slide/zoom, no impact on pricing/SKU/cart/configurator/gallery order.
-- 2026-02-12 — **BOSS KNOT — FINAL configurator**: 3 metals restored — Sterling Silver $3,200 · 10K Yellow Gold $8,500 · 10K White Gold $8,500. Flat 3-button picker. **Dynamic hero + gallery + metal badge** all swap on selection: Yellow Gold → gold marquee hero + 10-frame gold gallery; Silver OR 10K White Gold → silver hero (lifestyle-first ordering) + 5-frame shared silver/white gallery. Silver gallery leads with the Black executive lifestyle shots per user spec ("immediately communicates jewelry, not a necktie"). Eyebrow label changes per state. New metal badge near hero title shows *"Currently Viewing · {metal}"*. All FE ↔ BE prices synced; `/api/validate-cart` returns diff=0 for all 3 SKUs.
-- 2026-02-12 — **BOSS KNOT gallery expanded**: 5 new shots wired in (2 product macros + 1 close detail + 2 lifestyle/arrival shots). Editorial layout — 2-col half cells for product details, full-width 16:9 cells for lifestyle frames. All 5 images verified loaded via `naturalWidth > 0`. Hero remains the original woven tie shot.
-- 2026-02-12 — **BOSS KNOT** (Gentleman's Club · The Collective · Executive Pendant) — created `/products/boss-knot`. 3 SKUs: Sterling Silver $3,200, 10K Yellow Gold $8,500, 10K White Gold $8,500. Cascading configurator (Metal → Colour → Karat; colour/karat disabled when Silver). 18" matching chain included on every SKU. Woven mesh architecture, 70mm × 25mm. Added to homepage carousel + Signature Pieces grid. ShopDropPage CORE list updated. livePricingConfig.js + pricing_engine.py synced (`/api/validate-cart` returns diff=0 for all 3 tiers).
-- 2026-02-11 — Veyron Noir archive gallery expanded: replaced archive-1 with new 3/4 suede macro shot; added archive-11 (lounge/whiskey lifestyle) and archive-12 (steering-wheel-at-Bugatti lifestyle). Total: **12 frames**. Header copy updated from "Five frames from the garage." → "Frames from the garage." CSS grid updated so frames 5, 10, 11, 12 span full width; lifestyle frames (11, 12) use 16:9 aspect with `object-fit: cover` for cinematic closure.
-- 2026-02-11 — Built WYNETTE'S PALETTE & VEYRON NOIR pages, added to catalog/home.
-- Earlier — STACKRATS image/configurator/hero-video fixes; pricing engine integration.
+---
 
-## Roadmap
-### P0 (next)
-- Run `testing_agent_v3_fork` on WYNETTE'S PALETTE & VEYRON NOIR (cart, dynamic pricing, layout order regression).
+## 🟡 Active Priorities
 
-### P1
-- Consolidate `ShopDropPage.jsx` + `products.js` into one source of truth.
-- Port luxury motion system (`.lm-loaded`, `.gd-reveal`) to NERVATURA & COURONNE.
-- Build Chains category (`/shop?category=chains`).
-- Fix lint warnings in `backend/routes/cart.py`.
+### P2 — Chains Collection
+Build out `/shop?category=chains` category. Pieces, configurator, dynamic pricing tier sync, hero motion.
 
-### Awaiting User
-- **Actual BOSS KNOT imagery** — hero + gallery shots (woven mesh tie-silhouette pendant). Currently using Rose-of-Sharon placeholders.
-- Final VEYRON NOIR pricing (currently "PRICE COMING SOON").
-- Production hero footage for Wynette's Palette & Veyron Noir.
+### P3 — Luxury Motion System
+Continue refining museum-quality motion, editorial transitions, and quiet luxury interactions.
 
-## Integrations
-- Stripe (Payments) — needs user API key.
-- Emergent Universal LLM Key — backend image generation (Nano Banana).
-kend image generation (Nano Banana).
+- **NERVATURA** — port the new luxury motion system (`.lm-loaded`, `.gd-reveal`, staggered reveals)
+- **COURONNE** — same treatment
+
+---
+
+## 🔵 Future / Backlog
+
+- Backend catalog alignment (`/api/products` ↔ `catalogProducts`)
+- Pricing engine refinements (tighten `round_luxury()` for exact sub-$100 prices)
+- Additional Inspiration Vault releases
+- Editorial campaign films (longer-form motion studies per piece)
+- Collector numbering (per-edition serialisation for the archive)
+- Limited editions (release windows, edition counts, archive flags)
+- Lint cleanup in `backend/routes/cart.py`
+
+---
+
+## 🧭 PHILEON Development Philosophy
+
+The project has moved beyond building pages. Current development should focus on **refining the experience**.
+
+### Prioritise
+- **PHILEON Editorial Observation Standard** — every page reads as a curated editorial study, not a product listing.
+- **Museum-quality presentation** — generous black negative space, image-first composition, restrained typography.
+- **Quiet luxury motion** — no pulsing, no bouncing, no loud animation. Crossfades, slow scale (≤1.03), staggered reveals only.
+- **Gallery sequence (5 movements):** `Object → Observation → Craft → Scale → Motion`
+- **Editorial storytelling** — Hero → Intro → Archive Gallery → Specs → Configurator → ADD TO CART → Final Word.
+- **Performance** — minimise above-the-fold weight, lazy-load gallery cells, strip audio from hero videos for autoplay reliability.
+- **Reusable architecture** — shared components like `VaultHero` drive consistent presentation across collections.
+- **Manifest-driven collections** — adding a new piece = one entry in the manifest; layout / motion / sizing inherit automatically.
+
+### Preserve All Completed Work
+Completed collections are stable. Do not redesign without explicit request.
+
+### PHILEON Blueprint = Governing Design System
+All future development must align with the Blueprint above. New collections inherit it; one-off departures require deliberate justification.
+
+---
+
+## 🏗 Architecture
+
+### Frontend
+- Product detail pages: `/app/frontend/src/pages/`
+- Shared components: `/app/frontend/src/components/` (`VaultHero`, etc.)
+- Catalog single source of truth: `/app/frontend/src/data/products.js` (exports `products` + `catalogProducts` + `getCatalogList`)
+- Live pricing config: `/app/frontend/src/data/livePricingConfig.js`
+
+### Backend
+- Pricing validator: `/app/backend/pricing_engine.py` (must mirror any FE pricing change)
+- Cart endpoint: `POST /api/validate-cart`
+- Products list: `GET /api/products` (pending alignment with `catalogProducts`)
+
+### Core Rules
+- **Sitewide page order is non-negotiable** — gallery NEVER below configurator.
+- **Pricing sync**: any tier/SKU change MUST mirror in both `livePricingConfig.js` AND `pricing_engine.py`.
+- **Video codecs**: Playwright headless cannot decode H.264 MP4. Verify videos via `ffprobe` + DOM attributes, NOT screenshot playback.
+- **Hero videos**: use the direct `src` attribute on `<video>`. Never nest `<source>` (React `networkState: 3 / NO_SOURCE` bug). Strip audio (`ffmpeg -an`) for reliable autoplay.
+
+---
+
+## 📚 History
+Detailed implementation log: see `/app/memory/CHANGELOG.md`.
+
+## 🔌 Integrations
+- Stripe (Payments) — pending user API key
+- Emergent Universal LLM Key — image generation (Nano Banana) when needed
