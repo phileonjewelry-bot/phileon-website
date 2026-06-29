@@ -413,30 +413,15 @@ export default function InspirationVaultPage() {
             aria-label={`Enter ${piece.title} piece`}
           >
             <div className="iv-card-media">
-              {piece.heroVideo ? (
-                <video
-                  src={piece.heroVideo}
-                  className="iv-card-video"
-                  data-testid={`iv-card-${piece.slug}-video`}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                  controls={false}
-                  poster={piece.posterImage}
-                  aria-hidden="true"
-                  onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
-                />
-              ) : (
-                <img
-                  src={piece.posterImage}
-                  alt={`${piece.title} — ${piece.subtitle}`}
-                  className="iv-card-img"
-                  loading="lazy"
-                  data-testid={`iv-card-${piece.slug}-img`}
-                />
-              )}
+              {/* Vault index cards are ALWAYS static images.
+                  heroVideo is reserved for the product detail page hero. */}
+              <img
+                src={piece.posterImage}
+                alt={`${piece.title} — ${piece.subtitle}`}
+                className="iv-card-img"
+                loading="lazy"
+                data-testid={`iv-card-${piece.slug}-img`}
+              />
             </div>
             <div className="iv-card-meta">
               <div className="iv-card-title-block">
