@@ -253,10 +253,10 @@ export default function InspirationVaultPage() {
           The Archive Is <em>Growing.</em>
         </h1>
         <div className="iv-hero-body">
-          <p className="lead">Not every design begins as a collection.</p>
-          <p>Some begin as an idea worth preserving.</p>
-          <p>The Inspiration Vault houses ready-to-wear Phileon creations — pieces released simply because they deserved to exist.</p>
-          <p>Every addition expands the archive.</p>
+          <p>The Inspiration Vault houses hand-picked pieces discovered while traveling through China, Tokyo, Greece, Dubai, Italy, Paris, and beyond.</p>
+          <p className="lead">None of these are PHILEON creations.</p>
+          <p>They&rsquo;re the pieces that inspired mine.</p>
+          <p>Instead of collecting dust on a shelf, they&rsquo;re being released to inspire someone else&mdash;or to become the perfect finishing touch to an already amazing outfit.</p>
         </div>
         <p className="iv-hero-tag">No countdowns. &nbsp;·&nbsp; No pressure. &nbsp;·&nbsp; Just inspiration.</p>
       </section>
