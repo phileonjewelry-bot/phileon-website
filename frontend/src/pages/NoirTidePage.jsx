@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import VaultHero from "@/components/VaultHero";
 
 const HERO_IMG = "/inspiration-vault/noir-tide/hero.jpg";
 const STUDIO_BLACK_IMG = "/inspiration-vault/noir-tide/studio-black.jpg";
@@ -197,22 +198,15 @@ export default function NoirTidePage() {
         <ArrowLeft size={14} /> RETURN TO VAULT
       </Link>
 
-      {/* HERO — image only, no video */}
-      <section className="nt-hero" data-testid="nt-hero" style={{ opacity: 0.5 + Math.max(0, 1 - scrollY / 600) * 0.5 }}>
-        <div className="nt-hero-media">
-          <img
-            src={HERO_IMG}
-            alt="NOIR TIDE — editorial studio render, sculptural black & white pavé drop earrings on a dark backdrop."
-            className="nt-hero-img"
-            data-testid="nt-hero-img"
-          />
-        </div>
-        <div>
-          <p className="nt-eyebrow" data-testid="nt-eyebrow">Inspiration Vault</p>
-          <h1 className="nt-h1" data-testid="nt-title">Noir Tide</h1>
-          <p className="nt-subhead" data-testid="nt-subhead">Light and shadow, spiraling.</p>
-        </div>
-      </section>
+      {/* HERO — universal Vault hero (image only — no video) */}
+      <VaultHero
+        image={HERO_IMG}
+        video={null}
+        altText="NOIR TIDE — editorial studio render, sculptural black & white pavé drop earrings on a dark backdrop."
+        eyebrow="Inspiration Vault"
+        title="Noir Tide"
+        subhead="Light and shadow, spiraling."
+      />
 
       {/* DESCRIPTION */}
       <section className="nt-section nt-desc d1" data-testid="nt-desc">

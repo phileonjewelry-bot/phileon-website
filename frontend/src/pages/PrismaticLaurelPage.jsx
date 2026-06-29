@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import VaultHero from "@/components/VaultHero";
 
 const HERO_IMG = "/inspiration-vault/prismatic-laurel/hero.jpg";
 const HERO_VIDEO = "/inspiration-vault/prismatic-laurel/hero-video.mp4";
@@ -190,30 +191,15 @@ export default function PrismaticLaurelPage() {
         <ArrowLeft size={14} /> RETURN TO VAULT
       </Link>
 
-      {/* HERO — video background with image poster */}
-      <section className="pl-hero" data-testid="pl-hero" style={{ opacity: 0.5 + Math.max(0, 1 - scrollY / 600) * 0.5 }}>
-        <div className="pl-hero-media">
-          <video
-            src={HERO_VIDEO}
-            className="pl-hero-video"
-            data-testid="pl-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            controls={false}
-            poster={HERO_IMG}
-            aria-hidden="true"
-            onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
-          />
-        </div>
-        <div>
-          <p className="pl-eyebrow" data-testid="pl-eyebrow">Inspiration Vault</p>
-          <h1 className="pl-h1" data-testid="pl-title">Prismatic Laurel</h1>
-          <p className="pl-subhead" data-testid="pl-subhead">A study in colour and balance.</p>
-        </div>
-      </section>
+      {/* HERO — universal Vault hero (image → 1.7s hold → crossfade → muted looping video) */}
+      <VaultHero
+        image={HERO_IMG}
+        video={HERO_VIDEO}
+        altText="PRISMATIC LAUREL — editorial studio hero, multicolour emerald-cut pavé sculptural drop earrings on a dark backdrop with prismatic light refraction."
+        eyebrow="Inspiration Vault"
+        title="Prismatic Laurel"
+        subhead="A study in colour and balance."
+      />
 
       {/* DESCRIPTION */}
       <section className="pl-section pl-desc d1" data-testid="pl-desc">

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import VaultHero from "@/components/VaultHero";
 
 const HERO_VIDEO = "/inspiration-vault/noir-cadence/hero-video.mp4";
 const HERO_POSTER = "/inspiration-vault/noir-cadence/hero.jpg";
@@ -192,30 +193,15 @@ export default function NoirCadencePage() {
         <ArrowLeft size={14} /> RETURN TO VAULT
       </Link>
 
-      {/* HERO with VIDEO */}
-      <section className="nc-hero" data-testid="nc-hero" style={{ opacity: 0.5 + Math.max(0, 1 - scrollY / 600) * 0.5 }}>
-        <div className="nc-hero-media">
-          <video
-            key="nc-hero-video"
-            src={HERO_VIDEO}
-            className="nc-hero-video"
-            data-testid="nc-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster={HERO_POSTER}
-            aria-label="NOIR CADENCE — looping product film"
-            onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
-          />
-        </div>
-        <div>
-          <p className="nc-eyebrow" data-testid="nc-eyebrow">Inspiration Vault</p>
-          <h1 className="nc-h1" data-testid="nc-title">Noir Cadence</h1>
-          <p className="nc-subhead" data-testid="nc-subhead">Black Stone Pavé-Set Hoop Earrings</p>
-        </div>
-      </section>
+      {/* HERO — universal Vault hero (image → 1.7s hold → crossfade → muted looping video) */}
+      <VaultHero
+        image={HERO_POSTER}
+        video={HERO_VIDEO}
+        altText="NOIR CADENCE — black stone pavé hoop earrings, looping product film."
+        eyebrow="Inspiration Vault"
+        title="Noir Cadence"
+        subhead="Black Stone Pavé-Set Hoop Earrings"
+      />
 
       {/* DESCRIPTION */}
       <section className="nc-section nc-desc d1" data-testid="nc-desc">

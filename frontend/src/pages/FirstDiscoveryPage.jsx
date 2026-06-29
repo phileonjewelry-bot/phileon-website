@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import VaultHero from "@/components/VaultHero";
 
 const HERO_IMG = "/inspiration-vault/first-discovery/hero.jpg";
 const WORN_IMG = "/inspiration-vault/first-discovery/worn.jpg";
@@ -193,17 +194,15 @@ export default function FirstDiscoveryPage() {
         <ArrowLeft size={14} /> RETURN
       </Link>
 
-      {/* HERO */}
-      <section className="iv-hero" data-testid="iv-hero" style={{ opacity: 0.5 + heroParallax * 0.5 }}>
-        <div className="iv-hero-img-wrap">
-          <img src={HERO_IMG} alt="PRIMA WAVE — woven rose-gold vermeil drop earrings on dark studio backdrop." className="iv-hero-img" data-testid="iv-hero-img" />
-        </div>
-        <div>
-          <p className="iv-eyebrow" data-testid="iv-eyebrow">Inspiration Vault</p>
-          <h1 className="iv-h1" data-testid="iv-title">Prima Wave</h1>
-          <p className="iv-subhead" data-testid="iv-subhead">The first movement.</p>
-        </div>
-      </section>
+      {/* HERO — universal Vault hero (image only — no video) */}
+      <VaultHero
+        image={HERO_IMG}
+        video={null}
+        altText="PRIMA WAVE — woven rose-gold vermeil drop earrings on a dark studio backdrop."
+        eyebrow="Inspiration Vault"
+        title="Prima Wave"
+        subhead="The first movement."
+      />
 
       {/* INTRO */}
       <section className="iv-section iv-intro d1" data-testid="iv-intro">

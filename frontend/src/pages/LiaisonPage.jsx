@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import VaultHero from "@/components/VaultHero";
 
 const HERO_IMG = "/inspiration-vault/liaison/hero.jpg";
 const HERO_VIDEO = "/inspiration-vault/liaison/hero-video.mp4";
@@ -190,30 +191,15 @@ export default function LiaisonPage() {
         <ArrowLeft size={14} /> RETURN TO VAULT
       </Link>
 
-      {/* HERO */}
-      <section className="lia-hero" data-testid="lia-hero" style={{ opacity: 0.5 + Math.max(0, 1 - scrollY / 600) * 0.5 }}>
-        <div className="lia-hero-media">
-          <video
-            src={HERO_VIDEO}
-            className="lia-hero-img"
-            data-testid="lia-hero-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            controls={false}
-            poster={HERO_IMG}
-            aria-hidden="true"
-            onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
-          />
-        </div>
-        <div>
-          <p className="lia-eyebrow" data-testid="lia-eyebrow">Inspiration Vault</p>
-          <h1 className="lia-h1" data-testid="lia-title">Liaison</h1>
-          <p className="lia-subhead" data-testid="lia-subhead">Infinity Link Earrings</p>
-        </div>
-      </section>
+      {/* HERO — universal Vault hero (image → 1.7s hold → crossfade → muted looping video) */}
+      <VaultHero
+        image={HERO_IMG}
+        video={HERO_VIDEO}
+        altText="LIAISON — editorial hero render, gold infinity-link earrings against marble and black velvet."
+        eyebrow="Inspiration Vault"
+        title="Liaison"
+        subhead="Infinity Link Earrings"
+      />
 
       {/* DESCRIPTION */}
       <section className="lia-section lia-desc d1" data-testid="lia-desc">

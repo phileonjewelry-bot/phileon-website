@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 
@@ -6,7 +6,9 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 // VAULT MANIFEST — single source of truth for the archive index.
 // Future Inspiration Vault pieces append HERE, newest first.
 // The index auto-renders any piece with: title · subtitle · price · href ·
-//   posterImage · heroVideo? (optional · falls back to posterImage when absent).
+//   posterImage · heroVideo? (optional · falls back to posterImage when absent) ·
+//   category (one of: "Earrings", "Rings", "Bangles & Bracelets",
+//   "Pendants & Necklaces").
 // No layout changes required for new releases.
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
@@ -19,6 +21,7 @@ const VAULT_PIECES = [
     heroVideo: "/inspiration-vault/prismatic-laurel/hero-video.mp4",
     posterImage: "/inspiration-vault/prismatic-laurel/hero.jpg",
     releasedAt: "2026-02-16",
+    category: "Earrings",
   },
   {
     slug: "noir-tide",
@@ -29,6 +32,7 @@ const VAULT_PIECES = [
     heroVideo: null,
     posterImage: "/inspiration-vault/noir-tide/hero.jpg",
     releasedAt: "2026-02-15",
+    category: "Earrings",
   },
   {
     slug: "liaison",
@@ -39,6 +43,7 @@ const VAULT_PIECES = [
     heroVideo: null,
     posterImage: "/inspiration-vault/liaison/hero.jpg",
     releasedAt: "2026-02-14",
+    category: "Earrings",
   },
   {
     slug: "noir-cadence",
@@ -49,6 +54,7 @@ const VAULT_PIECES = [
     heroVideo: "/inspiration-vault/noir-cadence/hero-video.mp4",
     posterImage: "/inspiration-vault/noir-cadence/hero.jpg",
     releasedAt: "2026-02-13",
+    category: "Earrings",
   },
   {
     slug: "first-discovery",
@@ -59,16 +65,27 @@ const VAULT_PIECES = [
     heroVideo: null, // No video yet — gracefully falls back to poster image
     posterImage: "/inspiration-vault/first-discovery/hero.jpg",
     releasedAt: "2026-02-12",
+    category: "Earrings",
   },
 ];
 
+// Fixed display order — drives the "EXPLORE THE ARCHIVE" pill nav.
+const CATEGORIES = ["All", "Earrings", "Rings", "Bangles & Bracelets", "Pendants & Necklaces"];
+
 export default function InspirationVaultPage() {
+  const [activeCategory, setActiveCategory] = useState("All");
+
   useEffect(() => {
     document.title = "INSPIRATION VAULT — The Archive · PHILEON";
   }, []);
 
-  // Sort newest first by released date — future-proof for chronological appends
-  const pieces = [...VAULT_PIECES].sort((a, b) => (a.releasedAt < b.releasedAt ? 1 : -1));
+  // Sort newest-first, then filter by category. Memoised so the fade animation
+  // only re-runs when the user explicitly toggles a pill.
+  const pieces = useMemo(() => {
+    const sorted = [...VAULT_PIECES].sort((a, b) => (a.releasedAt < b.releasedAt ? 1 : -1));
+    if (activeCategory === "All") return sorted;
+    return sorted.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
 
   return (
     <div className="iv-index" data-testid="inspiration-vault-index">
@@ -129,6 +146,66 @@ export default function InspirationVaultPage() {
           font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;
           color:var(--gold);text-align:center;margin:1.5rem auto 0;
           font-weight:400;font-style:normal;
+        }
+
+        /* CATEGORY NAV — "EXPLORE THE ARCHIVE" */
+        .iv-category-nav {
+          max-width:1180px;margin:0 auto;
+          padding:clamp(40px,5vw,72px) clamp(20px,4vw,60px) clamp(20px,3vw,40px);
+          text-align:center;
+          opacity:0;animation:ivFade 1s ease .35s forwards;
+        }
+        .iv-category-title {
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.5em;
+          color:var(--gold);text-transform:uppercase;margin:0 0 26px;
+        }
+        .iv-category-pills {
+          display:inline-flex;flex-wrap:wrap;justify-content:center;
+          gap:clamp(10px,1vw,14px);max-width:920px;
+        }
+        .iv-category-pill {
+          appearance:none;cursor:pointer;
+          padding:12px 24px;
+          background:#000;border:1px solid var(--rule);
+          color:var(--ink);
+          font-family:'Cinzel',serif;font-size:11px;letter-spacing:.32em;
+          text-transform:uppercase;
+          transition:background 380ms ease,color 380ms ease,border-color 380ms ease,
+            box-shadow 380ms ease,transform 240ms ease;
+        }
+        .iv-category-pill:hover {
+          color:var(--gold);
+          border-color:var(--gold);
+          box-shadow:0 0 24px -4px rgba(200,162,74,.45),inset 0 0 24px -8px rgba(200,162,74,.18);
+        }
+        .iv-category-pill.is-active {
+          background:var(--gold);
+          color:#050505;
+          border-color:var(--gold);
+          box-shadow:0 0 30px -6px rgba(200,162,74,.6);
+        }
+        .iv-category-pill.is-active:hover { transform:translateY(-1px); }
+        @media (max-width:640px){
+          .iv-category-pill { padding:10px 16px;font-size:10px;letter-spacing:.26em; }
+        }
+
+        /* COLLECTION fade — re-trigger on filter change */
+        .iv-collection-fade {
+          animation:ivCollectionFade .55s cubic-bezier(.22,.61,.36,1) both;
+        }
+        @keyframes ivCollectionFade {
+          from { opacity:0;transform:translateY(12px); }
+          to   { opacity:1;transform:translateY(0); }
+        }
+        .iv-empty {
+          grid-column:1 / -1;text-align:center;padding:80px 20px;
+          font-family:'Playfair Display',serif;font-style:italic;
+          color:var(--ink-muted);font-size:clamp(20px,2vw,26px);line-height:1.6;
+        }
+        .iv-empty-note {
+          display:block;margin-top:14px;
+          font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.42em;
+          color:var(--gold-deep);text-transform:uppercase;font-style:normal;
         }
 
         /* DIVIDER */
@@ -277,6 +354,31 @@ export default function InspirationVaultPage() {
         <p className="iv-hero-tag">No countdowns. &nbsp;·&nbsp; No pressure. &nbsp;·&nbsp; Just inspiration.</p>
       </section>
 
+      {/* CATEGORY NAVIGATION — drives the archive filter */}
+      <section className="iv-category-nav" data-testid="iv-category-nav" aria-label="Explore the archive by category">
+        <p className="iv-category-title">Explore the Archive</p>
+        <div className="iv-category-pills" role="tablist">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat;
+            const slug = cat.toLowerCase().replace(/\s*&\s*/g, "-and-").replace(/\s+/g, "-");
+            return (
+              <button
+                key={cat}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveCategory(cat)}
+                className={`iv-category-pill ${isActive ? 'is-active' : ''}`}
+                data-testid={`iv-category-pill-${slug}`}
+                data-active={isActive}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* DIVIDER */}
       <div className="iv-divider" aria-hidden="true">
         <span className="iv-divider-rule"></span>
@@ -285,8 +387,13 @@ export default function InspirationVaultPage() {
       </div>
 
       {/* COLLECTION */}
-      <section className="iv-collection" data-testid="iv-collection">
-        {pieces.map((piece, idx) => (
+      <section className="iv-collection iv-collection-fade" key={activeCategory} data-testid="iv-collection" data-active-category={activeCategory}>
+        {pieces.length === 0 ? (
+          <p className="iv-empty" data-testid="iv-empty-state">
+            The archive is quiet here — for now.
+            <span className="iv-empty-note">More pieces arriving soon</span>
+          </p>
+        ) : pieces.map((piece, idx) => (
           <Link
             key={piece.slug}
             to={piece.href}
