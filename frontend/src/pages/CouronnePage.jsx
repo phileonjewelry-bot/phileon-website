@@ -5,6 +5,7 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 import SizeGuideModal from "@/components/SizeGuideModal";
+import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import RingSizeSelector, {
   DEFAULT_RING_SIZE,
   ringSizeLabel,
@@ -23,6 +24,9 @@ export default function CouronnePage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  // Wire the shared PHILEON luxury motion system.
+  useLuxuryMotionObserver();
 
   const currentTier = product.tiers[selectedTier];
   const gallery = product.gallery;
@@ -70,13 +74,14 @@ export default function CouronnePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <LuxuryMotionStyles />
       {/* HERO */}
       <section
         className="relative w-full h-[92vh] overflow-hidden bg-black"
         data-testid="couronne-hero"
       >
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          className="lm-hero-media absolute inset-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
@@ -111,14 +116,14 @@ export default function CouronnePage() {
         {/* Text */}
         <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center text-white px-6">
           <p
-            className="text-[10px] tracking-[0.4em] font-sans uppercase mb-3 opacity-80"
+            className="lm-reveal lm-delay-1 text-[10px] tracking-[0.4em] font-sans uppercase mb-3"
             data-testid="couronne-eyebrow"
           >
             PHILEON
           </p>
 
           <h1
-            className="font-serif text-5xl md:text-6xl leading-tight tracking-[-0.02em] mb-2"
+            className="lm-reveal lm-delay-2 font-serif text-5xl md:text-6xl leading-tight tracking-[-0.02em] mb-2"
             style={{ fontFamily: "'Playfair Display', serif" }}
             data-testid="couronne-title"
           >
@@ -126,14 +131,14 @@ export default function CouronnePage() {
           </h1>
 
           <p
-            className="text-[10px] md:text-[11px] tracking-[0.35em] uppercase opacity-55 mb-5"
+            className="lm-reveal lm-delay-3 text-[10px] md:text-[11px] tracking-[0.35em] uppercase mb-5 text-white/55"
             data-testid="couronne-translation"
           >
             Taking of the Crown
           </p>
 
           <p
-            className="font-serif italic text-sm opacity-90"
+            className="lm-reveal lm-delay-4 font-serif italic text-sm"
             style={{ fontFamily: "'Playfair Display', serif" }}
             data-testid="couronne-tagline"
           >
@@ -186,7 +191,7 @@ export default function CouronnePage() {
 
       {/* COMPOSITION */}
       <section
-        className="py-20 md:py-28 border-t border-white/[0.04]"
+        className="lm-section py-20 md:py-28 border-t border-white/[0.04]"
         data-testid="couronne-composition"
       >
         <div className="max-w-[520px] mx-auto px-5 md:px-8 text-center">
@@ -209,7 +214,7 @@ export default function CouronnePage() {
 
       {/* DETAIL */}
       <section
-        className="py-20 md:py-28 border-t border-white/[0.04]"
+        className="lm-section py-20 md:py-28 border-t border-white/[0.04]"
         data-testid="couronne-detail"
       >
         <div className="max-w-[560px] mx-auto px-5 md:px-8 text-center">
@@ -237,7 +242,7 @@ export default function CouronnePage() {
 
       {/* CRAFT */}
       <section
-        className="py-20 md:py-28 border-t border-white/[0.04]"
+        className="lm-section py-20 md:py-28 border-t border-white/[0.04]"
         data-testid="couronne-craft"
       >
         <div className="max-w-[560px] mx-auto px-5 md:px-8 text-center">
@@ -263,7 +268,7 @@ export default function CouronnePage() {
 
       {/* SPECIFICATIONS */}
       <section
-        className="py-20 md:py-28 border-t border-white/[0.04]"
+        className="lm-section py-20 md:py-28 border-t border-white/[0.04]"
         data-testid="couronne-specifications"
       >
         <div className="max-w-[760px] mx-auto px-5 md:px-8 text-center">
@@ -377,7 +382,7 @@ export default function CouronnePage() {
 
       {/* FINAL WORD */}
       <section
-        className="py-24 md:py-32 border-t border-white/[0.04]"
+        className="lm-section py-24 md:py-32 border-t border-white/[0.04]"
         data-testid="couronne-final-word"
       >
         <div className="max-w-[520px] mx-auto px-5 md:px-8 text-center">

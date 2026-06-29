@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 const HERO_IMG =
   "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg";
@@ -85,6 +86,9 @@ export default function NervaturaPage() {
 
   const [selectedTier, setSelectedTier] = useState(product.defaultTier || "signature");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  // Wire the shared PHILEON luxury motion system.
+  useLuxuryMotionObserver();
 
   // Belt-and-suspenders loop watcher for the hero video.
   // Some browsers (especially Safari/iOS, and Chrome under certain HW codec paths)
@@ -173,6 +177,7 @@ export default function NervaturaPage() {
         .nervatura-cinzel { font-family: 'Cinzel', serif; letter-spacing: 0.08em; }
         .nervatura-cormorant { font-family: 'Cormorant Garamond', serif; }
       `}</style>
+      <LuxuryMotionStyles />
 
       {/* ─── 1. HERO ───────────────────────────────────────────────── */}
       <section
@@ -182,7 +187,7 @@ export default function NervaturaPage() {
         <video
           key="nervatura-hero-video"
           ref={heroVideoRef}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="lm-hero-media absolute inset-0 w-full h-full object-cover"
           src="https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/r9udxjr3_XiaoYing_Video_1777699475543_1080HD.mp4"
           autoPlay
           muted
@@ -215,20 +220,20 @@ export default function NervaturaPage() {
         <div className="relative z-10 h-full flex items-center justify-center px-6 text-center text-white">
           <div>
             <p
-              className="nervatura-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5"
+              className="lm-reveal lm-delay-1 nervatura-cinzel text-[10px] md:text-[11px] tracking-[0.45em] text-white/75 mb-5"
               data-testid="nervatura-eyebrow"
             >
               PHILEON
             </p>
             <h1
-              className="nervatura-cinzel text-4xl md:text-6xl text-white"
+              className="lm-reveal lm-delay-2 nervatura-cinzel text-4xl md:text-6xl text-white"
               style={{ letterSpacing: "0.12em" }}
               data-testid="nervatura-title"
             >
               NERVATURA
             </h1>
             <p
-              className="text-white italic tracking-wide text-sm mt-4"
+              className="lm-reveal lm-delay-3 text-white italic tracking-wide text-sm mt-4"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
               data-testid="nervatura-subline"
             >
@@ -240,7 +245,7 @@ export default function NervaturaPage() {
 
       {/* ─── 2. HORIZONTAL GALLERY ─────────────────────────────────── */}
       <section
-        className="w-full bg-black py-8 md:py-12"
+        className="lm-section w-full bg-black py-8 md:py-12"
         data-testid="nervatura-gallery"
       >
         <div
@@ -278,7 +283,7 @@ export default function NervaturaPage() {
       </section>
 
       {/* ─── 3. PURCHASE BLOCK ─────────────────────────────────────── */}
-      <section className="w-full py-14 md:py-20" data-testid="nervatura-purchase">
+      <section className="lm-section w-full py-14 md:py-20" data-testid="nervatura-purchase">
         <div className="max-w-[960px] mx-auto px-6 md:px-8 text-center space-y-10">
           <div>
             <h2
