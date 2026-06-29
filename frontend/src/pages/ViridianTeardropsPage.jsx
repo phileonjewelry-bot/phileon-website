@@ -123,13 +123,6 @@ export default function ViridianTeardropsPage() {
           transition:transform 900ms cubic-bezier(.22,.61,.36,1);
         }
         .vt-gallery-cell:hover img { transform:scale(1.03); }
-        .vt-gallery-label {
-          position:absolute;left:14px;bottom:12px;
-          font-family:'Cinzel',serif;font-size:10px;letter-spacing:.4em;
-          color:var(--gold);text-transform:uppercase;
-          background:rgba(0,0,0,.55);padding:6px 10px;backdrop-filter:blur(6px);
-          pointer-events:none;z-index:2;
-        }
         @media (max-width:640px){ .vt-gallery-grid { grid-template-columns:1fr; } .vt-gallery-cell.full { aspect-ratio:4/5; } }
         .vt-cta { text-align:center; }
         .vt-price-display {
@@ -220,7 +213,6 @@ export default function ViridianTeardropsPage() {
           {GALLERY_STILLS.map((g, i) => (
             <div key={i} className={`vt-gallery-cell ${g.span === 'full' ? 'full' : ''}`} data-testid={`vt-gallery-cell-${i + 1}`}>
               <img src={g.src} alt={g.alt} loading="lazy" />
-              <span className="vt-gallery-label">{`№0${i + 1} · ${g.label}`}</span>
             </div>
           ))}
           {/* Motion — gallery cell #5 = the hero video, looping silently in-frame */}
@@ -237,7 +229,6 @@ export default function ViridianTeardropsPage() {
               aria-label="VIRIDIAN TEARDROPS — motion study, looped silent product film"
               onLoadedMetadata={(e) => { e.currentTarget.play().catch(() => {}); }}
             />
-            <span className="vt-gallery-label">№05 · Motion</span>
           </div>
         </div>
       </section>
