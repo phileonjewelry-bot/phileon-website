@@ -13,6 +13,17 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "viridian-teardrops",
+    title: "Viridian Teardrops",
+    subtitle: "Emerald Pavé Pear-Cut Drop Earrings",
+    price: 120,
+    href: "/viridian-teardrops",
+    heroVideo: "/inspiration-vault/viridian-teardrops/hero-video.mp4",
+    posterImage: "/inspiration-vault/viridian-teardrops/hero.jpg",
+    releasedAt: "2026-02-17",
+    category: "Earrings",
+  },
+  {
     slug: "prismatic-laurel",
     title: "Prismatic Laurel",
     subtitle: "Multicolour Emerald-Cut Sculptural Earrings",

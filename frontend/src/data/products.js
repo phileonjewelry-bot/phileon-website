@@ -185,6 +185,27 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — VIRIDIAN TEARDROPS
+  // Sculptural drop earrings · Rhodium-Plated Alloy · Pear-cut + Emerald Pavé + Clear CZ Halo
+  // ==========================================
+  inspirationVaultViridianTeardrops: {
+    name: "Viridian Teardrops",
+    slug: "inspiration-vault",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Inspiration Vault · plated",
+    basePrice: 120,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/viridian-teardrops/hero.jpg",
+
+    dynamicPricing: false,
+    pricing: {
+      default: 120,
+    },
+  },
+
+  // ==========================================
   // INSPIRATION VAULT — PRISMATIC LAUREL
   // Sculptural drop earrings · Rhodium-Plated Alloy · Multicolour Emerald-Cut CZ
   // ==========================================
