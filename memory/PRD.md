@@ -1,5 +1,9 @@
 # PHILEON — Luxury Jewelry Platform
 
+> ⚠️ **Read `/app/memory/BLUEPRINT.md` FIRST.** It is the PHILEON constitution — the permanent design philosophy, architecture, and non-negotiable rules. All future work must follow the Blueprint before consulting this PRD or the CHANGELOG.
+>
+> Documentation hierarchy: **BLUEPRINT.md → PRD.md → CHANGELOG.md**.
+
 > *The project has moved beyond building pages. Current development focuses on refining the experience.*
 
 ---
