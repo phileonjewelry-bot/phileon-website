@@ -185,6 +185,24 @@ export const products = {
   },
 
   // ==========================================
+  // INSPIRATION VAULT — ORBIT LUMIÈRE
+  // Oversized architectural pavé hoop earrings · Rhodium-Plated Alloy
+  // ==========================================
+  inspirationVaultOrbitLumiere: {
+    name: "Orbit Lumière",
+    slug: "inspiration-vault",
+    category: "earrings",
+    audience: "ladies",
+    collection: "inspiration-vault",
+    weight: "Inspiration Vault · plated",
+    basePrice: 175,
+    isNewArrival: true,
+    imageUrl: "/inspiration-vault/orbit-lumiere/hero.jpg",
+    dynamicPricing: false,
+    pricing: { default: 175 },
+  },
+
+  // ==========================================
   // INSPIRATION VAULT — VIRIDIAN TEARDROPS
   // Sculptural drop earrings · Rhodium-Plated Alloy · Pear-cut + Emerald Pavé + Clear CZ Halo
   // ==========================================

@@ -13,6 +13,17 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "orbit-lumiere",
+    title: "Orbit Lumière",
+    subtitle: "Oversized Architectural Pavé Hoop Earrings",
+    price: 175,
+    href: "/orbit-lumiere",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/orbit-lumiere/hero.jpg",
+    releasedAt: "2026-06-30",
+    category: "Earrings",
+  },
+  {
     slug: "viridian-teardrops",
     title: "Viridian Teardrops",
     subtitle: "Emerald Pavé Pear-Cut Drop Earrings",

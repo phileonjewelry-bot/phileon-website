@@ -77,6 +77,7 @@ import LiaisonPage from "@/pages/LiaisonPage";
 import NoirTidePage from "@/pages/NoirTidePage";
 import PrismaticLaurelPage from "@/pages/PrismaticLaurelPage";
 import ViridianTeardropsPage from "@/pages/ViridianTeardropsPage";
+import OrbitLumierePage from "@/pages/OrbitLumierePage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
 import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
@@ -228,6 +229,8 @@ function App() {
             <Route path="/inspiration-vault/prismatic-laurel" element={<PrismaticLaurelPage />} />
             <Route path="/viridian-teardrops" element={<ViridianTeardropsPage />} />
             <Route path="/inspiration-vault/viridian-teardrops" element={<ViridianTeardropsPage />} />
+            <Route path="/orbit-lumiere" element={<OrbitLumierePage />} />
+            <Route path="/inspiration-vault/orbit-lumiere" element={<OrbitLumierePage />} />
             <Route path="/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />

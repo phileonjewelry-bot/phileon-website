@@ -131,6 +131,11 @@ const livePricingConfig = {
     default: { lockedBasePriceCad: 120, metalType: "Rhodium-Plated Alloy", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — ORBIT LUMIÈRE (rhodium-plated alloy · oversized pavé hoops)
+  inspirationVaultOrbitLumiere: {
+    default: { lockedBasePriceCad: 175, metalType: "Rhodium-Plated Alloy", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },
