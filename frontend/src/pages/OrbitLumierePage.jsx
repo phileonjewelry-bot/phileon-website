@@ -9,6 +9,10 @@ const MACRO_IMG = "/inspiration-vault/orbit-lumiere/macro.png";
 const ON_EAR_IMG = "/inspiration-vault/orbit-lumiere/on-ear.jpg";
 const ON_EAR_PROFILE_IMG = "/inspiration-vault/orbit-lumiere/on-ear-profile.jpg";
 const LIFESTYLE_IMG = "/inspiration-vault/orbit-lumiere/lifestyle.jpg";
+const DETAIL_01_IMG = "/inspiration-vault/orbit-lumiere/new-02.png";
+const DETAIL_02_IMG = "/inspiration-vault/orbit-lumiere/new-03.png";
+const EDITORIAL_WIDE_IMG = "/inspiration-vault/orbit-lumiere/new-04.png";
+const STUDIO_02_IMG = "/inspiration-vault/orbit-lumiere/new-01.jpg";
 const PRICE = 175;
 
 // Gallery: Object → Observation → Craft → Scale (per Blueprint).
@@ -20,6 +24,10 @@ const GALLERY = [
   { src: ON_EAR_IMG,            span: "half", alt: "ORBIT LUMIÈRE — on-ear bust, 3/4 angle showing scale and silhouette." },
   { src: ON_EAR_PROFILE_IMG,    span: "half", alt: "ORBIT LUMIÈRE — on-ear bust, profile angle catching light through the open cage." },
   { src: LIFESTYLE_IMG,         span: "full", alt: "ORBIT LUMIÈRE — lifestyle portrait, worn in a softly lit boutique mirror." },
+  { src: DETAIL_01_IMG,         span: "half", alt: "ORBIT LUMIÈRE — close detail of the pavé arc and floating crystal, captured against deep shadow." },
+  { src: DETAIL_02_IMG,         span: "half", alt: "ORBIT LUMIÈRE — alternate detail of the open cage and concentric crystal arcs." },
+  { src: EDITORIAL_WIDE_IMG,    span: "full", alt: "ORBIT LUMIÈRE — wide editorial composition emphasising volume and light play." },
+  { src: STUDIO_02_IMG,         span: "full", alt: "ORBIT LUMIÈRE — secondary studio portrait, the pair seen as wearable sculpture." },
 ];
 
 export default function OrbitLumierePage() {
