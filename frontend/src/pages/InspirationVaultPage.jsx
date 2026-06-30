@@ -416,7 +416,13 @@ export default function InspirationVaultPage() {
         <p className="iv-hero-signature" data-testid="iv-curator-signature">— Curated by Phill Wilson</p>
         <div style={{ textAlign:'center' }}>
           <span className="iv-hero-price-range" data-testid="iv-vault-price-range">
-            Vault Range · $50 – $200 USD
+            {(() => {
+              const prices = VAULT_PIECES.map((p) => p.price).filter((n) => typeof n === 'number');
+              if (!prices.length) return null;
+              const min = Math.min(...prices);
+              const max = Math.ceil(Math.max(...prices) / 25) * 25;
+              return `Vault Range · $${min} – $${max} USD`;
+            })()}
           </span>
         </div>
         <p className="iv-hero-tag">No countdowns. &nbsp;·&nbsp; No pressure. &nbsp;·&nbsp; Just inspiration.</p>
