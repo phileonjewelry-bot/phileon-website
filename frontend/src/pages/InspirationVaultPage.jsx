@@ -169,6 +169,18 @@ export default function InspirationVaultPage() {
           color:var(--gold);text-align:center;margin:1.5rem auto 0;
           font-weight:400;font-style:normal;
         }
+        .iv-hero-price-range {
+          display:inline-flex;align-items:center;gap:10px;
+          margin:1.25rem auto 0;padding:7px 16px;
+          border:1px solid rgba(200,162,74,.32);
+          font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.42em;
+          color:rgba(200,162,74,.78);text-transform:uppercase;
+          background:rgba(0,0,0,.35);
+        }
+        .iv-hero-price-range::before {
+          content:'';width:5px;height:5px;border-radius:50%;
+          background:var(--gold);box-shadow:0 0 8px rgba(200,162,74,.55);
+        }
 
         /* CATEGORY NAV — "EXPLORE THE ARCHIVE" */
         .iv-category-nav {
@@ -402,6 +414,11 @@ export default function InspirationVaultPage() {
           <p>Instead of collecting dust on a shelf, they&rsquo;re being released to inspire someone else&mdash;or to become the perfect finishing touch to an already amazing outfit.</p>
         </div>
         <p className="iv-hero-signature" data-testid="iv-curator-signature">— Curated by Phill Wilson</p>
+        <div style={{ textAlign:'center' }}>
+          <span className="iv-hero-price-range" data-testid="iv-vault-price-range">
+            Vault Range · $50 – $200 USD
+          </span>
+        </div>
         <p className="iv-hero-tag">No countdowns. &nbsp;·&nbsp; No pressure. &nbsp;·&nbsp; Just inspiration.</p>
       </section>
 
