@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 
 const HERO_IMG = "/inspiration-vault/first-discovery/hero.jpg";
 const WORN_IMG = "/inspiration-vault/first-discovery/worn.jpg";
@@ -279,6 +280,9 @@ export default function FirstDiscoveryPage() {
           {buttonText || "ADD TO CART"}
         </button>
       </section>
+
+      {/* ARCHIVE NOTICE */}
+      <VaultArchiveNotice />
 
       {/* FINAL EDITORIAL QUOTE */}
       <section className="iv-final" data-testid="iv-final-quote">

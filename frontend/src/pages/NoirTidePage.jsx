@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 
 const HERO_IMG = "/inspiration-vault/noir-tide/hero.jpg";
 const STUDIO_BLACK_IMG = "/inspiration-vault/noir-tide/studio-black.jpg";
@@ -267,6 +268,9 @@ export default function NoirTidePage() {
           {buttonText || "ADD TO CART"}
         </button>
       </section>
+
+      {/* ARCHIVE NOTICE */}
+      <VaultArchiveNotice />
 
       {/* FINAL */}
       <section className="nt-final" data-testid="nt-final-quote">

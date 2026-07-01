@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 
 const HERO_IMG = "/inspiration-vault/liaison/hero.jpg";
 const HERO_VIDEO = "/inspiration-vault/liaison/hero-video.mp4";
@@ -259,6 +260,9 @@ export default function LiaisonPage() {
           {buttonText || "ADD TO CART"}
         </button>
       </section>
+
+      {/* ARCHIVE NOTICE */}
+      <VaultArchiveNotice />
 
       {/* FINAL */}
       <section className="lia-final" data-testid="lia-final-quote">

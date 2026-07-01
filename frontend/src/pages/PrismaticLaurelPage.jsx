@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 
 const HERO_IMG = "/inspiration-vault/prismatic-laurel/hero.jpg";
 const HERO_VIDEO = "/inspiration-vault/prismatic-laurel/hero-video.mp4";
@@ -262,6 +263,9 @@ export default function PrismaticLaurelPage() {
           {buttonText || "ADD TO CART"}
         </button>
       </section>
+
+      {/* ARCHIVE NOTICE */}
+      <VaultArchiveNotice />
 
       {/* FINAL */}
       <section className="pl-final" data-testid="pl-final-quote">

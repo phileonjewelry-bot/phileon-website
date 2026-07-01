@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 const HERO_IMG = "/inspiration-vault/orbit-lumiere/hero.jpg";
@@ -190,6 +191,8 @@ export default function OrbitLumierePage() {
           {buttonText || "ADD TO CART"}
         </button>
       </section>
+
+      <VaultArchiveNotice />
 
       <section className="ol-final" data-testid="ol-final-quote">
         <p className="ol-final-line">&ldquo;Light doesn&rsquo;t decorate the design. It completes it.&rdquo;</p>

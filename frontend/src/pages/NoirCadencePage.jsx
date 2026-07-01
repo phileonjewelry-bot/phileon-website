@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 
 const HERO_VIDEO = "/inspiration-vault/noir-cadence/hero-video.mp4";
 const HERO_POSTER = "/inspiration-vault/noir-cadence/hero.jpg";
@@ -261,6 +262,9 @@ export default function NoirCadencePage() {
           {buttonText || "ADD TO CART"}
         </button>
       </section>
+
+      {/* ARCHIVE NOTICE */}
+      <VaultArchiveNotice />
 
       {/* FINAL */}
       <section className="nc-final" data-testid="nc-final-quote">
