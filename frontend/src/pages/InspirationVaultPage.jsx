@@ -19,7 +19,7 @@ const VAULT_PIECES = [
     subtitle: "Art Deco Fan Cocktail Ring",
     price: 60,
     href: "/deco-eventail",
-    heroVideo: null,
+    heroVideo: "/inspiration-vault/deco-eventail/hero.mp4",
     posterImage: "/inspiration-vault/deco-eventail/hero.jpg",
     releasedAt: "2026-07-01",
     category: "Rings",

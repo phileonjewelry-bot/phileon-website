@@ -7,13 +7,20 @@ import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 const HERO_IMG = "/inspiration-vault/deco-eventail/hero.jpg";
+const HERO_VIDEO = "/inspiration-vault/deco-eventail/hero.mp4";
+const HAND_SILK_IMG   = "/inspiration-vault/deco-eventail/hand-silk.jpg";
+const HAND_BLACK_IMG  = "/inspiration-vault/deco-eventail/hand-black.jpg";
+const HAND_BOXES_IMG  = "/inspiration-vault/deco-eventail/hand-boxes.jpg";
+const MACRO_HAND_IMG  = "/inspiration-vault/deco-eventail/macro-hand.jpg";
 const PRICE = 60;
 
-// Gallery — the manifest ships with a single editorial capture; the rhythm
-// is preserved with one full-width cell. Additional imagery will slot in
-// as half/half pairs beneath it without layout changes.
+// Gallery: Object → Worn → Lifestyle → Macro (per Blueprint rhythm).
 const GALLERY = [
-  { src: HERO_IMG, span: "full", alt: "DECO ÉVENTAIL — Art Deco fan cocktail ring, cinematic studio portrait against deep black with soft lens flares." },
+  { src: HERO_IMG,        span: "full", alt: "DECO ÉVENTAIL — Art Deco fan cocktail ring, cinematic studio portrait against deep black with soft lens flares." },
+  { src: HAND_SILK_IMG,   span: "half", alt: "DECO ÉVENTAIL — worn against dark silk, catching soft directional light along the pavé arcs." },
+  { src: HAND_BLACK_IMG,  span: "half", alt: "DECO ÉVENTAIL — worn on the hand, deep black backdrop revealing the open-fan geometry." },
+  { src: HAND_BOXES_IMG,  span: "full", alt: "DECO ÉVENTAIL — lifestyle capture, held between fingers with velvet jewellery boxes softly out of focus behind." },
+  { src: MACRO_HAND_IMG,  span: "full", alt: "DECO ÉVENTAIL — extreme macro across the fingers, revealing pavé density and the negative-space fan cutouts." },
 ];
 
 export default function DecoEventailPage() {
@@ -111,7 +118,7 @@ export default function DecoEventailPage() {
 
       <VaultHero
         image={HERO_IMG}
-        video={null}
+        video={HERO_VIDEO}
         altText="DECO ÉVENTAIL — Art Deco fan cocktail ring, cinematic studio portrait against deep black with soft lens flares."
         eyebrow="Inspiration Vault"
         title="Deco Éventail"
