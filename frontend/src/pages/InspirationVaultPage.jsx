@@ -370,6 +370,13 @@ export default function InspirationVaultPage() {
           font-family:'Cinzel',serif;font-size:14px;letter-spacing:.32em;
           color:var(--ink-strong);
         }
+        .iv-card-price-block {
+          display:flex;flex-direction:column;align-items:flex-end;gap:6px;
+        }
+        .iv-card-archive-tag {
+          font-family:'Cinzel',serif;font-size:9px;letter-spacing:.42em;
+          color:var(--gold);text-transform:uppercase;opacity:.55;
+        }
         .iv-card-cta {
           display:inline-flex;align-items:center;gap:10px;
           font-family:'Cinzel',serif;font-size:11px;letter-spacing:.42em;
@@ -382,6 +389,7 @@ export default function InspirationVaultPage() {
         @media (max-width:680px){
           .iv-card-meta { grid-template-columns:1fr;gap:18px;padding-top:24px; }
           .iv-card-side { text-align:left;align-items:flex-start; }
+          .iv-card-price-block { align-items:flex-start; }
         }
 
         /* FINAL QUOTE */
@@ -511,7 +519,10 @@ export default function InspirationVaultPage() {
                 <p className="iv-card-subtitle">{piece.subtitle}</p>
               </div>
               <div className="iv-card-side">
-                <span className="iv-card-price" data-testid={`iv-card-${piece.slug}-price`}>${piece.price} USD</span>
+                <div className="iv-card-price-block">
+                  <span className="iv-card-price" data-testid={`iv-card-${piece.slug}-price`}>${piece.price} USD</span>
+                  <span className="iv-card-archive-tag" data-testid={`iv-card-${piece.slug}-archive-tag`}>Archive Piece</span>
+                </div>
                 <span className="iv-card-cta">Enter Piece <ArrowRight size={14} aria-hidden="true" /></span>
               </div>
             </div>
