@@ -115,10 +115,14 @@ export function LuxuryMotionStyles() {
 
 /**
  * useLuxuryMotionObserver — wires the IntersectionObserver that toggles
- * .visible on .lm-reveal / .lm-section and .is-active on .lm-gallery-item.
- * Call it once near the top of a page component.
+ * .visible on .lm-reveal / .lm-section / .lm-cell-reveal and .is-active
+ * on .lm-gallery-item. Call it once near the top of a page component.
+ *
+ * @param {any[]} deps  Optional dependency list — pass state values (e.g. an
+ *   active filter/category) that cause new .lm-* nodes to mount, so the
+ *   observer re-attaches to the fresh DOM.
  */
-export function useLuxuryMotionObserver() {
+export function useLuxuryMotionObserver(deps = []) {
   useEffect(() => {
     const revealEls = document.querySelectorAll(".lm-reveal, .lm-section, .lm-cell-reveal");
     const revealObserver = new IntersectionObserver(
@@ -147,5 +151,5 @@ export function useLuxuryMotionObserver() {
       revealObserver.disconnect();
       galleryObserver.disconnect();
     };
-  }, []);
+  }, deps);
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowLeft } from "lucide-react";
+import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // VAULT MANIFEST — single source of truth for the archive index.
@@ -96,6 +97,7 @@ const CATEGORIES = ["All", "Earrings", "Rings", "Bangles & Bracelets", "Pendants
 
 export default function InspirationVaultPage() {
   const [activeCategory, setActiveCategory] = useState("All");
+  useLuxuryMotionObserver([activeCategory]);
 
   useEffect(() => {
     document.title = "INSPIRATION VAULT — The Archive · PHILEON";
@@ -111,6 +113,7 @@ export default function InspirationVaultPage() {
 
   return (
     <div className="iv-index" data-testid="inspiration-vault-index">
+      <LuxuryMotionStyles />
       <style>{`
         .iv-index {
           --bg:#050505;--bg-soft:#0a0908;--ink:#cfc8be;--ink-strong:#f4ede0;
@@ -268,13 +271,7 @@ export default function InspirationVaultPage() {
         /* CARD */
         .iv-card {
           display:block;text-decoration:none;color:inherit;
-          opacity:0;transform:translateY(28px);
-          animation:ivFade 1.1s cubic-bezier(.22,.61,.36,1) forwards;
         }
-        .iv-card.idx-1 { animation-delay:.42s; }
-        .iv-card.idx-2 { animation-delay:.58s; }
-        .iv-card.idx-3 { animation-delay:.74s; }
-        .iv-card.idx-4 { animation-delay:.9s; }
         .iv-card-media {
           position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;
           background:#020100;border:1px solid var(--rule-soft);
@@ -392,7 +389,7 @@ export default function InspirationVaultPage() {
         }
 
         @media (prefers-reduced-motion: reduce){
-          .iv-hero,.iv-divider,.iv-card { animation:none !important;transform:none !important;opacity:1 !important; }
+          .iv-hero,.iv-divider { animation:none !important;transform:none !important;opacity:1 !important; }
           .iv-card:hover .iv-card-video,.iv-card:hover .iv-card-img { transform:none; }
         }
       `}</style>
@@ -471,7 +468,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card idx-${idx + 1}`}
+            className={`iv-card lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
