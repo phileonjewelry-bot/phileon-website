@@ -111,6 +111,9 @@ LIVE_PRICING_CONFIG = {
     "inspirationVaultOrbitLumiere": {
         "default": {"lockedBasePriceCad": 175, "metalType": "Rhodium-Plated Alloy", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+    "inspirationVaultDecoEventail": {
+        "default": {"lockedBasePriceCad": 60, "metalType": "Rhodium-Plated Alloy", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

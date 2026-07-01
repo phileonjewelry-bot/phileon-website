@@ -136,6 +136,11 @@ const livePricingConfig = {
     default: { lockedBasePriceCad: 175, metalType: "Rhodium-Plated Alloy", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
+  // INSPIRATION VAULT — DECO ÉVENTAIL (rhodium-plated alloy · Art Deco fan cocktail ring)
+  inspirationVaultDecoEventail: {
+    default: { lockedBasePriceCad: 60, metalType: "Rhodium-Plated Alloy", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
   // MONIKA COUTURE
   monikaCouture: {
     silver:    { lockedBasePriceCad: 1400, metalType: "925",  weightGrams: 12, lockedMetalReferenceCad: 14 },

@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "deco-eventail",
+    title: "Deco Éventail",
+    subtitle: "Art Deco Fan Cocktail Ring",
+    price: 60,
+    href: "/deco-eventail",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/deco-eventail/hero.jpg",
+    releasedAt: "2026-07-01",
+    category: "Rings",
+  },
+  {
     slug: "orbit-lumiere",
     title: "Orbit Lumière",
     subtitle: "Oversized Architectural Pavé Hoop Earrings",
