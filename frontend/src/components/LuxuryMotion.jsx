@@ -16,6 +16,9 @@ import { useEffect } from "react";
  *        .lm-section             → opacity-0 + translateY-20px (section-level)
  *        .lm-gallery-item        → scroll-snap activation pattern (use with a parent
  *                                  carrying [data-lm-gallery-scroller])
+ *        .lm-cell-reveal         → subtle 800ms fade + 6px lift for gallery cells,
+ *                                  pair with .lm-stagger-1..9 for sequential entry
+ *                                  (100ms between cells). Opt-in per page.
  *
  * All effects are auto-disabled when prefers-reduced-motion is reduce.
  */
@@ -71,12 +74,34 @@ export function LuxuryMotionStyles() {
         opacity: 1; transform: scale(1); filter: brightness(1);
       }
 
+      /* Subtle sequential reveal for gallery cells. Opt-in per page.
+         Duration 800ms · 6px lift · 100ms stagger between cells. */
+      .lm-cell-reveal {
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: opacity, transform;
+      }
+      .lm-cell-reveal.visible { opacity: 1 !important; transform: translateY(0) !important; }
+      .lm-cell-reveal.lm-stagger-1 { transition-delay: 0ms; }
+      .lm-cell-reveal.lm-stagger-2 { transition-delay: 100ms; }
+      .lm-cell-reveal.lm-stagger-3 { transition-delay: 200ms; }
+      .lm-cell-reveal.lm-stagger-4 { transition-delay: 300ms; }
+      .lm-cell-reveal.lm-stagger-5 { transition-delay: 400ms; }
+      .lm-cell-reveal.lm-stagger-6 { transition-delay: 500ms; }
+      .lm-cell-reveal.lm-stagger-7 { transition-delay: 600ms; }
+      .lm-cell-reveal.lm-stagger-8 { transition-delay: 700ms; }
+      .lm-cell-reveal.lm-stagger-9 { transition-delay: 800ms; }
+
       @media (prefers-reduced-motion: reduce) {
-        .lm-hero-media, .lm-reveal, .lm-section, .lm-gallery-item {
+        .lm-hero-media, .lm-reveal, .lm-section, .lm-gallery-item, .lm-cell-reveal {
           animation: none !important;
           transition-duration: 0.001ms !important;
+          transition-delay: 0ms !important;
         }
-        .lm-reveal, .lm-section {
+        .lm-reveal, .lm-section, .lm-cell-reveal {
           opacity: 1 !important;
           transform: none !important;
         }
@@ -95,7 +120,7 @@ export function LuxuryMotionStyles() {
  */
 export function useLuxuryMotionObserver() {
   useEffect(() => {
-    const revealEls = document.querySelectorAll(".lm-reveal, .lm-section");
+    const revealEls = document.querySelectorAll(".lm-reveal, .lm-section, .lm-cell-reveal");
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

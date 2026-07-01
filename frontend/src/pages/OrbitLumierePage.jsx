@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
+import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 const HERO_IMG = "/inspiration-vault/orbit-lumiere/hero.jpg";
 const MACRO_IMG = "/inspiration-vault/orbit-lumiere/macro.png";
@@ -32,6 +33,7 @@ const GALLERY = [
 
 export default function OrbitLumierePage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  useLuxuryMotionObserver();
 
   useEffect(() => {
     document.title = "ORBIT LUMIÈRE — Inspiration Vault · PHILEON";
@@ -53,6 +55,7 @@ export default function OrbitLumierePage() {
 
   return (
     <div className="ol-page" data-testid="orbit-lumiere-page">
+      <LuxuryMotionStyles />
       <style>{`
         .ol-page { --bg:#050505; --bg-deep:#020202; --ink:#cfc8be; --ink-strong:#f4ede0;
           --ink-muted:#7a716a; --gold:#c8a24a; --rule-soft:rgba(200,162,74,.12);
@@ -167,7 +170,11 @@ export default function OrbitLumierePage() {
         <h2 className="ol-h2" style={{ textAlign:'center' }}>From every angle.</h2>
         <div className="ol-gallery-grid">
           {GALLERY.map((g, i) => (
-            <div key={i} className={`ol-gallery-cell ${g.span === 'full' ? 'full' : ''}`} data-testid={`ol-gallery-cell-${i + 1}`}>
+            <div
+              key={i}
+              className={`ol-gallery-cell ${g.span === 'full' ? 'full' : ''} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
+              data-testid={`ol-gallery-cell-${i + 1}`}
+            >
               <img src={g.src} alt={g.alt} loading="lazy" />
             </div>
           ))}
