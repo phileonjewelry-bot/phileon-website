@@ -12,15 +12,20 @@ const HAND_SILK_IMG   = "/inspiration-vault/deco-eventail/hand-silk.jpg";
 const HAND_BLACK_IMG  = "/inspiration-vault/deco-eventail/hand-black.jpg";
 const HAND_BOXES_IMG  = "/inspiration-vault/deco-eventail/hand-boxes.jpg";
 const MACRO_HAND_IMG  = "/inspiration-vault/deco-eventail/macro-hand.jpg";
+const MOTION_01_VIDEO = "/inspiration-vault/deco-eventail/motion-01.mp4";
+const MOTION_02_VIDEO = "/inspiration-vault/deco-eventail/motion-02.mp4";
 const PRICE = 60;
 
-// Gallery: Object → Worn → Lifestyle → Macro (per Blueprint rhythm).
+// Gallery: Object → Worn → Lifestyle → Macro → Motion (per Blueprint rhythm).
+// Video cells: silent, muted, autoloop — same discipline as VaultHero.
 const GALLERY = [
-  { src: HERO_IMG,        span: "full", alt: "DECO ÉVENTAIL — Art Deco fan cocktail ring, cinematic studio portrait against deep black with soft lens flares." },
-  { src: HAND_SILK_IMG,   span: "half", alt: "DECO ÉVENTAIL — worn against dark silk, catching soft directional light along the pavé arcs." },
-  { src: HAND_BLACK_IMG,  span: "half", alt: "DECO ÉVENTAIL — worn on the hand, deep black backdrop revealing the open-fan geometry." },
-  { src: HAND_BOXES_IMG,  span: "full", alt: "DECO ÉVENTAIL — lifestyle capture, held between fingers with velvet jewellery boxes softly out of focus behind." },
-  { src: MACRO_HAND_IMG,  span: "full", alt: "DECO ÉVENTAIL — extreme macro across the fingers, revealing pavé density and the negative-space fan cutouts." },
+  { type: "img",   src: HERO_IMG,        span: "full",          alt: "DECO ÉVENTAIL — Art Deco fan cocktail ring, cinematic studio portrait against deep black with soft lens flares." },
+  { type: "img",   src: HAND_SILK_IMG,   span: "half",          alt: "DECO ÉVENTAIL — worn against dark silk, catching soft directional light along the pavé arcs." },
+  { type: "img",   src: HAND_BLACK_IMG,  span: "half",          alt: "DECO ÉVENTAIL — worn on the hand, deep black backdrop revealing the open-fan geometry." },
+  { type: "img",   src: HAND_BOXES_IMG,  span: "full",          alt: "DECO ÉVENTAIL — lifestyle capture, held between fingers with velvet jewellery boxes softly out of focus behind." },
+  { type: "img",   src: MACRO_HAND_IMG,  span: "full",          alt: "DECO ÉVENTAIL — extreme macro across the fingers, revealing pavé density and the negative-space fan cutouts." },
+  { type: "video", src: MOTION_01_VIDEO, span: "full-square",   alt: "DECO ÉVENTAIL — motion study, the fan silhouette rotating slowly in editorial studio light." },
+  { type: "video", src: MOTION_02_VIDEO, span: "full-portrait", alt: "DECO ÉVENTAIL — motion study, portrait handheld capture of the ring worn." },
 ];
 
 export default function DecoEventailPage() {
@@ -88,11 +93,19 @@ export default function DecoEventailPage() {
         .de-gallery-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(16px,1.8vw,24px); margin-top:36px; }
         .de-gallery-cell { position:relative; aspect-ratio:1/1; overflow:hidden;
           background:var(--bg-deep); border:1px solid var(--rule-soft); }
-        .de-gallery-cell.full { grid-column:1 / -1; aspect-ratio:16/10; }
-        .de-gallery-cell img { width:100%; height:100%; object-fit:cover; display:block;
+        .de-gallery-cell.full          { grid-column:1 / -1; aspect-ratio:16/10; }
+        .de-gallery-cell.full-square   { grid-column:1 / -1; aspect-ratio:1/1;  max-width:820px; margin:0 auto; }
+        .de-gallery-cell.full-portrait { grid-column:1 / -1; aspect-ratio:9/16; max-width:520px; margin:0 auto; }
+        .de-gallery-cell img,
+        .de-gallery-cell video { width:100%; height:100%; object-fit:cover; display:block;
           transition:transform 900ms cubic-bezier(.22,.61,.36,1); }
         .de-gallery-cell:hover img { transform:scale(1.03); }
-        @media (max-width:640px){ .de-gallery-grid { grid-template-columns:1fr; } .de-gallery-cell.full { aspect-ratio:4/5; } }
+        @media (max-width:640px){
+          .de-gallery-grid { grid-template-columns:1fr; }
+          .de-gallery-cell.full          { aspect-ratio:4/5; }
+          .de-gallery-cell.full-square   { max-width:100%; }
+          .de-gallery-cell.full-portrait { max-width:100%; aspect-ratio:9/16; }
+        }
         .de-cta { text-align:center; }
         .de-price-display { font-family:'Cinzel',serif; font-size:22px; letter-spacing:.32em;
           color:var(--ink-strong); margin:0 0 10px; }
@@ -160,15 +173,31 @@ export default function DecoEventailPage() {
         <p className="de-eyebrow" style={{ textAlign:'center' }}>The Look</p>
         <h2 className="de-h2" style={{ textAlign:'center' }}>Symmetry, unfolding.</h2>
         <div className="de-gallery-grid">
-          {GALLERY.map((g, i) => (
-            <div
-              key={i}
-              className={`de-gallery-cell ${g.span === 'full' ? 'full' : ''} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
-              data-testid={`de-gallery-cell-${i + 1}`}
-            >
-              <img src={g.src} alt={g.alt} loading="lazy" />
-            </div>
-          ))}
+          {GALLERY.map((g, i) => {
+            const spanClass = g.span || "";
+            return (
+              <div
+                key={i}
+                className={`de-gallery-cell ${spanClass} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
+                data-testid={`de-gallery-cell-${i + 1}`}
+              >
+                {g.type === "video" ? (
+                  <video
+                    src={g.src}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    aria-label={g.alt}
+                    data-testid={`de-gallery-cell-${i + 1}-video`}
+                  />
+                ) : (
+                  <img src={g.src} alt={g.alt} loading="lazy" />
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
 
