@@ -246,6 +246,16 @@ export default function RingProductPage({ product }) {
                 "--ring-muted": "rgba(255, 255, 255, 0.5)",
               }}
             />
+
+            {/* Metal confirmation line — subtle reinforcement of the customer's
+                current metal + price before Add-to-Cart. No badge, no animation,
+                no layout shift; quiet gold/cream tone, kept at a small size. */}
+            <p
+              className="mt-4 text-xs tracking-[0.14em] text-[#C6A25D]/70"
+              data-testid="metal-selected-confirmation"
+            >
+              Metal Selected: {currentTier.metal} · ${currentTier.price.toLocaleString()}
+            </p>
           </div>
 
           {/* STORY — Composition sits BEFORE the configurator CTA per SITEWIDE ORDER RULE */}

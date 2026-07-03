@@ -49,6 +49,11 @@ const roseGoldGallery = [
     src: "/parabola/macro.png",
     alt: "PARABOLA — extreme macro of the pink sapphire outer rim into the white diamond and champagne diamond concentric pavé fields.",
   },
+  {
+    type: "image",
+    src: "/parabola/lifestyle-hand.jpg",
+    alt: "PARABOLA — on-hand studio shot, the 22 mm rose gold dish reading as a saucer of light across the finger, pink sapphire rim glowing warm against the skin.",
+  },
 ];
 
 /* White-metal gallery — Sterling Silver + 10K White Gold share this set. */
@@ -77,6 +82,11 @@ const whiteMetalGallery = [
     type: "image",
     src: "/parabola/white-metal/wm-05.png",
     alt: "PARABOLA — white-metal top-down composition, the concentric fields reading as a bowl of light gathered inside the pink sapphire rim.",
+  },
+  {
+    type: "image",
+    src: "/parabola/white-metal/lifestyle-hand.jpg",
+    alt: "PARABOLA — white-metal on-hand studio shot, the 22 mm dish resting across the finger, silvery bezel edge glinting under low light against the pink sapphire outer rim.",
   },
 ];
 
