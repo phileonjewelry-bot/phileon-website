@@ -129,7 +129,7 @@ const parabolaProduct = {
     },
   },
 
-  defaultTier: "roseGold10k",
+  defaultTier: "sterling",
 
   // Product-level fallback gallery (rose gold reads as the signature look
   // whenever the tier-scoped `media` is not resolved yet).
