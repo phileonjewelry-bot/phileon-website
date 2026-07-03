@@ -34,6 +34,22 @@ export default function RingProductPage({ product }) {
 
   const currentTier = product.tiers[selectedTier];
 
+  // Per-tier gallery override — if the selected tier defines its own `media`,
+  // use it; otherwise fall back to `product.media`. This keeps existing pages
+  // (single gallery) untouched while allowing PARABOLA-style metal variants
+  // (silver/white gold share one gallery, rose gold uses another).
+  const activeGallery = useMemo(() => {
+    return (currentTier && currentTier.media && currentTier.media.length > 0)
+      ? currentTier.media
+      : product.media;
+  }, [currentTier, product.media]);
+
+  // Reset thumbnail selection when the metal (and therefore the gallery)
+  // changes, so we never point at a stale index past the new array's length.
+  useEffect(() => {
+    setActiveMedia(0);
+  }, [selectedTier]);
+
   // Video autoplay handling
   useEffect(() => {
     const video = videoRef.current;
@@ -59,7 +75,7 @@ export default function RingProductPage({ product }) {
     return () => {
       video.removeEventListener("ended", handleEnded);
     };
-  }, [activeMedia]);
+  }, [activeMedia, selectedTier]);
 
   const isSizeValid = !!selectedSize;
 
@@ -68,7 +84,7 @@ export default function RingProductPage({ product }) {
     const sizeLabelText = ringSizeLabel(selectedSize);
     const sizeIdToken = ringSizeIdToken(selectedSize);
     const skuToken = ringSizeSkuToken(selectedSize);
-    const heroImage = product.media.find(m => m.type === "image")?.src || product.media[0]?.poster;
+    const heroImage = activeGallery.find(m => m.type === "image")?.src || activeGallery[0]?.poster;
 
     handleAddToCart({
       id: `${product.id}-${selectedTier}-size-${sizeIdToken}`,
@@ -93,11 +109,11 @@ export default function RingProductPage({ product }) {
           {/* HERO MEDIA */}
           <div className="product-media-wrap w-full max-w-full overflow-hidden">
             <div className="product-media-main w-full max-w-full aspect-square flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
-              {product.media[activeMedia].type === "video" ? (
+              {activeGallery[activeMedia].type === "video" ? (
                 <video
                   ref={videoRef}
-                  src={product.media[activeMedia].src}
-                  poster={product.media[activeMedia].poster}
+                  src={activeGallery[activeMedia].src}
+                  poster={activeGallery[activeMedia].poster}
                   autoPlay
                   muted
                   loop
@@ -111,8 +127,8 @@ export default function RingProductPage({ product }) {
                 />
               ) : (
                 <img
-                  src={product.media[activeMedia].src}
-                  alt={product.media[activeMedia].alt}
+                  src={activeGallery[activeMedia].src}
+                  alt={activeGallery[activeMedia].alt}
                   className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
                 />
               )}
@@ -121,7 +137,7 @@ export default function RingProductPage({ product }) {
 
           {/* THUMBNAILS */}
           <div className="grid grid-cols-6 gap-2 mt-4">
-            {product.media.map((item, index) => (
+            {activeGallery.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setActiveMedia(index)}

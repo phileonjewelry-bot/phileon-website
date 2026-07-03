@@ -8,15 +8,77 @@ import { products } from "@/data/products";
  * 22 mm face diameter, deep concave dish silhouette (not a dome).
  * Approx 15.5 mm total height. Approx 178 stones. Ring size 7 default.
  *
- * Hero: video (autoplay, loop, muted, playsInline, no controls, object-contain).
- * `RingProductPage` already renders the hero video with the exact discipline
- * we need — see `<video autoPlay muted loop playsInline>` at line ~97 with
- * `object-contain` so the full dish + rim + shank are preserved (never cropped).
+ * Metal selector (tier system) drives the gallery:
+ *   • Sterling Silver + 10K White Gold  →  white-metal gallery
+ *   • 10K Rose Gold                     →  rose-gold gallery (default)
  *
- * If a hero video is not yet available, comment out the first `media` entry
- * and the top-down image becomes the primary hero automatically.
+ * Pricing:
+ *   • Sterling Silver : $1,250 USD
+ *   • 10K White Gold  : $7,800 CAD
+ *   • 10K Rose Gold   : $7,800 CAD (default)
+ *
+ * Add-to-cart captures product, selected metal, selected size, exact price,
+ * and a variant SKU via `RingProductPage`'s standard cart wiring.
  */
 const parabolaPricing = products.parabola.pricing;
+
+/* Rose-gold gallery (default) — hero image + 4 supporting angles. */
+const roseGoldGallery = [
+  {
+    type: "image",
+    src: "/parabola/hero.png",
+    alt: "PARABOLA — 3/4 studio portrait, the concave dish revealing pink sapphire rim, white and champagne diamond concentric fields, and rose gold shank.",
+  },
+  {
+    type: "image",
+    src: "/parabola/top-down.png",
+    alt: "PARABOLA — top-down view, the sunken center reads as a bowl of light with pink sapphire rim, white diamond concentric rows, and champagne diamond core.",
+  },
+  {
+    type: "image",
+    src: "/parabola/profile.png",
+    alt: "PARABOLA — profile view revealing the deep concave dish curvature, knife-edge outer rim, and clean minimalist shank.",
+  },
+  {
+    type: "image",
+    src: "/parabola/back.png",
+    alt: "PARABOLA — reverse view showing the lightweight engineered pavé under-gallery and shank architecture.",
+  },
+  {
+    type: "image",
+    src: "/parabola/macro.png",
+    alt: "PARABOLA — extreme macro of the pink sapphire outer rim into the white diamond and champagne diamond concentric pavé fields.",
+  },
+];
+
+/* White-metal gallery — Sterling Silver + 10K White Gold share this set. */
+const whiteMetalGallery = [
+  {
+    type: "image",
+    src: "/parabola/white-metal/wm-01.png",
+    alt: "PARABOLA — white-metal 3/4 studio portrait, the concave dish resting on a polished silver shank, pink sapphire rim collecting the light.",
+  },
+  {
+    type: "image",
+    src: "/parabola/white-metal/wm-02.png",
+    alt: "PARABOLA — white-metal front elevation, the pink sapphire outer band framing the white diamond field with a champagne diamond center.",
+  },
+  {
+    type: "image",
+    src: "/parabola/white-metal/wm-03.png",
+    alt: "PARABOLA — white-metal reverse portrait, the engineered pavé under-gallery visible through the split shank.",
+  },
+  {
+    type: "image",
+    src: "/parabola/white-metal/wm-04.png",
+    alt: "PARABOLA — white-metal macro of the shank rise and pavé under-gallery, revealing the concave dish support architecture.",
+  },
+  {
+    type: "image",
+    src: "/parabola/white-metal/wm-05.png",
+    alt: "PARABOLA — white-metal top-down composition, the concentric fields reading as a bowl of light gathered inside the pink sapphire rim.",
+  },
+];
 
 const parabolaProduct = {
   id: "parabola",
@@ -35,6 +97,7 @@ const parabolaProduct = {
       badge: "",
       description:
         "Sterling Silver setting with premium synthetic pink sapphires, premium synthetic white stones, and premium synthetic champagne stones. $1,250 USD.",
+      media: whiteMetalGallery,
     },
     whiteGold10k: {
       name: "White Gold",
@@ -43,6 +106,7 @@ const parabolaProduct = {
       badge: "SIGNATURE",
       description:
         "10K White Gold with genuine pink sapphires, white diamonds, and champagne diamonds. $7,800 CAD.",
+      media: whiteMetalGallery,
     },
     roseGold10k: {
       name: "Rose Gold",
@@ -51,41 +115,15 @@ const parabolaProduct = {
       badge: "COLLECTOR",
       description:
         "10K Rose Gold with genuine pink sapphires, white diamonds, and champagne diamonds. $7,800 CAD.",
+      media: roseGoldGallery,
     },
   },
 
-  defaultTier: "whiteGold10k",
+  defaultTier: "roseGold10k",
 
-  // Hero media — video first (autoplay/muted/loop/playsInline handled by
-  // RingProductPage). Poster falls back to the 3/4-angle hero image so the
-  // full ring reads immediately before the video decodes.
-  media: [
-    {
-      type: "image",
-      src: "/parabola/hero.png",
-      alt: "PARABOLA — 3/4 studio portrait, the concave dish revealing pink sapphire rim, white and champagne diamond concentric fields, and rose gold shank.",
-    },
-    {
-      type: "image",
-      src: "/parabola/top-down.png",
-      alt: "PARABOLA — top-down view, the sunken center reads as a bowl of light with pink sapphire rim, white diamond concentric rows, and champagne diamond core.",
-    },
-    {
-      type: "image",
-      src: "/parabola/profile.png",
-      alt: "PARABOLA — profile view revealing the deep concave dish curvature, knife-edge outer rim, and clean minimalist shank.",
-    },
-    {
-      type: "image",
-      src: "/parabola/back.png",
-      alt: "PARABOLA — reverse view showing the lightweight engineered pavé under-gallery and shank architecture.",
-    },
-    {
-      type: "image",
-      src: "/parabola/macro.png",
-      alt: "PARABOLA — extreme macro of the pink sapphire outer rim into the white diamond and champagne diamond concentric pavé fields.",
-    },
-  ],
+  // Product-level fallback gallery (rose gold reads as the signature look
+  // whenever the tier-scoped `media` is not resolved yet).
+  media: roseGoldGallery,
 
   story:
     "Light does not simply strike its surface. It gathers within it. " +

@@ -1,109 +1,50 @@
-# PHILEON — Luxury Jewelry Platform
-
-> ⚠️ **Read `/app/memory/BLUEPRINT.md` FIRST.** It is the PHILEON constitution — the permanent design philosophy, architecture, and non-negotiable rules. All future work must follow the Blueprint before consulting this PRD or the CHANGELOG.
->
-> Documentation hierarchy: **BLUEPRINT.md → PRD.md → CHANGELOG.md**.
-
-> *The project has moved beyond building pages. Current development focuses on refining the experience.*
-
----
+# PHILEON — Product Requirements Document
 
 ## Original Problem Statement
-High-end, cinematic, editorial e-commerce for bespoke jewelry. Strict sitewide page rhythm:
-**SEE → UNDERSTAND → CHOOSE → BUY** (Hero → Intro → Archive Gallery → Composition/Specs → Configurator → ADD TO CART → Final Word).
-Sitewide dynamic pricing computed from CAD base, displayed strictly in USD. Typography: Playfair Display · Cinzel · Cormorant Garamond.
+The user is building a high-end luxury jewelry e-commerce platform requiring bespoke, cinematic product pages with strict layout rhythms. All work must adhere to `/app/memory/BLUEPRINT.md` (the PHILEON Constitution).
 
----
+**Design principles**
+- Cinematic, editorial UI
+- Strict typography (Playfair Display, Cinzel, Cormorant Garamond)
+- Page flow: SEE → UNDERSTAND → CHOOSE → BUY
+- Strict frontend/backend cart price sync via `/api/validate-cart`
+- No cropping of jewelry — `object-contain` with generous black negative space
 
-## ✅ Completed (Do Not Redesign Without Explicit Request)
+## Architecture
+- **Frontend**: React (CRA), Tailwind, Shadcn/UI, framer-motion (`LuxuryMotion`)
+- **Backend**: FastAPI + MongoDB, `pricing_engine.py` for cart validation
+- **Catalog**: single source of truth in `/app/frontend/src/data/products.js` + `catalogProducts` array
+- **Rings**: standardized via `RingProductPage.jsx` (tier + size selectors, per-tier gallery)
+- **Vault pieces**: cinematic hero + `VaultArchiveNotice`
+- **Live pricing**: `livePricingConfig.js` (frontend) mirrored by `pricing_engine.py` (backend)
 
-- **Ladies First** — bespoke product pages (Wynette's Palette, Lady Boss Knot, Annie Rose, La Marva, Monika Couture, Alejandra Heels, Rosaria, Désir Corset, Forme Cuff, Cypher, Trace, Bound, Apex, Homage, DRAPE, Le Cocktail de Jessica, Nervatura, The Grand Dame, The Carapace, Battenti della Villa, Stackrats, Lady Jay, Lisa)
-- **The Gentleman's Club** — Uncle Jo, Veyron Noir, Boss Knot, Cypher, Il Morso del Re, La Bête, Blessed, COOGI I, Galatians 6:14, Tola II, PTP Cuff, Rhythm Mesh, Midweek, Gent, Porta Aurea, COOGI DNA Tag, The True Vine, The Don Gorgon, Prise de Couronne
-- **The Collective** — cross-audience editorial pieces
-- **Bamburgh Circle** — collector enclave (Bamburgh, Lady Bamburgh)
-- **Sacred Collection** — Rose of Sharon, Galatians 6:14, Corinthians 15:14, The True Vine, Blessed
-- **Inspiration Vault** — archival "found, not created" curatorial mode:
-  - Category nav (All · Earrings · Rings · Bangles & Bracelets · Pendants & Necklaces)
-  - Universal `VaultHero` (image → 1.7s hold → crossfade → looping muted video; graceful image-only fallback; museum sizing `object-fit: contain`, 85vh stage)
-  - Editorial Film badge on cards with motion assets
-  - Scarcity line "Available until the Vault closes." in every product page
-  - Curator signature ("— Curated by Phill Wilson")
-  - Pieces: Prima Wave · Noir Cadence · Liaison · Noir Tide · Prismatic Laurel · Viridian Teardrops
-- **Shop Catalog Consolidation** (Single Source of Truth) — `catalogProducts` array + deep `products` object both live in `/app/frontend/src/data/products.js`. `ShopDropPage.jsx` reduced 1,454 → 689 lines.
+## What's Been Implemented (up to 2026-02)
+- Rose of Sharon, Boss Knot, Lady Boss Knot, Uncle Jo, Veyron Noir, Wynette Palette, La Marva, Annie Rose, Monika Couture, Katrina Cascata, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset, Forme Cuff, Rhythm Mesh Ring, TOLA II, GALATIANS 6:14, TRACE, BOUND, APEX, HOMAGE, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, Fondo Curvo, 1 Corinthians 15:14, DRAPE, Le Cocktail de Jessica, Prise de Couronne, Nervatura, The Don Gorgon, The Grand Dame, The Carapace, MIDWEEK, LA MADONNA, LA SCARPA DELLA REGINA, BAPE, LISA, LADY JAY, THE TRUE VINE, PORTA AUREA, COOGI DNA TAG, BATTENTI DELLA VILLA, GENT, STACKRATS, Deco Éventail, Orbit Lumière
+- **Inspiration Vault** (editorial archive) w/ 8 pieces + `VaultArchiveNotice`
+- **PARABOLA** (Ladies First · 22mm concave dish statement ring · 3 metal tiers)
+  - Sterling Silver ($1,250 USD) · 10K White Gold ($7,800 CAD) · 10K Rose Gold ($7,800 CAD)
+  - Per-tier gallery swap (Silver + White Gold → white-metal gallery, Rose Gold → rose-gold gallery)
+  - Default metal: **10K Rose Gold**; default ring size: **US 7**
+  - Frontend/backend price sync verified — `difference: 0` for all tiers via `/api/validate-cart`
 
----
+## Backlog / Prioritized Roadmap
+- **P2** — Chains Collection (`/shop?category=chains`)
+- **P3** — Backend catalog alignment
+- **P3** — Pricing engine refinements
+- **P3** — Additional Inspiration Vault releases
+- **P3** — Editorial campaign films
+- **P3** — Collector numbering & Limited editions
+- **Future** — Surface "Sized to Order — Free Resizing" pill on ring shop cards
 
-## 🟡 Active Priorities
+## Third-Party Integrations
+- Stripe (Payments) — requires user API key
+- Universal LLM Key (Emergent integrations)
 
-### P2 — Chains Collection
-Build out `/shop?category=chains` category. Pieces, configurator, dynamic pricing tier sync, hero motion.
-
-### P3 — Luxury Motion System
-Continue refining museum-quality motion, editorial transitions, and quiet luxury interactions.
-
-- **NERVATURA** — port the new luxury motion system (`.lm-loaded`, `.gd-reveal`, staggered reveals)
-- **COURONNE** — same treatment
-
----
-
-## 🔵 Future / Backlog
-
-- Backend catalog alignment (`/api/products` ↔ `catalogProducts`)
-- Pricing engine refinements (tighten `round_luxury()` for exact sub-$100 prices)
-- Additional Inspiration Vault releases
-- Editorial campaign films (longer-form motion studies per piece)
-- Collector numbering (per-edition serialisation for the archive)
-- Limited editions (release windows, edition counts, archive flags)
-- Lint cleanup in `backend/routes/cart.py`
-
----
-
-## 🧭 PHILEON Development Philosophy
-
-The project has moved beyond building pages. Current development should focus on **refining the experience**.
-
-### Prioritise
-- **PHILEON Editorial Observation Standard** — every page reads as a curated editorial study, not a product listing.
-- **Museum-quality presentation** — generous black negative space, image-first composition, restrained typography.
-- **Quiet luxury motion** — no pulsing, no bouncing, no loud animation. Crossfades, slow scale (≤1.03), staggered reveals only.
-- **Gallery sequence (5 movements):** `Object → Observation → Craft → Scale → Motion`
-- **Editorial storytelling** — Hero → Intro → Archive Gallery → Specs → Configurator → ADD TO CART → Final Word.
-- **Performance** — minimise above-the-fold weight, lazy-load gallery cells, strip audio from hero videos for autoplay reliability.
-- **Reusable architecture** — shared components like `VaultHero` drive consistent presentation across collections.
-- **Manifest-driven collections** — adding a new piece = one entry in the manifest; layout / motion / sizing inherit automatically.
-
-### Preserve All Completed Work
-Completed collections are stable. Do not redesign without explicit request.
-
-### PHILEON Blueprint = Governing Design System
-All future development must align with the Blueprint above. New collections inherit it; one-off departures require deliberate justification.
-
----
-
-## 🏗 Architecture
-
-### Frontend
-- Product detail pages: `/app/frontend/src/pages/`
-- Shared components: `/app/frontend/src/components/` (`VaultHero`, etc.)
-- Catalog single source of truth: `/app/frontend/src/data/products.js` (exports `products` + `catalogProducts` + `getCatalogList`)
-- Live pricing config: `/app/frontend/src/data/livePricingConfig.js`
-
-### Backend
-- Pricing validator: `/app/backend/pricing_engine.py` (must mirror any FE pricing change)
-- Cart endpoint: `POST /api/validate-cart`
-- Products list: `GET /api/products` (pending alignment with `catalogProducts`)
-
-### Core Rules
-- **Sitewide page order is non-negotiable** — gallery NEVER below configurator.
-- **Pricing sync**: any tier/SKU change MUST mirror in both `livePricingConfig.js` AND `pricing_engine.py`.
-- **Video codecs**: Playwright headless cannot decode H.264 MP4. Verify videos via `ffprobe` + DOM attributes, NOT screenshot playback.
-- **Hero videos**: use the direct `src` attribute on `<video>`. Never nest `<source>` (React `networkState: 3 / NO_SOURCE` bug). Strip audio (`ffmpeg -an`) for reliable autoplay.
-
----
-
-## 📚 History
-Detailed implementation log: see `/app/memory/CHANGELOG.md`.
-
-## 🔌 Integrations
-- Stripe (Payments) — pending user API key
-- Emergent Universal LLM Key — image generation (Nano Banana) when needed
+## Key Files
+- `/app/memory/BLUEPRINT.md` — PHILEON Constitution
+- `/app/frontend/src/components/RingProductPage.jsx` — reusable ring page (per-tier gallery support added Feb 2026)
+- `/app/frontend/src/components/VaultHero.jsx`
+- `/app/frontend/src/components/LuxuryMotion.jsx`
+- `/app/frontend/src/data/livePricingConfig.js`
+- `/app/backend/pricing_engine.py`
+- `/app/frontend/src/data/products.js`
