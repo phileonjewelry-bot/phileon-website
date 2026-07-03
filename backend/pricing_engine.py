@@ -114,6 +114,15 @@ LIVE_PRICING_CONFIG = {
     "inspirationVaultDecoEventail": {
         "default": {"lockedBasePriceCad": 60, "metalType": "Rhodium-Plated Alloy", "weightGrams": 0, "lockedMetalReferenceCad": 0},
     },
+
+    # PARABOLA — Ladies First · 22mm concave dish statement ring · 3 metal tiers.
+    # Sterling ($1,250 USD), 10K White Gold ($7,800 CAD), 10K Rose Gold ($7,800 CAD).
+    # Locked hand-set pricing (weightGrams=0 disables live metal recalc).
+    "parabola": {
+        "sterling":     {"lockedBasePriceCad": 1250, "metalType": "925",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "whiteGold10k": {"lockedBasePriceCad": 7800, "metalType": "10KWG", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "roseGold10k":  {"lockedBasePriceCad": 7800, "metalType": "10KRG", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+    },
     "monikaCouture": {
         "silver":    {"lockedBasePriceCad": 1400, "metalType": "925",  "weightGrams": 12, "lockedMetalReferenceCad": 14},
         "white10k":  {"lockedBasePriceCad": 2400, "metalType": "10K",  "weightGrams": 10, "lockedMetalReferenceCad": 625},

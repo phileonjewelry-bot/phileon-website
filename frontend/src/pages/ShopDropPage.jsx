@@ -52,6 +52,7 @@ const SHOP_COLLECTION_MAP = {
   'la-scarpa-della-regina': 'editorial',
   'lisa': 'signature',
   'lady-jay': 'editorial',
+  'parabola': 'signature',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',

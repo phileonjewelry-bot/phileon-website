@@ -30,6 +30,15 @@ const livePricingConfig = {
     gold10k:    { lockedBasePriceCad: 9200, metalType: "10K",  weightGrams: 30, lockedMetalReferenceCad: 1875 },
   },
 
+  // PARABOLA — pricing is DELIBERATELY not registered here.
+  // Sterling is priced $1,250 USD; White Gold and Rose Gold are $7,800 CAD.
+  // The `cadToUsdLuxury` conversion + $500 luxury rounding used by
+  // `useLiveTierPrices` cannot reproduce the exact $7,800 target
+  // (it snaps to $8,000). By leaving PARABOLA out of this map, the
+  // RingProductPage falls back to the raw `tier.price` values in
+  // `products.parabola.pricing`, which display the exact spec numbers.
+  // Backend cart validation remains active via `pricing_engine.py`.
+
   // WYNETTE'S PALETTE — Collector cocktail ring (black onyx + multi-colour halo)
   // Hand-set USD prices · USD-mirrored convention (matches Veyron Noir,
   // Uncle Jo, Battenti). lockedBasePriceCad numerically mirrors priceUsd

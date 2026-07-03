@@ -2898,6 +2898,39 @@ This is expression — under control.`,
     imageUrl: "/lady-boss-knot/hero.jpg",
     dynamicPricing: true,
     currency: "USD",
+  },
+
+  // ==========================================
+  // PARABOLA — Ladies First · Concave Statement Ring · The Collective
+  // 22mm face · deep concave dish · ~178 stones · ring size 7 default.
+  // 3 SKUs: Sterling Silver $1,250 USD · 10K White Gold $7,800 CAD · 10K Rose Gold $7,800 CAD.
+  // Pricing keys: sterling, whiteGold10k, roseGold10k.
+  // ==========================================
+  parabola: {
+    name: "PARABOLA",
+    slug: "parabola",
+    category: "rings",
+    audience: ["ladies-first", "collective"],
+    collections: ["rings", "ladies", "ladies-first", "collective", "the-collective", "new-arrivals", "featured"],
+    subtitle: "Concave Statement Ring · 22mm Face",
+    tagline: "Some jewelry reflects light. PARABOLA collects it.",
+    priceFrom: "From $1,250 USD",
+    basePrice: 1250,
+    featured: true,
+    newArrival: true,
+    displayOrder: 4,
+    showOnHomepage: true,
+    showInCarousel: true,
+    showInCollective: true,
+    seoDescription: "PARABOLA is a concave statement ring — a 22mm deep dish set with pink sapphires, white diamonds, and champagne diamonds arranged in concentric pavé rows. Sterling Silver, 10K White Gold, or 10K Rose Gold. Ladies First.",
+    imageUrl: "/parabola/hero.png",
+    dynamicPricing: false,
+    currency: "USD",
+    pricing: {
+      sterling:     1250,
+      whiteGold10k: 7800,
+      roseGold10k:  7800,
+    },
   }
 
 };
@@ -3049,6 +3082,7 @@ export const catalogProducts = [
   { id: 'battenti-della-villa', name: 'BATTENTI DELLA VILLA', slug: 'battenti-della-villa', materialLine: 'Villa Door Knocker Earrings · Sterling Silver Vermeil → 18K Yellow Gold · Rope Twist · Omega Back', imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png', href: '/battenti-della-villa', price_range: 'From $2,800 USD', inventory_count: 100, is_core: true, category: 'earrings', audience: ['ladies', 'collective'], tags: ['Ladies', 'Collective', 'Earrings', 'Silver', '18K', 'Yellow Gold', 'Italia'], isNew: true, isFeatured: true, displayOrder: 9 },
   { id: 'gent', name: 'GENT', slug: 'gent', materialLine: 'Architectural Signet Ring · Sterling Silver → 14K Yellow Gold · Woven Lattice · Monumental Typography', imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/87u8o3vp_1000156494.jpg', href: '/gent', price_range: 'From $1,850 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['gentlemens-club', 'collective'], tags: ['Gents', 'Collective', 'Signet', 'Ring', 'Architectural', 'House Signature', 'Yellow Gold', 'Silver', 'Vermeil'], isNew: true, isFeatured: true, displayOrder: 10 },
   { id: 'stackrats', name: 'STACKRATS', slug: 'stackrats', materialLine: 'Micro-bead Mesh Bangles · Dinah · Valerie · Dominique · Wide 10mm or Thin 7mm', imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dgp6tl9l_1000156925.jpg', href: '/stackrats', price_range: 'From $1,800 USD', inventory_count: 100, is_core: true, category: 'bracelets', audience: ['ladies', 'collective'], tags: ['Ladies', 'Collective', 'Bangle', 'Bracelet', 'Mesh', 'Rose Gold', 'White Gold', 'Yellow Gold', 'Stack'], isNew: true, isFeatured: true, displayOrder: 11 },
+  { id: 'parabola', name: 'PARABOLA', slug: 'parabola', materialLine: 'Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Rose Gold', imageUrl: '/parabola/hero.png', href: '/products/parabola', price_range: 'From $1,250 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['ladies', 'ladies-first', 'collective'], tags: ['Ladies', 'Ladies First', 'Collective', 'Ring', 'Statement', 'Concave', 'Pink Sapphire', 'Diamond', 'Rose Gold', 'White Gold', 'Sterling'], isNew: true, isFeatured: true, displayOrder: 12 },
 ];
 
 // Helper: filter the catalog by simple predicates.

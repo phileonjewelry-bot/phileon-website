@@ -369,6 +369,12 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           {
+            title: "PARABOLA",
+            image: "/parabola/hero.png",
+            href: "/products/parabola",
+            subtitle: "Some jewelry reflects light. PARABOLA collects it. Concave 22mm statement ring. Sterling Silver, 10K White Gold, or 10K Rose Gold. FROM $1,250 USD"
+          },
+          {
             title: "ROSE OF SHARON",
             image: "/rose-of-sharon/hero.png",
             href: "/products/rose-of-sharon",

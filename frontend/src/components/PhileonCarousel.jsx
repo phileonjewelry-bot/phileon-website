@@ -16,6 +16,7 @@ const carouselItems = [
   { name: "LADY BAMBURGH", slug: "lady-bamburgh", image: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png" },
   { name: "FONDO CURVO", slug: "fondo-curvo", image: products.fondoCurvo?.imageUrl, tagline: "Says everything to those who see it. Says nothing to those who don't." },
   { name: "LA MARVA", slug: "la-marva", image: products.laMarva?.imageUrl },
+  { name: "PARABOLA", slug: "parabola", image: products.parabola?.imageUrl, tagline: "Some jewelry reflects light. PARABOLA collects it." },
   { name: "CYPHER", slug: "cypher", image: products.cypher?.imageUrl },
   { name: "BOUND", slug: "bound", image: products.bound?.imageUrl },
   { name: "LA BETE", slug: "labete", image: products.labete?.imageUrl },
