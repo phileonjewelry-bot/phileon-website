@@ -23,6 +23,7 @@ import SecretDropPage from "./pages/SecretDropPage";
 import VaultPage from "@/pages/VaultPage";
 import LaMarvaPage from "@/pages/LaMarvaPage";
 import ParabolaPage from "@/pages/ParabolaPage";
+import ParabolaHeritagePage from "@/pages/ParabolaHeritagePage";
 import AnnieRosePage from "@/pages/AnnieRosePage";
 import MonikaCouturePage from "@/pages/MonikaCouturePage";
 import AlejandraHeelsPage from "@/pages/AlejandraHeelsPage";
@@ -139,6 +140,7 @@ function App() {
             <Route path="/piece/:slug" element={<ProductDetailPage />} />
             <Route path="/products/la-marva" element={<LaMarvaPage />} />
             <Route path="/products/parabola" element={<ParabolaPage />} />
+            <Route path="/products/parabola-heritage" element={<ParabolaHeritagePage />} />
             <Route path="/products/annie-rose" element={<AnnieRosePage />} />
             <Route path="/products/monika-couture" element={<MonikaCouturePage />} />
             <Route path="/products/alejandra-heels" element={<AlejandraHeelsPage />} />

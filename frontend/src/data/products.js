@@ -2931,6 +2931,41 @@ This is expression — under control.`,
       whiteGold10k: 7800,
       roseGold10k:  7800,
     },
+  },
+
+  // ==========================================
+  // PARABOLA HERITAGE — Gentleman's Club · 22mm concave statement ring.
+  // Same master architecture as PARABOLA. Heritage stone palette:
+  // ruby → yellow → emerald → black diamond, moving inward through the dish.
+  // Metals: Sterling ($1,250 USD), 10K White Gold ($7,800 CAD), 10K Yellow Gold ($7,800 CAD).
+  // Default metal: 10K Yellow Gold. Default ring size: US 10.
+  // Pricing keys: sterling, whiteGold10k, yellowGold10k.
+  // ==========================================
+  parabolaHeritage: {
+    name: "PARABOLA HERITAGE",
+    slug: "parabola-heritage",
+    category: "rings",
+    audience: ["gentlemens-club", "collective"],
+    collections: ["rings", "gentlemens-club", "collective", "the-collective", "new-arrivals", "featured"],
+    subtitle: "Heritage Concave Statement Ring · 22mm Face",
+    tagline: "Built to outlast its first owner.",
+    priceFrom: "From $1,250 USD",
+    basePrice: 1250,
+    featured: true,
+    newArrival: true,
+    displayOrder: 5,
+    showOnHomepage: true,
+    showInCarousel: true,
+    showInCollective: true,
+    seoDescription: "PARABOLA HERITAGE is the men's expression of the PARABOLA architecture — a 22mm concave dish statement ring with a ceremonial palette of rubies, yellow stones, emeralds, and black diamonds moving inward through the pavé fields. Sterling Silver, 10K White Gold, or 10K Yellow Gold. Gentleman's Club.",
+    imageUrl: "/parabola-heritage/img-01-profile.png",
+    dynamicPricing: false,
+    currency: "USD",
+    pricing: {
+      sterling:       1250,
+      whiteGold10k:   7800,
+      yellowGold10k:  7800,
+    },
   }
 
 };
@@ -3083,6 +3118,7 @@ export const catalogProducts = [
   { id: 'gent', name: 'GENT', slug: 'gent', materialLine: 'Architectural Signet Ring · Sterling Silver → 14K Yellow Gold · Woven Lattice · Monumental Typography', imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/87u8o3vp_1000156494.jpg', href: '/gent', price_range: 'From $1,850 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['gentlemens-club', 'collective'], tags: ['Gents', 'Collective', 'Signet', 'Ring', 'Architectural', 'House Signature', 'Yellow Gold', 'Silver', 'Vermeil'], isNew: true, isFeatured: true, displayOrder: 10 },
   { id: 'stackrats', name: 'STACKRATS', slug: 'stackrats', materialLine: 'Micro-bead Mesh Bangles · Dinah · Valerie · Dominique · Wide 10mm or Thin 7mm', imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dgp6tl9l_1000156925.jpg', href: '/stackrats', price_range: 'From $1,800 USD', inventory_count: 100, is_core: true, category: 'bracelets', audience: ['ladies', 'collective'], tags: ['Ladies', 'Collective', 'Bangle', 'Bracelet', 'Mesh', 'Rose Gold', 'White Gold', 'Yellow Gold', 'Stack'], isNew: true, isFeatured: true, displayOrder: 11 },
   { id: 'parabola', name: 'PARABOLA', slug: 'parabola', materialLine: 'Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Rose Gold', imageUrl: '/parabola/hero.png', href: '/products/parabola', price_range: 'From $1,250 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['ladies', 'ladies-first', 'collective'], tags: ['Ladies', 'Ladies First', 'Collective', 'Ring', 'Statement', 'Concave', 'Pink Sapphire', 'Diamond', 'Rose Gold', 'White Gold', 'Sterling'], isNew: true, isFeatured: true, displayOrder: 12 },
+  { id: 'parabola-heritage', name: 'PARABOLA HERITAGE', slug: 'parabola-heritage', materialLine: 'Heritage Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Yellow Gold', imageUrl: '/parabola-heritage/img-01-profile.png', href: '/products/parabola-heritage', price_range: 'From $1,250 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['gentlemens-club', 'collective'], tags: ['Gentleman', "Gentleman's Club", 'Collective', 'Ring', 'Statement', 'Concave', 'Heritage', 'Ruby', 'Emerald', 'Black Diamond', 'Yellow Gold', 'White Gold', 'Sterling'], isNew: true, isFeatured: true, displayOrder: 13 },
 ];
 
 // Helper: filter the catalog by simple predicates.

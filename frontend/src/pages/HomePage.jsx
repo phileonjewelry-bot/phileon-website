@@ -375,6 +375,12 @@ const HomePage = () => {
             subtitle: "Some jewelry reflects light. PARABOLA collects it. Concave 22mm statement ring. Sterling Silver, 10K White Gold, or 10K Rose Gold. FROM $1,250 USD"
           },
           {
+            title: "PARABOLA HERITAGE",
+            image: "/parabola-heritage/img-01-profile.png",
+            href: "/products/parabola-heritage",
+            subtitle: "Built to outlast its first owner. The Heritage expression of the PARABOLA family — ruby, yellow, emerald, and black diamond concentric fields on the same 22mm concave architecture. Sterling Silver, 10K White Gold, or 10K Yellow Gold. FROM $1,250 USD"
+          },
+          {
             title: "ROSE OF SHARON",
             image: "/rose-of-sharon/hero.png",
             href: "/products/rose-of-sharon",

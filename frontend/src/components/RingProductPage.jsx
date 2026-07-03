@@ -25,7 +25,9 @@ export default function RingProductPage({ product }) {
   const [selectedTier, setSelectedTier] = useState(
     product.defaultTier || "signature"
   );
-  const [selectedSize, setSelectedSize] = useState(DEFAULT_RING_SIZE);
+  const [selectedSize, setSelectedSize] = useState(
+    product.defaultRingSize || DEFAULT_RING_SIZE
+  );
   const [customSize, setCustomSize] = useState("");
 
   const sizeConfig = useMemo(() => {
