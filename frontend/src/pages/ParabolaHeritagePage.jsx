@@ -38,16 +38,6 @@ const yellowGoldGallery = [
   },
   {
     type: "image",
-    src: "/parabola-heritage/img-04-onhand.png",
-    alt: "PARABOLA HERITAGE — on-hand lifestyle shot, the 22 mm dish sitting on the finger with the ruby outer band framing the ceremonial concentric field.",
-  },
-  {
-    type: "image",
-    src: "/parabola-heritage/img-05-macro.png",
-    alt: "PARABOLA HERITAGE — extreme macro into the concave center, black diamonds gathering into the sunken well beneath the emerald, yellow, and ruby rings.",
-  },
-  {
-    type: "image",
     src: "/parabola-heritage/yellow-gold/yg-08-profile.png",
     alt: "PARABOLA HERITAGE — 10K yellow gold, 3/4 profile study with the dish tilted to reveal every concentric field: ruby outer, yellow, emerald, and black diamond center, all resting on the architectural gold shank.",
   },
