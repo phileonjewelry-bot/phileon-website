@@ -100,6 +100,21 @@ const whiteMetalGallery = [
     src: "/parabola-heritage/img-05-macro.png",
     alt: "PARABOLA HERITAGE — extreme macro into the concave center, black diamonds gathering into the sunken well beneath the emerald, yellow, and ruby rings.",
   },
+  {
+    type: "image",
+    src: "/parabola-heritage/white-metal/wm-04-portrait.jpg",
+    alt: "PARABOLA HERITAGE — white-metal edition, editorial portrait in warm ambient light: the wearer's hand held to the face, the ceremonial dish glowing against a soft veranda backdrop.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/white-metal/wm-05-side.png",
+    alt: "PARABOLA HERITAGE — white-metal edition, on-hand side elevation revealing the deep concave silhouette and the silvery bezel edge tracing the ruby outer rim.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/white-metal/wm-06-topdown.png",
+    alt: "PARABOLA HERITAGE — white-metal edition, top-down on-hand composition, the full concentric field of ruby, yellow, emerald, and black diamonds framed by the white-metal outer bezel.",
+  },
 ];
 
 const parabolaHeritageProduct = {
@@ -141,11 +156,11 @@ const parabolaHeritageProduct = {
     },
   },
 
-  defaultTier: "yellowGold10k",
+  defaultTier: "sterling",
   defaultRingSize: "10",
 
-  // Product-level fallback gallery — yellow gold reads as the Heritage signature.
-  media: yellowGoldGallery,
+  // Product-level fallback gallery — white-metal reads as the entry-tier signature.
+  media: whiteMetalGallery,
 
   // Family cross-link — quiet editorial connector to the Ladies First
   // expression of the same master architecture.
