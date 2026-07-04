@@ -4,6 +4,7 @@
    ===================================== */
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { ringSizeProfiles } from "../data/ringSizes";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "../hooks/useLivePrice";
@@ -301,6 +302,23 @@ export default function RingProductPage({ product }) {
           </p>
         </div>
       </div>
+
+      {/* FAMILY CROSS-LINK — quiet editorial connector between PARABOLA family
+          members. Only renders when the product exposes `crossLink`; other
+          product pages are unaffected. No card, no badge, no animation, no
+          layout shift. Small uppercase Cinzel, warm gold, thin underline. */}
+      {product.crossLink ? (
+        <div className="max-w-7xl mx-auto px-4 pb-24 text-center">
+          <Link
+            to={product.crossLink.to}
+            className="inline-block text-[11px] md:text-xs tracking-[0.3em] uppercase text-[#C6A25D]/85 hover:text-[#C6A25D] border-b border-[#C6A25D]/25 hover:border-[#C6A25D]/60 pb-1 transition-colors"
+            style={{ fontFamily: "'Cinzel', serif" }}
+            data-testid="family-cross-link"
+          >
+            {product.crossLink.label} <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

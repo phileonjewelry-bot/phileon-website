@@ -140,7 +140,9 @@ function App() {
             <Route path="/piece/:slug" element={<ProductDetailPage />} />
             <Route path="/products/la-marva" element={<LaMarvaPage />} />
             <Route path="/products/parabola" element={<ParabolaPage />} />
+            <Route path="/parabola" element={<ParabolaPage />} />
             <Route path="/products/parabola-heritage" element={<ParabolaHeritagePage />} />
+            <Route path="/parabola-heritage" element={<ParabolaHeritagePage />} />
             <Route path="/products/annie-rose" element={<AnnieRosePage />} />
             <Route path="/products/monika-couture" element={<MonikaCouturePage />} />
             <Route path="/products/alejandra-heels" element={<AlejandraHeelsPage />} />

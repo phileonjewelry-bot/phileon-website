@@ -112,6 +112,13 @@ const parabolaHeritageProduct = {
   // Product-level fallback gallery — yellow gold reads as the Heritage signature.
   media: yellowGoldGallery,
 
+  // Family cross-link — quiet editorial connector to the Ladies First
+  // expression of the same master architecture.
+  crossLink: {
+    to: "/parabola",
+    label: "Discover the Ladies First expression",
+  },
+
   story:
     "PARABOLA HERITAGE carries the same concave architecture as PARABOLA, but with a stronger ancestral palette.\n\n" +
     "Rubies, yellow stones, emeralds, and black diamonds move inward through the dish, creating a ceremonial field of color and shadow. " +

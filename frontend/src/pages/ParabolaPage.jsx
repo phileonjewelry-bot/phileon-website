@@ -135,6 +135,13 @@ const parabolaProduct = {
   // whenever the tier-scoped `media` is not resolved yet).
   media: roseGoldGallery,
 
+  // Family cross-link — quiet editorial connector to the Gentleman's Club
+  // expression of the same master architecture.
+  crossLink: {
+    to: "/parabola-heritage",
+    label: "Discover the Heritage expression",
+  },
+
   story:
     "Light does not simply strike its surface. It gathers within it. " +
     "PARABOLA curves inward instead of rising outward, forming a concave field of pink sapphires, white diamonds, and champagne diamonds. " +
