@@ -71,6 +71,16 @@ const yellowGoldGallery = [
     src: "/parabola-heritage/yellow-gold/yg-06-onhand.jpg",
     alt: "PARABOLA HERITAGE — 10K yellow gold, on-hand ambient lifestyle shot, the ceremonial dish reading warm against dark skin under low interior light.",
   },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-11-punch.jpg",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, editorial street portrait: forward-punch stance in a green track jacket, the concave dish held toward the viewer as a statement of presence.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-12-box.jpg",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, unboxing composition: the ceremonial ring resting inside its black suede presentation cushion on a walnut surface, warm gold rim catching the light.",
+  },
 ];
 
 /* White-metal Heritage gallery — Sterling Silver + 10K White Gold share this set. */
