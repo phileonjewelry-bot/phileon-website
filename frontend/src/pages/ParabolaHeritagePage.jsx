@@ -46,6 +46,31 @@ const yellowGoldGallery = [
     src: "/parabola-heritage/img-05-macro.png",
     alt: "PARABOLA HERITAGE — extreme macro into the concave center, black diamonds gathering into the sunken well beneath the emerald, yellow, and ruby rings.",
   },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-08-profile.png",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, 3/4 profile study with the dish tilted to reveal every concentric field: ruby outer, yellow, emerald, and black diamond center, all resting on the architectural gold shank.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-10-front.png",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, straight-on portrait, the full concentric field reading as a ceremonial ring of color above a clean minimalist shank.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-07-angle.png",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, angled composition with the deep concave dish tilted toward the viewer, the warm yellow bezel glowing under studio light.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-09-macro.png",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, extreme macro descending into the sunken center, black diamond pavé spiralling into shadow beneath the emerald ring.",
+  },
+  {
+    type: "image",
+    src: "/parabola-heritage/yellow-gold/yg-06-onhand.jpg",
+    alt: "PARABOLA HERITAGE — 10K yellow gold, on-hand ambient lifestyle shot, the ceremonial dish reading warm against dark skin under low interior light.",
+  },
 ];
 
 /* White-metal Heritage gallery — Sterling Silver + 10K White Gold share this set. */
