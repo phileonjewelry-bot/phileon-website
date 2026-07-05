@@ -165,6 +165,23 @@ export default function RingProductPage({ product }) {
             </div>
           </div>
 
+          {/* LINEAGE CAPTION — opt-in per product. Renders only when the hero
+              video slot (index 0) is active AND the currently displayed media
+              is a video. Quiet gold at 70% opacity, small uppercase Cinzel,
+              thin underline. No card, no badge, no animation, no layout shift. */}
+          {product.lineageCaption && activeMedia === 0 && activeGallery[0]?.type === "video" ? (
+            <div className="mt-3 text-center">
+              <Link
+                to={product.lineageCaption.to}
+                className="inline-block text-[10.5px] tracking-[0.32em] uppercase text-[#C6A25D]/70 hover:text-[#C6A25D] border-b border-[#C6A25D]/25 hover:border-[#C6A25D]/60 pb-0.5"
+                style={{ fontFamily: "'Cinzel', serif" }}
+                data-testid="lineage-caption"
+              >
+                {product.lineageCaption.label} <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          ) : null}
+
           {/* THUMBNAILS */}
           <div className="grid grid-cols-6 gap-2 mt-4">
             {activeGallery.map((item, index) => (

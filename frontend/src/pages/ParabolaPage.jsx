@@ -159,6 +159,14 @@ const parabolaProduct = {
     label: "Discover the Heritage expression",
   },
 
+  // Lineage caption — appears only when the hero video slot is active on
+  // PARABOLA. Quiet gold, connects the production piece back to the
+  // Inspiration Vault study that inspired it.
+  lineageCaption: {
+    to: "/parabola-atelier",
+    label: "Discover the original study",
+  },
+
   story:
     "Light does not simply strike its surface. It gathers within it. " +
     "PARABOLA curves inward instead of rising outward, forming a concave field of pink sapphires, white diamonds, and champagne diamonds. " +
