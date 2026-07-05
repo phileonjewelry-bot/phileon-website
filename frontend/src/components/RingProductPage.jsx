@@ -80,6 +80,16 @@ export default function RingProductPage({ product }) {
     };
   }, [activeMedia, selectedTier]);
 
+  // One-time hero-video fade-in on page load only. Runs once regardless of
+  // tier switches, gallery navigation, or video loops. Products without a
+  // hero video are unaffected.
+  const [heroMounted, setHeroMounted] = useState(false);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setHeroMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const hasHeroVideo = activeGallery[0]?.type === "video";
+
   const isSizeValid = !!selectedSize;
 
   // Handle add to cart
@@ -122,11 +132,22 @@ export default function RingProductPage({ product }) {
                   loop
                   playsInline
                   preload="auto"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+                  onContextMenu={(e) => e.preventDefault()}
                   onEnded={(e) => {
                     e.currentTarget.currentTime = 0;
                     e.currentTarget.play();
                   }}
-                  className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
+                  className={`w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms] ${
+                    hasHeroVideo
+                      ? `transition-opacity ease-out duration-[1200ms] ${
+                          heroMounted ? "opacity-100" : "opacity-0"
+                        }`
+                      : ""
+                  }`}
+                  data-testid="hero-video"
                 />
               ) : (
                 <img

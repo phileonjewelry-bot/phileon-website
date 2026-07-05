@@ -29,8 +29,18 @@ import { products } from "@/data/products";
  */
 const heritagePricing = products.parabolaHeritage.pricing;
 
+/* Shared hero film — plays first as the product hero on every metal tier.
+   12.44s, 1280×720 H.264, audio stripped for silent cross-browser autoplay. */
+const HERO_FILM = {
+  type: "video",
+  src: "/parabola-heritage/hero-film.mp4",
+  poster: "/parabola-heritage/hero-film-poster.jpg",
+  alt: "PARABOLA HERITAGE — hero film, 12 seconds of the ceremonial concave dish moving through studio light.",
+};
+
 /* Yellow-gold gallery (default) — hero, ceremonial front, on-hand, macro. */
 const yellowGoldGallery = [
+  HERO_FILM,
   {
     type: "image",
     src: "/parabola-heritage/img-03-front.png",
@@ -75,6 +85,7 @@ const yellowGoldGallery = [
 
 /* White-metal Heritage gallery — Sterling Silver + 10K White Gold share this set. */
 const whiteMetalGallery = [
+  HERO_FILM,
   {
     type: "image",
     src: "/parabola-heritage/img-01-profile.png",
