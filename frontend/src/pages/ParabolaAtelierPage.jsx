@@ -148,6 +148,31 @@ export default function ParabolaAtelierPage() {
         subhead="The idea before the icon."
       />
 
+      {/* RECIPROCAL LINEAGE CAPTION — quiet forward-link from the Vault study
+          to its production expression (PARABOLA · Ladies First). Small
+          uppercase Cinzel, warm gold at 70% opacity, thin underline. No card,
+          no badge, no animation, no layout shift. Does not replace the
+          Archive notice or final quote below. */}
+      <div className="text-center" style={{ padding: "clamp(20px,3vw,40px) clamp(20px,4vw,60px) 0" }}>
+        <Link
+          to="/parabola"
+          data-testid="pa-lineage-caption"
+          style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize: 10.5,
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            color: "rgba(200, 162, 74, 0.7)",
+            borderBottom: "1px solid rgba(200, 162, 74, 0.25)",
+            paddingBottom: 2,
+            display: "inline-block",
+            textDecoration: "none",
+          }}
+        >
+          Now living in PARABOLA &middot; Ladies First <span aria-hidden="true">&rarr;</span>
+        </Link>
+      </div>
+
       <section className="pa-section pa-desc d1" data-testid="pa-desc">
         <p className="pa-eyebrow">Editorial</p>
         <div className="pa-desc-body">
