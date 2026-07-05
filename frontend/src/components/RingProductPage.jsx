@@ -116,7 +116,13 @@ export default function RingProductPage({ product }) {
 
   return (
     <div className="bg-black text-white min-h-screen overflow-x-hidden" data-testid={`${product.id}-page`}>
-      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10">
+      <div
+        className={`max-w-7xl mx-auto px-4 grid grid-cols-1 gap-10 ${
+          product.prominentHero
+            ? "py-4 lg:grid-cols-[1.42fr_0.58fr]"
+            : "py-8 lg:grid-cols-[1.2fr_0.8fr]"
+        }`}
+      >
         {/* LEFT SIDE — GALLERY */}
         <div>
           {/* HERO MEDIA */}

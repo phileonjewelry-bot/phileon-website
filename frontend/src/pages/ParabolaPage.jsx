@@ -22,8 +22,18 @@ import { products } from "@/data/products";
  */
 const parabolaPricing = products.parabola.pricing;
 
+/* Shared hero film — same asset used by PARABOLA ATELIER (Inspiration Vault).
+   Referenced by path, never duplicated. Audio pre-stripped for silent autoplay. */
+const HERO_FILM = {
+  type: "video",
+  src: "/inspiration-vault/parabola-atelier/hero-film.mp4",
+  poster: "/inspiration-vault/parabola-atelier/hero-film-poster.jpg",
+  alt: "PARABOLA — architectural concave dish hero film, silent autoplay preserving the full ring composition.",
+};
+
 /* Rose-gold gallery (default) — hero image + 4 supporting angles. */
 const roseGoldGallery = [
+  HERO_FILM,
   {
     type: "image",
     src: "/parabola/hero.png",
@@ -58,6 +68,7 @@ const roseGoldGallery = [
 
 /* White-metal gallery — Sterling Silver + 10K White Gold share this set. */
 const whiteMetalGallery = [
+  HERO_FILM,
   {
     type: "image",
     src: "/parabola/white-metal/wm-01.png",
@@ -130,6 +141,12 @@ const parabolaProduct = {
   },
 
   defaultTier: "sterling",
+
+  // Prominent hero — enlarges the media column by ~18% for PARABOLA (Ladies
+  // First) so the concave dish reads larger on first load. Never applied to
+  // other products; PARABOLA HERITAGE and every other ring page remain
+  // untouched.
+  prominentHero: true,
 
   // Product-level fallback gallery (rose gold reads as the signature look
   // whenever the tier-scoped `media` is not resolved yet).
