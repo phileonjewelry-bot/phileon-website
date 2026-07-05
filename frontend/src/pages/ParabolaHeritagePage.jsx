@@ -170,6 +170,11 @@ const parabolaHeritageProduct = {
     label: "Discover the Ladies First expression",
   },
 
+  // PARABOLA family nav — renders the shared collection strip with this
+  // page marked active. Only PARABOLA / PARABOLA HERITAGE / PARABOLA ATELIER
+  // expose this key.
+  parabolaFamily: "heritage",
+
   story:
     "PARABOLA HERITAGE carries the same concave architecture as PARABOLA, but with a stronger ancestral palette.\n\n" +
     "Rubies, yellow stones, emeralds, and black diamonds move inward through the dish, creating a ceremonial field of color and shadow. " +

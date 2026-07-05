@@ -5,6 +5,7 @@ import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
 import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
+import ParabolaFamilyNav from "@/components/ParabolaFamilyNav";
 
 /**
  * PARABOLA ATELIER — Inspiration Vault · $100 USD
@@ -260,6 +261,8 @@ export default function ParabolaAtelierPage() {
         <p className="pa-final-line">&ldquo;Every masterpiece begins as an idea. This is where PARABOLA began.&rdquo;</p>
         <p className="pa-final-attr">— PHILEON</p>
       </section>
+
+      <ParabolaFamilyNav active="atelier" />
     </div>
   );
 }

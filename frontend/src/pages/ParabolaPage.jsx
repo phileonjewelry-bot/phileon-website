@@ -167,6 +167,11 @@ const parabolaProduct = {
     label: "Discover the original study",
   },
 
+  // PARABOLA family nav — renders the shared collection strip with this
+  // page marked active. Only PARABOLA / PARABOLA HERITAGE / PARABOLA ATELIER
+  // expose this key.
+  parabolaFamily: "ladies-first",
+
   story:
     "Light does not simply strike its surface. It gathers within it. " +
     "PARABOLA curves inward instead of rising outward, forming a concave field of pink sapphires, white diamonds, and champagne diamonds. " +

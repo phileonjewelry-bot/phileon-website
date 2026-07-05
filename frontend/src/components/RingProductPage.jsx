@@ -6,6 +6,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ringSizeProfiles } from "../data/ringSizes";
+import ParabolaFamilyNav from "./ParabolaFamilyNav";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "../hooks/useLivePrice";
 import { slugToProductKey } from "../components/LiveFromPrice";
@@ -362,6 +363,13 @@ export default function RingProductPage({ product }) {
             {product.crossLink.label} <span aria-hidden="true">→</span>
           </Link>
         </div>
+      ) : null}
+
+      {/* PARABOLA FAMILY NAV — compact editorial navigation strip, only rendered
+          when a product opts in via `product.parabolaFamily`. Placed at the
+          bottom of the page, immediately above the site footer. */}
+      {product.parabolaFamily ? (
+        <ParabolaFamilyNav active={product.parabolaFamily} />
       ) : null}
     </div>
   );
