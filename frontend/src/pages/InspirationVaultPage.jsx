@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "parabola-atelier",
+    title: "PARABOLA ATELIER",
+    subtitle: "Architectural Concave Study · The Idea Before the Icon",
+    price: 100,
+    href: "/parabola-atelier",
+    heroVideo: "/inspiration-vault/parabola-atelier/hero-film.mp4",
+    posterImage: "/inspiration-vault/parabola-atelier/hero-film-poster.jpg",
+    releasedAt: "2026-07-05",
+    category: "Rings",
+  },
+  {
     slug: "deco-eventail",
     title: "Deco Éventail",
     subtitle: "Art Deco Fan Cocktail Ring",
