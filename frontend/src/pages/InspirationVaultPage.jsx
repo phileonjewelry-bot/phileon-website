@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "echelle",
+    title: "ÉCHELLE",
+    subtitle: "Architectural Three-Tone Gold Ribbon Hoops",
+    price: 115,
+    href: "/echelle",
+    heroVideo: "/inspiration-vault/echelle/hero-film.mp4",
+    posterImage: "/inspiration-vault/echelle/hero-film-poster.jpg",
+    releasedAt: "2026-07-06",
+    category: "Earrings",
+  },
+  {
     slug: "parabola-atelier",
     title: "PARABOLA ATELIER",
     subtitle: "Architectural Concave Study · The Idea Before the Icon",

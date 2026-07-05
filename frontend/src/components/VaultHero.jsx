@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
  *   - generous black negative space
  *   - never crop, never zoom, never overflow viewport
  */
-export default function VaultHero({ image, video = null, altText = "", eyebrow = null, title = null, subhead = null }) {
+export default function VaultHero({ image, video = null, altText = "", eyebrow = null, title = null, subhead = null, prominent = false }) {
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef(null);
 
@@ -35,7 +35,7 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
   };
 
   return (
-    <section className="iv-product-hero" data-testid="iv-product-hero">
+    <section className={`iv-product-hero${prominent ? " iv-product-hero-prominent" : ""}`} data-testid="iv-product-hero">
       <style>{`
         .iv-product-hero {
           display: flex;
@@ -93,6 +93,16 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
         }
         .iv-product-hero-media-shown   { opacity: 1; pointer-events: auto; }
         .iv-product-hero-media-hidden  { opacity: 0; pointer-events: none; }
+
+        /* Prominent variant — opt-in per Vault page. Widens the stage max-width
+           by ~13% (1200px → 1360px) and slightly reduces vertical padding so
+           the composition reads larger without cropping. object-fit still
+           contain, aspect ratio preserved. Applied only when the parent page
+           passes prominent={true}. */
+        .iv-product-hero-prominent { padding: 3rem 1.5rem; }
+        .iv-product-hero-prominent .iv-product-hero-stage { max-width: 1360px; height: min(86vh, 84vh); }
+        .iv-product-hero-prominent .iv-product-hero-image,
+        .iv-product-hero-prominent .iv-product-hero-video { max-width: min(100%, 1360px); max-height: 86vh; }
         @media (max-width: 880px) {
           .iv-product-hero { min-height: 70vh; padding: 2.5rem 1.25rem; }
           .iv-product-hero-stage { height: min(60vh, 60vh); }
