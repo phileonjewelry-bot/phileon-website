@@ -29,7 +29,7 @@ const GALLERY = [
   { type: "img", src: STILL_01, span: "full", alt: "ÉCHELLE — editorial on-bust portrait, the alternating three-tone gold ribbons framing negative space against a dim boutique interior." },
   { type: "img", src: STILL_02, span: "full", alt: "ÉCHELLE — studio pair resting on black velvet, revealing the pavé density and open oval architecture of the rhythmic ribbon construction." },
   { type: "video", src: GALLERY_VIDEO_A, poster: GALLERY_VIDEO_A_POSTER, span: "half", alt: "ÉCHELLE — hero editorial film revealing alternating pavé bands moving through studio light." },
-  { type: "video", src: GALLERY_VIDEO_B, poster: GALLERY_VIDEO_B_POSTER, span: "half", alt: "ÉCHELLE — supplementary editorial film exploring the open oval architecture from additional angles." },
+  { type: "video", src: GALLERY_VIDEO_B, poster: GALLERY_VIDEO_B_POSTER, span: "full-portrait", alt: "ÉCHELLE — supplementary editorial film exploring the open oval architecture from additional angles." },
 ];
 
 export default function EchellePage() {
@@ -88,13 +88,15 @@ export default function EchellePage() {
         .ec-gallery-cell { position:relative; aspect-ratio:1/1; overflow:hidden;
           background:var(--bg-deep); border:1px solid var(--rule-soft); }
         .ec-gallery-cell.full { grid-column:1 / -1; aspect-ratio:16/10; }
+        .ec-gallery-cell.full-portrait { grid-column:1 / -1; aspect-ratio:auto; height:min(88vh, 940px); }
         .ec-gallery-cell img,
         .ec-gallery-cell video { width:100%; height:100%; object-fit:contain; display:block; padding:4%;
           background:#000;
           transition:transform 900ms cubic-bezier(.22,.61,.36,1); }
+        .ec-gallery-cell.full-portrait video { padding: 0; }
         .ec-gallery-cell:hover img,
         .ec-gallery-cell:hover video { transform:scale(1.02); }
-        @media (max-width:640px){ .ec-gallery-grid { grid-template-columns:1fr; } .ec-gallery-cell.full { aspect-ratio:4/5; } }
+        @media (max-width:640px){ .ec-gallery-grid { grid-template-columns:1fr; } .ec-gallery-cell.full { aspect-ratio:4/5; } .ec-gallery-cell.full-portrait { height:min(78vh, 720px); } }
         .ec-cta { text-align:center; }
         .ec-price-display { font-family:'Cinzel',serif; font-size:22px; letter-spacing:.32em;
           color:var(--ink-strong); margin:0 0 10px; }
