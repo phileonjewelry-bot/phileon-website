@@ -88,7 +88,18 @@ export default function EchellePage() {
         .ec-gallery-cell { position:relative; aspect-ratio:1/1; overflow:hidden;
           background:var(--bg-deep); border:1px solid var(--rule-soft); }
         .ec-gallery-cell.full { grid-column:1 / -1; aspect-ratio:16/10; }
-        .ec-gallery-cell.full-portrait { grid-column:1 / -1; aspect-ratio:auto; height:min(88vh, 940px); }
+        /* Portrait-video cell: cell aspect matches the actual portrait video
+           (400×720 = 5:9) so object-fit: contain fills the cell edge-to-edge
+           with zero black bars. Height caps at 92vh / 1120px on desktop. */
+        .ec-gallery-cell.full-portrait {
+          grid-column: 1 / -1;
+          aspect-ratio: 5 / 9;
+          height: min(92vh, 1120px);
+          width: auto;
+          max-width: 100%;
+          justify-self: center;
+          margin: 0 auto;
+        }
         .ec-gallery-cell img,
         .ec-gallery-cell video { width:100%; height:100%; object-fit:contain; display:block; padding:4%;
           background:#000;
@@ -96,7 +107,11 @@ export default function EchellePage() {
         .ec-gallery-cell.full-portrait video { padding: 0; }
         .ec-gallery-cell:hover img,
         .ec-gallery-cell:hover video { transform:scale(1.02); }
-        @media (max-width:640px){ .ec-gallery-grid { grid-template-columns:1fr; } .ec-gallery-cell.full { aspect-ratio:4/5; } .ec-gallery-cell.full-portrait { height:min(78vh, 720px); } }
+        @media (max-width:640px){
+          .ec-gallery-grid { grid-template-columns:1fr; }
+          .ec-gallery-cell.full { aspect-ratio:4/5; }
+          .ec-gallery-cell.full-portrait { height:min(88vh, 780px); aspect-ratio: 5 / 9; }
+        }
         .ec-cta { text-align:center; }
         .ec-price-display { font-family:'Cinzel',serif; font-size:22px; letter-spacing:.32em;
           color:var(--ink-strong); margin:0 0 10px; }
