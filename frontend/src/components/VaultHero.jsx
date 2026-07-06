@@ -69,17 +69,22 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
           height: min(80vh, 78vh);
           margin: 0 auto;
           z-index: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .iv-product-hero-image,
         .iv-product-hero-video {
           position: absolute;
-          inset: 0;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           width: 100%;
           height: 100%;
           max-width: min(100%, 1200px);
           max-height: 80vh;
           object-fit: contain;
-          object-position: center;
+          object-position: center center;
           display: block;
           margin: 0 auto;
           transition: opacity 1.4s cubic-bezier(.22,.61,.36,1);
@@ -88,33 +93,63 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
           animation: ivHeroRise 1.4s cubic-bezier(.22,.61,.36,1) both;
         }
         @keyframes ivHeroRise {
-          from { opacity: 0; transform: translateY(28px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translate(-50%, calc(-50% + 28px)); }
+          to   { opacity: 1; transform: translate(-50%, -50%); }
         }
         .iv-product-hero-media-shown   { opacity: 1; pointer-events: auto; }
         .iv-product-hero-media-hidden  { opacity: 0; pointer-events: none; }
 
-        /* Prominent + square-optimized variant — opt-in per Vault page.
-           Renders a strict 1:1 stage sized around 992px on a 1080p desktop
-           viewport, which is roughly +18 percent linear over the standard
-           1:1 rendering (842px) in the default hero. object-fit stays as
-           contain on the media so no crop is possible; the square container
-           clips only its own black background against the page background.
-           Ignored unless the page passes the prominent flag as true. */
+        /* Prominent variant — opt-in per Vault page.
+           Portrait-first layout: sizes the media by HEIGHT (not width), so
+           portrait videos render as an editorial film poster rather than
+           being letterboxed into a landscape or square frame. The stage is a
+           positioning context; the poster and video are STACKED absolute
+           layers, each centered via translate(-50%, -50%). Because they are
+           not flex siblings, they cannot push each other sideways. object-fit
+           stays contain; nothing is cropped, stretched, or zoomed. */
         .iv-product-hero-prominent { padding: 3rem 1.5rem; }
         .iv-product-hero-prominent .iv-product-hero-stage {
-          width: min(92vh, 992px);
-          height: min(92vh, 992px);
-          max-width: min(92vh, 992px);
-          aspect-ratio: 1 / 1;
+          position: relative;
+          width: 100%;
+          max-width: none;
+          height: clamp(520px, 78vh, 860px);
+          min-height: clamp(520px, 78vh, 860px);
+          margin: 0 auto;
         }
         .iv-product-hero-prominent .iv-product-hero-image,
         .iv-product-hero-prominent .iv-product-hero-video {
-          width: 100%;
-          height: 100%;
-          max-width: none;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: auto;
+          height: clamp(520px, 78vh, 860px);
+          max-width: 100%;
           max-height: none;
           object-fit: contain;
+          object-position: center center;
+          margin: 0;
+          display: block;
+        }
+        /* The base rule adds a translateY entrance animation to the poster;
+           override it to preserve the translate(-50%, -50%) centering. */
+        .iv-product-hero-prominent .iv-product-hero-image {
+          animation: ivHeroRiseProminent 1.4s cubic-bezier(.22,.61,.36,1) both;
+        }
+        @keyframes ivHeroRiseProminent {
+          from { opacity: 0; transform: translate(-50%, calc(-50% + 28px)); }
+          to   { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @media (max-width: 768px) {
+          .iv-product-hero-prominent .iv-product-hero-stage {
+            height: min(72vh, 760px);
+            min-height: min(72vh, 760px);
+          }
+          .iv-product-hero-prominent .iv-product-hero-image,
+          .iv-product-hero-prominent .iv-product-hero-video {
+            height: min(72vh, 760px);
+          }
         }
         @media (max-width: 880px) {
           .iv-product-hero { min-height: 70vh; padding: 2.5rem 1.25rem; }
