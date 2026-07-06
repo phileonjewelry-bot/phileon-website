@@ -14,15 +14,22 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  * shop, earrings, carousel, or any production collection.
  */
 
-const HERO_VIDEO  = "/inspiration-vault/echelle/hero-film.mp4";
-const HERO_POSTER = "/inspiration-vault/echelle/hero-film-poster.jpg";
+const HERO_VIDEO  = "/inspiration-vault/echelle/hero-square.mp4";
+const HERO_POSTER = "/inspiration-vault/echelle/hero-square-poster.jpg";
 const STILL_01    = "/inspiration-vault/echelle/still-01-bust.jpg";
 const STILL_02    = "/inspiration-vault/echelle/still-02-pair.jpg";
+const GALLERY_VIDEO_A = "/inspiration-vault/echelle/hero-square.mp4";
+const GALLERY_VIDEO_A_POSTER = "/inspiration-vault/echelle/hero-square-poster.jpg";
+const GALLERY_VIDEO_B = "/inspiration-vault/echelle/gallery-2.mp4";
+const GALLERY_VIDEO_B_POSTER = "/inspiration-vault/echelle/gallery-2-poster.jpg";
 const PRICE = 115;
 
+// Gallery order (preserved): existing 2 stills first, then the two motion cells appended.
 const GALLERY = [
   { type: "img", src: STILL_01, span: "full", alt: "ÉCHELLE — editorial on-bust portrait, the alternating three-tone gold ribbons framing negative space against a dim boutique interior." },
   { type: "img", src: STILL_02, span: "full", alt: "ÉCHELLE — studio pair resting on black velvet, revealing the pavé density and open oval architecture of the rhythmic ribbon construction." },
+  { type: "video", src: GALLERY_VIDEO_A, poster: GALLERY_VIDEO_A_POSTER, span: "half", alt: "ÉCHELLE — hero editorial film revealing alternating pavé bands moving through studio light." },
+  { type: "video", src: GALLERY_VIDEO_B, poster: GALLERY_VIDEO_B_POSTER, span: "half", alt: "ÉCHELLE — supplementary editorial film exploring the open oval architecture from additional angles." },
 ];
 
 export default function EchellePage() {
@@ -81,9 +88,12 @@ export default function EchellePage() {
         .ec-gallery-cell { position:relative; aspect-ratio:1/1; overflow:hidden;
           background:var(--bg-deep); border:1px solid var(--rule-soft); }
         .ec-gallery-cell.full { grid-column:1 / -1; aspect-ratio:16/10; }
-        .ec-gallery-cell img { width:100%; height:100%; object-fit:contain; display:block; padding:4%;
+        .ec-gallery-cell img,
+        .ec-gallery-cell video { width:100%; height:100%; object-fit:contain; display:block; padding:4%;
+          background:#000;
           transition:transform 900ms cubic-bezier(.22,.61,.36,1); }
-        .ec-gallery-cell:hover img { transform:scale(1.02); }
+        .ec-gallery-cell:hover img,
+        .ec-gallery-cell:hover video { transform:scale(1.02); }
         @media (max-width:640px){ .ec-gallery-grid { grid-template-columns:1fr; } .ec-gallery-cell.full { aspect-ratio:4/5; } }
         .ec-cta { text-align:center; }
         .ec-price-display { font-family:'Cinzel',serif; font-size:22px; letter-spacing:.32em;
@@ -178,7 +188,24 @@ export default function EchellePage() {
           {GALLERY.map((g, i) => (
             <div key={i} className={`ec-gallery-cell ${g.span || ""} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
               data-testid={`ec-gallery-cell-${i + 1}`}>
-              <img src={g.src} alt={g.alt} loading="lazy" />
+              {g.type === "video" ? (
+                <video
+                  src={g.src}
+                  poster={g.poster}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+                  onContextMenu={(e) => e.preventDefault()}
+                  aria-label={g.alt}
+                />
+              ) : (
+                <img src={g.src} alt={g.alt} loading="lazy" />
+              )}
             </div>
           ))}
         </div>

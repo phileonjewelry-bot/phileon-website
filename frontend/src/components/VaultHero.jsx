@@ -94,15 +94,28 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
         .iv-product-hero-media-shown   { opacity: 1; pointer-events: auto; }
         .iv-product-hero-media-hidden  { opacity: 0; pointer-events: none; }
 
-        /* Prominent variant — opt-in per Vault page. Widens the stage max-width
-           by ~13% (1200px → 1360px) and slightly reduces vertical padding so
-           the composition reads larger without cropping. object-fit still
-           contain, aspect ratio preserved. Applied only when the parent page
-           passes prominent={true}. */
+        /* Prominent + square-optimized variant — opt-in per Vault page.
+           Renders a strict 1:1 stage sized around 992px on a 1080p desktop
+           viewport, which is roughly +18 percent linear over the standard
+           1:1 rendering (842px) in the default hero. object-fit stays as
+           contain on the media so no crop is possible; the square container
+           clips only its own black background against the page background.
+           Ignored unless the page passes the prominent flag as true. */
         .iv-product-hero-prominent { padding: 3rem 1.5rem; }
-        .iv-product-hero-prominent .iv-product-hero-stage { max-width: 1360px; height: min(86vh, 84vh); }
+        .iv-product-hero-prominent .iv-product-hero-stage {
+          width: min(92vh, 992px);
+          height: min(92vh, 992px);
+          max-width: min(92vh, 992px);
+          aspect-ratio: 1 / 1;
+        }
         .iv-product-hero-prominent .iv-product-hero-image,
-        .iv-product-hero-prominent .iv-product-hero-video { max-width: min(100%, 1360px); max-height: 86vh; }
+        .iv-product-hero-prominent .iv-product-hero-video {
+          width: 100%;
+          height: 100%;
+          max-width: none;
+          max-height: none;
+          object-fit: contain;
+        }
         @media (max-width: 880px) {
           .iv-product-hero { min-height: 70vh; padding: 2.5rem 1.25rem; }
           .iv-product-hero-stage { height: min(60vh, 60vh); }

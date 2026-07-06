@@ -19,8 +19,8 @@ const VAULT_PIECES = [
     subtitle: "Architectural Three-Tone Gold Ribbon Hoops",
     price: 115,
     href: "/echelle",
-    heroVideo: "/inspiration-vault/echelle/hero-film.mp4",
-    posterImage: "/inspiration-vault/echelle/hero-film-poster.jpg",
+    heroVideo: "/inspiration-vault/echelle/hero-square.mp4",
+    posterImage: "/inspiration-vault/echelle/still-01-bust.jpg",
     releasedAt: "2026-07-06",
     category: "Earrings",
   },
@@ -31,7 +31,7 @@ const VAULT_PIECES = [
     price: 100,
     href: "/parabola-atelier",
     heroVideo: "/inspiration-vault/parabola-atelier/hero-film.mp4",
-    posterImage: "/inspiration-vault/parabola-atelier/hero-film-poster.jpg",
+    posterImage: "/inspiration-vault/parabola-atelier/still-01-topdown.jpg",
     releasedAt: "2026-07-05",
     category: "Rings",
   },
@@ -523,16 +523,9 @@ export default function InspirationVaultPage() {
                 loading="lazy"
                 data-testid={`iv-card-${piece.slug}-img`}
               />
-              {piece.heroVideo && (
-                <span
-                  className="iv-card-film-badge"
-                  data-testid={`iv-card-${piece.slug}-film-badge`}
-                  aria-label="Editorial film inside the product page"
-                >
-                  <span className="iv-card-film-glyph" aria-hidden="true" />
-                  Editorial Film
-                </span>
-              )}
+              {/* Editorial-Film overlay intentionally removed — the Inspiration
+                  Vault index is image-first. Motion assets live on the
+                  individual product page only. */}
             </div>
             <div className="iv-card-meta">
               <div className="iv-card-title-block">
