@@ -100,20 +100,21 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
         .iv-product-hero-media-hidden  { opacity: 0; pointer-events: none; }
 
         /* Prominent variant — opt-in per Vault page.
-           Portrait-first layout: sizes the media by HEIGHT (not width), so
-           portrait videos render as an editorial film poster rather than
-           being letterboxed into a landscape or square frame. The stage is a
-           positioning context; the poster and video are STACKED absolute
-           layers, each centered via translate(-50%, -50%). Because they are
-           not flex siblings, they cannot push each other sideways. object-fit
-           stays contain; nothing is cropped, stretched, or zoomed. */
-        .iv-product-hero-prominent { padding: 3rem 1.5rem; }
+           Portrait-first layout: sizes the media by HEIGHT (not width). The
+           section shrinks to hug the media so the earrings dominate the
+           viewport as an editorial film poster rather than floating inside a
+           large black canvas. object-fit stays contain; nothing is cropped,
+           stretched, or zoomed. */
+        .iv-product-hero-prominent {
+          padding: 1rem 1.5rem;
+          min-height: 0;
+        }
         .iv-product-hero-prominent .iv-product-hero-stage {
           position: relative;
           width: 100%;
           max-width: none;
-          height: clamp(520px, 78vh, 860px);
-          min-height: clamp(520px, 78vh, 860px);
+          height: clamp(640px, 92vh, 1040px);
+          min-height: clamp(640px, 92vh, 1040px);
           margin: 0 auto;
         }
         .iv-product-hero-prominent .iv-product-hero-image,
@@ -123,7 +124,7 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
           left: 50%;
           transform: translate(-50%, -50%);
           width: auto;
-          height: clamp(520px, 78vh, 860px);
+          height: clamp(640px, 92vh, 1040px);
           max-width: 100%;
           max-height: none;
           object-fit: contain;
@@ -131,8 +132,8 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
           margin: 0;
           display: block;
         }
-        /* The base rule adds a translateY entrance animation to the poster;
-           override it to preserve the translate(-50%, -50%) centering. */
+        /* Override the base rule's translateY entrance animation so the
+           translate(-50%, -50%) centering is preserved throughout. */
         .iv-product-hero-prominent .iv-product-hero-image {
           animation: ivHeroRiseProminent 1.4s cubic-bezier(.22,.61,.36,1) both;
         }
@@ -142,13 +143,16 @@ export default function VaultHero({ image, video = null, altText = "", eyebrow =
         }
 
         @media (max-width: 768px) {
+          .iv-product-hero-prominent {
+            padding: 0.75rem 1rem;
+          }
           .iv-product-hero-prominent .iv-product-hero-stage {
-            height: min(72vh, 760px);
-            min-height: min(72vh, 760px);
+            height: min(78vh, 780px);
+            min-height: min(78vh, 780px);
           }
           .iv-product-hero-prominent .iv-product-hero-image,
           .iv-product-hero-prominent .iv-product-hero-video {
-            height: min(72vh, 760px);
+            height: min(78vh, 780px);
           }
         }
         @media (max-width: 880px) {
