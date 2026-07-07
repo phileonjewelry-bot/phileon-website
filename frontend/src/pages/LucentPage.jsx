@@ -19,15 +19,21 @@ const HERO_POSTER = "/inspiration-vault/lucent/still-02-pair.jpg";
 const STILL_01    = "/inspiration-vault/lucent/still-01-bust.jpg";
 const STILL_02    = "/inspiration-vault/lucent/still-02-pair.jpg";
 const STILL_03    = "/inspiration-vault/lucent/still-03-lifestyle.jpg";
+const GALLERY_VIDEO_A = "/inspiration-vault/lucent/gallery-a.mp4";
+const GALLERY_VIDEO_A_POSTER = "/inspiration-vault/lucent/gallery-a-poster.jpg";
+const GALLERY_VIDEO_B = "/inspiration-vault/lucent/gallery-b.mp4";
+const GALLERY_VIDEO_B_POSTER = "/inspiration-vault/lucent/gallery-b-poster.jpg";
 const PRICE = 70;
 
-// Gallery order: two editorial stills first, then the lifestyle still, then
-// the portrait hero film to close the study.
+// Gallery order: three editorial stills, then the two supplementary portrait
+// films that reveal the articulated chain-link architecture from additional
+// angles (the hero film already anchors the top of the page).
 const GALLERY = [
   { type: "img", src: STILL_01, span: "full", alt: "LUCENT — editorial on-model portrait, articulated pavé chain-link hoops framing the jawline in cool white light." },
   { type: "img", src: STILL_02, span: "full", alt: "LUCENT — studio pair, revealing the sculpted link geometry and continuous pavé density from a straight-on angle." },
   { type: "img", src: STILL_03, span: "full", alt: "LUCENT — lifestyle vignette catching the earrings against skin and fabric, isolating the interplay between weight and luminosity." },
-  { type: "video", src: HERO_VIDEO, poster: HERO_POSTER, span: "full-portrait", alt: "LUCENT — hero editorial film revealing the articulated chain-links catching light as the earrings rotate." },
+  { type: "video", src: GALLERY_VIDEO_A, poster: GALLERY_VIDEO_A_POSTER, span: "full-portrait", alt: "LUCENT — supplementary editorial film revealing the articulated link geometry from a rotating angle." },
+  { type: "video", src: GALLERY_VIDEO_B, poster: GALLERY_VIDEO_B_POSTER, span: "full-portrait", alt: "LUCENT — closing editorial film following the continuous pavé travel around the hoop under studio light." },
 ];
 
 export default function LucentPage() {
