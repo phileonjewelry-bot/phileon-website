@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "lucent",
+    title: "LUCENT",
+    subtitle: "Articulated Pavé Chain-Link Hoop Earrings",
+    price: 130,
+    href: "/lucent",
+    heroVideo: "/inspiration-vault/lucent/hero-film.mp4",
+    posterImage: "/inspiration-vault/lucent/still-02-pair.jpg",
+    releasedAt: "2026-07-07",
+    category: "Earrings",
+  },
+  {
     slug: "echelle",
     title: "ÉCHELLE",
     subtitle: "Architectural Three-Tone Gold Ribbon Hoops",

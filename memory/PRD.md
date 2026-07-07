@@ -18,10 +18,13 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 - **Vault pieces**: cinematic hero + `VaultArchiveNotice`
 - **Live pricing**: `livePricingConfig.js` (frontend) mirrored by `pricing_engine.py` (backend)
 
-## What's Been Implemented (up to 2026-02)
+## What's Been Implemented (up to 2026-07)
 - Rose of Sharon, Boss Knot, Lady Boss Knot, Uncle Jo, Veyron Noir, Wynette Palette, La Marva, Annie Rose, Monika Couture, Katrina Cascata, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset, Forme Cuff, Rhythm Mesh Ring, TOLA II, GALATIANS 6:14, TRACE, BOUND, APEX, HOMAGE, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, Fondo Curvo, 1 Corinthians 15:14, DRAPE, Le Cocktail de Jessica, Prise de Couronne, Nervatura, The Don Gorgon, The Grand Dame, The Carapace, MIDWEEK, LA MADONNA, LA SCARPA DELLA REGINA, BAPE, LISA, LADY JAY, THE TRUE VINE, PORTA AUREA, COOGI DNA TAG, BATTENTI DELLA VILLA, GENT, STACKRATS, Deco Éventail, Orbit Lumière
-- **Inspiration Vault** (editorial archive) w/ 8 pieces + `VaultArchiveNotice`
-- **PARABOLA** (Ladies First · 22mm concave dish statement ring · 3 metal tiers)
+- **Inspiration Vault** (editorial archive) w/ 11 pieces + `VaultArchiveNotice`
+  - 2026-07-07 — **LUCENT** ($130 USD) · articulated pavé chain-link hoop earrings · portrait hero film · `/lucent` + `/inspiration-vault/lucent`
+  - 2026-07-06 — ÉCHELLE ($115 USD) · three-tone architectural ribbon hoops
+  - 2026-07-05 — PARABOLA ATELIER ($100 USD) · concave study companion to the Parabola family
+- **PARABOLA** family (Ladies First · Heritage · Atelier) w/ shared `ParabolaFamilyNav`
   - Sterling Silver ($1,250 USD) · 10K White Gold ($7,800 CAD) · 10K Rose Gold ($7,800 CAD)
   - Per-tier gallery swap (Silver + White Gold → white-metal gallery, Rose Gold → rose-gold gallery)
   - Default metal: **10K Rose Gold**; default ring size: **US 7**

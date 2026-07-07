@@ -83,6 +83,7 @@ import OrbitLumierePage from "@/pages/OrbitLumierePage";
 import DecoEventailPage from "@/pages/DecoEventailPage";
 import ParabolaAtelierPage from "@/pages/ParabolaAtelierPage";
 import EchellePage from "@/pages/EchellePage";
+import LucentPage from "@/pages/LucentPage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
 import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
@@ -246,6 +247,8 @@ function App() {
             <Route path="/inspiration-vault/parabola-atelier" element={<ParabolaAtelierPage />} />
             <Route path="/echelle" element={<EchellePage />} />
             <Route path="/inspiration-vault/echelle" element={<EchellePage />} />
+            <Route path="/lucent" element={<LucentPage />} />
+            <Route path="/inspiration-vault/lucent" element={<LucentPage />} />
             <Route path="/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />
