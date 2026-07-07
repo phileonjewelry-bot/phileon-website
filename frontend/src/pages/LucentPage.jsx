@@ -7,7 +7,7 @@ import VaultArchiveNotice from "@/components/VaultArchiveNotice";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 /**
- * LUCENT — Inspiration Vault · $130 USD
+ * LUCENT — Inspiration Vault · $70 USD
  *
  * Pavé-set articulated chain-link hoop earrings — a study of chain reimagined
  * as continuous illumination. Vault-only archive piece; never added to shop,
@@ -19,7 +19,7 @@ const HERO_POSTER = "/inspiration-vault/lucent/still-02-pair.jpg";
 const STILL_01    = "/inspiration-vault/lucent/still-01-bust.jpg";
 const STILL_02    = "/inspiration-vault/lucent/still-02-pair.jpg";
 const STILL_03    = "/inspiration-vault/lucent/still-03-lifestyle.jpg";
-const PRICE = 130;
+const PRICE = 70;
 
 // Gallery order: two editorial stills first, then the lifestyle still, then
 // the portrait hero film to close the study.

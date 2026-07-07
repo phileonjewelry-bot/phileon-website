@@ -17,7 +17,7 @@ const VAULT_PIECES = [
     slug: "lucent",
     title: "LUCENT",
     subtitle: "Articulated Pavé Chain-Link Hoop Earrings",
-    price: 130,
+    price: 70,
     href: "/lucent",
     heroVideo: "/inspiration-vault/lucent/hero-film.mp4",
     posterImage: "/inspiration-vault/lucent/still-02-pair.jpg",
