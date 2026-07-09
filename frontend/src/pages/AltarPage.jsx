@@ -16,7 +16,7 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 
 const HERO_VIDEO      = "/inspiration-vault/altar/hero-film.mp4";
 const HERO_POSTER     = "/inspiration-vault/altar/hero-film-poster.jpg";  // the video's own opening frame — no separate photo behind the film
-const STILL_LIFE_A    = "/inspiration-vault/altar/lifestyle-desk.jpg";    // wrist on desk, white nails
+const STILL_LIFE_A    = "/inspiration-vault/altar/lifestyle-couch.jpg";   // couch — hands-under-chin editorial portrait
 const STILL_LIFE_B    = "/inspiration-vault/altar/lifestyle-window.jpg";  // wrist on jeans, window light
 const STILL_FRONT_A   = "/inspiration-vault/altar/img-03.jpg";   // studio front
 const STILL_FRONT_B   = "/inspiration-vault/altar/img-04.jpg";   // studio front, cuff standing
@@ -27,7 +27,7 @@ const PRICE = 40;
 // Gallery order: two new editorial wrist lifestyle shots first, then the
 // four unique product studies. No duplicates, no repeat of the hero.
 const GALLERY = [
-  { type: "img", src: STILL_LIFE_A, span: "half",          alt: "ALTAR — editorial wrist portrait on a warm oak surface, the mirror-polish gold catching daylight beside a soft white manicure." },
+  { type: "img", src: STILL_LIFE_A, span: "half",          alt: "ALTAR — editorial couch portrait, the model resting her chin on folded hands as the polished gold cross cuff catches soft daylight against a cream sweater." },
   { type: "img", src: STILL_LIFE_B, span: "half",          alt: "ALTAR — editorial wrist portrait beside a window, the cuff resting on light denim with the cross cutout in clear focus." },
   { type: "img", src: STILL_FRONT_A, span: "half",         alt: "ALTAR — studio front shot, the mirror-polish gold cuff isolated on white with the architectural cross cutout centered." },
   { type: "img", src: STILL_FRONT_B, span: "half",         alt: "ALTAR — alternate studio front shot, the cuff standing tall to reveal the precision of the cross cutout and the polished shoulder." },
