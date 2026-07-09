@@ -12,30 +12,23 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  * Gold-plated stainless-steel architectural cross cuff. Vault-only archive
  * piece; never added to shop, bracelets collection, carousel, or any
  * production line.
- *
- * NOTE: Hero is image-only pending the editorial film upload. Swap in a
- * `HERO_VIDEO` path when the film arrives — VaultHero already handles the
- * crossfade + autoplay.
  */
 
-const HERO_POSTER     = "/inspiration-vault/altar/img-05.png";   // lifestyle hero
-const STILL_LIFESTYLE = "/inspiration-vault/altar/img-05.png";
+const HERO_VIDEO      = "/inspiration-vault/altar/hero-film.mp4";
+const HERO_POSTER     = "/inspiration-vault/altar/img-05.png";   // lifestyle still (used only as video poster)
 const STILL_FRONT_A   = "/inspiration-vault/altar/img-03.jpg";   // studio front
 const STILL_FRONT_B   = "/inspiration-vault/altar/img-04.jpg";   // studio front, cuff standing
 const STILL_TOPDOWN   = "/inspiration-vault/altar/img-02.jpg";   // top view looking into the cuff
 const STILL_WRIST_A   = "/inspiration-vault/altar/img-01.jpg";   // front phone shot
 const PRICE = 40;
 
-// Gallery order follows the user's requested rhythm:
-// 1. Lifestyle Hero → 2. Editorial (front studio A) → 3. Front Product →
-// 4. Top Product View → 5. Wrist Lifestyle A → 6. Wrist Lifestyle B (front B).
+// Gallery contains only images that do NOT duplicate the hero video's
+// lifestyle poster. Four unique product studies flanking the film.
 const GALLERY = [
-  { type: "img", src: STILL_LIFESTYLE, span: "full",           alt: "ALTAR — editorial lifestyle portrait, the gold cross cuff worn on the wrist as the model rests her chin on folded hands in soft natural light." },
-  { type: "img", src: STILL_FRONT_A,   span: "half",           alt: "ALTAR — studio front shot, the mirror-polish gold cuff isolated on white with the architectural cross cutout centered." },
-  { type: "img", src: STILL_FRONT_B,   span: "half",           alt: "ALTAR — alternate studio front shot, the cuff standing tall to reveal the precision of the cross cutout and the polished shoulder." },
-  { type: "img", src: STILL_TOPDOWN,   span: "half-portrait",  alt: "ALTAR — top-down product view looking into the cuff, revealing the mirror-polish interior and the sculpted opening of the band." },
-  { type: "img", src: STILL_WRIST_A,   span: "half-portrait",  alt: "ALTAR — closer front portrait, capturing the depth of the polished gold surface and the crisp geometry of the cross window." },
-  { type: "img", src: STILL_FRONT_B,   span: "half",           alt: "ALTAR — closing studio shot reprising the front elevation as the eye returns to the anchor of the composition." },
+  { type: "img", src: STILL_FRONT_A, span: "half",          alt: "ALTAR — studio front shot, the mirror-polish gold cuff isolated on white with the architectural cross cutout centered." },
+  { type: "img", src: STILL_FRONT_B, span: "half",          alt: "ALTAR — alternate studio front shot, the cuff standing tall to reveal the precision of the cross cutout and the polished shoulder." },
+  { type: "img", src: STILL_TOPDOWN, span: "half-portrait", alt: "ALTAR — top-down product view looking into the cuff, revealing the mirror-polish interior and the sculpted opening of the band." },
+  { type: "img", src: STILL_WRIST_A, span: "half-portrait", alt: "ALTAR — closer front portrait, capturing the depth of the polished gold surface and the crisp geometry of the cross window." },
 ];
 
 export default function AltarPage() {
@@ -137,8 +130,9 @@ export default function AltarPage() {
 
       <VaultHero
         image={HERO_POSTER}
+        video={HERO_VIDEO}
         prominent
-        altText="ALTAR — architectural gold cross cuff, editorial lifestyle portrait of the piece worn against a soft neutral interior."
+        altText="ALTAR — architectural gold cross cuff, editorial film revealing the mirror-polish and cross cutout under soft studio light."
         eyebrow="Inspiration Vault"
         title="ALTAR"
         subhead="Built with purpose. Worn with conviction."

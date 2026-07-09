@@ -19,7 +19,7 @@ const VAULT_PIECES = [
     subtitle: "Architectural Cross Cuff",
     price: 40,
     href: "/altar",
-    heroVideo: null,
+    heroVideo: "/inspiration-vault/altar/hero-film.mp4",
     posterImage: "/inspiration-vault/altar/img-05.png",
     releasedAt: "2026-07-10",
     category: "Bangles & Bracelets",
