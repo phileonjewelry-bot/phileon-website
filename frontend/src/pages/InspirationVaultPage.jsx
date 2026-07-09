@@ -20,7 +20,7 @@ const VAULT_PIECES = [
     price: 40,
     href: "/altar",
     heroVideo: "/inspiration-vault/altar/hero-film.mp4",
-    posterImage: "/inspiration-vault/altar/img-05.png",
+    posterImage: "/inspiration-vault/altar/lifestyle-desk.jpg",
     releasedAt: "2026-07-10",
     category: "Bangles & Bracelets",
   },

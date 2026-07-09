@@ -15,18 +15,22 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  */
 
 const HERO_VIDEO      = "/inspiration-vault/altar/hero-film.mp4";
-const HERO_POSTER     = "/inspiration-vault/altar/img-05.png";   // lifestyle still (used only as video poster)
+const HERO_POSTER     = "/inspiration-vault/altar/hero-film-poster.jpg";  // the video's own opening frame — no separate photo behind the film
+const STILL_LIFE_A    = "/inspiration-vault/altar/lifestyle-desk.jpg";    // wrist on desk, white nails
+const STILL_LIFE_B    = "/inspiration-vault/altar/lifestyle-window.jpg";  // wrist on jeans, window light
 const STILL_FRONT_A   = "/inspiration-vault/altar/img-03.jpg";   // studio front
 const STILL_FRONT_B   = "/inspiration-vault/altar/img-04.jpg";   // studio front, cuff standing
 const STILL_TOPDOWN   = "/inspiration-vault/altar/img-02.jpg";   // top view looking into the cuff
 const STILL_WRIST_A   = "/inspiration-vault/altar/img-01.jpg";   // front phone shot
 const PRICE = 40;
 
-// Gallery contains only images that do NOT duplicate the hero video's
-// lifestyle poster. Four unique product studies flanking the film.
+// Gallery order: two new editorial wrist lifestyle shots first, then the
+// four unique product studies. No duplicates, no repeat of the hero.
 const GALLERY = [
-  { type: "img", src: STILL_FRONT_A, span: "half",          alt: "ALTAR — studio front shot, the mirror-polish gold cuff isolated on white with the architectural cross cutout centered." },
-  { type: "img", src: STILL_FRONT_B, span: "half",          alt: "ALTAR — alternate studio front shot, the cuff standing tall to reveal the precision of the cross cutout and the polished shoulder." },
+  { type: "img", src: STILL_LIFE_A, span: "half",          alt: "ALTAR — editorial wrist portrait on a warm oak surface, the mirror-polish gold catching daylight beside a soft white manicure." },
+  { type: "img", src: STILL_LIFE_B, span: "half",          alt: "ALTAR — editorial wrist portrait beside a window, the cuff resting on light denim with the cross cutout in clear focus." },
+  { type: "img", src: STILL_FRONT_A, span: "half",         alt: "ALTAR — studio front shot, the mirror-polish gold cuff isolated on white with the architectural cross cutout centered." },
+  { type: "img", src: STILL_FRONT_B, span: "half",         alt: "ALTAR — alternate studio front shot, the cuff standing tall to reveal the precision of the cross cutout and the polished shoulder." },
   { type: "img", src: STILL_TOPDOWN, span: "half-portrait", alt: "ALTAR — top-down product view looking into the cuff, revealing the mirror-polish interior and the sculpted opening of the band." },
   { type: "img", src: STILL_WRIST_A, span: "half-portrait", alt: "ALTAR — closer front portrait, capturing the depth of the polished gold surface and the crisp geometry of the cross window." },
 ];
