@@ -17,14 +17,23 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 const HERO_VIDEO   = "/inspiration-vault/roseline/hero-film.mp4";
 const HERO_POSTER  = "/inspiration-vault/roseline/hero-still.jpg";
 const STILL_01     = "/inspiration-vault/roseline/hero-still.jpg";
+const STILL_WRIST_A = "/inspiration-vault/roseline/gallery-4.jpg";
+const STILL_WRIST_B = "/inspiration-vault/roseline/gallery-5.jpg";
+const STILL_MACRO_A = "/inspiration-vault/roseline/gallery-2.jpg";
+const STILL_MACRO_B = "/inspiration-vault/roseline/gallery-3.jpg";
 const GALLERY_VIDEO_A = "/inspiration-vault/roseline/gallery-1.mp4";
 const GALLERY_VIDEO_A_POSTER = "/inspiration-vault/roseline/gallery-1-poster.jpg";
 const PRICE = 50;
 
-// Gallery order: editorial still first, then the supplementary portrait film.
-// The hero film already anchors the top of the page.
+// Gallery order: pedestal editorial still → two wrist lifestyle portraits →
+// two black-stone pavé macros → supplementary portrait film. The hero film
+// already anchors the top of the page.
 const GALLERY = [
   { type: "img", src: STILL_01, span: "full", alt: "ROSELINE — editorial pedestal portrait, the rose-gold safety-pin cuff resting on polished black stone with the pavé head catching soft warm light." },
+  { type: "img", src: STILL_WRIST_A, span: "half-portrait", alt: "ROSELINE — lifestyle portrait, the rose-gold cuff worn on the wrist beside a manicured hand, showing the open-pin silhouette in wear." },
+  { type: "img", src: STILL_WRIST_B, span: "half-portrait", alt: "ROSELINE — lifestyle portrait, the wrist raised to reveal the pavé head and the delicate open architecture of the cuff." },
+  { type: "img", src: STILL_MACRO_A, span: "half", alt: "ROSELINE — macro close-up on black stone, revealing the hand-set AAA pavé cubic zirconia along the sculpted head of the pin." },
+  { type: "img", src: STILL_MACRO_B, span: "half", alt: "ROSELINE — deeper macro on black stone, catching a single spark of light across the pavé surface and the polished rose-gold shoulder." },
   { type: "video", src: GALLERY_VIDEO_A, poster: GALLERY_VIDEO_A_POSTER, span: "full-portrait", alt: "ROSELINE — supplementary editorial film revealing the pavé head and open-cuff silhouette from a rotating angle." },
 ];
 
@@ -84,6 +93,12 @@ export default function RoselinePage() {
         .rl-gallery-cell { position:relative; aspect-ratio:1/1; overflow:hidden;
           background:var(--bg-deep); border:1px solid var(--rule-soft); }
         .rl-gallery-cell.full { grid-column:1 / -1; aspect-ratio:1/1; }
+        /* Half-width square cell (used for the black-stone pavé macros,
+           which are 1024×1024). object-fit:contain keeps them uncropped. */
+        .rl-gallery-cell.half { aspect-ratio: 1 / 1; }
+        /* Half-width portrait cell (used for the wrist lifestyle shots,
+           which are ~856×1414 → ~3:5). */
+        .rl-gallery-cell.half-portrait { aspect-ratio: 3 / 5; }
         /* Portrait-video cell matches the 9:16 hero film aspect exactly so
            object-fit:contain fills edge-to-edge with zero letterboxing. */
         .rl-gallery-cell.full-portrait {
@@ -105,6 +120,8 @@ export default function RoselinePage() {
         @media (max-width:640px){
           .rl-gallery-grid { grid-template-columns:1fr; }
           .rl-gallery-cell.full { aspect-ratio:4/5; }
+          .rl-gallery-cell.half { grid-column:1 / -1; aspect-ratio: 1 / 1; }
+          .rl-gallery-cell.half-portrait { grid-column:1 / -1; aspect-ratio: 3 / 5; }
           .rl-gallery-cell.full-portrait { height:min(88vh, 780px); aspect-ratio: 9 / 16; }
         }
         .rl-cta { text-align:center; }
