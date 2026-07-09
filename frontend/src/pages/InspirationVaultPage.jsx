@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "altar",
+    title: "ALTAR",
+    subtitle: "Architectural Cross Cuff",
+    price: 40,
+    href: "/altar",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/altar/img-05.png",
+    releasedAt: "2026-07-10",
+    category: "Bangles & Bracelets",
+  },
+  {
     slug: "roseline",
     title: "ROSELINE",
     subtitle: "Rose-Gold Pavé Safety-Pin Cuff Bangle",
