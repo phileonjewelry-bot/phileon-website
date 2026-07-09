@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "roseline",
+    title: "ROSELINE",
+    subtitle: "Rose-Gold Pavé Safety-Pin Cuff Bangle",
+    price: 50,
+    href: "/roseline",
+    heroVideo: "/inspiration-vault/roseline/hero-film.mp4",
+    posterImage: "/inspiration-vault/roseline/hero-still.jpg",
+    releasedAt: "2026-07-09",
+    category: "Bangles & Bracelets",
+  },
+  {
     slug: "lucent",
     title: "LUCENT",
     subtitle: "Articulated Pavé Chain-Link Hoop Earrings",
