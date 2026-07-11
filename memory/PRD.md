@@ -21,7 +21,7 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 ## What's Been Implemented (up to 2026-07)
 - Rose of Sharon, Boss Knot, Lady Boss Knot, Uncle Jo, Veyron Noir, Wynette Palette, La Marva, Annie Rose, Monika Couture, Katrina Cascata, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset, Forme Cuff, Rhythm Mesh Ring, TOLA II, GALATIANS 6:14, TRACE, BOUND, APEX, HOMAGE, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, Fondo Curvo, 1 Corinthians 15:14, DRAPE, Le Cocktail de Jessica, Prise de Couronne, Nervatura, The Don Gorgon, The Grand Dame, The Carapace, MIDWEEK, LA MADONNA, LA SCARPA DELLA REGINA, BAPE, LISA, LADY JAY, THE TRUE VINE, PORTA AUREA, COOGI DNA TAG, BATTENTI DELLA VILLA, GENT, STACKRATS, Deco Éventail, Orbit Lumière
 - **Inspiration Vault** (editorial archive) w/ 14 pieces + `VaultArchiveNotice`
-  - 2026-07-11 — **ORIEL** ($40 USD) · rhodium-plated nickel-free openwork rose-window drop earrings · AAA pavé CZ · `/oriel` + `/inspiration-vault/oriel`
+  - 2026-07-11 — **ORIEL** ($40 USD) · rhodium-plated nickel-free openwork rose-window drop earrings · AAA pavé CZ · hero film (720x1280, muted autoloop) · 6-slot gallery (4 studio + 2 lifestyle) · `/oriel` + `/inspiration-vault/oriel`
   - 2026-07-10 — ALTAR ($40 USD) · gold-plated stainless-steel architectural cross cuff · portrait hero film · `/altar` + `/inspiration-vault/altar`
   - 2026-07-09 — ROSELINE ($50 USD) · rose-gold pavé safety-pin cuff bangle
   - 2026-07-07 — LUCENT ($70 USD) · articulated pavé chain-link hoop earrings

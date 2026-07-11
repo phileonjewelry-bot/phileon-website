@@ -22,13 +22,17 @@ const STILL_SPARK  = "/inspiration-vault/oriel/still-02.png";  // pair on hammer
 const STILL_PAIR   = "/inspiration-vault/oriel/still-03.jpg";  // clean pair on hammered black bangle
 const STILL_MIRROR = "/inspiration-vault/oriel/still-04.jpg";  // top-down mirror composition
 const STILL_BOWL   = "/inspiration-vault/oriel/still-05.jpg";  // curved white bowl portrait
+const LIFESTYLE_DAY    = "/inspiration-vault/oriel/lifestyle-02.png"; // daylight portrait with black bowl
+const LIFESTYLE_VELVET = "/inspiration-vault/oriel/lifestyle-01.png"; // velvet-dress dramatic portrait
 const PRICE = 40;
 
 const GALLERY = [
-  { src: STILL_SPARK,  span: "half",          alt: "ORIEL — the pair captured with prismatic sparkle rays, the rose-window openwork medallion catching light against a hammered black cuff." },
-  { src: STILL_PAIR,   span: "half",          alt: "ORIEL — clean editorial pair shot on hammered black metal and dark cloth, revealing the graduated three-station drop and pavé medallion." },
-  { src: STILL_MIRROR, span: "half",          alt: "ORIEL — top-down mirror composition, the two openwork medallions and their reflections forming a symmetrical study in circular geometry." },
-  { src: STILL_BOWL,   span: "half-portrait", alt: "ORIEL — the pair resting inside a curved white bowl, the openwork medallion isolated against soft neutral light." },
+  { src: STILL_PAIR,       span: "half",          alt: "ORIEL — a clean editorial view of the pair, revealing the graduated three-station drop and openwork pavé medallion." },
+  { src: STILL_SPARK,      span: "half",          alt: "ORIEL — captured against hammered black metal, with prismatic light tracing the pavé and rose-window geometry." },
+  { src: STILL_MIRROR,     span: "half",          alt: "ORIEL — a mirrored study of symmetry, proportion, and circular architecture." },
+  { src: STILL_BOWL,       span: "half-portrait", alt: "ORIEL — the pair framed in soft neutral light, isolating the scale and intricacy of the openwork medallion." },
+  { src: LIFESTYLE_DAY,    span: "half",          alt: "ORIEL worn in daylight — the openwork medallion catches natural light against a soft interior setting, its scale confident and its geometry alive." },
+  { src: LIFESTYLE_VELVET, span: "half-portrait", alt: "ORIEL worn against velvet — the rose-window medallion suspended in low, sculptural light, architecture worn like light itself." },
 ];
 
 export default function OrielPage() {
