@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "oriel",
+    title: "ORIEL",
+    subtitle: "Rhodium-Plated Openwork Drop Earrings",
+    price: 40,
+    href: "/oriel",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/oriel/still-01.png",
+    releasedAt: "2026-07-11",
+    category: "Earrings",
+  },
+  {
     slug: "altar",
     title: "ALTAR",
     subtitle: "Architectural Cross Cuff",
