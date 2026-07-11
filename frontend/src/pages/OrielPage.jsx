@@ -15,7 +15,9 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  * inherit ARCHITRAVE's copy, materials, stone-count, or pricing.
  */
 
-const HERO_IMAGE   = "/inspiration-vault/oriel/still-01.png";  // ear-worn portrait
+const HERO_VIDEO   = "/inspiration-vault/oriel/hero-film.mp4";
+const HERO_POSTER  = "/inspiration-vault/oriel/hero-poster.jpg";
+const HERO_IMAGE   = "/inspiration-vault/oriel/still-01.png";  // ear-worn portrait (fallback / cart image)
 const STILL_SPARK  = "/inspiration-vault/oriel/still-02.png";  // pair on hammered black bangle with prismatic sparkle
 const STILL_PAIR   = "/inspiration-vault/oriel/still-03.jpg";  // clean pair on hammered black bangle
 const STILL_MIRROR = "/inspiration-vault/oriel/still-04.jpg";  // top-down mirror composition
@@ -134,7 +136,8 @@ export default function OrielPage() {
       </Link>
 
       <VaultHero
-        image={HERO_IMAGE}
+        image={HERO_POSTER}
+        video={HERO_VIDEO}
         prominent
         altText="ORIEL — rhodium-plated openwork drop earring worn against the ear, the pavé rose-window medallion catching studio light."
         eyebrow="Inspiration Vault"

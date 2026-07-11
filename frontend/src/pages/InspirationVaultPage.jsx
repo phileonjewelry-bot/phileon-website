@@ -19,7 +19,7 @@ const VAULT_PIECES = [
     subtitle: "Rhodium-Plated Openwork Drop Earrings",
     price: 40,
     href: "/oriel",
-    heroVideo: null,
+    heroVideo: "/inspiration-vault/oriel/hero-film.mp4",
     posterImage: "/inspiration-vault/oriel/still-01.png",
     releasedAt: "2026-07-11",
     category: "Earrings",
