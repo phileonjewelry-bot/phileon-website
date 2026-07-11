@@ -477,6 +477,45 @@ export default function InspirationVaultPage() {
           .iv-hero,.iv-divider { animation:none !important;transform:none !important;opacity:1 !important; }
           .iv-card:hover .iv-card-video,.iv-card:hover .iv-card-img { transform:none; }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           ORIEL CARD — STATIC IMAGE PRESENCE OVERRIDE (Inspiration Vault index only)
+           Reason: ORIEL's poster is a portrait ear-worn crop. The default 16:10
+           landscape card frame with object-fit:cover shrinks the earring visually.
+           This override lets the ORIEL image render at its natural portrait
+           aspect, edge-to-edge, giving it stronger presence — especially on mobile.
+           Scope: .oriel-vault-card only. Does not touch other Vault cards, the
+           product page, or the hero film.
+           ───────────────────────────────────────────────────────────────── */
+        .oriel-vault-card .iv-card-media {
+          aspect-ratio:auto;
+          width:100%;
+          max-width:none;
+          margin:0;
+          background:#000;
+        }
+        .oriel-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          object-fit:contain;
+          object-position:center;
+        }
+        @media (max-width:768px){
+          .oriel-vault-card .iv-card-media {
+            width:calc(100% + 8px);
+            margin-left:-4px;
+            margin-right:-4px;
+            margin-bottom:26px;
+          }
+          .oriel-vault-card .iv-card-img {
+            width:100%;
+            max-height:none;
+          }
+          .oriel-vault-card .iv-card-meta {
+            padding-top:16px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -553,7 +592,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
