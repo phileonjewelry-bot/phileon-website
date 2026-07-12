@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { cadToUsdLuxury } from "@/lib/livePricing";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 /**
@@ -26,14 +27,18 @@ const IMG_PHILEON    = "/architrave/still-phileon-box.png";
 const IMG_MARBLE     = "/architrave/hero.jpg";
 
 // ── EDITIONS ────────────────────────────────────────────────────────────────
-const EDITIONS = [
+// Internal costing stays in CAD (basePriceCAD).
+// Public storefront prices are derived via the shared cadToUsdLuxury() rule
+// (CAD × 0.75, rounded to nearest $50 <$2k, nearest $500 ≥$2k).
+// NEVER expose basePriceCAD publicly; only usdPrice is shown & passed to cart.
+const EDITIONS_INTERNAL = [
   {
     key: "silver-cz",
     sku: "architrave-silver-cz",
     label: "Sterling Silver",
     material: "Sterling Silver · AAA Cubic Zirconia",
     stones: "536 AAA Cubic Zirconia Stones Per Pair",
-    price: 8950,
+    basePriceCAD: 8950,
   },
   {
     key: "10k-white-lab",
@@ -41,7 +46,7 @@ const EDITIONS = [
     label: "10K White Gold",
     material: "10K White Gold · Lab-Grown Diamonds",
     stones: "536 Lab-Grown Diamonds Per Pair",
-    price: 9750,
+    basePriceCAD: 9750,
   },
   {
     key: "14k-white-lab",
@@ -49,12 +54,18 @@ const EDITIONS = [
     label: "14K White Gold",
     material: "14K White Gold · Lab-Grown Diamonds",
     stones: "536 Lab-Grown Diamonds Per Pair",
-    price: 9950,
+    basePriceCAD: 9950,
   },
 ];
+// Materialise the USD-facing view once, using the shared PHILEON conversion.
+const EDITIONS = EDITIONS_INTERNAL.map((e) => ({
+  ...e,
+  usdPrice: cadToUsdLuxury(e.basePriceCAD),
+  currency: "USD",
+}));
 const DEFAULT_EDITION_KEY = "14k-white-lab";
 
-const fmtCAD = (n) => `$${n.toLocaleString("en-CA")} CAD`;
+const fmtUSD = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
 
 // Gallery order — image-only, no captions rendered. Alt text preserved for a11y.
 const GALLERY = [
@@ -90,7 +101,8 @@ export default function ArchitravePage() {
       {
         id: edition.sku,
         name: `ARCHITRAVE — ${edition.label}`,
-        price: edition.price,
+        price: edition.usdPrice,   // Public storefront USD (converted). NEVER CAD.
+        currency: "USD",
         sku: edition.sku,
         productKey: "architrave",
         tierKey: edition.key,
@@ -98,6 +110,7 @@ export default function ArchitravePage() {
         image: HERO_IMAGE,
         images: [HERO_IMAGE],
         materials: [edition.material],
+        soldAs: "pair",
       },
       1,
       edition.material
@@ -433,7 +446,7 @@ export default function ArchitravePage() {
                       <span className="ar-edition-material">{ed.material}</span>
                     </span>
                     <span className="ar-edition-price" data-testid={`ar-edition-${ed.key}-price`}>
-                      {fmtCAD(ed.price)}
+                      {fmtUSD(ed.usdPrice)}
                     </span>
                   </button>
                 </li>

@@ -3127,7 +3127,10 @@ export const catalogProducts = [
     subtitle: 'Openwork Drop Earrings',
     imageUrl: '/architrave/still-clean-pair.jpg',
     href: '/architrave',
-    price_range: 'FROM $8,950 CAD',
+    // Internal costing (CAD) — never shown publicly.
+    basePriceCAD: 8950,
+    // Public storefront USD — computed via PHILEON cadToUsdLuxury($8,950 CAD) = $6,500 USD.
+    price_range: 'FROM $6,500 USD',
     inventory_count: 100,
     is_core: true,
     category: 'earrings',
