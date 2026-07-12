@@ -3119,6 +3119,27 @@ export const catalogProducts = [
   { id: 'stackrats', name: 'STACKRATS', slug: 'stackrats', materialLine: 'Micro-bead Mesh Bangles · Dinah · Valerie · Dominique · Wide 10mm or Thin 7mm', imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dgp6tl9l_1000156925.jpg', href: '/stackrats', price_range: 'From $1,800 USD', inventory_count: 100, is_core: true, category: 'bracelets', audience: ['ladies', 'collective'], tags: ['Ladies', 'Collective', 'Bangle', 'Bracelet', 'Mesh', 'Rose Gold', 'White Gold', 'Yellow Gold', 'Stack'], isNew: true, isFeatured: true, displayOrder: 11 },
   { id: 'parabola', name: 'PARABOLA', slug: 'parabola', materialLine: 'Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Rose Gold', imageUrl: '/parabola/hero.png', href: '/products/parabola', price_range: 'From $1,250 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['ladies', 'ladies-first', 'collective'], tags: ['Ladies', 'Ladies First', 'Collective', 'Ring', 'Statement', 'Concave', 'Pink Sapphire', 'Diamond', 'Rose Gold', 'White Gold', 'Sterling'], isNew: true, isFeatured: true, displayOrder: 12 },
   { id: 'parabola-heritage', name: 'PARABOLA HERITAGE', slug: 'parabola-heritage', materialLine: 'Heritage Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Yellow Gold', imageUrl: '/parabola-heritage/img-01-profile.png', href: '/products/parabola-heritage', price_range: 'From $1,250 USD', inventory_count: 100, is_core: true, category: 'rings', audience: ['gentlemens-club', 'collective'], tags: ['Gentleman', "Gentleman's Club", 'Collective', 'Ring', 'Statement', 'Concave', 'Heritage', 'Ruby', 'Emerald', 'Black Diamond', 'Yellow Gold', 'White Gold', 'Sterling'], isNew: true, isFeatured: true, displayOrder: 13 },
+  {
+    id: 'architrave',
+    name: 'ARCHITRAVE',
+    slug: 'architrave',
+    materialLine: 'Diamond Openwork Drop Earrings · 18K White Gold · 536 Diamonds Per Pair',
+    subtitle: 'Diamond Openwork Drop Earrings',
+    imageUrl: '/architrave/still-clean-pair.jpg',
+    href: '/architrave',
+    price_range: 'Made to Order · Inquire',
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: ['ladies', 'ladies-first'],
+    tags: ['Ladies', 'Ladies First', 'Fine Jewelry', 'Earrings', 'Diamond', '18K White Gold', 'Made to Order'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 0,
+    collection: 'signature',
+    label: 'PHILEON Fine Jewelry',
+    ctaLabel: 'View ARCHITRAVE',
+  },
 ];
 
 // Helper: filter the catalog by simple predicates.
