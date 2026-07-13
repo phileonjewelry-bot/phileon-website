@@ -20,8 +20,19 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 
 ## What's Been Implemented (up to 2026-07)
 - Rose of Sharon, Boss Knot, Lady Boss Knot, Uncle Jo, Veyron Noir, Wynette Palette, La Marva, Annie Rose, Monika Couture, Katrina Cascata, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset, Forme Cuff, Rhythm Mesh Ring, TOLA II, GALATIANS 6:14, TRACE, BOUND, APEX, HOMAGE, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, Fondo Curvo, 1 Corinthians 15:14, DRAPE, Le Cocktail de Jessica, Prise de Couronne, Nervatura, The Don Gorgon, The Grand Dame, The Carapace, MIDWEEK, LA MADONNA, LA SCARPA DELLA REGINA, BAPE, LISA, LADY JAY, THE TRUE VINE, PORTA AUREA, COOGI DNA TAG, BATTENTI DELLA VILLA, GENT, STACKRATS, Deco Éventail, Orbit Lumière
+- **PHILEON Fine Jewelry** (Ladies First → Earrings)
+  - 2026-07-13 — **ARCHITRAVE** · Diamond & CZ Openwork Drop Earrings · rose-window openwork medallion + graduated 3-station drop · 536 stones per pair (268 per earring)
+    - **Editions** (internal CAD → converted USD via shared `cadToUsdLuxury()` at $500 luxury steps):
+      • Sterling Silver · AAA CZ · CAD 8,950 → **$6,500 USD** · SKU `architrave-silver-cz`
+      • 10K White Gold · Lab Diamonds · CAD 9,750 → **$7,500 USD** · SKU `architrave-10k-white-lab`
+      • 14K White Gold · Lab Diamonds · CAD 9,950 → **$7,500 USD** · SKU `architrave-14k-white-lab` *(default)*
+    - Made to order · Sold as a pair · uses existing PHILEON Add-to-Cart + checkout (no Inquire flow)
+    - Public storefront exposes USD only; `basePriceCAD` retained internally
+    - **Hero film**: `/architrave/hero-film.mp4` (1280×720, silent, autoplay+muted+loop+playsInline, poster = `still-clean-pair.jpg`); mobile hero breaks out to `calc(100vw - 24px)` with border/padding removed for maximum presence (verified uncropped at 360/390/430 px)
+    - **Gallery**: 6 cells — 5 stills + 1 silent portrait autoloop film, 2-col desktop / 1-col mobile, `object-fit: contain`, no captions
+    - **Shop card**: `FROM $6,500 USD`, static image (no video, no Editorial Film overlay)
+    - Routes `/architrave` + `/products/architrave`; catalog entry in `Ladies First > Earrings`
 - **Inspiration Vault** (editorial archive) w/ 14 pieces + `VaultArchiveNotice`
-  - 2026-07-12 — **ARCHITRAVE** (Made to Order · Inquire) · PHILEON Fine Jewelry · 18K white gold · 536 diamonds per pair · openwork radial medallion · `/architrave` · Ladies First → Earrings · static hero, no video, no autoplay on shop card
   - 2026-07-11 — **ORIEL** ($40 USD) · rhodium-plated nickel-free openwork rose-window drop earrings · AAA pavé CZ · hero film (720x1280, muted autoloop) · 6-slot gallery (4 studio + 2 lifestyle) · `/oriel` + `/inspiration-vault/oriel`
   - 2026-07-10 — ALTAR ($40 USD) · gold-plated stainless-steel architectural cross cuff · portrait hero film · `/altar` + `/inspiration-vault/altar`
   - 2026-07-09 — ROSELINE ($50 USD) · rose-gold pavé safety-pin cuff bangle
