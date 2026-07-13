@@ -20,7 +20,7 @@ const VAULT_PIECES = [
     price: 60,
     href: "/inspiration-vault/monaco",
     heroVideo: null,
-    posterImage: "/inspiration-vault/monaco/still-01.jpg",
+    posterImage: "/inspiration-vault/monaco/hero-poster.jpg",
     releasedAt: "2026-07-13",
     category: "Rings",
   },

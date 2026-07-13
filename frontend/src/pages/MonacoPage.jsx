@@ -16,8 +16,8 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  */
 
 const HERO_VIDEO   = "/inspiration-vault/monaco/hero-film.mp4";
-const HERO_POSTER  = "/inspiration-vault/monaco/still-01.jpg"; // strongest clean editorial
-const STILL_GRANITE = "/inspiration-vault/monaco/still-01.jpg";
+const HERO_POSTER  = "/inspiration-vault/monaco/hero-poster.jpg"; // NEW official on-hand hero (also cart thumb + og:image)
+const STILL_GRANITE = "/inspiration-vault/monaco/still-01.jpg";   // moved to gallery only
 const STILL_FLASH   = "/inspiration-vault/monaco/still-02.jpg";
 const HAND_COOL     = "/inspiration-vault/monaco/hand-cool.jpg";
 const HAND_WARM     = "/inspiration-vault/monaco/hand-warm.jpg";
@@ -47,6 +47,23 @@ export default function MonacoPage() {
       'content',
       'MONACO is a pavé two-finger statement ring featuring an open octagonal frame and three vertically stacked baguette-style cubic zirconia clusters, preserved within the PHILEON Inspiration Vault.'
     );
+
+    // Social / Open Graph — canonical hero image
+    const ogImageUrl = `${window.location.origin}${HERO_POSTER}`;
+    const upsertMeta = (attr, val, content) => {
+      let el = document.querySelector(`meta[${attr}="${val}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, val);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+    upsertMeta('property', 'og:title', 'MONACO | Pavé Two-Finger Statement Ring | PHILEON Inspiration Vault');
+    upsertMeta('property', 'og:image', ogImageUrl);
+    upsertMeta('property', 'og:type', 'product');
+    upsertMeta('name',     'twitter:card', 'summary_large_image');
+    upsertMeta('name',     'twitter:image', ogImageUrl);
   }, []);
 
   // Autoplay reliability — force muted + attempt play
