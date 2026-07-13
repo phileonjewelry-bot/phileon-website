@@ -221,8 +221,8 @@ export default function ArchitravePage() {
           color:var(--ink-dim);text-transform:uppercase;display:block;margin-top:6px;
         }
         .ar-hero-visual {
-          position:relative;overflow:visible;background:var(--bg-panel);
-          border:1px solid var(--rule);padding:14px;
+          position:relative;overflow:visible;background:transparent;
+          border:none;padding:0;
         }
         .ar-hero-visual img,
         .ar-hero-visual .architrave-hero-video {
@@ -311,7 +311,7 @@ export default function ArchitravePage() {
           }
           .ar-hero-visual {
             order:-1;
-            padding:8px;
+            padding:0;
           }
           .ar-hero-title {
             font-size:clamp(38px,10vw,58px);
@@ -329,7 +329,9 @@ export default function ArchitravePage() {
             max-width:none;
             margin-left:calc(50% - 50vw + 12px);
             margin-right:calc(50% - 50vw + 12px);
-            padding:10px;
+            padding:0;
+            border:none;
+            background:transparent;
             overflow:visible;
           }
           .ar-hero-visual .architrave-hero-video,
