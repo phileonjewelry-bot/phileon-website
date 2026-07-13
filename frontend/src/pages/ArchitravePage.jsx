@@ -321,6 +321,28 @@ export default function ArchitravePage() {
           }
           .ar-add-btn { max-width:none; }
         }
+
+        /* MOBILE HERO VIDEO — nearly full-width breakout, preserve 16:9 uncropped */
+        @media (max-width:768px){
+          .ar-hero-visual {
+            width:calc(100vw - 24px);
+            max-width:none;
+            margin-left:calc(50% - 50vw + 12px);
+            margin-right:calc(50% - 50vw + 12px);
+            padding:10px;
+            overflow:visible;
+          }
+          .ar-hero-visual .architrave-hero-video,
+          .ar-hero-visual img {
+            display:block;
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain;
+            object-position:center;
+          }
+        }
+
         @media (max-width:420px){
           .ar-hero-title {
             font-size:clamp(30px,9.2vw,44px);
