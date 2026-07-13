@@ -527,6 +527,65 @@ export default function InspirationVaultPage() {
             padding-top:16px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           MONACO CARD — MOBILE CLIPPING FIX (Inspiration Vault index only)
+           Reason: MONACO's hero is a 1:1 on-hand photo. The default 16:10
+           card media with object-fit:cover crops the top/bottom of the hand,
+           and the "Enter Piece" CTA is hover-gated (invisible on touch mobile).
+           This override lets the card grow naturally, renders the image at
+           natural aspect uncropped, and always shows the CTA.
+           Scope: .monaco-vault-card only. Does not touch other Vault cards,
+           the MONACO product page, video, cart, or price.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.monaco-vault-card,
+        [data-testid="iv-card-monaco"] {
+          height:auto;
+          min-height:0;
+          max-height:none;
+          overflow:visible;
+        }
+        .monaco-vault-card .iv-card-media {
+          aspect-ratio:auto;
+          width:100%;
+          height:auto;
+          max-height:none;
+          overflow:hidden;
+          background:#000;
+        }
+        .monaco-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          object-fit:contain;
+          object-position:center;
+        }
+        .monaco-vault-card .iv-card-meta {
+          height:auto;
+          min-height:0;
+          overflow:visible;
+          padding-bottom:40px;
+        }
+        /* Ensure "Enter Piece" is visible on mobile / touch (no hover state) */
+        .monaco-vault-card .iv-card-cta {
+          opacity:1;
+          transform:translateX(0);
+          margin-top:20px;
+        }
+        @media (max-width:768px){
+          .iv-card.monaco-vault-card,
+          [data-testid="iv-card-monaco"] {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .monaco-vault-card .iv-card-meta {
+            padding:34px clamp(8px,1vw,16px) 46px;
+          }
+          .monaco-vault-card .iv-card-cta {
+            margin-top:28px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -603,7 +662,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
