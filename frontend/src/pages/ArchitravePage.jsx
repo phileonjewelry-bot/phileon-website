@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
@@ -19,7 +19,10 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  */
 
 // ── ASSETS ──────────────────────────────────────────────────────────────────
-const HERO_IMAGE     = "/architrave/still-clean-pair.jpg";  // hero — clean pair, no crop
+const HERO_IMAGE     = "/architrave/still-clean-pair.jpg";  // hero poster (also cart image)
+const HERO_VIDEO     = "/architrave/hero-film.mp4";         // silent, autoplay, loop (product page only)
+const HERO_POSTER    = "/architrave/still-clean-pair.jpg";  // static fallback until video paints
+const GALLERY_FILM   = "/architrave/gallery-film.mp4";      // silent portrait film — gallery only
 const IMG_MANNEQ     = "/architrave/still-mannequin.jpg";
 const IMG_LIFESTYLE  = "/architrave/lifestyle-cafe.png";
 const IMG_PAIR       = "/architrave/still-clean-pair.jpg";
@@ -67,13 +70,15 @@ const DEFAULT_EDITION_KEY = "14k-white-lab";
 
 const fmtUSD = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
 
-// Gallery order — image-only, no captions rendered. Alt text preserved for a11y.
+// Gallery order — image-only cells + one silent portrait film. No visible captions.
+// Alt text preserved for a11y.
 const GALLERY = [
-  { src: IMG_LIFESTYLE, alt: "A woman smiling in daylight, wearing ARCHITRAVE — the openwork medallion catching sunlight at true scale against the line of the neck." },
-  { src: IMG_MANNEQ,    alt: "ARCHITRAVE presented on a sculptural black bust, revealing the graduated three-station drop and full openwork medallion." },
-  { src: IMG_PHILEON,   alt: "ARCHITRAVE presented on a PHILEON-branded stand alongside PHILEON packaging, showing scale and finish." },
-  { src: IMG_PAIR,      alt: "A front-and-angle view of the ARCHITRAVE pair on a clean neutral background, revealing articulated links and refined white-metal profile." },
-  { src: IMG_MARBLE,    alt: "A close front-facing view of the ARCHITRAVE pair on a soft grey stone surface — two medallions in symmetry." },
+  { type: "image", src: IMG_LIFESTYLE, alt: "A woman smiling in daylight, wearing ARCHITRAVE — the openwork medallion catching sunlight at true scale against the line of the neck." },
+  { type: "image", src: IMG_MANNEQ,    alt: "ARCHITRAVE presented on a sculptural black bust, revealing the graduated three-station drop and full openwork medallion." },
+  { type: "video", src: GALLERY_FILM,  alt: "ARCHITRAVE cinematic close study — silent, looping product film." },
+  { type: "image", src: IMG_PHILEON,   alt: "ARCHITRAVE presented on a PHILEON-branded stand alongside PHILEON packaging, showing scale and finish." },
+  { type: "image", src: IMG_PAIR,      alt: "A front-and-angle view of the ARCHITRAVE pair on a clean neutral background, revealing articulated links and refined white-metal profile." },
+  { type: "image", src: IMG_MARBLE,    alt: "A close front-facing view of the ARCHITRAVE pair on a soft grey stone surface — two medallions in symmetry." },
 ];
 
 export default function ArchitravePage() {
@@ -81,6 +86,22 @@ export default function ArchitravePage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [editionKey, setEditionKey] = useState(DEFAULT_EDITION_KEY);
   const edition = EDITIONS.find((e) => e.key === editionKey) || EDITIONS[2];
+  const heroVideoRef = useRef(null);
+  const galleryVideoRef = useRef(null);
+
+  // Autoplay reliability — force-mute + attempt play; keep poster if blocked.
+  useEffect(() => {
+    for (const v of [heroVideoRef.current, galleryVideoRef.current]) {
+      if (!v) continue;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.volume = 0;
+      const p = v.play();
+      if (p !== undefined) {
+        p.catch(() => { /* browser blocked — poster stays visible */ });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     document.title = "ARCHITRAVE | Diamond & CZ Drop Earrings | PHILEON";
@@ -203,8 +224,31 @@ export default function ArchitravePage() {
           position:relative;overflow:visible;background:var(--bg-panel);
           border:1px solid var(--rule);padding:14px;
         }
-        .ar-hero-visual img {
+        .ar-hero-visual img,
+        .ar-hero-visual .architrave-hero-video {
           width:100%;height:auto;display:block;object-fit:contain;
+        }
+        .architrave-hero-video {
+          display:block;
+          width:100%;
+          height:auto;
+          max-width:100%;
+          object-fit:contain;
+          object-position:center;
+          background:#000;
+        }
+        @media (max-width:768px){
+          .architrave-hero-video {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain;
+            object-position:center top;
+          }
+        }
+        /* Gallery video mirrors the still-image cell — silent autoloop */
+        .ar-gallery-cell video {
+          width:100%;height:auto;object-fit:contain;display:block;background:#000;
         }
 
         /* EDITION SELECTOR + CART */
@@ -469,11 +513,24 @@ export default function ArchitravePage() {
         </div>
 
         <div className="ar-hero-visual">
-          <img
-            src={HERO_IMAGE}
-            alt="ARCHITRAVE drop earrings, showing the complete graduated three-station drop, articulated links, and full openwork radial medallion — available in Sterling Silver, 10K White Gold, and 14K White Gold."
-            data-testid="ar-hero-image"
-          />
+          <video
+            ref={heroVideoRef}
+            className="architrave-hero-video"
+            src={HERO_VIDEO}
+            poster={HERO_POSTER}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            controls={false}
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            aria-label="ARCHITRAVE cinematic product film"
+            data-testid="ar-hero-video"
+          >
+            Your browser does not support embedded video.
+          </video>
         </div>
       </section>
 
@@ -600,7 +657,26 @@ export default function ArchitravePage() {
               className={`ar-gallery-cell lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
               data-testid={`ar-gallery-cell-${i + 1}`}
             >
-              <img src={g.src} alt={g.alt} loading="lazy" />
+              {g.type === "video" ? (
+                <video
+                  ref={i === 2 ? galleryVideoRef : undefined}
+                  src={g.src}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  controls={false}
+                  disablePictureInPicture
+                  controlsList="nodownload nofullscreen noremoteplayback"
+                  aria-label={g.alt}
+                  data-testid={`ar-gallery-video-${i + 1}`}
+                >
+                  Your browser does not support embedded video.
+                </video>
+              ) : (
+                <img src={g.src} alt={g.alt} loading="lazy" />
+              )}
             </div>
           ))}
         </div>
