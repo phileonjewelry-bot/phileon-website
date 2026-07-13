@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "monaco",
+    title: "MONACO",
+    subtitle: "Two-Finger Statement Ring",
+    price: 60,
+    href: "/inspiration-vault/monaco",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/monaco/still-01.jpg",
+    releasedAt: "2026-07-13",
+    category: "Rings",
+  },
+  {
     slug: "oriel",
     title: "ORIEL",
     subtitle: "Rhodium-Plated Openwork Drop Earrings",
