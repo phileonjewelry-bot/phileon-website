@@ -795,6 +795,123 @@ export default function InspirationVaultPage() {
             margin-top:26px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           PARABOLA ATELIER CARD — MOBILE CLIPPING + IMAGE CROP FIX
+           (Inspiration Vault index only)
+           Reason: PARABOLA ATELIER's still-01-topdown.jpg is a tall
+           portrait study of the complete concave-cocktail ring. The default
+           16:10 .iv-card-media with object-fit:cover zooms into and
+           crops the piece, and the two-line title "PARABOLA ATELIER" plus
+           subtitle/price/CTA get pushed beyond the card. Additionally the
+           default .iv-card-cta is hover-gated (invisible on touch mobile).
+           This override lets the card grow naturally, renders the image
+           at natural aspect uncropped (object-fit:contain), allows the
+           two-line title to wrap freely, and always shows the CTA +
+           Archive Piece tag + price on mobile.
+           Scope: .parabola-atelier-vault-card only. Does NOT touch:
+             - PARABOLA (Fine Jewelry)
+             - PARABOLA HERITAGE
+             - the PARABOLA ATELIER product page
+             - shared product videos
+             - other Vault cards
+             - pricing / routes / cart / checkout
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.parabola-atelier-vault-card,
+        [data-testid="iv-card-parabola-atelier"] {
+          width:100%;
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .parabola-atelier-vault-card .iv-card-media {
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none;
+          aspect-ratio:auto !important;
+          overflow:visible;
+          padding:0;
+          background:#000;
+        }
+        .parabola-atelier-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain !important;
+          object-position:center;
+          transform:none;
+        }
+        .parabola-atelier-vault-card .iv-card-title {
+          width:100%;
+          max-width:100%;
+          height:auto;
+          white-space:normal;
+          overflow:visible;
+          text-overflow:clip;
+          overflow-wrap:normal;
+          line-height:0.95;
+          margin-bottom:24px;
+        }
+        .parabola-atelier-vault-card .iv-card-meta {
+          position:static;
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none !important;
+          overflow:visible !important;
+          padding:34px 28px 46px;
+        }
+        .parabola-atelier-vault-card .iv-card-cta {
+          position:static;
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          margin-top:20px;
+          margin-bottom:0;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+        @media (max-width:768px){
+          .iv-card.parabola-atelier-vault-card,
+          [data-testid="iv-card-parabola-atelier"] {
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .parabola-atelier-vault-card .iv-card-media {
+            width:100%;
+            height:auto !important;
+            aspect-ratio:auto !important;
+            overflow:visible !important;
+          }
+          .parabola-atelier-vault-card .iv-card-img {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain !important;
+            object-position:center;
+          }
+          .parabola-atelier-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:30px 22px 46px;
+          }
+          .parabola-atelier-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:26px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -871,7 +988,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
