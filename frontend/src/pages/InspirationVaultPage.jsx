@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "caged-wings",
+    title: "CAGED WINGS",
+    subtitle: "Statement Caged-Wing Earrings",
+    price: 70,
+    href: "/inspiration-vault/caged-wings",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/caged-wings/hero-poster.jpg",
+    releasedAt: "2026-07-14",
+    category: "Earrings",
+  },
+  {
     slug: "monaco",
     title: "MONACO",
     subtitle: "Two-Finger Statement Ring",
