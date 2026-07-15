@@ -32,7 +32,17 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
     - **Gallery**: 6 cells — 5 stills + 1 silent portrait autoloop film, 2-col desktop / 1-col mobile, `object-fit: contain`, no captions
     - **Shop card**: `FROM $6,500 USD`, static image (no video, no Editorial Film overlay)
     - Routes `/architrave` + `/products/architrave`; catalog entry in `Ladies First > Earrings`
-- **Inspiration Vault** (editorial archive) w/ 14 pieces + `VaultArchiveNotice`
+- **Inspiration Vault** (editorial archive) w/ `VaultArchiveNotice`
+  - 2026-07-14 — **CAGED WINGS** ($70 USD) · Inspiration Vault > Earrings · pavé butterfly drop earrings · bright white plated base metal · clear AAA cubic zirconia · sold as one pair
+    - **Hero**: temporary static image (`hero-poster.jpg`) — no final hero video selected yet; do NOT wire `hero-film.mp4` until the final asset is approved
+    - **Gallery**: 5 items (2 photographs + 3 silent autoplay films) · natural aspect ratios · `object-fit: contain` · no captions or overlays · all films `autoplay muted loop playsInline controls={false} disablePictureInPicture` via `videoRefs` useEffect
+    - **Vault index card**: static image-only (no video on the index card)
+    - **Cart**: ADD TO CART wired through the existing PHILEON `CartDrawer` (verified subtotal $70 USD, success toast)
+    - **Copy restrictions**: bright white plated base metal + clear AAA cubic zirconia only — NO sterling, white-gold, platinum, or diamond claims
+    - **Routes**: `/caged-wings` + `/inspiration-vault/caged-wings`
+    - **Frozen**: keep implementation unchanged until the final hero video is selected (no "Just Added" / "New to the Archive" ribbon)
+    - **Files touched**: `/app/frontend/src/pages/CagedWingsPage.jsx` (new), `/app/frontend/src/App.js` (import + 2 routes), `/app/frontend/src/pages/InspirationVaultPage.jsx` (manifest entry only). MONACO, ORIEL, ARCHITRAVE, Ladies First, homepage, cart logic, checkout logic untouched.
+  - 2026-07-13 — **MONACO** ($60 USD) · Inspiration Vault > Rings · pavé two-finger statement ring · bright white plated base metal · AAA CZ · silent hero film · `/monaco` + `/inspiration-vault/monaco`
   - 2026-07-11 — **ORIEL** ($40 USD) · rhodium-plated nickel-free openwork rose-window drop earrings · AAA pavé CZ · hero film (720x1280, muted autoloop) · 6-slot gallery (4 studio + 2 lifestyle) · `/oriel` + `/inspiration-vault/oriel`
   - 2026-07-10 — ALTAR ($40 USD) · gold-plated stainless-steel architectural cross cuff · portrait hero film · `/altar` + `/inspiration-vault/altar`
   - 2026-07-09 — ROSELINE ($50 USD) · rose-gold pavé safety-pin cuff bangle
