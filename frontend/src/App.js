@@ -90,6 +90,7 @@ import OrielPage from "@/pages/OrielPage";
 import ArchitravePage from "@/pages/ArchitravePage";
 import MonacoPage from "@/pages/MonacoPage";
 import CagedWingsPage from "@/pages/CagedWingsPage";
+import NovaPage from "@/pages/NovaPage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
 import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
@@ -267,6 +268,8 @@ function App() {
             <Route path="/inspiration-vault/monaco" element={<MonacoPage />} />
             <Route path="/caged-wings" element={<CagedWingsPage />} />
             <Route path="/inspiration-vault/caged-wings" element={<CagedWingsPage />} />
+            <Route path="/nova" element={<NovaPage />} />
+            <Route path="/inspiration-vault/nova" element={<NovaPage />} />
             <Route path="/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />

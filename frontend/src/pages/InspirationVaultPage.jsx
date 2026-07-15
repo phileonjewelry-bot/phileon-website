@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "nova",
+    title: "NOVA",
+    subtitle: "Pavé Starburst Link Earrings",
+    price: 80,
+    href: "/inspiration-vault/nova",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/nova/hero-poster.jpg",
+    releasedAt: "2026-07-15",
+    category: "Earrings",
+  },
+  {
     slug: "caged-wings",
     title: "CAGED WINGS",
     subtitle: "Statement Caged-Wing Earrings",
@@ -676,6 +687,114 @@ export default function InspirationVaultPage() {
             margin-top:28px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           NOVA CARD — MOBILE CLIPPING FIX (Inspiration Vault index only)
+           Reason: NOVA's hero-poster is a portrait-leaning studio still of
+           the pair on the white presentation stand with the red base. The
+           default 16:10 card media with object-fit:cover would crop the
+           starburst petals and the lower articulated links, and the
+           "Enter Piece" CTA is hover-gated (invisible on touch mobile).
+           This override lets the card grow naturally, renders the image
+           at natural aspect uncropped, and always shows the CTA + Archive
+           Piece tag + price on mobile.
+           Scope: .nova-vault-card only. Does not touch other Vault cards,
+           the NOVA product page, videos, cart, or price.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.nova-vault-card,
+        [data-testid="iv-card-nova"] {
+          width:100%;
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .nova-vault-card .iv-card-media {
+          width:100%;
+          height:auto;
+          min-height:0;
+          max-height:none;
+          aspect-ratio:auto;
+          overflow:visible;
+          padding:0;
+          background:#000;
+        }
+        .nova-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain;
+          object-position:center;
+        }
+        .nova-vault-card .iv-card-meta {
+          position:static;
+          width:100%;
+          height:auto;
+          min-height:0;
+          max-height:none;
+          overflow:visible;
+          padding:34px 28px 46px;
+        }
+        .nova-vault-card .iv-card-title {
+          width:100%;
+          max-width:100%;
+          white-space:normal;
+          overflow-wrap:normal;
+        }
+        .nova-vault-card .iv-card-cta {
+          position:static;
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          margin-top:20px;
+          margin-bottom:0;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+        @media (min-width:769px) and (max-width:1024px){
+          .nova-vault-card .iv-card-meta {
+            padding:32px 26px 44px;
+          }
+        }
+        @media (max-width:768px){
+          .iv-card.nova-vault-card,
+          [data-testid="iv-card-nova"] {
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .nova-vault-card .iv-card-media {
+            width:100%;
+            height:auto !important;
+            aspect-ratio:auto !important;
+            overflow:visible !important;
+          }
+          .nova-vault-card .iv-card-img {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain;
+            object-position:center;
+          }
+          .nova-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:30px 22px 46px;
+          }
+          .nova-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:26px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -752,7 +871,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
