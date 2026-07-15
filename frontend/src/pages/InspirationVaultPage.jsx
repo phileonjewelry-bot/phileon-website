@@ -597,6 +597,85 @@ export default function InspirationVaultPage() {
             margin-top:28px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           CAGED WINGS CARD — MOBILE CLIPPING FIX (Inspiration Vault index only)
+           Reason: CAGED WINGS' hero-poster is a tall studio still (~1024x961)
+           of the earring pair. The default 16:10 card media with object-fit:cover
+           crops the earring drops, and the "Enter Piece" CTA is hover-gated
+           (invisible on touch mobile). This override lets the card grow
+           naturally, renders the image at natural aspect uncropped, and always
+           shows the CTA + Archive Piece tag + price on mobile.
+           Scope: .caged-wings-vault-card only. Does not touch other Vault
+           cards, the CAGED WINGS product page, videos, cart, or price.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.caged-wings-vault-card,
+        [data-testid="iv-card-caged-wings"] {
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .caged-wings-vault-card .iv-card-media {
+          aspect-ratio:auto;
+          width:100%;
+          height:auto;
+          min-height:0;
+          max-height:none;
+          overflow:visible;
+          background:#000;
+        }
+        .caged-wings-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain;
+          object-position:center;
+        }
+        .caged-wings-vault-card .iv-card-meta {
+          position:static;
+          height:auto;
+          min-height:0;
+          max-height:none;
+          overflow:visible;
+          padding-bottom:44px;
+        }
+        /* Ensure "Enter Piece" is visible on mobile / touch (no hover state) */
+        .caged-wings-vault-card .iv-card-cta {
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          position:static;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+          margin-top:20px;
+          margin-bottom:0;
+        }
+        @media (max-width:768px){
+          .iv-card.caged-wings-vault-card,
+          [data-testid="iv-card-caged-wings"] {
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .caged-wings-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:32px 22px 46px;
+          }
+          .caged-wings-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:28px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -673,7 +752,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
