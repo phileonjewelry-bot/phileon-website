@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "driven",
+    title: "DRIVEN",
+    subtitle: "Black Pavé Nail-Wrap Bracelet",
+    price: 75,
+    href: "/inspiration-vault/driven",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/driven/hero-poster.jpg",
+    releasedAt: "2026-07-17",
+    category: "Bangles & Bracelets",
+  },
+  {
     slug: "nova",
     title: "NOVA",
     subtitle: "Pavé Starburst Link Earrings",
@@ -912,6 +923,112 @@ export default function InspirationVaultPage() {
             margin-top:26px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           DRIVEN CARD — MOBILE CLIPPING FIX (Inspiration Vault index only)
+           Reason: DRIVEN's hero-poster is a 1024x1024 sculptural-hand
+           composition on black background. The default 16:10 .iv-card-media
+           with object-fit:cover crops the top of the hand and the pointed
+           terminal, and the hover-gated .iv-card-cta is invisible on
+           touch mobile. This override lets the card grow naturally,
+           renders the image at natural aspect uncropped (object-fit:contain),
+           and always shows the CTA + Archive Piece tag + price on mobile.
+           Scope: .driven-vault-card only. Does NOT touch: NOVA, CAGED WINGS,
+           MONACO, ORIEL, PARABOLA ATELIER, ARCHITRAVE, Ladies First,
+           homepage, cart, checkout, ring-sizing, or unrelated routes.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.driven-vault-card,
+        [data-testid="iv-card-driven"] {
+          width:100%;
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .driven-vault-card .iv-card-media {
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none;
+          aspect-ratio:auto !important;
+          overflow:visible;
+          padding:0;
+          background:#000;
+        }
+        .driven-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain !important;
+          object-position:center;
+          transform:none;
+        }
+        .driven-vault-card .iv-card-title {
+          width:100%;
+          max-width:100%;
+          height:auto;
+          white-space:normal;
+          overflow:visible;
+          text-overflow:clip;
+        }
+        .driven-vault-card .iv-card-meta {
+          position:static;
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none !important;
+          overflow:visible !important;
+          padding:34px 28px 46px;
+        }
+        .driven-vault-card .iv-card-cta {
+          position:static;
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          margin-top:20px;
+          margin-bottom:0;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+        @media (max-width:768px){
+          .iv-card.driven-vault-card,
+          [data-testid="iv-card-driven"] {
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .driven-vault-card .iv-card-media {
+            width:100%;
+            height:auto !important;
+            aspect-ratio:auto !important;
+            overflow:visible !important;
+          }
+          .driven-vault-card .iv-card-img {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain !important;
+            object-position:center;
+          }
+          .driven-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:30px 22px 46px;
+          }
+          .driven-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:26px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -988,7 +1105,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
