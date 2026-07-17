@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
@@ -25,15 +25,18 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  */
 
 const HERO_POSTER      = "/inspiration-vault/driven/hero-poster.jpg";
+const HERO_VIDEO       = "/inspiration-vault/driven/hero-film.mp4";
 const STILL_FRONT      = "/inspiration-vault/driven/still-01-front.jpg";
 const STILL_TQ         = "/inspiration-vault/driven/still-02-three-quarter.jpg";
 const STILL_NAILHEAD   = "/inspiration-vault/driven/still-03-nailhead-macro.jpg";
 const STILL_ARCH       = "/inspiration-vault/driven/still-04-arch-profile.jpg";
+const FILM_01          = "/inspiration-vault/driven/film-01.mp4";
 const PRICE = 75;
 
-// Gallery order — image-only until additional videos + photos arrive.
+// Gallery order — front → film-01 → three-quarter → nail-head macro → arch profile
 const GALLERY = [
   { type: "image", src: STILL_FRONT,    alt: "DRIVEN — front view on white showing the triple-wrap open cuff, circular nail-head terminal, and pointed pavé tip in blackened plated base metal with black cubic zirconia." },
+  { type: "video", src: FILM_01,        alt: "DRIVEN — silent editorial film, motion study of the triple-wrap open cuff on a sculptural hand." },
   { type: "image", src: STILL_TQ,       alt: "DRIVEN — front three-quarter product view revealing the pointed pavé terminal and the layered pavé construction across all three bands." },
   { type: "image", src: STILL_NAILHEAD, alt: "DRIVEN — macro detail of the circular nail-head terminal and the three parallel black pavé bands." },
   { type: "image", src: STILL_ARCH,     alt: "DRIVEN — side arch profile study showing the open cuff silhouette in blackened plated base metal." },
@@ -41,6 +44,8 @@ const GALLERY = [
 
 export default function DrivenPage() {
   const { isAdding, handleAddToCart } = useAddToCart();
+  const heroVideoRef = useRef(null);
+  const videoRefs = useRef([]);
   useLuxuryMotionObserver();
 
   useEffect(() => {
@@ -58,6 +63,29 @@ export default function DrivenPage() {
     upsertMeta('property', 'og:type',       'product');
     upsertMeta('name',     'twitter:card',  'summary_large_image');
     upsertMeta('name',     'twitter:image', ogImageUrl);
+  }, []);
+
+  // Hero video autoplay reliability
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.volume = 0;
+    const p = v.play();
+    if (p !== undefined) p.catch(() => { /* poster stays if blocked */ });
+  }, []);
+
+  // Gallery videos autoplay reliability
+  useEffect(() => {
+    videoRefs.current.forEach((v) => {
+      if (!v) return;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.volume = 0;
+      const p = v.play();
+      if (p !== undefined) p.catch(() => { /* poster stays if blocked */ });
+    });
   }, []);
 
   const onAddToCart = () => {
@@ -111,6 +139,17 @@ export default function DrivenPage() {
         .dr-list li { position:relative; padding:9px 0 9px 24px; font-family:'Cormorant Garamond',serif;
           font-size:18px; line-height:1.6; color:var(--ink); }
         .dr-list li::before { content:''; position:absolute; left:0; top:18px; width:8px; height:1px; background:var(--gold); }
+
+        /* HERO VIDEO — silent autoplay, portrait-friendly */
+        .dr-hero-video-wrap {
+          max-width:1180px; margin:clamp(24px,3vw,44px) auto 0;
+          padding:0 clamp(20px,4vw,60px);
+        }
+        .driven-hero-video {
+          display:block; width:100%; height:auto; max-height:78vh;
+          object-fit:contain; object-position:center; background:#000;
+          border:1px solid var(--rule-soft);
+        }
 
         /* GALLERY — natural aspect · 2 col desktop · 1 col mobile · no captions */
         .driven-gallery {
@@ -183,6 +222,28 @@ export default function DrivenPage() {
         subhead="Pressure made visible."
       />
 
+      {/* HERO VIDEO — silent, autoplay, loop, playsInline, no controls */}
+      <div className="dr-hero-video-wrap" data-testid="dr-hero-video-wrap">
+        <video
+          ref={heroVideoRef}
+          className="driven-hero-video"
+          src={HERO_VIDEO}
+          poster={HERO_POSTER}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          controls={false}
+          disablePictureInPicture
+          controlsList="nodownload nofullscreen noremoteplayback"
+          aria-label="DRIVEN editorial hero film"
+          data-testid="dr-hero-video"
+        >
+          Your browser does not support embedded video.
+        </video>
+      </div>
+
       {/* EDITORIAL DESCRIPTION */}
       <section className="dr-section dr-desc d1" data-testid="dr-desc">
         <p className="dr-eyebrow">Editorial</p>
@@ -243,6 +304,7 @@ export default function DrivenPage() {
               return (
                 <div key={i} className={cellClass} data-testid={`dr-gallery-cell-${i + 1}`}>
                   <video
+                    ref={(el) => { videoRefs.current[i] = el; }}
                     className="driven-gallery-film"
                     src={g.src}
                     poster={HERO_POSTER}
