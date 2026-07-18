@@ -25,12 +25,13 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
  *   - 65 mm overall drop · 15 mm stud · 18 mm max width
  *   - Secure Posts with Butterfly Backs
  *
- * Hero: temporary STATIC IMAGE (`hero-poster.jpg`, top-down complete
- * pair on light stone). Do NOT wire /rebelle/hero-film.mp4 — that path
- * is reserved for the future Toronto confidence film only.
+ * Hero: silent autoplay **video** (`hero-film.mp4`, h264 640×368, 15.12 s,
+ * 0 audio streams — ffprobe verified). `hero-poster.jpg` remains as the
+ * video poster fallback and canonical cart / OG / Twitter image.
  */
 
 const HERO_POSTER = "/rebelle/hero-poster.jpg";
+const HERO_VIDEO  = "/rebelle/hero-film.mp4";
 const SHOP_CARD   = "/rebelle/shop-card.jpg";
 const STILL_SIDE  = "/rebelle/still-01-side.jpg";
 const STILL_MACRO = "/rebelle/still-02-stiletto-macro.jpg";
@@ -87,6 +88,18 @@ export default function RebellePage() {
   const { isAdding, handleAddToCart } = useAddToCart();
   const [editionKey, setEditionKey] = useState(DEFAULT_EDITION_KEY);
   const edition = EDITIONS.find((e) => e.key === editionKey) || EDITIONS[2];
+  const heroVideoRef = useRef(null);
+
+  // Hero video autoplay reliability — force-mute + attempt play; keep poster if blocked.
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.volume = 0;
+    const p = v.play();
+    if (p !== undefined) p.catch(() => { /* poster stays if blocked */ });
+  }, []);
 
   useEffect(() => {
     document.title = "REBELLE | Black Pavé Helix Stiletto Earrings | PHILEON Fine Jewelry";
@@ -147,7 +160,8 @@ export default function RebellePage() {
           display:grid; grid-template-columns:1fr; gap:clamp(32px,4vw,56px); align-items:start; }
         @media (min-width:1024px){ .rb-hero { grid-template-columns:1.05fr 1fr; align-items:center; } }
         .rb-hero-visual { width:100%; background:#000; border:1px solid var(--rule-soft); }
-        .rebelle-hero-image { display:block; width:100%; height:auto; max-height:82vh;
+        .rebelle-hero-image,
+        .rebelle-hero-video { display:block; width:100%; height:auto; max-height:82vh;
           object-fit:contain; object-position:center; background:#000; }
         .rb-hero-copy { padding:8px 0; }
         .rb-hero-title { font-family:'Playfair Display',serif; font-weight:400; font-size:clamp(38px,5vw,62px);
@@ -251,13 +265,24 @@ export default function RebellePage() {
       {/* HERO — static image + editorial + purchase block */}
       <section className="rb-hero" data-testid="rb-hero">
         <div className="rb-hero-visual" data-testid="rb-hero-visual">
-          <img
-            src={HERO_POSTER}
-            alt="REBELLE black pavé double-helix stiletto earrings — complete pair shown on a soft neutral stone surface."
-            className="rebelle-hero-image"
-            data-testid="rb-hero-image"
-            loading="eager"
-          />
+          <video
+            ref={heroVideoRef}
+            className="rebelle-hero-video"
+            src={HERO_VIDEO}
+            poster={HERO_POSTER}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            controls={false}
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            aria-label="REBELLE cinematic product film — silent autoplay loop."
+            data-testid="rb-hero-video"
+          >
+            Your browser does not support embedded video.
+          </video>
         </div>
 
         <div className="rb-hero-copy">
