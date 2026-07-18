@@ -88,6 +88,7 @@ import RoselinePage from "@/pages/RoselinePage";
 import AltarPage from "@/pages/AltarPage";
 import OrielPage from "@/pages/OrielPage";
 import ArchitravePage from "@/pages/ArchitravePage";
+import RebellePage from "@/pages/RebellePage";
 import MonacoPage from "@/pages/MonacoPage";
 import CagedWingsPage from "@/pages/CagedWingsPage";
 import NovaPage from "@/pages/NovaPage";
@@ -265,6 +266,8 @@ function App() {
             <Route path="/inspiration-vault/oriel" element={<OrielPage />} />
             <Route path="/architrave" element={<ArchitravePage />} />
             <Route path="/products/architrave" element={<ArchitravePage />} />
+            <Route path="/rebelle" element={<RebellePage />} />
+            <Route path="/products/rebelle" element={<RebellePage />} />
             <Route path="/monaco" element={<MonacoPage />} />
             <Route path="/inspiration-vault/monaco" element={<MonacoPage />} />
             <Route path="/caged-wings" element={<CagedWingsPage />} />

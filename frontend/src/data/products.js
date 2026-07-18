@@ -3143,6 +3143,32 @@ export const catalogProducts = [
     label: 'PHILEON Fine Jewelry',
     ctaLabel: 'View ARCHITRAVE',
   },
+  {
+    id: 'rebelle',
+    name: 'REBELLE',
+    slug: 'rebelle',
+    materialLine: 'Black Pavé Helix Stiletto Earrings · Sterling Silver, 10K & 14K White Gold · Black Rhodium · 264 Stones Per Pair',
+    subtitle: 'Black Pavé Helix Stiletto Earrings',
+    imageUrl: '/rebelle/shop-card.jpg',
+    href: '/rebelle',
+    // Internal costing (CAD) — never shown publicly.
+    basePriceCAD: 4950,
+    // Public storefront USD — computed via PHILEON cadToUsdLuxury($4,950 CAD).
+    // 4950 × 0.75 = 3712.50 → rounds to nearest $500 (≥$2k step) → $3,500 USD.
+    price_range: 'FROM $3,500 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'earrings',
+    audience: ['ladies', 'ladies-first'],
+    tags: ['Ladies', 'Ladies First', 'Fine Jewelry', 'Earrings', 'Statement', 'Stiletto', 'Double Helix', 'Black Rhodium', 'White Gold', 'Silver', 'Lab Black Diamonds', 'Black CZ'],
+    isNew: true,
+    isFeatured: true,
+    soldAs: 'pair',
+    displayOrder: 1,
+    collection: 'signature',
+    label: 'PHILEON Fine Jewelry',
+    ctaLabel: 'View REBELLE',
+  },
 ];
 
 // Helper: filter the catalog by simple predicates.
