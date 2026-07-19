@@ -36,6 +36,12 @@ const SHOP_CARD   = "/rebelle/shop-card.jpg";
 const STILL_SIDE  = "/rebelle/still-01-side.jpg";
 const STILL_MACRO = "/rebelle/still-02-stiletto-macro.jpg";
 const STILL_ALT   = "/rebelle/still-03-side-alt.jpg";
+// Editorial + product batch — model portraits & product-on-gray studies.
+const STILL_MODEL_CLOSE    = "/rebelle/still-model-01-close.jpg";
+const STILL_MODEL_BOTH     = "/rebelle/still-model-02-both.jpg";
+const STILL_MODEL_PROFILE  = "/rebelle/still-model-03-profile.jpg";
+const STILL_PRODUCT_ANGLED = "/rebelle/still-product-01-angled.jpg";
+const STILL_PRODUCT_STRAIGHT = "/rebelle/still-product-02-straight.jpg";
 
 // ── EDITIONS ────────────────────────────────────────────────────────────────
 // Internal costing stays in CAD. NEVER expose basePriceCAD publicly;
@@ -71,23 +77,31 @@ const EDITIONS = EDITIONS_INTERNAL.map((e) => ({
   usdPrice: cadToUsdLuxury(e.basePriceCAD),
   currency: "USD",
 }));
-const DEFAULT_EDITION_KEY = "14k-white-black-lab";
+const DEFAULT_EDITION_KEY = "silver-black-cz";
 
 const fmtUSD = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
 
-// Gallery — 3 approved product stills (no model portraits supplied yet).
+// Gallery — 8 stills (5 new editorial + product on gray + 3 original product studies).
+// Sequence intermixes editorial and product for a natural rhythm:
+//   model-both → product-angled → model-close → side-plinth → model-profile →
+//   product-straight → stiletto-macro → side-alt
 // Hero image is NOT duplicated in the gallery. No visible captions.
 const GALLERY = [
-  { type: "image", src: STILL_SIDE,  alt: "REBELLE black pavé double-helix stiletto earrings — side view on a dark plinth revealing the concentric stud, dimensional double helix, and stiletto silhouette with secure butterfly-back closures." },
-  { type: "image", src: STILL_MACRO, alt: "REBELLE — dramatic macro of the pavé stiletto silhouettes on a dark reflective surface, showing the sculptural pointed toe and narrow heel." },
-  { type: "image", src: STILL_ALT,   alt: "REBELLE — side profile pair on a soft neutral surface, revealing the open double-helix construction and the pointed pavé stiletto." },
+  { type: "image", src: STILL_MODEL_BOTH,        alt: "REBELLE editorial — three-quarter portrait of a model with a braided crown and black feather garment, both black pavé double-helix stiletto earrings visible." },
+  { type: "image", src: STILL_PRODUCT_ANGLED,    alt: "REBELLE product study — angled 3D view of the pair on a soft gray surface, revealing the concentric pavé stud, the open double-helix construction, and the pointed stiletto silhouette." },
+  { type: "image", src: STILL_MODEL_CLOSE,       alt: "REBELLE editorial — tight close-up of a model wearing a single REBELLE earring; braided crown, black feather garment, and the full concentric stud, helix, and stiletto silhouette visible against the ear." },
+  { type: "image", src: STILL_SIDE,              alt: "REBELLE black pavé double-helix stiletto earrings — side view on a dark plinth revealing the concentric stud, dimensional double helix, and stiletto silhouette with secure butterfly-back closures." },
+  { type: "image", src: STILL_MODEL_PROFILE,     alt: "REBELLE editorial — model in right profile with a braided crown and feather garment, the REBELLE earring shown clean against the ear from the side." },
+  { type: "image", src: STILL_PRODUCT_STRAIGHT,  alt: "REBELLE product study — straight-on view of the pair on a soft gray surface, presenting the complete silhouette from concentric stud through double helix to pointed stiletto." },
+  { type: "image", src: STILL_MACRO,             alt: "REBELLE — dramatic macro of the pavé stiletto silhouettes on a dark reflective surface, showing the sculptural pointed toe and narrow heel." },
+  { type: "image", src: STILL_ALT,               alt: "REBELLE — side profile pair on a soft neutral surface, revealing the open double-helix construction and the pointed pavé stiletto." },
 ];
 
 export default function RebellePage() {
   useLuxuryMotionObserver();
   const { isAdding, handleAddToCart } = useAddToCart();
   const [editionKey, setEditionKey] = useState(DEFAULT_EDITION_KEY);
-  const edition = EDITIONS.find((e) => e.key === editionKey) || EDITIONS[2];
+  const edition = EDITIONS.find((e) => e.key === editionKey) || EDITIONS[0];
   const heroVideoRef = useRef(null);
 
   // Hero video autoplay reliability — force-mute + attempt play; keep poster if blocked.
