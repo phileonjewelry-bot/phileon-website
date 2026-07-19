@@ -30,16 +30,18 @@ const STILL_FRONT      = "/inspiration-vault/driven/still-01-front.jpg";
 const STILL_TQ         = "/inspiration-vault/driven/still-02-three-quarter.jpg";
 const STILL_NAILHEAD   = "/inspiration-vault/driven/still-03-nailhead-macro.jpg";
 const STILL_ARCH       = "/inspiration-vault/driven/still-04-arch-profile.jpg";
+const STILL_OPEN_CUFF  = "/inspiration-vault/driven/still-05-open-cuff.jpg";
 const FILM_01          = "/inspiration-vault/driven/film-01.mp4";
 const PRICE = 75;
 
-// Gallery order — front → film-01 → three-quarter → nail-head macro → arch profile
+// Gallery order — front → film-01 → three-quarter → nail-head macro → arch profile → open-cuff top-down
 const GALLERY = [
   { type: "image", src: STILL_FRONT,    alt: "DRIVEN — front view on white showing the triple-wrap open cuff, circular nail-head terminal, and pointed pavé tip in blackened plated base metal with black cubic zirconia." },
   { type: "video", src: FILM_01,        alt: "DRIVEN — silent editorial film, motion study of the triple-wrap open cuff on a sculptural hand." },
   { type: "image", src: STILL_TQ,       alt: "DRIVEN — front three-quarter product view revealing the pointed pavé terminal and the layered pavé construction across all three bands." },
   { type: "image", src: STILL_NAILHEAD, alt: "DRIVEN — macro detail of the circular nail-head terminal and the three parallel black pavé bands." },
   { type: "image", src: STILL_ARCH,     alt: "DRIVEN — side arch profile study showing the open cuff silhouette in blackened plated base metal." },
+  { type: "image", src: STILL_OPEN_CUFF, alt: "DRIVEN — open-cuff top-down study on a soft neutral surface, showing both terminals in a single continuous line: the pointed pavé tip meeting the circular nail-head across three parallel black pavé bands." },
 ];
 
 export default function DrivenPage() {

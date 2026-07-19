@@ -45,7 +45,7 @@ const EDITIONS_INTERNAL = [
     key: "silver-black-cz",
     sku: "rebelle-silver-black-cz",
     label: "Sterling Silver",
-    material: "Sterling Silver · Black Rhodium Finish · AAA Black Cubic Zirconia",
+    material: "Sterling Silver · Black Enamel Finish · AAA Black Cubic Zirconia",
     stones: "264 AAA Black Cubic Zirconia Stones Per Pair",
     basePriceCAD: 4950,
   },
@@ -53,7 +53,7 @@ const EDITIONS_INTERNAL = [
     key: "10k-white-black-lab",
     sku: "rebelle-10k-white-black-lab",
     label: "10K White Gold",
-    material: "10K White Gold · Black Rhodium Finish · Lab-Grown Black Diamonds",
+    material: "10K White Gold · Black Enamel Finish · Lab-Grown Black Diamonds",
     stones: "264 Lab-Grown Black Diamonds Per Pair",
     basePriceCAD: 11250,
   },
@@ -61,7 +61,7 @@ const EDITIONS_INTERNAL = [
     key: "14k-white-black-lab",
     sku: "rebelle-14k-white-black-lab",
     label: "14K White Gold",
-    material: "14K White Gold · Black Rhodium Finish · Lab-Grown Black Diamonds",
+    material: "14K White Gold · Black Enamel Finish · Lab-Grown Black Diamonds",
     stones: "264 Lab-Grown Black Diamonds Per Pair",
     basePriceCAD: 12350,
   },
@@ -362,7 +362,7 @@ export default function RebellePage() {
         <h2 className="rb-h2" style={{ textAlign: "center" }}>Specifications</h2>
         <div className="rb-specs">
           <div className="rb-spec-row"><span className="rb-spec-key">Material</span><span className="rb-spec-val" data-testid="rb-spec-material">{edition.label}</span></div>
-          <div className="rb-spec-row"><span className="rb-spec-key">Finish</span><span className="rb-spec-val">Black Rhodium</span></div>
+          <div className="rb-spec-row"><span className="rb-spec-key">Finish</span><span className="rb-spec-val">Black Enamel</span></div>
           <div className="rb-spec-row"><span className="rb-spec-key">Stone Count</span><span className="rb-spec-val" data-testid="rb-spec-stones">264 Stones Per Pair</span></div>
           <div className="rb-spec-row"><span className="rb-spec-key">Setting</span><span className="rb-spec-val">Pavé</span></div>
           <div className="rb-spec-row"><span className="rb-spec-key">Format</span><span className="rb-spec-val">Concentric Stud · Double Helix · Stiletto Drop</span></div>
