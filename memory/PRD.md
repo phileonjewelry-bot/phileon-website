@@ -21,6 +21,39 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 ## What's Been Implemented (up to 2026-07)
 - Rose of Sharon, Boss Knot, Lady Boss Knot, Uncle Jo, Veyron Noir, Wynette Palette, La Marva, Annie Rose, Monika Couture, Katrina Cascata, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset, Forme Cuff, Rhythm Mesh Ring, TOLA II, GALATIANS 6:14, TRACE, BOUND, APEX, HOMAGE, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, Fondo Curvo, 1 Corinthians 15:14, DRAPE, Le Cocktail de Jessica, Prise de Couronne, Nervatura, The Don Gorgon, The Grand Dame, The Carapace, MIDWEEK, LA MADONNA, LA SCARPA DELLA REGINA, BAPE, LISA, LADY JAY, THE TRUE VINE, PORTA AUREA, COOGI DNA TAG, BATTENTI DELLA VILLA, GENT, STACKRATS, Deco Éventail, Orbit Lumière
 - **PHILEON Fine Jewelry** (Ladies First → Earrings)
+  - 2026-07-19 — **REBELLE** (Ladies First · Earrings) · Black Pavé Helix Stiletto Earrings · Tagline: *Elegance was never meant to behave.* · Made to Order · Sold as one pair · **APPROVED FINAL STATE**
+    - **Three purchasable editions** (internal CAD → public USD via shared `cadToUsdLuxury()`; CAD never rendered):
+      - **Sterling Silver · Black Cubic Zirconia — $3,500 USD** ← **default selected edition**
+      - 10K White Gold · Lab-Grown Black Diamonds — **$8,500 USD**
+      - 14K White Gold · Lab-Grown Black Diamonds — **$9,500 USD**
+      - All editions finished in **Black Enamel** (final approved language — NOT Black Rhodium)
+      - SKUs: `rebelle-silver-black-cz` · `rebelle-10k-white-black-lab` · `rebelle-14k-white-black-lab`
+    - **Universal specifications** (only approved values displayed):
+      - **264 Stones Per Pair** (only approved stone count — no other figures)
+      - **65 mm** Overall Drop · **15 mm** Circular Stud · **18 mm** Maximum Width
+      - **Approximately 25 g Per Pair** (only approved weight display — never per-earring)
+      - Pavé setting · Concentric Stud · Double Helix · Stiletto Drop
+      - Secure Posts with Butterfly Backs · Sold as One Pair · Made to Order
+    - **Media**:
+      - **Hero**: silent autoplay **video** `/rebelle/hero-film.mp4` (h264 640×368, 15.12 s, 0 audio streams — ffprobe verified) with `/rebelle/hero-poster.jpg` as poster fallback. Video attributes: `muted=true` · `defaultMuted=true` · `autoplay=true` · `loop=true` · `playsInline=true` · `controls=false` · `volume=0` · `disablePictureInPicture=true` · `controlsList="nodownload nofullscreen noremoteplayback"`
+      - **Ladies First shop card**: static image only — `/rebelle/shop-card.jpg` — 0 videos
+      - **Gallery**: **8 still photographs · 0 videos · 0 captions/overlays · natural aspect ratios via `object-fit: contain`**. Hero image never duplicated in gallery.
+    - **Gallery order** (editorial + product intermixed):
+      1. Model portrait — both earrings visible (`still-model-02-both.jpg`)
+      2. Product angled three-quarter view on gray (`still-product-01-angled.jpg`)
+      3. Model close-up — single earring focus, left profile (`still-model-01-close.jpg`)
+      4. Existing side plinth study — butterfly backs (`still-01-side.jpg`)
+      5. Model right-profile portrait (`still-model-03-profile.jpg`)
+      6. Product straight-on pair on gray (`still-product-02-straight.jpg`)
+      7. Existing stiletto macro — dark reflective (`still-02-stiletto-macro.jpg`)
+      8. Existing alternate side profile (`still-03-side-alt.jpg`)
+    - **Purchase behavior**: Sterling Silver selected on load · default ADD TO CART lands `REBELLE — Sterling Silver` · default cart price + subtotal = `$3,500 USD` · 10K and 14K unchanged · public storefront USD only (no CAD rendered) · existing PHILEON cart & checkout unchanged.
+    - **Routes**: `/rebelle` + `/products/rebelle`
+    - **SEO**: title, meta description, og:title, og:image, og:type=product, twitter:card=summary_large_image, twitter:image all upserted client-side.
+    - **Language guardrails (verified — 0 forbidden terms in body copy)**: Preserve *Black Enamel*. NOT Black Rhodium. No 18K edition · no yellow-gold · no rose-gold · no INQUIRE · no price-on-request · no "12.5 g per earring" · no "Facet Flow" · no 276/347/500 stone counts · no CAD / basePriceCAD / $4,950 / $11,250 / $12,350.
+    - **Files owned by REBELLE**: `/app/frontend/src/pages/RebellePage.jsx` · `/app/frontend/public/rebelle/{hero-film.mp4, hero-poster.jpg, shop-card.jpg, still-01-side.jpg, still-02-stiletto-macro.jpg, still-03-side-alt.jpg, still-model-01-close.jpg, still-model-02-both.jpg, still-model-03-profile.jpg, still-product-01-angled.jpg, still-product-02-straight.jpg}` · route lines in `/app/frontend/src/App.js` · catalog entry in `/app/frontend/src/data/products.js`.
+    - **Frozen**: no further REBELLE changes unless explicitly requested by user.
+    - **Untouched**: ARCHITRAVE · MONIKA COUTURE · DRIVEN · NOVA · CAGED WINGS · MONACO · ORIEL · PARABOLA ATELIER · Inspiration Vault · homepage · existing routes · global cart logic · checkout · unrelated products and pricing.
   - 2026-07-13 — **ARCHITRAVE** · Diamond & CZ Openwork Drop Earrings · rose-window openwork medallion + graduated 3-station drop · 536 stones per pair (268 per earring)
     - **Editions** (internal CAD → converted USD via shared `cadToUsdLuxury()` at $500 luxury steps):
       • Sterling Silver · AAA CZ · CAD 8,950 → **$6,500 USD** · SKU `architrave-silver-cz`
@@ -33,6 +66,11 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
     - **Shop card**: `FROM $6,500 USD`, static image (no video, no Editorial Film overlay)
     - Routes `/architrave` + `/products/architrave`; catalog entry in `Ladies First > Earrings`
 - **Inspiration Vault** (editorial archive) w/ `VaultArchiveNotice`
+  - 2026-07-18 — **DRIVEN gallery + REBELLE finish-copy corrections** (COMPLETE)
+    - **DRIVEN** — added a 6th gallery item: `still-05-open-cuff.jpg` (open-cuff top-down study on soft neutral surface showing both terminals in a single continuous line — pointed pavé tip meeting circular nail-head across three parallel black pavé bands). Gallery now has **5 photographs + 1 silent film = 6 cells**. Hero video, Vault index card, pricing, routes, cart, other Vault products unchanged.
+    - **REBELLE** — replaced `Black Rhodium` → `Black Enamel` across all 3 edition materials (Sterling Silver / 10K / 14K), the specifications table Finish row, and the Ladies First shop-card `materialLine` + `tags` in `/app/frontend/src/data/products.js`. Verified 0 occurrences of "Black Rhodium" remain in visible body copy.
+    - **Files touched**: `/app/frontend/src/pages/DrivenPage.jsx` (added `STILL_OPEN_CUFF` const + one gallery entry) · `/app/frontend/public/inspiration-vault/driven/still-05-open-cuff.jpg` (new asset) · `/app/frontend/src/pages/RebellePage.jsx` (4 finish-copy swaps) · `/app/frontend/src/data/products.js` (2 finish-copy swaps in REBELLE catalog entry).
+    - **Untouched**: DRIVEN hero/video/pricing/routes/cart · REBELLE hero video / hero poster / shop card image / edition prices / SKUs / gallery / SEO / routes · NOVA · CAGED WINGS · MONACO · ORIEL · PARABOLA ATELIER · ARCHITRAVE · Ladies First layout · homepage · cart logic · checkout · ring sizing · unrelated routes.
   - 2026-07-17 — **DRIVEN** ($75 USD) · Inspiration Vault > Bangles & Bracelets · black pavé nail-wrap bracelet · blackened plated base metal · black cubic zirconia · sold as one bracelet
     - **Hero**: silent autoplay **video** (`hero-film.mp4`, h264 720×1280, 11.53 s, 0 audio streams verified via ffprobe) with `hero-poster.jpg` as poster + editorial `VaultHero` image (sculptural neutral hand on black background)
     - **Gallery**: 5 items · **4 photographs + 1 silent autoplay film** · natural aspect ratios · `object-fit: contain` · no captions or overlays · film runs `autoplay muted loop playsInline controls={false} disablePictureInPicture` with `videoRefs` useEffect enforcing autoplay · gallery order: `still-01-front.jpg` → `film-01.mp4` → `still-02-three-quarter.jpg` → `still-03-nailhead-macro.jpg` → `still-04-arch-profile.jpg`
