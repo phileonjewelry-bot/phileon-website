@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -27,11 +27,47 @@ import { cadToUsdLuxury, formatUsd } from "@/lib/livePricing";
 
 const HERO_IMAGE = "/tribute-series/neighborhood-nip/hero-front.png";
 const BASE_PRICE_CAD = 19950;
+const CUSTOM_FEE_CAD = 1000;
 const NIP_SIZES = ["8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13"];
 
-// Ordered gallery — six angles supplied to date. Additional angles slot
+// Original Victory Lap Patch — approved arrangement (6 white + 6 black).
+// Serialized row-by-row: WWB/BWB/BWB/BWW
+const VICTORY_PATTERN = [
+  ["W", "W", "B"],
+  ["B", "W", "B"],
+  ["B", "W", "B"],
+  ["B", "W", "W"],
+];
+
+const PATCH_ROWS = 4;
+const PATCH_COLS = 3;
+const REQUIRED_WHITE = 6;
+const REQUIRED_BLACK = 6;
+
+const serializePattern = (grid) =>
+  grid.map((row) => row.join("")).join("/");
+
+const countStones = (grid) => {
+  let w = 0, b = 0;
+  for (const row of grid) for (const c of row) {
+    if (c === "W") w++;
+    else if (c === "B") b++;
+  }
+  return { w, b };
+};
+
+const isPatternValid = (grid) => {
+  const { w, b } = countStones(grid);
+  return w === REQUIRED_WHITE && b === REQUIRED_BLACK && (w + b) === (PATCH_ROWS * PATCH_COLS);
+};
+
+const cloneGrid = (grid) => grid.map((r) => r.slice());
+
+// Ordered gallery — eight angles supplied to date. Additional angles slot
 // in here without any structural change.
 const GALLERY = [
+  { src: "/tribute-series/neighborhood-nip/gallery-07-hand-on-book.jpg",       alt: "NEIGHBORHOOD NIP — worn on the hand, resting on a leather-bound volume. 14K white gold cushion-square face set with invisible-set princess-cut blue sapphires and the black-and-white diamond Victory Patch." },
+  { src: "/tribute-series/neighborhood-nip/gallery-08-four-panel.jpg",         alt: "NEIGHBORHOOD NIP — four editorial angles: three-quarter view, top-down face, front elevation, and side profile of the 14K white gold sapphire signet." },
   { src: "/tribute-series/neighborhood-nip/gallery-01-front.png",              alt: "NEIGHBORHOOD NIP — head-on front view showing the pavé sapphire face and central Victory Lap flag and N tribute motif." },
   { src: "/tribute-series/neighborhood-nip/gallery-02-front-tight.png",        alt: "NEIGHBORHOOD NIP — tight front view emphasizing the cushion-square silhouette and mosaic sapphire grid." },
   { src: "/tribute-series/neighborhood-nip/gallery-03-motif-macro.png",        alt: "NEIGHBORHOOD NIP — macro of the Victory Lap flag and N tribute motif set in black and white diamonds against the sapphire field." },
@@ -43,9 +79,25 @@ const GALLERY = [
 export default function NeighborhoodNipPage() {
   useLuxuryMotionObserver();
   const [selectedSize, setSelectedSize] = useState(null);
+  const [patchType, setPatchType] = useState("original"); // "original" | "custom"
+  const [customGrid, setCustomGrid] = useState(() => cloneGrid(VICTORY_PATTERN));
+  const [gridHistory, setGridHistory] = useState([]); // stack of prior grids for undo
   const { isAdding, handleAddToCart } = useAddToCart();
+  const makeYourMarkRef = useRef(null);
 
-  const priceUsdLabel = `${formatUsd(cadToUsdLuxury(BASE_PRICE_CAD))} USD`;
+  const basePriceUsd = useMemo(() => cadToUsdLuxury(BASE_PRICE_CAD), []);
+  const customFeeUsd = useMemo(() => cadToUsdLuxury(CUSTOM_FEE_CAD), []);
+  const currentPriceUsd = patchType === "custom" ? basePriceUsd + customFeeUsd : basePriceUsd;
+  const priceUsdLabel = `${formatUsd(currentPriceUsd)} USD`;
+  const customFeeLabel = `${formatUsd(customFeeUsd)} USD`;
+
+  const { w: whiteCount, b: blackCount } = countStones(customGrid);
+  const totalCells = whiteCount + blackCount;
+  const customValid = isPatternValid(customGrid);
+  const patternIncomplete = totalCells < PATCH_ROWS * PATCH_COLS;
+
+  const patchPatternStr = patchType === "custom" ? serializePattern(customGrid) : serializePattern(VICTORY_PATTERN);
+  const patchLabel = patchType === "custom" ? "Custom Black-and-White Diamond Layout" : "Original Victory Patch";
 
   useEffect(() => {
     document.title = "NEIGHBORHOOD NIP | Tribute Series | PHILEON";
@@ -55,7 +107,7 @@ export default function NeighborhoodNipPage() {
       el.setAttribute("content", content);
     };
     upsertMeta("name", "description",
-      "NEIGHBORHOOD NIP — architectural tribute ring in 14K white gold, princess-cut blue sapphires, and black and white diamonds. PHILEON Tribute Series. Made to order.");
+      "NEIGHBORHOOD NIP — architectural tribute ring in 14K white gold, princess-cut blue sapphires, and black and white diamonds. Customize your Victory Patch. PHILEON Tribute Series. Made to order.");
     const ogImage = `${window.location.origin}${HERO_IMAGE}`;
     upsertMeta("property", "og:title",     "NEIGHBORHOOD NIP | Tribute Series | PHILEON");
     upsertMeta("property", "og:image",     ogImage);
@@ -64,20 +116,78 @@ export default function NeighborhoodNipPage() {
     upsertMeta("name",     "twitter:image", ogImage);
   }, []);
 
+  // ── Grid Editor Handlers ────────────────────────────────────────────
+  const pushHistory = (grid) => {
+    setGridHistory((h) => [...h.slice(-49), cloneGrid(grid)]); // keep last 50
+  };
+
+  const toggleCell = (rowIdx, colIdx) => {
+    pushHistory(customGrid);
+    setCustomGrid((prev) => {
+      const next = cloneGrid(prev);
+      next[rowIdx][colIdx] = prev[rowIdx][colIdx] === "W" ? "B" : "W";
+      return next;
+    });
+  };
+
+  const resetToOriginal = () => {
+    pushHistory(customGrid);
+    setCustomGrid(cloneGrid(VICTORY_PATTERN));
+  };
+
+  const invertColours = () => {
+    pushHistory(customGrid);
+    setCustomGrid((prev) => prev.map((row) => row.map((c) => (c === "W" ? "B" : "W"))));
+  };
+
+  const undoLast = () => {
+    if (gridHistory.length === 0) return;
+    const prev = gridHistory[gridHistory.length - 1];
+    setGridHistory((h) => h.slice(0, -1));
+    setCustomGrid(cloneGrid(prev));
+  };
+
+  const scrollToCustomization = (e) => {
+    e?.preventDefault();
+    makeYourMarkRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // ── Cart handler ────────────────────────────────────────────────────
   const onAddToCart = () => {
     if (!selectedSize) {
       toast.error("Please select a ring size.");
       return;
     }
+    if (patchType === "custom") {
+      if (patternIncomplete) {
+        toast.error("Complete all 12 positions in your custom patch.");
+        return;
+      }
+      if (!customValid) {
+        toast.error("Use exactly 6 white diamonds and 6 black diamonds.");
+        return;
+      }
+    }
+
     const sizeLabel = ringSizeLabel(selectedSize);
+    const sizeToken = ringSizeSkuToken(selectedSize);
     const sku = `neighborhood-nip-14k-white-size-${String(selectedSize).replace(".", "-")}`;
+    const isCustom = patchType === "custom";
+    const patchNameForCart = isCustom ? "Custom" : "Original";
+    const variantParts = [
+      `Blue Sapphires · Black and White Diamonds`,
+      `Ring Size: ${sizeLabel}`,
+      `Victory Patch: ${patchNameForCart}`,
+    ];
+    if (isCustom) variantParts.push(`Pattern: ${patchPatternStr}`);
+
     handleAddToCart(
       {
-        id: `neighborhood-nip-14k-white-size-${ringSizeSkuToken(selectedSize)}`,
+        id: `neighborhood-nip-14k-white-size-${sizeToken}-patch-${isCustom ? patchPatternStr.replace(/\//g, "-") : "original"}`,
         name: `NEIGHBORHOOD NIP — 14K White Gold · ${sizeLabel}`,
-        price: cadToUsdLuxury(BASE_PRICE_CAD),
+        price: currentPriceUsd,
         productKey: "neighborhoodNip",
-        tierKey: `14k-white-size-${ringSizeSkuToken(selectedSize)}`,
+        tierKey: `14k-white-size-${sizeToken}`,
         metal: "14K White Gold",
         ringSize: selectedSize,
         ringSizeLabel: sizeLabel,
@@ -85,12 +195,24 @@ export default function NeighborhoodNipPage() {
         slug: "neighborhood-nip",
         image: HERO_IMAGE,
         materials: ["14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds"],
+        // Custom-patch metadata (line-item only — SKU is unchanged)
+        patchType,
+        patchPattern: patchPatternStr,
+        patchLabel,
+        whiteDiamondCount: isCustom ? whiteCount : REQUIRED_WHITE,
+        blackDiamondCount: isCustom ? blackCount : REQUIRED_BLACK,
+        customFeeUsd: isCustom ? customFeeUsd : 0,
         quantity: 1,
       },
       1,
-      `Blue Sapphires · Black and White Diamonds · Ring Size: ${sizeLabel}`
+      variantParts.join(" · ")
     );
   };
+
+  // ── ADD-TO-CART enablement (spec: block when invalid) ───────────────
+  const addDisabled = isAdding
+    || !selectedSize
+    || (patchType === "custom" && (!customValid || patternIncomplete));
 
   return (
     <div className="nip-page" data-testid="neighborhood-nip-page">
@@ -393,6 +515,243 @@ export default function NeighborhoodNipPage() {
           .nip-gallery-cell img { transition:none; }
           .nip-gallery-cell:hover img { transform:none; }
         }
+
+        /* ── PATCH SUMMARY (inside purchase block) ────────────────────── */
+        .nip-patch-summary {
+          max-width:520px; margin:20px auto 24px;
+          display:flex; align-items:center; justify-content:space-between;
+          gap:16px; flex-wrap:wrap;
+          padding:14px 18px;
+          background:rgba(3, 6, 12, 0.55);
+          border:1px solid var(--rule-soft);
+        }
+        .nip-patch-summary-row {
+          display:flex; flex-direction:column; gap:4px; text-align:left; min-width:0;
+        }
+        .nip-patch-summary-label {
+          font-family:'Cinzel', serif; font-size:10px; letter-spacing:.44em;
+          color:var(--ink-muted); text-transform:uppercase;
+        }
+        .nip-patch-summary-value {
+          font-family:'Cormorant Garamond', serif; font-size:16px;
+          color:var(--ink-strong); line-height:1.35;
+        }
+        .nip-patch-summary-fee {
+          font-style:italic; color:var(--electric); font-size:14px;
+        }
+        .nip-patch-summary-cta {
+          font-family:'Cinzel', serif; font-size:10px; letter-spacing:.42em;
+          color:var(--electric); text-transform:uppercase; text-decoration:none;
+          padding:8px 4px; white-space:nowrap;
+          transition:color 220ms ease, letter-spacing 220ms ease;
+        }
+        .nip-patch-summary-cta:hover { color:var(--ink-strong); letter-spacing:.5em; }
+
+        .nip-inline-error {
+          margin:16px auto 0; max-width:520px;
+          font-family:'Cormorant Garamond', serif; font-style:italic;
+          font-size:14px; color:#ff9ea6; text-align:center;
+        }
+
+        /* ── CUSTOMIZATION SECTION ────────────────────────────────────── */
+        .nip-customize-grid {
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:clamp(28px, 3.4vw, 56px);
+          align-items:start;
+          max-width:1080px; margin:0 auto;
+        }
+        @media (max-width:900px){
+          .nip-customize-grid {
+            grid-template-columns:1fr;
+            gap:32px;
+          }
+          /* Mobile order: heading, selector, preview, editor, counters, controls, note */
+          .nip-customize-right { order:1; }
+          .nip-customize-left { order:2; }
+        }
+
+        /* ── Original / Custom toggle ────────────────────────────────── */
+        .nip-patch-toggle {
+          display:grid; grid-template-columns:1fr 1fr; gap:12px;
+          margin-bottom:28px;
+        }
+        @media (max-width:520px){
+          .nip-patch-toggle { grid-template-columns:1fr; }
+        }
+        .nip-patch-toggle-btn {
+          display:flex; flex-direction:column; gap:6px;
+          padding:16px 18px; text-align:left;
+          background:rgba(3, 6, 12, 0.55);
+          border:1px solid var(--rule-soft);
+          color:var(--ink); cursor:pointer;
+          transition:border-color 220ms ease, background 220ms ease, transform 220ms ease;
+        }
+        .nip-patch-toggle-btn:hover { border-color:var(--electric); transform:translateY(-1px); }
+        .nip-patch-toggle-btn.is-active {
+          border-color:var(--electric);
+          background:linear-gradient(180deg, rgba(45,99,200,.14) 0%, rgba(7,27,70,.55) 100%);
+        }
+        .nip-patch-toggle-title {
+          font-family:'Cinzel', serif; font-size:12px; letter-spacing:.34em;
+          color:var(--ink-strong); text-transform:uppercase;
+        }
+        .nip-patch-toggle-sub {
+          font-family:'Cormorant Garamond', serif; font-style:italic;
+          font-size:14px; color:var(--ink-muted);
+        }
+
+        /* ── Editor ──────────────────────────────────────────────────── */
+        .nip-editor {
+          margin-top:8px;
+          padding:20px;
+          background:rgba(3, 6, 12, 0.55);
+          border:1px solid var(--rule-soft);
+        }
+        .nip-editor-instructions {
+          font-family:'Cormorant Garamond', serif; font-style:italic;
+          font-size:14px; color:var(--ink-muted); line-height:1.6;
+          margin-bottom:16px;
+        }
+        .nip-editor-grid {
+          display:grid;
+          grid-template-columns:repeat(${PATCH_COLS}, minmax(0, 1fr));
+          grid-template-rows:repeat(${PATCH_ROWS}, minmax(0, 1fr));
+          gap:8px;
+          aspect-ratio:${PATCH_COLS} / ${PATCH_ROWS};
+          max-width:min(340px, 100%);
+          margin:0 auto;
+        }
+        .nip-editor-cell {
+          position:relative;
+          display:flex; align-items:center; justify-content:center;
+          aspect-ratio:1 / 1;
+          border-radius:3px;
+          cursor:pointer;
+          transition:transform 180ms ease, box-shadow 220ms ease;
+          padding:0;
+        }
+        .nip-editor-cell:hover { transform:scale(1.05); }
+        .nip-editor-cell:focus-visible {
+          outline:2px solid var(--electric); outline-offset:3px;
+        }
+        .nip-editor-cell.is-white {
+          background:
+            radial-gradient(circle at 30% 25%, rgba(255,255,255,.95) 0%, #e8ebf3 45%, #b6bccf 100%);
+          border:1px solid rgba(255,255,255,.6);
+          box-shadow: inset 0 0 6px rgba(255,255,255,.7), 0 0 0 1px rgba(197,210,234,.35);
+        }
+        .nip-editor-cell.is-black {
+          background:
+            radial-gradient(circle at 30% 25%, rgba(80,84,98,.75) 0%, #16171f 45%, #05050a 100%);
+          border:1px solid rgba(80,84,98,.35);
+          box-shadow: inset 0 0 5px rgba(0,0,0,.7), 0 0 0 1px rgba(45,99,200,.18);
+        }
+        .nip-editor-cell-marker {
+          font-family:'Cinzel', serif;
+          font-size:11px; letter-spacing:.06em;
+          font-weight:600;
+        }
+        .nip-editor-cell.is-white .nip-editor-cell-marker { color:rgba(3,6,12,.55); }
+        .nip-editor-cell.is-black .nip-editor-cell-marker { color:rgba(255,255,255,.55); }
+
+        .nip-editor-counters {
+          display:flex; justify-content:center; gap:24px; flex-wrap:wrap;
+          margin-top:20px;
+        }
+        .nip-counter {
+          font-family:'Cormorant Garamond', serif;
+          font-size:15px; letter-spacing:.02em;
+          color:var(--ink);
+        }
+        .nip-counter b { font-family:'Cinzel', serif; font-weight:500; letter-spacing:.06em; }
+        .nip-counter.is-ok { color:#8fd7a3; }
+        .nip-counter.is-warn { color:#ffb884; }
+
+        .nip-editor-error {
+          margin-top:14px; text-align:center;
+          font-family:'Cormorant Garamond', serif; font-style:italic;
+          font-size:14px; color:#ff9ea6;
+        }
+
+        .nip-editor-controls {
+          display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+          margin-top:22px;
+        }
+        .nip-editor-ctrl {
+          padding:10px 18px;
+          background:transparent;
+          border:1px solid var(--rule-strong);
+          color:var(--ink); cursor:pointer;
+          font-family:'Cinzel', serif; font-size:10px; letter-spacing:.32em;
+          text-transform:uppercase;
+          transition:background 220ms ease, color 220ms ease, border-color 220ms ease;
+        }
+        .nip-editor-ctrl:hover:not(:disabled) {
+          background:var(--electric); color:#03060C; border-color:var(--electric);
+        }
+        .nip-editor-ctrl:disabled { opacity:.45; cursor:not-allowed; }
+
+        /* ── Live Preview ────────────────────────────────────────────── */
+        .nip-preview-frame {
+          position:relative;
+          width:100%;
+          max-width:420px;
+          margin:0 auto;
+          aspect-ratio:1 / 1;
+          background:linear-gradient(180deg, var(--sapphire-deep) 0%, #04102b 100%);
+          border:1px solid var(--rule-strong);
+          overflow:hidden;
+          display:flex; align-items:center; justify-content:center;
+        }
+        .nip-preview-sapphire-field {
+          position:absolute; inset:0;
+          display:grid;
+          grid-template-columns:repeat(5, 1fr);
+          grid-template-rows:repeat(5, 1fr);
+          gap:2px; padding:8px;
+          opacity:.82;
+        }
+        .nip-preview-sapphire-tile {
+          background:linear-gradient(135deg, #1d4ea2 0%, #123e8a 55%, #061a44 100%);
+          border-radius:2px;
+        }
+        .nip-preview-gold-border {
+          position:relative;
+          padding:6px;
+          background:linear-gradient(180deg, #e8ebf3 0%, #b6bccf 45%, #7d8299 100%);
+          box-shadow: 0 8px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.4);
+          border-radius:4px;
+          width:min(58%, 240px);
+        }
+        .nip-preview-grid {
+          display:grid;
+          grid-template-columns:repeat(${PATCH_COLS}, minmax(0, 1fr));
+          grid-template-rows:repeat(${PATCH_ROWS}, minmax(0, 1fr));
+          gap:3px;
+          aspect-ratio:${PATCH_COLS} / ${PATCH_ROWS};
+          background:rgba(3,6,12,.6);
+        }
+        .nip-preview-stone {
+          aspect-ratio:1 / 1;
+          border-radius:2px;
+        }
+        .nip-preview-stone.is-white {
+          background:
+            radial-gradient(circle at 30% 25%, rgba(255,255,255,.98) 0%, #ecf0f7 45%, #b6bccf 100%);
+          box-shadow: inset 0 0 4px rgba(255,255,255,.7);
+        }
+        .nip-preview-stone.is-black {
+          background:
+            radial-gradient(circle at 30% 25%, rgba(90,94,108,.65) 0%, #14151d 45%, #050509 100%);
+          box-shadow: inset 0 0 4px rgba(0,0,0,.75);
+        }
+        .nip-preview-note {
+          max-width:420px; margin:16px auto 0;
+          text-align:center;
+          font-family:'Cormorant Garamond', serif; font-style:italic;
+          font-size:13px; line-height:1.55; color:var(--ink-muted);
+        }
       `}</style>
 
       <Link to="/tribute-series" className="nip-return" data-testid="nip-return">
@@ -456,6 +815,22 @@ export default function NeighborhoodNipPage() {
           />
         </div>
 
+        {/* COMPACT PATCH SUMMARY */}
+        <div className="nip-patch-summary" data-testid="nip-patch-summary">
+          <div className="nip-patch-summary-row">
+            <span className="nip-patch-summary-label">Victory Patch</span>
+            <span className="nip-patch-summary-value" data-testid="nip-patch-summary-value">
+              {patchLabel}
+              {patchType === "custom" && (
+                <em className="nip-patch-summary-fee"> · +{customFeeLabel}</em>
+              )}
+            </span>
+          </div>
+          <a href="#make-your-mark" onClick={scrollToCustomization} className="nip-patch-summary-cta" data-testid="nip-patch-edit-link">
+            EDIT PATCH →
+          </a>
+        </div>
+
         {/* RING SIZING CUSTOMER INSTRUCTIONS */}
         <div className="nip-sizing-block" data-testid="nip-sizing-block">
           <p className="nip-sizing-eyebrow">Ring Sizing</p>
@@ -477,12 +852,220 @@ export default function NeighborhoodNipPage() {
           type="button"
           className="nip-add-btn"
           onClick={onAddToCart}
-          disabled={isAdding}
+          disabled={addDisabled}
           aria-label="Add NEIGHBORHOOD NIP to cart"
           data-testid="nip-add-to-cart"
         >
           {isAdding ? "✓ ADDED" : "ADD TO CART"}
         </button>
+
+        {patchType === "custom" && !customValid && !isAdding && (
+          <p className="nip-inline-error" data-testid="nip-patch-inline-error">
+            {patternIncomplete
+              ? "Complete all 12 positions in your custom patch."
+              : "Use exactly 6 white diamonds and 6 black diamonds."}
+          </p>
+        )}
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          CUSTOMIZATION — MAKE YOUR MARK
+          Two-column on desktop, single-column on mobile.
+          Left: heading, copy, selector, editor, counters, controls.
+          Right (desktop) / Above editor (mobile): live preview + note.
+      ═══════════════════════════════════════════════════════════════ */}
+      <section
+        id="make-your-mark"
+        ref={makeYourMarkRef}
+        className="nip-section nip-customize d6"
+        data-testid="nip-customize-section"
+      >
+        <p className="nip-eyebrow" style={{ textAlign: "center" }}>Customization</p>
+        <h2 className="nip-h2">Make Your Mark</h2>
+        <p className="nip-body" style={{ marginBottom: 44 }}>
+          <span
+            style={{
+              display: "block",
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: "italic",
+              fontSize: "clamp(20px, 2vw, 26px)",
+              color: "var(--electric)",
+              marginBottom: 20,
+            }}
+          >
+            Reconfigure the black-and-white diamond Victory Patch.
+          </span>
+          At the centre of NEIGHBORHOOD NIP sits a twelve-stone black-and-white diamond patch. Choose the original Victory Lap configuration or arrange the same six white diamonds and six black diamonds into a custom pattern of your own. The sapphire field remains unchanged. The stone count remains unchanged.
+        </p>
+
+        <div className="nip-customize-grid" data-testid="nip-customize-grid-layout">
+          {/* LEFT COLUMN — controls */}
+          <div className="nip-customize-left">
+            {/* Original / Custom Selector */}
+            <div
+              className="nip-patch-toggle"
+              role="tablist"
+              aria-label="Patch selection"
+              data-testid="nip-patch-toggle"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={patchType === "original"}
+                className={`nip-patch-toggle-btn ${patchType === "original" ? "is-active" : ""}`}
+                onClick={() => setPatchType("original")}
+                data-testid="nip-patch-toggle-original"
+              >
+                <span className="nip-patch-toggle-title">Original Victory Patch</span>
+                <span className="nip-patch-toggle-sub">Approved arrangement · No additional charge</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={patchType === "custom"}
+                className={`nip-patch-toggle-btn ${patchType === "custom" ? "is-active" : ""}`}
+                onClick={() => setPatchType("custom")}
+                data-testid="nip-patch-toggle-custom"
+              >
+                <span className="nip-patch-toggle-title">Custom Patch</span>
+                <span className="nip-patch-toggle-sub">Arrange your own 6 + 6 · +{customFeeLabel}</span>
+              </button>
+            </div>
+
+            {/* Grid editor (only when Custom selected) */}
+            {patchType === "custom" && (
+              <div className="nip-editor" data-testid="nip-patch-editor">
+                <div className="nip-editor-instructions">
+                  Tap each stone to toggle between White Diamond and Black Diamond.
+                  Use exactly six of each.
+                </div>
+
+                <div
+                  className="nip-editor-grid"
+                  role="grid"
+                  aria-label="Custom diamond patch — 3 columns by 4 rows"
+                  data-testid="nip-editor-grid"
+                >
+                  {customGrid.map((row, rIdx) =>
+                    row.map((cell, cIdx) => {
+                      const isWhite = cell === "W";
+                      const rowNum = rIdx + 1;
+                      const colNum = cIdx + 1;
+                      const label = `Row ${rowNum}, Column ${colNum} — ${isWhite ? "White" : "Black"} Diamond. Press Enter or Space to toggle.`;
+                      return (
+                        <button
+                          key={`${rIdx}-${cIdx}`}
+                          type="button"
+                          role="gridcell"
+                          aria-label={label}
+                          aria-pressed={isWhite}
+                          className={`nip-editor-cell ${isWhite ? "is-white" : "is-black"}`}
+                          onClick={() => toggleCell(rIdx, cIdx)}
+                          onKeyDown={(e) => {
+                            if (e.key === " " || e.key === "Enter") {
+                              e.preventDefault();
+                              toggleCell(rIdx, cIdx);
+                            }
+                          }}
+                          data-testid={`nip-editor-cell-r${rowNum}c${colNum}`}
+                        >
+                          <span className="nip-editor-cell-marker" aria-hidden="true">
+                            {isWhite ? "W" : "B"}
+                          </span>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+
+                {/* Counters */}
+                <div className="nip-editor-counters" data-testid="nip-editor-counters">
+                  <span
+                    className={`nip-counter ${whiteCount === REQUIRED_WHITE ? "is-ok" : "is-warn"}`}
+                    data-testid="nip-counter-white"
+                  >
+                    White Diamonds: <b>{whiteCount} / {REQUIRED_WHITE}</b>
+                  </span>
+                  <span
+                    className={`nip-counter ${blackCount === REQUIRED_BLACK ? "is-ok" : "is-warn"}`}
+                    data-testid="nip-counter-black"
+                  >
+                    Black Diamonds: <b>{blackCount} / {REQUIRED_BLACK}</b>
+                  </span>
+                </div>
+
+                {!customValid && (
+                  <p className="nip-editor-error" role="alert" data-testid="nip-editor-error">
+                    {patternIncomplete
+                      ? "Complete all 12 positions in your custom patch."
+                      : "Use exactly 6 white diamonds and 6 black diamonds."}
+                  </p>
+                )}
+
+                {/* Controls */}
+                <div className="nip-editor-controls" data-testid="nip-editor-controls">
+                  <button
+                    type="button"
+                    className="nip-editor-ctrl"
+                    onClick={resetToOriginal}
+                    data-testid="nip-editor-reset"
+                  >
+                    Reset to Original
+                  </button>
+                  <button
+                    type="button"
+                    className="nip-editor-ctrl"
+                    onClick={invertColours}
+                    data-testid="nip-editor-invert"
+                  >
+                    Invert Colours
+                  </button>
+                  <button
+                    type="button"
+                    className="nip-editor-ctrl"
+                    onClick={undoLast}
+                    disabled={gridHistory.length === 0}
+                    data-testid="nip-editor-undo"
+                  >
+                    Undo Last Change
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT COLUMN — Live Preview */}
+          <div className="nip-customize-right">
+            <div className="nip-preview-frame" data-testid="nip-patch-preview">
+              <div className="nip-preview-sapphire-field" aria-hidden="true">
+                {Array.from({ length: 25 }).map((_, i) => (
+                  <span key={i} className="nip-preview-sapphire-tile" />
+                ))}
+              </div>
+              <div className="nip-preview-gold-border">
+                <div
+                  className="nip-preview-grid"
+                  role="img"
+                  aria-label={`Live preview of the ${patchLabel.toLowerCase()}`}
+                >
+                  {(patchType === "custom" ? customGrid : VICTORY_PATTERN).map((row, rIdx) =>
+                    row.map((cell, cIdx) => (
+                      <span
+                        key={`p-${rIdx}-${cIdx}`}
+                        className={`nip-preview-stone ${cell === "W" ? "is-white" : "is-black"}`}
+                        data-testid={`nip-preview-stone-r${rIdx + 1}c${cIdx + 1}`}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+            <p className="nip-preview-note" data-testid="nip-preview-note">
+              Digital preview represents stone placement only. Final colour,
+              brilliance, and hand-setting may vary slightly.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* THE BLOCK BECAME THE BLUEPRINT */}
@@ -539,7 +1122,11 @@ export default function NeighborhoodNipPage() {
           </div>
           <div className="nip-spec-row">
             <span className="nip-spec-label">Central Detail</span>
-            <span className="nip-spec-value">Victory Lap Flag and &ldquo;N&rdquo; Tribute Motif</span>
+            <span className="nip-spec-value" data-testid="nip-spec-central-detail">
+              {patchType === "custom"
+                ? "Custom 12-Stone Black-and-White Diamond Patch"
+                : "Victory Lap Flag and \u201CN\u201D Tribute Motif"}
+            </span>
           </div>
           <div className="nip-spec-row">
             <span className="nip-spec-label">Total Stone Count</span>
@@ -591,7 +1178,7 @@ export default function NeighborhoodNipPage() {
       {/* GALLERY */}
       <section className="nip-section d5" data-testid="nip-gallery-section">
         <p className="nip-eyebrow" style={{ textAlign:"center" }}>Study</p>
-        <h2 className="nip-h2">Six Angles. One Idea.</h2>
+        <h2 className="nip-h2">Eight Angles. One Idea.</h2>
         <div className="nip-gallery" data-testid="nip-gallery">
           {GALLERY.map((g, i) => (
             <div key={i} className="nip-gallery-cell" data-testid={`nip-gallery-cell-${i + 1}`}>
