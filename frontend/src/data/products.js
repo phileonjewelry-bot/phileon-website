@@ -1,3 +1,5 @@
+import { cadToUsdLuxury, formatUsd } from '@/lib/livePricing';
+
 export const products = {
 
   // ==========================================
@@ -3170,25 +3172,23 @@ export const catalogProducts = [
     ctaLabel: 'View REBELLE',
   },
   // ── PHILEON TRIBUTE SERIES ──────────────────────────────────────────
-  // Non-commercial tribute pieces. Surfaced on Shop (Mens > Rings +
-  // Collective section) and the Home carousel for discovery only.
-  // The card renders with no price, no wishlist, and a "TRIBUTE · NOT
-  // FOR SALE" pill. Clicking routes to the tribute page, which itself
-  // contains no commerce elements.
+  // Purchasable Tribute Series ring. Internal price stored in CAD;
+  // storefront must render USD via cadToUsdLuxury().
   {
     id: 'neighborhood-nip',
     name: 'NEIGHBORHOOD NIP',
     slug: 'neighborhood-nip',
-    materialLine: 'Tribute Series · Architectural Signet · Not for Sale',
+    materialLine: '14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds',
     imageUrl: '/tribute-series/neighborhood-nip/front-clean.png',
     href: '/tribute-series/neighborhood-nip',
+    basePriceCAD: 19950,
+    price_range: `${formatUsd(cadToUsdLuxury(19950))} USD`,
     inventory_count: 999,
     is_core: true,
-    is_tribute: true,
-    tributeLabel: 'TRIBUTE · NOT FOR SALE',
+    is_tribute_series: true, // eyebrow label only; NOT the old non-commercial flag
     category: 'rings',
     audience: ['gentlemens-club', 'collective'],
-    tags: ['Gents', 'Collective', 'Tribute Series', 'Ring', 'Signet', 'Blue'],
+    tags: ['Gents', 'Collective', 'Tribute Series', 'Ring', 'Signet', 'Sapphire', 'Diamond', 'White Gold', 'Made to Order'],
     isNew: true,
     isFeatured: true,
     displayOrder: 0,

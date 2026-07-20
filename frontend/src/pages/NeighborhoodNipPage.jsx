@@ -1,46 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
+import RingSizeSelector, { ringSizeLabel, ringSizeSkuToken } from "@/components/RingSizeSelector";
+import { useAddToCart } from "@/hooks/useAddToCart";
+import { cadToUsdLuxury, formatUsd } from "@/lib/livePricing";
 
 /**
- * NEIGHBORHOOD NIP — PHILEON Tribute Series
+ * NEIGHBORHOOD NIP — PHILEON Tribute Series (purchasable)
  *
- * A non-commercial tribute piece. This page is intentionally free of
- * commerce elements: NO price, NO ADD TO CART, NO INQUIRE, NO mailto,
- * NO "coming soon" or price-pending language.
+ * A commercial Tribute Series ring.
  *
- * Color palette (STRICT — no gold, red, or orange):
- *   Midnight Asphalt  #03060C
- *   Deep Sapphire     #071B46
- *   Victory Blue      #123E8A
- *   Electric Sapphire #2D63C8
+ * Configuration (single edition):
+ *   14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds
+ *   No sterling / 10K / 18K / yellow / rose / lab / natural / CZ claims.
  *
- * Copy guardrails:
- *   No gang imagery, palm trees, graffiti fonts.
- *   No Nipsey Hussle or Marathon Clothing likeness / logos.
- *   Center motif is called "Victory Lap flag and N tribute motif."
+ * Pricing:
+ *   basePriceCAD: 19950 (internal only, never rendered)
+ *   Public USD = cadToUsdLuxury(19950) — displayed via formatUsd()
  *
- * Hero:
- *   Static `hero-front.png` presented uncropped (object-fit: contain) on a
- *   Deep Sapphire panel. No text overlay on the image.
- *
- * Gallery:
- *   Component and styles are scaffolded below but NOT rendered until the
- *   full asset set arrives. Add images to the `GALLERY` array and remove
- *   the `GALLERY_LIVE = false` guard to publish.
+ * Sizes:  US 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13
+ *   Size 10 is the reference size but NOT preselected. Customer must
+ *   pick a size before ADD TO CART.
  */
 
 const HERO_IMAGE = "/tribute-series/neighborhood-nip/hero-front.png";
+const BASE_PRICE_CAD = 19950;
+const NIP_SIZES = ["8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13"];
 
-// Placeholder scaffold — DO NOT publish until the full asset set arrives.
-// When ready, populate this array with the final ordered images and set
-// GALLERY_LIVE = true. No visible placeholders in the meantime.
-const GALLERY = [];
-const GALLERY_LIVE = false;
+// Ordered gallery — six angles supplied to date. Additional angles slot
+// in here without any structural change.
+const GALLERY = [
+  { src: "/tribute-series/neighborhood-nip/gallery-01-front.png",              alt: "NEIGHBORHOOD NIP — head-on front view showing the pavé sapphire face and central Victory Lap flag and N tribute motif." },
+  { src: "/tribute-series/neighborhood-nip/gallery-02-front-tight.png",        alt: "NEIGHBORHOOD NIP — tight front view emphasizing the cushion-square silhouette and mosaic sapphire grid." },
+  { src: "/tribute-series/neighborhood-nip/gallery-03-motif-macro.png",        alt: "NEIGHBORHOOD NIP — macro of the Victory Lap flag and N tribute motif set in black and white diamonds against the sapphire field." },
+  { src: "/tribute-series/neighborhood-nip/gallery-04-side-macro.png",         alt: "NEIGHBORHOOD NIP — side macro showing the invisible-set princess-cut sapphires and 14K white gold framing." },
+  { src: "/tribute-series/neighborhood-nip/gallery-05-motif-extreme-macro.png",alt: "NEIGHBORHOOD NIP — extreme macro of the tribute motif; princess-cut white diamonds and black diamonds forming the N and checkered field." },
+  { src: "/tribute-series/neighborhood-nip/gallery-06-three-quarter.png",      alt: "NEIGHBORHOOD NIP — three-quarter angle on white showing the wide-band cushion-square profile in 14K white gold." },
+];
 
 export default function NeighborhoodNipPage() {
   useLuxuryMotionObserver();
+  const [selectedSize, setSelectedSize] = useState(null);
+  const { isAdding, handleAddToCart } = useAddToCart();
+
+  const priceUsdLabel = `${formatUsd(cadToUsdLuxury(BASE_PRICE_CAD))} USD`;
 
   useEffect(() => {
     document.title = "NEIGHBORHOOD NIP | Tribute Series | PHILEON";
@@ -50,14 +55,42 @@ export default function NeighborhoodNipPage() {
       el.setAttribute("content", content);
     };
     upsertMeta("name", "description",
-      "NEIGHBORHOOD NIP — an architectural tribute ring in blue, from the PHILEON Tribute Series. Independent tribute. Not for sale.");
+      "NEIGHBORHOOD NIP — architectural tribute ring in 14K white gold, princess-cut blue sapphires, and black and white diamonds. PHILEON Tribute Series. Made to order.");
     const ogImage = `${window.location.origin}${HERO_IMAGE}`;
     upsertMeta("property", "og:title",     "NEIGHBORHOOD NIP | Tribute Series | PHILEON");
     upsertMeta("property", "og:image",     ogImage);
-    upsertMeta("property", "og:type",      "article");
+    upsertMeta("property", "og:type",      "product");
     upsertMeta("name",     "twitter:card", "summary_large_image");
     upsertMeta("name",     "twitter:image", ogImage);
   }, []);
+
+  const onAddToCart = () => {
+    if (!selectedSize) {
+      toast.error("Please select a ring size.");
+      return;
+    }
+    const sizeLabel = ringSizeLabel(selectedSize);
+    const sku = `neighborhood-nip-14k-white-size-${String(selectedSize).replace(".", "-")}`;
+    handleAddToCart(
+      {
+        id: `neighborhood-nip-14k-white-size-${ringSizeSkuToken(selectedSize)}`,
+        name: `NEIGHBORHOOD NIP — 14K White Gold · ${sizeLabel}`,
+        price: cadToUsdLuxury(BASE_PRICE_CAD),
+        productKey: "neighborhoodNip",
+        tierKey: `14k-white-size-${ringSizeSkuToken(selectedSize)}`,
+        metal: "14K White Gold",
+        ringSize: selectedSize,
+        ringSizeLabel: sizeLabel,
+        sku,
+        slug: "neighborhood-nip",
+        image: HERO_IMAGE,
+        materials: ["14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds"],
+        quantity: 1,
+      },
+      1,
+      `Blue Sapphires · Black and White Diamonds · Ring Size: ${sizeLabel}`
+    );
+  };
 
   return (
     <div className="nip-page" data-testid="neighborhood-nip-page">
@@ -109,6 +142,7 @@ export default function NeighborhoodNipPage() {
         .nip-section.d3 { animation-delay:.36s; }
         .nip-section.d4 { animation-delay:.48s; }
         .nip-section.d5 { animation-delay:.60s; }
+        .nip-section.d6 { animation-delay:.72s; }
 
         /* ── HERO ─────────────────────────────────────────────────────── */
         .nip-hero-wrap {
@@ -154,6 +188,93 @@ export default function NeighborhoodNipPage() {
           font-size:clamp(20px, 2vw, 28px);
           color:var(--electric); margin:0;
         }
+
+        /* ── PURCHASE BLOCK ───────────────────────────────────────────── */
+        .nip-purchase {
+          max-width:820px; margin:0 auto;
+          padding:clamp(40px, 5vw, 72px) clamp(20px, 4vw, 60px) clamp(48px, 6vw, 96px);
+          text-align:center;
+        }
+        .nip-buy-subtitle {
+          font-family:'Playfair Display', serif; font-style:italic;
+          font-size:clamp(18px, 1.8vw, 24px);
+          color:var(--ink); margin:0 0 22px;
+        }
+        .nip-buy-price {
+          font-family:'Cinzel', serif; font-size:clamp(22px, 2.2vw, 30px);
+          letter-spacing:.28em; color:var(--ink-strong);
+          margin:0 0 22px;
+        }
+        .nip-buy-material {
+          font-family:'Cormorant Garamond', serif;
+          font-size:clamp(16px, 1.4vw, 20px);
+          line-height:1.65; color:var(--ink);
+          margin:0 0 24px;
+        }
+        .nip-buy-details {
+          list-style:none; padding:0; margin:0 auto 32px;
+          max-width:520px; text-align:left;
+          display:grid; grid-template-columns:1fr 1fr;
+          gap:6px 24px;
+        }
+        .nip-buy-details li {
+          font-family:'Cormorant Garamond', serif;
+          font-size:16px; color:var(--ink); line-height:1.55;
+          padding:6px 0;
+          border-bottom:1px solid var(--rule-soft);
+        }
+        @media (max-width:520px){
+          .nip-buy-details { grid-template-columns:1fr; }
+        }
+
+        .nip-size-wrap {
+          max-width:520px; margin:0 auto 24px;
+          text-align:left;
+        }
+
+        .nip-sizing-block {
+          max-width:520px; margin:24px auto 32px;
+          text-align:left;
+          padding:20px 22px;
+          background:color-mix(in srgb, var(--electric) 6%, transparent);
+          border-left:2px solid var(--electric);
+        }
+        .nip-sizing-eyebrow {
+          font-family:'Cinzel', serif; font-size:10px; letter-spacing:.44em;
+          color:var(--electric); text-transform:uppercase; margin:0 0 12px;
+        }
+        .nip-sizing-lead {
+          font-family:'Cormorant Garamond', serif; font-style:italic;
+          font-size:15px; line-height:1.6; color:var(--ink);
+          margin:0 0 12px;
+        }
+        .nip-sizing-list {
+          list-style:none; padding:0; margin:0;
+        }
+        .nip-sizing-list li {
+          position:relative;
+          padding:5px 0 5px 18px;
+          font-family:'Cormorant Garamond', serif;
+          font-size:15px; line-height:1.55; color:var(--ink);
+        }
+        .nip-sizing-list li::before {
+          content:'';
+          position:absolute; left:0; top:14px;
+          width:8px; height:1px; background:var(--electric);
+        }
+
+        .nip-add-btn {
+          display:inline-flex; align-items:center; justify-content:center; gap:12px;
+          padding:18px 64px;
+          border:1.5px solid var(--electric); background:transparent;
+          font-family:'Cinzel', serif; font-size:12px; letter-spacing:.42em;
+          color:var(--ink-strong); text-transform:uppercase; cursor:pointer;
+          transition:background 380ms ease, color 380ms ease, transform 280ms ease;
+        }
+        .nip-add-btn:hover {
+          background:var(--electric); color:#03060C; transform:translateY(-2px);
+        }
+        .nip-add-btn:disabled { opacity:.6; cursor:wait; }
 
         /* ── EDITORIAL BLOCKS ─────────────────────────────────────────── */
         .nip-h2 {
@@ -242,7 +363,7 @@ export default function NeighborhoodNipPage() {
           color:var(--ink-muted); text-transform:uppercase; margin-top:22px;
         }
 
-        /* ── GALLERY (scaffold — visually hidden until GALLERY_LIVE) ──── */
+        /* ── GALLERY ─────────────────────────────────────────────────── */
         .nip-gallery {
           display:grid;
           grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -283,18 +404,86 @@ export default function NeighborhoodNipPage() {
         <div className="nip-hero-panel">
           <img
             src={HERO_IMAGE}
-            alt="NEIGHBORHOOD NIP tribute ring — front view. Architectural blue signet with a central Victory Lap flag and N tribute motif set against a deep sapphire panel."
+            alt="NEIGHBORHOOD NIP tribute ring — front view. Architectural cushion-square signet in 14K white gold with princess-cut blue sapphires and a central Victory Lap flag and N tribute motif in black and white diamonds."
             data-testid="nip-hero-image"
           />
         </div>
       </div>
 
-      {/* HERO TYPOGRAPHY — beneath the image, per spec (no text on image) */}
+      {/* HERO TYPOGRAPHY */}
       <div className="nip-hero-caption" data-testid="nip-hero-caption">
         <p className="nip-hero-eyebrow">PHILEON · Tribute Series</p>
         <h1 className="nip-hero-title" data-testid="nip-hero-title">NEIGHBORHOOD NIP</h1>
         <p className="nip-hero-sub">A blueprint carved in blue.</p>
       </div>
+
+      {/* PURCHASE BLOCK */}
+      <section className="nip-purchase" data-testid="nip-purchase-block">
+        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Tribute Series</p>
+        <p className="nip-buy-subtitle">14K White Gold Sapphire and Diamond Tribute Ring</p>
+        <p className="nip-buy-price" data-testid="nip-buy-price">{priceUsdLabel}</p>
+        <p className="nip-buy-material">
+          14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds
+        </p>
+
+        <ul className="nip-buy-details" data-testid="nip-buy-details">
+          <li>200 Stones</li>
+          <li>Approximately 18 g</li>
+          <li>Approximately 15 mm Band Width</li>
+          <li>Approximately 3 mm Band Thickness</li>
+          <li>Made to Order</li>
+          <li>Reference Size: US 10</li>
+        </ul>
+
+        <div
+          className="nip-size-wrap"
+          style={{
+            "--ring-accent": "#2D63C8",
+            "--ring-bg": "rgba(3, 6, 12, 0.82)",
+            "--ring-fg": "#eef2fb",
+            "--ring-muted": "rgba(197, 210, 234, 0.62)",
+          }}
+        >
+          <RingSizeSelector
+            value={selectedSize}
+            onChange={setSelectedSize}
+            sizes={NIP_SIZES}
+            label="RING SIZE"
+            bandWidthMm={15}
+            showSizingMicrocopy={false}
+            hideWideBandWarning={true}
+            testIdPrefix="nip-ring-size"
+          />
+        </div>
+
+        {/* RING SIZING CUSTOMER INSTRUCTIONS */}
+        <div className="nip-sizing-block" data-testid="nip-sizing-block">
+          <p className="nip-sizing-eyebrow">Ring Sizing</p>
+          <p className="nip-sizing-lead">
+            NEIGHBORHOOD NIP is a substantial wide-band ring. Wide bands can feel tighter
+            than narrow rings, so accurate sizing is important.
+          </p>
+          <p className="nip-sizing-lead" style={{ margin: "0 0 8px" }}>For the best fit:</p>
+          <ul className="nip-sizing-list">
+            <li>Measure the finger on which the ring will be worn.</li>
+            <li>Measure near the end of the day, when fingers are at their normal size.</li>
+            <li>Do not measure when the hands are unusually cold or swollen.</li>
+            <li>Use the PHILEON Ring Size Guide before placing the order.</li>
+            <li>When between two sizes, select the larger size for this wide-band construction.</li>
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          className="nip-add-btn"
+          onClick={onAddToCart}
+          disabled={isAdding}
+          aria-label="Add NEIGHBORHOOD NIP to cart"
+          data-testid="nip-add-to-cart"
+        >
+          {isAdding ? "✓ ADDED" : "ADD TO CART"}
+        </button>
+      </section>
 
       {/* THE BLOCK BECAME THE BLUEPRINT */}
       <section className="nip-section d1" data-testid="nip-block-blueprint">
@@ -331,42 +520,58 @@ export default function NeighborhoodNipPage() {
         </div>
       </section>
 
-      {/* TECHNICAL SPECS — no commerce fields */}
+      {/* THE BUILD — Technical Specification */}
       <section className="nip-section nip-specs d4" data-testid="nip-specs">
-        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Specification</p>
+        <p className="nip-eyebrow" style={{ textAlign:"center" }}>The Build</p>
         <h2 className="nip-h2">Drawn, then Built.</h2>
         <div className="nip-specs-grid" data-testid="nip-specs-grid">
           <div className="nip-spec-row">
-            <span className="nip-spec-label">Series</span>
-            <span className="nip-spec-value">PHILEON Tribute Series</span>
+            <span className="nip-spec-label">Material</span>
+            <span className="nip-spec-value">14K White Gold</span>
+          </div>
+          <div className="nip-spec-row">
+            <span className="nip-spec-label">Primary Stones</span>
+            <span className="nip-spec-value">Princess-Cut Blue Sapphires</span>
+          </div>
+          <div className="nip-spec-row">
+            <span className="nip-spec-label">Accent Stones</span>
+            <span className="nip-spec-value">Black and White Diamonds</span>
+          </div>
+          <div className="nip-spec-row">
+            <span className="nip-spec-label">Central Detail</span>
+            <span className="nip-spec-value">Victory Lap Flag and &ldquo;N&rdquo; Tribute Motif</span>
+          </div>
+          <div className="nip-spec-row">
+            <span className="nip-spec-label">Total Stone Count</span>
+            <span className="nip-spec-value">200 Stones</span>
+          </div>
+          <div className="nip-spec-row">
+            <span className="nip-spec-label">Setting</span>
+            <span className="nip-spec-value">Architectural Mosaic Grid</span>
           </div>
           <div className="nip-spec-row">
             <span className="nip-spec-label">Silhouette</span>
-            <span className="nip-spec-value">Architectural Signet Ring</span>
+            <span className="nip-spec-value">Wide Cushion-Square Statement Ring</span>
           </div>
           <div className="nip-spec-row">
-            <span className="nip-spec-label">Center Motif</span>
-            <span className="nip-spec-value">Victory Lap flag and N tribute motif</span>
+            <span className="nip-spec-label">Reference Ring Size</span>
+            <span className="nip-spec-value">US Size 10</span>
           </div>
           <div className="nip-spec-row">
-            <span className="nip-spec-label">Palette</span>
-            <span className="nip-spec-value">Midnight Asphalt · Deep Sapphire · Victory Blue · Electric Sapphire</span>
+            <span className="nip-spec-label">Band Width</span>
+            <span className="nip-spec-value">Approximately 15 mm</span>
           </div>
           <div className="nip-spec-row">
-            <span className="nip-spec-label">Construction</span>
-            <span className="nip-spec-value">Solid shank · Raised crown · Hand-finished edges</span>
+            <span className="nip-spec-label">Band Thickness</span>
+            <span className="nip-spec-value">Approximately 3 mm</span>
           </div>
           <div className="nip-spec-row">
-            <span className="nip-spec-label">Finish</span>
-            <span className="nip-spec-value">Polished field · Matte inlay · High-polish rim</span>
+            <span className="nip-spec-label">Estimated Metal Weight</span>
+            <span className="nip-spec-value">Approximately 18 g</span>
           </div>
           <div className="nip-spec-row">
-            <span className="nip-spec-label">Category</span>
-            <span className="nip-spec-value">Non-Commercial Tribute Piece</span>
-          </div>
-          <div className="nip-spec-row">
-            <span className="nip-spec-label">Status</span>
-            <span className="nip-spec-value">Independent Tribute · Not for Sale</span>
+            <span className="nip-spec-label">Production</span>
+            <span className="nip-spec-value">Made to Order</span>
           </div>
         </div>
       </section>
@@ -378,25 +583,23 @@ export default function NeighborhoodNipPage() {
           NEIGHBORHOOD NIP is an independent design tribute created by PHILEON.
           It is not affiliated with, endorsed by, or licensed by any estate,
           brand, or organization. No likenesses, logos, or protected marks are
-          used. The piece exists as an architectural study &mdash; a work of
-          respect, published for viewing only.
+          used. The piece is offered as an architectural study &mdash; a work
+          of respect, made to order in a single edition.
         </p>
       </section>
 
-      {/* GALLERY — scaffolded but not published */}
-      {GALLERY_LIVE && GALLERY.length > 0 && (
-        <section className="nip-section d5" data-testid="nip-gallery-section">
-          <p className="nip-eyebrow" style={{ textAlign:"center" }}>Study</p>
-          <h2 className="nip-h2">Eleven Angles. One Idea.</h2>
-          <div className="nip-gallery" data-testid="nip-gallery">
-            {GALLERY.map((g, i) => (
-              <div key={i} className="nip-gallery-cell" data-testid={`nip-gallery-cell-${i + 1}`}>
-                <img src={g.src} alt={g.alt} loading="lazy" data-testid={`nip-gallery-image-${i + 1}`} />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* GALLERY */}
+      <section className="nip-section d5" data-testid="nip-gallery-section">
+        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Study</p>
+        <h2 className="nip-h2">Six Angles. One Idea.</h2>
+        <div className="nip-gallery" data-testid="nip-gallery">
+          {GALLERY.map((g, i) => (
+            <div key={i} className="nip-gallery-cell" data-testid={`nip-gallery-cell-${i + 1}`}>
+              <img src={g.src} alt={g.alt} loading="lazy" data-testid={`nip-gallery-image-${i + 1}`} />
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* FINAL LINE */}
       <section className="nip-final" data-testid="nip-final">

@@ -7,6 +7,7 @@ import LaMarvaFlagship from '@/components/LaMarvaFlagship';
 import { products } from '@/data/products';
 
 import { LiveFromPrice } from '@/components/LiveFromPrice';
+import { cadToUsdLuxury, formatUsd } from '@/lib/livePricing';
 // Helper to format price from products.js basePrice
 const formatPrice = (basePrice) => `From $${basePrice.toLocaleString()}`;
 
@@ -372,8 +373,7 @@ const HomePage = () => {
             title: "NEIGHBORHOOD NIP",
             image: "/tribute-series/neighborhood-nip/front-clean.png",
             href: "/tribute-series/neighborhood-nip",
-            subtitle: "A blueprint carved in blue. PHILEON Tribute Series — independent, non-commercial homage. Not for sale.",
-            isTribute: true,
+            subtitle: "A blueprint carved in blue. PHILEON Tribute Series — 14K White Gold, princess-cut blue sapphires, black and white diamonds. Made to order.",
           },
           {
             title: "PARABOLA",
@@ -591,34 +591,12 @@ const HomePage = () => {
                   to={item.href} 
                   className={`strip-image ${item.title === "BOUND" ? "strip-image-bound" : ""}`}
                   data-testid={`strip-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
-                  style={{ position: 'relative' }}
                 >
                   <img
                     src={item.image}
                     alt={item.title}
                     draggable="false"
                   />
-                  {item.isTribute && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '10px',
-                        padding: '5px 9px',
-                        background: 'rgba(3, 6, 12, 0.82)',
-                        border: '1px solid rgba(45, 99, 200, 0.55)',
-                        color: '#2D63C8',
-                        fontFamily: 'Cinzel, serif',
-                        fontSize: '8px',
-                        letterSpacing: '0.32em',
-                        textTransform: 'uppercase',
-                        pointerEvents: 'none',
-                        zIndex: 2,
-                      }}
-                    >
-                      TRIBUTE · NOT FOR SALE
-                    </span>
-                  )}
                 </Link>
               ))}
             </div>
@@ -650,26 +628,6 @@ const HomePage = () => {
                 data-testid="collective-tile-neighborhood-nip"
               >
                 <div className="aspect-square overflow-hidden bg-[#071B46] rounded-sm relative">
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '12px',
-                      left: '12px',
-                      zIndex: 3,
-                      padding: '6px 10px',
-                      background: 'rgba(3, 6, 12, 0.82)',
-                      border: '1px solid rgba(45, 99, 200, 0.55)',
-                      color: '#2D63C8',
-                      fontFamily: 'Cinzel, serif',
-                      fontSize: '9px',
-                      letterSpacing: '0.32em',
-                      textTransform: 'uppercase',
-                      pointerEvents: 'none',
-                    }}
-                    data-testid="collective-tribute-pill-neighborhood-nip"
-                  >
-                    TRIBUTE · NOT FOR SALE
-                  </span>
                   <div
                     className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
@@ -683,18 +641,24 @@ const HomePage = () => {
                   />
                 </div>
                 <div className="mt-6 text-center">
+                  <p
+                    className="text-[10px] mb-2 tracking-[0.42em] uppercase"
+                    style={{ color: '#2D63C8' }}
+                  >
+                    Tribute Series
+                  </p>
                   <h3
-                    className="font-serif text-lg tracking-wide text-phileon-ivory/90 transition-colors duration-300"
+                    className="font-serif text-lg tracking-wide transition-colors duration-300"
                     style={{ color: '#eef2fb' }}
                   >
                     NEIGHBORHOOD NIP
                   </h3>
-                  <p className="text-xs text-phileon-ivory/40 mt-2">Tribute Series</p>
+                  <p className="text-xs text-phileon-ivory/40 mt-2">14K White Gold · Sapphire · Diamond</p>
                   <p
-                    className="text-[10px] mt-2 tracking-[0.32em] uppercase"
+                    className="text-sm mt-2 tracking-[0.18em]"
                     style={{ color: '#2D63C8' }}
                   >
-                    Not for Sale
+                    <LiveFromPrice slug="neighborhood-nip" fallback={`${formatUsd(cadToUsdLuxury(19950))} USD`} />
                   </p>
                 </div>
               </Link>
