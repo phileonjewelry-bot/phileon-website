@@ -93,6 +93,8 @@ import MonacoPage from "@/pages/MonacoPage";
 import CagedWingsPage from "@/pages/CagedWingsPage";
 import NovaPage from "@/pages/NovaPage";
 import DrivenPage from "@/pages/DrivenPage";
+import TributeSeriesPage from "@/pages/TributeSeriesPage";
+import NeighborhoodNipPage from "@/pages/NeighborhoodNipPage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
 import BossKnotPage from "@/pages/BossKnotPage";
 import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
@@ -276,6 +278,9 @@ function App() {
             <Route path="/inspiration-vault/nova" element={<NovaPage />} />
             <Route path="/driven" element={<DrivenPage />} />
             <Route path="/inspiration-vault/driven" element={<DrivenPage />} />
+            <Route path="/tribute-series" element={<TributeSeriesPage />} />
+            <Route path="/tribute-series/neighborhood-nip" element={<NeighborhoodNipPage />} />
+            <Route path="/neighborhood-nip" element={<NeighborhoodNipPage />} />
             <Route path="/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/products/rose-of-sharon" element={<RoseOfSharonPage />} />
             <Route path="/boss-knot" element={<BossKnotPage />} />
