@@ -152,12 +152,32 @@ export default function NeighborhoodNipPage() {
     makeYourMarkRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // Switching between Original ↔ Custom must always leave the state
+  // in a purchasable configuration. When returning to Original, restore
+  // the approved 6+6 pattern and clear undo history so a subsequent
+  // Custom toggle starts from a valid arrangement.
+  const handlePatchTypeChange = (nextType) => {
+    if (nextType === patchType) return;
+    if (nextType === "original") {
+      setCustomGrid(cloneGrid(VICTORY_PATTERN));
+      setGridHistory([]);
+    }
+    setPatchType(nextType);
+  };
+
   // ── Cart handler ────────────────────────────────────────────────────
+  // Validation lives INSIDE the click handler and shows a toast on
+  // failure. The button itself is only HTML-disabled while an add
+  // operation is actively processing (isAdding) — never on validation
+  // state — so users always get audible/visible feedback on tap.
   const onAddToCart = () => {
+    if (isAdding) return;
+
     if (!selectedSize) {
       toast.error("Please select a ring size.");
       return;
     }
+
     if (patchType === "custom") {
       if (patternIncomplete) {
         toast.error("Complete all 12 positions in your custom patch.");
@@ -169,50 +189,68 @@ export default function NeighborhoodNipPage() {
       }
     }
 
-    const sizeLabel = ringSizeLabel(selectedSize);
-    const sizeToken = ringSizeSkuToken(selectedSize);
-    const sku = `neighborhood-nip-14k-white-size-${String(selectedSize).replace(".", "-")}`;
+    // Normalize size to a plain string in case the selector supplies an object.
+    const sizeStr = String(
+      (selectedSize && typeof selectedSize === "object" && "value" in selectedSize)
+        ? selectedSize.value
+        : selectedSize
+    );
+    const sizeLabel = ringSizeLabel(sizeStr);
+    const sizeToken = ringSizeSkuToken(sizeStr);
+    const sku = `neighborhood-nip-14k-white-size-${sizeStr.replace(".", "-")}`;
+
     const isCustom = patchType === "custom";
+    const finalPriceUsd = basePriceUsd + (isCustom ? customFeeUsd : 0);
+    const serializedPattern = isCustom
+      ? serializePattern(customGrid)
+      : serializePattern(VICTORY_PATTERN);
+
+    // Defensive: never dispatch an undefined/NaN price to the cart.
+    if (!Number.isFinite(finalPriceUsd) || finalPriceUsd <= 0) {
+      toast.error("Something went wrong. Please refresh and try again.");
+      return;
+    }
+
     const patchNameForCart = isCustom ? "Custom" : "Original";
     const variantParts = [
       `Blue Sapphires · Black and White Diamonds`,
       `Ring Size: ${sizeLabel}`,
       `Victory Patch: ${patchNameForCart}`,
     ];
-    if (isCustom) variantParts.push(`Pattern: ${patchPatternStr}`);
+    if (isCustom) variantParts.push(`Pattern: ${serializedPattern}`);
 
     handleAddToCart(
       {
-        id: `neighborhood-nip-14k-white-size-${sizeToken}-patch-${isCustom ? patchPatternStr.replace(/\//g, "-") : "original"}`,
+        // Line-item id — patch type kept in the id so Original and Custom
+        // versions at the same size remain separate cart entries.
+        id: `neighborhood-nip-14k-white-size-${sizeToken}-${isCustom ? "custom" : "original"}`,
+        sku, // matches the spec: neighborhood-nip-14k-white-size-{n}
         name: `NEIGHBORHOOD NIP — 14K White Gold · ${sizeLabel}`,
-        price: currentPriceUsd,
+        edition: "14K White Gold",
+        metal: "14K White Gold",
+        price: finalPriceUsd,
+        currency: "USD",
         productKey: "neighborhoodNip",
         tierKey: `14k-white-size-${sizeToken}`,
-        metal: "14K White Gold",
-        ringSize: selectedSize,
+        ringSize: sizeStr,
         ringSizeLabel: sizeLabel,
-        sku,
         slug: "neighborhood-nip",
         image: HERO_IMAGE,
         materials: ["14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds"],
-        // Custom-patch metadata (line-item only — SKU is unchanged)
+        // Custom-patch metadata (line-item only)
         patchType,
-        patchPattern: patchPatternStr,
+        patchPattern: serializedPattern,
         patchLabel,
         whiteDiamondCount: isCustom ? whiteCount : REQUIRED_WHITE,
         blackDiamondCount: isCustom ? blackCount : REQUIRED_BLACK,
         customFeeUsd: isCustom ? customFeeUsd : 0,
+        soldAs: "ring",
         quantity: 1,
       },
       1,
       variantParts.join(" · ")
     );
   };
-
-  // ── ADD-TO-CART enablement (spec: block when invalid) ───────────────
-  const addDisabled = isAdding
-    || !selectedSize
-    || (patchType === "custom" && (!customValid || patternIncomplete));
 
   return (
     <div className="nip-page" data-testid="neighborhood-nip-page">
@@ -852,7 +890,7 @@ export default function NeighborhoodNipPage() {
           type="button"
           className="nip-add-btn"
           onClick={onAddToCart}
-          disabled={addDisabled}
+          disabled={isAdding}
           aria-label="Add NEIGHBORHOOD NIP to cart"
           data-testid="nip-add-to-cart"
         >
@@ -913,7 +951,7 @@ export default function NeighborhoodNipPage() {
                 role="tab"
                 aria-selected={patchType === "original"}
                 className={`nip-patch-toggle-btn ${patchType === "original" ? "is-active" : ""}`}
-                onClick={() => setPatchType("original")}
+                onClick={() => handlePatchTypeChange("original")}
                 data-testid="nip-patch-toggle-original"
               >
                 <span className="nip-patch-toggle-title">Original Victory Patch</span>
@@ -924,7 +962,7 @@ export default function NeighborhoodNipPage() {
                 role="tab"
                 aria-selected={patchType === "custom"}
                 className={`nip-patch-toggle-btn ${patchType === "custom" ? "is-active" : ""}`}
-                onClick={() => setPatchType("custom")}
+                onClick={() => handlePatchTypeChange("custom")}
                 data-testid="nip-patch-toggle-custom"
               >
                 <span className="nip-patch-toggle-title">Custom Patch</span>
