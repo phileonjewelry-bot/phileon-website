@@ -3169,6 +3169,30 @@ export const catalogProducts = [
     label: 'PHILEON Fine Jewelry',
     ctaLabel: 'View REBELLE',
   },
+  // ── PHILEON TRIBUTE SERIES ──────────────────────────────────────────
+  // Non-commercial tribute pieces. Surfaced on Shop (Mens > Rings +
+  // Collective section) and the Home carousel for discovery only.
+  // The card renders with no price, no wishlist, and a "TRIBUTE · NOT
+  // FOR SALE" pill. Clicking routes to the tribute page, which itself
+  // contains no commerce elements.
+  {
+    id: 'neighborhood-nip',
+    name: 'NEIGHBORHOOD NIP',
+    slug: 'neighborhood-nip',
+    materialLine: 'Tribute Series · Architectural Signet · Not for Sale',
+    imageUrl: '/tribute-series/neighborhood-nip/front-clean.png',
+    href: '/tribute-series/neighborhood-nip',
+    inventory_count: 999,
+    is_core: true,
+    is_tribute: true,
+    tributeLabel: 'TRIBUTE · NOT FOR SALE',
+    category: 'rings',
+    audience: ['gentlemens-club', 'collective'],
+    tags: ['Gents', 'Collective', 'Tribute Series', 'Ring', 'Signet', 'Blue'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 0,
+  },
 ];
 
 // Helper: filter the catalog by simple predicates.

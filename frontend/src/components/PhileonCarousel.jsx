@@ -40,7 +40,7 @@ export default function PhileonCarousel() {
         >
           {carouselItems.map((product, i) => (
             <Link
-              to={`/products/${product.slug}`}
+              to={product.href || `/products/${product.slug}`}
               key={i}
               className="min-w-[70%] md:min-w-[30%] snap-center group"
             >

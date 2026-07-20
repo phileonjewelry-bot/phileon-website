@@ -72,6 +72,7 @@ const SHOP_COLLECTION_MAP = {
   'rose-of-sharon': 'collective',
   'boss-knot': 'collective',
   'lady-boss-knot': 'collective',
+  'neighborhood-nip': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -524,17 +525,42 @@ const ShopDropPage = () => {
                       className={`shop-drop__card-wrapper ${visibleProducts.includes(globalIndex) ? 'is-visible' : ''}`}
                       style={{ position: 'relative', transitionDelay: `${index * 80}ms` }}
                     >
-                      <button
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(product.id); }}
-                        style={{
-                          position: 'absolute', top: '12px', right: '12px', zIndex: 100,
-                          padding: '8px', background: 'rgba(0, 0, 0, 0.4)', border: 'none',
-                          borderRadius: '50%', color: 'white', cursor: 'pointer',
-                        }}
-                        title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
-                      >
-                        <Heart className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} />
-                      </button>
+                      {!product.is_tribute && (
+                        <button
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(product.id); }}
+                          style={{
+                            position: 'absolute', top: '12px', right: '12px', zIndex: 100,
+                            padding: '8px', background: 'rgba(0, 0, 0, 0.4)', border: 'none',
+                            borderRadius: '50%', color: 'white', cursor: 'pointer',
+                          }}
+                          title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+                        >
+                          <Heart className={`w-4 h-4 ${has(product.id) ? 'fill-current text-red-400' : ''}`} />
+                        </button>
+                      )}
+
+                      {product.is_tribute && (
+                        <span
+                          data-testid={`tribute-pill-${product.slug}`}
+                          style={{
+                            position: 'absolute',
+                            top: '12px',
+                            left: '12px',
+                            zIndex: 100,
+                            padding: '6px 10px',
+                            background: 'rgba(3, 6, 12, 0.78)',
+                            border: '1px solid rgba(45, 99, 200, 0.55)',
+                            color: '#2D63C8',
+                            fontFamily: 'Cinzel, serif',
+                            fontSize: '9px',
+                            letterSpacing: '0.32em',
+                            textTransform: 'uppercase',
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          {product.tributeLabel || 'TRIBUTE · NOT FOR SALE'}
+                        </span>
+                      )}
 
                       <a
                         href={productUrl}
@@ -630,7 +656,7 @@ const ShopDropPage = () => {
                               ))}
                             </div>
                           )}
-                          {product.price_range && (
+                          {product.price_range && !product.is_tribute && (
                             <p className="shop-drop__card-price">{product.price_range}</p>
                           )}
                           {product.slug === 'the-true-vine' && (

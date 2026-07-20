@@ -369,6 +369,13 @@ const HomePage = () => {
         // Unified strip items - ALL products from products.js
         const stripItems = [
           {
+            title: "NEIGHBORHOOD NIP",
+            image: "/tribute-series/neighborhood-nip/front-clean.png",
+            href: "/tribute-series/neighborhood-nip",
+            subtitle: "A blueprint carved in blue. PHILEON Tribute Series — independent, non-commercial homage. Not for sale.",
+            isTribute: true,
+          },
+          {
             title: "PARABOLA",
             image: "/parabola/hero.png",
             href: "/products/parabola",
@@ -584,12 +591,34 @@ const HomePage = () => {
                   to={item.href} 
                   className={`strip-image ${item.title === "BOUND" ? "strip-image-bound" : ""}`}
                   data-testid={`strip-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
+                  style={{ position: 'relative' }}
                 >
                   <img
                     src={item.image}
                     alt={item.title}
                     draggable="false"
                   />
+                  {item.isTribute && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        padding: '5px 9px',
+                        background: 'rgba(3, 6, 12, 0.82)',
+                        border: '1px solid rgba(45, 99, 200, 0.55)',
+                        color: '#2D63C8',
+                        fontFamily: 'Cinzel, serif',
+                        fontSize: '8px',
+                        letterSpacing: '0.32em',
+                        textTransform: 'uppercase',
+                        pointerEvents: 'none',
+                        zIndex: 2,
+                      }}
+                    >
+                      TRIBUTE · NOT FOR SALE
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
@@ -613,7 +642,64 @@ const HomePage = () => {
           </ScrollReveal>
 
           {/* Preview Grid - No BOUND, fresh variety */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-16">
+            <ScrollReveal delay={100}>
+              <Link
+                to="/tribute-series/neighborhood-nip"
+                className="group block"
+                data-testid="collective-tile-neighborhood-nip"
+              >
+                <div className="aspect-square overflow-hidden bg-[#071B46] rounded-sm relative">
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      zIndex: 3,
+                      padding: '6px 10px',
+                      background: 'rgba(3, 6, 12, 0.82)',
+                      border: '1px solid rgba(45, 99, 200, 0.55)',
+                      color: '#2D63C8',
+                      fontFamily: 'Cinzel, serif',
+                      fontSize: '9px',
+                      letterSpacing: '0.32em',
+                      textTransform: 'uppercase',
+                      pointerEvents: 'none',
+                    }}
+                    data-testid="collective-tribute-pill-neighborhood-nip"
+                  >
+                    TRIBUTE · NOT FOR SALE
+                  </span>
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(45,99,200,0.18) 100%)'
+                    }}
+                  />
+                  <img
+                    src="/tribute-series/neighborhood-nip/front-clean.png"
+                    alt="NEIGHBORHOOD NIP — PHILEON Tribute Series"
+                    className="w-full h-full object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-6 text-center">
+                  <h3
+                    className="font-serif text-lg tracking-wide text-phileon-ivory/90 transition-colors duration-300"
+                    style={{ color: '#eef2fb' }}
+                  >
+                    NEIGHBORHOOD NIP
+                  </h3>
+                  <p className="text-xs text-phileon-ivory/40 mt-2">Tribute Series</p>
+                  <p
+                    className="text-[10px] mt-2 tracking-[0.32em] uppercase"
+                    style={{ color: '#2D63C8' }}
+                  >
+                    Not for Sale
+                  </p>
+                </div>
+              </Link>
+            </ScrollReveal>
+
             <ScrollReveal delay={150}>
               <Link to="/products/forme-cuff" className="group block">
                 <div className="aspect-square overflow-hidden bg-[#111] rounded-sm relative">
