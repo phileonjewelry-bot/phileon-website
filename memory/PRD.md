@@ -21,7 +21,25 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 ## What's Been Implemented (up to 2026-07)
 - Rose of Sharon, Boss Knot, Lady Boss Knot, Uncle Jo, Veyron Noir, Wynette Palette, La Marva, Annie Rose, Monika Couture, Katrina Cascata, Alejandra Heels, PTP Cuff, Rosaria, Désir Corset, Forme Cuff, Rhythm Mesh Ring, TOLA II, GALATIANS 6:14, TRACE, BOUND, APEX, HOMAGE, CYPHER, IL MORSO DEL RE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, Fondo Curvo, 1 Corinthians 15:14, DRAPE, Le Cocktail de Jessica, Prise de Couronne, Nervatura, The Don Gorgon, The Grand Dame, The Carapace, MIDWEEK, LA MADONNA, LA SCARPA DELLA REGINA, BAPE, LISA, LADY JAY, THE TRUE VINE, PORTA AUREA, COOGI DNA TAG, BATTENTI DELLA VILLA, GENT, STACKRATS, Deco Éventail, Orbit Lumière
 - **PHILEON Tribute Series** (Mens → Rings · Collective)
-  - 2026-07-19 — **NEIGHBORHOOD NIP** (Tribute Series · Rings) · 14K White Gold Sapphire and Diamond Tribute Ring · Tagline: *Built for the long run.* · Made to Order · Sold as one ring · **APPROVED FINAL STATE**
+  - 2026-07-19 — **NEIGHBORHOOD NIP** (Tribute Series · Rings) · 14K White Gold Sapphire and Diamond Tribute Ring · Tagline: *Built for the long run.* · Made to Order · Sold as one ring · **APPROVED FINAL STATE (post-ADD-TO-CART-fix)**
+    - **ADD TO CART repair (2026-07-19 — corrective release, only file changed: `NeighborhoodNipPage.jsx`)**:
+      - **Root cause**: button was rendered with `disabled={addDisabled}` where `addDisabled` combined `isAdding || !selectedSize || (patchType === "custom" && (!customValid || patternIncomplete))`. When a customer had no size selected or held a temporarily invalid custom pattern, the button was HTML-disabled, so taps produced no handler run and therefore no validation toast — appearing to users as a broken button.
+      - **Fix**:
+        - Button HTML now uses `disabled={isAdding}` **only**. It remains clickable during all normal validation states.
+        - `addDisabled` compound was removed. Validation lives **inside** the `onAddToCart` handler and shows the appropriate `toast.error(...)` on each failure branch.
+        - `type="button"` preserved on the CTA. Early-return `if (isAdding) return;` guard prevents duplicate submissions.
+        - `selectedSize` normalized to a string before validation and payload construction (handles a selector returning either a primitive or `{ value }` object).
+        - `finalPriceUsd = basePriceUsd + (isCustom ? customFeeUsd : 0)` — one numeric value, guarded via `Number.isFinite(finalPriceUsd) && finalPriceUsd > 0` before dispatch.
+        - Pattern kept as canonical 12-cell array during editing/validation. Serialized only at cart-payload build (`WBW/BWB/WBW/BWB`). Length check runs on the array, never on the slashed string.
+        - `handlePatchTypeChange("original")` restores `VICTORY_PATTERN` into `customGrid` and clears `gridHistory`, so a subsequent Custom toggle always starts from a valid 6+6 arrangement and the base price returns to `$15,000 USD`.
+        - Cart payload uses spec-defined field names: `id`, `sku`, `name`, `edition`, `metal`, `ringSize`, `ringSizeLabel`, `patchType`, `patchPattern`, `whiteDiamondCount`, `blackDiamondCount`, `customFeeUsd`, numeric `price`, `currency: "USD"`, `soldAs: "ring"`, `quantity: 1`. Formatted price strings used only for rendering.
+      - **End-to-end verified — all five required tests pass on desktop AND mobile (360 / 390 / 430 px)**:
+        1. Original + no size → toast `"Please select a ring size."` · nothing enters cart
+        2. Original + US 10 → cart drawer opens · `$15,000 USD` · `Ring Size: US 10` · `Victory Patch: Original` · Subtotal `$15,000 USD`
+        3. Valid Custom + US 10 → `$15,750 USD` · `Victory Patch: Custom` · `Pattern: WWB/BWB/BWB/BWW` · Subtotal `$15,750 USD`
+        4. Invalid Custom (7W / 5B) → toast `"Use exactly 6 white diamonds and 6 black diamonds."` · nothing enters cart · button stays clickable
+        5. Custom → break pattern → back to Original → price returns to `$15,000 USD` · Original add succeeds · switching back to Custom restores 6/6 counts
+      - **Scope**: only `/app/frontend/src/pages/NeighborhoodNipPage.jsx` was modified for this repair. Global cart logic, shared `RingSizeSelector`, checkout behaviour, product pricing, gallery, editorial sections, homepage placements, shop placements, REBELLE, ARCHITRAVE, DRIVEN, Inspiration Vault, and all unrelated products and routes untouched.
     - **Single edition** — no alternate metals, no alternate colourways:
       - **14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds**
       - Internal `basePriceCAD: 19950` → public **$15,000 USD** (Original patch) via shared `cadToUsdLuxury()`
@@ -31,34 +49,48 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
       - Central Detail (dynamic): *Victory Lap Flag and "N" Tribute Motif* (Original) / *Custom 12-Stone Black-and-White Diamond Patch* (Custom)
       - Wide Cushion-Square Statement · Architectural Mosaic Grid setting · Reference size **US 10** (not preselected)
       - Sizes: US 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13 — all sizes at the same public price
+    - **Approved page order (post-fix, verified live)**:
+      1. Product information (title, subtitle, hero, tagline)
+      2. Ring-size selector (shared `RingSizeSelector`, `bandWidthMm={15}`, no preselect)
+      3. Ring Size Guide CTA (`/ring-size-guide`, rendered by shared selector)
+      4. Wide-band sizing instructions block (custom RING SIZING copy)
+      5. MAKE YOUR MARK — customization heading + copy
+      6. Original / Custom selector (two-choice)
+      7. Live patch preview (sapphire-framed, white-gold border, preview note)
+      8. Custom editor (revealed only when Custom selected)
+      9. Live counters + Reset / Invert Colours / Undo Last controls
+      10. Final configuration summary (compact patch summary inside purchase block with EDIT PATCH link)
+      11. Final dynamic price (`$15,000 USD` Original / `$15,750 USD` Custom)
+      12. ADD TO CART (exactly one primary CTA)
+      13. Gallery (8 photographs)
+      14. Remaining editorial sections (THE BLOCK BECAME THE BLUEPRINT · THE BLUE MEANS EVERYTHING · THE VICTORY LAP · THE BUILD · Independent Tribute Notice · closing quote)
     - **Customization — MAKE YOUR MARK**:
       - Two-choice selector: **Original Victory Patch** (default · no charge) / **Custom Patch** (+$750 USD)
       - Interactive **3 columns × 4 rows** editor · exactly **6 white + 6 black** diamonds enforced · live counters · Reset / Invert Colours / Undo Last controls · keyboard-accessible cells (Enter/Space toggle) · W/B markers inside cells · `aria-pressed` + descriptive `aria-label`
       - Live sapphire-framed patch preview (5×5 sapphire field + white-gold border) with note: *Digital preview represents stone placement only. Final colour, brilliance, and hand-setting may vary slightly.*
       - Serialization: `WBW/BWB/WBW/BWB` (row-by-row, `/` between rows) — captured as line-item metadata alongside `patchType`, `whiteDiamondCount`, `blackDiamondCount`, `customFeeUsd`
       - Original approved pattern: `WWB/BWB/BWB/BWW`
-      - ADD TO CART blocked until: (a) ring size selected AND (b) if Custom selected, exactly 6 white + 6 black across all 12 positions
+      - ADD TO CART reachable at all times — validation runs inside the click handler and shows a toast on failure (never HTML-disabled on validation state)
       - Compact patch summary inside purchase block (Victory Patch label + fee + EDIT PATCH link that scrolls to `#make-your-mark`) — grid editor NOT duplicated in purchase block
     - **Media**:
       - **Hero**: static uncropped `hero-front.png` on Deep Sapphire panel (`#071B46`); `object-fit: contain`; no text overlay; **0 videos**
       - **Gallery**: **8 photographs · 0 videos · 0 captions / overlays** · natural aspect ratios via `object-fit: contain` · order: hand-on-book portrait, 4-panel angles composite, front, tight front, motif macro, side macro, motif extreme macro, three-quarter
     - **Palette (strict — no gold, red, orange)**: Midnight Asphalt `#03060C` · Deep Sapphire `#071B46` · Victory Blue `#123E8A` · Electric Sapphire `#2D63C8`
-    - **Editorial sections**: THE BLOCK BECAME THE BLUEPRINT · THE BLUE MEANS EVERYTHING · THE VICTORY LAP · THE BUILD · MAKE YOUR MARK · Independent Tribute Notice · closing quote *"The block became the blueprint. The blueprint became the ring."*
     - **Commerce surfaces (consistent $15,000 USD baseline)**:
       - Shop → Mens > Rings (`/shop?audience=gentlemens-club&category=rings`)
       - Shop → Collective (`/shop?collection=collective`, added to `SHOP_COLLECTION_MAP`)
       - Homepage → **THE COLLECTIVE** (first tile; `TRIBUTE SERIES` eyebrow retained; grid expanded to `md:grid-cols-2 lg:grid-cols-4`)
       - Homepage → cinematic image strip (first slot)
       - Standalone `/tribute-series` index page
-    - **Cart line item**: `NEIGHBORHOOD NIP — 14K White Gold · US {size}` · `Blue Sapphires · Black and White Diamonds · Ring Size: US {size} · Victory Patch: {Original|Custom}[ · Pattern: {WBW/BWB/WBW/BWB}]` · price = `$15,000 USD` (Original) / `$15,750 USD` (Custom) · size-specific SKU pattern: `neighborhood-nip-14k-white-size-{n}` (custom patch attaches as line-item metadata — no duplicate SKUs)
+    - **Cart line item**: `NEIGHBORHOOD NIP — 14K White Gold · US {size}` · `Blue Sapphires · Black and White Diamonds · Ring Size: US {size} · Victory Patch: {Original|Custom}[ · Pattern: {WBW/BWB/WBW/BWB}]` · price = `$15,000 USD` (Original) / `$15,750 USD` (Custom) · size-specific SKU pattern: `neighborhood-nip-14k-white-size-{n}` (custom patch attaches as line-item metadata — no duplicate SKUs). Line-item `id` differentiates Original vs Custom at same size so both can coexist in one cart.
     - **Ring-sizing guidance**: shared `RingSizeSelector` with `bandWidthMm={15}` + built-in Ring Size Guide CTA (`/ring-size-guide`) + custom RING SIZING block (wide-band notice, measurement tips, "select larger when between sizes"). No unconfirmed resizing promise.
     - **Routes**: `/tribute-series/neighborhood-nip` + `/neighborhood-nip` (alias) · Index: `/tribute-series`
     - **SEO**: title, meta description, og:title, og:image, og:type=product, twitter:card=summary_large_image, twitter:image all upserted client-side
     - **Language guardrails (verified — 0 forbidden terms)**: no INQUIRE · no mailto · no "price pending" · no "coming soon" · no "Tribute not for sale" · no Nipsey Hussle / Marathon Clothing likeness or logos · no gang imagery / palm trees / graffiti fonts · no sterling / 10K / 18K / yellow / rose gold / CZ / natural or lab-stone claims · no CAD rendered publicly
     - **Files owned by NEIGHBORHOOD NIP**: `/app/frontend/src/pages/NeighborhoodNipPage.jsx` · `/app/frontend/src/pages/TributeSeriesPage.jsx` · `/app/frontend/public/tribute-series/neighborhood-nip/{hero-front.png, front-clean.png, glass-reflection.png, three-quarter-elevated.png, top-border.png, gallery-01-front.png, gallery-02-front-tight.png, gallery-03-motif-macro.png, gallery-04-side-macro.png, gallery-05-motif-extreme-macro.png, gallery-06-three-quarter.png, gallery-07-hand-on-book.jpg, gallery-08-four-panel.jpg}` · route lines in `/app/frontend/src/App.js` · catalog entry in `/app/frontend/src/data/products.js` · card surfaces in `/app/frontend/src/pages/ShopDropPage.jsx` + `/app/frontend/src/pages/HomePage.jsx`
-    - **Verified at 360 / 390 / 430 px**: hero image visible uncropped · title `NEIGHBORHOOD NIP` on one line · purchase block, patch summary + EDIT PATCH link, size selector, RING SIZING block, ADD TO CART all fully in view · CUSTOMIZATION section 3×4 grid + counters + controls + preview all inside viewport with no horizontal overflow · gallery cells natural aspect ratios
+    - **Verified at 360 / 390 / 430 px (post-fix)**: hero image visible uncropped · title `NEIGHBORHOOD NIP` on one line · purchase block, patch summary + EDIT PATCH link, size selector, RING SIZING block, ADD TO CART all fully in view and clickable · CUSTOMIZATION section 3×4 grid + counters + controls + preview all inside viewport with no horizontal overflow · Original add succeeds at $15,000 · Custom add succeeds at $15,750 · gallery cells natural aspect ratios
     - **Untouched**: REBELLE · ARCHITRAVE · DRIVEN · ORIEL · MONACO · CAGED WINGS · NOVA · PARABOLA · PARABOLA HERITAGE · PARABOLA ATELIER · Inspiration Vault · Ladies First · shared `RingSizeSelector` · shared Ring Size Guide route/behaviour · `cadToUsdLuxury` function · global cart logic · unrelated checkout behaviour · unrelated pricing · unrelated routes
-    - **Frozen**: no further NEIGHBORHOOD NIP changes unless explicitly requested by user.
+    - **Frozen**: no further NEIGHBORHOOD NIP changes unless explicitly requested by user. Share Your Design suggestion explicitly declined.
 - **PHILEON Fine Jewelry** (Ladies First → Earrings)
   - 2026-07-19 — **REBELLE** (Ladies First · Earrings) · Black Pavé Helix Stiletto Earrings · Tagline: *Elegance was never meant to behave.* · Made to Order · Sold as one pair · **APPROVED FINAL STATE**
     - **Three purchasable editions** (internal CAD → public USD via shared `cadToUsdLuxury()`; CAD never rendered):
