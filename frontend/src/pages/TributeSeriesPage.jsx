@@ -25,7 +25,7 @@ const TRIBUTES = [
     title: "NEIGHBORHOOD NIP",
     subtitle: "A blueprint carved in blue.",
     href: "/tribute-series/neighborhood-nip",
-    posterImage: "/tribute-series/neighborhood-nip/hero-front.png",
+    posterImage: "/tribute-series/neighborhood-nip/shop-card-front-v2.jpg",
     releasedAt: "2026-07-19",
   },
 ];

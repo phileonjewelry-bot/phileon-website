@@ -371,7 +371,7 @@ const HomePage = () => {
         const stripItems = [
           {
             title: "NEIGHBORHOOD NIP",
-            image: "/tribute-series/neighborhood-nip/front-clean.png",
+            image: "/tribute-series/neighborhood-nip/shop-card-front-v2.jpg",
             href: "/tribute-series/neighborhood-nip",
             subtitle: "A blueprint carved in blue. PHILEON Tribute Series — 14K White Gold, princess-cut blue sapphires, black and white diamonds. Made to order.",
           },
@@ -635,7 +635,7 @@ const HomePage = () => {
                     }}
                   />
                   <img
-                    src="/tribute-series/neighborhood-nip/front-clean.png"
+                    src="/tribute-series/neighborhood-nip/shop-card-front-v2.jpg"
                     alt="NEIGHBORHOOD NIP — PHILEON Tribute Series"
                     className="w-full h-full object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   />

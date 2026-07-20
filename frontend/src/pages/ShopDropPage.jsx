@@ -499,6 +499,9 @@ const ShopDropPage = () => {
                   const productUrl = product.href || `/products/${product.slug}`;
 
                   const cardImage =
+                    product.shopCardImage ||
+                    product.cardImage ||
+                    product.thumbnail ||
                     product.audienceImages?.[audienceParam] ||
                     product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
                     product.lifestyleImages?.[audienceParam] ||
@@ -631,7 +634,7 @@ const ShopDropPage = () => {
                             </div>
                           )}
                         </div>
-                        <div style={{ padding: '12px 0 8px' }}>
+                        <div style={{ padding: '12px 16px 12px' }}>
                           <h3 className="shop-drop__card-name">{product.name}</h3>
                           <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
                           {Array.isArray(product.metals) && product.metals.length > 0 && (

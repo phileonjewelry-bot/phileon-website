@@ -3179,7 +3179,14 @@ export const catalogProducts = [
     name: 'NEIGHBORHOOD NIP',
     slug: 'neighborhood-nip',
     materialLine: '14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds',
-    imageUrl: '/tribute-series/neighborhood-nip/front-clean.png',
+    // Card asset — explicitly a three-quarter front view showing the
+    // full cushion-square silhouette, sapphire mosaic, and Victory Patch.
+    // Do NOT swap this to the overhead ring-opening photograph (that
+    // photo remains gallery-only).
+    imageUrl: '/tribute-series/neighborhood-nip/shop-card-front-v2.jpg',
+    shopCardImage: '/tribute-series/neighborhood-nip/shop-card-front-v2.jpg',
+    cardImage: '/tribute-series/neighborhood-nip/shop-card-front-v2.jpg',
+    thumbnail: '/tribute-series/neighborhood-nip/shop-card-front-v2.jpg',
     href: '/tribute-series/neighborhood-nip',
     basePriceCAD: 19950,
     price_range: `${formatUsd(cadToUsdLuxury(19950))} USD`,
