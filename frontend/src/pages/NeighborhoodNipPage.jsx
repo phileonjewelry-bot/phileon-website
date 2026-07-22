@@ -26,6 +26,7 @@ import { cadToUsdLuxury, formatUsd } from "@/lib/livePricing";
  */
 
 const HERO_IMAGE = "/tribute-series/neighborhood-nip/hero-front.png";
+const HERO_VIDEO = "/tribute-series/neighborhood-nip/hero-video.mp4";
 const BASE_PRICE_CAD = 19950;
 const CUSTOM_FEE_CAD = 1000;
 const NIP_SIZES = ["8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13"];
@@ -84,6 +85,7 @@ export default function NeighborhoodNipPage() {
   const [gridHistory, setGridHistory] = useState([]); // stack of prior grids for undo
   const { isAdding, handleAddToCart } = useAddToCart();
   const makeYourMarkRef = useRef(null);
+  const heroVideoRef = useRef(null);
 
   const basePriceUsd = useMemo(() => cadToUsdLuxury(BASE_PRICE_CAD), []);
   const customFeeUsd = useMemo(() => cadToUsdLuxury(CUSTOM_FEE_CAD), []);
@@ -114,6 +116,19 @@ export default function NeighborhoodNipPage() {
     upsertMeta("property", "og:type",      "product");
     upsertMeta("name",     "twitter:card", "summary_large_image");
     upsertMeta("name",     "twitter:image", ogImage);
+  }, []);
+
+  // Hero video autoplay reliability (matches DrivenPage / other PHILEON
+  // product pages). If the browser blocks autoplay for any reason, the
+  // poster (hero-front.png) stays visible as graceful fallback.
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.volume = 0;
+    const p = v.play();
+    if (p !== undefined) p.catch(() => { /* poster stays if blocked */ });
   }, []);
 
   // ── Grid Editor Handlers ────────────────────────────────────────────
@@ -317,13 +332,23 @@ export default function NeighborhoodNipPage() {
             linear-gradient(180deg, var(--sapphire-deep) 0%, #04102b 100%);
           border:1px solid var(--rule-strong);
           display:flex; align-items:center; justify-content:center;
-          aspect-ratio:1 / 1;
+          /* Panel matches source video aspect (640/368 ≈ 1.74) so the
+             ring composition fills the frame edge-to-edge without crop
+             or letterbox. On mobile the panel enforces a minimum height
+             so the hero still reads prominently. */
+          aspect-ratio:640 / 368;
           max-height:82vh;
+          overflow:hidden;
         }
-        .nip-hero-panel img {
+        @media (max-width:640px){
+          .nip-hero-panel { min-height:56vw; }
+        }
+        .nip-hero-panel img,
+        .nip-hero-panel video.nip-hero-video {
           display:block;
           width:100%; height:100%;
           object-fit:contain; object-position:center;
+          background:transparent;
         }
         .nip-hero-caption {
           max-width:1180px; margin:clamp(24px, 3vw, 42px) auto 0;
@@ -796,14 +821,36 @@ export default function NeighborhoodNipPage() {
         <ArrowLeft size={14} /> RETURN TO TRIBUTE SERIES
       </Link>
 
-      {/* HERO — static, uncropped, no overlay text on image */}
+      {/* HERO — silent autoplay video with poster fallback. Full ring
+          composition preserved via object-fit: contain. Panel aspect
+          matches the source video (640/368) so the ring reads edge-to-edge
+          with no crop. */}
       <div className="nip-hero-wrap" data-testid="nip-hero">
         <div className="nip-hero-panel">
-          <img
-            src={HERO_IMAGE}
-            alt="NEIGHBORHOOD NIP tribute ring — front view. Architectural cushion-square signet in 14K white gold with princess-cut blue sapphires and a central Victory Lap flag and N tribute motif in black and white diamonds."
-            data-testid="nip-hero-image"
-          />
+          <video
+            ref={heroVideoRef}
+            className="nip-hero-video"
+            src={HERO_VIDEO}
+            poster={HERO_IMAGE}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            controls={false}
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            aria-label="NEIGHBORHOOD NIP editorial hero film — architectural signet in 14K white gold with princess-cut blue sapphires and the black-and-white diamond Victory Patch."
+            data-testid="nip-hero-video"
+          >
+            {/* Poster fallback for browsers without embedded video support */}
+            <img
+              src={HERO_IMAGE}
+              alt="NEIGHBORHOOD NIP tribute ring — front view. Architectural cushion-square signet in 14K white gold with princess-cut blue sapphires and a central Victory Lap flag and N tribute motif in black and white diamonds."
+              data-testid="nip-hero-image"
+            />
+            Your browser does not support embedded video.
+          </video>
         </div>
       </div>
 
