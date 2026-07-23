@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
@@ -15,43 +15,87 @@ const DETAIL_01_IMG = "/inspiration-vault/orbit-lumiere/new-02.png";
 const DETAIL_02_IMG = "/inspiration-vault/orbit-lumiere/new-03.png";
 const EDITORIAL_WIDE_IMG = "/inspiration-vault/orbit-lumiere/new-04.png";
 const STUDIO_02_IMG = "/inspiration-vault/orbit-lumiere/new-01.jpg";
+
+// Multicolour finish (yellow, rose and white) — supplied set
+const MC_IMG_01 = "/inspiration-vault/orbit-lumiere/multicolour/multi-01.jpg";
+const MC_IMG_02 = "/inspiration-vault/orbit-lumiere/multicolour/multi-02.jpg";
+const MC_IMG_03 = "/inspiration-vault/orbit-lumiere/multicolour/multi-03.jpg";
+const MC_IMG_04 = "/inspiration-vault/orbit-lumiere/multicolour/multi-04.jpg";
+const MC_IMG_05 = "/inspiration-vault/orbit-lumiere/multicolour/multi-05.jpg";
+
 const PRICE = 175;
 
-// Gallery: Object → Observation → Craft → Scale (per Blueprint).
-// "Motion" cell omitted gracefully — no hero video provided yet. The hero
-// will reveal it automatically when the manifest's heroVideo flips on.
-const GALLERY = [
-  { src: HERO_IMG,             span: "full", alt: "ORBIT LUMIÈRE — editorial studio pair, oversized pavé hoops on a black acrylic stand with mirror reflection." },
-  { src: MACRO_IMG,             span: "full", alt: "ORBIT LUMIÈRE — macro detail of the pavé arcs and floating crystal spheres, 18K hallmark visible." },
-  { src: ON_EAR_IMG,            span: "half", alt: "ORBIT LUMIÈRE — on-ear bust, 3/4 angle showing scale and silhouette." },
-  { src: ON_EAR_PROFILE_IMG,    span: "half", alt: "ORBIT LUMIÈRE — on-ear bust, profile angle catching light through the open cage." },
-  { src: LIFESTYLE_IMG,         span: "full", alt: "ORBIT LUMIÈRE — lifestyle portrait, worn in a softly lit boutique mirror." },
-  { src: DETAIL_01_IMG,         span: "half", alt: "ORBIT LUMIÈRE — close detail of the pavé arc and floating crystal, captured against deep shadow." },
-  { src: DETAIL_02_IMG,         span: "half", alt: "ORBIT LUMIÈRE — alternate detail of the open cage and concentric crystal arcs." },
-  { src: EDITORIAL_WIDE_IMG,    span: "full", alt: "ORBIT LUMIÈRE — wide editorial composition emphasising volume and light play." },
-  { src: STUDIO_02_IMG,         span: "full", alt: "ORBIT LUMIÈRE — secondary studio portrait, the pair seen as wearable sculpture." },
+// ── Silver gallery (original, unchanged) ────────────────────────────
+const SILVER_GALLERY = [
+  { src: HERO_IMG,           span: "full", alt: "ORBIT LUMIÈRE silver earrings — editorial studio pair, oversized pavé hoops on a black acrylic stand with mirror reflection." },
+  { src: MACRO_IMG,          span: "full", alt: "ORBIT LUMIÈRE silver earrings — macro detail of the pavé arcs and floating crystal spheres." },
+  { src: ON_EAR_IMG,         span: "half", alt: "ORBIT LUMIÈRE silver earrings — on-ear bust, 3/4 angle showing scale and silhouette." },
+  { src: ON_EAR_PROFILE_IMG, span: "half", alt: "ORBIT LUMIÈRE silver earrings — on-ear bust, profile angle catching light through the open cage." },
+  { src: LIFESTYLE_IMG,      span: "full", alt: "ORBIT LUMIÈRE silver earrings — lifestyle portrait, worn in a softly lit boutique mirror." },
+  { src: DETAIL_01_IMG,      span: "half", alt: "ORBIT LUMIÈRE silver earrings — close detail of the pavé arc and floating crystal, captured against deep shadow." },
+  { src: DETAIL_02_IMG,      span: "half", alt: "ORBIT LUMIÈRE silver earrings — alternate detail of the open cage and concentric crystal arcs." },
+  { src: EDITORIAL_WIDE_IMG, span: "full", alt: "ORBIT LUMIÈRE silver earrings — wide editorial composition emphasising volume and light play." },
+  { src: STUDIO_02_IMG,      span: "full", alt: "ORBIT LUMIÈRE silver earrings — secondary studio portrait, the pair seen as wearable sculpture." },
+];
+
+// ── Multicolour gallery (yellow, rose and white finishes) ───────────
+const MULTICOLOUR_GALLERY = [
+  { src: MC_IMG_01, span: "full", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — editorial pair on dark velvet, three-tone pavé arcs catching light." },
+  { src: MC_IMG_03, span: "half", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — on-ear silhouette study, three-tone concentric hoops framing the face." },
+  { src: MC_IMG_04, span: "half", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — macro on ear, showing the yellow, rose and white finish layers within the open-cage architecture." },
+  { src: MC_IMG_05, span: "full", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — lifestyle composition with the matching set on a dark marble surface." },
+  { src: MC_IMG_02, span: "full", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — companion set portrait on light marble, revealing the tri-tone pavé craftsmanship in full detail." },
 ];
 
 export default function OrbitLumierePage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   useLuxuryMotionObserver();
 
+  // Finish selector — Silver is the default. Never null.
+  const [selectedFinish, setSelectedFinish] = useState("silver");
+
+  // Active gallery derives from the selected finish. Changing finish
+  // atomically swaps the gallery source — no intermediate render of the
+  // other finish's images can occur.
+  const activeGallery = useMemo(
+    () => (selectedFinish === "multicolour" ? MULTICOLOUR_GALLERY : SILVER_GALLERY),
+    [selectedFinish]
+  );
+  const finishLabel = selectedFinish === "multicolour" ? "Multicolour" : "Silver";
+
   useEffect(() => {
     document.title = "ORBIT LUMIÈRE — Inspiration Vault · PHILEON";
   }, []);
 
+  // Switching finish resets the visible gallery to image 1 without
+  // touching the page scroll or triggering a navigation. The gallery
+  // key change also forces the reveal-stagger to replay from index 0.
+  const handleFinishChange = (nextFinish) => {
+    if (nextFinish === selectedFinish) return;
+    setSelectedFinish(nextFinish);
+  };
+
   const onAddToCart = () => {
+    const isMulti = selectedFinish === "multicolour";
+    const variantLabel = isMulti ? "ORBIT LUMIÈRE — MULTICOLOUR" : "ORBIT LUMIÈRE — SILVER";
+    const materialLabel = isMulti
+      ? "Multicolour — Yellow, Rose and White Finishes"
+      : "Rhodium-Plated Alloy — Silver";
+
     handleAddToCart({
-      id: "inspiration-vault-orbit-lumiere",
-      name: "ORBIT LUMIÈRE — Oversized Architectural Pavé Hoop Earrings",
+      id: `inspiration-vault-orbit-lumiere-${selectedFinish}`,
+      productName: "ORBIT LUMIÈRE",
+      name: `ORBIT LUMIÈRE — ${finishLabel}`,
+      variantLabel,
+      finish: finishLabel,
       price: PRICE,
       productKey: "inspirationVaultOrbitLumiere",
-      tierKey: "default",
-      metal: "Rhodium-Plated Alloy",
-      sku: "IV-OL-RPA",
+      tierKey: selectedFinish,
+      metal: materialLabel,
+      sku: isMulti ? "IV-OL-MC" : "IV-OL-SV",
       quantity: 1,
-      image: HERO_IMG,
-    }, 1, "Rhodium-Plated Alloy");
+      image: activeGallery[0].src,
+    }, 1, `Finish: ${finishLabel}`);
   };
 
   return (
@@ -102,6 +146,32 @@ export default function OrbitLumierePage() {
           transition:transform 900ms cubic-bezier(.22,.61,.36,1); }
         .ol-gallery-cell:hover img { transform:scale(1.03); }
         @media (max-width:640px){ .ol-gallery-grid { grid-template-columns:1fr; } .ol-gallery-cell.full { aspect-ratio:4/5; } }
+
+        /* Multicolour cells preserve the full earring — no crop, centred, dark backdrop for reading */
+        .ol-gallery-cell.mc img { object-fit:contain; background:var(--bg-deep); padding:6px; }
+
+        /* ── Finish selector (inside purchase / configuration section) ─ */
+        .ol-finish-wrap { max-width:520px; margin:0 auto 32px; text-align:left; }
+        .ol-finish-label { font-family:'Cinzel',serif; font-size:10.5px; letter-spacing:.42em;
+          color:var(--gold); text-transform:uppercase; margin:0 0 12px; }
+        .ol-finish-options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        @media (max-width:520px){ .ol-finish-options { grid-template-columns:1fr; } }
+        .ol-finish-btn { display:flex; flex-direction:column; gap:6px; padding:14px 16px; text-align:left;
+          background:rgba(20,18,14,.55); border:1px solid var(--rule-soft); color:var(--ink);
+          font-family:'Cormorant Garamond',serif; cursor:pointer;
+          transition:border-color 220ms ease,background 220ms ease,transform 220ms ease; }
+        .ol-finish-btn:hover { border-color:var(--gold); transform:translateY(-1px); }
+        .ol-finish-btn:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+        .ol-finish-btn[aria-pressed="true"] { border-color:var(--gold);
+          background:linear-gradient(180deg, rgba(200,162,74,.14) 0%, rgba(20,18,14,.55) 100%); }
+        .ol-finish-btn-title { font-family:'Cinzel',serif; font-size:11.5px; letter-spacing:.34em;
+          color:var(--ink-strong); text-transform:uppercase; }
+        .ol-finish-btn-sub { font-family:'Cormorant Garamond',serif; font-style:italic;
+          font-size:14px; color:var(--ink-muted); }
+        .ol-finish-summary { font-family:'Cormorant Garamond',serif; font-size:15px;
+          color:var(--ink); margin:14px 0 0; letter-spacing:.02em; }
+        .ol-finish-summary strong { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.32em;
+          color:var(--gold); font-weight:400; text-transform:uppercase; margin-right:6px; }
         .ol-cta { text-align:center; }
         .ol-price-display { font-family:'Cinzel',serif; font-size:22px; letter-spacing:.32em;
           color:var(--ink-strong); margin:0 0 10px; }
@@ -153,7 +223,7 @@ export default function OrbitLumierePage() {
             <h2 className="ol-h2">Architecture, on the ear.</h2>
             <dl className="ol-specs-list">
               <li><dt>Material</dt><dd>Rhodium-Plated Alloy</dd></li>
-              <li><dt>Finish</dt><dd>White Pavé Crystal</dd></li>
+              <li><dt>Finish</dt><dd data-testid="ol-spec-finish">{selectedFinish === "multicolour" ? "Multicolour — Yellow, Rose and White" : "White Pavé Crystal — Silver"}</dd></li>
               <li><dt>Form</dt><dd>Sculptural Open-Cage Design</dd></li>
               <li><dt>Detail</dt><dd>Floating Crystal Sphere Centres</dd></li>
               <li><dt>Scale</dt><dd>Oversized Statement Hoop</dd></li>
@@ -169,11 +239,14 @@ export default function OrbitLumierePage() {
       <section className="ol-section d3" data-testid="ol-gallery">
         <p className="ol-eyebrow" style={{ textAlign:'center' }}>The Look</p>
         <h2 className="ol-h2" style={{ textAlign:'center' }}>From every angle.</h2>
-        <div className="ol-gallery-grid">
-          {GALLERY.map((g, i) => (
+        {/* key forces a clean remount when the finish changes so the
+            entire gallery swaps atomically — no residual images from the
+            previously selected finish can appear. */}
+        <div className="ol-gallery-grid" key={selectedFinish} data-testid={`ol-gallery-${selectedFinish}`}>
+          {activeGallery.map((g, i) => (
             <div
               key={i}
-              className={`ol-gallery-cell ${g.span === 'full' ? 'full' : ''} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
+              className={`ol-gallery-cell ${g.span === 'full' ? 'full' : ''} ${selectedFinish === 'multicolour' ? 'mc' : ''} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
               data-testid={`ol-gallery-cell-${i + 1}`}
             >
               <img src={g.src} alt={g.alt} loading="lazy" />
@@ -183,11 +256,45 @@ export default function OrbitLumierePage() {
       </section>
 
       <section className="ol-section ol-cta d4" data-testid="ol-cta">
+        {/* FINISH SELECTOR — inside the purchase / configuration section */}
+        <div className="ol-finish-wrap" data-testid="ol-finish-wrap">
+          <p className="ol-finish-label">Select Finish</p>
+          <div className="ol-finish-options" role="radiogroup" aria-label="Select finish">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={selectedFinish === "silver"}
+              aria-pressed={selectedFinish === "silver"}
+              className="ol-finish-btn"
+              onClick={() => handleFinishChange("silver")}
+              data-testid="ol-finish-silver"
+            >
+              <span className="ol-finish-btn-title">Silver</span>
+              <span className="ol-finish-btn-sub">Rhodium-plated white pavé</span>
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={selectedFinish === "multicolour"}
+              aria-pressed={selectedFinish === "multicolour"}
+              className="ol-finish-btn"
+              onClick={() => handleFinishChange("multicolour")}
+              data-testid="ol-finish-multicolour"
+            >
+              <span className="ol-finish-btn-title">Multicolour</span>
+              <span className="ol-finish-btn-sub">Yellow, rose and white finishes</span>
+            </button>
+          </div>
+          <p className="ol-finish-summary" data-testid="ol-finish-summary">
+            <strong>Finish:</strong>{finishLabel}
+          </p>
+        </div>
+
         <p className="ol-eyebrow">Price</p>
         <p className="ol-price-display" data-testid="ol-price">${PRICE} USD</p>
         <p className="ol-price-note">Inspiration Vault · In Stock</p>
         <button onClick={onAddToCart} disabled={isAdding} className="ol-add-btn"
-          data-testid="ol-add-to-cart" aria-label="Add Orbit Lumière to cart">
+          data-testid="ol-add-to-cart" aria-label={`Add Orbit Lumière ${finishLabel} to cart`}>
           {buttonText || "ADD TO CART"}
         </button>
       </section>
