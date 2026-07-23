@@ -63,6 +63,17 @@ export default function OrbitLumierePage() {
   );
   const finishLabel = selectedFinish === "multicolour" ? "Multicolour" : "Silver";
 
+  // Hero + specs inset track the selected finish so every visible
+  // product image above the gallery reflects the current choice.
+  const heroImage = selectedFinish === "multicolour" ? MC_IMG_01 : HERO_IMG;
+  const specsImage = selectedFinish === "multicolour" ? MC_IMG_03 : ON_EAR_IMG;
+  const heroAlt = selectedFinish === "multicolour"
+    ? "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — editorial pair on dark velvet, three-tone pavé arcs catching light."
+    : "ORBIT LUMIÈRE silver earrings — editorial studio pair, oversized pavé hoops on a black acrylic stand with mirror reflection.";
+  const specsAlt = selectedFinish === "multicolour"
+    ? "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — worn for scale and silhouette."
+    : "ORBIT LUMIÈRE silver earrings — worn for scale + silhouette.";
+
   useEffect(() => {
     document.title = "ORBIT LUMIÈRE — Inspiration Vault · PHILEON";
   }, []);
@@ -196,9 +207,10 @@ export default function OrbitLumierePage() {
       </Link>
 
       <VaultHero
-        image={HERO_IMG}
+        key={`hero-${selectedFinish}`}
+        image={heroImage}
         video={null}
-        altText="ORBIT LUMIÈRE — editorial studio pair, oversized pavé hoops on a black acrylic stand with mirror reflection."
+        altText={heroAlt}
         eyebrow="Inspiration Vault"
         title="Orbit Lumière"
         subhead="Light doesn't decorate the design. It completes it."
@@ -216,7 +228,7 @@ export default function OrbitLumierePage() {
       <section className="ol-section ol-specs d2" data-testid="ol-specs">
         <div className="ol-specs-grid">
           <div className="ol-specs-img-wrap">
-            <img src={ON_EAR_IMG} alt="ORBIT LUMIÈRE — worn for scale + silhouette." className="ol-specs-img" loading="lazy" />
+            <img src={specsImage} alt={specsAlt} className="ol-specs-img" loading="lazy" data-testid="ol-specs-img" />
           </div>
           <div>
             <p className="ol-eyebrow">Specifications</p>
