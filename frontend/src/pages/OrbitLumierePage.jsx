@@ -260,10 +260,11 @@ export default function OrbitLumierePage() {
           {activeGallery.map((g, i) => (
             <div
               key={i}
-              className={`ol-gallery-cell ${g.span === 'full' ? 'full' : ''} ${selectedFinish === 'multicolour' ? 'mc' : ''} lm-cell-reveal lm-stagger-${(i % 9) + 1}`}
+              className={`ol-gallery-cell ${g.span === 'full' ? 'full' : ''} ${selectedFinish === 'multicolour' ? 'mc' : ''}`}
+              style={{ opacity: 1, transform: 'none' }}
               data-testid={`ol-gallery-cell-${i + 1}`}
             >
-              <img src={g.src} alt={g.alt} loading="lazy" />
+              <img src={g.src} alt={g.alt} loading="eager" />
             </div>
           ))}
         </div>
