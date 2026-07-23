@@ -1040,6 +1040,121 @@ export default function InspirationVaultPage() {
             margin-top:26px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           STAMPEDE SET CARD — MOBILE CLIPPING FIX (Inspiration Vault index only)
+           Reason: STAMPEDE SET's poster is a black-background studio still
+           of the ring. The default 16:10 .iv-card-media with object-fit:cover
+           crops the ring, and the hover-gated .iv-card-cta is invisible on
+           touch mobile — leaving the title / subtitle / price / Archive Piece
+           tag / "Enter Piece" CTA vertically cut off on 360-430px viewports.
+           This override lets the card grow naturally, renders the image at
+           natural aspect uncropped (object-fit:contain), uses a responsive
+           clamp() title so "STAMPEDE SET" wraps cleanly on narrow screens,
+           and always shows the CTA + Archive Piece tag + price on mobile.
+           Scope: .stampede-set-vault-card only. Does NOT touch: DRIVEN, NOVA,
+           CAGED WINGS, MONACO, ORIEL, PARABOLA ATELIER, ARCHITRAVE,
+           Ladies First, homepage, cart, checkout, or unrelated routes.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.stampede-set-vault-card,
+        [data-testid="iv-card-stampede-set"] {
+          width:100%;
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .stampede-set-vault-card .iv-card-media {
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none;
+          aspect-ratio:auto !important;
+          overflow:visible;
+          padding:0;
+          background:#000;
+        }
+        .stampede-set-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain !important;
+          object-position:center;
+          transform:none;
+        }
+        .stampede-set-vault-card .iv-card-title {
+          width:100%;
+          max-width:100%;
+          height:auto;
+          white-space:normal;
+          overflow:visible;
+          text-overflow:clip;
+          overflow-wrap:normal;
+          font-size:clamp(30px,5.2vw,64px);
+          line-height:1.02;
+        }
+        .stampede-set-vault-card .iv-card-meta {
+          position:static;
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none !important;
+          overflow:visible !important;
+          padding:34px 28px 46px;
+        }
+        .stampede-set-vault-card .iv-card-cta {
+          position:static;
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          margin-top:20px;
+          margin-bottom:0;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+        @media (max-width:768px){
+          .iv-card.stampede-set-vault-card,
+          [data-testid="iv-card-stampede-set"] {
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .stampede-set-vault-card .iv-card-media {
+            width:100%;
+            height:auto !important;
+            aspect-ratio:auto !important;
+            overflow:visible !important;
+          }
+          .stampede-set-vault-card .iv-card-img {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain !important;
+            object-position:center;
+          }
+          .stampede-set-vault-card .iv-card-title {
+            font-size:clamp(28px,7.4vw,44px);
+            line-height:1.02;
+          }
+          .stampede-set-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:30px 22px 46px;
+          }
+          .stampede-set-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:26px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -1116,7 +1231,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >

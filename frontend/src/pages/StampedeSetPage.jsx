@@ -6,19 +6,16 @@ import { useAddToCart } from "@/hooks/useAddToCart";
 
 const WORN_SET   = "/inspiration-vault/stampede-set/worn-set.png";
 const BANGLE_BLK = "/inspiration-vault/stampede-set/bangle-black.jpg";
+const BANGLE_WHT = "/inspiration-vault/stampede-set/bangle-white-pedestal.png";
 const RING_BLK   = "/inspiration-vault/stampede-set/ring-black.jpg";
-const PAIR_01    = "/inspiration-vault/stampede-set/pair-01.png";
-const PAIR_02    = "/inspiration-vault/stampede-set/pair-02.png";
 const PRICE = 150;
 
-// Approved gallery order. The "bangle on white pedestal" slot is
-// reserved between the two black-background images — insert its asset
-// here when the customer supplies it. No stand-in image is used.
+// Approved gallery order:
+// 1) Worn set  2) Bangle on black  3) Bangle on white pedestal  4) Ring on black
 const GALLERY = [
   { src: WORN_SET,   alt: "STAMPEDE SET pavé ring and matching bangle worn together" },
-  { src: PAIR_01,    alt: "STAMPEDE SET pavé ring and matching bangle displayed together on a black reflective surface, four-point brilliance across the crown of each piece" },
-  { src: PAIR_02,    alt: "STAMPEDE SET pavé ring nested against the matching bangle on black, close overhead study of the two pieces as a coordinated pair" },
   { src: BANGLE_BLK, alt: "STAMPEDE SET pavé hinged bangle on black background" },
+  { src: BANGLE_WHT, alt: "STAMPEDE SET pavé hinged bangle resting on a white pedestal" },
   { src: RING_BLK,   alt: "STAMPEDE SET matching pavé statement ring on black background" },
 ];
 
