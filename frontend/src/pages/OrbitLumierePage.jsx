@@ -22,6 +22,7 @@ const MC_IMG_02 = "/inspiration-vault/orbit-lumiere/multicolour/multi-02.jpg";
 const MC_IMG_03 = "/inspiration-vault/orbit-lumiere/multicolour/multi-03.jpg";
 const MC_IMG_04 = "/inspiration-vault/orbit-lumiere/multicolour/multi-04.jpg";
 const MC_IMG_05 = "/inspiration-vault/orbit-lumiere/multicolour/multi-05.jpg";
+const MC_IMG_06 = "/inspiration-vault/orbit-lumiere/multicolour/multi-06-lifestyle-portrait.jpg";
 
 const PRICE = 175;
 
@@ -40,6 +41,7 @@ const SILVER_GALLERY = [
 
 // ── Multicolour gallery (yellow, rose and white finishes) ───────────
 const MULTICOLOUR_GALLERY = [
+  { src: MC_IMG_06, span: "full", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — worn lifestyle portrait, three-tone pavé hoops catching warm café light against the wearer's smile." },
   { src: MC_IMG_01, span: "full", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — editorial pair on dark velvet, three-tone pavé arcs catching light." },
   { src: MC_IMG_03, span: "half", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — on-ear silhouette study, three-tone concentric hoops framing the face." },
   { src: MC_IMG_04, span: "half", alt: "ORBIT LUMIÈRE multicolour earrings in yellow, rose and white finishes — macro on ear, showing the yellow, rose and white finish layers within the open-cage architecture." },
