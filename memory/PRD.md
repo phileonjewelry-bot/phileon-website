@@ -215,3 +215,14 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 - `/app/frontend/src/data/livePricingConfig.js`
 - `/app/backend/pricing_engine.py`
 - `/app/frontend/src/data/products.js`
+
+
+## STAMPEDE SET — Inspiration Vault (Sets)
+- **2026-07-23** — Vault "SETS" category piece: pavé statement ring + matching hinged bangle, $150 USD.
+- Product page `/inspiration-vault/stampede-set` — `StampedeSetPage.jsx`. Gallery order (final, user-approved 2026-07-23):
+  1. `worn-set.png` — worn set on hand
+  2. `bangle-black.jpg` — bangle on black
+  3. `bangle-white-pedestal.png` — bangle on white pedestal (**NEW asset added 2026-07-23**)
+  4. `ring-black.jpg` — ring on black
+- `PAIR_01` / `PAIR_02` slots removed from the gallery (2026-07-23).
+- **Vault index card mobile clipping fix (2026-07-23)** — `InspirationVaultPage.jsx` now applies a scoped `.stampede-set-vault-card` class with `height:auto`, `overflow:visible`, `object-fit:contain` on the media, and a mobile-visible (non-hover-gated) `.iv-card-cta`. Title uses `clamp(28px,7.4vw,44px)` at ≤768px so "STAMPEDE SET" never wraps or clips. Verified by `testing_agent_v3_fork` (iteration_11.json — 35/35 assertions passed at 375x800, 768x1024, and 1440x900). No sibling Vault card regressions.
