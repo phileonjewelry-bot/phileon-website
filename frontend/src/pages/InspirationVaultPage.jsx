@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "stampede-set",
+    title: "STAMPEDE SET",
+    subtitle: "Pavé Ring & Bangle",
+    price: null,
+    href: "/inspiration-vault/stampede-set",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/stampede-set/worn-set.png",
+    releasedAt: "2026-07-23",
+    category: "Sets",
+  },
+  {
     slug: "driven",
     title: "DRIVEN",
     subtitle: "Black Pavé Nail-Wrap Bracelet",
@@ -214,7 +225,7 @@ const VAULT_PIECES = [
 ];
 
 // Fixed display order — drives the "EXPLORE THE ARCHIVE" pill nav.
-const CATEGORIES = ["All", "Earrings", "Rings", "Bangles & Bracelets", "Pendants & Necklaces"];
+const CATEGORIES = ["All", "Earrings", "Rings", "Bangles & Bracelets", "Pendants & Necklaces", "Sets"];
 
 export default function InspirationVaultPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -1131,7 +1142,11 @@ export default function InspirationVaultPage() {
               </div>
               <div className="iv-card-side">
                 <div className="iv-card-price-block">
-                  <span className="iv-card-price" data-testid={`iv-card-${piece.slug}-price`}>${piece.price} USD</span>
+                  {piece.price != null ? (
+                    <span className="iv-card-price" data-testid={`iv-card-${piece.slug}-price`}>${piece.price} USD</span>
+                  ) : (
+                    <span className="iv-card-price" data-testid={`iv-card-${piece.slug}-price`}>Set of Two</span>
+                  )}
                   <span className="iv-card-archive-tag" data-testid={`iv-card-${piece.slug}-archive-tag`}>Archive Piece</span>
                 </div>
                 <span className="iv-card-cta">Enter Piece <ArrowRight size={14} aria-hidden="true" /></span>

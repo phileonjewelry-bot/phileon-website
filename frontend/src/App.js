@@ -93,6 +93,7 @@ import MonacoPage from "@/pages/MonacoPage";
 import CagedWingsPage from "@/pages/CagedWingsPage";
 import NovaPage from "@/pages/NovaPage";
 import DrivenPage from "@/pages/DrivenPage";
+import StampedeSetPage from "@/pages/StampedeSetPage";
 import TributeSeriesPage from "@/pages/TributeSeriesPage";
 import NeighborhoodNipPage from "@/pages/NeighborhoodNipPage";
 import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
@@ -278,6 +279,8 @@ function App() {
             <Route path="/inspiration-vault/nova" element={<NovaPage />} />
             <Route path="/driven" element={<DrivenPage />} />
             <Route path="/inspiration-vault/driven" element={<DrivenPage />} />
+            <Route path="/inspiration-vault/stampede-set" element={<StampedeSetPage />} />
+            <Route path="/stampede-set" element={<StampedeSetPage />} />
             <Route path="/tribute-series" element={<TributeSeriesPage />} />
             <Route path="/tribute-series/neighborhood-nip" element={<NeighborhoodNipPage />} />
             <Route path="/neighborhood-nip" element={<NeighborhoodNipPage />} />
