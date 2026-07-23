@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
+import { useAddToCart } from "@/hooks/useAddToCart";
 
 const WORN_SET   = "/inspiration-vault/stampede-set/worn-set.png";
 const BANGLE_BLK = "/inspiration-vault/stampede-set/bangle-black.jpg";
 const RING_BLK   = "/inspiration-vault/stampede-set/ring-black.jpg";
+const PRICE = 150;
 
 // Approved gallery order. The "bangle on white pedestal" slot is
 // reserved between the two black-background images — insert its asset
@@ -19,6 +21,7 @@ const GALLERY = [
 export default function StampedeSetPage() {
   useLuxuryMotionObserver();
   const [idx, setIdx] = useState(0);
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
     setIdx(0);
@@ -36,6 +39,22 @@ export default function StampedeSetPage() {
 
   const prev = () => setIdx((i) => (i - 1 + GALLERY.length) % GALLERY.length);
   const next = () => setIdx((i) => (i + 1) % GALLERY.length);
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: "inspiration-vault-stampede-set",
+      productName: "STAMPEDE SET",
+      name: "STAMPEDE SET — Pavé Ring & Pavé Bangle",
+      category: "Inspiration Vault — Sets",
+      includes: "Ring & Bangle",
+      price: PRICE,
+      productKey: "inspirationVaultStampedeSet",
+      tierKey: "default",
+      sku: "IV-STAMPEDE-SET",
+      quantity: 1,
+      image: RING_BLK,
+    }, 1, "Set of Two · Ring & Bangle");
+  };
 
   return (
     <div className="ss-page" data-testid="stampede-set-page">
@@ -85,6 +104,19 @@ export default function StampedeSetPage() {
         .ss-notice { max-width:640px; margin:44px auto 0; text-align:center;
           font-family:'Cormorant Garamond',serif; font-style:italic;
           font-size:15px; color:rgba(232,224,207,.55); line-height:1.6; }
+        .ss-cta { text-align:center; max-width:520px; margin:56px auto 0;
+          padding-top:44px; border-top:1px solid rgba(200,162,74,.18); }
+        .ss-price { font-family:'Cinzel',serif; font-size:clamp(22px,2.4vw,32px);
+          letter-spacing:.28em; color:#f4ecd6; margin:0 0 8px; }
+        .ss-price-note { font-family:'Cormorant Garamond',serif; font-style:italic;
+          font-size:14px; letter-spacing:.06em; color:rgba(232,224,207,.55); margin:0 0 26px; }
+        .ss-add-btn { display:inline-flex; align-items:center; justify-content:center;
+          padding:18px 64px; border:1.5px solid #c8a24a; background:transparent;
+          font-family:'Cinzel',serif; font-size:12px; letter-spacing:.42em;
+          color:#f4ecd6; text-transform:uppercase; cursor:pointer;
+          transition:background 320ms ease,color 320ms ease,transform 220ms ease; }
+        .ss-add-btn:hover:not(:disabled) { background:#c8a24a; color:#0a0908; transform:translateY(-2px); }
+        .ss-add-btn:disabled { opacity:.6; cursor:wait; }
       `}</style>
 
       <Link to="/inspiration-vault?category=sets" className="ss-return" data-testid="ss-return">
@@ -94,7 +126,7 @@ export default function StampedeSetPage() {
       <div className="ss-wrap">
         <p className="ss-eyebrow">Inspiration Vault · Sets</p>
         <h1 className="ss-title" data-testid="ss-title">STAMPEDE SET</h1>
-        <p className="ss-subtitle">Pavé Ring &amp; Bangle Set</p>
+        <p className="ss-subtitle">Pavé Ring &amp; Pavé Bangle</p>
 
         <div className="ss-gallery" data-testid="ss-gallery">
           <div className="ss-main" data-testid="ss-gallery-main">
@@ -130,10 +162,20 @@ export default function StampedeSetPage() {
           <p className="ss-includes" data-testid="ss-includes">Includes · Ring &amp; Bangle</p>
         </div>
 
-        <p className="ss-notice">
-          Price, sizing, and full specifications will publish here when confirmed.
-          Purchasing is disabled until then.
-        </p>
+        <div className="ss-cta" data-testid="ss-cta">
+          <p className="ss-price" data-testid="ss-price">${PRICE} USD</p>
+          <p className="ss-price-note">Inspiration Vault · Set of Two</p>
+          <button
+            type="button"
+            onClick={onAddToCart}
+            disabled={isAdding}
+            className="ss-add-btn"
+            aria-label="Add STAMPEDE SET to cart"
+            data-testid="ss-add-to-cart"
+          >
+            {buttonText || "ADD TO CART"}
+          </button>
+        </div>
       </div>
     </div>
   );
