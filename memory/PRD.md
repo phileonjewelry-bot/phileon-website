@@ -226,3 +226,20 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
   4. `ring-black.jpg` — ring on black
 - `PAIR_01` / `PAIR_02` slots removed from the gallery (2026-07-23).
 - **Vault index card mobile clipping fix (2026-07-23)** — `InspirationVaultPage.jsx` now applies a scoped `.stampede-set-vault-card` class with `height:auto`, `overflow:visible`, `object-fit:contain` on the media, and a mobile-visible (non-hover-gated) `.iv-card-cta`. Title uses `clamp(28px,7.4vw,44px)` at ≤768px so "STAMPEDE SET" never wraps or clips. Verified by `testing_agent_v3_fork` (iteration_11.json — 35/35 assertions passed at 375x800, 768x1024, and 1440x900). No sibling Vault card regressions.
+
+## RIBBON REGALE — Inspiration Vault (Earrings)
+- **2026-07-24** — Vault "Earrings" piece: sculptural gold-tone earrings, $30 USD, sold as one pair. Slug `gold-theory-ribbon`, route `/inspiration-vault/gold-theory-ribbon` (alias `/inspiration-vault/ribbon-regale`).
+- Product page `RibbonRegalePage.jsx` — 8-item gallery in strict order:
+  1. `hero-pair-black.png` — black-bg mirrored pair with reflections
+  2. `car-three-quarter.png` — candid car three-quarter lifestyle
+  3. `car-profile.png` — candid car profile lifestyle
+  4. `cafe-lifestyle.png` — café lifestyle portrait
+  5. `mannequin-worn.png` — black mannequin worn
+  6. `pair-white.jpg` — white-background pair (original)
+  7. `video-1.mp4` — silent product motion #1 (audio stripped via ffmpeg `-an`)
+  8. `video-2.mp4` — silent product motion #2 (audio stripped via ffmpeg `-an`)
+- Gallery videos: `autoplay muted loop playsInline`, `controls=false`, `volume=0`, `disablePictureInPicture`, poster fallback, `object-fit: contain`. Videos appear on the product page only — **never** on the Vault index card.
+- Vault card CTA text is scoped: shows **"View Archive Piece"** for RIBBON REGALE, keeps **"Enter Piece"** for all other Vault pieces.
+- Scoped `.ribbon-regale-vault-card` CSS in `InspirationVaultPage.jsx` preserves natural card height, `object-fit: contain` on the 1:1 hero image (no cropping, reflections preserved), CTA visible on mobile, responsive `clamp()` title sizing.
+- Verified by `testing_agent_v3_fork` (iteration_12.json — 8/8 acceptance items pass at 375/768/1440). Add-to-cart writes `product_id=inspiration-vault-gold-theory-ribbon`, `unit_amount_cents=3000`, `sku=IV-RIBBON-REGALE`, `variant='One Pair'` to `localStorage['phileon_cart']`. No regression to STAMPEDE SET, DRIVEN, NOVA, CAGED WINGS, MONACO, ORIEL, or PARABOLA ATELIER.
+
