@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "gold-theory-ribbon",
+    title: "RIBBON REGALE",
+    subtitle: "Sculptural Earrings",
+    price: 30,
+    href: "/inspiration-vault/gold-theory-ribbon",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/gold-theory-ribbon/hero-pair-black.png",
+    releasedAt: "2026-07-24",
+    category: "Earrings",
+  },
+  {
     slug: "stampede-set",
     title: "STAMPEDE SET",
     subtitle: "Pavé Ring & Pavé Bangle",
@@ -1155,6 +1166,122 @@ export default function InspirationVaultPage() {
             margin-top:26px;
           }
         }
+
+        /* ─────────────────────────────────────────────────────────────────
+           RIBBON REGALE CARD — VAULT INDEX SIZING & MOBILE SAFETY
+           Reason: RIBBON REGALE's poster is a black-background 1024x1024
+           studio still of the mirrored pair with reflections. The default
+           16:10 .iv-card-media with object-fit:cover would crop the ribbon
+           terminals and the reflections, and the hover-gated .iv-card-cta
+           is invisible on touch mobile. This override:
+             · lets the media render at natural square aspect (object-fit:
+               contain) so the complete pair and reflections are preserved
+             · keeps the card at natural responsive height (no fixed
+               viewport heights, no oversized card body)
+             · always shows the CTA + Archive Piece tag + price on mobile
+             · uses responsive clamp() title so RIBBON REGALE never clips
+           Scope: .ribbon-regale-vault-card only. Does NOT touch: STAMPEDE
+           SET, DRIVEN, NOVA, CAGED WINGS, MONACO, ORIEL, PARABOLA ATELIER,
+           any completed product page, cart, checkout, or unrelated routes.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.ribbon-regale-vault-card,
+        [data-testid="iv-card-gold-theory-ribbon"] {
+          width:100%;
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .ribbon-regale-vault-card .iv-card-media {
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none;
+          aspect-ratio:auto !important;
+          overflow:hidden;
+          padding:0;
+          background:#000;
+        }
+        .ribbon-regale-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain !important;
+          object-position:center;
+          transform:none;
+        }
+        .ribbon-regale-vault-card .iv-card-title {
+          width:100%;
+          max-width:100%;
+          height:auto;
+          white-space:normal;
+          overflow:visible;
+          text-overflow:clip;
+          overflow-wrap:normal;
+          font-size:clamp(30px,5.2vw,64px);
+          line-height:1.02;
+        }
+        .ribbon-regale-vault-card .iv-card-meta {
+          position:static;
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none !important;
+          overflow:visible !important;
+          padding:34px 28px 46px;
+        }
+        .ribbon-regale-vault-card .iv-card-cta {
+          position:static;
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          margin-top:20px;
+          margin-bottom:0;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+        @media (max-width:768px){
+          .iv-card.ribbon-regale-vault-card,
+          [data-testid="iv-card-gold-theory-ribbon"] {
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .ribbon-regale-vault-card .iv-card-media {
+            width:100%;
+            height:auto !important;
+            aspect-ratio:auto !important;
+          }
+          .ribbon-regale-vault-card .iv-card-img {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain !important;
+            object-position:center;
+          }
+          .ribbon-regale-vault-card .iv-card-title {
+            font-size:clamp(28px,7vw,44px);
+            line-height:1.02;
+          }
+          .ribbon-regale-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:30px 22px 46px;
+          }
+          .ribbon-regale-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:26px;
+          }
+        }
       `}</style>
 
       <Link to="/" className="iv-return" data-testid="iv-index-return">
@@ -1231,7 +1358,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
@@ -1264,7 +1391,10 @@ export default function InspirationVaultPage() {
                   )}
                   <span className="iv-card-archive-tag" data-testid={`iv-card-${piece.slug}-archive-tag`}>Archive Piece</span>
                 </div>
-                <span className="iv-card-cta">Enter Piece <ArrowRight size={14} aria-hidden="true" /></span>
+                <span className="iv-card-cta">
+                  {piece.slug === 'gold-theory-ribbon' ? 'View Archive Piece' : 'Enter Piece'}
+                  {' '}<ArrowRight size={14} aria-hidden="true" />
+                </span>
               </div>
             </div>
           </Link>

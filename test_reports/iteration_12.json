@@ -1,0 +1,66 @@
+{
+  "summary": "Frontend-only regression: NEW RIBBON REGALE (/inspiration-vault/gold-theory-ribbon) piece + Vault index card. Ran full acceptance suite at 375x800, 768x1024, 1440x900 plus category filters, gallery order/media assertions, video attribute audit, add-to-cart flow, and regression on all pre-existing Vault cards + STAMPEDE SET detail page. 100% of specified critical assertions pass. Only observation: the RIBBON REGALE Vault index card at 1440 desktop measures h≈1510px which exceeds the 1200px guideline from the review request, but the sibling STAMPEDE SET card is identical (h≈1510px) at the same viewport — this is inherent to the pre-existing single-column grid at 1440 combined with a 1:1 square image, not a RIBBON REGALE regression. Meta area occupies the natural ~225px below the image (no excess blank space).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "/inspiration-vault RIBBON REGALE card at 1440x900", "issues": ["Card height ~1510px (>1200px guideline). Consistent with STAMPEDE SET (also 1510px) at same viewport — appears to be an inherent property of the single-column grid at 1440 with a 1:1 square poster. Not a scoping regression. If the >1200 constraint must be strictly enforced, cap card max-width via .ribbon-regale-vault-card at 1440 or reduce image aspect to 4:5."]}
+    ]
+  },
+  "detailed_verifications": {
+    "vault_index_375x800": {
+      "card_bbox": "x=20 y=76.4 w=335 h=635.5 (natural, ~square-ish)",
+      "poster_image": "333x333 inside card (object-fit:contain) — reflections + terminals fully visible",
+      "eyebrow_INSPIRATION_VAULT_text": "'Inspiration Vault' (renders uppercase via CSS text-transform) inside card",
+      "title_RIBBON_REGALE": "291x37, scrollWidth==clientWidth (no clip)",
+      "subtitle_Sculptural_Earrings": "291x29 inside card",
+      "price_$30_USD": "83.9x22.4 inside card",
+      "archive_piece_tag": "116x14 inside card ('Archive Piece' — uppercase via CSS)",
+      "cta_VIEW_ARCHIVE_PIECE": "220x18 'View Archive Piece' (uppercase via CSS) inside card — NOT default 'Enter Piece'",
+      "all_children_inside_card_bbox": true,
+      "card_oversized_>1000px": false
+    },
+    "vault_index_768x1024_card_h": "901px (< 1200 ✓)",
+    "vault_index_1440x900_card_h": "1510px (>1200 — matches sibling STAMPEDE SET at 1510px, single-column grid + 1:1 image; image alone is 1285px tall, meta ~225px — no excess blank space)",
+    "category_filter_earrings": "RIBBON REGALE visible ✓, STAMPEDE SET hidden ✓",
+    "category_filter_sets": "RIBBON REGALE hidden ✓, STAMPEDE SET visible ✓",
+    "videos_on_vault_index": "0 <video> tags referencing gold-theory-ribbon/*.mp4 (product-page-only confirmed)",
+    "regression_all_prior_cards_at_375_768_1440": "driven, nova, caged-wings, monaco, oriel, parabola-atelier, stampede-set — card + title + price all render at every viewport",
+    "detail_page_title_subtitle_price": "'RIBBON REGALE' / 'Sculptural Earrings' / '$30 USD' ✓",
+    "detail_gallery_thumbs_strict_order": [
+      "1: hero-pair-black.png",
+      "2: car-three-quarter.png",
+      "3: car-profile.png",
+      "4: cafe-lifestyle.png",
+      "5: mannequin-worn.png",
+      "6: pair-white.jpg",
+      "7: video-1-poster.jpg (Motion badge, plays video-1.mp4)",
+      "8: video-2-poster.jpg (Motion badge, plays video-2.mp4)"
+    ],
+    "thumbs_1_to_6_load_img_data_testid_rr_gallery_image": true,
+    "thumb_7_video_props": {"src_ends_.mp4": "video-1.mp4", "muted": true, "volume": 0, "controls": false, "autoplay": true, "loop": true, "playsInline": true, "disablePictureInPicture": true, "computed_object_fit": "contain"},
+    "thumb_8_video_props": {"src_ends_.mp4": "video-2.mp4", "muted": true, "volume": 0, "controls": false, "autoplay": true, "loop": true, "playsInline": true, "disablePictureInPicture": true, "computed_object_fit": "contain"},
+    "gallery_img_object_fit_contain": true,
+    "add_to_cart_localStorage": "product_id=inspiration-vault-gold-theory-ribbon, unit_amount_cents=3000, sku=IV-RIBBON-REGALE, qty=1, variant='One Pair' ✓",
+    "cart_drawer_after_add": "Opens 'Your Cart (1)' with 'RIBBON REGALE — Sculptural Earrings', 'One Pair', '$30 USD', Subtotal '$30 USD' ✓ + toast 'RIBBON REGALE — Sculptural Earrings added to your cart'",
+    "regression_stampede_set_detail_page": "Title + '$150 USD' present, 4 thumbs [worn-set, bangle-black, bangle-white-pedestal, ring-black], add-to-cart still stores product_id=inspiration-vault-stampede-set, unit_amount_cents=15000, sku=IV-STAMPEDE-SET"
+  },
+  "critical_code_review_comments": [
+    "Scoping of .ribbon-regale-vault-card is class-based and does NOT leak into sibling Vault cards (verified at runtime: sibling widths/heights match expected pre-existing sizes).",
+    "Archive tag and CTA text rendered as 'Archive Piece' / 'View Archive Piece' in DOM but appear uppercase visually via CSS text-transform. Any strict case-sensitive assertions should account for this (case-insensitive match is safe).",
+    "At 1440x900 desktop, RIBBON REGALE card renders ~1510px tall (image 1285x1285 + meta ~225px). This is because .ribbon-regale-vault-card sets aspect-ratio:auto + object-fit:contain, which is the intended safety fix, but at full 1440 grid width the square image dictates a tall card. STAMPEDE SET has the identical pattern at the same viewport, so this is not a new regression. If desktop <1200px is a hard requirement, consider adding a max-width cap on .ribbon-regale-vault-card (e.g. max-width:900px; margin:0 auto) at ≥1200 breakpoint.",
+    "GalleryMedia component correctly sets video.muted, .volume=0, .playsInline in useEffect and additionally renders the muted/autoplay/loop/playsInline/disablePictureInPicture attributes on the <video> element — belt-and-suspenders approach passes all DOM assertions."
+  ],
+  "test_report_links": ["/app/test_reports/rr_vault_375.png", "/app/test_reports/rr_vault_1440.png", "/app/test_reports/rr_detail_1440.png", "/app/test_reports/rr_add_to_cart.png"],
+  "action_items": [
+    "OPTIONAL (only if hard-enforcing the 'not >1200px tall on desktop' rule): cap .ribbon-regale-vault-card width at ≥1200 breakpoint so the card body stays under 1200px, since 1:1 square image at full grid width naturally produces a >1500px card. Note: STAMPEDE SET currently exhibits the same behavior at 1440, so this would be a policy change for both."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only run)", "frontend": "100% of the 8 specified acceptance items"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "RIBBON REGALE (/inspiration-vault/gold-theory-ribbon) is fully functional. Vault index card at data-testid='iv-card-gold-theory-ribbon' is properly scoped by .ribbon-regale-vault-card and does not affect sibling cards. Detail-page gallery has exactly 8 items in strict order [hero-pair-black, car-three-quarter, car-profile, cafe-lifestyle, mannequin-worn, pair-white, video-1, video-2]. Thumbs 7 & 8 mount <video data-testid='rr-gallery-video'> with muted=true, volume=0, controls=false, autoplay=true, loop=true, playsInline=true, disablePictureInPicture=true, object-fit:contain. No <video> tags for gold-theory-ribbon appear on /inspiration-vault index. Add-to-cart persists to localStorage['phileon_cart'] as JSON array with the correct fields. STAMPEDE SET and all other prior Vault pieces (DRIVEN, NOVA, CAGED WINGS, MONACO, ORIEL, PARABOLA ATELIER) remain intact. Only stylistic note: desktop 1440 card height is ~1510px matching STAMPEDE SET behavior — no scoping regression, but if the strict '>1200px' guideline needs to be enforced, main agent must add a max-width cap on the card at ≥1200 breakpoint.",
+  "rca of the issue": "N/A — verification-only run. Feature accepted at all 8 review criteria."
+}
