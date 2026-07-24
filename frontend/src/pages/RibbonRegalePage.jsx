@@ -19,20 +19,20 @@ const VIDEO_2_POSTER    = `${BASE}/video-2-poster.jpg`;
 
 const PRICE = 30;
 
-// Approved gallery order:
-// 1) Black-bg mirrored pair   2) Candid car three-quarter
-// 3) Candid car profile       4) Café lifestyle
-// 5) Black mannequin worn     6) White-bg pair
-// 7) Silent product video #1  8) Silent product video #2
+// Approved gallery order (updated 2026-07-24 — videos first, then stills):
+// 1) Silent product video #1   2) Silent product video #2
+// 3) Black-bg mirrored pair    4) Candid car three-quarter
+// 5) Candid car profile        6) Café lifestyle
+// 7) Black mannequin worn      8) White-bg pair
 const GALLERY = [
+  { type: "video", src: VIDEO_1, poster: VIDEO_1_POSTER, alt: "RIBBON REGALE silent product motion — study one" },
+  { type: "video", src: VIDEO_2, poster: VIDEO_2_POSTER, alt: "RIBBON REGALE silent product motion — study two" },
   { type: "image", src: HERO_PAIR_BLACK,   alt: "RIBBON REGALE — mirrored pair on black with reflections" },
   { type: "image", src: CAR_THREE_QUARTER, alt: "RIBBON REGALE worn — candid three-quarter view in a car" },
   { type: "image", src: CAR_PROFILE,       alt: "RIBBON REGALE worn — candid profile view in a car" },
   { type: "image", src: CAFE_LIFESTYLE,    alt: "RIBBON REGALE worn — café lifestyle portrait" },
   { type: "image", src: MANNEQUIN_WORN,    alt: "RIBBON REGALE worn on a black mannequin bust" },
   { type: "image", src: PAIR_WHITE,        alt: "RIBBON REGALE — the pair on a white background" },
-  { type: "video", src: VIDEO_1, poster: VIDEO_1_POSTER, alt: "RIBBON REGALE silent product motion — study one" },
-  { type: "video", src: VIDEO_2, poster: VIDEO_2_POSTER, alt: "RIBBON REGALE silent product motion — study two" },
 ];
 
 function GalleryMedia({ item }) {
