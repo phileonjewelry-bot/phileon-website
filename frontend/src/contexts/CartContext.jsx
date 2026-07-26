@@ -52,6 +52,11 @@ export const CartProvider = ({ children }) => {
       slug: product.slug,
       materials: product.materials,
       currency: product.currency || null,
+      // Optional configuration descriptors preserved for ring products
+      // that expose separate karat / metal colour / ring size selectors.
+      karat: product.karat || null,
+      metalColour: product.metalColour || null,
+      ringSize: product.ringSize || null,
     };
 
     setItems(prevItems => {

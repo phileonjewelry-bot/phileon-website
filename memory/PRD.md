@@ -243,3 +243,21 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 - Scoped `.ribbon-regale-vault-card` CSS in `InspirationVaultPage.jsx` preserves natural card height, `object-fit: contain` on the 1:1 hero image (no cropping, reflections preserved), CTA visible on mobile, responsive `clamp()` title sizing.
 - Verified by `testing_agent_v3_fork` (iteration_12.json — 8/8 acceptance items pass at 375/768/1440). Add-to-cart writes `product_id=inspiration-vault-gold-theory-ribbon`, `unit_amount_cents=3000`, `sku=IV-RIBBON-REGALE`, `variant='One Pair'` to `localStorage['phileon_cart']`. No regression to STAMPEDE SET, DRIVEN, NOVA, CAGED WINGS, MONACO, ORIEL, or PARABOLA ATELIER.
 
+
+## SCACCO MATTO — PHILEON Fine Jewelry (Rings, Unisex)
+- **2026-07-26** — New Fine Jewelry ring: Geometric Gemstone Band with natural blue + yellow sapphires alternating square and circular stations. Slug `scacco-matto`. Route `/scacco-matto` (+ aliases `/fine-jewelry/scacco-matto`, `/products/scacco-matto`).
+- **Pricing (CAD-only, approved; never converted to USD):**
+  - 10K Yellow Gold — $11,400 CAD (available)
+  - 14K Yellow Gold — $12,000 CAD (available)
+  - 10K White Gold — $11,650 CAD (Coming Soon — disabled)
+  - 14K White Gold — $12,200 CAD (Coming Soon — disabled)
+- **Selectors:** separate karat pills (10K / 14K) + colour pills (Yellow Gold / White Gold — Coming Soon disabled with COMING SOON label, keyboard + pointer locked out) + shared `RingSizeSelector` (US 4 → US 12 in 0.5 increments + Custom Above US 12). Ring size required before Add-to-Cart. Karat change resets gallery to slot 1.
+- **Millennial styling scoped to `.sm-page`:** Baloo 2 + Quicksand loaded via inline `@import` (per-page only, global PHILEON typography untouched). Palette: cream #FBF3DE, marigold #F3C012, burnt orange #E6672E, avocado #7C8A4E, sapphire cobalt #2E5A8C, dark brown #3A2B1E, paper #FFFBF0.
+- **Gallery:** 5 approved images in strict order — hero-three-quarter → macro-square-circle → stations-frontal-closeup → rear-opening → top-down. Slots 6, 7, 8 (additional square-sapphire macro / additional yellow-and-blue close-up / overhead Black male model lifestyle) **pending user upload** — no stand-ins used.
+- **Cart payload persists:** `product_id`, `unit_amount_cents`, `lockedPriceCad`, `currency: "CAD"`, `sku` (e.g. `SM-14K-YELLOW-10`), `variant` (e.g. `"14K · Yellow Gold · US 10"`), `karat`, `metalColour`, `ringSize`, plus `materials: [Natural Blue Sapphires, Natural Yellow Sapphires, {karat} Yellow Gold]`. Cart drawer now respects `item.currency` per line + subtotal (default "USD" preserved for every other product).
+- **Shared component changes (additive, backward-compatible):**
+  - `CartContext.addToCart` (lines 35-60) now preserves `currency`, `karat`, `metalColour`, `ringSize` fields.
+  - `CartDrawer` per-line + subtotal render `item.currency || "USD"` (subtotal uses shared currency when all items match; falls back to "USD" for mixed carts).
+- **Shop catalog entry** added in `/app/frontend/src/data/products.js` right before `ARCHITRAVE`: Fine Jewelry ring, "From CAD $11,400", href `/scacco-matto`.
+- Verified by `testing_agent` (iteration_13.json — initially 53/55 → 55/55 after CartContext fix). Regression pass on STAMPEDE SET, RIBBON REGALE, NEIGHBORHOOD NIP, GENT, PARABOLA, PARABOLA HERITAGE, and other prior Vault/Fine Jewelry cards. SCACCO MATTO does NOT appear on `/inspiration-vault`.
+
