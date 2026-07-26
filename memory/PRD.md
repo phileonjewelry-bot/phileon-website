@@ -261,3 +261,24 @@ The user is building a high-end luxury jewelry e-commerce platform requiring bes
 - **Shop catalog entry** added in `/app/frontend/src/data/products.js` right before `ARCHITRAVE`: Fine Jewelry ring, "From CAD $11,400", href `/scacco-matto`.
 - Verified by `testing_agent` (iteration_13.json — initially 53/55 → 55/55 after CartContext fix). Regression pass on STAMPEDE SET, RIBBON REGALE, NEIGHBORHOOD NIP, GENT, PARABOLA, PARABOLA HERITAGE, and other prior Vault/Fine Jewelry cards. SCACCO MATTO does NOT appear on `/inspiration-vault`.
 
+
+## SCACCO MATTO — LA BÊTE-aligned rebuild + USD storefront (2026-07-26)
+- **Full page rewrite**: `ScaccoMattoPage.jsx` rebuilt to LA BÊTE's exact visual language — pure black bg, low-opacity white typography, small square thumbnails (`w-11 h-11` desktop, `38x38` mobile) with `ring-[0.5px] ring-white/30` active state, minimal bordered pill selectors, LA BÊTE-style white ADD TO CART button (`bg-white text-black rounded-md py-3.5 text-[10px] tracking-[0.18em]`). All millennial custom CSS deleted.
+- **Public pricing switched to USD** (CAD is now internal-only, removed from every DOM/cart/localStorage surface):
+  - 10K Yellow Gold — $8,100 USD (unit_amount_cents: 810000)
+  - 14K Yellow Gold — $8,500 USD (unit_amount_cents: 850000)
+  - 10K White Gold — $8,300 USD (Coming Soon — disabled)
+  - 14K White Gold — $8,700 USD (Coming Soon — disabled)
+- Cart payload now sets `currency: "USD"` explicitly. `lockedPriceCad` removed. Shop card price updated to `From $8,100 USD`.
+- **8-slot gallery** (unchanged product images 1-5 + 3 new lifestyle shots added):
+  1. hero-three-quarter.png
+  2. macro-square-circle.png
+  3. stations-frontal-closeup.png
+  4. rear-opening.png
+  5. top-down.png
+  6. lifestyle-cafe-window.jpg (NEW)
+  7. lifestyle-cafe-coffee.png (NEW)
+  8. lifestyle-hands-outdoor.png (NEW)
+- Mobile content order matches spec: name → subtitle → gemstones → price → gold → colour → size → guide CTA → ADD TO CART → description → additional details.
+- Verified live: no CAD/internal-pricing language leaks to DOM, horizontal overflow 0px at 375px, cart drawer shows `$8,500 USD` per-line + `$8,500 USD` subtotal, karat toggle updates price, white gold locked, size guide CTA present exactly once at `/ring-size-guide`.
+

@@ -3130,8 +3130,8 @@ export const catalogProducts = [
     // Card asset — approved upright three-quarter view on dark background.
     imageUrl: '/fine-jewelry/scacco-matto/hero-three-quarter.png',
     href: '/scacco-matto',
-    // Approved storefront pricing is CAD-only. Never converted to USD.
-    price_range: 'From CAD $11,400',
+    // Public storefront pricing — USD only. Internal CAD costing is not published.
+    price_range: 'From $8,100 USD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',
