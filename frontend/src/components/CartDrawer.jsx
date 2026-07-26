@@ -172,7 +172,7 @@ const CartDrawer = () => {
                       
                       <div className="flex items-center gap-2">
                         <span className="text-yellow-500 font-semibold text-sm">
-                          ${Math.round((item.unit_amount_cents * item.qty) / 100).toLocaleString("en-US")} USD
+                          ${Math.round((item.unit_amount_cents * item.qty) / 100).toLocaleString("en-US")} {item.currency || "USD"}
                         </span>
                         <Button
                           onClick={() => removeFromCart(item.product_id, item.variant)}
@@ -196,7 +196,14 @@ const CartDrawer = () => {
               {/* Subtotal */}
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Subtotal</span>
-                <span className="text-white text-xl font-bold">${getFormattedTotal()} USD</span>
+                <span className="text-white text-xl font-bold">
+                  ${getFormattedTotal()} {(() => {
+                    // If every line shares a single currency, show that.
+                    // Mixed-currency carts fall back to USD (unchanged).
+                    const currencies = Array.from(new Set(items.map(i => i.currency || "USD")));
+                    return currencies.length === 1 ? currencies[0] : "USD";
+                  })()}
+                </span>
               </div>
               
               {/* Shipping Note */}

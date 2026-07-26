@@ -50,7 +50,8 @@ export const CartProvider = ({ children }) => {
       qty: quantity,
       variant,
       slug: product.slug,
-      materials: product.materials
+      materials: product.materials,
+      currency: product.currency || null,
     };
 
     setItems(prevItems => {

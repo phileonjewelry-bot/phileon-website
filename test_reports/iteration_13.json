@@ -1,0 +1,61 @@
+{
+  "summary": "Frontend-only regression for the new SCACCO MATTO ring page. Executed ~55 assertions across desktop (1280x900) and mobile (375x800) covering page metadata, karat/colour pill logic, white-gold lock, ring-size + add-to-cart validation, cart drawer + localStorage payload, gallery order/reset, shop card, inspiration-vault non-inclusion, and regression on STAMPEDE SET / RIBBON REGALE. Result: 53/55 pass. Two failures — one real bug (cart localStorage is missing karat/metalColour/ringSize fields required by spec) and one likely spec-compliance edge case (validation banner not appearing when the disabled attribute is stripped and .click() is fired synchronously via JS on sm-add-to-cart).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "CartContext.addToCart -> phileon_cart localStorage",
+        "issue": "The mapping in /app/frontend/src/contexts/CartContext.jsx (lines 35-55) does NOT forward the karat / metalColour / ringSize fields that ScaccoMattoPage passes into handleAddToCart. Cart localStorage after adding 14K/Yellow/US10 contains {product_id, name, image, unit_amount_cents:1200000, lockedPriceCad:12000, sku:'SM-14K-YELLOW-10', variant:'14K · Yellow Gold · US 10', currency:'CAD', materials:[...]} but is MISSING karat:'14K', metalColour:'Yellow Gold', ringSize:'US 10'. Review spec explicitly requires these three keys in the cart payload.",
+        "selector": "localStorage['phileon_cart'][0]",
+        "priority": "HIGH"
+      },
+      {
+        "component": "sm-add-to-cart validation trigger",
+        "issue": "When sm-add-to-cart is disabled (no size chosen) and the disabled attribute is stripped and .click() fired via JS, the sm-validation banner did not render within 200ms. onAddToCart source clearly calls setShowValidation(true) when !isValid, so this may be a React re-render race caused by disabled being reasserted before the handler fires. Please verify with a real user flow: skip the disabled bypass and confirm that a legitimate flow without size shows the banner. If handler is bypassed by React, consider removing the disabled attr entirely and enforcing validation only inside onClick.",
+        "selector": "[data-testid=\"sm-add-to-cart\"] -> [data-testid=\"sm-validation\"]",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passing_checks_highlights": [
+    "data-testid=scacco-matto-page present; title 'SCACCO MATTO'; subtitle 'Geometric Gemstone Band'; eyebrow 'PHILEON Fine Jewelry · Rings'; Unisex sticker visible.",
+    "Description contains 'natural blue' + 'yellow sapphire' + 'square and circular stations'; no occurrence of 'Every move was intentional' anywhere in DOM.",
+    "Karat pills: 10K active by default at $11,400 CAD; clicking 14K -> $12,000 CAD; no 'USD' string anywhere inside sm-buy block.",
+    "Colour pills: yellow active by default. sm-colour-white has element.disabled=true, aria-disabled='true', className contains 'disabled', ::after content='COMING SOON'. force-click and Enter/Space keyboard both do NOT activate white; yellow remains active.",
+    "sm-add-to-cart disabled initially; enabled after selecting sm-ring-size-opt-10.",
+    "sm-ring-size-guide-link exists exactly once with href='/ring-size-guide'.",
+    "Cart flow (14K + Yellow + US 10): drawer opens, shows $12,000 CAD per line and subtotal, no USD leak. Cart item currency='CAD', lockedPriceCad=12000, unit_amount_cents=1200000, sku='SM-14K-YELLOW-10', variant '14K · Yellow Gold · US 10', materials=['Natural Blue Sapphires','Natural Yellow Sapphires','14K Yellow Gold'].",
+    "Karat change resets gallery: after clicking sm-thumb-3 then sm-karat-10k, sm-gallery-image src returns to hero-three-quarter.png.",
+    "Exactly 5 thumbs in order hero-three-quarter / macro-square-circle / stations-frontal-closeup / rear-opening / top-down; object-fit=contain; sm-gallery-prev/next cycle correctly.",
+    "Shop card /shop?category=rings: <a href='/scacco-matto'> present, testid product-card-scacco-matto, img src ends /fine-jewelry/scacco-matto/hero-three-quarter.png, shows 'SCACCO MATTO' and 'From CAD $11,400', card bounding rect height 504px (< 700).",
+    "Mobile 375x800: scrollWidth==innerWidth (no horizontal overflow); every key testid width > 0; sm-add-to-cart width 335px (< 375).",
+    "/inspiration-vault does NOT contain 'SCACCO MATTO' text nor any scacco data-testid. RIBBON REGALE + STAMPEDE SET still listed.",
+    "/inspiration-vault/stampede-set: shows title, $150, USD label preserved. /inspiration-vault/gold-theory-ribbon: title 'RIBBON REGALE', $30 shown.",
+    "/shop?category=rings still shows GENT, PARABOLA, PARABOLA HERITAGE, NEIGHBORHOOD NIP alongside SCACCO MATTO."
+  ],
+  "not_tested": [
+    "Full cart add of STAMPEDE SET / RIBBON REGALE with currency-null USD fallback subtotal (only page presence + price verified).",
+    "Tablet 768x1024 breakpoint (only 1280x900 desktop and 375x800 mobile executed).",
+    "Aspect-ratio ±20% comparison of scacco card vs GENT/PARABOLA/PARABOLA HERITAGE siblings (only absolute height verified)."
+  ],
+  "test_report_links": [],
+  "action_items": [
+    "In /app/frontend/src/contexts/CartContext.jsx addToCart (around lines 35-55), forward karat, metalColour, ringSize (and any other selection-descriptor fields) from the incoming product object onto newItem so they persist to localStorage['phileon_cart']. Spec requires: karat, metalColour, ringSize on the top-level cart item.",
+    "Verify sm-validation renders when the CTA is programmatically clicked with size empty (test bypass scenario). Consider always rendering the handler check regardless of disabled attribute — if E1 already does, this may just be a Playwright DOM-race and can be re-verified with a manual click after removing the disabled attribute via devtools."
+  ],
+  "critical_code_review_comments": [
+    "ScaccoMattoPage.jsx (652 lines) is approaching the 700-line threshold. The 330-line inline <style> block is the main contributor. Consider moving the CSS to /app/frontend/src/pages/scacco-matto/scacco-matto.css and importing it — the JSX will drop to ~300 lines and stay maintainable.",
+    "CartContext.addToCart uses positional field allowlist; any new descriptor field passed by product pages is silently dropped (root cause of the karat/metalColour/ringSize regression). Consider spreading `...product` at the end or maintaining an explicit `descriptorFields` array so future ring/necklace variants don't require CartContext edits.",
+    "chooseColour early-returns for disabled but the button still has role='radio' aria-checked=false which is correct; however, disabled radios in a radiogroup can confuse screen readers when tabIndex=-1. Consider aria-hidden='false' + aria-label including 'coming soon' for a11y clarity (nice-to-have)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "96% (53/55 assertions)"},
+  "test_credentials": "N/A",
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Re-verify only the two failures after E1 fix: (1) inspect localStorage['phileon_cart'] after adding SCACCO MATTO 14K/Yellow/US10 and assert karat, metalColour, ringSize keys are present with values '14K','Yellow Gold','US 10'. (2) With size empty, remove disabled attribute from [data-testid='sm-add-to-cart'] via el.removeAttribute('disabled'), click it, and assert [data-testid='sm-validation'] becomes visible. All other 53 assertions were passing; a spot-check of the same happy-path flow should be sufficient.",
+  "rca of the issue": "CartContext.addToCart (lines 36-55) constructs newItem by hand-picking product fields. ScaccoMattoPage correctly passes karat, metalColour, ringSize into handleAddToCart -> addToCart, but those keys are never copied into newItem, so localStorage['phileon_cart'] lacks them. Mitigation: add `karat: product.karat || null, metalColour: product.metalColour || null, ringSize: product.ringSize || null` (or spread the product before overriding) inside the newItem literal."
+}
