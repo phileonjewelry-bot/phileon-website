@@ -10,15 +10,25 @@ import { useAddToCart } from "@/hooks/useAddToCart";
  */
 
 const BASE = "/fine-jewelry/scacco-matto";
-const GALLERY = [
-  { src: `${BASE}/hero-three-quarter.png`,        alt: "SCACCO MATTO upright three-quarter view" },
+const HERO_VIDEO_SRC = `${BASE}/hero-video.mp4`;
+const HERO_VIDEO_POSTER = `${BASE}/hero-three-quarter.png`;
+
+const YELLOW_GALLERY = [
+  { src: `${BASE}/hero-three-quarter.png`,        alt: "SCACCO MATTO yellow-gold upright three-quarter view" },
   { src: `${BASE}/macro-square-circle.png`,       alt: "SCACCO MATTO macro of a blue square sapphire beside a yellow circular sapphire" },
   { src: `${BASE}/stations-frontal-closeup.png`,  alt: "SCACCO MATTO frontal close-up of square and circular stations" },
-  { src: `${BASE}/rear-opening.png`,              alt: "SCACCO MATTO straight rear view of the full ring opening" },
-  { src: `${BASE}/top-down.png`,                  alt: "SCACCO MATTO elevated top-down view" },
+  { src: `${BASE}/rear-opening.png`,              alt: "SCACCO MATTO yellow-gold straight rear view of the full ring opening" },
+  { src: `${BASE}/top-down.png`,                  alt: "SCACCO MATTO yellow-gold elevated top-down view" },
   { src: `${BASE}/lifestyle-cafe-window.jpg`,     alt: "SCACCO MATTO worn — café window portrait" },
   { src: `${BASE}/lifestyle-cafe-coffee.png`,     alt: "SCACCO MATTO worn — resting hand around a coffee cup" },
   { src: `${BASE}/lifestyle-hands-outdoor.png`,   alt: "SCACCO MATTO worn — outdoor café hands" },
+];
+
+const WHITE_GALLERY = [
+  { src: `${BASE}/white-hero-three-quarter.png`,   alt: "SCACCO MATTO white-gold upright three-quarter view on white background" },
+  { src: `${BASE}/white-elevated-angle.png`,       alt: "SCACCO MATTO white-gold elevated three-quarter view" },
+  { src: `${BASE}/white-workbench-editorial.png`,  alt: "SCACCO MATTO white-gold ring on the jeweller's workbench" },
+  { src: `${BASE}/white-rear-architecture.png`,    alt: "SCACCO MATTO white-gold rear circular architecture view" },
 ];
 
 // USD price map — public storefront only. No CAD, no internal costing.
@@ -40,14 +50,34 @@ export default function ScaccoMattoPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   const priceUsd = PRICE_MAP[`${karat}|${colour}`] ?? PRICE_MAP[`${karat}|yellow`];
-  const isValid = Boolean(karat) && colour === "yellow" && Boolean(size);
+  const isValid = Boolean(karat) && Boolean(colour) && Boolean(size);
+  const GALLERY = colour === "white" ? WHITE_GALLERY : YELLOW_GALLERY;
+
+  // Reduced-motion preference (poster fallback only)
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const listener = (e) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", listener);
+    return () => mq.removeEventListener?.("change", listener);
+  }, []);
+
+  const heroVideoRef = useRef(null);
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v || reducedMotion) return;
+    try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; } catch (_e) { /* no-op */ }
+    v.play().catch(() => {});
+  }, [reducedMotion]);
 
   useEffect(() => {
     document.title = "SCACCO MATTO | PHILEON Fine Jewelry";
   }, []);
 
-  // Karat change resets gallery to slot 1
-  useEffect(() => { setIdx(0); }, [karat]);
+  // Karat OR colour change resets gallery to slot 1
+  useEffect(() => { setIdx(0); }, [karat, colour]);
 
   const touchStart = useRef(null);
   const onTouchStart = (e) => { touchStart.current = e.touches[0].clientX; };
@@ -60,11 +90,12 @@ export default function ScaccoMattoPage() {
     touchStart.current = null;
   };
 
-  const chooseColour = (id) => { if (id === "white") return; setColour(id); };
+  const chooseColour = (id) => { setColour(id); };
 
   const onAddToCart = () => {
     if (!isValid) return;
-    const variant = `${karat} · Yellow Gold · ${ringSizeLabel(size)}`;
+    const colourLabel = colour === "white" ? "White Gold" : "Yellow Gold";
+    const variant = `${karat} · ${colourLabel} · ${ringSizeLabel(size)}`;
     handleAddToCart({
       id: `scacco-matto-${karat.toLowerCase()}-${colour}-${ringSizeSkuToken(size)}`,
       name: "SCACCO MATTO — Geometric Gemstone Band",
@@ -79,9 +110,9 @@ export default function ScaccoMattoPage() {
       quantity: 1,
       slug: "scacco-matto",
       image: GALLERY[0].src,
-      materials: ["Natural Blue Sapphires", "Natural Yellow Sapphires", `${karat} Yellow Gold`],
+      materials: ["Natural Blue Sapphires", "Natural Yellow Sapphires", `${karat} ${colourLabel}`],
       karat,
-      metalColour: "Yellow Gold",
+      metalColour: colourLabel,
       ringSize: ringSizeLabel(size),
     }, 1, variant);
   };
@@ -128,6 +159,44 @@ export default function ScaccoMattoPage() {
           <span aria-hidden="true">←</span> Return to Fine Jewelry
         </Link>
       </div>
+
+      {/* HERO VIDEO — landscape, silent, autoplay, loop; poster fallback + reduced-motion aware */}
+      <section
+        className="max-w-[1100px] mx-auto px-5 md:px-8 mt-4 md:mt-6"
+        data-testid="sm-hero-video-section"
+        aria-label="SCACCO MATTO yellow-gold sapphire ring campaign film"
+      >
+        <div
+          className="relative w-full bg-black overflow-hidden"
+          style={{ aspectRatio: "16 / 9" }}
+        >
+          {reducedMotion ? (
+            <img
+              src={HERO_VIDEO_POSTER}
+              alt="SCACCO MATTO — full ring hero (poster fallback for reduced motion)"
+              className="absolute inset-0 w-full h-full object-contain"
+              data-testid="sm-hero-video-poster"
+            />
+          ) : (
+            <video
+              ref={heroVideoRef}
+              src={HERO_VIDEO_SRC}
+              poster={HERO_VIDEO_POSTER}
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
+              preload="metadata"
+              aria-label="SCACCO MATTO yellow-gold sapphire ring campaign film"
+              className="absolute inset-0 w-full h-full object-contain"
+              data-testid="sm-hero-video"
+            />
+          )}
+        </div>
+      </section>
 
       {/* MOBILE */}
       <div className="md:hidden pt-4 pb-16">
@@ -180,19 +249,7 @@ export default function ScaccoMattoPage() {
             <p className="text-[8px] tracking-[0.35em] text-white/25 mb-2.5">SELECT YOUR COLOUR</p>
             <div className="flex gap-2 flex-wrap">
               <button type="button" onClick={() => chooseColour("yellow")} className={colourBtnClass("yellow", false)} data-testid="sm-colour-yellow">Yellow Gold</button>
-              <button
-                type="button"
-                onClick={() => chooseColour("white")}
-                disabled
-                aria-disabled="true"
-                tabIndex={-1}
-                onKeyDown={(e)=>{ if(e.key==="Enter"||e.key===" ") e.preventDefault(); }}
-                className={colourBtnClass("white", true)}
-                data-testid="sm-colour-white"
-              >
-                White Gold
-                <span className="ml-2 text-[8px] tracking-[0.28em] text-white/35">COMING SOON</span>
-              </button>
+              <button type="button" onClick={() => chooseColour("white")} className={colourBtnClass("white", false)} data-testid="sm-colour-white">White Gold</button>
             </div>
           </div>
 
@@ -234,7 +291,7 @@ export default function ScaccoMattoPage() {
               Cool blue and golden-yellow tones meet through bold geometry, open-sided detailing and a composition designed to be seen from every angle.
             </p>
             <p className="text-[13px] text-white/45 leading-[1.6] italic">
-              Available in 10K and 14K yellow gold. White gold coming soon.
+              Available in 10K and 14K yellow or white gold.
             </p>
           </div>
 
@@ -283,19 +340,7 @@ export default function ScaccoMattoPage() {
               <p className="text-[8px] tracking-[0.35em] text-white/20 mb-3">SELECT YOUR COLOUR</p>
               <div className="flex gap-2 flex-wrap">
                 <button type="button" onClick={() => chooseColour("yellow")} className={colourBtnClass("yellow", false)} data-testid="sm-colour-yellow-desktop">Yellow Gold</button>
-                <button
-                  type="button"
-                  onClick={() => chooseColour("white")}
-                  disabled
-                  aria-disabled="true"
-                  tabIndex={-1}
-                  onKeyDown={(e)=>{ if(e.key==="Enter"||e.key===" ") e.preventDefault(); }}
-                  className={colourBtnClass("white", true)}
-                  data-testid="sm-colour-white-desktop"
-                >
-                  White Gold
-                  <span className="ml-2 text-[8px] tracking-[0.28em] text-white/35">COMING SOON</span>
-                </button>
+                <button type="button" onClick={() => chooseColour("white")} className={colourBtnClass("white", false)} data-testid="sm-colour-white-desktop">White Gold</button>
               </div>
             </div>
 
@@ -330,7 +375,7 @@ export default function ScaccoMattoPage() {
               <p className="text-[13px] text-white/55 leading-[1.65]">
                 Cool blue and golden-yellow tones meet through bold geometry, open-sided detailing and a composition designed to be seen from every angle.
               </p>
-              <p className="text-[12px] text-white/40 leading-[1.65] italic">Available in 10K and 14K yellow gold. White gold coming soon.</p>
+              <p className="text-[12px] text-white/40 leading-[1.65] italic">Available in 10K and 14K yellow or white gold.</p>
             </div>
           </div>
         </div>
