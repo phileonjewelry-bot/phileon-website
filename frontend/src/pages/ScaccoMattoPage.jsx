@@ -25,10 +25,13 @@ const YELLOW_GALLERY = [
 ];
 
 const WHITE_GALLERY = [
-  { src: `${BASE}/white-hero-three-quarter.png`,   alt: "SCACCO MATTO white-gold upright three-quarter view on white background" },
-  { src: `${BASE}/white-elevated-angle.png`,       alt: "SCACCO MATTO white-gold elevated three-quarter view" },
-  { src: `${BASE}/white-workbench-editorial.png`,  alt: "SCACCO MATTO white-gold ring on the jeweller's workbench" },
-  { src: `${BASE}/white-rear-architecture.png`,    alt: "SCACCO MATTO white-gold rear circular architecture view" },
+  { src: `${BASE}/white-hero-three-quarter.png`,       alt: "SCACCO MATTO white-gold upright three-quarter view on white background" },
+  { src: `${BASE}/white-elevated-angle.png`,           alt: "SCACCO MATTO white-gold elevated three-quarter view" },
+  { src: `${BASE}/white-gemstone-macro.png`,           alt: "SCACCO MATTO white-gold macro — yellow circular sapphire beside blue square sapphire" },
+  { src: `${BASE}/white-rear-architecture.png`,        alt: "SCACCO MATTO white-gold rear circular architecture view" },
+  { src: `${BASE}/white-front-gemstone-detail.png`,    alt: "SCACCO MATTO white-gold front gemstone detail — blue square centre between yellow circular sapphires" },
+  { src: `${BASE}/white-workbench-editorial.png`,      alt: "SCACCO MATTO white-gold ring on the jeweller's workbench" },
+  { src: `${BASE}/white-lifestyle-hand.jpg`,           alt: "SCACCO MATTO white-gold ring worn on a hand — lifestyle" },
 ];
 
 // USD price map — public storefront only. No CAD, no internal costing.
