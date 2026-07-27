@@ -1,447 +1,170 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CreditCard, MapPin, Package, CheckCircle2, ArrowLeft } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { useToast } from '../hooks/use-toast';
-import PaymentMethods from '../components/PaymentMethods';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
-const Checkout = () => {
+/**
+ * PHILEON Checkout — Phase 1 pilot (SCACCO MATTO only).
+ *
+ * The frontend NEVER sends prices, subtotals, currencies or unit amounts.
+ * It sends only product_id + quantity + karat + metalColour + ringSize
+ * (+ customer email + idempotency key). The backend is the sole authority
+ * for pricing.
+ */
+const API = process.env.REACT_APP_BACKEND_URL;
+const CHECKOUT_ENDPOINT = `${API}/api/checkout/stripe/session`;
+
+const isSupportedItem = (i) => {
+  const pid = (i.product_id || "").toString();
+  return pid.startsWith("scacco-matto") || i.productKey === "scaccoMatto" || i.slug === "scacco-matto";
+};
+
+const formatUsd = (cents) => `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })} USD`;
+
+export default function Checkout() {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [cartItems, setCartItems] = useState([]);
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: 'USA'
-  });
-  const [shippingCost, setShippingCost] = useState(15);
-  const [currentStep, setCurrentStep] = useState(1); // 1: Contact, 2: Shipping, 3: Payment
-  const [formErrors, setFormErrors] = useState({});
+  const { items: cart } = useCart();
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [redirectPending, setRedirectPending] = useState(false);
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    if (cart.length === 0) {
-      navigate('/cart');
-    }
-    setCartItems(cart);
-  }, [navigate]);
+    // Give the CartContext a beat to hydrate from localStorage before redirecting.
+    const t = setTimeout(() => {
+      if (!cart || cart.length === 0) setRedirectPending(true);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [cart]);
 
   useEffect(() => {
-    // Mock shipping calculation based on country/state
-    if (formData.country && formData.state) {
-      const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      if (subtotal >= 100) {
-        setShippingCost(0);
-      } else if (formData.country === 'USA') {
-        setShippingCost(15);
-      } else {
-        setShippingCost(35);
-      }
-    }
-  }, [formData.country, formData.state, cartItems]);
+    if (redirectPending && (!cart || cart.length === 0)) navigate("/cart");
+  }, [redirectPending, cart, navigate]);
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-    // Clear error for this field
-    if (formErrors[e.target.name]) {
-      setFormErrors({
-        ...formErrors,
-        [e.target.name]: ''
+  const supported = (cart || []).filter(isSupportedItem);
+  const unsupported = (cart || []).filter((i) => !isSupportedItem(i));
+  const hasUnsupported = unsupported.length > 0;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    if (hasUnsupported) { setError("Please remove non-SCACCO MATTO items from your cart to continue with online checkout."); return; }
+    if (!supported.length) { setError("Your cart is empty."); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { setError("Please enter a valid email address."); return; }
+
+    setSubmitting(true);
+    try {
+      // Frontend sends configuration only — never prices.
+      const items = supported.map((i) => ({
+        product_id: (i.product_id || "scacco-matto").replace(/^scacco-matto-.*/, "scacco-matto"),
+        quantity: i.qty || i.quantity || 1,
+        karat: i.karat,
+        metalColour: i.metalColour,
+        ringSize: i.ringSize,
+      }));
+      // Stable idempotency key survives duplicate button clicks.
+      const idempotency_key = `${email.trim().toLowerCase()}:${JSON.stringify(items)}`;
+      const resp = await fetch(CHECKOUT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Idempotency-Key": idempotency_key },
+        body: JSON.stringify({ items, customer_email: email.trim(), idempotency_key }),
       });
+      const data = await resp.json();
+      if (!resp.ok) {
+        const msg = (data?.detail?.message) || (data?.detail?.code) || `Checkout error (HTTP ${resp.status})`;
+        setError(msg);
+        setSubmitting(false);
+        return;
+      }
+      // Persist the one-time status token so the success page can look up the order.
+      if (data.status_token && data.order_number) {
+        sessionStorage.setItem(`phi_order_${data.order_number}`, data.status_token);
+      }
+      window.location.href = data.checkout_url;
+    } catch (err) {
+      setError("Network error — please try again.");
+      setSubmitting(false);
     }
   };
-
-  const validateStep = (step) => {
-    const errors = {};
-    
-    if (step === 1) {
-      if (!formData.email) errors.email = 'Email is required';
-      if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Email is invalid';
-    }
-    
-    if (step === 2) {
-      if (!formData.firstName) errors.firstName = 'First name is required';
-      if (!formData.lastName) errors.lastName = 'Last name is required';
-      if (!formData.address) errors.address = 'Address is required';
-      if (!formData.city) errors.city = 'City is required';
-      if (!formData.state) errors.state = 'State is required';
-      if (!formData.zipCode) errors.zipCode = 'ZIP code is required';
-      if (!formData.country) errors.country = 'Country is required';
-    }
-    
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleNextStep = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handlePrevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
-  const handlePaymentSuccess = (paymentData) => {
-    toast({
-      title: 'Payment Successful!',
-      description: 'Thank you for your purchase. Order confirmation sent to your email.',
-    });
-    localStorage.setItem('cart', '[]');
-    navigate('/checkout/success', { 
-      state: { 
-        orderId: paymentData.order?.order_id,
-        paymentIntent: paymentData.paymentIntent
-      } 
-    });
-  };
-
-  const handlePaymentError = (error) => {
-    console.error('Payment error:', error);
-    toast({
-      title: 'Payment Failed',
-      description: error.message || 'An error occurred while processing your payment.',
-      variant: 'destructive'
-    });
-  };
-
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const total = subtotal + shippingCost;
 
   return (
-    <div className="min-h-screen bg-black">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Header */}
-        <div className="flex items-center mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/cart')}
-            className="text-gray-400 hover:text-white mr-4"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Cart
-          </Button>
-          <h1 className="text-4xl font-bold text-white">Checkout</h1>
+    <div className="min-h-screen bg-black text-white" data-testid="checkout-page">
+      <div className="max-w-[720px] mx-auto px-6 md:px-8 pt-8 pb-24">
+        <Link to="/cart" className="inline-flex items-center gap-2 text-[9px] tracking-[0.42em] text-white/40 hover:text-white/70 uppercase" data-testid="checkout-back-to-cart">
+          <ArrowLeft size={14} /> Return to Cart
+        </Link>
+
+        <div className="mt-8">
+          <p className="text-[9px] tracking-[0.42em] text-white/30 mb-2">SECURE CHECKOUT</p>
+          <h1 className="text-[28px] md:text-[36px] tracking-[0.015em] font-light text-white/90">Complete Your Order</h1>
+          <p className="text-white/45 text-[13px] mt-2">Flexible payment options may be available at checkout, subject to eligibility.</p>
         </div>
 
-        {/* Progress Steps */}
-        <div className="flex items-center justify-center mb-8">
-          {[1, 2, 3].map((step) => (
-            <div key={step} className="flex items-center">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-                currentStep >= step 
-                  ? 'bg-yellow-500 text-black' 
-                  : 'bg-gray-700 text-gray-400'
-              }`}>
-                {step}
+        {/* Order summary */}
+        <div className="mt-10 border-t border-white/10 pt-6">
+          <p className="text-[9px] tracking-[0.42em] text-white/30 mb-4">ORDER SUMMARY</p>
+          {(cart || []).map((i, idx) => (
+            <div key={idx} className="flex justify-between items-start py-3 border-b border-white/[0.04]" data-testid={`checkout-item-${idx}`}>
+              <div className="flex-1">
+                <p className="text-white/85 text-[15px]">{i.name || i.productName || "SCACCO MATTO"}</p>
+                <p className="text-white/45 text-[12px] mt-1">{i.variant || `${i.karat || ""} · ${i.metalColour || ""} · ${i.ringSize || ""}`}</p>
+                <p className="text-white/30 text-[11px] mt-1">Qty {i.qty || i.quantity || 1}</p>
+                {!isSupportedItem(i) && (
+                  <p className="text-orange-300 text-[11px] mt-2" data-testid={`checkout-item-unsupported-${idx}`}>
+                    Not available for online checkout yet — please remove to continue.
+                  </p>
+                )}
               </div>
-              <span className={`ml-2 text-sm ${
-                currentStep >= step ? 'text-yellow-500' : 'text-gray-400'
-              }`}>
-                {step === 1 ? 'Contact' : step === 2 ? 'Shipping' : 'Payment'}
-              </span>
-              {step < 3 && (
-                <div className={`w-12 h-0.5 mx-4 ${
-                  currentStep > step ? 'bg-yellow-500' : 'bg-gray-700'
-                }`} />
-              )}
+              <p className="text-white/75 text-[14px]">{formatUsd((i.unit_amount_cents || 0) * (i.qty || i.quantity || 1))}</p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Forms */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Step 1: Contact Information */}
-            {currentStep === 1 && (
-              <Card className="bg-gray-900 border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="bg-yellow-500/10 p-2 rounded-lg">
-                      <MapPin className="w-6 h-6 text-yellow-500" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">Contact Information</h2>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="email" className="text-gray-300 mb-2 block">Email Address *</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.email ? 'border-red-500' : ''
-                        }`}
-                        placeholder="you@example.com"
-                      />
-                      {formErrors.email && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex justify-end mt-6">
-                    <Button
-                      onClick={handleNextStep}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-2"
-                    >
-                      Continue to Shipping
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+        {/* Email */}
+        <form onSubmit={handleSubmit} className="mt-8">
+          <label className="block">
+            <span className="text-[9px] tracking-[0.42em] text-white/30 uppercase">Email</span>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="mt-2 w-full bg-transparent border border-white/15 rounded-md px-4 py-3 text-white/90 text-[15px] focus:outline-none focus:border-white/40 transition-colors"
+              data-testid="checkout-email"
+            />
+          </label>
+          <p className="text-white/25 text-[11px] mt-2">Order confirmation and shipping updates go here.</p>
 
-            {/* Step 2: Shipping Address */}
-            {currentStep === 2 && (
-              <Card className="bg-gray-900 border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="bg-yellow-500/10 p-2 rounded-lg">
-                      <Package className="w-6 h-6 text-yellow-500" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">Shipping Address</h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName" className="text-gray-300 mb-2 block">First Name *</Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        required
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.firstName ? 'border-red-500' : ''
-                        }`}
-                      />
-                      {formErrors.firstName && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.firstName}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName" className="text-gray-300 mb-2 block">Last Name *</Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        required
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.lastName ? 'border-red-500' : ''
-                        }`}
-                      />
-                      {formErrors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.lastName}</p>
-                      )}
-                    </div>
-                    <div className="md:col-span-2">
-                      <Label htmlFor="address" className="text-gray-300 mb-2 block">Street Address *</Label>
-                      <Input
-                        id="address"
-                        name="address"
-                        required
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.address ? 'border-red-500' : ''
-                        }`}
-                      />
-                      {formErrors.address && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.address}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="city" className="text-gray-300 mb-2 block">City *</Label>
-                      <Input
-                        id="city"
-                        name="city"
-                        required
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.city ? 'border-red-500' : ''
-                        }`}
-                      />
-                      {formErrors.city && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.city}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="state" className="text-gray-300 mb-2 block">State/Province *</Label>
-                      <Input
-                        id="state"
-                        name="state"
-                        required
-                        value={formData.state}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.state ? 'border-red-500' : ''
-                        }`}
-                      />
-                      {formErrors.state && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.state}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="zipCode" className="text-gray-300 mb-2 block">ZIP/Postal Code *</Label>
-                      <Input
-                        id="zipCode"
-                        name="zipCode"
-                        required
-                        value={formData.zipCode}
-                        onChange={handleInputChange}
-                        className={`bg-gray-800 border-gray-700 text-white focus:border-yellow-500 ${
-                          formErrors.zipCode ? 'border-red-500' : ''
-                        }`}
-                      />
-                      {formErrors.zipCode && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.zipCode}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="country" className="text-gray-300 mb-2 block">Country *</Label>
-                      <select
-                        id="country"
-                        name="country"
-                        required
-                        value={formData.country}
-                        onChange={handleInputChange}
-                        className={`w-full bg-gray-800 border border-gray-700 text-white rounded-md px-3 py-2 focus:outline-none focus:border-yellow-500 ${
-                          formErrors.country ? 'border-red-500' : ''
-                        }`}
-                      >
-                        <option value="USA">United States</option>
-                        <option value="Canada">Canada</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="Australia">Australia</option>
-                      </select>
-                      {formErrors.country && (
-                        <p className="text-red-500 text-sm mt-1">{formErrors.country}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex justify-between mt-6">
-                    <Button
-                      onClick={handlePrevStep}
-                      variant="outline"
-                      className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-2"
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      onClick={handleNextStep}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-2"
-                    >
-                      Continue to Payment
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+          {error && (
+            <div className="mt-4 border border-red-800/40 bg-red-950/30 rounded-md px-4 py-3 text-red-200 text-[13px]" role="alert" data-testid="checkout-error">
+              {error}
+            </div>
+          )}
 
-            {/* Step 3: Payment */}
-            {currentStep === 3 && (
-              <Card className="bg-gray-900 border-gray-800">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-yellow-500/10 p-2 rounded-lg">
-                        <CreditCard className="w-6 h-6 text-yellow-500" />
-                      </div>
-                      <h2 className="text-2xl font-bold text-white">Payment</h2>
-                    </div>
-                    <Button
-                      onClick={handlePrevStep}
-                      variant="outline"
-                      className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                    >
-                      Back
-                    </Button>
-                  </div>
-                  
-                  <PaymentMethods
-                    cartItems={cartItems}
-                    shippingAddress={formData}
-                    email={formData.email}
-                    onPaymentSuccess={handlePaymentSuccess}
-                    onPaymentError={handlePaymentError}
-                  />
-                </CardContent>
-              </Card>
-            )}
+          {hasUnsupported && (
+            <div className="mt-4 border border-orange-800/40 bg-orange-950/20 rounded-md px-4 py-3 text-orange-200 text-[13px]" data-testid="checkout-mixed-cart-notice">
+              Online checkout is currently available for <strong>SCACCO MATTO</strong> only during this launch. Please remove the other items from your cart to continue.
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={submitting || hasUnsupported}
+            className="w-full bg-white text-black rounded-md py-4 mt-6 text-[10px] tracking-[0.18em] font-medium hover:bg-white/92 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
+            data-testid="checkout-continue-btn"
+          >
+            {submitting ? "REDIRECTING TO STRIPE…" : "PAY WITH CARD OR FINANCING"}
+          </button>
+
+          <div className="mt-6 text-center">
+            <p className="text-white/22 text-[10px] leading-relaxed">
+              Payments are securely processed by Stripe. Card details never touch PHILEON servers.<br/>
+              Flexible payment options (Affirm, Klarna, Afterpay, Apple Pay, Google Pay) may appear at checkout when eligible.
+            </p>
           </div>
-
-          {/* Right Column - Order Summary */}
-          <div className="lg:col-span-1">
-            <Card className="bg-gray-900 border-gray-800 sticky top-6">
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Order Summary</h2>
-                
-                {/* Cart Items */}
-                <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
-                  {cartItems.map(item => (
-                    <div key={item.id} className="flex gap-4">
-                      <img
-                        src={item.images[0]}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <p className="text-white text-sm font-medium line-clamp-2">{item.name}</p>
-                        <p className="text-gray-400 text-xs">Qty: {item.quantity}</p>
-                      </div>
-                      <p className="text-yellow-500 font-semibold">${Math.round(item.price * item.quantity).toLocaleString("en-US")} USD</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Totals */}
-                <div className="space-y-3 pt-4 border-t border-gray-800">
-                  <div className="flex justify-between text-gray-400">
-                    <span>Subtotal</span>
-                    <span className="text-white">${Math.round(subtotal).toLocaleString("en-US")} USD</span>
-                  </div>
-                  <div className="flex justify-between text-gray-400">
-                    <span>Shipping</span>
-                    <span className={shippingCost === 0 ? 'text-green-500 font-semibold' : 'text-white'}>
-                      {shippingCost === 0 ? 'FREE' : `$${Math.round(shippingCost).toLocaleString("en-US")} USD`}
-                    </span>
-                  </div>
-                  {subtotal >= 100 && (
-                    <div className="flex items-center gap-2 text-green-500 text-sm">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Free shipping applied!</span>
-                    </div>
-                  )}
-                  <div className="border-t border-gray-800 pt-3">
-                    <div className="flex justify-between text-white text-xl font-bold">
-                      <span>Total</span>
-                      <span className="text-yellow-500">${Math.round(total).toLocaleString("en-US")} USD</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   );
-};
-
-export default Checkout;
+}

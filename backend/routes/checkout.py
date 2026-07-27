@@ -213,6 +213,27 @@ async def order_status(order_number: str, token: str, session_id: Optional[str] 
 
 @router.get("/health")
 async def health():
-    return {"payment_configured": _payment_configured(),
-            "supported_products": ["scacco-matto"],
-            "mode": _cfg("STRIPE_MODE", "test")}
+    """Payment health — reports credentials_present, stripe_api_verified,
+    webhook_secret_present, and mode. Never exposes secret values."""
+    credentials_present = bool(_cfg("STRIPE_SECRET_KEY"))
+    webhook_secret_present = bool(_cfg("STRIPE_WEBHOOK_SECRET"))
+    api_verified = False
+    api_error_code = None
+    if credentials_present:
+        try:
+            import stripe
+            stripe.api_key = _cfg("STRIPE_SECRET_KEY")
+            # Lightweight verification: retrieve account balance metadata.
+            stripe.Balance.retrieve()
+            api_verified = True
+        except Exception as e:
+            # Report a short error code, never the key or prefix.
+            api_error_code = type(e).__name__
+    return {
+        "credentials_present": credentials_present,
+        "webhook_secret_present": webhook_secret_present,
+        "stripe_api_verified": api_verified,
+        "stripe_api_error_code": api_error_code,
+        "mode": _cfg("STRIPE_MODE", "test"),
+        "supported_products": ["scacco-matto"],
+    }

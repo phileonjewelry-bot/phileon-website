@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { Minus, Plus, X, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -27,72 +27,17 @@ const CartDrawer = () => {
     setIsOpen 
   } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
-    
+    // Client-side navigation preserves in-memory CartContext state so the
+    // Checkout page can read items without a page reload wiping them.
     setIsCheckingOut(true);
-    
-    try {
-      // Convert cart items to expected format
-      const checkoutItems = getCheckoutItems();
-      
-      const response = await axios.post(`${BACKEND_URL}/api/stripe/create-checkout-session`, {
-        items: checkoutItems,
-        email: '', // Will be collected in Stripe Checkout
-        shippingAddress: {}, // Will be collected in Stripe Checkout
-        success_url: `${window.location.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${window.location.origin}/checkout/cancel`
-      });
-
-      // Redirect to Stripe Checkout
-      if (response.data.checkout_url) {
-        window.location.href = response.data.checkout_url;
-      } else if (response.data.url) {
-        window.location.href = response.data.url;
-      }
-      
-    } catch (error) {
-      console.error('Checkout error:', error);
-      
-      // Handle inventory validation errors
-      if (error.response?.data?.detail?.code === 'OUT_OF_STOCK') {
-        const messages = error.response.data.detail.messages || [];
-        
-        // Check for cart refresh error specifically
-        const hasRefreshError = messages.some(msg => 
-          msg.includes('Cart item missing product reference')
-        );
-        
-        if (hasRefreshError) {
-          toast({
-            title: 'Cart Needs Refresh',
-            description: 'Some cart items need to be refreshed. Please remove and re-add items to your cart.',
-            variant: 'destructive'
-          });
-        } else {
-          toast({
-            title: 'Items Out of Stock',
-            description: messages.length > 1 
-              ? `${messages.length} items have stock issues. Please review your cart.`
-              : messages[0] || 'Some items are no longer available.',
-            variant: 'destructive'
-          });
-        }
-        
-        // Show detailed errors in console for debugging
-        console.warn('Inventory validation errors:', messages);
-      } else {
-        toast({
-          title: 'Checkout Error',
-          description: 'Unable to start checkout. Please try again.',
-          variant: 'destructive'
-        });
-      }
-    } finally {
-      setIsCheckingOut(false);
-    }
+    setIsOpen(false);
+    navigate("/checkout");
+    setIsCheckingOut(false);
   };
 
   return (

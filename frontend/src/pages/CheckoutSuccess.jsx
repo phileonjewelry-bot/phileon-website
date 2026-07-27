@@ -1,201 +1,119 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { CheckCircle2, Package, Mail, Home } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import axios from 'axios';
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL;
 
-const CheckoutSuccess = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [orderDetails, setOrderDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+const formatUsd = (cents) => `$${(cents / 100).toLocaleString("en-US")} USD`;
 
-  const sessionId = searchParams.get('session_id');
-  const orderId = searchParams.get('order_id');
+export default function CheckoutSuccess() {
+  const [params] = useSearchParams();
+  const orderNumber = params.get("order");
+  const [order, setOrder] = useState(null);
+  const [error, setError] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const pollRef = useRef(null);
 
   useEffect(() => {
-    const fetchOrderDetails = async () => {
+    if (!orderNumber) { setError("Missing order reference."); return; }
+    const token = sessionStorage.getItem(`phi_order_${orderNumber}`);
+    if (!token) { setError("Missing secure order token. If you completed a payment, we will still process it on the next signed provider event."); return; }
+
+    const poll = async () => {
       try {
-        if (sessionId) {
-          // Handle Stripe Checkout session completion
-          const response = await axios.get(`${BACKEND_URL}/api/stripe/session/${sessionId}`);
-          if (response.data.success) {
-            setOrderDetails({
-              orderId: response.data.order_id,
-              sessionId: sessionId,
-              paymentStatus: 'completed'
-            });
-          } else {
-            setError('Payment was not completed successfully.');
-          }
-        } else if (orderId) {
-          // Handle direct order ID (from payment intent)
-          setOrderDetails({
-            orderId: orderId,
-            paymentStatus: 'completed'
-          });
-        } else {
-          setError('No order information found.');
+        const resp = await fetch(`${API}/api/checkout/order/${encodeURIComponent(orderNumber)}/status?token=${encodeURIComponent(token)}`);
+        if (!resp.ok) { setError(`Unable to retrieve order status (HTTP ${resp.status}).`); return; }
+        const data = await resp.json();
+        setOrder(data);
+        setAttempts((a) => a + 1);
+        const terminal = ["paid", "failed", "refunded", "partially_refunded", "cancelled", "disputed"];
+        if (terminal.includes(data.payment_status)) {
+          if (pollRef.current) clearInterval(pollRef.current);
+          try { localStorage.removeItem("phileon_cart"); } catch (_e) { /* ignore */ }
         }
-      } catch (error) {
-        console.error('Error fetching order details:', error);
-        setError('Unable to retrieve order information.');
-      } finally {
-        setIsLoading(false);
+      } catch (_e) {
+        // transient network — keep polling
       }
     };
+    poll();
+    pollRef.current = setInterval(poll, 3000);
+    // stop polling after ~60 seconds regardless
+    const stopAfter = setTimeout(() => { if (pollRef.current) clearInterval(pollRef.current); }, 60000);
+    return () => { if (pollRef.current) clearInterval(pollRef.current); clearTimeout(stopAfter); };
+  }, [orderNumber]);
 
-    fetchOrderDetails();
-  }, [sessionId, orderId]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
-          <p className="text-white">Processing your order...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Card className="bg-gray-900 border-gray-800 w-full max-w-lg">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Order Error</h1>
-            <p className="text-gray-300 mb-6">{error}</p>
-            <Button
-              onClick={() => navigate('/')}
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
-            >
-              Return to Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const status = order?.payment_status || "pending";
+  const isPaid = status === "paid";
+  const isFailed = ["failed", "cancelled"].includes(status);
 
   return (
-    <div className="min-h-screen bg-black">
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-12 h-12 text-green-600" />
-          </div>
-          <h1 className="text-4xl font-bold text-white mb-2">Payment Successful!</h1>
-          <p className="text-xl text-gray-300">Thank you for your order</p>
-        </div>
+    <div className="min-h-screen bg-black text-white" data-testid="checkout-success-page">
+      <div className="max-w-[640px] mx-auto px-6 md:px-8 pt-16 pb-24 text-center">
+        <p className="text-[9px] tracking-[0.42em] text-white/30 mb-3">CHECKOUT · CONFIRMATION</p>
 
-        <Card className="bg-gray-900 border-gray-800 mb-8">
-          <CardContent className="p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">Order Details</h2>
-                <div className="space-y-3 text-gray-300">
-                  <div className="flex justify-between">
-                    <span>Order ID:</span>
-                    <span className="text-yellow-500 font-mono">{orderDetails?.orderId}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Payment Status:</span>
-                    <span className="text-green-500 font-semibold capitalize">{orderDetails?.paymentStatus}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Order Date:</span>
-                    <span>{new Date().toLocaleDateString()}</span>
-                  </div>
-                  {orderDetails?.sessionId && (
-                    <div className="flex justify-between">
-                      <span>Transaction ID:</span>
-                      <span className="text-yellow-500 font-mono text-sm">{orderDetails.sessionId.slice(-8)}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+        {!order && !error && (
+          <>
+            <h1 className="text-[28px] md:text-[36px] tracking-[0.015em] font-light text-white/90">Order received</h1>
+            <p className="text-white/50 text-[14px] mt-3" data-testid="checkout-status-confirming">Confirming payment with your bank…</p>
+          </>
+        )}
 
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">What's Next?</h2>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Mail className="w-6 h-6 text-yellow-500 mt-1" />
-                    <div>
-                      <p className="text-white font-semibold">Order Confirmation</p>
-                      <p className="text-gray-400 text-sm">We've sent a confirmation email with your order details.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Package className="w-6 h-6 text-yellow-500 mt-1" />
-                    <div>
-                      <p className="text-white font-semibold">Order Processing</p>
-                      <p className="text-gray-400 text-sm">Your order will be processed within 1-2 business days.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle2 className="w-6 h-6 text-yellow-500 mt-1" />
-                    <div>
-                      <p className="text-white font-semibold">Shipping Updates</p>
-                      <p className="text-gray-400 text-sm">You'll receive tracking information once shipped.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {order && !isPaid && !isFailed && (
+          <>
+            <h1 className="text-[28px] md:text-[36px] tracking-[0.015em] font-light text-white/90">Order received</h1>
+            <p className="text-white/50 text-[14px] mt-3" data-testid="checkout-status-processing">
+              Confirming payment. Some financing and bank-redirect payments can take a moment to finalize — you&apos;ll receive a confirmation email as soon as it settles.
+            </p>
+          </>
+        )}
+
+        {isPaid && (
+          <>
+            <h1 className="text-[28px] md:text-[36px] tracking-[0.015em] font-light text-white/90" data-testid="checkout-status-paid">Payment confirmed</h1>
+            <p className="text-white/50 text-[14px] mt-3">Thank you. A confirmation is on its way to your inbox.</p>
+          </>
+        )}
+
+        {isFailed && (
+          <>
+            <h1 className="text-[28px] md:text-[36px] tracking-[0.015em] font-light text-red-200" data-testid="checkout-status-failed">Payment not completed</h1>
+            <p className="text-white/50 text-[14px] mt-3">Your card was not charged. Please try again or use a different method.</p>
+          </>
+        )}
+
+        {error && (
+          <div className="mt-6 text-orange-300 text-[13px] border border-orange-800/40 bg-orange-950/20 rounded-md px-4 py-3" data-testid="checkout-success-error">{error}</div>
+        )}
+
+        {order && (
+          <div className="mt-10 text-left border border-white/10 rounded-md p-6" data-testid="checkout-order-summary">
+            <div className="flex justify-between text-[12px] tracking-[0.28em] text-white/40 uppercase">
+              <span>Order</span>
+              <span data-testid="checkout-order-number">{order.order_number}</span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="mt-4 space-y-3">
+              {order.items?.map((i, idx) => (
+                <div key={idx} className="flex justify-between items-start">
+                  <div>
+                    <p className="text-white/85 text-[14px]">{i.product_name}</p>
+                    <p className="text-white/45 text-[12px]">{i.variant} · Qty {i.quantity}</p>
+                  </div>
+                  <p className="text-white/70 text-[13px]">{formatUsd(i.unit_amount_cents * i.quantity)}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10 flex justify-between">
+              <span className="text-white/50 text-[13px]">Total</span>
+              <span className="text-white/90 text-[16px]" data-testid="checkout-total">{formatUsd(order.total_cents)}</span>
+            </div>
+            <p className="text-white/25 text-[10px] mt-3">Status: <span data-testid="checkout-payment-status">{order.payment_status}</span> · Attempts: {attempts}</p>
+          </div>
+        )}
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={() => navigate('/')}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-3"
-          >
-            <Home className="w-5 h-5 mr-2" />
-            Continue Shopping
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate('/products')}
-            className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-3"
-          >
-            View Our Collection
-          </Button>
-        </div>
-
-        {/* Additional Information */}
-        <div className="mt-12 text-center">
-          <Card className="bg-gray-900 border-gray-800">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-2">Need Help?</h3>
-              <p className="text-gray-400 text-sm mb-4">
-                If you have any questions about your order, please don't hesitate to contact us.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center text-sm">
-                <a href="mailto:support@phileon.com" className="text-yellow-500 hover:text-yellow-400">
-                  support@phileon.com
-                </a>
-                <span className="hidden sm:block text-gray-600">|</span>
-                <a href="tel:+1234567890" className="text-yellow-500 hover:text-yellow-400">
-                  +1 (234) 567-8900
-                </a>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mt-10 flex flex-col gap-3">
+          <Link to="/" className="text-[10px] tracking-[0.28em] text-white/50 hover:text-white/80 uppercase" data-testid="checkout-return-home">Return to PHILEON</Link>
+          <Link to="/shop?category=rings" className="text-[10px] tracking-[0.28em] text-white/30 hover:text-white/60 uppercase">Continue browsing Fine Jewelry</Link>
         </div>
       </div>
     </div>
   );
-};
-
-export default CheckoutSuccess;
+}
