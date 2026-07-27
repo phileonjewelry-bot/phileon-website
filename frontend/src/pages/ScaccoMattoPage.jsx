@@ -11,7 +11,9 @@ import { useAddToCart } from "@/hooks/useAddToCart";
 
 const BASE = "/fine-jewelry/scacco-matto";
 const HERO_VIDEO_SRC = `${BASE}/hero-video.mp4`;
+const HERO_VIDEO_SRC_WHITE = `${BASE}/hero-video-white.mp4`;
 const HERO_VIDEO_POSTER = `${BASE}/hero-three-quarter.png`;
+const HERO_VIDEO_POSTER_WHITE = `${BASE}/white-hero-three-quarter.png`;
 
 const YELLOW_GALLERY = [
   { src: `${BASE}/hero-three-quarter.png`,        alt: "SCACCO MATTO yellow-gold upright three-quarter view" },
@@ -71,9 +73,9 @@ export default function ScaccoMattoPage() {
   useEffect(() => {
     const v = heroVideoRef.current;
     if (!v || reducedMotion) return;
-    try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; } catch (_e) { /* no-op */ }
+    try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; v.currentTime = 0; } catch (_e) { /* no-op */ }
     v.play().catch(() => {});
-  }, [reducedMotion]);
+  }, [reducedMotion, colour]);
 
   useEffect(() => {
     document.title = "SCACCO MATTO | PHILEON Fine Jewelry";
@@ -163,11 +165,15 @@ export default function ScaccoMattoPage() {
         </Link>
       </div>
 
-      {/* HERO VIDEO — landscape, silent, autoplay, loop; poster fallback + reduced-motion aware */}
+      {/* HERO VIDEO — landscape, silent, autoplay, loop; poster fallback + reduced-motion aware.
+          Video + poster swap by selected colour. React key={colour} forces remount so the
+          newly selected video restarts from frame 0 and the previous video is unmounted (paused). */}
       <section
         className="max-w-[1100px] mx-auto px-5 md:px-8 mt-4 md:mt-6"
         data-testid="sm-hero-video-section"
-        aria-label="SCACCO MATTO yellow-gold sapphire ring campaign film"
+        aria-label={colour === "white"
+          ? "SCACCO MATTO white-gold sapphire ring campaign film"
+          : "SCACCO MATTO yellow-gold sapphire ring campaign film"}
       >
         <div
           className="relative w-full bg-black overflow-hidden"
@@ -175,16 +181,20 @@ export default function ScaccoMattoPage() {
         >
           {reducedMotion ? (
             <img
-              src={HERO_VIDEO_POSTER}
-              alt="SCACCO MATTO — full ring hero (poster fallback for reduced motion)"
+              key={`hero-poster-${colour}`}
+              src={colour === "white" ? HERO_VIDEO_POSTER_WHITE : HERO_VIDEO_POSTER}
+              alt={colour === "white"
+                ? "SCACCO MATTO white-gold — full ring hero (poster fallback for reduced motion)"
+                : "SCACCO MATTO yellow-gold — full ring hero (poster fallback for reduced motion)"}
               className="absolute inset-0 w-full h-full object-contain"
               data-testid="sm-hero-video-poster"
             />
           ) : (
             <video
+              key={`hero-video-${colour}`}
               ref={heroVideoRef}
-              src={HERO_VIDEO_SRC}
-              poster={HERO_VIDEO_POSTER}
+              src={colour === "white" ? HERO_VIDEO_SRC_WHITE : HERO_VIDEO_SRC}
+              poster={colour === "white" ? HERO_VIDEO_POSTER_WHITE : HERO_VIDEO_POSTER}
               autoPlay
               loop
               muted
@@ -193,7 +203,9 @@ export default function ScaccoMattoPage() {
               disablePictureInPicture
               disableRemotePlayback
               preload="metadata"
-              aria-label="SCACCO MATTO yellow-gold sapphire ring campaign film"
+              aria-label={colour === "white"
+                ? "SCACCO MATTO white-gold sapphire ring campaign film"
+                : "SCACCO MATTO yellow-gold sapphire ring campaign film"}
               className="absolute inset-0 w-full h-full object-contain"
               data-testid="sm-hero-video"
             />
