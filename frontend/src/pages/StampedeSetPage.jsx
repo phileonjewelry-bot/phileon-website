@@ -8,15 +8,22 @@ const WORN_SET   = "/inspiration-vault/stampede-set/worn-set.png";
 const BANGLE_BLK = "/inspiration-vault/stampede-set/bangle-black.jpg";
 const BANGLE_WHT = "/inspiration-vault/stampede-set/bangle-white-pedestal.png";
 const RING_BLK   = "/inspiration-vault/stampede-set/ring-black.jpg";
+const VIDEO_1    = "/inspiration-vault/stampede-set/video-1.mp4";
+const VIDEO_1_POSTER = "/inspiration-vault/stampede-set/video-1-poster.jpg";
+const VIDEO_2    = "/inspiration-vault/stampede-set/video-2.mp4";
+const VIDEO_2_POSTER = "/inspiration-vault/stampede-set/video-2-poster.jpg";
 const PRICE = 150;
 
 // Approved gallery order:
 // 1) Worn set  2) Bangle on black  3) Bangle on white pedestal  4) Ring on black
+// 5) Silent product motion #1  6) Silent product motion #2
 const GALLERY = [
-  { src: WORN_SET,   alt: "STAMPEDE SET pavé ring and matching bangle worn together" },
-  { src: BANGLE_BLK, alt: "STAMPEDE SET pavé hinged bangle on black background" },
-  { src: BANGLE_WHT, alt: "STAMPEDE SET pavé hinged bangle resting on a white pedestal" },
-  { src: RING_BLK,   alt: "STAMPEDE SET matching pavé statement ring on black background" },
+  { type: "image", src: WORN_SET,   alt: "STAMPEDE SET pavé ring and matching bangle worn together" },
+  { type: "image", src: BANGLE_BLK, alt: "STAMPEDE SET pavé hinged bangle on black background" },
+  { type: "image", src: BANGLE_WHT, alt: "STAMPEDE SET pavé hinged bangle resting on a white pedestal" },
+  { type: "image", src: RING_BLK,   alt: "STAMPEDE SET matching pavé statement ring on black background" },
+  { type: "video", src: VIDEO_1, poster: VIDEO_1_POSTER, alt: "STAMPEDE SET silent product motion — study one" },
+  { type: "video", src: VIDEO_2, poster: VIDEO_2_POSTER, alt: "STAMPEDE SET silent product motion — study two" },
 ];
 
 export default function StampedeSetPage() {
@@ -131,7 +138,26 @@ export default function StampedeSetPage() {
 
         <div className="ss-gallery" data-testid="ss-gallery">
           <div className="ss-main" data-testid="ss-gallery-main">
-            <img src={GALLERY[idx].src} alt={GALLERY[idx].alt} data-testid="ss-gallery-image" />
+            {GALLERY[idx].type === "video" ? (
+              <video
+                key={`ss-video-${idx}`}
+                src={GALLERY[idx].src}
+                poster={GALLERY[idx].poster}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
+                preload="metadata"
+                aria-label={GALLERY[idx].alt}
+                data-testid="ss-gallery-video"
+                ref={(v) => { if (v) { try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; v.play().catch(()=>{}); } catch(_e) { /* no-op */ } } }}
+              />
+            ) : (
+              <img src={GALLERY[idx].src} alt={GALLERY[idx].alt} data-testid="ss-gallery-image" />
+            )}
             <button type="button" className="ss-nav prev" onClick={prev} aria-label="Previous image" data-testid="ss-prev"><ChevronLeft size={20}/></button>
             <button type="button" className="ss-nav next" onClick={next} aria-label="Next image" data-testid="ss-next"><ChevronRight size={20}/></button>
           </div>
@@ -142,11 +168,11 @@ export default function StampedeSetPage() {
                 key={i}
                 onClick={() => setIdx(i)}
                 className={`ss-thumb ${i === idx ? "active" : ""}`}
-                aria-label={`Show image ${i + 1}: ${g.alt}`}
+                aria-label={`Show ${g.type === "video" ? "video" : "image"} ${i + 1}: ${g.alt}`}
                 aria-pressed={i === idx}
                 data-testid={`ss-thumb-${i + 1}`}
               >
-                <img src={g.src} alt="" loading="lazy" />
+                <img src={g.type === "video" ? g.poster : g.src} alt="" loading="lazy" />
               </button>
             ))}
           </div>
