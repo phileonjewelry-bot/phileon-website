@@ -57,6 +57,7 @@ export const CartProvider = ({ children }) => {
       karat: product.karat || null,
       metalColour: product.metalColour || null,
       ringSize: product.ringSize || null,
+      gemstones: product.gemstones || null,
     };
 
     setItems(prevItems => {

@@ -36,12 +36,12 @@ const WHITE_GALLERY = [
   { src: `${BASE}/white-lifestyle-hand.jpg`,           alt: "SCACCO MATTO white-gold ring worn on a hand — lifestyle" },
 ];
 
-// USD price map — public storefront only. No CAD, no internal costing.
+// USD price map — public storefront only. Approved lab-grown sapphire pricing.
 const PRICE_MAP = {
-  "10K|yellow": 8100,
-  "14K|yellow": 8500,
-  "10K|white":  8300,
-  "14K|white":  8700,
+  "10K|yellow": 3900,
+  "14K|yellow": 4300,
+  "10K|white":  4100,
+  "14K|white":  4500,
 };
 const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 const SIZE_OPTIONS = ["4","4.5","5","5.5","6","6.5","7","7.5","8","8.5","9","9.5","10","10.5","11","11.5","12","custom"];
@@ -115,7 +115,8 @@ export default function ScaccoMattoPage() {
       quantity: 1,
       slug: "scacco-matto",
       image: GALLERY[0].src,
-      materials: ["Natural Blue Sapphires", "Natural Yellow Sapphires", `${karat} ${colourLabel}`],
+      materials: ["Lab-Grown Blue Sapphires", "Lab-Grown Yellow Sapphires", `${karat} ${colourLabel}`],
+      gemstones: "Lab-Grown Blue & Yellow Sapphires",
       karat,
       metalColour: colourLabel,
       ringSize: ringSizeLabel(size),
@@ -300,7 +301,7 @@ export default function ScaccoMattoPage() {
           {/* Description */}
           <div className="mt-10 space-y-4">
             <p className="text-[15px] text-white/60 leading-[1.6]">
-              SCACCO MATTO brings natural blue and yellow sapphires together in a continuous sequence of square and circular stations. Each gemstone is framed in gold, creating a repeating pattern that carries around the entire band.
+              SCACCO MATTO brings lab-grown blue and yellow sapphires together in a continuous sequence of square and circular stations. Each gemstone is framed in gold, creating a repeating pattern that carries around the entire band.
             </p>
             <p className="text-[15px] text-white/60 leading-[1.6]">
               Cool blue and golden-yellow tones meet through bold geometry, open-sided detailing and a composition designed to be seen from every angle.
@@ -339,7 +340,7 @@ export default function ScaccoMattoPage() {
             <p className="text-[9px] tracking-[0.4em] text-white/25 mb-2">RING</p>
             <h1 className="text-[32px] tracking-[0.015em] font-light text-white/90 mb-1">SCACCO MATTO</h1>
             <p className="text-white/40 text-[14px]">Geometric Gemstone Band</p>
-            <p className="text-white/35 text-[13px] mt-1">Natural Blue &amp; Yellow Sapphires</p>
+            <p className="text-white/35 text-[13px] mt-1">Lab-Grown Blue &amp; Yellow Sapphires</p>
 
             <p className="text-[34px] tracking-[0.015em] font-light text-white/90 mt-6">{formatUsd(priceUsd)}</p>
 
@@ -385,7 +386,7 @@ export default function ScaccoMattoPage() {
 
             <div className="mt-8 border-t border-white/[0.04] pt-6 space-y-3">
               <p className="text-[13px] text-white/55 leading-[1.65]">
-                SCACCO MATTO brings natural blue and yellow sapphires together in a continuous sequence of square and circular stations. Each gemstone is framed in gold, creating a repeating pattern that carries around the entire band.
+                SCACCO MATTO brings lab-grown blue and yellow sapphires together in a continuous sequence of square and circular stations. Each gemstone is framed in gold, creating a repeating pattern that carries around the entire band.
               </p>
               <p className="text-[13px] text-white/55 leading-[1.65]">
                 Cool blue and golden-yellow tones meet through bold geometry, open-sided detailing and a composition designed to be seen from every angle.

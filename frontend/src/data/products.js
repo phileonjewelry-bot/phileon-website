@@ -3126,12 +3126,12 @@ export const catalogProducts = [
     name: 'SCACCO MATTO',
     slug: 'scacco-matto',
     subtitle: 'Geometric Gemstone Band',
-    materialLine: 'PHILEON Fine Jewelry · Rings · Natural Blue & Yellow Sapphires · 10K–14K Yellow Gold',
+    materialLine: 'PHILEON Fine Jewelry · Rings · Lab-Grown Blue & Yellow Sapphires · 10K–14K Yellow or White Gold',
     // Card asset — approved upright three-quarter view on dark background.
     imageUrl: '/fine-jewelry/scacco-matto/hero-three-quarter.png',
     href: '/scacco-matto',
-    // Public storefront pricing — USD only. Internal CAD costing is not published.
-    price_range: 'From $8,100 USD',
+    // Public storefront pricing — USD only, approved lab-grown sapphire tier.
+    price_range: 'From $3,900 USD',
     inventory_count: 100,
     is_core: true,
     category: 'rings',
