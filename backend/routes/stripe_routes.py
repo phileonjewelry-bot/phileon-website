@@ -38,7 +38,10 @@ def _pname(p):
 
 @router.post("/create-payment-intent")
 async def create_payment_intent(payment_data: Dict[str, Any]):
-    """Create Stripe Payment Intent for card payments"""
+    """DEPRECATED — insecure, trusted browser prices. Disabled 2026-07-27."""
+    raise HTTPException(status_code=410, detail={
+        "code": "LEGACY_ENDPOINT_DISABLED",
+        "message": "This endpoint has been removed. Use POST /api/checkout/stripe/session instead."})
     try:
         # Extract cart items and calculate amount
         items = payment_data.get("items", [])
@@ -80,7 +83,10 @@ async def create_payment_intent(payment_data: Dict[str, Any]):
 
 @router.post("/create-checkout-session")
 async def create_checkout_session(session_data: Dict[str, Any]):
-    """Create Stripe Checkout Session for comprehensive payment methods with inventory validation"""
+    """DEPRECATED — insecure, trusted browser prices. Disabled 2026-07-27."""
+    raise HTTPException(status_code=410, detail={
+        "code": "LEGACY_ENDPOINT_DISABLED",
+        "message": "This endpoint has been removed. Use POST /api/checkout/stripe/session instead."})
     try:
         items = session_data.get("items", [])
         success_url = session_data.get("success_url", "https://yourdomain.com/success")
@@ -193,55 +199,10 @@ async def create_checkout_session(session_data: Dict[str, Any]):
 
 @router.post("/confirm-payment")
 async def confirm_payment(payment_data: Dict[str, Any]):
-    """Confirm payment and create order"""
-    try:
-        payment_intent_id = payment_data.get("payment_intent_id")
-        email = payment_data.get("email")
-        items = payment_data.get("items", [])
-        shipping_address = payment_data.get("shippingAddress", {})
-        
-        # Retrieve payment intent from Stripe
-        intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-        
-        if intent.status == "succeeded":
-            # Create order in database
-            db = get_db()
-            
-            subtotal = sum(item["price"] * item["quantity"] for item in items)
-            shipping_cost = 0.0 if subtotal >= 100 else (15.0 if shipping_address.get("country") == "USA" else 35.0)
-            
-            order = Order(
-                id=str(uuid.uuid4()),
-                email=email,
-                items=[OrderItem(**item) for item in items],
-                shippingAddress=Address(**shipping_address),
-                subtotal=subtotal,
-                shippingCost=shipping_cost,
-                total=subtotal + shipping_cost,
-                paymentMethod="card",
-                paymentStatus="completed",
-                paymentIntentId=payment_intent_id,
-                orderStatus="confirmed",
-                createdAt=datetime.utcnow(),
-                updatedAt=datetime.utcnow()
-            )
-            
-            await db.orders.insert_one(order.dict())
-            
-            return {
-                "success": True,
-                "order_id": order.id,
-                "message": "Payment confirmed and order created"
-            }
-        else:
-            raise HTTPException(status_code=400, detail="Payment not completed")
-            
-    except stripe.error.StripeError as e:
-        logger.error(f"Stripe error: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Stripe error: {str(e)}")
-    except Exception as e:
-        logger.error(f"Error confirming payment: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+    """DEPRECATED — payment confirmation now handled exclusively via signed Stripe webhooks."""
+    raise HTTPException(status_code=410, detail={
+        "code": "LEGACY_ENDPOINT_DISABLED",
+        "message": "Payment confirmation is now handled server-side via signed webhooks."})
 
 @router.get("/session/{session_id}")
 async def get_checkout_session(session_id: str):

@@ -732,6 +732,12 @@ app.include_router(orders_router, prefix="/api")
 # app.include_router(customer_photos_router, prefix="/api")  # Temporarily disabled - missing models
 app.include_router(restock_router, prefix="/api")
 app.include_router(stripe_router, prefix="/api")
+
+# Phase 1 — secure checkout foundation (SCACCO MATTO pilot)
+from routes.checkout import router as checkout_v2_router
+from routes.webhooks_stripe import router as webhooks_stripe_router
+app.include_router(checkout_v2_router, prefix="/api")
+app.include_router(webhooks_stripe_router, prefix="/api")
 app.include_router(metals_router)
 
 app.add_middleware(
