@@ -4,17 +4,23 @@ import { ArrowLeft } from "lucide-react";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
-const HERO         = "/inspiration-vault/parallax-drop-earrings/hero-bust-pair.png";
-const DETAIL_CLOSE = "/inspiration-vault/parallax-drop-earrings/detail-close.png";
-const ON_EAR       = "/inspiration-vault/parallax-drop-earrings/on-ear-profile.png";
-const FILM_ONE     = "/inspiration-vault/parallax-drop-earrings/film-one.mp4";
-const FILM_TWO     = "/inspiration-vault/parallax-drop-earrings/film-two.mp4";
+const HERO           = "/inspiration-vault/parallax-drop-earrings/hero-bust-pair.png";
+const DETAIL_CLOSE   = "/inspiration-vault/parallax-drop-earrings/detail-close.png";
+const ON_EAR         = "/inspiration-vault/parallax-drop-earrings/on-ear-profile.png";
+const PAIR_SUSPENDED = "/inspiration-vault/parallax-drop-earrings/pair-suspended.png";
+const WORN_DAYTIME   = "/inspiration-vault/parallax-drop-earrings/worn-daytime.png";
+const WORN_EVENING   = "/inspiration-vault/parallax-drop-earrings/worn-evening.png";
+const FILM_ONE       = "/inspiration-vault/parallax-drop-earrings/film-one.mp4";
+const FILM_TWO       = "/inspiration-vault/parallax-drop-earrings/film-two.mp4";
 const PRICE = 70;
 
 const GALLERY = [
-  { type: "image", src: HERO,         alt: "PARALLAX gold-plated silver drop earrings displayed as a pair" },
-  { type: "image", src: DETAIL_CLOSE, alt: "PARALLAX synthetic bi-colour drop earring close-up" },
-  { type: "image", src: ON_EAR,       alt: "PARALLAX long geometric drop earring shown on a black display bust" },
+  { type: "image", src: HERO,           alt: "PARALLAX gold-plated silver drop earrings displayed as a pair" },
+  { type: "image", src: DETAIL_CLOSE,   alt: "PARALLAX synthetic bi-colour drop earring close-up" },
+  { type: "image", src: ON_EAR,         alt: "PARALLAX long geometric drop earring shown on a black display bust" },
+  { type: "image", src: PAIR_SUSPENDED, alt: "PARALLAX pair suspended on a display arc — full length silhouette" },
+  { type: "image", src: WORN_DAYTIME,   alt: "PARALLAX drop earring worn — daytime restaurant editorial" },
+  { type: "image", src: WORN_EVENING,   alt: "PARALLAX drop earring worn — evening dining editorial" },
   { type: "video", src: FILM_ONE, alt: "PARALLAX drop earrings — silent product motion, study one" },
   { type: "video", src: FILM_TWO, alt: "PARALLAX drop earrings — silent product motion, study two" },
 ];
