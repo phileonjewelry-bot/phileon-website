@@ -95,6 +95,7 @@ import NovaPage from "@/pages/NovaPage";
 import DrivenPage from "@/pages/DrivenPage";
 import StampedeSetPage from "@/pages/StampedeSetPage";
 import NightfangSetPage from "@/pages/NightfangSetPage";
+import ParallaxDropEarringsPage from "@/pages/ParallaxDropEarringsPage";
 import RibbonRegalePage from "@/pages/RibbonRegalePage";
 import ScaccoMattoPage from "@/pages/ScaccoMattoPage";
 import TributeSeriesPage from "@/pages/TributeSeriesPage";
@@ -286,6 +287,8 @@ function App() {
             <Route path="/stampede-set" element={<StampedeSetPage />} />
             <Route path="/inspiration-vault/nightfang-set" element={<NightfangSetPage />} />
             <Route path="/nightfang-set" element={<NightfangSetPage />} />
+            <Route path="/inspiration-vault/parallax-drop-earrings" element={<ParallaxDropEarringsPage />} />
+            <Route path="/parallax-drop-earrings" element={<ParallaxDropEarringsPage />} />
             <Route path="/inspiration-vault/gold-theory-ribbon" element={<RibbonRegalePage />} />
             <Route path="/inspiration-vault/ribbon-regale" element={<RibbonRegalePage />} />
             <Route path="/scacco-matto" element={<ScaccoMattoPage />} />

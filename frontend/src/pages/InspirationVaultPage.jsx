@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "parallax-drop-earrings",
+    title: "PARALLAX DROP EARRINGS",
+    subtitle: "Geometric Bi-Colour Drops",
+    price: 70,
+    href: "/inspiration-vault/parallax-drop-earrings",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/parallax-drop-earrings/hero-bust-pair.png",
+    releasedAt: "2026-07-28",
+    category: "Earrings",
+  },
+  {
     slug: "nightfang-set",
     title: "NIGHTFANG SET",
     subtitle: "Panther Ring & Bangle",
@@ -1193,14 +1204,17 @@ export default function InspirationVaultPage() {
            RIBBON REGALE, or any other Vault card.
            ───────────────────────────────────────────────────────────────── */
         .iv-card.nightfang-set-vault-card,
-        [data-testid="iv-card-nightfang-set"] {
+        [data-testid="iv-card-nightfang-set"],
+        .iv-card.parallax-drop-earrings-vault-card,
+        [data-testid="iv-card-parallax-drop-earrings"] {
           width:100%;
           height:auto !important;
           min-height:0 !important;
           max-height:none !important;
           overflow:visible !important;
         }
-        .nightfang-set-vault-card .iv-card-media {
+        .nightfang-set-vault-card .iv-card-media,
+        .parallax-drop-earrings-vault-card .iv-card-media {
           width:100%;
           height:auto !important;
           min-height:0;
@@ -1210,7 +1224,8 @@ export default function InspirationVaultPage() {
           padding:0;
           background:#000;
         }
-        .nightfang-set-vault-card .iv-card-img {
+        .nightfang-set-vault-card .iv-card-img,
+        .parallax-drop-earrings-vault-card .iv-card-img {
           display:block;
           width:100%;
           height:auto;
@@ -1219,7 +1234,8 @@ export default function InspirationVaultPage() {
           object-position:center;
           transform:none;
         }
-        .nightfang-set-vault-card .iv-card-title {
+        .nightfang-set-vault-card .iv-card-title,
+        .parallax-drop-earrings-vault-card .iv-card-title {
           width:100%;
           max-width:100%;
           height:auto;
@@ -1230,7 +1246,8 @@ export default function InspirationVaultPage() {
           font-size:clamp(30px,5.2vw,64px);
           line-height:1.02;
         }
-        .nightfang-set-vault-card .iv-card-meta {
+        .nightfang-set-vault-card .iv-card-meta,
+        .parallax-drop-earrings-vault-card .iv-card-meta {
           position:static;
           width:100%;
           height:auto !important;
@@ -1239,7 +1256,8 @@ export default function InspirationVaultPage() {
           overflow:visible !important;
           padding:34px 28px 46px;
         }
-        .nightfang-set-vault-card .iv-card-cta {
+        .nightfang-set-vault-card .iv-card-cta,
+        .parallax-drop-earrings-vault-card .iv-card-cta {
           position:static;
           display:inline-flex;
           align-items:center;
@@ -1253,37 +1271,44 @@ export default function InspirationVaultPage() {
         }
         @media (max-width:768px){
           .iv-card.nightfang-set-vault-card,
-          [data-testid="iv-card-nightfang-set"] {
+          [data-testid="iv-card-nightfang-set"],
+          .iv-card.parallax-drop-earrings-vault-card,
+          [data-testid="iv-card-parallax-drop-earrings"] {
             width:100%;
             height:auto !important;
             min-height:0 !important;
             max-height:none !important;
             overflow:visible !important;
           }
-          .nightfang-set-vault-card .iv-card-media {
+          .nightfang-set-vault-card .iv-card-media,
+          .parallax-drop-earrings-vault-card .iv-card-media {
             width:100%;
             height:auto !important;
             aspect-ratio:auto !important;
             overflow:visible !important;
           }
-          .nightfang-set-vault-card .iv-card-img {
+          .nightfang-set-vault-card .iv-card-img,
+          .parallax-drop-earrings-vault-card .iv-card-img {
             width:100%;
             height:auto;
             max-height:none;
             object-fit:contain !important;
             object-position:center;
           }
-          .nightfang-set-vault-card .iv-card-title {
+          .nightfang-set-vault-card .iv-card-title,
+          .parallax-drop-earrings-vault-card .iv-card-title {
             font-size:clamp(28px,7.4vw,44px);
             line-height:1.02;
           }
-          .nightfang-set-vault-card .iv-card-meta {
+          .nightfang-set-vault-card .iv-card-meta,
+          .parallax-drop-earrings-vault-card .iv-card-meta {
             height:auto !important;
             max-height:none !important;
             overflow:visible !important;
             padding:30px 22px 46px;
           }
-          .nightfang-set-vault-card .iv-card-cta {
+          .nightfang-set-vault-card .iv-card-cta,
+          .parallax-drop-earrings-vault-card .iv-card-cta {
             display:inline-flex !important;
             opacity:1 !important;
             visibility:visible !important;
@@ -1483,7 +1508,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'nightfang-set' ? 'nightfang-set-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'nightfang-set' ? 'nightfang-set-vault-card' : ''} ${piece.slug === 'parallax-drop-earrings' ? 'parallax-drop-earrings-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
