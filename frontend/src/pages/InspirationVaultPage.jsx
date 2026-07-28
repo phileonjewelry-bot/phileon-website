@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "nightfang-set",
+    title: "NIGHTFANG SET",
+    subtitle: "Panther Ring & Bangle",
+    price: 185,
+    href: "/inspiration-vault/nightfang-set",
+    heroVideo: null,
+    posterImage: "/inspiration-vault/nightfang-set/hero-marble-set.png",
+    releasedAt: "2026-07-28",
+    category: "Sets",
+  },
+  {
     slug: "gold-theory-ribbon",
     title: "RIBBON REGALE",
     subtitle: "Sculptural Earrings",

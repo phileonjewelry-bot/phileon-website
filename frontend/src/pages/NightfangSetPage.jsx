@@ -1,0 +1,244 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
+import { useAddToCart } from "@/hooks/useAddToCart";
+
+const HERO         = "/inspiration-vault/nightfang-set/hero-marble-set.png";
+const ON_BODY      = "/inspiration-vault/nightfang-set/on-body.png";
+const RING_DETAIL1 = "/inspiration-vault/nightfang-set/ring-detail-01.png";
+const RING_DETAIL2 = "/inspiration-vault/nightfang-set/ring-detail-02.png";
+const RING_DETAIL3 = "/inspiration-vault/nightfang-set/ring-detail-03.png";
+const RING_DETAIL4 = "/inspiration-vault/nightfang-set/ring-detail-04.png";
+const VIDEO_1      = "/inspiration-vault/nightfang-set/video-1.mp4";
+const VIDEO_2      = "/inspiration-vault/nightfang-set/video-2.mp4";
+const VIDEO_3      = "/inspiration-vault/nightfang-set/video-3.mp4";
+const VIDEO_4      = "/inspiration-vault/nightfang-set/video-4.mp4";
+const PRICE = 185;
+
+// Approved gallery order:
+// 1) Hero (marble two-piece)  2) On-body (bangle + ring worn together)
+// 3-6) Ring detail studies    7-10) Silent product motion (all four)
+const GALLERY = [
+  { type: "image", src: HERO,         alt: "NIGHTFANG SET black enamel panther ring and bangle displayed together on a black-and-gold marble platform" },
+  { type: "image", src: ON_BODY,      alt: "NIGHTFANG SET panther ring worn on the hand alongside the matching panther bangle around the wrist" },
+  { type: "image", src: RING_DETAIL1, alt: "NIGHTFANG SET black enamel panther ring — three-quarter close-up with green synthetic emerald eye" },
+  { type: "image", src: RING_DETAIL2, alt: "NIGHTFANG SET black enamel panther ring — side profile detail with green synthetic emerald eye" },
+  { type: "image", src: RING_DETAIL3, alt: "NIGHTFANG SET black enamel panther ring — reverse view highlighting the sculpted head and pavé stones" },
+  { type: "image", src: RING_DETAIL4, alt: "NIGHTFANG SET black enamel panther ring — angled side view of the panther head" },
+  { type: "video", src: VIDEO_1, poster: RING_DETAIL1, alt: "NIGHTFANG SET silent product motion — study one" },
+  { type: "video", src: VIDEO_2, poster: RING_DETAIL2, alt: "NIGHTFANG SET silent product motion — study two" },
+  { type: "video", src: VIDEO_3, poster: RING_DETAIL3, alt: "NIGHTFANG SET silent product motion — study three" },
+  { type: "video", src: VIDEO_4, poster: RING_DETAIL4, alt: "NIGHTFANG SET silent product motion — study four" },
+];
+
+export default function NightfangSetPage() {
+  useLuxuryMotionObserver();
+  const [idx, setIdx] = useState(0);
+  const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+
+  useEffect(() => {
+    setIdx(0);
+    document.title = "NIGHTFANG SET | Panther Ring & Bangle | PHILEON";
+    const upsert = (attr, val, content) => {
+      let el = document.querySelector(`meta[${attr}="${val}"]`);
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, val); document.head.appendChild(el); }
+      el.setAttribute("content", content);
+    };
+    upsert("name", "description",
+      "Discover NIGHTFANG, a coordinated black enamel panther ring and bangle set finished with black synthetic stones and green synthetic emerald eyes.");
+    upsert("property", "og:title", "NIGHTFANG SET | Panther Ring & Bangle | PHILEON");
+    upsert("property", "og:image", `${window.location.origin}${HERO}`);
+  }, []);
+
+  const prev = () => setIdx((i) => (i - 1 + GALLERY.length) % GALLERY.length);
+  const next = () => setIdx((i) => (i + 1) % GALLERY.length);
+
+  const onAddToCart = () => {
+    handleAddToCart({
+      id: "inspiration-vault-nightfang-set",
+      productName: "NIGHTFANG SET",
+      name: "NIGHTFANG SET — Panther Ring & Panther Bangle",
+      category: "Inspiration Vault — Sets",
+      includes: "Ring & Bangle",
+      price: PRICE,
+      productKey: "inspirationVaultNightfangSet",
+      tierKey: "default",
+      sku: "IV-NIGHTFANG-SET",
+      quantity: 1,
+      image: HERO,
+    }, 1, "Set of Two · Panther Ring & Panther Bangle");
+  };
+
+  return (
+    <div className="nf-page" data-testid="nightfang-set-page">
+      <LuxuryMotionStyles />
+      <style>{`
+        .nf-page { background:#0a0908; color:#e8e0cf; font-family:'Cormorant Garamond',serif; min-height:100vh; }
+        .nf-return { display:inline-flex; align-items:center; gap:10px; padding:18px 26px;
+          font-family:'Cinzel',serif; font-size:11px; letter-spacing:.42em;
+          color:rgba(232,224,207,.55); text-decoration:none; text-transform:uppercase;
+          transition:color 220ms ease,gap 220ms ease; }
+        .nf-return:hover { color:#c8a24a; gap:16px; }
+        .nf-wrap { max-width:1180px; margin:0 auto; padding:32px clamp(20px,4vw,60px) 120px; }
+        .nf-eyebrow { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.6em;
+          color:#c8a24a; text-transform:uppercase; margin:0 0 16px; text-align:center; }
+        .nf-title { font-family:'Cinzel',serif; font-weight:500;
+          font-size:clamp(36px,5.6vw,72px); letter-spacing:.16em; text-align:center;
+          margin:0 0 12px; color:#f4ecd6; text-transform:uppercase; }
+        .nf-subtitle { font-family:'Playfair Display',serif; font-style:italic;
+          font-size:clamp(18px,2vw,26px); text-align:center; color:#c8a24a;
+          margin:0 0 40px; }
+        .nf-gallery { position:relative; margin:0 auto 40px; max-width:900px; }
+        .nf-main { position:relative; width:100%; aspect-ratio:1/1; background:#111;
+          border:1px solid rgba(200,162,74,.22); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .nf-main img, .nf-main video { width:100%; height:100%; object-fit:contain; object-position:center; display:block; background:#111; }
+        .nf-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(10,9,8,.75);
+          border:1px solid rgba(200,162,74,.35); color:#f4ecd6; width:44px; height:44px;
+          display:flex; align-items:center; justify-content:center; cursor:pointer;
+          transition:background 220ms ease,color 220ms ease; }
+        .nf-nav:hover { background:#c8a24a; color:#0a0908; }
+        .nf-nav.prev { left:12px; } .nf-nav.next { right:12px; }
+        .nf-thumbs { display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
+          gap:10px; margin-top:14px; }
+        @media (max-width:640px) {
+          .nf-thumbs { grid-template-columns:repeat(4,minmax(0,1fr)); }
+        }
+        .nf-thumb { border:1px solid rgba(200,162,74,.18); background:#111; padding:0;
+          aspect-ratio:1/1; cursor:pointer; overflow:hidden;
+          transition:border-color 220ms ease,transform 220ms ease; position:relative; }
+        .nf-thumb:hover { border-color:#c8a24a; transform:translateY(-2px); }
+        .nf-thumb.active { border-color:#c8a24a; }
+        .nf-thumb img { width:100%; height:100%; object-fit:contain; background:#111; }
+        .nf-thumb-video-badge { position:absolute; bottom:6px; right:6px;
+          font-family:'Cinzel',serif; font-size:8px; letter-spacing:.24em;
+          padding:3px 6px; background:rgba(10,9,8,.85); color:#c8a24a;
+          border:1px solid rgba(200,162,74,.4); pointer-events:none; }
+        .nf-body { max-width:720px; margin:56px auto 0; text-align:center; }
+        .nf-body h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,36px);
+          margin:0 0 20px; color:#f4ecd6; }
+        .nf-body p { font-size:clamp(17px,1.5vw,20px); line-height:1.7; color:#d6cdb6; margin:0 0 16px; }
+        .nf-material { display:block; max-width:600px; margin:24px auto 0;
+          font-family:'Cormorant Garamond',serif; font-size:15px; letter-spacing:.08em;
+          color:rgba(232,224,207,.7); text-transform:none; }
+        .nf-includes { display:inline-block; margin-top:24px; padding:12px 26px;
+          border:1px solid rgba(200,162,74,.35);
+          font-family:'Cinzel',serif; font-size:11px; letter-spacing:.34em;
+          color:#c8a24a; text-transform:uppercase; }
+        .nf-notice { max-width:640px; margin:44px auto 0; text-align:center;
+          font-family:'Cormorant Garamond',serif; font-style:italic;
+          font-size:15px; color:rgba(232,224,207,.55); line-height:1.6; }
+        .nf-cta { text-align:center; max-width:520px; margin:56px auto 0;
+          padding-top:44px; border-top:1px solid rgba(200,162,74,.18); }
+        .nf-price { font-family:'Cinzel',serif; font-size:clamp(22px,2.4vw,32px);
+          letter-spacing:.28em; color:#f4ecd6; margin:0 0 8px; }
+        .nf-price-note { font-family:'Cormorant Garamond',serif; font-style:italic;
+          font-size:14px; letter-spacing:.06em; color:rgba(232,224,207,.55); margin:0 0 26px; }
+        .nf-add-btn { display:inline-flex; align-items:center; justify-content:center;
+          padding:18px 64px; border:1.5px solid #c8a24a; background:transparent;
+          font-family:'Cinzel',serif; font-size:12px; letter-spacing:.42em;
+          color:#f4ecd6; text-transform:uppercase; cursor:pointer;
+          transition:background 320ms ease,color 320ms ease,transform 220ms ease; }
+        .nf-add-btn:hover:not(:disabled) { background:#c8a24a; color:#0a0908; transform:translateY(-2px); }
+        .nf-add-btn:disabled { opacity:.6; cursor:wait; }
+      `}</style>
+
+      <Link to="/inspiration-vault?category=sets" className="nf-return" data-testid="nf-return">
+        <ArrowLeft size={14} /> RETURN TO VAULT
+      </Link>
+
+      <div className="nf-wrap">
+        <p className="nf-eyebrow">Inspiration Vault · Sets</p>
+        <h1 className="nf-title" data-testid="nf-title">NIGHTFANG SET</h1>
+        <p className="nf-subtitle">Panther Ring &amp; Bangle</p>
+
+        <div className="nf-gallery" data-testid="nf-gallery">
+          <div className="nf-main" data-testid="nf-gallery-main">
+            {GALLERY[idx].type === "video" ? (
+              <video
+                key={`nf-video-${idx}`}
+                src={GALLERY[idx].src}
+                poster={GALLERY[idx].poster}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
+                preload="metadata"
+                aria-label={GALLERY[idx].alt}
+                data-testid="nf-gallery-video"
+                ref={(v) => { if (v) { try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; v.play().catch(()=>{}); } catch(_e) { /* no-op */ } } }}
+              />
+            ) : (
+              <img
+                src={GALLERY[idx].src}
+                alt={GALLERY[idx].alt}
+                data-testid="nf-gallery-image"
+                loading={idx === 0 ? "eager" : "lazy"}
+              />
+            )}
+            <button type="button" className="nf-nav prev" onClick={prev} aria-label="Previous image" data-testid="nf-prev"><ChevronLeft size={20}/></button>
+            <button type="button" className="nf-nav next" onClick={next} aria-label="Next image" data-testid="nf-next"><ChevronRight size={20}/></button>
+          </div>
+          <div className="nf-thumbs" data-testid="nf-gallery-thumbs">
+            {GALLERY.map((g, i) => (
+              <button
+                type="button"
+                key={i}
+                onClick={() => setIdx(i)}
+                className={`nf-thumb ${i === idx ? "active" : ""}`}
+                aria-label={`Show ${g.type === "video" ? "video" : "image"} ${i + 1}: ${g.alt}`}
+                aria-pressed={i === idx}
+                data-testid={`nf-thumb-${i + 1}`}
+              >
+                <img src={g.type === "video" ? g.poster : g.src} alt="" loading="lazy" />
+                {g.type === "video" && <span className="nf-thumb-video-badge">FILM</span>}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="nf-body">
+          <h2>A matched panther pairing, sealed in shadow.</h2>
+          <p>
+            NIGHTFANG enters as a matched panther ring and bangle set, finished
+            in black enamel and covered in black synthetic stones. Green
+            synthetic emerald eyes cut through the darkness, while the circular
+            details connect both pieces through one unmistakable design
+            language.
+          </p>
+          <p>
+            <em>Created to be worn together. Sold only as a complete set.</em>
+          </p>
+          <span className="nf-material" data-testid="nf-material">
+            Black Enamel-Finished Metal · Black Synthetic Stones · Green Synthetic Emerald Eyes
+          </span>
+          <p className="nf-includes" data-testid="nf-includes">Includes One Ring + One Bangle</p>
+        </div>
+
+        <p className="nf-notice" data-testid="nf-notice">
+          Part of the PHILEON Inspiration Vault. Crafted in enamel-finished
+          metal with synthetic stones. This set is not part of the PHILEON Fine
+          Jewelry collection.
+        </p>
+
+        <div className="nf-cta" data-testid="nf-cta">
+          <p className="nf-price" data-testid="nf-price">${PRICE} USD</p>
+          <p className="nf-price-note">Inspiration Vault · Set of Two</p>
+          <button
+            type="button"
+            onClick={onAddToCart}
+            disabled={isAdding}
+            className="nf-add-btn"
+            aria-label="Add NIGHTFANG SET to cart"
+            data-testid="nf-add-to-cart"
+          >
+            {buttonText || "ADD TO CART"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
