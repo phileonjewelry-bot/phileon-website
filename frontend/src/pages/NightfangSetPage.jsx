@@ -167,14 +167,27 @@ export default function NightfangSetPage() {
                       if (v.dataset.ioAttached === "1") return;
                       v.dataset.ioAttached = "1";
                       const kick = () => {
+                        // Some browsers (notably Chrome with isom-brand H.264)
+                        // drop the intrinsic <video loop> when the video is
+                        // paused by IntersectionObserver mid-play — the file
+                        // plays once and stalls at ended=true. Force a rewind
+                        // whenever the video has ended so loop works reliably.
+                        if (v.ended || v.currentTime >= (v.duration || 0) - 0.05) {
+                          try { v.currentTime = 0; } catch (_e) { /* no-op */ }
+                        }
                         const p = v.play();
                         if (p && typeof p.catch === "function") {
                           p.catch(() => {
-                            // retry once after a short delay
                             setTimeout(() => { try { v.play().catch(() => {}); } catch (_e) { /* no-op */ } }, 400);
                           });
                         }
                       };
+                      // Belt-and-braces: whenever playback ends, rewind and
+                      // restart. This guarantees autoloop regardless of the
+                      // browser's handling of the `loop` attribute.
+                      v.addEventListener("ended", () => {
+                        try { v.currentTime = 0; v.play().catch(() => {}); } catch (_e) { /* no-op */ }
+                      });
                       const io = new IntersectionObserver((entries) => {
                         entries.forEach((e) => {
                           if (e.isIntersecting) {

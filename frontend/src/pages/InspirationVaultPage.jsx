@@ -436,7 +436,14 @@ export default function InspirationVaultPage() {
         }
         .iv-card-video,
         .iv-card-img {
-          position:relative;z-index:1;width:100%;height:100%;object-fit:cover;
+          position:relative;z-index:1;width:100%;height:100%;
+          /* Cover cropped luxury hero compositions (e.g. NIGHTFANG two-piece
+             marble shot, STAMPEDE pair-on-black) whose sources are square 1:1.
+             contain preserves the full composition inside the 16:10 media
+             frame; the frame background (#020100) is the same as the page,
+             so any letterboxing reads as intentional editorial breathing room
+             rather than a black bar. */
+          object-fit:contain;
           object-position:center;display:block;
           transition:transform .7s ease;
           pointer-events:none;
