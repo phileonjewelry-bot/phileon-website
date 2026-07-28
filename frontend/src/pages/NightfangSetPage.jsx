@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
@@ -10,35 +10,35 @@ const RING_DETAIL1 = "/inspiration-vault/nightfang-set/ring-detail-01.png";
 const RING_DETAIL2 = "/inspiration-vault/nightfang-set/ring-detail-02.png";
 const RING_DETAIL3 = "/inspiration-vault/nightfang-set/ring-detail-03.png";
 const RING_DETAIL4 = "/inspiration-vault/nightfang-set/ring-detail-04.png";
-const VIDEO_1      = "/inspiration-vault/nightfang-set/video-1.mp4";
-const VIDEO_2      = "/inspiration-vault/nightfang-set/video-2.mp4";
-const VIDEO_3      = "/inspiration-vault/nightfang-set/video-3.mp4";
-const VIDEO_4      = "/inspiration-vault/nightfang-set/video-4.mp4";
+const BANGLE_PROFILE      = "/inspiration-vault/nightfang-set/bangle-full-profile.png";
+const BANGLE_CONSTRUCTION = "/inspiration-vault/nightfang-set/bangle-construction.png";
+const VIDEO_1 = "/inspiration-vault/nightfang-set/video-1.mp4";
+const VIDEO_2 = "/inspiration-vault/nightfang-set/video-2.mp4";
+const VIDEO_3 = "/inspiration-vault/nightfang-set/video-3.mp4";
+const VIDEO_4 = "/inspiration-vault/nightfang-set/video-4.mp4";
 const PRICE = 185;
 
-// Approved gallery order:
-// 1) Hero (marble two-piece)  2) On-body (bangle + ring worn together)
-// 3-6) Ring detail studies    7-10) Silent product motion (all four)
+// Vertical stack — one item per row, in confirmed order.
 const GALLERY = [
-  { type: "image", src: HERO,         alt: "NIGHTFANG SET black enamel panther ring and bangle displayed together on a black-and-gold marble platform" },
-  { type: "image", src: ON_BODY,      alt: "NIGHTFANG SET panther ring worn on the hand alongside the matching panther bangle around the wrist" },
-  { type: "image", src: RING_DETAIL1, alt: "NIGHTFANG SET black enamel panther ring — three-quarter close-up with green synthetic emerald eye" },
-  { type: "image", src: RING_DETAIL2, alt: "NIGHTFANG SET black enamel panther ring — side profile detail with green synthetic emerald eye" },
-  { type: "image", src: RING_DETAIL3, alt: "NIGHTFANG SET black enamel panther ring — reverse view highlighting the sculpted head and pavé stones" },
-  { type: "image", src: RING_DETAIL4, alt: "NIGHTFANG SET black enamel panther ring — angled side view of the panther head" },
-  { type: "video", src: VIDEO_1, poster: RING_DETAIL1, alt: "NIGHTFANG SET silent product motion — study one" },
-  { type: "video", src: VIDEO_2, poster: RING_DETAIL2, alt: "NIGHTFANG SET silent product motion — study two" },
-  { type: "video", src: VIDEO_3, poster: RING_DETAIL3, alt: "NIGHTFANG SET silent product motion — study three" },
-  { type: "video", src: VIDEO_4, poster: RING_DETAIL4, alt: "NIGHTFANG SET silent product motion — study four" },
+  { type: "image", src: HERO,                alt: "NIGHTFANG SET black enamel panther ring and bangle displayed together on a black-and-gold marble platform" },
+  { type: "image", src: ON_BODY,             alt: "NIGHTFANG SET panther ring worn on the hand alongside the matching panther bangle around the wrist" },
+  { type: "image", src: RING_DETAIL1,        alt: "NIGHTFANG SET black enamel panther ring — three-quarter close-up with green synthetic emerald eye" },
+  { type: "image", src: RING_DETAIL2,        alt: "NIGHTFANG SET black enamel panther ring — side profile detail with green synthetic emerald eye" },
+  { type: "image", src: RING_DETAIL3,        alt: "NIGHTFANG SET black enamel panther ring — reverse view highlighting the sculpted head and pavé stones" },
+  { type: "image", src: RING_DETAIL4,        alt: "NIGHTFANG SET black enamel panther ring — angled side view of the panther head" },
+  { type: "image", src: BANGLE_PROFILE,      alt: "NIGHTFANG SET full-profile panther bangle upright against dark marble" },
+  { type: "image", src: BANGLE_CONSTRUCTION, alt: "NIGHTFANG SET panther bangle horizontal on a glossy black rectangular platform — construction detail" },
+  { type: "video", src: VIDEO_1, alt: "NIGHTFANG SET silent product motion — study one" },
+  { type: "video", src: VIDEO_2, alt: "NIGHTFANG SET silent product motion — study two" },
+  { type: "video", src: VIDEO_3, alt: "NIGHTFANG SET silent product motion — study three" },
+  { type: "video", src: VIDEO_4, alt: "NIGHTFANG SET silent product motion — study four" },
 ];
 
 export default function NightfangSetPage() {
   useLuxuryMotionObserver();
-  const [idx, setIdx] = useState(0);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
-    setIdx(0);
     document.title = "NIGHTFANG SET | Panther Ring & Bangle | PHILEON";
     const upsert = (attr, val, content) => {
       let el = document.querySelector(`meta[${attr}="${val}"]`);
@@ -50,9 +50,6 @@ export default function NightfangSetPage() {
     upsert("property", "og:title", "NIGHTFANG SET | Panther Ring & Bangle | PHILEON");
     upsert("property", "og:image", `${window.location.origin}${HERO}`);
   }, []);
-
-  const prev = () => setIdx((i) => (i - 1 + GALLERY.length) % GALLERY.length);
-  const next = () => setIdx((i) => (i + 1) % GALLERY.length);
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -89,38 +86,30 @@ export default function NightfangSetPage() {
         .nf-subtitle { font-family:'Playfair Display',serif; font-style:italic;
           font-size:clamp(18px,2vw,26px); text-align:center; color:#c8a24a;
           margin:0 0 40px; }
-        .nf-gallery { position:relative; margin:0 auto 40px; max-width:900px; }
-        .nf-main { position:relative; width:100%; aspect-ratio:1/1; background:#111;
+
+        /* Vertical stack gallery */
+        .nf-stack { max-width:900px; margin:0 auto 40px; display:flex; flex-direction:column; gap:clamp(18px,2.4vw,32px); }
+        .nf-frame { position:relative; width:100%; aspect-ratio:1/1; background:#111;
           border:1px solid rgba(200,162,74,.22); display:flex; align-items:center; justify-content:center; overflow:hidden; }
-        .nf-main img, .nf-main video { width:100%; height:100%; object-fit:contain; object-position:center; display:block; background:#111; }
-        .nf-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(10,9,8,.75);
-          border:1px solid rgba(200,162,74,.35); color:#f4ecd6; width:44px; height:44px;
-          display:flex; align-items:center; justify-content:center; cursor:pointer;
-          transition:background 220ms ease,color 220ms ease; }
-        .nf-nav:hover { background:#c8a24a; color:#0a0908; }
-        .nf-nav.prev { left:12px; } .nf-nav.next { right:12px; }
-        .nf-thumbs { display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
-          gap:10px; margin-top:14px; }
-        @media (max-width:640px) {
-          .nf-thumbs { grid-template-columns:repeat(4,minmax(0,1fr)); }
-        }
-        .nf-thumb { border:1px solid rgba(200,162,74,.18); background:#111; padding:0;
-          aspect-ratio:1/1; cursor:pointer; overflow:hidden;
-          transition:border-color 220ms ease,transform 220ms ease; position:relative; }
-        .nf-thumb:hover { border-color:#c8a24a; transform:translateY(-2px); }
-        .nf-thumb.active { border-color:#c8a24a; }
-        .nf-thumb img { width:100%; height:100%; object-fit:contain; background:#111; }
-        .nf-thumb-video-badge { position:absolute; bottom:6px; right:6px;
-          font-family:'Cinzel',serif; font-size:8px; letter-spacing:.24em;
-          padding:3px 6px; background:rgba(10,9,8,.85); color:#c8a24a;
-          border:1px solid rgba(200,162,74,.4); pointer-events:none; }
+        .nf-frame img, .nf-frame video { width:100%; height:100%; object-fit:contain; object-position:center; display:block; background:#111; }
+        .nf-frame-index { position:absolute; top:12px; left:14px; z-index:2;
+          font-family:'Cinzel',serif; font-size:9px; letter-spacing:.32em;
+          color:rgba(232,224,207,.55); background:rgba(10,9,8,.7);
+          padding:5px 9px; border:1px solid rgba(200,162,74,.22);
+          pointer-events:none; }
+        .nf-frame-badge { position:absolute; top:12px; right:14px; z-index:2;
+          font-family:'Cinzel',serif; font-size:9px; letter-spacing:.32em;
+          color:#c8a24a; background:rgba(10,9,8,.7);
+          padding:5px 9px; border:1px solid rgba(200,162,74,.4);
+          pointer-events:none; }
+
         .nf-body { max-width:720px; margin:56px auto 0; text-align:center; }
         .nf-body h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,36px);
           margin:0 0 20px; color:#f4ecd6; }
         .nf-body p { font-size:clamp(17px,1.5vw,20px); line-height:1.7; color:#d6cdb6; margin:0 0 16px; }
         .nf-material { display:block; max-width:600px; margin:24px auto 0;
           font-family:'Cormorant Garamond',serif; font-size:15px; letter-spacing:.08em;
-          color:rgba(232,224,207,.7); text-transform:none; }
+          color:rgba(232,224,207,.7); }
         .nf-includes { display:inline-block; margin-top:24px; padding:12px 26px;
           border:1px solid rgba(200,162,74,.35);
           font-family:'Cinzel',serif; font-size:11px; letter-spacing:.34em;
@@ -152,52 +141,42 @@ export default function NightfangSetPage() {
         <h1 className="nf-title" data-testid="nf-title">NIGHTFANG SET</h1>
         <p className="nf-subtitle">Panther Ring &amp; Bangle</p>
 
-        <div className="nf-gallery" data-testid="nf-gallery">
-          <div className="nf-main" data-testid="nf-gallery-main">
-            {GALLERY[idx].type === "video" ? (
-              <video
-                key={`nf-video-${idx}`}
-                src={GALLERY[idx].src}
-                poster={GALLERY[idx].poster}
-                autoPlay
-                loop
-                muted
-                playsInline
-                controls={false}
-                disablePictureInPicture
-                disableRemotePlayback
-                preload="metadata"
-                aria-label={GALLERY[idx].alt}
-                data-testid="nf-gallery-video"
-                ref={(v) => { if (v) { try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; v.play().catch(()=>{}); } catch(_e) { /* no-op */ } } }}
-              />
-            ) : (
-              <img
-                src={GALLERY[idx].src}
-                alt={GALLERY[idx].alt}
-                data-testid="nf-gallery-image"
-                loading={idx === 0 ? "eager" : "lazy"}
-              />
-            )}
-            <button type="button" className="nf-nav prev" onClick={prev} aria-label="Previous image" data-testid="nf-prev"><ChevronLeft size={20}/></button>
-            <button type="button" className="nf-nav next" onClick={next} aria-label="Next image" data-testid="nf-next"><ChevronRight size={20}/></button>
-          </div>
-          <div className="nf-thumbs" data-testid="nf-gallery-thumbs">
-            {GALLERY.map((g, i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => setIdx(i)}
-                className={`nf-thumb ${i === idx ? "active" : ""}`}
-                aria-label={`Show ${g.type === "video" ? "video" : "image"} ${i + 1}: ${g.alt}`}
-                aria-pressed={i === idx}
-                data-testid={`nf-thumb-${i + 1}`}
-              >
-                <img src={g.type === "video" ? g.poster : g.src} alt="" loading="lazy" />
-                {g.type === "video" && <span className="nf-thumb-video-badge">FILM</span>}
-              </button>
-            ))}
-          </div>
+        <div className="nf-stack" data-testid="nf-gallery">
+          {GALLERY.map((g, i) => (
+            <figure
+              key={i}
+              className="nf-frame"
+              data-testid={`nf-frame-${i + 1}`}
+            >
+              <span className="nf-frame-index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              {g.type === "video" ? (
+                <>
+                  <span className="nf-frame-badge" aria-hidden="true">FILM</span>
+                  <video
+                    src={g.src}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    controls={false}
+                    disablePictureInPicture
+                    disableRemotePlayback
+                    preload="metadata"
+                    aria-label={g.alt}
+                    data-testid={`nf-video-${i + 1}`}
+                    ref={(v) => { if (v) { try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; v.play().catch(()=>{}); } catch(_e) { /* no-op */ } } }}
+                  />
+                </>
+              ) : (
+                <img
+                  src={g.src}
+                  alt={g.alt}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  data-testid={`nf-image-${i + 1}`}
+                />
+              )}
+            </figure>
+          ))}
         </div>
 
         <div className="nf-body">
