@@ -92,16 +92,6 @@ export default function NightfangSetPage() {
         .nf-frame { position:relative; width:100%; aspect-ratio:1/1; background:#111;
           border:1px solid rgba(200,162,74,.22); display:flex; align-items:center; justify-content:center; overflow:hidden; }
         .nf-frame img, .nf-frame video { width:100%; height:100%; object-fit:contain; object-position:center; display:block; background:#111; }
-        .nf-frame-index { position:absolute; top:12px; left:14px; z-index:2;
-          font-family:'Cinzel',serif; font-size:9px; letter-spacing:.32em;
-          color:rgba(232,224,207,.55); background:rgba(10,9,8,.7);
-          padding:5px 9px; border:1px solid rgba(200,162,74,.22);
-          pointer-events:none; }
-        .nf-frame-badge { position:absolute; top:12px; right:14px; z-index:2;
-          font-family:'Cinzel',serif; font-size:9px; letter-spacing:.32em;
-          color:#c8a24a; background:rgba(10,9,8,.7);
-          padding:5px 9px; border:1px solid rgba(200,162,74,.4);
-          pointer-events:none; }
 
         .nf-body { max-width:720px; margin:56px auto 0; text-align:center; }
         .nf-body h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,36px);
@@ -148,10 +138,8 @@ export default function NightfangSetPage() {
               className="nf-frame"
               data-testid={`nf-frame-${i + 1}`}
             >
-              <span className="nf-frame-index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               {g.type === "video" ? (
                 <>
-                  <span className="nf-frame-badge" aria-hidden="true">FILM</span>
                   <video
                     src={g.src}
                     autoPlay
@@ -161,10 +149,45 @@ export default function NightfangSetPage() {
                     controls={false}
                     disablePictureInPicture
                     disableRemotePlayback
-                    preload="metadata"
+                    preload="auto"
                     aria-label={g.alt}
                     data-testid={`nf-video-${i + 1}`}
-                    ref={(v) => { if (v) { try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; v.play().catch(()=>{}); } catch(_e) { /* no-op */ } } }}
+                    ref={(v) => {
+                      if (!v) return;
+                      try {
+                        v.muted = true;
+                        v.defaultMuted = true;
+                        v.volume = 0;
+                        v.playsInline = true;
+                      } catch (_e) { /* no-op */ }
+                      // Attach a one-time IntersectionObserver so each film only
+                      // starts once its frame is visible. Prevents browsers from
+                      // dropping the 4th concurrent autoplay (common Chrome/Safari
+                      // heuristic on pages with many offscreen <video autoplay>).
+                      if (v.dataset.ioAttached === "1") return;
+                      v.dataset.ioAttached = "1";
+                      const kick = () => {
+                        const p = v.play();
+                        if (p && typeof p.catch === "function") {
+                          p.catch(() => {
+                            // retry once after a short delay
+                            setTimeout(() => { try { v.play().catch(() => {}); } catch (_e) { /* no-op */ } }, 400);
+                          });
+                        }
+                      };
+                      const io = new IntersectionObserver((entries) => {
+                        entries.forEach((e) => {
+                          if (e.isIntersecting) {
+                            kick();
+                          } else {
+                            try { v.pause(); } catch (_e) { /* no-op */ }
+                          }
+                        });
+                      }, { rootMargin: "200px 0px", threshold: 0.15 });
+                      io.observe(v);
+                      // also try an immediate kick in case IO doesn't fire (e.g. above-fold on load)
+                      kick();
+                    }}
                   />
                 </>
               ) : (
