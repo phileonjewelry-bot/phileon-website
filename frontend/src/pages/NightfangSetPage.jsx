@@ -12,7 +12,7 @@ const RING_DETAIL3 = "/inspiration-vault/nightfang-set/ring-detail-03.png";
 const RING_DETAIL4 = "/inspiration-vault/nightfang-set/ring-detail-04.png";
 const BANGLE_PROFILE      = "/inspiration-vault/nightfang-set/bangle-full-profile.png";
 const BANGLE_CONSTRUCTION = "/inspiration-vault/nightfang-set/bangle-construction.png";
-const VIDEO_1 = "/inspiration-vault/nightfang-set/video-1.mp4";
+const RED_DISPLAY_SET     = "/inspiration-vault/nightfang-set/red-display-set.png";
 const VIDEO_2 = "/inspiration-vault/nightfang-set/video-2.mp4";
 const VIDEO_3 = "/inspiration-vault/nightfang-set/video-3.mp4";
 const VIDEO_4 = "/inspiration-vault/nightfang-set/video-4.mp4";
@@ -28,10 +28,10 @@ const GALLERY = [
   { type: "image", src: RING_DETAIL4,        alt: "NIGHTFANG SET black enamel panther ring — angled side view of the panther head" },
   { type: "image", src: BANGLE_PROFILE,      alt: "NIGHTFANG SET full-profile panther bangle upright against dark marble" },
   { type: "image", src: BANGLE_CONSTRUCTION, alt: "NIGHTFANG SET panther bangle horizontal on a glossy black rectangular platform — construction detail" },
-  { type: "video", src: VIDEO_1, alt: "NIGHTFANG SET silent product motion — study one" },
-  { type: "video", src: VIDEO_2, alt: "NIGHTFANG SET silent product motion — study two" },
-  { type: "video", src: VIDEO_3, alt: "NIGHTFANG SET silent product motion — study three" },
-  { type: "video", src: VIDEO_4, alt: "NIGHTFANG SET silent product motion — study four" },
+  { type: "image", src: RED_DISPLAY_SET,     alt: "NIGHTFANG SET panther ring and bangle presented on a red lacquer display base with white cushion inserts" },
+  { type: "video", src: VIDEO_2, alt: "NIGHTFANG SET silent product motion — study one" },
+  { type: "video", src: VIDEO_3, alt: "NIGHTFANG SET silent product motion — study two" },
+  { type: "video", src: VIDEO_4, alt: "NIGHTFANG SET silent product motion — study three" },
 ];
 
 export default function NightfangSetPage() {
