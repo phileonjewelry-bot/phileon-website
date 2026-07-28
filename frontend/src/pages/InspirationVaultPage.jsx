@@ -436,14 +436,7 @@ export default function InspirationVaultPage() {
         }
         .iv-card-video,
         .iv-card-img {
-          position:relative;z-index:1;width:100%;height:100%;
-          /* Cover cropped luxury hero compositions (e.g. NIGHTFANG two-piece
-             marble shot, STAMPEDE pair-on-black) whose sources are square 1:1.
-             contain preserves the full composition inside the 16:10 media
-             frame; the frame background (#020100) is the same as the page,
-             so any letterboxing reads as intentional editorial breathing room
-             rather than a black bar. */
-          object-fit:contain;
+          position:relative;z-index:1;width:100%;height:100%;object-fit:cover;
           object-position:center;display:block;
           transition:transform .7s ease;
           pointer-events:none;
@@ -1186,6 +1179,120 @@ export default function InspirationVaultPage() {
         }
 
         /* ─────────────────────────────────────────────────────────────────
+           NIGHTFANG SET CARD — VAULT INDEX SIZING & MOBILE SAFETY
+           Reason: NIGHTFANG's approved hero is a 1254×1254 square marble
+           two-piece composition. The default 16:10 .iv-card-media forces
+           either (a) object-fit:cover which crops the panther heads and
+           marble base, or (b) object-fit:contain which letterboxes the
+           square inside a wide frame — making the card look undersized
+           beside STAMPEDE. This override mirrors the STAMPEDE pattern
+           exactly: let the media wrapper adopt the image's native
+           aspect-ratio so the square hero fills 100% of the media area
+           with no letterboxing, matching STAMPEDE's visual weight.
+           Scope: .nightfang-set-vault-card only. Does NOT touch STAMPEDE,
+           RIBBON REGALE, or any other Vault card.
+           ───────────────────────────────────────────────────────────────── */
+        .iv-card.nightfang-set-vault-card,
+        [data-testid="iv-card-nightfang-set"] {
+          width:100%;
+          height:auto !important;
+          min-height:0 !important;
+          max-height:none !important;
+          overflow:visible !important;
+        }
+        .nightfang-set-vault-card .iv-card-media {
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none;
+          aspect-ratio:auto !important;
+          overflow:visible;
+          padding:0;
+          background:#000;
+        }
+        .nightfang-set-vault-card .iv-card-img {
+          display:block;
+          width:100%;
+          height:auto;
+          max-height:none;
+          object-fit:contain !important;
+          object-position:center;
+          transform:none;
+        }
+        .nightfang-set-vault-card .iv-card-title {
+          width:100%;
+          max-width:100%;
+          height:auto;
+          white-space:normal;
+          overflow:visible;
+          text-overflow:clip;
+          overflow-wrap:normal;
+          font-size:clamp(30px,5.2vw,64px);
+          line-height:1.02;
+        }
+        .nightfang-set-vault-card .iv-card-meta {
+          position:static;
+          width:100%;
+          height:auto !important;
+          min-height:0;
+          max-height:none !important;
+          overflow:visible !important;
+          padding:34px 28px 46px;
+        }
+        .nightfang-set-vault-card .iv-card-cta {
+          position:static;
+          display:inline-flex;
+          align-items:center;
+          width:max-content;
+          margin-top:20px;
+          margin-bottom:0;
+          opacity:1;
+          visibility:visible;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+        @media (max-width:768px){
+          .iv-card.nightfang-set-vault-card,
+          [data-testid="iv-card-nightfang-set"] {
+            width:100%;
+            height:auto !important;
+            min-height:0 !important;
+            max-height:none !important;
+            overflow:visible !important;
+          }
+          .nightfang-set-vault-card .iv-card-media {
+            width:100%;
+            height:auto !important;
+            aspect-ratio:auto !important;
+            overflow:visible !important;
+          }
+          .nightfang-set-vault-card .iv-card-img {
+            width:100%;
+            height:auto;
+            max-height:none;
+            object-fit:contain !important;
+            object-position:center;
+          }
+          .nightfang-set-vault-card .iv-card-title {
+            font-size:clamp(28px,7.4vw,44px);
+            line-height:1.02;
+          }
+          .nightfang-set-vault-card .iv-card-meta {
+            height:auto !important;
+            max-height:none !important;
+            overflow:visible !important;
+            padding:30px 22px 46px;
+          }
+          .nightfang-set-vault-card .iv-card-cta {
+            display:inline-flex !important;
+            opacity:1 !important;
+            visibility:visible !important;
+            transform:none !important;
+            margin-top:26px;
+          }
+        }
+
+        /* ─────────────────────────────────────────────────────────────────
            RIBBON REGALE CARD — VAULT INDEX SIZING & MOBILE SAFETY
            Reason: RIBBON REGALE's poster is a black-background 1024x1024
            studio still of the mirrored pair with reflections. The default
@@ -1376,7 +1483,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'nightfang-set' ? 'nightfang-set-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
