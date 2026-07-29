@@ -143,6 +143,18 @@ export default function ParallaxDropEarringsPage() {
                       }
                     };
                     v.addEventListener("ended", () => { try { v.currentTime = 0; v.play().catch(() => {}); } catch (_e) { /* no-op */ } });
+                    // BULLETPROOF LOOP: some browsers (notably Chromium with
+                    // certain H.264 encodings) stall at the last decoded frame
+                    // WITHOUT firing `ended`, so the browser's native `loop`
+                    // silently fails. Watch currentTime and force a rewind
+                    // when we cross duration - 0.25s.
+                    v.addEventListener("timeupdate", () => {
+                      const d = v.duration;
+                      if (!isFinite(d) || d <= 0) return;
+                      if (v.currentTime >= d - 0.25) {
+                        try { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); } catch (_e) { /* no-op */ }
+                      }
+                    });
                     // If buffering finishes AFTER the frame has scrolled into
                     // view, `canplay` fires and we kick playback then.
                     v.addEventListener("canplay", kick, { once: false });

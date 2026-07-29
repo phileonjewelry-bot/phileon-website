@@ -188,6 +188,17 @@ export default function NightfangSetPage() {
                       v.addEventListener("ended", () => {
                         try { v.currentTime = 0; v.play().catch(() => {}); } catch (_e) { /* no-op */ }
                       });
+                      // BULLETPROOF LOOP: some browsers stall at the last
+                      // decoded frame WITHOUT firing `ended`, so the browser's
+                      // native `loop` silently fails. Force a rewind when we
+                      // cross duration - 0.25s.
+                      v.addEventListener("timeupdate", () => {
+                        const d = v.duration;
+                        if (!isFinite(d) || d <= 0) return;
+                        if (v.currentTime >= d - 0.25) {
+                          try { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); } catch (_e) { /* no-op */ }
+                        }
+                      });
                       const io = new IntersectionObserver((entries) => {
                         entries.forEach((e) => {
                           if (e.isIntersecting) {
