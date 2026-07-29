@@ -135,32 +135,58 @@ export default function ParallaxDropEarringsPage() {
                     // longer clips (~4 MB+) can arrive at the play() call with
                     // readyState=0 and silently stall.
                     try { v.load(); } catch (_e) { /* no-op */ }
+                    // Track whether WE (via IntersectionObserver) requested
+                    // the pause vs a natural end-of-clip stall. This flag is
+                    // the key to reliably distinguishing "user scrolled away"
+                    // from "video hit last frame and stalled".
+                    let manuallyPaused = false;
                     const kick = () => {
+                      manuallyPaused = false;
                       if (v.ended || v.currentTime >= (v.duration || 0) - 0.05) { try { v.currentTime = 0; } catch (_e) { /* no-op */ } }
                       const p = v.play();
                       if (p && typeof p.catch === "function") {
                         p.catch(() => setTimeout(() => { try { v.play().catch(() => {}); } catch (_e) { /* no-op */ } }, 400));
                       }
                     };
-                    v.addEventListener("ended", () => { try { v.currentTime = 0; v.play().catch(() => {}); } catch (_e) { /* no-op */ } });
-                    // BULLETPROOF LOOP: some browsers (notably Chromium with
-                    // certain H.264 encodings) stall at the last decoded frame
-                    // WITHOUT firing `ended`, so the browser's native `loop`
-                    // silently fails. Watch currentTime and force a rewind
-                    // when we cross duration - 0.25s.
+                    const forceRestart = () => {
+                      try { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); } catch (_e) { /* no-op */ }
+                    };
+                    v.addEventListener("ended", forceRestart);
+                    // TRIPLE-REDUNDANT LOOP:
+                    //   (1) native <video loop> attribute
+                    //   (2) `ended` event → forceRestart (above)
+                    //   (3) `pause` event → if we didn't manually pause it,
+                    //       treat it as a natural end-of-clip stall and
+                    //       force-restart. This catches every Chromium
+                    //       H.264 case where `ended` never fires but the
+                    //       video sits paused at (or near) the last frame.
+                    v.addEventListener("pause", () => {
+                      if (manuallyPaused) return;
+                      // If we're near the end (or ended), restart.
+                      const d = v.duration;
+                      const near = isFinite(d) && d > 0 && v.currentTime >= d - 0.5;
+                      if (v.ended || near) forceRestart();
+                    });
+                    // Also keep a timeupdate watchdog as belt-and-braces for
+                    // browsers whose `pause` doesn't fire on end-stall.
                     v.addEventListener("timeupdate", () => {
                       const d = v.duration;
                       if (!isFinite(d) || d <= 0) return;
-                      if (v.currentTime >= d - 0.25) {
-                        try { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); } catch (_e) { /* no-op */ }
-                      }
+                      if (v.currentTime >= d - 0.25) forceRestart();
                     });
                     // If buffering finishes AFTER the frame has scrolled into
                     // view, `canplay` fires and we kick playback then.
                     v.addEventListener("canplay", kick, { once: false });
                     // Large rootMargin so slower clips get a head-start.
                     const io = new IntersectionObserver((entries) => {
-                      entries.forEach((e) => { if (e.isIntersecting) kick(); else { try { v.pause(); } catch (_e) { /* no-op */ } } });
+                      entries.forEach((e) => {
+                        if (e.isIntersecting) {
+                          kick();
+                        } else {
+                          manuallyPaused = true;
+                          try { v.pause(); } catch (_e) { /* no-op */ }
+                        }
+                      });
                     }, { rootMargin: "600px 0px", threshold: 0.05 });
                     io.observe(v);
                     kick();
