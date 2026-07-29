@@ -122,7 +122,7 @@ export default function ParallaxDropEarringsPage() {
                   src={g.src}
                   autoPlay loop muted playsInline controls={false}
                   disablePictureInPicture disableRemotePlayback
-                  preload="metadata"
+                  preload="auto"
                   aria-label={g.alt}
                   data-testid={`pdx-video-${i + 1}`}
                   ref={(v) => {
@@ -130,6 +130,11 @@ export default function ParallaxDropEarringsPage() {
                     try { v.muted = true; v.defaultMuted = true; v.volume = 0; v.playsInline = true; } catch (_e) { /* no-op */ }
                     if (v.dataset.ioAttached === "1") return;
                     v.dataset.ioAttached = "1";
+                    // Force the browser to begin fetching this file now so it's
+                    // buffered before the user scrolls into view. Without this,
+                    // longer clips (~4 MB+) can arrive at the play() call with
+                    // readyState=0 and silently stall.
+                    try { v.load(); } catch (_e) { /* no-op */ }
                     const kick = () => {
                       if (v.ended || v.currentTime >= (v.duration || 0) - 0.05) { try { v.currentTime = 0; } catch (_e) { /* no-op */ } }
                       const p = v.play();
@@ -138,9 +143,13 @@ export default function ParallaxDropEarringsPage() {
                       }
                     };
                     v.addEventListener("ended", () => { try { v.currentTime = 0; v.play().catch(() => {}); } catch (_e) { /* no-op */ } });
+                    // If buffering finishes AFTER the frame has scrolled into
+                    // view, `canplay` fires and we kick playback then.
+                    v.addEventListener("canplay", kick, { once: false });
+                    // Large rootMargin so slower clips get a head-start.
                     const io = new IntersectionObserver((entries) => {
                       entries.forEach((e) => { if (e.isIntersecting) kick(); else { try { v.pause(); } catch (_e) { /* no-op */ } } });
-                    }, { rootMargin: "200px 0px", threshold: 0.15 });
+                    }, { rootMargin: "600px 0px", threshold: 0.05 });
                     io.observe(v);
                     kick();
                   }}
