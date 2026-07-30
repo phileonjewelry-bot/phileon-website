@@ -676,7 +676,8 @@ export const products = {
     description: "Wide hollow ribbed ring designed to stand alone or stack.",
     basePrice: 225,
 
-    imageUrl: "/fine-jewelry/ovation/hero-marble-stack.png",
+    imageUrl: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pl6at891_1000166845.png",
+    hoverImage: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/whnl770o_1000166839.png",
 
     pricing: {
       silver:    225,

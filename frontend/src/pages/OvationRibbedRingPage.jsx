@@ -2,11 +2,13 @@ import React from "react";
 import RingProductPage from "../components/RingProductPage";
 import { products } from "@/data/products";
 
-// Approved hero — three yellow-gold OVATION rings leaning naturally on light
-// marble. The stack is styling only; each OVATION ring is sold individually.
-// Same hero is used for every metal choice until approved white-gold and silver
-// assets are supplied.
-const HERO = "/fine-jewelry/ovation/hero-marble-stack.png";
+// Approved OVATION assets — yellow-gold ribbed stackable rings.
+// Same visual language used across every metal tier until dedicated white-gold
+// and silver assets are supplied.
+const HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pl6at891_1000166845.png"; // 3-ring leaning stack on light marble
+const IMG_DARK_STACK = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tf63q0bx_1000166838.jpg"; // stack on dark stone
+const IMG_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/whnl770o_1000166839.png"; // worn stack on finger
+const IMG_SINGLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dkvs1fm4_1000166780.png"; // single ribbed ring on wood
 
 const ovationPricing = products.ovationRibbedRing.pricing;
 
@@ -79,6 +81,9 @@ const ovationProduct = {
 
   media: [
     { type: "image", src: HERO, alt: "Three OVATION ribbed yellow-gold rings styled in a leaning stack on marble" },
+    { type: "image", src: IMG_DARK_STACK, alt: "OVATION ribbed rings stacked on dark stone with reflection" },
+    { type: "image", src: IMG_HAND, alt: "OVATION ribbed rings worn stacked on the finger" },
+    { type: "image", src: IMG_SINGLE, alt: "Single OVATION ribbed ring, macro detail on wood" },
   ],
 
   story:
