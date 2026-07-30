@@ -662,6 +662,36 @@ export const products = {
   },
 
   // ==========================================
+  // OVATION RIBBED RING
+  // Fine Jewelry — Wide ribbed stackable band
+  // Sold individually. Metal choices: Sterling Silver + 10K/14K/18K Yellow/White Gold
+  // ==========================================
+  ovationRibbedRing: {
+    name: "OVATION Ribbed Ring",
+    slug: "ovation",
+    category: "rings",
+    audience: "unisex",
+    shopMaterialLine: "Wide Ribbed Ring · Silver & 10K-18K Gold",
+    tagline: "One was never the point.",
+    description: "Wide hollow ribbed ring designed to stand alone or stack.",
+    basePrice: 225,
+
+    imageUrl: "/fine-jewelry/ovation/hero-marble-stack.png",
+
+    pricing: {
+      silver:    225,
+      yellow10k: 850,
+      white10k:  850,
+      yellow14k: 1100,
+      white14k:  1100,
+      yellow18k: 1400,
+      white18k:  1400,
+    },
+
+    shipping: "Complimentary insured shipping within North America.",
+  },
+
+  // ==========================================
   // RHYTHM MESH RING
   // Unisex statement ring
   // ==========================================
@@ -3167,6 +3197,28 @@ export const catalogProducts = [
     collection: 'signature',
     label: 'PHILEON Fine Jewelry',
     ctaLabel: 'View ARCHITRAVE',
+  },
+  {
+    id: 'ovation',
+    name: 'OVATION',
+    slug: 'ovation',
+    subtitle: 'Wide Ribbed Stackable Ring',
+    materialLine: 'PHILEON Fine Jewelry · Rings · Wide Ribbed Band · Sterling Silver → 10K / 14K / 18K Yellow or White Gold',
+    imageUrl: '/fine-jewelry/ovation/hero-marble-stack.png',
+    href: '/ovation',
+    price_range: 'From $225 USD',
+    inventory_count: 100,
+    is_core: true,
+    category: 'rings',
+    audience: ['ladies', 'gentlemens-club', 'collective'],
+    tags: ['Unisex', 'Fine Jewelry', 'Ring', 'Ribbed', 'Stackable', 'Sterling Silver', 'Yellow Gold', 'White Gold'],
+    isNew: true,
+    isFeatured: true,
+    displayOrder: 0,
+    collection: 'signature',
+    label: 'PHILEON Fine Jewelry',
+    ctaLabel: 'View OVATION',
+    note: 'Sold Individually',
   },
   {
     id: 'rebelle',
