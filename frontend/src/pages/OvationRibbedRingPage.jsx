@@ -9,6 +9,11 @@ const HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e7
 const IMG_DARK_STACK = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tf63q0bx_1000166838.jpg"; // stack on dark stone
 const IMG_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/whnl770o_1000166839.png"; // worn stack on finger
 const IMG_SINGLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dkvs1fm4_1000166780.png"; // single ribbed ring on wood
+// Black-marble editorial series — single ring, four angles
+const IMG_BLACK_ANGLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ohlxhee8_1000167004.png"; // 3/4 angle, interior visible
+const IMG_BLACK_PROFILE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/atkej09z_1000167002.png"; // profile with reflection
+const IMG_BLACK_TOP = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1sm493bw_1000167001.png"; // overhead top-down
+const IMG_BLACK_MACRO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d21b2emv_1000167003.png"; // macro close-up
 
 const ovationPricing = products.ovationRibbedRing.pricing;
 
@@ -83,6 +88,10 @@ const ovationProduct = {
     { type: "image", src: HERO, alt: "Three OVATION ribbed yellow-gold rings styled in a leaning stack on marble" },
     { type: "image", src: IMG_DARK_STACK, alt: "OVATION ribbed rings stacked on dark stone with reflection" },
     { type: "image", src: IMG_HAND, alt: "OVATION ribbed rings worn stacked on the finger" },
+    { type: "image", src: IMG_BLACK_ANGLE, alt: "Single OVATION ribbed ring, three-quarter angle on black marble" },
+    { type: "image", src: IMG_BLACK_PROFILE, alt: "Single OVATION ribbed ring, profile with reflection on black marble" },
+    { type: "image", src: IMG_BLACK_TOP, alt: "Single OVATION ribbed ring, overhead top-down view on black marble" },
+    { type: "image", src: IMG_BLACK_MACRO, alt: "Single OVATION ribbed ring, macro detail on black marble" },
     { type: "image", src: IMG_SINGLE, alt: "Single OVATION ribbed ring, macro detail on wood" },
   ],
 
