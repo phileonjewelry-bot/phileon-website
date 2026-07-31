@@ -85,14 +85,14 @@ const ovationProduct = {
   defaultTier: "yellow10k",
 
   media: [
-    { type: "image", src: HERO, alt: "Three OVATION ribbed yellow-gold rings styled in a leaning stack on marble" },
-    { type: "image", src: IMG_DARK_STACK, alt: "OVATION ribbed rings stacked on dark stone with reflection" },
-    { type: "image", src: IMG_HAND, alt: "OVATION ribbed rings worn stacked on the finger" },
+    { type: "image", src: HERO, alt: "Three OVATION ribbed yellow-gold rings styled in a leaning stack on light marble — hero" },
+    { type: "image", src: IMG_HAND, alt: "OVATION ribbed rings worn stacked on the finger — scale and stacking" },
     { type: "image", src: IMG_BLACK_ANGLE, alt: "Single OVATION ribbed ring, three-quarter angle on black marble" },
-    { type: "image", src: IMG_BLACK_PROFILE, alt: "Single OVATION ribbed ring, profile with reflection on black marble" },
-    { type: "image", src: IMG_BLACK_TOP, alt: "Single OVATION ribbed ring, overhead top-down view on black marble" },
-    { type: "image", src: IMG_BLACK_MACRO, alt: "Single OVATION ribbed ring, macro detail on black marble" },
-    { type: "image", src: IMG_SINGLE, alt: "Single OVATION ribbed ring, macro detail on wood" },
+    { type: "image", src: IMG_BLACK_PROFILE, alt: "Single OVATION ribbed ring, upright profile on black marble" },
+    { type: "image", src: IMG_BLACK_TOP, alt: "Single OVATION ribbed ring, top-down view on black marble" },
+    { type: "image", src: IMG_BLACK_MACRO, alt: "Single OVATION ribbed ring, close-up ribbed macro on black marble" },
+    { type: "image", src: IMG_DARK_STACK, alt: "OVATION ribbed rings stacked on dark stone with reflection" },
+    { type: "image", src: IMG_SINGLE, alt: "Single OVATION ribbed ring, craftsmanship macro on wood workbench" },
   ],
 
   story:
