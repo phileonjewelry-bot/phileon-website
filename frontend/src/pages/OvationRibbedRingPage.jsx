@@ -15,6 +15,9 @@ const IMG_BLACK_PROFILE = "https://customer-assets-jt897jd0.emergentagent.net/jo
 const IMG_BLACK_TOP = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1sm493bw_1000167001.png"; // overhead top-down
 const IMG_BLACK_MACRO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d21b2emv_1000167003.png"; // macro close-up
 const IMG_GENTS_STREET = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hu5t98bl_1000167394.png"; // NYC street portrait — gents-only editorial
+const IMG_GENTS_TIMES_SQ = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rlopkl6u_1000167440.png"; // Times Square fist — gents-only lifestyle
+const IMG_LADIES_PALM = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h1dia9td_1000167410.jpg"; // SoHo palm-forward front — ladies-only lifestyle
+const IMG_LADIES_ANGLED = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4nj5sncd_1000167411.png"; // SoHo palm angled — ladies-only lifestyle
 
 const ovationPricing = products.ovationRibbedRing.pricing;
 
@@ -86,15 +89,25 @@ const ovationProduct = {
   defaultTier: "yellow10k",
 
   media: [
+    // 1. Hero (unisex): the product truth — 3-ring stack on light marble
     { type: "image", src: HERO, alt: "Three OVATION ribbed yellow-gold rings styled in a leaning stack on light marble — hero" },
+    // 2–3. Gents lifestyle (audience-gated): Times Square hero, then SoHo street portrait
+    { type: "image", src: IMG_GENTS_TIMES_SQ, alt: "OVATION worn as a two-ring stack — Times Square fur-collar editorial", audience: "gents" },
+    { type: "image", src: IMG_GENTS_STREET, alt: "OVATION worn as a three-ring stack — SoHo street editorial", audience: "gents" },
+    // 4. Hand-worn stack (unisex) — scale reference
     { type: "image", src: IMG_HAND, alt: "OVATION ribbed rings worn stacked on the finger — scale and stacking" },
+    // 5–6. Ladies lifestyle (audience-gated): SoHo palm-forward pair
+    { type: "image", src: IMG_LADIES_PALM, alt: "OVATION worn on the middle finger — SoHo palm-forward editorial", audience: "ladies" },
+    { type: "image", src: IMG_LADIES_ANGLED, alt: "OVATION worn on the middle finger — SoHo angled portrait editorial", audience: "ladies" },
+    // 7–10. Studio detail (unisex)
     { type: "image", src: IMG_BLACK_ANGLE, alt: "Single OVATION ribbed ring, three-quarter angle on black marble" },
     { type: "image", src: IMG_BLACK_PROFILE, alt: "Single OVATION ribbed ring, upright profile on black marble" },
     { type: "image", src: IMG_BLACK_TOP, alt: "Single OVATION ribbed ring, top-down view on black marble" },
     { type: "image", src: IMG_BLACK_MACRO, alt: "Single OVATION ribbed ring, close-up ribbed macro on black marble" },
+    // 11. Dark-stone stack (unisex)
     { type: "image", src: IMG_DARK_STACK, alt: "OVATION ribbed rings stacked on dark stone with reflection" },
+    // 12. Wood workbench macro (unisex) — closing craftsmanship note
     { type: "image", src: IMG_SINGLE, alt: "Single OVATION ribbed ring, craftsmanship macro on wood workbench" },
-    { type: "image", src: IMG_GENTS_STREET, alt: "OVATION worn as a three-ring stack — NYC street editorial", audience: "gents" },
   ],
 
   story:
