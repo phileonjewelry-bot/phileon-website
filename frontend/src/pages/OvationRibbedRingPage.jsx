@@ -14,6 +14,7 @@ const IMG_BLACK_ANGLE = "https://customer-assets-jt897jd0.emergentagent.net/job_
 const IMG_BLACK_PROFILE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/atkej09z_1000167002.png"; // profile with reflection
 const IMG_BLACK_TOP = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1sm493bw_1000167001.png"; // overhead top-down
 const IMG_BLACK_MACRO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d21b2emv_1000167003.png"; // macro close-up
+const IMG_GENTS_STREET = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hu5t98bl_1000167394.png"; // NYC street portrait — gents-only editorial
 
 const ovationPricing = products.ovationRibbedRing.pricing;
 
@@ -93,6 +94,7 @@ const ovationProduct = {
     { type: "image", src: IMG_BLACK_MACRO, alt: "Single OVATION ribbed ring, close-up ribbed macro on black marble" },
     { type: "image", src: IMG_DARK_STACK, alt: "OVATION ribbed rings stacked on dark stone with reflection" },
     { type: "image", src: IMG_SINGLE, alt: "Single OVATION ribbed ring, craftsmanship macro on wood workbench" },
+    { type: "image", src: IMG_GENTS_STREET, alt: "OVATION worn as a three-ring stack — NYC street editorial", audience: "gents" },
   ],
 
   story:

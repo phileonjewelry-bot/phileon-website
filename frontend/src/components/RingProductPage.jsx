@@ -4,7 +4,7 @@
    ===================================== */
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ringSizeProfiles } from "../data/ringSizes";
 import ParabolaFamilyNav from "./ParabolaFamilyNav";
 import { useAddToCart } from "../hooks/useAddToCart";
@@ -42,11 +42,31 @@ export default function RingProductPage({ product }) {
   // use it; otherwise fall back to `product.media`. This keeps existing pages
   // (single gallery) untouched while allowing PARABOLA-style metal variants
   // (silver/white gold share one gallery, rose gold uses another).
+  const location = useLocation();
   const activeGallery = useMemo(() => {
-    return (currentTier && currentTier.media && currentTier.media.length > 0)
+    const base = (currentTier && currentTier.media && currentTier.media.length > 0)
       ? currentTier.media
       : product.media;
-  }, [currentTier, product.media]);
+    if (!base) return base;
+    // Audience-conditional media: items may carry `audience: "gents" | "ladies"`.
+    // Items with no `audience` tag always show. Tagged items only show when the
+    // page is reached via the matching audience entry point (?audience=... on
+    // the referring shop URL), stored in sessionStorage for the session.
+    const urlAudience = new URLSearchParams(location.search).get("audience");
+    const stored = typeof window !== "undefined"
+      ? window.sessionStorage.getItem("phileonAudience")
+      : null;
+    if (urlAudience && typeof window !== "undefined") {
+      window.sessionStorage.setItem("phileonAudience", urlAudience);
+    }
+    const audience = urlAudience || stored; // "ladies" | "gentlemens-club" | null
+    return base.filter((m) => {
+      if (!m.audience) return true;
+      if (m.audience === "gents") return audience === "gentlemens-club";
+      if (m.audience === "ladies") return audience === "ladies";
+      return true;
+    });
+  }, [currentTier, product.media, location.search]);
 
   // Reset thumbnail selection when the metal (and therefore the gallery)
   // changes, so we never point at a stale index past the new array's length.

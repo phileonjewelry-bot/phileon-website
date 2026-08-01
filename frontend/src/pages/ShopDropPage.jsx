@@ -95,6 +95,15 @@ const ShopDropPage = () => {
   const audienceParam = searchParams.get('audience');
   const collectionParam = searchParams.get('collection'); // 'sacred' | 'signature' | 'editorial' | 'collective' | null = All
 
+  // Persist the current audience so product pages (which don't receive the
+  // query param when navigated to directly) can render audience-conditional
+  // media (e.g. gents-only editorial shots on OVATION).
+  useEffect(() => {
+    if (audienceParam) {
+      window.sessionStorage.setItem('phileonAudience', audienceParam);
+    }
+  }, [audienceParam]);
+
   const setCollection = (key) => {
     const next = new URLSearchParams(searchParams);
     if (key) next.set('collection', key);
