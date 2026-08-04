@@ -21,6 +21,7 @@ const RENDER_ALT   = "https://customer-assets-jt897jd0.emergentagent.net/job_096
 const RENDER_PROFILE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/nyc3lac7_1000168349.png"; // side profile — reptile shank fully visible
 const LIFESTYLE_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qv537c0a_1000167362.png"; // hand model wearing the ring on middle finger
 const LIFESTYLE_EDIT = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qg4ncofo_1000167663.png"; // full-body editorial at bar
+const LIFESTYLE_BAR_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5d9xqw5d_1000168910.png"; // intimate bar hand — warm bokeh on marble
 
 const bajanJoeProduct = {
   id: "bajan-joe",
@@ -109,6 +110,11 @@ const bajanJoeProduct = {
       type: "image",
       src: LIFESTYLE_HAND,
       alt: "BAJAN JOE worn on the middle finger — close macro showing the ring in scale",
+    },
+    {
+      type: "image",
+      src: LIFESTYLE_BAR_HAND,
+      alt: "BAJAN JOE worn at the bar — intimate hand rest on dark marble with warm bokeh",
     },
     {
       type: "image",
