@@ -97,6 +97,7 @@ import StampedeSetPage from "@/pages/StampedeSetPage";
 import NightfangSetPage from "@/pages/NightfangSetPage";
 import ParallaxDropEarringsPage from "@/pages/ParallaxDropEarringsPage";
 import OvationRibbedRingPage from "@/pages/OvationRibbedRingPage";
+import BajanJoeSignetRingPage from "@/pages/BajanJoeSignetRingPage";
 import RibbonRegalePage from "@/pages/RibbonRegalePage";
 import ScaccoMattoPage from "@/pages/ScaccoMattoPage";
 import TributeSeriesPage from "@/pages/TributeSeriesPage";
@@ -292,6 +293,9 @@ function App() {
             <Route path="/parallax-drop-earrings" element={<ParallaxDropEarringsPage />} />
             <Route path="/ovation" element={<OvationRibbedRingPage />} />
             <Route path="/products/ovation" element={<OvationRibbedRingPage />} />
+            <Route path="/bajan-joe" element={<BajanJoeSignetRingPage />} />
+            <Route path="/products/bajan-joe" element={<BajanJoeSignetRingPage />} />
+            <Route path="/fine-jewelry/bajan-joe" element={<BajanJoeSignetRingPage />} />
             <Route path="/inspiration-vault/gold-theory-ribbon" element={<RibbonRegalePage />} />
             <Route path="/inspiration-vault/ribbon-regale" element={<RibbonRegalePage />} />
             <Route path="/scacco-matto" element={<ScaccoMattoPage />} />
