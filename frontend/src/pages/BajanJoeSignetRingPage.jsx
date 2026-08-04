@@ -17,6 +17,10 @@ const HERO_VIDEO   = "https://customer-assets-jt897jd0.emergentagent.net/job_096
 const RENDER_FRONT = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/p0nvtaur_1000168342.png";
 const RENDER_ANGLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mb9ie3g5_1000168343.png";
 const RENDER_ALT   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o8yxeh08_1000168344.png";
+// New: reptile-detail profile + gents lifestyle
+const RENDER_PROFILE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/nyc3lac7_1000168349.png"; // side profile — reptile shank fully visible
+const LIFESTYLE_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qv537c0a_1000167362.png"; // hand model wearing the ring on middle finger
+const LIFESTYLE_EDIT = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qg4ncofo_1000167663.png"; // full-body editorial at bar
 
 const bajanJoeProduct = {
   id: "bajan-joe",
@@ -26,6 +30,29 @@ const bajanJoeProduct = {
   collection: "PHILEON Fine Jewelry",
   sizeProfile: "gents",
   defaultTier: "polish",
+
+  // ------------------------------------------------------------------
+  // BAJAN JOE OPT-IN FEATURES (do not enable on other products):
+  //   - noDefaultSize: no size preselected, placeholder "SELECT RING SIZE"
+  //   - showSizeValidationOnAdd: inline error + focus on selector when the
+  //       customer presses Add to Cart before choosing a size
+  //   - sizePlaceholder: exact copy required for BAJAN JOE
+  //   - zoomableGallery: full-screen zoom overlay so shoppers can inspect
+  //       the reptile-scale texture up close
+  //   - bandWidthMm 11.5 triggers the shared wide-band fit notice
+  //   - customFitNote: BAJAN JOE-specific fit guidance
+  // ------------------------------------------------------------------
+  noDefaultSize: true,
+  showSizeValidationOnAdd: true,
+  sizePlaceholder: "SELECT RING SIZE",
+  zoomableGallery: true,
+  bandWidthMm: 11.5,
+  // BAJAN JOE size range — gents 7 → 15 in half sizes (17 sizes, no custom).
+  availableSizes: [
+    "7","7.5","8","8.5","9","9.5","10","10.5","11","11.5","12","12.5","13","13.5","14","14.5","15",
+  ],
+  customFitNote:
+    "Because BAJAN JOE has a wide, substantial shank, customers between sizes should generally choose the next half size up. Measure at the end of the day when fingers are at their normal size. The left and right hands may measure differently — measure the exact finger on which the ring will be worn.",
 
   // Two finishes, one price. Both variants ship as sterling silver with the
   // same 8×8mm princess-cut black spinel. High Polish is default.
@@ -72,6 +99,21 @@ const bajanJoeProduct = {
       type: "image",
       src: RENDER_ALT,
       alt: "BAJAN JOE sterling-silver reptile signet ring — front detail",
+    },
+    {
+      type: "image",
+      src: RENDER_PROFILE,
+      alt: "BAJAN JOE — side profile showing the full reptile-textured shank",
+    },
+    {
+      type: "image",
+      src: LIFESTYLE_HAND,
+      alt: "BAJAN JOE worn on the middle finger — close macro showing the ring in scale",
+    },
+    {
+      type: "image",
+      src: LIFESTYLE_EDIT,
+      alt: "BAJAN JOE styled with a black suit — full-body editorial",
     },
   ],
 

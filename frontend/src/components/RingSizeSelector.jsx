@@ -63,9 +63,12 @@ export default function RingSizeSelector({
   onChange,
   sizes = DEFAULT_RING_SIZES,
   label = "RING SIZE",
+  placeholder = "Select your size",
   bandWidthMm = null,
   showSizingMicrocopy = true,
   hideWideBandWarning = false,
+  invalid = false,
+  errorMessage = "",
   testIdPrefix = "ring-size",
   className = "",
   style = {},
@@ -300,14 +303,34 @@ export default function RingSizeSelector({
         className="rss-field"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-invalid={invalid || undefined}
+        aria-describedby={invalid && errorMessage ? `${testIdPrefix}-error` : undefined}
         onClick={() => setOpen((o) => !o)}
         data-testid={`${testIdPrefix}-button`}
+        style={invalid ? { borderColor: "#c65b5b" } : undefined}
       >
         <span className={`rss-field-value ${value ? "" : "is-empty"}`}>
-          {value ? ringSizeLabel(value) : "Select your size"}
+          {value ? ringSizeLabel(value) : placeholder}
         </span>
         <ChevronDown className="rss-chevron" aria-hidden="true" />
       </button>
+
+      {invalid && errorMessage ? (
+        <p
+          id={`${testIdPrefix}-error`}
+          role="alert"
+          data-testid={`${testIdPrefix}-error`}
+          style={{
+            marginTop: 10,
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 12.5,
+            letterSpacing: "0.02em",
+            color: "#e08282",
+          }}
+        >
+          {errorMessage}
+        </p>
+      ) : null}
 
       {open && (
         <div

@@ -28,9 +28,14 @@ export default function RingProductPage({ product }) {
     product.defaultTier || "signature"
   );
   const [selectedSize, setSelectedSize] = useState(
-    product.defaultRingSize || DEFAULT_RING_SIZE
+    product.noDefaultSize
+      ? null
+      : (product.defaultRingSize || DEFAULT_RING_SIZE)
   );
   const [customSize, setCustomSize] = useState("");
+  const [sizeError, setSizeError] = useState(false);
+  const sizeSelectorRef = useRef(null);
+  const [zoomIndex, setZoomIndex] = useState(null); // null = closed
 
   const sizeConfig = useMemo(() => {
     return ringSizeProfiles[product.sizeProfile || "gents"];
@@ -113,8 +118,26 @@ export default function RingProductPage({ product }) {
 
   const isSizeValid = !!selectedSize;
 
+  // Clear the validation flag as soon as a size is chosen.
+  useEffect(() => {
+    if (selectedSize && sizeError) setSizeError(false);
+  }, [selectedSize, sizeError]);
+
   // Handle add to cart
   const onAddToCart = () => {
+    if (!isSizeValid) {
+      // Only trigger inline validation for products that opt in
+      // (e.g. BAJAN JOE). Existing products keep prior disabled-button behaviour.
+      if (product.showSizeValidationOnAdd) {
+        setSizeError(true);
+        if (sizeSelectorRef.current) {
+          sizeSelectorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+          const btn = sizeSelectorRef.current.querySelector(`[data-testid="${product.id}-ringsize-button"]`);
+          if (btn) setTimeout(() => btn.focus(), 300);
+        }
+      }
+      return;
+    }
     const sizeLabelText = ringSizeLabel(selectedSize);
     const sizeIdToken = ringSizeIdToken(selectedSize);
     const skuToken = ringSizeSkuToken(selectedSize);
@@ -180,7 +203,13 @@ export default function RingProductPage({ product }) {
                 <img
                   src={activeGallery[activeMedia].src}
                   alt={activeGallery[activeMedia].alt}
-                  className="w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms]"
+                  onClick={() => {
+                    if (product.zoomableGallery) setZoomIndex(activeMedia);
+                  }}
+                  className={`w-full h-full max-w-full object-contain block scale-[1.03] transition-transform duration-[6000ms] ${
+                    product.zoomableGallery ? "cursor-zoom-in" : ""
+                  }`}
+                  data-testid="hero-image"
                 />
               )}
             </div>
@@ -301,11 +330,15 @@ export default function RingProductPage({ product }) {
           </div>
 
           {/* SIZE SELECTION — sitewide reusable component */}
-          <div className="mb-8">
+          <div className="mb-8" ref={sizeSelectorRef}>
             <RingSizeSelector
               value={selectedSize}
               onChange={setSelectedSize}
+              sizes={product.availableSizes || undefined}
               bandWidthMm={product.bandWidthMm ?? null}
+              placeholder={product.sizePlaceholder || "Select your size"}
+              invalid={sizeError}
+              errorMessage={sizeError ? "Please select your ring size." : ""}
               testIdPrefix={`${product.id}-ringsize`}
               style={{
                 "--ring-accent": "#C6A25D",
@@ -314,6 +347,18 @@ export default function RingProductPage({ product }) {
                 "--ring-muted": "rgba(255, 255, 255, 0.5)",
               }}
             />
+
+            {/* Product-specific fit note (optional). Renders directly under the
+                selector, above the metal confirmation line. Used by BAJAN JOE
+                to communicate that customers between sizes should size up. */}
+            {product.customFitNote ? (
+              <p
+                className="mt-4 text-xs leading-relaxed text-[#c9c9c9]"
+                data-testid={`${product.id}-fit-note`}
+              >
+                {product.customFitNote}
+              </p>
+            ) : null}
 
             {/* Metal confirmation line — subtle reinforcement of the customer's
                 current metal + price before Add-to-Cart. No badge, no animation,
@@ -350,13 +395,13 @@ export default function RingProductPage({ product }) {
 
           {/* ADD TO CART */}
           <button
-            disabled={!isSizeValid || isAdding}
+            disabled={isAdding || (!isSizeValid && !product.showSizeValidationOnAdd)}
             onClick={onAddToCart}
             className={`w-full py-4 rounded-xl tracking-[0.25em] text-sm font-semibold transition-all ${
               isSizeValid && !isAdding
                 ? "bg-[#C6A25D] text-black hover:bg-[#b8944f]"
-                : "bg-[#3a3a3a] text-[#8a8a8a] cursor-not-allowed"
-            } ${isAdding ? "bg-green-600 text-white" : ""}`}
+                : "bg-[#3a3a3a] text-[#8a8a8a]"
+            } ${!isSizeValid && !product.showSizeValidationOnAdd ? "cursor-not-allowed" : "cursor-pointer"} ${isAdding ? "bg-green-600 text-white" : ""}`}
             data-testid="add-to-cart-button"
           >
             {isAdding ? buttonText : (isSizeValid ? "ADD TO CART" : "SELECT A SIZE")}
@@ -390,6 +435,122 @@ export default function RingProductPage({ product }) {
           bottom of the page, immediately above the site footer. */}
       {product.parabolaFamily ? (
         <ParabolaFamilyNav active={product.parabolaFamily} />
+      ) : null}
+
+      {/* ZOOM OVERLAY — opt-in via `product.zoomableGallery`. Full-screen
+          editorial lightbox for inspecting reptile-texture and stone detail.
+          ESC closes; click backdrop closes; arrows navigate images only. */}
+      {product.zoomableGallery && zoomIndex !== null && activeGallery[zoomIndex] ? (
+        <ZoomOverlay
+          gallery={activeGallery}
+          index={zoomIndex}
+          onChangeIndex={setZoomIndex}
+          onClose={() => setZoomIndex(null)}
+          productName={product.name}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/* -------------------- ZOOM OVERLAY (opt-in) -------------------- */
+function ZoomOverlay({ gallery, index, onChangeIndex, onClose, productName }) {
+  const item = gallery[index];
+  // Filter to images only for arrow navigation (videos aren't zoom targets).
+  const imageIndexes = gallery
+    .map((m, i) => (m.type === "image" ? i : null))
+    .filter((v) => v !== null);
+  const currentPos = imageIndexes.indexOf(index);
+  const prevIndex = currentPos > 0 ? imageIndexes[currentPos - 1] : imageIndexes[imageIndexes.length - 1];
+  const nextIndex = currentPos < imageIndexes.length - 1 ? imageIndexes[currentPos + 1] : imageIndexes[0];
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onChangeIndex(prevIndex);
+      else if (e.key === "ArrowRight") onChangeIndex(nextIndex);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [prevIndex, nextIndex, onChangeIndex, onClose]);
+
+  if (item.type !== "image") return null;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${productName} zoomed image`}
+      onClick={onClose}
+      data-testid="zoom-overlay"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 100,
+        background: "rgba(0,0,0,0.94)",
+        backdropFilter: "blur(6px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "clamp(16px, 4vw, 48px)",
+        cursor: "zoom-out",
+      }}
+    >
+      <img
+        src={item.src}
+        alt={item.alt}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          maxWidth: "100%",
+          maxHeight: "100%",
+          objectFit: "contain",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+          cursor: "zoom-out",
+        }}
+        data-testid="zoom-overlay-image"
+      />
+      {/* Close */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        aria-label="Close zoomed image"
+        data-testid="zoom-overlay-close"
+        style={{
+          position: "fixed", top: 24, right: 24, zIndex: 101,
+          width: 44, height: 44, borderRadius: "50%",
+          background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.24)",
+          color: "#fff", fontSize: 22, lineHeight: 1, cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}
+      >×</button>
+      {imageIndexes.length > 1 ? (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); onChangeIndex(prevIndex); }}
+            aria-label="Previous image"
+            data-testid="zoom-overlay-prev"
+            style={{
+              position: "fixed", left: 20, top: "50%", transform: "translateY(-50%)", zIndex: 101,
+              width: 44, height: 44, borderRadius: "50%",
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.24)",
+              color: "#fff", fontSize: 20, cursor: "pointer",
+            }}
+          >‹</button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onChangeIndex(nextIndex); }}
+            aria-label="Next image"
+            data-testid="zoom-overlay-next"
+            style={{
+              position: "fixed", right: 20, top: "50%", transform: "translateY(-50%)", zIndex: 101,
+              width: 44, height: 44, borderRadius: "50%",
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.24)",
+              color: "#fff", fontSize: 20, cursor: "pointer",
+            }}
+          >›</button>
+        </>
       ) : null}
     </div>
   );
