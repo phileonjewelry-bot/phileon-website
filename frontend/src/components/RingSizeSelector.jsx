@@ -297,23 +297,56 @@ export default function RingSizeSelector({
         {label}
       </label>
 
-      <button
-        id={`${testIdPrefix}-button`}
-        type="button"
-        className="rss-field"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-invalid={invalid || undefined}
-        aria-describedby={invalid && errorMessage ? `${testIdPrefix}-error` : undefined}
-        onClick={() => setOpen((o) => !o)}
-        data-testid={`${testIdPrefix}-button`}
-        style={invalid ? { borderColor: "#c65b5b" } : undefined}
-      >
-        <span className={`rss-field-value ${value ? "" : "is-empty"}`}>
-          {value ? ringSizeLabel(value) : placeholder}
-        </span>
-        <ChevronDown className="rss-chevron" aria-hidden="true" />
-      </button>
+      {/* Wrap the field + dropdown menu together so the absolute menu
+          anchors to the button itself, not to the entire root (which
+          also contains microcopy + wide-band notice underneath). */}
+      <div className="rss-field-wrap" style={{ position: "relative" }}>
+        <button
+          id={`${testIdPrefix}-button`}
+          type="button"
+          className="rss-field"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-invalid={invalid || undefined}
+          aria-describedby={invalid && errorMessage ? `${testIdPrefix}-error` : undefined}
+          onClick={() => setOpen((o) => !o)}
+          data-testid={`${testIdPrefix}-button`}
+          style={invalid ? { borderColor: "#c65b5b" } : undefined}
+        >
+          <span className={`rss-field-value ${value ? "" : "is-empty"}`}>
+            {value ? ringSizeLabel(value) : placeholder}
+          </span>
+          <ChevronDown className="rss-chevron" aria-hidden="true" />
+        </button>
+
+        {open && (
+          <div
+            role="listbox"
+            aria-label="Ring size"
+            className="rss-menu"
+            data-testid={`${testIdPrefix}-menu`}
+          >
+            {sizes.map((s) => {
+              const isSel = value === s;
+              const isCustomOpt = s === "custom";
+              return (
+              <button
+                key={s}
+                type="button"
+                role="option"
+                aria-selected={isSel}
+                onClick={() => handleSelect(s)}
+                className={`rss-option ${isCustomOpt ? "is-custom" : ""} ${isSel ? "is-selected" : ""}`}
+                data-testid={`${testIdPrefix}-opt-${ringSizeIdToken(s)}`}
+              >
+                <span>{ringSizeLabel(s)}</span>
+                {isSel && <span className="rss-option-mark">SELECTED</span>}
+              </button>
+            );
+          })}
+          </div>
+        )}
+      </div>
 
       {invalid && errorMessage ? (
         <p
@@ -331,34 +364,6 @@ export default function RingSizeSelector({
           {errorMessage}
         </p>
       ) : null}
-
-      {open && (
-        <div
-          role="listbox"
-          aria-label="Ring size"
-          className="rss-menu"
-          data-testid={`${testIdPrefix}-menu`}
-        >
-          {sizes.map((s) => {
-            const isSel = value === s;
-            const isCustomOpt = s === "custom";
-            return (
-              <button
-                key={s}
-                type="button"
-                role="option"
-                aria-selected={isSel}
-                onClick={() => handleSelect(s)}
-                className={`rss-option ${isCustomOpt ? "is-custom" : ""} ${isSel ? "is-selected" : ""}`}
-                data-testid={`${testIdPrefix}-opt-${ringSizeIdToken(s)}`}
-              >
-                <span>{ringSizeLabel(s)}</span>
-                {isSel && <span className="rss-option-mark">SELECTED</span>}
-              </button>
-            );
-          })}
-        </div>
-      )}
 
       {isCustom && (
         <p className="rss-custom-note" data-testid={`${testIdPrefix}-custom-note`}>
