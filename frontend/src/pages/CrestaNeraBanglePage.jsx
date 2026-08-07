@@ -31,10 +31,10 @@ const METAL_OPTIONS = [
 ];
 
 const MEDIA = [
-  { type: "video", src: HERO_VIDEO, poster: IMG_FRONT_STACK, alt: "CRESTA NERA hinged yellow-gold bangle — looping hero" },
-  { type: "image", src: IMG_FRONT_STACK, alt: "CRESTA NERA yellow-gold hinged bangle with granulated gold points and black-diamond pavé triangles — front view" },
+  { type: "video", src: HERO_VIDEO, poster: IMG_VERTICAL, alt: "CRESTA NERA hinged yellow-gold bangle — looping hero" },
+  { type: "image", src: IMG_VERTICAL, alt: "CRESTA NERA yellow-gold hinged bangle — hero" },
+  { type: "image", src: IMG_FRONT_STACK, alt: "CRESTA NERA yellow-gold hinged bangle — front view" },
   { type: "image", src: IMG_ANGLED_STACK, alt: "CRESTA NERA yellow-gold hinged bangle — three-quarter angle" },
-  { type: "image", src: IMG_VERTICAL, alt: "CRESTA NERA yellow-gold hinged bangle — pattern detail" },
   { type: "image", src: IMG_HINGE_CIRCLE, alt: "CRESTA NERA yellow-gold hinged bangle — hinge and latch profile" },
 ];
 
@@ -102,7 +102,7 @@ export default function CrestaNeraBanglePage() {
     handleAddToCart({
       id: `cresta-nera-${selectedMetal}-${selectedWrist}`,
       name: `CRESTA NERA — ${metal.label} · ${wrist.label} · ${wrist.mm} mm`,
-      image: IMG_FRONT_STACK,
+      image: IMG_VERTICAL,
       price,
       productKey: "cresta-nera",
       slug: "cresta-nera",

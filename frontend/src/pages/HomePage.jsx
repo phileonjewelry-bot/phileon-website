@@ -371,7 +371,7 @@ const HomePage = () => {
         const stripItems = [
           {
             title: "CRESTA NERA",
-            image: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/el5elc8u_1000169400.jpg",
+            image: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/otm0wfwp_1000169382.jpg",
             href: "/cresta-nera",
             subtitle: "Black Diamond Granulated Gold Bangle. A substantial yellow-gold hinged bangle with granulated gold points and 66 black diamonds in 22 pavé triangle clusters. 10K or 14K Yellow Gold. FROM $10,495 USD",
           },
