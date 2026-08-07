@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { products } from "@/data/products";
 
 const carouselItems = [
+  { name: "CRESTA NERA", slug: "cresta-nera", image: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/el5elc8u_1000169400.jpg", tagline: "Built, not made." },
   { name: "VEYRON NOIR", slug: "veyron-noir", image: products.veyronNoir?.imageUrl, tagline: "Not every tribute is a memory. Some are machines." },
   { name: "WYNETTE'S PALETTE", slug: "wynette-palette", image: products.wynettePalette?.imageUrl, tagline: "Every island brought a colour." },
   { name: "DRAPE", slug: "drape", image: products.drape?.imageUrl, tagline: "The dress left. The bones remain." },
