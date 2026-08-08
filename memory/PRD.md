@@ -4,7 +4,7 @@
 High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editorial UI (LA BÊTE visual language). Ongoing: content/UI expansion of Fine Jewelry, Inspiration Vault, and now Bracelets, with cinematic vertical galleries, autoplay-muted-loop hero video, and product-page detail pages per SKU.
 
 ## Product Registry (implemented)
-- **Fine Jewelry Rings**: Rhythm Mesh, OVATION Ribbed Ring, BAJAN JOE Signet Ring, RHYTHM MESH, LA BÊTE, CYPHER, BOUND, APEX, HOMAGE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, TOLA II, Galatians 6:14, TRACE, IL MORSO DEL RE
+- **Fine Jewelry Rings**: Rhythm Mesh, OVATION Ribbed Ring, BAJAN JOE Signet Ring, **QUADRIGA DOMINUS (NEW)**, RHYTHM MESH, LA BÊTE, CYPHER, BOUND, APEX, HOMAGE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, TOLA II, Galatians 6:14, TRACE, IL MORSO DEL RE
 - **Fine Jewelry Bracelets/Bangles**: **CRESTA NERA (NEW)** (10K/14K Yellow Gold · Black Diamonds · hinged)
 - **Inspiration Vault**: Orbit Lumière, Viridian Teardrops, Prismatic Laurel, Noir Tide, Prima Wave, Noir Cadence, Liaison, STAMPEDE, NIGHTFANG, PARALLAX
 - **Other**: PTP Cuff, Forme Cuff, Désir Corset, Rosaria, Alejandra Heels, La Marva, Annie Rose, Monika Couture, Katrina Cascata
@@ -18,6 +18,8 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 ## Changelog
 
 ### Feb 2026
+- **[DONE]** QUADRIGA DOMINUS — new gents statement ring with 4 colorway switch cards (Red/Black default, Black/Red, Green/Black, Black/Green), 10K/14K metal selector, gents US 7–15 half sizes, dynamic price matrix ($10,495–$13,750), shared `RingSizeSelector` reuse, size-guide CTA, substantial-band fit note. Registered in `/quadriga-dominus` (+ `/products/`, `/fine-jewelry/`) and appears in Gentleman's Club → Rings + Collective (excluded from Ladies and Inspiration Vault).
+- **[DONE]** BAJAN JOE gallery — presentation-box (red PHILEON box) added as 9th/final gallery image; existing order preserved
 - **[DONE]** CRESTA NERA Hinged Bangle — new product with metal (10K/14K YG) + wrist size (S/M/L/XL) required selectors, dynamic pricing matrix ($10,495–$12,595), bespoke page, hero video, main-page carousel placement, `WristSizeSelector` + `BraceletSizeGuideModal` shared components
 - BAJAN JOE Signet Ring — additional gallery images (bar-hand editorial); reptile-detail zoom overlay; 17-size gents range 7–15 with required validation
 - Ring-size selector dropdown positioning bug fixed (now anchors to button, not to parent root)
