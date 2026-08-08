@@ -13,7 +13,7 @@ import React from "react";
 import RingProductPage from "../components/RingProductPage";
 
 // Approved BAJAN JOE assets (public artifact URLs, unmodified).
-const HERO_VIDEO   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/u0p08dq0_VID-20260803-WA00241.mp4";
+const HERO_VIDEO   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ua7fhqo0_hf_20260808_045211_0c2ba646-60ce-406a-b04b-979db1d45083.mp4";
 const RENDER_FRONT = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/p0nvtaur_1000168342.png";
 const RENDER_ANGLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mb9ie3g5_1000168343.png";
 const RENDER_ALT   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o8yxeh08_1000168344.png";
@@ -22,6 +22,7 @@ const RENDER_PROFILE = "https://customer-assets-jt897jd0.emergentagent.net/job_0
 const LIFESTYLE_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qv537c0a_1000167362.png"; // hand model wearing the ring on middle finger
 const LIFESTYLE_EDIT = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qg4ncofo_1000167663.png"; // full-body editorial at bar
 const LIFESTYLE_BAR_HAND = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5d9xqw5d_1000168910.png"; // intimate bar hand — warm bokeh on marble
+const PRESENTATION_BOX = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/p84yjqh9_1000169938.png"; // top-down on white ring pillow in red presentation box
 
 const bajanJoeProduct = {
   id: "bajan-joe",
