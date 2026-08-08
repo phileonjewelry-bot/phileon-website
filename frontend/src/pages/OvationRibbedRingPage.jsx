@@ -2,7 +2,8 @@ import React from "react";
 import RingProductPage from "../components/RingProductPage";
 import { products } from "@/data/products";
 
-// Approved OVATION assets — yellow-gold ribbed stackable rings.
+// New: OVATION hero video (autoplay, muted, loop, playsInline — no controls)
+const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/g029yecv_XiaoYing_Video_1786156881949_HD.mp4";
 // Same visual language used across every metal tier until dedicated white-gold
 // and silver assets are supplied.
 const HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pl6at891_1000166845.png"; // 3-ring leaning stack on light marble
@@ -89,6 +90,9 @@ const ovationProduct = {
   defaultTier: "yellow10k",
 
   media: [
+    // 0. Hero video — autoplay, muted, loop, playsInline, no controls (RingProductPage template).
+    //    Poster falls back to the light-marble stack hero if the video is blocked / reduced-motion.
+    { type: "video", src: HERO_VIDEO, poster: HERO, alt: "OVATION ribbed yellow-gold rings — looping hero video" },
     // 1. Hero (unisex): the product truth — 3-ring stack on light marble
     { type: "image", src: HERO, alt: "Three OVATION ribbed yellow-gold rings styled in a leaning stack on light marble — hero" },
     // 2–3. Gents lifestyle (audience-gated): Times Square hero, then SoHo street portrait
