@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
 const HERO_IMG = "/uncle-jo/hero.jpg";
+const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gmlgkf8i_hf_20260808_172010_6d65e015-5612-462b-b5a1-f788be91038f.mp4";
 const HERO_ALT = "UNCLE JO — sterling silver handwoven mesh statement ring held between fingers.";
 
 // 2 metals × 3 product selections = 6 SKUs. USD-mirrored convention
@@ -48,6 +49,7 @@ const GALLERY = [
   { src: "/uncle-jo/archive-2.jpg", alt: "UNCLE JO — matching cuff detail, mesh weave under polished sterling silver rails." },
   { src: "/uncle-jo/archive-3.jpg", alt: "UNCLE JO — ring and cuff together, the Signature Mesh set as one composition." },
   { src: "/uncle-jo/archive-4.jpg", alt: "UNCLE JO — lifestyle: the cuff worn at the wrist, the ring at hand." },
+  { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/a1ho1qae_1000169976.png", alt: "UNCLE JO — sterling silver woven mesh band (925 stamp) on a white pillow inside the PHILEON red presentation box." },
 ];
 
 export default function UncleJoPage() {
@@ -323,7 +325,23 @@ export default function UncleJoPage() {
       <section className="uj-hero" data-testid="uj-hero">
         <div className="uj-hero-grid">
           <div className="uj-hero-img-wrap" style={{ transform: `translateY(${heroParallax * 0.25}px)` }}>
-            <img src={HERO_IMG} alt={HERO_ALT} className="uj-hero-img" data-testid="uj-hero-img" />
+            <video
+              src={HERO_VIDEO}
+              poster={HERO_IMG}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+              disableRemotePlayback
+              controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+              onContextMenu={(e) => e.preventDefault()}
+              onEnded={(e) => { e.currentTarget.currentTime = 0; e.currentTarget.play(); }}
+              className="uj-hero-img"
+              aria-label={HERO_ALT}
+              data-testid="uj-hero-video"
+            />
           </div>
           <div>
             <p className="uj-collection">PHILEON</p>
