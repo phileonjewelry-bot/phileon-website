@@ -122,6 +122,11 @@ const bajanJoeProduct = {
       src: LIFESTYLE_EDIT,
       alt: "BAJAN JOE styled with a black suit — full-body editorial",
     },
+    {
+      type: "image",
+      src: PRESENTATION_BOX,
+      alt: "BAJAN JOE presented top-down on a white ring pillow inside the PHILEON red presentation box",
+    },
   ],
 
   story:
