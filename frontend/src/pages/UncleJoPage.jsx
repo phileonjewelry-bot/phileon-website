@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
 const HERO_IMG = "/uncle-jo/hero.jpg";
-const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gmlgkf8i_hf_20260808_172010_6d65e015-5612-462b-b5a1-f788be91038f.mp4";
+const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d4et2wch_hf_20260809_020523_4d0bfe80-5e93-4f5c-9789-31ce409fe646.mp4";
 const HERO_ALT = "UNCLE JO — sterling silver handwoven mesh statement ring held between fingers.";
 
 // 2 metals × 3 product selections = 6 SKUs. USD-mirrored convention
