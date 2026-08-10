@@ -52,7 +52,13 @@ const COLORWAYS = [
     image: IMG_RED_BLACK,
     alt: "QUADRIGA DOMINUS — red cushion centre stone framed by black pavé double halo",
     pricing: { "10K": 10495, "14K": 12250 },
-    extras: [],
+    extras: [
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/laky5n5r_1000170370.png", alt: "QUADRIGA DOMINUS — ruby centre with black pavé, editorial three-quarter view on burgundy velvet" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1cxr64eu_1000170377.png", alt: "QUADRIGA DOMINUS — extreme macro of a prong holding the ruby centre against the black pavé bed" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/bb6207s9_1000170378.png", alt: "QUADRIGA DOMINUS — ruby centre lifestyle: on a marble table beside a Cohiba Siglo V humidor and cigar cutter" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h9mgec5t_1000170379.png", alt: "QUADRIGA DOMINUS — ruby centre worn on hand in a dark-panelled library, editorial lifestyle" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2bpn5t1m_1000170380.png", alt: "QUADRIGA DOMINUS — ruby centre worn on hand at night with a city skyline bokeh behind" },
+    ],
   },
   {
     id: "black-red",
