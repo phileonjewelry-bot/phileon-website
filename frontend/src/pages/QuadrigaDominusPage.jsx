@@ -34,7 +34,8 @@ const IMG_GREEN_BLACK = "https://customer-assets-jt897jd0.emergentagent.net/job_
 const IMG_BLACK_GREEN = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8jgj6qm3_1000169939.png"; // Black Centre / Green Pavé
 
 // Single persistent hero video — same clip plays for every colorway selection.
-const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3em51w8p_XiaoYing_Video_1786309893482.mp4";
+// Self-hosted, audio track stripped, faststart moov atom for reliable looping.
+const HERO_VIDEO = "/quadriga/hero-video.mp4";
 // Poster is a still frame extracted from the hero video itself (640×368,
 // same aspect ratio as the video) — prevents layout shift between the
 // fallback and the decoded playback.
@@ -84,7 +85,13 @@ const COLORWAYS = [
     image: IMG_BLACK_GREEN,
     alt: "QUADRIGA DOMINUS — black cushion centre stone framed by green pavé double halo",
     pricing: { "10K": 11995, "14K": 13750 },
-    extras: [],
+    extras: [
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f0zzmem0_1000170329.png", alt: "QUADRIGA DOMINUS — black centre with emerald pavé, editorial three-quarter view" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/qtlk2o66_1000170331.png", alt: "QUADRIGA DOMINUS — rear architectural view of the black centre framed by three rows of emerald pavé" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jxjlkrds_1000170330.png", alt: "QUADRIGA DOMINUS — macro on the faceted black cushion and emerald pavé double halo" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4ta316eq_1000170333.png", alt: "QUADRIGA DOMINUS — full ring profile with black centre and emerald pavé, standing on a soft neutral surface" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/r9bh58qh_1000170334.png", alt: "QUADRIGA DOMINUS — top-down view of the black centre framed by three concentric rows of emerald pavé" },
+    ],
   },
 ];
 
