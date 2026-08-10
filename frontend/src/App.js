@@ -101,6 +101,7 @@ import BajanJoeSignetRingPage from "@/pages/BajanJoeSignetRingPage";
 import QuadrigaDominusPage from "@/pages/QuadrigaDominusPage";
 import CrestaNeraBanglePage from "@/pages/CrestaNeraBanglePage";
 import RibbonRegalePage from "@/pages/RibbonRegalePage";
+import RibbonRegaleEditionPage from "@/pages/RibbonRegaleEditionPage";
 import ScaccoMattoPage from "@/pages/ScaccoMattoPage";
 import TributeSeriesPage from "@/pages/TributeSeriesPage";
 import NeighborhoodNipPage from "@/pages/NeighborhoodNipPage";
@@ -306,6 +307,9 @@ function App() {
             <Route path="/fine-jewelry/cresta-nera" element={<CrestaNeraBanglePage />} />
             <Route path="/inspiration-vault/gold-theory-ribbon" element={<RibbonRegalePage />} />
             <Route path="/inspiration-vault/ribbon-regale" element={<RibbonRegalePage />} />
+            <Route path="/ribbon-regale-edition" element={<RibbonRegaleEditionPage />} />
+            <Route path="/products/ribbon-regale-edition" element={<RibbonRegaleEditionPage />} />
+            <Route path="/fine-jewelry/ribbon-regale-edition" element={<RibbonRegaleEditionPage />} />
             <Route path="/scacco-matto" element={<ScaccoMattoPage />} />
             <Route path="/fine-jewelry/scacco-matto" element={<ScaccoMattoPage />} />
             <Route path="/products/scacco-matto" element={<ScaccoMattoPage />} />
