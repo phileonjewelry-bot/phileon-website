@@ -376,6 +376,15 @@ const HomePage = () => {
             subtitle: "Black Diamond Granulated Gold Bangle. A substantial yellow-gold hinged bangle with granulated gold points and 66 black diamonds in 22 pavé triangle clusters. 10K or 14K Yellow Gold. FROM $10,495 USD",
           },
           {
+            title: "QUADRIGA DOMINUS",
+            image: "/quadriga/card-hero.jpg",
+            href: "/quadriga-dominus",
+            subtitle: "Genuine-Stone Statement Ring. Four colorways sharing one commanding gents architecture — 188 pavé stones and one genuine centre stone. 10K or 14K White Metal. FROM $10,495 USD",
+            // Source image is a wide 640×368 four-ring composition; contain
+            // (over the strip's default cover) so no outer ring is clipped.
+            objectFit: "contain",
+          },
+          {
             title: "NEIGHBORHOOD NIP",
             image: "/tribute-series/neighborhood-nip/shop-card-front-v2.jpg",
             href: "/tribute-series/neighborhood-nip",
@@ -602,6 +611,7 @@ const HomePage = () => {
                     src={item.image}
                     alt={item.title}
                     draggable="false"
+                    style={item.objectFit ? { objectFit: item.objectFit } : undefined}
                   />
                 </Link>
               ))}
