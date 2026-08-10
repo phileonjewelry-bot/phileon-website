@@ -1,28 +1,15 @@
 /* ==========================================================================
    RIBBON REGALE ÉDITION — PHILEON Fine Jewelry
    -------------------------------------------------------------------------
-   This page is the precious-metal Fine Jewelry counterpart to the original
-   RIBBON REGALE archive piece housed in the Inspiration Vault.
-
-   The original file (`RibbonRegalePage.jsx`) and its route
-   (`/inspiration-vault/ribbon-regale`) remain untouched. This file is a
-   clone with the following surgical differences:
-     • Metal selector — 4 options
-         1) 18K Yellow Gold Plated Sterling Silver  ($495 CAD, default)
-         2) 10K Solid Yellow Gold                    ($1,495 CAD)
-         3) 14K Solid Yellow Gold                    ($1,895 CAD)
-         4) 18K Solid Yellow Gold                    ($2,395 CAD)
-     • Prices stored in CAD; the currency suffix is rendered verbatim
-     • Explicit material disclosure — plated version can never be
-       mistaken for solid gold
-     • Copy — "reissued in precious metal" reissue statement, Fine
-       Jewelry material listing, no plated / archive tags
-     • Product route + cart identifiers use `ribbon-regale-edition`
+   Full editorial redesign. Immersive dark gallery, single horizontal
+   thumbnail rail, campaign-scale brass/gold statement, refined metal
+   configurator. Original Inspiration Vault page (`RibbonRegalePage.jsx`)
+   is untouched.
    ========================================================================== */
 
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import { useAddToCart } from "@/hooks/useAddToCart";
 
@@ -40,19 +27,16 @@ const VIDEO_2           = `${BASE}/video-2.mp4`;
 const VIDEO_2_POSTER    = `${BASE}/video-2-poster.jpg`;
 
 // ── PRICES (CAD) ────────────────────────────────────────────────────────────
-// Prices are stored in Canadian Dollars per merchant direction. The storefront
-// displays these values verbatim with a CAD suffix; do NOT hard-code converted
-// USD values here.
 const PRICE_GOLD_PLATED_STERLING_SILVER_CAD = 495;
 const PRICE_10K_SOLID_YELLOW_GOLD_CAD       = 1495;
 const PRICE_14K_SOLID_YELLOW_GOLD_CAD       = 1895;
 const PRICE_18K_SOLID_YELLOW_GOLD_CAD       = 2395;
-
 const CURRENCY_CODE = "CAD";
 
 const METAL_OPTIONS = [
   {
     id: "plated",
+    shortLabel: "Gold Plated",
     label: "GOLD PLATED STERLING SILVER",
     cartMetalLabel: "18K Yellow Gold Plated Sterling Silver",
     price: PRICE_GOLD_PLATED_STERLING_SILVER_CAD,
@@ -63,6 +47,7 @@ const METAL_OPTIONS = [
   },
   {
     id: "10k",
+    shortLabel: "10K",
     label: "10K YELLOW GOLD",
     cartMetalLabel: "10K Solid Yellow Gold",
     price: PRICE_10K_SOLID_YELLOW_GOLD_CAD,
@@ -72,6 +57,7 @@ const METAL_OPTIONS = [
   },
   {
     id: "14k",
+    shortLabel: "14K",
     label: "14K YELLOW GOLD",
     cartMetalLabel: "14K Solid Yellow Gold",
     price: PRICE_14K_SOLID_YELLOW_GOLD_CAD,
@@ -81,6 +67,7 @@ const METAL_OPTIONS = [
   },
   {
     id: "18k",
+    shortLabel: "18K",
     label: "18K YELLOW GOLD",
     cartMetalLabel: "18K Solid Yellow Gold",
     price: PRICE_18K_SOLID_YELLOW_GOLD_CAD,
@@ -90,11 +77,8 @@ const METAL_OPTIONS = [
   },
 ];
 
-// Default entry state — the plated Sterling Silver entry option is selected
-// on load so the customer sees the $495 CAD starting price immediately.
 const DEFAULT_METAL_ID = "plated";
 
-// Approved gallery order — mirrors the original archive piece.
 const GALLERY = [
   { type: "video", src: VIDEO_1, poster: VIDEO_1_POSTER, alt: "RIBBON REGALE ÉDITION silent product motion — study one" },
   { type: "video", src: VIDEO_2, poster: VIDEO_2_POSTER, alt: "RIBBON REGALE ÉDITION silent product motion — study two" },
@@ -151,9 +135,9 @@ export default function RibbonRegaleEditionPage() {
   const [idx, setIdx] = useState(0);
   const [selectedMetalId, setSelectedMetalId] = useState(DEFAULT_METAL_ID);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
+  const thumbRailRef = useRef(null);
 
   useEffect(() => {
-    setIdx(0);
     document.title = "RIBBON REGALE ÉDITION | PHILEON Fine Jewelry";
     const upsert = (attr, val, content) => {
       let el = document.querySelector(`meta[${attr}="${val}"]`);
@@ -166,6 +150,17 @@ export default function RibbonRegaleEditionPage() {
     upsert("property", "og:image", `${window.location.origin}${HERO_PAIR_BLACK}`);
   }, []);
 
+  // Keep the active thumbnail in view when the customer paginates the main
+  // slide (chevron, swipe, or dot click).
+  useEffect(() => {
+    const rail = thumbRailRef.current;
+    if (!rail) return;
+    const active = rail.querySelector(`[data-thumb-idx="${idx}"]`);
+    if (active && typeof active.scrollIntoView === "function") {
+      active.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  }, [idx]);
+
   const prev = () => setIdx((i) => (i - 1 + GALLERY.length) % GALLERY.length);
   const next = () => setIdx((i) => (i + 1) % GALLERY.length);
 
@@ -173,11 +168,8 @@ export default function RibbonRegaleEditionPage() {
   const activePrice = activeMetal.price;
   const canPurchase = typeof activePrice === "number" && activePrice > 0;
 
-  const handleSelectMetal = (id) => setSelectedMetalId(id);
-
   const onAddToCart = () => {
     if (!canPurchase) return;
-
     handleAddToCart({
       id: `ribbon-regale-edition-${activeMetal.id}`,
       productName: "RIBBON REGALE ÉDITION",
@@ -201,7 +193,7 @@ export default function RibbonRegaleEditionPage() {
     }, 1, `${activeMetal.cartMetalLabel} · One Pair`);
   };
 
-  // ── Swipe support (mobile) ────────────────────────────────────────────────
+  // ── Swipe support ─────────────────────────────────────────────────────────
   const touchStart = useRef(null);
   const onTouchStart = (e) => { touchStart.current = e.touches[0].clientX; };
   const onTouchEnd = (e) => {
@@ -211,253 +203,313 @@ export default function RibbonRegaleEditionPage() {
     touchStart.current = null;
   };
 
+  const activeItem = GALLERY[idx];
+  const activeIsLightBg = activeItem.type === "image" && activeItem.src.includes("pair-white");
+
   return (
     <div className="rre-page" data-testid="ribbon-regale-edition-page">
       <LuxuryMotionStyles />
       <style>{`
-        .rre-page { background:#0a0908; color:#e8e0cf; font-family:'Cormorant Garamond',serif; min-height:100vh; }
-        .rre-return { display:inline-flex; align-items:center; gap:10px; padding:18px 26px;
-          font-family:'Cinzel',serif; font-size:11px; letter-spacing:.42em;
-          color:rgba(232,224,207,.55); text-decoration:none; text-transform:uppercase;
+        /* ───────────────────────  BASE  ─────────────────────── */
+        .rre-page { background:#08070a; color:#e8e0cf;
+          font-family:'Cormorant Garamond',serif; min-height:100vh;
+          overflow-x:hidden; }
+        .rre-return { display:inline-flex; align-items:center; gap:10px;
+          padding:22px clamp(20px,4vw,60px);
+          font-family:'Cinzel',serif; font-size:10.5px; letter-spacing:.5em;
+          color:rgba(232,224,207,.5); text-decoration:none; text-transform:uppercase;
           transition:color 220ms ease,gap 220ms ease; }
         .rre-return:hover { color:#c8a24a; gap:16px; }
-        .rre-wrap { max-width:1180px; margin:0 auto; padding:32px clamp(20px,4vw,60px) 120px; }
-        .rre-eyebrow { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.6em;
-          color:#c8a24a; text-transform:uppercase; margin:0 0 16px; text-align:center; }
-        .rre-title { font-family:'Cinzel',serif; font-weight:500;
-          font-size:clamp(36px,5.6vw,72px); letter-spacing:.16em; text-align:center;
-          margin:0 0 12px; color:#f4ecd6; text-transform:uppercase; }
+
+        /* ───────────────────  EDITORIAL HEADER  ─────────────────── */
+        .rre-header { text-align:center; padding:8px clamp(20px,4vw,60px) 40px; }
+        .rre-eyebrow { font-family:'Cinzel',serif; font-size:10.5px; letter-spacing:.7em;
+          color:#c8a24a; text-transform:uppercase; margin:0 0 20px; }
+        .rre-title { font-family:'Cinzel',serif; font-weight:400;
+          font-size:clamp(38px,6.4vw,92px); letter-spacing:.14em; line-height:1.05;
+          margin:0 0 14px; color:#f4ecd6; text-transform:uppercase; }
         .rre-subtitle { font-family:'Playfair Display',serif; font-style:italic;
-          font-size:clamp(18px,2vw,26px); text-align:center; color:#c8a24a;
-          margin:0 0 40px; }
+          font-size:clamp(15px,1.7vw,20px); letter-spacing:.06em;
+          color:rgba(232,224,207,.7); margin:0; }
 
-        /* GALLERY */
-        .rre-gallery { position:relative; margin:0 auto 40px; max-width:900px; }
-        .rre-main { position:relative; width:100%; aspect-ratio:1/1; background:#000;
-          border:1px solid rgba(200,162,74,.22); display:flex; align-items:center; justify-content:center;
+        /* ───────────────────  IMMERSIVE GALLERY  ─────────────────── */
+        .rre-gallery-stage { position:relative; width:100%;
+          background:#08070a; margin:16px auto 0; }
+        .rre-stage-inner { position:relative;
+          width:min(1200px,100%); margin:0 auto;
+          aspect-ratio:5/6;
           overflow:hidden; touch-action:pan-y; }
-        .rre-main img, .rre-main video { width:100%; height:100%; object-fit:contain; object-position:center;
-          display:block; background:#000; pointer-events:none; }
-        .rre-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(10,9,8,.75);
-          border:1px solid rgba(200,162,74,.35); color:#f4ecd6; width:44px; height:44px;
-          display:flex; align-items:center; justify-content:center; cursor:pointer;
-          transition:background 220ms ease,color 220ms ease; z-index:2; }
-        .rre-nav:hover { background:#c8a24a; color:#0a0908; }
-        .rre-nav.prev { left:12px; } .rre-nav.next { right:12px; }
+        @media (min-width:1024px){ .rre-stage-inner { aspect-ratio:4/3; } }
+        .rre-stage-inner img, .rre-stage-inner video {
+          position:absolute; inset:0; width:100%; height:100%;
+          object-fit:cover; display:block;
+          transition:opacity 520ms ease; pointer-events:none;
+          background:#08070a;
+        }
+        /* White-bg product still gets contained without a giant white card */
+        .rre-stage-inner.light-bg { background:#f6f2ea; }
+        .rre-stage-inner.light-bg img { object-fit:contain; background:#f6f2ea; padding:6% 4%; }
 
-        .rre-thumbs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-          gap:10px; margin-top:14px; }
+        /* Subtle chevrons — desktop only, understated */
+        .rre-chev { position:absolute; top:50%; transform:translateY(-50%);
+          width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+          background:transparent; border:none; color:rgba(244,236,214,.65);
+          cursor:pointer; z-index:3; padding:0;
+          transition:color 220ms ease,transform 220ms ease; }
+        .rre-chev:hover { color:#f4ecd6; }
+        .rre-chev.prev { left:clamp(4px,1.5vw,20px); }
+        .rre-chev.next { right:clamp(4px,1.5vw,20px); }
+        .rre-chev.next:hover { transform:translateY(-50%) translateX(4px); }
+        .rre-chev.prev:hover { transform:translateY(-50%) translateX(-4px); }
         @media (max-width:520px){
-          .rre-thumbs { grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
-        }
-        .rre-thumb { position:relative; border:1px solid rgba(200,162,74,.18); background:#000; padding:0;
-          aspect-ratio:1/1; cursor:pointer; overflow:hidden;
-          transition:border-color 220ms ease,transform 220ms ease; }
-        .rre-thumb:hover { border-color:#c8a24a; transform:translateY(-2px); }
-        .rre-thumb.active { border-color:#c8a24a; }
-        .rre-thumb img { width:100%; height:100%; object-fit:contain; background:#000; }
-        .rre-thumb .rre-video-badge {
-          position:absolute; bottom:6px; right:6px;
-          background:rgba(0,0,0,.7); border:1px solid rgba(200,162,74,.55);
-          color:#c8a24a; font-family:'Cinzel',serif; font-size:8.5px; letter-spacing:.28em;
-          padding:3px 6px; text-transform:uppercase;
-          pointer-events:none;
+          .rre-chev { width:36px; height:36px; opacity:0; pointer-events:none; }
         }
 
-        /* EDITORIAL CAMPAIGN STATEMENT */
-        .rre-campaign { margin:80px auto 0; max-width:1180px;
-          padding:88px clamp(24px,6vw,80px);
-          border-top:1px solid rgba(200,162,74,.18);
-          border-bottom:1px solid rgba(200,162,74,.18);
-          text-align:center; }
-        .rre-campaign-line { font-family:'Cinzel',serif; font-weight:500;
-          font-size:clamp(30px,6vw,72px); letter-spacing:.16em; line-height:1.15;
-          color:#f4ecd6; text-transform:uppercase; margin:0; }
-        .rre-campaign-line + .rre-campaign-line { margin-top:.35em; color:#c8a24a; }
-        @media (max-width:520px){
-          .rre-campaign { margin-top:56px; padding:56px 20px; }
-          .rre-campaign-line { font-size:clamp(24px,9vw,42px); letter-spacing:.12em; }
+        /* Pagination dots (mobile-primary, desktop-secondary cue) */
+        .rre-dots { position:absolute; bottom:14px; left:0; right:0;
+          display:flex; align-items:center; justify-content:center; gap:6px;
+          pointer-events:none; z-index:3; }
+        .rre-dot { width:6px; height:6px; border-radius:50%;
+          background:rgba(255,255,255,.35);
+          transition:background 220ms ease,width 220ms ease; }
+        .rre-dot.active { background:#c8a24a; width:18px; border-radius:3px; }
+
+        /* Horizontal thumbnail rail — single row, scrollable, subtle */
+        .rre-thumb-rail { display:flex; gap:10px; overflow-x:auto;
+          padding:18px clamp(20px,4vw,60px) 6px;
+          scroll-snap-type:x mandatory;
+          scrollbar-width:none;
         }
+        .rre-thumb-rail::-webkit-scrollbar { display:none; }
+        .rre-thumb { flex:0 0 auto;
+          width:clamp(80px,22vw,110px);
+          aspect-ratio:1/1;
+          background:#0a0908;
+          border:1px solid transparent;
+          overflow:hidden; padding:0; cursor:pointer;
+          scroll-snap-align:center;
+          transition:border-color 260ms ease,opacity 260ms ease,transform 260ms ease;
+          opacity:.6;
+        }
+        .rre-thumb:hover { opacity:.9; transform:translateY(-2px); }
+        .rre-thumb.active { opacity:1; border-color:#c8a24a; }
+        .rre-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
 
-        /* BODY */
-        .rre-body { max-width:720px; margin:56px auto 0; text-align:center; }
-        .rre-body h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,36px);
-          margin:0 0 20px; color:#f4ecd6; }
-        .rre-body p { font-size:clamp(17px,1.5vw,20px); line-height:1.7; color:#d6cdb6; margin:0 0 16px; }
-        .rre-reissue { font-family:'Playfair Display',serif; font-style:italic;
-          color:#c8a24a; font-size:clamp(18px,1.6vw,22px); }
-        .rre-material-statement { display:inline-block; margin-top:24px; padding:14px 26px;
-          border:1px solid rgba(200,162,74,.35);
-          font-family:'Cinzel',serif; font-size:11px; letter-spacing:.34em;
-          color:#c8a24a; text-transform:uppercase; line-height:1.6; }
+        /* ───────────────────  CAMPAIGN STATEMENT  ─────────────────── */
+        .rre-campaign { padding:clamp(72px,10vw,140px) clamp(20px,4vw,60px);
+          background:#08070a; text-align:center; margin-top:24px; }
+        .rre-campaign-line { font-family:'Cinzel',serif;
+          font-size:clamp(28px,5.6vw,68px); letter-spacing:.16em; line-height:1.15;
+          text-transform:uppercase; margin:0; color:rgba(232,224,207,.55);
+          font-weight:400; }
+        .rre-campaign-line.dominant { color:#c8a24a; font-weight:500;
+          font-size:clamp(34px,7.4vw,92px);
+          margin-top:.35em; letter-spacing:.14em; }
 
-        /* METAL SELECTOR */
-        .rre-metals { max-width:820px; margin:56px auto 0; }
-        .rre-metals-heading { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.42em;
-          text-align:center; color:rgba(232,224,207,.55); text-transform:uppercase;
+        /* ───────────────────  PURCHASE BLOCK  ─────────────────── */
+        .rre-purchase { max-width:900px; margin:0 auto;
+          padding:64px clamp(20px,4vw,60px) 40px; }
+        .rre-material-quote { font-family:'Playfair Display',serif; font-style:italic;
+          font-size:clamp(18px,1.8vw,24px); text-align:center;
+          color:#c8a24a; margin:0 0 26px; letter-spacing:.02em; }
+        .rre-material-list { font-family:'Cormorant Garamond',serif;
+          font-size:clamp(16px,1.6vw,20px); text-align:center;
+          line-height:1.65; color:#d6cdb6; max-width:640px;
+          margin:0 auto 44px; }
+
+        /* Metal selector — refined pills */
+        .rre-metals-heading { font-family:'Cinzel',serif; font-size:10px;
+          letter-spacing:.5em; text-align:center;
+          color:rgba(232,224,207,.5); text-transform:uppercase;
           margin:0 0 18px; }
-        .rre-metal-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
-        @media (max-width:900px){ .rre-metal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-        @media (max-width:520px){ .rre-metal-grid { grid-template-columns:1fr; } }
-        .rre-metal-btn { display:flex; flex-direction:column; align-items:center; justify-content:center;
-          padding:18px 12px; background:transparent; border:1.5px solid rgba(200,162,74,.35);
-          color:#e8e0cf; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.22em;
-          text-transform:uppercase; cursor:pointer; text-align:center;
-          transition:background 220ms ease,color 220ms ease,border-color 220ms ease,transform 220ms ease; }
-        .rre-metal-btn:hover { background:rgba(200,162,74,.08); border-color:#c8a24a; transform:translateY(-2px); }
-        .rre-metal-btn.active { background:rgba(200,162,74,.15); border-color:#c8a24a; color:#f4ecd6; }
-        .rre-metal-price { display:block; margin-top:8px; font-family:'Cormorant Garamond',serif;
-          font-style:italic; letter-spacing:.04em; color:#c8a24a; font-size:14px; text-transform:none; }
+        .rre-metal-row { display:grid;
+          grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px;
+          margin:0 auto 22px; max-width:820px; }
+        @media (max-width:900px){ .rre-metal-row { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media (max-width:400px){ .rre-metal-row { grid-template-columns:1fr; } }
+        .rre-metal-pill { display:flex; flex-direction:column; align-items:center; justify-content:center;
+          padding:18px 12px;
+          background:transparent;
+          border:1px solid rgba(200,162,74,.25);
+          color:#e8e0cf; cursor:pointer; text-align:center;
+          transition:border-color 240ms ease,background 240ms ease,color 240ms ease,transform 240ms ease; }
+        .rre-metal-pill:hover { border-color:rgba(200,162,74,.55); transform:translateY(-2px); }
+        .rre-metal-pill.active {
+          background:rgba(200,162,74,.08);
+          border-color:#c8a24a;
+          color:#f4ecd6;
+        }
+        .rre-metal-pill .metal-name {
+          font-family:'Cinzel',serif; font-size:10.5px; letter-spacing:.22em;
+          text-transform:uppercase; line-height:1.35;
+        }
+        .rre-metal-pill .metal-price {
+          font-family:'Cormorant Garamond',serif; font-style:italic;
+          font-size:14px; color:#c8a24a; margin-top:10px; letter-spacing:.02em;
+        }
 
-        /* MATERIAL DISCLOSURE — always visible under the selector */
-        .rre-material-disclosure { margin:28px auto 0; padding:22px 24px;
-          border:1px solid rgba(200,162,74,.22); background:rgba(200,162,74,.04);
-          max-width:640px; text-align:left; }
-        .rre-disclosure-title { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.32em;
-          color:#c8a24a; text-transform:uppercase; margin:0 0 12px; }
-        .rre-disclosure-line { font-family:'Cormorant Garamond',serif; font-size:16px;
-          color:#e8e0cf; margin:0 0 6px; letter-spacing:.02em; }
-        .rre-disclosure-line strong { color:#f4ecd6; font-weight:600; letter-spacing:.04em; }
-        .rre-disclosure-note { font-family:'Cormorant Garamond',serif; font-style:italic;
-          font-size:14px; color:rgba(232,224,207,.7); margin:10px 0 0; letter-spacing:.02em; }
+        /* Material disclosure — clean, no heavy box */
+        .rre-disclosure { max-width:640px; margin:0 auto;
+          text-align:center; padding:22px 0 32px;
+          border-top:1px solid rgba(200,162,74,.14); }
+        .rre-disclosure-title { font-family:'Cinzel',serif; font-size:10px;
+          letter-spacing:.5em; text-transform:uppercase;
+          color:rgba(232,224,207,.6); margin:0 0 12px; }
+        .rre-disclosure p { font-family:'Cormorant Garamond',serif;
+          font-size:16px; letter-spacing:.02em; color:#e8e0cf; margin:0 0 6px; }
+        .rre-disclosure p strong { color:#f4ecd6; font-weight:600; letter-spacing:.04em; }
+        .rre-disclosure .note { font-style:italic; color:rgba(232,224,207,.65);
+          font-size:14px; margin-top:10px; }
 
-        /* CTA */
-        .rre-cta { text-align:center; max-width:520px; margin:56px auto 0;
-          padding-top:44px; border-top:1px solid rgba(200,162,74,.18); }
-        .rre-price { font-family:'Cinzel',serif; font-size:clamp(22px,2.4vw,32px);
-          letter-spacing:.28em; color:#f4ecd6; margin:0 0 8px; }
+        /* Price + CTA */
+        .rre-cta { text-align:center; margin:28px auto 0; max-width:520px; }
+        .rre-price { font-family:'Cinzel',serif;
+          font-size:clamp(24px,3vw,36px); letter-spacing:.28em;
+          color:#f4ecd6; margin:0 0 8px; }
         .rre-price-note { font-family:'Cormorant Garamond',serif; font-style:italic;
-          font-size:14px; letter-spacing:.06em; color:rgba(232,224,207,.55); margin:0 0 26px; }
+          font-size:13px; letter-spacing:.06em;
+          color:rgba(232,224,207,.5); margin:0 0 26px; }
         .rre-add-btn { display:inline-flex; align-items:center; justify-content:center;
-          padding:18px 64px; border:1.5px solid #c8a24a; background:transparent;
-          font-family:'Cinzel',serif; font-size:12px; letter-spacing:.42em;
+          min-width:280px; padding:20px 56px;
+          border:1.5px solid #c8a24a; background:transparent;
+          font-family:'Cinzel',serif; font-size:11px; letter-spacing:.5em;
           color:#f4ecd6; text-transform:uppercase; cursor:pointer;
-          transition:background 320ms ease,color 320ms ease,transform 220ms ease; }
-        .rre-add-btn:hover:not(:disabled) { background:#c8a24a; color:#0a0908; transform:translateY(-2px); }
+          transition:background 320ms ease,color 320ms ease,transform 220ms ease,letter-spacing 320ms ease; }
+        .rre-add-btn:hover:not(:disabled) { background:#c8a24a; color:#08070a;
+          transform:translateY(-2px); letter-spacing:.6em; }
         .rre-add-btn:disabled { opacity:.55; cursor:not-allowed; }
+
+        /* Editorial body/story */
+        .rre-story { max-width:700px; margin:56px auto 0;
+          padding:0 clamp(20px,4vw,60px) 96px; text-align:center; }
+        .rre-story h2 { font-family:'Playfair Display',serif;
+          font-size:clamp(24px,3.4vw,40px); color:#f4ecd6;
+          margin:0 0 22px; line-height:1.25; }
+        .rre-story p { font-size:clamp(17px,1.5vw,20px); line-height:1.75;
+          color:#c9c1ac; margin:0 0 16px; }
+        .rre-story .dims { font-family:'Cinzel',serif; font-size:10.5px;
+          letter-spacing:.4em; text-transform:uppercase;
+          color:rgba(232,224,207,.55); margin-top:26px; display:block; }
       `}</style>
 
-      <Link to="/shop?audience=ladies&category=earrings" className="rre-return" data-testid="rre-return">
+      <Link
+        to="/shop?audience=ladies&category=earrings"
+        className="rre-return"
+        data-testid="rre-return"
+      >
         <ArrowLeft size={14} /> RETURN
       </Link>
 
-      <div className="rre-wrap">
+      {/* ────────────────  EDITORIAL HEADER  ──────────────── */}
+      <header className="rre-header">
         <p className="rre-eyebrow">PHILEON Fine Jewelry · Earrings</p>
         <h1 className="rre-title" data-testid="rre-title">RIBBON REGALE ÉDITION</h1>
         <p className="rre-subtitle">Sculptural Earrings — Precious Metal Edition</p>
+      </header>
 
-        <div className="rre-gallery" data-testid="rre-gallery">
-          <div
-            className="rre-main"
-            data-testid="rre-gallery-main"
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-          >
-            <GalleryMedia key={idx} item={GALLERY[idx]} />
-            <button type="button" className="rre-nav prev" onClick={prev} aria-label="Previous image" data-testid="rre-prev"><ChevronLeft size={20}/></button>
-            <button type="button" className="rre-nav next" onClick={next} aria-label="Next image" data-testid="rre-next"><ChevronRight size={20}/></button>
-          </div>
-
-          <div className="rre-thumbs" data-testid="rre-gallery-thumbs">
-            {GALLERY.map((g, i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => setIdx(i)}
-                className={`rre-thumb ${i === idx ? "active" : ""}`}
-                aria-label={`Show ${g.type === "video" ? "video" : "image"} ${i + 1}: ${g.alt}`}
-                aria-pressed={i === idx}
-                data-testid={`rre-thumb-${i + 1}`}
-              >
-                <img src={g.type === "video" ? g.poster : g.src} alt="" loading="lazy" />
-                {g.type === "video" && <span className="rre-video-badge">Motion</span>}
-              </button>
+      {/* ────────────────  IMMERSIVE GALLERY  ──────────────── */}
+      <section className="rre-gallery-stage" aria-label="RIBBON REGALE ÉDITION gallery">
+        <div
+          className={`rre-stage-inner ${activeIsLightBg ? "light-bg" : ""}`}
+          data-testid="rre-gallery-main"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          <GalleryMedia key={idx} item={activeItem} />
+          <button type="button" className="rre-chev prev" onClick={prev} aria-label="Previous image" data-testid="rre-prev">
+            <ChevronLeft size={22} strokeWidth={1.4} />
+          </button>
+          <button type="button" className="rre-chev next" onClick={next} aria-label="Next image" data-testid="rre-next">
+            <ChevronRight size={22} strokeWidth={1.4} />
+          </button>
+          <div className="rre-dots" aria-hidden="true">
+            {GALLERY.map((_, i) => (
+              <span key={i} className={`rre-dot ${i === idx ? "active" : ""}`} />
             ))}
           </div>
         </div>
 
-        {/* EDITORIAL CAMPAIGN STATEMENT — PHILEON campaign voice.
-            Only appears on RIBBON REGALE ÉDITION. */}
-        <section
-          className="rre-campaign"
-          aria-label="PHILEON campaign statement"
-          data-testid="rre-campaign-statement"
+        {/* Single horizontal thumbnail rail — scrolls on mobile */}
+        <div
+          className="rre-thumb-rail"
+          data-testid="rre-gallery-thumbs"
+          ref={thumbRailRef}
         >
-          <p className="rre-campaign-line">THEY SELL IT IN BRASS.</p>
-          <p className="rre-campaign-line">WE MAKE IT IN GOLD.</p>
-        </section>
+          {GALLERY.map((g, i) => (
+            <button
+              type="button"
+              key={i}
+              onClick={() => setIdx(i)}
+              className={`rre-thumb ${i === idx ? "active" : ""}`}
+              aria-label={`Show ${g.type === "video" ? "video" : "image"} ${i + 1}`}
+              aria-pressed={i === idx}
+              data-thumb-idx={i}
+              data-testid={`rre-thumb-${i + 1}`}
+            >
+              <img src={g.type === "video" ? g.poster : g.src} alt="" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      </section>
 
-        <div className="rre-body">
-          <h2>A polished ribbon silhouette, shaped into sweeping loops and crisp folds.</h2>
-          <p className="rre-reissue" data-testid="rre-reissue-statement">
-            An original PHILEON design, reissued in precious metal.
-          </p>
-          <p>
-            The Fine Jewelry expression of RIBBON REGALE. Its sculptural silhouette is
-            carried into precious metal — the same sweeping architecture, now rendered
-            with heirloom-grade weight and provenance. Designed as a mirrored pair for
-            a balanced statement.
-          </p>
-          <p><strong>Sold as a pair.</strong> Approximately 20 mm × 20 mm · 0.40 mm thickness.</p>
-          <p className="rre-material-statement" data-testid="rre-material-statement">
-            RIBBON REGALE ÉDITION is available in 18K yellow-gold plated sterling
-            silver or solid 10K, 14K and 18K yellow gold.
-          </p>
+      {/* ────────────────  CAMPAIGN STATEMENT  ──────────────── */}
+      <section
+        className="rre-campaign"
+        aria-label="PHILEON campaign statement"
+        data-testid="rre-campaign-statement"
+      >
+        <p className="rre-campaign-line">THEY SELL IT IN BRASS.</p>
+        <p className="rre-campaign-line dominant">WE MAKE IT IN GOLD.</p>
+      </section>
+
+      {/* ────────────────  PURCHASE BLOCK  ──────────────── */}
+      <section className="rre-purchase" data-testid="rre-purchase-block">
+        <p className="rre-material-quote" data-testid="rre-reissue-statement">
+          An original PHILEON design, reissued in precious metal.
+        </p>
+        <p className="rre-material-list" data-testid="rre-material-statement">
+          RIBBON REGALE ÉDITION is available in 18K yellow-gold plated
+          sterling silver or solid 10K, 14K and 18K yellow gold.
+        </p>
+
+        <p className="rre-metals-heading">Select Your Metal</p>
+        <div className="rre-metal-row" role="radiogroup" aria-label="Metal" data-testid="rre-metal-selector">
+          {METAL_OPTIONS.map((m) => {
+            const isActive = selectedMetalId === m.id;
+            return (
+              <button
+                key={m.id}
+                type="button"
+                role="radio"
+                aria-checked={isActive}
+                onClick={() => setSelectedMetalId(m.id)}
+                className={`rre-metal-pill ${isActive ? "active" : ""}`}
+                data-testid={`rre-metal-${m.id}`}
+              >
+                <span className="metal-name">{m.label}</span>
+                <span className="metal-price">{formatCad(m.price)}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* METAL SELECTOR */}
-        <div className="rre-metals" data-testid="rre-metal-selector">
-          <p className="rre-metals-heading">Select Your Metal</p>
-          <div className="rre-metal-grid" role="radiogroup" aria-label="Metal">
-            {METAL_OPTIONS.map((m) => {
-              const isActive = selectedMetalId === m.id;
-              return (
-                <button
-                  key={m.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={isActive}
-                  onClick={() => handleSelectMetal(m.id)}
-                  className={`rre-metal-btn ${isActive ? "active" : ""}`}
-                  data-testid={`rre-metal-${m.id}`}
-                >
-                  <span>{m.label}</span>
-                  <span className="rre-metal-price">{formatCad(m.price)}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Material disclosure — always shows the exact material of the
-              currently selected metal so the plated version can never be
-              mistaken for solid gold. */}
-          <div
-            className="rre-material-disclosure"
-            data-testid="rre-material-disclosure"
-          >
-            {activeMetal.isSolidGold ? (
-              <>
-                <p className="rre-disclosure-title">Material — {activeMetal.karat} Solid Yellow Gold</p>
-                <p className="rre-disclosure-line">
-                  This variant is crafted in <strong>{activeMetal.karat} Solid Yellow Gold</strong>. Not plated.
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="rre-disclosure-title">Material — {activeMetal.cartMetalLabel}</p>
-                <p className="rre-disclosure-line">
-                  Base Metal: <strong>Sterling Silver</strong>
-                </p>
-                <p className="rre-disclosure-line">
-                  Finish: <strong>18K Yellow Gold Plated</strong>
-                </p>
-                <p className="rre-disclosure-note">
-                  This is the plated entry option. It is <strong>not</strong> solid gold.
-                  Choose 10K, 14K or 18K above for the solid-gold versions.
-                </p>
-              </>
-            )}
-          </div>
+        <div className="rre-disclosure" data-testid="rre-material-disclosure">
+          {activeMetal.isSolidGold ? (
+            <>
+              <p className="rre-disclosure-title">Material — {activeMetal.karat} Solid Yellow Gold</p>
+              <p>Crafted in <strong>{activeMetal.karat} Solid Yellow Gold</strong>. Not plated.</p>
+            </>
+          ) : (
+            <>
+              <p className="rre-disclosure-title">Material — 18K Yellow Gold Plated Sterling Silver</p>
+              <p>Base Metal: <strong>Sterling Silver</strong></p>
+              <p>Finish: <strong>18K Yellow Gold Plated</strong></p>
+              <p className="note">
+                This is the plated entry option. It is <strong>not</strong> solid gold.
+                Choose 10K, 14K or 18K above for the solid-gold versions.
+              </p>
+            </>
+          )}
         </div>
 
         <div className="rre-cta" data-testid="rre-cta">
@@ -476,7 +528,20 @@ export default function RibbonRegaleEditionPage() {
             {isAdding ? (buttonText || "ADDING…") : "ADD TO CART"}
           </button>
         </div>
-      </div>
+      </section>
+
+      {/* ────────────────  STORY  ──────────────── */}
+      <section className="rre-story">
+        <h2>A polished ribbon silhouette, shaped into sweeping loops and crisp folds.</h2>
+        <p>
+          The Fine Jewelry expression of RIBBON REGALE. Its sculptural
+          silhouette is carried into precious metal — the same sweeping
+          architecture, now rendered with heirloom-grade weight and
+          provenance. Designed as a mirrored pair for a balanced statement.
+        </p>
+        <p><strong>Sold as a pair.</strong></p>
+        <span className="dims">Approx. 20 mm × 20 mm · 0.40 mm thickness</span>
+      </section>
     </div>
   );
 }
