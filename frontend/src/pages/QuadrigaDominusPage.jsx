@@ -16,7 +16,7 @@
    size up if between sizes.
    ========================================================================== */
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import RingSizeSelector, {
   ringSizeLabel,
@@ -115,6 +115,10 @@ function ColorwaySwatch({ id }) {
 export default function QuadrigaDominusPage() {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
+  // Persistent ref to the hero video so we can enforce muted-autoplay
+  // aggressively across mount, viewport re-entry, and pause interference.
+  const heroVideoRef = useRef(null);
+
   // Default colorway = Red Centre / Black Pavé.
   const [selectedColorwayId, setSelectedColorwayId] = useState("red-black");
   // Metal has NO default — customer must choose.
@@ -128,6 +132,47 @@ export default function QuadrigaDominusPage() {
     () => COLORWAYS.find((c) => c.id === selectedColorwayId) || COLORWAYS[0],
     [selectedColorwayId]
   );
+
+  // -------------------------------------------------------------------
+  // AUTOPLAY RELIABILITY
+  // Force-mute + hard-play on mount, on viewport re-entry, and on any
+  // stray pause event. This mirrors the pattern used elsewhere on the
+  // site to defeat mobile browser autoplay throttling.
+  // -------------------------------------------------------------------
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+
+    const forcePlay = () => {
+      try {
+        v.muted = true;
+        v.defaultMuted = true;
+        v.volume = 0;
+        const p = v.play();
+        if (p && typeof p.catch === "function") p.catch(() => {});
+      } catch (_) { /* no-op */ }
+    };
+
+    forcePlay();
+
+    const onPause = () => { if (!v.ended) forcePlay(); };
+    v.addEventListener("pause", onPause);
+
+    let observer;
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) forcePlay();
+        });
+      }, { threshold: 0.05 });
+      observer.observe(v);
+    }
+
+    return () => {
+      v.removeEventListener("pause", onPause);
+      if (observer) observer.disconnect();
+    };
+  }, []);
 
   const activePrice = selectedMetal ? activeColorway.pricing[selectedMetal] : null;
   const isReady = !!selectedMetal && !!selectedSize;
@@ -178,26 +223,38 @@ export default function QuadrigaDominusPage() {
     >
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 gap-10 lg:grid-cols-[1.2fr_0.8fr]">
         {/* ================================================================
-            LEFT — PERSISTENT HERO VIDEO (same clip for every colorway)
-            plus a colorway-highlighted thumbnail strip beneath.
+            LEFT — PERSISTENT HERO VIDEO (same clip for every colorway).
+            Container has no fixed aspect ratio: the video fills width
+            and takes its natural height up to a viewport-relative cap,
+            so we avoid large empty black gaps above/below.
             ================================================================ */}
         <div>
           <div className="product-media-wrap w-full max-w-full overflow-hidden">
-            <div className="product-media-main w-full max-w-full aspect-square flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
+            <div className="product-media-main w-full max-w-full flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
               <video
+                ref={heroVideoRef}
                 src={HERO_VIDEO}
                 poster={activeColorway.image}
                 autoPlay
                 muted
                 loop
                 playsInline
+                controls={false}
                 preload="auto"
                 disablePictureInPicture
                 disableRemotePlayback
                 controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
                 onContextMenu={(e) => e.preventDefault()}
+                onLoadedMetadata={(e) => {
+                  const el = e.currentTarget;
+                  el.muted = true;
+                  el.defaultMuted = true;
+                  el.volume = 0;
+                  const p = el.play();
+                  if (p && typeof p.catch === "function") p.catch(() => {});
+                }}
                 onEnded={(e) => { e.currentTarget.currentTime = 0; e.currentTarget.play(); }}
-                className="w-full h-full max-w-full object-contain block bg-black"
+                className="w-full h-auto max-h-[85vh] object-contain block bg-black"
                 aria-label="QUADRIGA DOMINUS hero video"
                 data-testid="quadriga-hero-video"
               />
