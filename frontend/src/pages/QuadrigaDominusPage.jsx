@@ -33,6 +33,9 @@ const IMG_BLACK_RED   = "https://customer-assets-jt897jd0.emergentagent.net/job_
 const IMG_GREEN_BLACK = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ie5lwq3b_1000169940.png"; // Green Centre / Black Pavé
 const IMG_BLACK_GREEN = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8jgj6qm3_1000169939.png"; // Black Centre / Green Pavé
 
+// Single persistent hero video — same clip plays for every colorway selection.
+const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3em51w8p_XiaoYing_Video_1786309893482.mp4";
+
 // --------------------------------------------------------------------------
 // COLORWAY MATRIX — price = pricing[metal] per colorway
 // --------------------------------------------------------------------------
@@ -175,17 +178,28 @@ export default function QuadrigaDominusPage() {
     >
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 gap-10 lg:grid-cols-[1.2fr_0.8fr]">
         {/* ================================================================
-            LEFT — PRODUCT IMAGE (switches with colorway)
+            LEFT — PERSISTENT HERO VIDEO (same clip for every colorway)
+            plus a colorway-highlighted thumbnail strip beneath.
             ================================================================ */}
         <div>
           <div className="product-media-wrap w-full max-w-full overflow-hidden">
             <div className="product-media-main w-full max-w-full aspect-square flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
-              <img
-                key={activeColorway.id}
-                src={activeColorway.image}
-                alt={activeColorway.alt}
-                className="w-full h-full max-w-full object-contain block transition-opacity duration-500"
-                data-testid="quadriga-hero-image"
+              <video
+                src={HERO_VIDEO}
+                poster={activeColorway.image}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                disableRemotePlayback
+                controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+                onContextMenu={(e) => e.preventDefault()}
+                onEnded={(e) => { e.currentTarget.currentTime = 0; e.currentTarget.play(); }}
+                className="w-full h-full max-w-full object-contain block bg-black"
+                aria-label="QUADRIGA DOMINUS hero video"
+                data-testid="quadriga-hero-video"
               />
             </div>
           </div>
