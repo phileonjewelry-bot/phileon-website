@@ -264,6 +264,21 @@ export default function RibbonRegaleEditionPage() {
           pointer-events:none;
         }
 
+        /* EDITORIAL CAMPAIGN STATEMENT */
+        .rre-campaign { margin:80px auto 0; max-width:1180px;
+          padding:88px clamp(24px,6vw,80px);
+          border-top:1px solid rgba(200,162,74,.18);
+          border-bottom:1px solid rgba(200,162,74,.18);
+          text-align:center; }
+        .rre-campaign-line { font-family:'Cinzel',serif; font-weight:500;
+          font-size:clamp(30px,6vw,72px); letter-spacing:.16em; line-height:1.15;
+          color:#f4ecd6; text-transform:uppercase; margin:0; }
+        .rre-campaign-line + .rre-campaign-line { margin-top:.35em; color:#c8a24a; }
+        @media (max-width:520px){
+          .rre-campaign { margin-top:56px; padding:56px 20px; }
+          .rre-campaign-line { font-size:clamp(24px,9vw,42px); letter-spacing:.12em; }
+        }
+
         /* BODY */
         .rre-body { max-width:720px; margin:56px auto 0; text-align:center; }
         .rre-body h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,36px);
@@ -360,6 +375,17 @@ export default function RibbonRegaleEditionPage() {
             ))}
           </div>
         </div>
+
+        {/* EDITORIAL CAMPAIGN STATEMENT — PHILEON campaign voice.
+            Only appears on RIBBON REGALE ÉDITION. */}
+        <section
+          className="rre-campaign"
+          aria-label="PHILEON campaign statement"
+          data-testid="rre-campaign-statement"
+        >
+          <p className="rre-campaign-line">THEY SELL IT IN BRASS.</p>
+          <p className="rre-campaign-line">WE MAKE IT IN GOLD.</p>
+        </section>
 
         <div className="rre-body">
           <h2>A polished ribbon silhouette, shaped into sweeping loops and crisp folds.</h2>
