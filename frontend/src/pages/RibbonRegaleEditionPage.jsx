@@ -1,17 +1,22 @@
 /* ==========================================================================
    RIBBON REGALE ÉDITION — PHILEON Fine Jewelry
    -------------------------------------------------------------------------
-   This page is the SOLID GOLD Fine Jewelry counterpart to the original
+   This page is the precious-metal Fine Jewelry counterpart to the original
    RIBBON REGALE archive piece housed in the Inspiration Vault.
 
    The original file (`RibbonRegalePage.jsx`) and its route
    (`/inspiration-vault/ribbon-regale`) remain untouched. This file is a
    clone with the following surgical differences:
-     • Metal selector — 10K / 14K / 18K SOLID Yellow Gold (no silver,
-       plated, vermeil, gold-tone, white-gold or rose-gold)
-     • Karat-specific pricing — three placeholder-safe fields at the top
-       of this file, awaiting real prices (see PRICES block)
-     • Copy — Fine Jewelry material statement, no plated / archive tags
+     • Metal selector — 4 options
+         1) 18K Yellow Gold Plated Sterling Silver  ($495 CAD, default)
+         2) 10K Solid Yellow Gold                    ($1,495 CAD)
+         3) 14K Solid Yellow Gold                    ($1,895 CAD)
+         4) 18K Solid Yellow Gold                    ($2,395 CAD)
+     • Prices stored in CAD; the currency suffix is rendered verbatim
+     • Explicit material disclosure — plated version can never be
+       mistaken for solid gold
+     • Copy — "reissued in precious metal" reissue statement, Fine
+       Jewelry material listing, no plated / archive tags
      • Product route + cart identifiers use `ribbon-regale-edition`
    ========================================================================== */
 
@@ -34,20 +39,60 @@ const VIDEO_1_POSTER    = `${BASE}/video-1-poster.jpg`;
 const VIDEO_2           = `${BASE}/video-2.mp4`;
 const VIDEO_2_POSTER    = `${BASE}/video-2-poster.jpg`;
 
-// ── PRICES ─────────────────────────────────────────────────────────────────
-// NOTE (Feb 2026): three karat-specific prices have not yet been supplied
-// by the merchant. Fill these three numeric USD values in and the metal
-// selector + Add-to-Cart will activate automatically. Leave as `null` to
-// keep the Fine Jewelry edition marked as "Pricing pending".
-const PRICE_10K_YELLOW_GOLD_USD = null; // TODO: awaiting price input
-const PRICE_14K_YELLOW_GOLD_USD = null; // TODO: awaiting price input
-const PRICE_18K_YELLOW_GOLD_USD = null; // TODO: awaiting price input
+// ── PRICES (CAD) ────────────────────────────────────────────────────────────
+// Prices are stored in Canadian Dollars per merchant direction. The storefront
+// displays these values verbatim with a CAD suffix; do NOT hard-code converted
+// USD values here.
+const PRICE_GOLD_PLATED_STERLING_SILVER_CAD = 495;
+const PRICE_10K_SOLID_YELLOW_GOLD_CAD       = 1495;
+const PRICE_14K_SOLID_YELLOW_GOLD_CAD       = 1895;
+const PRICE_18K_SOLID_YELLOW_GOLD_CAD       = 2395;
+
+const CURRENCY_CODE = "CAD";
 
 const METAL_OPTIONS = [
-  { id: "10k", karat: "10K", label: "10K YELLOW GOLD", cartMetalLabel: "10K Solid Yellow Gold", price: PRICE_10K_YELLOW_GOLD_USD, sku: "RRED-10KYG" },
-  { id: "14k", karat: "14K", label: "14K YELLOW GOLD", cartMetalLabel: "14K Solid Yellow Gold", price: PRICE_14K_YELLOW_GOLD_USD, sku: "RRED-14KYG" },
-  { id: "18k", karat: "18K", label: "18K YELLOW GOLD", cartMetalLabel: "18K Solid Yellow Gold", price: PRICE_18K_YELLOW_GOLD_USD, sku: "RRED-18KYG" },
+  {
+    id: "plated",
+    label: "GOLD PLATED STERLING SILVER",
+    cartMetalLabel: "18K Yellow Gold Plated Sterling Silver",
+    price: PRICE_GOLD_PLATED_STERLING_SILVER_CAD,
+    sku: "RRED-GPSS",
+    baseMetal: "Sterling Silver",
+    finish: "18K Yellow Gold Plated",
+    isSolidGold: false,
+  },
+  {
+    id: "10k",
+    label: "10K YELLOW GOLD",
+    cartMetalLabel: "10K Solid Yellow Gold",
+    price: PRICE_10K_SOLID_YELLOW_GOLD_CAD,
+    sku: "RRED-10KYG",
+    karat: "10K",
+    isSolidGold: true,
+  },
+  {
+    id: "14k",
+    label: "14K YELLOW GOLD",
+    cartMetalLabel: "14K Solid Yellow Gold",
+    price: PRICE_14K_SOLID_YELLOW_GOLD_CAD,
+    sku: "RRED-14KYG",
+    karat: "14K",
+    isSolidGold: true,
+  },
+  {
+    id: "18k",
+    label: "18K YELLOW GOLD",
+    cartMetalLabel: "18K Solid Yellow Gold",
+    price: PRICE_18K_SOLID_YELLOW_GOLD_CAD,
+    sku: "RRED-18KYG",
+    karat: "18K",
+    isSolidGold: true,
+  },
 ];
+
+// Default entry state — the plated Sterling Silver entry option is selected
+// on load so the customer sees the $495 CAD starting price immediately.
+const DEFAULT_METAL_ID = "plated";
 
 // Approved gallery order — mirrors the original archive piece.
 const GALLERY = [
@@ -61,8 +106,8 @@ const GALLERY = [
   { type: "image", src: PAIR_WHITE,        alt: "RIBBON REGALE ÉDITION — the pair on a white background" },
 ];
 
-function formatUsd(n) {
-  return `$${Number(n).toLocaleString("en-US")} USD`;
+function formatCad(n) {
+  return `$${Number(n).toLocaleString("en-US")} ${CURRENCY_CODE}`;
 }
 
 function GalleryMedia({ item }) {
@@ -104,8 +149,7 @@ function GalleryMedia({ item }) {
 export default function RibbonRegaleEditionPage() {
   useLuxuryMotionObserver();
   const [idx, setIdx] = useState(0);
-  const [selectedMetalId, setSelectedMetalId] = useState(null);
-  const [metalError, setMetalError] = useState(false);
+  const [selectedMetalId, setSelectedMetalId] = useState(DEFAULT_METAL_ID);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   useEffect(() => {
@@ -117,7 +161,7 @@ export default function RibbonRegaleEditionPage() {
       el.setAttribute("content", content);
     };
     upsert("name", "description",
-      "RIBBON REGALE ÉDITION — the solid-gold Fine Jewelry expression of the sculptural ribbon earrings. Crafted in solid yellow gold and available in 10K, 14K and 18K. Sold as a mirrored pair.");
+      "RIBBON REGALE ÉDITION — the Fine Jewelry reissue of the sculptural ribbon earrings. Available in 18K yellow-gold plated sterling silver or solid 10K, 14K and 18K yellow gold. Sold as a mirrored pair.");
     upsert("property", "og:title", "RIBBON REGALE ÉDITION | PHILEON Fine Jewelry");
     upsert("property", "og:image", `${window.location.origin}${HERO_PAIR_BLACK}`);
   }, []);
@@ -125,18 +169,14 @@ export default function RibbonRegaleEditionPage() {
   const prev = () => setIdx((i) => (i - 1 + GALLERY.length) % GALLERY.length);
   const next = () => setIdx((i) => (i + 1) % GALLERY.length);
 
-  const activeMetal = METAL_OPTIONS.find((m) => m.id === selectedMetalId) || null;
-  const activePrice = activeMetal && typeof activeMetal.price === "number" ? activeMetal.price : null;
-  const canPurchase = !!activeMetal && typeof activeMetal.price === "number" && activeMetal.price > 0;
+  const activeMetal = METAL_OPTIONS.find((m) => m.id === selectedMetalId) || METAL_OPTIONS[0];
+  const activePrice = activeMetal.price;
+  const canPurchase = typeof activePrice === "number" && activePrice > 0;
 
-  const handleSelectMetal = (id) => {
-    setSelectedMetalId(id);
-    if (metalError) setMetalError(false);
-  };
+  const handleSelectMetal = (id) => setSelectedMetalId(id);
 
   const onAddToCart = () => {
-    if (!activeMetal) { setMetalError(true); return; }
-    if (!canPurchase) return; // Price not set yet — do not add to cart
+    if (!canPurchase) return;
 
     handleAddToCart({
       id: `ribbon-regale-edition-${activeMetal.id}`,
@@ -145,10 +185,14 @@ export default function RibbonRegaleEditionPage() {
       category: "PHILEON Fine Jewelry — Earrings",
       includes: "One Pair",
       price: activePrice,
+      currency: CURRENCY_CODE,
       productKey: "ribbonRegaleEdition",
       tierKey: activeMetal.id,
       metal: activeMetal.cartMetalLabel,
-      karat: activeMetal.karat,
+      karat: activeMetal.karat || null,
+      baseMetal: activeMetal.baseMetal || null,
+      finish: activeMetal.finish || null,
+      isSolidGold: activeMetal.isSolidGold,
       slug: "ribbon-regale-edition",
       sku: activeMetal.sku,
       quantity: 1,
@@ -225,38 +269,48 @@ export default function RibbonRegaleEditionPage() {
         .rre-body h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,36px);
           margin:0 0 20px; color:#f4ecd6; }
         .rre-body p { font-size:clamp(17px,1.5vw,20px); line-height:1.7; color:#d6cdb6; margin:0 0 16px; }
-        .rre-material-statement { display:inline-block; margin-top:24px; padding:12px 26px;
+        .rre-reissue { font-family:'Playfair Display',serif; font-style:italic;
+          color:#c8a24a; font-size:clamp(18px,1.6vw,22px); }
+        .rre-material-statement { display:inline-block; margin-top:24px; padding:14px 26px;
           border:1px solid rgba(200,162,74,.35);
           font-family:'Cinzel',serif; font-size:11px; letter-spacing:.34em;
-          color:#c8a24a; text-transform:uppercase; }
+          color:#c8a24a; text-transform:uppercase; line-height:1.6; }
 
         /* METAL SELECTOR */
-        .rre-metals { max-width:640px; margin:56px auto 0; }
+        .rre-metals { max-width:820px; margin:56px auto 0; }
         .rre-metals-heading { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.42em;
           text-align:center; color:rgba(232,224,207,.55); text-transform:uppercase;
           margin:0 0 18px; }
-        .rre-metal-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+        .rre-metal-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+        @media (max-width:900px){ .rre-metal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:520px){ .rre-metal-grid { grid-template-columns:1fr; } }
         .rre-metal-btn { display:flex; flex-direction:column; align-items:center; justify-content:center;
           padding:18px 12px; background:transparent; border:1.5px solid rgba(200,162,74,.35);
-          color:#e8e0cf; font-family:'Cinzel',serif; font-size:12px; letter-spacing:.24em;
+          color:#e8e0cf; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.22em;
           text-transform:uppercase; cursor:pointer; text-align:center;
           transition:background 220ms ease,color 220ms ease,border-color 220ms ease,transform 220ms ease; }
         .rre-metal-btn:hover { background:rgba(200,162,74,.08); border-color:#c8a24a; transform:translateY(-2px); }
         .rre-metal-btn.active { background:rgba(200,162,74,.15); border-color:#c8a24a; color:#f4ecd6; }
         .rre-metal-price { display:block; margin-top:8px; font-family:'Cormorant Garamond',serif;
           font-style:italic; letter-spacing:.04em; color:#c8a24a; font-size:14px; text-transform:none; }
-        .rre-metal-price.pending { color:rgba(232,224,207,.45); }
-        .rre-metal-error { font-family:'Cinzel',serif; font-size:10.5px; letter-spacing:.28em;
-          text-transform:uppercase; color:#e67373; text-align:center; margin:14px 0 0; }
+
+        /* MATERIAL DISCLOSURE — always visible under the selector */
+        .rre-material-disclosure { margin:28px auto 0; padding:22px 24px;
+          border:1px solid rgba(200,162,74,.22); background:rgba(200,162,74,.04);
+          max-width:640px; text-align:left; }
+        .rre-disclosure-title { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.32em;
+          color:#c8a24a; text-transform:uppercase; margin:0 0 12px; }
+        .rre-disclosure-line { font-family:'Cormorant Garamond',serif; font-size:16px;
+          color:#e8e0cf; margin:0 0 6px; letter-spacing:.02em; }
+        .rre-disclosure-line strong { color:#f4ecd6; font-weight:600; letter-spacing:.04em; }
+        .rre-disclosure-note { font-family:'Cormorant Garamond',serif; font-style:italic;
+          font-size:14px; color:rgba(232,224,207,.7); margin:10px 0 0; letter-spacing:.02em; }
 
         /* CTA */
         .rre-cta { text-align:center; max-width:520px; margin:56px auto 0;
           padding-top:44px; border-top:1px solid rgba(200,162,74,.18); }
         .rre-price { font-family:'Cinzel',serif; font-size:clamp(22px,2.4vw,32px);
           letter-spacing:.28em; color:#f4ecd6; margin:0 0 8px; }
-        .rre-price.pending { color:rgba(232,224,207,.55); font-style:italic; letter-spacing:.14em;
-          font-family:'Cormorant Garamond',serif; }
         .rre-price-note { font-family:'Cormorant Garamond',serif; font-style:italic;
           font-size:14px; letter-spacing:.06em; color:rgba(232,224,207,.55); margin:0 0 26px; }
         .rre-add-btn { display:inline-flex; align-items:center; justify-content:center;
@@ -275,7 +329,7 @@ export default function RibbonRegaleEditionPage() {
       <div className="rre-wrap">
         <p className="rre-eyebrow">PHILEON Fine Jewelry · Earrings</p>
         <h1 className="rre-title" data-testid="rre-title">RIBBON REGALE ÉDITION</h1>
-        <p className="rre-subtitle">Sculptural Earrings — Solid Gold</p>
+        <p className="rre-subtitle">Sculptural Earrings — Precious Metal Edition</p>
 
         <div className="rre-gallery" data-testid="rre-gallery">
           <div
@@ -309,24 +363,28 @@ export default function RibbonRegaleEditionPage() {
 
         <div className="rre-body">
           <h2>A polished ribbon silhouette, shaped into sweeping loops and crisp folds.</h2>
+          <p className="rre-reissue" data-testid="rre-reissue-statement">
+            An original PHILEON design, reissued in precious metal.
+          </p>
           <p>
             The Fine Jewelry expression of RIBBON REGALE. Its sculptural silhouette is
-            carried into solid gold — the same sweeping architecture, now rendered in
-            weightier, heirloom material. Designed as a mirrored pair for a balanced statement.
+            carried into precious metal — the same sweeping architecture, now rendered
+            with heirloom-grade weight and provenance. Designed as a mirrored pair for
+            a balanced statement.
           </p>
-          <p><strong>Sold as a pair.</strong></p>
+          <p><strong>Sold as a pair.</strong> Approximately 20 mm × 20 mm · 0.40 mm thickness.</p>
           <p className="rre-material-statement" data-testid="rre-material-statement">
-            Crafted in solid yellow gold and available in 10K, 14K and 18K.
+            RIBBON REGALE ÉDITION is available in 18K yellow-gold plated sterling
+            silver or solid 10K, 14K and 18K yellow gold.
           </p>
         </div>
 
         {/* METAL SELECTOR */}
         <div className="rre-metals" data-testid="rre-metal-selector">
-          <p className="rre-metals-heading">Select Your Karat</p>
-          <div className="rre-metal-grid">
+          <p className="rre-metals-heading">Select Your Metal</p>
+          <div className="rre-metal-grid" role="radiogroup" aria-label="Metal">
             {METAL_OPTIONS.map((m) => {
               const isActive = selectedMetalId === m.id;
-              const hasPrice = typeof m.price === "number" && m.price > 0;
               return (
                 <button
                   key={m.id}
@@ -338,29 +396,49 @@ export default function RibbonRegaleEditionPage() {
                   data-testid={`rre-metal-${m.id}`}
                 >
                   <span>{m.label}</span>
-                  <span className={`rre-metal-price ${hasPrice ? "" : "pending"}`}>
-                    {hasPrice ? formatUsd(m.price) : "Pricing pending"}
-                  </span>
+                  <span className="rre-metal-price">{formatCad(m.price)}</span>
                 </button>
               );
             })}
           </div>
-          {metalError && !selectedMetalId ? (
-            <p className="rre-metal-error" data-testid="rre-metal-error">
-              Please select a karat before adding to cart.
-            </p>
-          ) : null}
+
+          {/* Material disclosure — always shows the exact material of the
+              currently selected metal so the plated version can never be
+              mistaken for solid gold. */}
+          <div
+            className="rre-material-disclosure"
+            data-testid="rre-material-disclosure"
+          >
+            {activeMetal.isSolidGold ? (
+              <>
+                <p className="rre-disclosure-title">Material — {activeMetal.karat} Solid Yellow Gold</p>
+                <p className="rre-disclosure-line">
+                  This variant is crafted in <strong>{activeMetal.karat} Solid Yellow Gold</strong>. Not plated.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="rre-disclosure-title">Material — {activeMetal.cartMetalLabel}</p>
+                <p className="rre-disclosure-line">
+                  Base Metal: <strong>Sterling Silver</strong>
+                </p>
+                <p className="rre-disclosure-line">
+                  Finish: <strong>18K Yellow Gold Plated</strong>
+                </p>
+                <p className="rre-disclosure-note">
+                  This is the plated entry option. It is <strong>not</strong> solid gold.
+                  Choose 10K, 14K or 18K above for the solid-gold versions.
+                </p>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="rre-cta" data-testid="rre-cta">
-          {canPurchase ? (
-            <p className="rre-price" data-testid="rre-price">{formatUsd(activePrice)}</p>
-          ) : (
-            <p className="rre-price pending" data-testid="rre-price">
-              {activeMetal ? "Pricing pending — please contact us" : "Select a karat to see your price"}
-            </p>
-          )}
-          <p className="rre-price-note">PHILEON Fine Jewelry · Sold as one pair</p>
+          <p className="rre-price" data-testid="rre-price">{formatCad(activePrice)}</p>
+          <p className="rre-price-note">
+            PHILEON Fine Jewelry · Sold as one pair · Prices in {CURRENCY_CODE}
+          </p>
           <button
             type="button"
             onClick={onAddToCart}
@@ -369,13 +447,7 @@ export default function RibbonRegaleEditionPage() {
             aria-label="Add RIBBON REGALE ÉDITION to cart"
             data-testid="rre-add-to-cart"
           >
-            {isAdding
-              ? (buttonText || "ADDING…")
-              : canPurchase
-                ? "ADD TO CART"
-                : !selectedMetalId
-                  ? "SELECT A KARAT"
-                  : "PRICING PENDING"}
+            {isAdding ? (buttonText || "ADDING…") : "ADD TO CART"}
           </button>
         </div>
       </div>
