@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 const CartContext = createContext();
+
+// Normalise a currency code for comparison; treat null/undefined/blank as USD
+// because the majority of the pre-existing catalog is priced in USD and never
+// set an explicit `currency` field.
+const normaliseCurrency = (c) => (c || 'USD').toString().trim().toUpperCase();
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -11,21 +17,23 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [items, setItems] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    const savedCart = localStorage.getItem('phileon_cart');
-    if (savedCart) {
-      try {
-        setItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error parsing saved cart:', error);
-        localStorage.removeItem('phileon_cart');
-      }
+  // Lazy initializer: read localStorage synchronously on first render so the
+  // cart is populated before any effect runs. This prevents the previous
+  // race where the save-effect would overwrite localStorage with `[]` before
+  // the load-effect could hydrate — which caused the mixed-currency guard
+  // to see an empty cart on freshly-navigated product pages.
+  const [items, setItems] = useState(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const saved = window.localStorage.getItem('phileon_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Error parsing saved cart:', error);
+      try { window.localStorage.removeItem('phileon_cart'); } catch (_e) { /* noop */ }
+      return [];
     }
-  }, []);
+  });
+  const [isOpen, setIsOpen] = useState(false);
 
   // Save cart to localStorage whenever items change
   useEffect(() => {
@@ -33,6 +41,22 @@ export const CartProvider = ({ children }) => {
   }, [items]);
 
   const addToCart = (product, quantity = 1, variant = null) => {
+    // ── Mixed-currency guard ────────────────────────────────────────────
+    // Stripe checkout sessions must use a single currency. If the cart
+    // already contains items priced in a different currency than this
+    // incoming product, refuse the add and surface a customer-facing
+    // message. No FX conversion is invented.
+    const incomingCurrency = normaliseCurrency(product.currency);
+    const existingCurrencies = new Set(items.map((it) => normaliseCurrency(it.currency)));
+    if (existingCurrencies.size > 0 && !existingCurrencies.has(incomingCurrency)) {
+      const existing = Array.from(existingCurrencies).join(', ');
+      toast.error(
+        `Items priced in different currencies (${incomingCurrency} vs ${existing}) must be purchased separately. Please complete your current cart first, or remove the existing items to add this one.`,
+        { duration: 6000 }
+      );
+      return false;
+    }
+
     const newItem = {
       product_id: product.id,
       name: product.name,
