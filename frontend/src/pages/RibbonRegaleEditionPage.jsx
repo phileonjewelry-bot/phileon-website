@@ -361,6 +361,26 @@ export default function RibbonRegaleEditionPage() {
         .rre-disclosure .note { font-style:italic; color:rgba(232,224,207,.65);
           font-size:14px; margin-top:10px; }
 
+        /* Dynamic material confirmation line — sits between disclosure and provenance */
+        .rre-material-confirm { text-align:center; margin:20px auto 0;
+          font-family:'Cinzel',serif; font-size:11px; letter-spacing:.36em;
+          text-transform:uppercase; color:#c8a24a; }
+
+        /* Provenance / assurance row */
+        .rre-provenance { max-width:640px; margin:44px auto 0;
+          padding:32px 0 12px; text-align:center;
+          border-top:1px solid rgba(200,162,74,.14); }
+        .rre-provenance-heading { font-family:'Cinzel',serif; font-size:10.5px;
+          letter-spacing:.7em; text-transform:uppercase;
+          color:#c8a24a; margin:0 0 14px; }
+        .rre-provenance-line { font-family:'Cormorant Garamond',serif;
+          font-style:italic; font-size:15px; letter-spacing:.02em;
+          color:rgba(232,224,207,.7); line-height:1.6; margin:0;
+          padding:0 clamp(0px,2vw,20px); }
+        @media (max-width:520px){
+          .rre-provenance-line { font-size:14px; }
+        }
+
         /* Price + CTA */
         .rre-cta { text-align:center; margin:28px auto 0; max-width:520px; }
         .rre-price { font-family:'Cinzel',serif;
@@ -511,6 +531,25 @@ export default function RibbonRegaleEditionPage() {
             </>
           )}
         </div>
+
+        {/* Dynamic material confirmation — mirrors the currently active metal. */}
+        <p className="rre-material-confirm" data-testid="rre-material-confirm">
+          {activeMetal.isSolidGold
+            ? `Solid ${activeMetal.karat} Yellow Gold`
+            : "Sterling Silver · 18K Yellow Gold Plated"}
+        </p>
+
+        {/* PHILEON Fine Jewelry provenance / assurance row */}
+        <section
+          className="rre-provenance"
+          aria-label="PHILEON Fine Jewelry assurance"
+          data-testid="rre-provenance-row"
+        >
+          <p className="rre-provenance-heading">PHILEON FINE JEWELRY</p>
+          <p className="rre-provenance-line">
+            Precious-metal construction · Karat-specific finishing · Made in limited production
+          </p>
+        </section>
 
         <div className="rre-cta" data-testid="rre-cta">
           <p className="rre-price" data-testid="rre-price">{formatCad(activePrice)}</p>

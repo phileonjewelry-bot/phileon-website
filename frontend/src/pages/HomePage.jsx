@@ -385,6 +385,17 @@ const HomePage = () => {
             objectFit: "contain",
           },
           {
+            title: "RIBBON REGALE ÉDITION",
+            image: "/inspiration-vault/gold-theory-ribbon/hero-pair-black.png",
+            href: "/ribbon-regale-edition",
+            subtitle: "The Fine Jewelry reissue of the sculptural ribbon earrings. 18K yellow-gold plated sterling silver, or solid 10K, 14K and 18K yellow gold. FROM $495 CAD",
+            editorialOverlay: {
+              dimLine: "THEY SELL IT IN BRASS.",
+              dominantLine: "WE MAKE IT IN GOLD.",
+              priceLine: "From $495 CAD",
+            },
+          },
+          {
             title: "NEIGHBORHOOD NIP",
             image: "/tribute-series/neighborhood-nip/shop-card-front-v2.jpg",
             href: "/tribute-series/neighborhood-nip",
@@ -613,6 +624,16 @@ const HomePage = () => {
                     draggable="false"
                     style={item.objectFit ? { objectFit: item.objectFit } : undefined}
                   />
+                  {item.editorialOverlay ? (
+                    <div
+                      className="strip-editorial-overlay"
+                      data-testid={`strip-overlay-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                      <p className="strip-editorial-dim">{item.editorialOverlay.dimLine}</p>
+                      <p className="strip-editorial-dominant">{item.editorialOverlay.dominantLine}</p>
+                      <p className="strip-editorial-price">{item.editorialOverlay.priceLine}</p>
+                    </div>
+                  ) : null}
                 </Link>
               ))}
             </div>
