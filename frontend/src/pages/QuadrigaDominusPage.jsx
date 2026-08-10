@@ -152,6 +152,12 @@ export default function QuadrigaDominusPage() {
   // aggressively across mount, viewport re-entry, and pause interference.
   const heroVideoRef = useRef(null);
 
+  // Ref to the per-colorway extras gallery so we can smooth-scroll it into
+  // view after a deliberate colorway switch. `didUserSwitchRef` guards
+  // against auto-scrolling on the initial page load.
+  const extrasRef = useRef(null);
+  const didUserSwitchRef = useRef(false);
+
   // Default colorway = Red Centre / Black Pavé.
   const [selectedColorwayId, setSelectedColorwayId] = useState("red-black");
   // Metal has NO default — customer must choose.
@@ -211,8 +217,37 @@ export default function QuadrigaDominusPage() {
   const isReady = !!selectedMetal && !!selectedSize;
 
   const handleSelectColorway = (id) => {
+    if (id !== selectedColorwayId) {
+      didUserSwitchRef.current = true;
+    }
     setSelectedColorwayId(id);
   };
+
+  // After a deliberate colorway switch, smoothly scroll the newly active
+  // extras gallery into view. Skipped on initial mount and when the user
+  // prefers reduced motion (instant positioning instead).
+  useEffect(() => {
+    if (!didUserSwitchRef.current) return;
+    didUserSwitchRef.current = false;
+
+    const el = extrasRef.current;
+    if (!el) return;
+
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Header offset so the gallery heading sits below the fixed top bar.
+    const HEADER_OFFSET = 96;
+    const rect = el.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - HEADER_OFFSET;
+
+    window.scrollTo({
+      top: Math.max(0, targetY),
+      behavior: reduce ? "auto" : "smooth",
+    });
+  }, [selectedColorwayId]);
 
   const handleSelectMetal = (metal) => {
     setSelectedMetal(metal);
@@ -326,7 +361,8 @@ export default function QuadrigaDominusPage() {
               other colorways behave exactly as before. */}
           {activeColorway.extras && activeColorway.extras.length > 0 ? (
             <div
-              className="mt-6"
+              ref={extrasRef}
+              className="mt-6 scroll-mt-24"
               data-testid={`quadriga-extras-${activeColorway.id}`}
             >
               <p className="text-xs tracking-[0.3em] text-[#8e8e8e] uppercase mb-3">
