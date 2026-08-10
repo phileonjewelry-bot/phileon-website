@@ -61,7 +61,13 @@ const COLORWAYS = [
     image: IMG_BLACK_RED,
     alt: "QUADRIGA DOMINUS — black cushion centre stone framed by red pavé double halo",
     pricing: { "10K": 10995, "14K": 12750 },
-    extras: [],
+    extras: [
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/535cb4aq_1000170348.png", alt: "QUADRIGA DOMINUS — black centre with ruby pavé, editorial three-quarter view on the polished white metal shank" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/oprujd38_1000170349.png", alt: "QUADRIGA DOMINUS — rear architectural view of the black centre framed by two rows of ruby pavé" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ufez5p5j_1000170350.png", alt: "QUADRIGA DOMINUS — top-down view of the black centre framed by the ruby double-halo pavé" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/i1r8nazd_1000170353.png", alt: "QUADRIGA DOMINUS — angled macro on the black cushion centre stone and ruby double halo" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h8nksk83_1000170345.png", alt: "QUADRIGA DOMINUS — extreme macro of a prong holding the black centre against the ruby pavé bed" },
+    ],
   },
   {
     id: "green-black",
