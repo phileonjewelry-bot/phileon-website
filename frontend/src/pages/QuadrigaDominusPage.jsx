@@ -35,6 +35,10 @@ const IMG_BLACK_GREEN = "https://customer-assets-jt897jd0.emergentagent.net/job_
 
 // Single persistent hero video — same clip plays for every colorway selection.
 const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3em51w8p_XiaoYing_Video_1786309893482.mp4";
+// Poster is a still frame extracted from the hero video itself (640×368,
+// same aspect ratio as the video) — prevents layout shift between the
+// fallback and the decoded playback.
+const HERO_POSTER = "/quadriga/hero-poster.jpg";
 
 // --------------------------------------------------------------------------
 // COLORWAY MATRIX — price = pricing[metal] per colorway
@@ -47,6 +51,7 @@ const COLORWAYS = [
     image: IMG_RED_BLACK,
     alt: "QUADRIGA DOMINUS — red cushion centre stone framed by black pavé double halo",
     pricing: { "10K": 10495, "14K": 12250 },
+    extras: [],
   },
   {
     id: "black-red",
@@ -55,6 +60,7 @@ const COLORWAYS = [
     image: IMG_BLACK_RED,
     alt: "QUADRIGA DOMINUS — black cushion centre stone framed by red pavé double halo",
     pricing: { "10K": 10995, "14K": 12750 },
+    extras: [],
   },
   {
     id: "green-black",
@@ -63,6 +69,13 @@ const COLORWAYS = [
     image: IMG_GREEN_BLACK,
     alt: "QUADRIGA DOMINUS — green cushion centre stone framed by black pavé double halo",
     pricing: { "10K": 11495, "14K": 13250 },
+    extras: [
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7spgrpo4_1000170275.png", alt: "QUADRIGA DOMINUS — emerald centre editorial three-quarter view, standing on a soft grey studio surface" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/yj1t7qm1_1000170273.png", alt: "QUADRIGA DOMINUS — macro on the emerald centre stone framed by the black pavé double halo" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/81t2anc7_1000170270.png", alt: "QUADRIGA DOMINUS — top-down architectural view of the emerald centre and black pavé haloes" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/6i89pfb4_1000170279.png", alt: "QUADRIGA DOMINUS — emerald centre presented in the PHILEON navy-velvet box, held between fingers" },
+      { src: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2sip6c2p_1000170277.png", alt: "QUADRIGA DOMINUS — emerald centre worn on hand, editorial lifestyle" },
+    ],
   },
   {
     id: "black-green",
@@ -71,6 +84,7 @@ const COLORWAYS = [
     image: IMG_BLACK_GREEN,
     alt: "QUADRIGA DOMINUS — black cushion centre stone framed by green pavé double halo",
     pricing: { "10K": 11995, "14K": 13750 },
+    extras: [],
   },
 ];
 
@@ -229,12 +243,12 @@ export default function QuadrigaDominusPage() {
             so we avoid large empty black gaps above/below.
             ================================================================ */}
         <div>
-          <div className="product-media-wrap w-full max-w-full overflow-hidden">
-            <div className="product-media-main w-full max-w-full flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]">
+          <div className="w-full max-w-full overflow-hidden">
+            <div className="w-full max-w-full flex justify-center items-center overflow-hidden rounded-2xl bg-black border border-[#1f1f1f]" data-testid="quadriga-hero-frame">
               <video
                 ref={heroVideoRef}
                 src={HERO_VIDEO}
-                poster={activeColorway.image}
+                poster={HERO_POSTER}
                 autoPlay
                 muted
                 loop
@@ -255,6 +269,7 @@ export default function QuadrigaDominusPage() {
                 }}
                 onEnded={(e) => { e.currentTarget.currentTime = 0; e.currentTarget.play(); }}
                 className="w-full h-auto max-h-[85vh] object-contain block bg-black"
+                style={{ aspectRatio: "640 / 368" }}
                 aria-label="QUADRIGA DOMINUS hero video"
                 data-testid="quadriga-hero-video"
               />
@@ -285,6 +300,37 @@ export default function QuadrigaDominusPage() {
               </button>
             ))}
           </div>
+
+          {/* Colorway-specific extras gallery — currently populated for the
+              emerald (Green Centre / Black Pavé) colorway. Rendered only
+              when the active colorway has extras; hidden otherwise so
+              other colorways behave exactly as before. */}
+          {activeColorway.extras && activeColorway.extras.length > 0 ? (
+            <div
+              className="mt-6"
+              data-testid={`quadriga-extras-${activeColorway.id}`}
+            >
+              <p className="text-xs tracking-[0.3em] text-[#8e8e8e] uppercase mb-3">
+                {activeColorway.name} — Gallery
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {activeColorway.extras.map((img, idx) => (
+                  <div
+                    key={`${activeColorway.id}-extra-${idx}`}
+                    className="relative overflow-hidden rounded-xl border border-[#1f1f1f] bg-black aspect-square"
+                  >
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      data-testid={`quadriga-extra-${activeColorway.id}-${idx}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         {/* ================================================================
