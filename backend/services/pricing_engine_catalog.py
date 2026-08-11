@@ -525,6 +525,18 @@ FIXED_PRODUCTS: Dict[str, Dict] = {
         },
     },
 
+    # ── RETRO BRED — DREW'S VAULT · PRIVATE RELEASE (CAD, chain separate) ─
+    # Pendant only. Chain sold separately. 3 tiers, all CAD.
+    "retro-bred": {
+        "product_name": "RETRO BRED", "subtitle": "Drew's Vault · Private Release",
+        "currency": "CAD", "sku_prefix": "RB", "size_profile": None, "needs_size": False,
+        "variants": {
+            "foundation": {"price_usd":  5995, "metal_label": "Sterling Silver · Synthetic Stones", "sku_suffix": "FND-925"},
+            "signature":  {"price_usd": 10495, "metal_label": "10K Gold · Lab-Grown Stones",        "sku_suffix": "SIG-10K"},
+            "heirloom":   {"price_usd": 11795, "metal_label": "14K Gold · Lab-Grown Stones",        "sku_suffix": "HRL-14K"},
+        },
+    },
+
     # ── THE GRAND DAME — Cuff · 2 metals × 3 tiers ────────────────────────
     # Current storefront (GrandDamePage.jsx + products.theGrandDame) publishes
     # FINAL prices (products.js flags `pricingPending: false` and defines

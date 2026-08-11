@@ -50,6 +50,8 @@ const SUPPORTED_SLUGS = new Set([
   "the-grand-dame",
   // Wave 5 — CRESTA NERA (merchant-signed 2 metals × 4 wrist sizes).
   "cresta-nera",
+  // Drew's Vault — RETRO BRED · Private Release · CAD (chain sold separately).
+  "retro-bred",
 ]);
 const DYNAMIC_SLUGS = new Set([
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",

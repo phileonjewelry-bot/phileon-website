@@ -225,11 +225,10 @@ function App() {
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/vault/drews-world" element={<VaultPage />} />
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
-            {/* Drew's Vault — collectible releases (RETRO BRED etc.) */}
+            {/* Drew's Vault — private access via /secret-drop unlock. NOT
+                linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />
             <Route path="/drews-vault/retro-bred" element={<RetroBredPage />} />
-            <Route path="/retro-bred" element={<RetroBredPage />} />
-            <Route path="/products/retro-bred" element={<RetroBredPage />} />
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
             <Route path="/lisa" element={<LisaPage />} />
             <Route path="/lady-jay" element={<LadyJayPage />} />

@@ -140,14 +140,16 @@ FIXTURES = [
     ("the-grand-dame",          {"tier": "rose_foundation"}),
     # --- Wave 5 ---
     ("cresta-nera",             {"tier": "10k-yellow-gold", "wrist_size": "medium"}),
+    # --- Drew's Vault Private Release ---
+    ("retro-bred",              {"tier": "signature"}),
 ]
 
 FIXTURE_SLUGS = [f[0] for f in FIXTURES]
 
 
 # ────────────────────────  SLUG PARITY  ────────────────────────
-def test_backend_slug_count_matches_82():
-    assert len(_SUPPORTED_SLUGS) == 82
+def test_backend_slug_count_matches_83():
+    assert len(_SUPPORTED_SLUGS) == 83
 
 def test_every_supported_slug_has_a_fixture():
     missing = _SUPPORTED_SLUGS - set(FIXTURE_SLUGS)
