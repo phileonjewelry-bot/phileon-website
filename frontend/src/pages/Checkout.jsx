@@ -45,6 +45,9 @@ const SUPPORTED_SLUGS = new Set([
   "iv-stampede-set", "iv-nightfang-set",
   "drew-face", "la-madonna", "la-scarpa-della-regina", "midweek",
   "bape", "lisa", "the-carapace", "neighborhood-nip",
+  // Wave 4 — Grand Dame (page publishes final USD pricing; stale
+  // pricing_engine entry retained but deprecated for checkout).
+  "the-grand-dame",
 ]);
 const DYNAMIC_SLUGS = new Set([
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",

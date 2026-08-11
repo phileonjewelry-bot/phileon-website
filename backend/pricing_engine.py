@@ -265,8 +265,16 @@ LIVE_PRICING_CONFIG = {
         "gold_heirloom_away":     {"lockedBasePriceCad": 14500, "metalType": "18K", "weightGrams": 14, "lockedMetalReferenceCad": 1575},
     },
     # THE GRAND DAME — Cuff (rose gold, 3 tiers).
-    # pricingPending: lockedBasePriceCad placeholders are 0 — page renders
-    # "Pricing on Inquiry" and the page does NOT submit cart validation calls.
+    # ⚠️  DEPRECATED / STALE — DO NOT USE FOR CHECKOUT PRICING.
+    # The current published product page (`GrandDamePage.jsx` +
+    # `products.theGrandDame.metals`) sets `pricingPending: false` and
+    # publishes FINAL trusted USD amounts: Foundation $9,500 / Signature
+    # $12,500 / Heirloom $17,000 (parity across rose/yellow gold).
+    # Trusted checkout is served from
+    # `services.pricing_engine_catalog.FIXED_PRODUCTS["the-grand-dame"]`.
+    # This entry is retained ONLY so downstream `/validate-cart` clients
+    # that still send productKey="theGrandDame" don't 500. Do not add
+    # `theGrandDame` to any new resolver that reads from LIVE_PRICING_CONFIG.
     "theGrandDame": {
         "foundation": {"lockedBasePriceCad": 0, "metalType": "10K", "weightGrams": 45, "lockedMetalReferenceCad": 2813},
         "signature":  {"lockedBasePriceCad": 0, "metalType": "14K", "weightGrams": 50, "lockedMetalReferenceCad": 4375},

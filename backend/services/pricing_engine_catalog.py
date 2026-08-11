@@ -524,6 +524,27 @@ FIXED_PRODUCTS: Dict[str, Dict] = {
             "custom":   {"price_usd": 15750, "metal_label": "14K White · Custom B/W Layout",      "sku_suffix": "CSTM"},
         },
     },
+
+    # ── THE GRAND DAME — Cuff · 2 metals × 3 tiers ────────────────────────
+    # Current storefront (GrandDamePage.jsx + products.theGrandDame) publishes
+    # FINAL prices (products.js flags `pricingPending: false` and defines
+    # `metals.rose.tiers` + `metals.yellow.tiers` with concrete integer USD
+    # amounts). This supersedes the STALE `pricing_engine.LIVE_PRICING_CONFIG.
+    # theGrandDame` entry (all `lockedBasePriceCad: 0`) — which is retained
+    # in that file for schema reasons but is NOT the trusted source anymore.
+    # Cart tierKey is sent as `${metal}_${tier}` (e.g. "rose_foundation").
+    "the-grand-dame": {
+        "product_name": "THE GRAND DAME CUFF", "subtitle": "Sculptural Open Cuff",
+        "currency": "USD", "sku_prefix": "GDM", "size_profile": None, "needs_size": False,
+        "variants": {
+            "rose_foundation":   {"price_usd":  9500, "metal_label": "Rose Gold · Foundation",   "sku_suffix": "ROSE-FND"},
+            "rose_signature":    {"price_usd": 12500, "metal_label": "Rose Gold · Signature",    "sku_suffix": "ROSE-SIG"},
+            "rose_heirloom":     {"price_usd": 17000, "metal_label": "Rose Gold · Heirloom",     "sku_suffix": "ROSE-HRL"},
+            "yellow_foundation": {"price_usd":  9500, "metal_label": "Yellow Gold · Foundation", "sku_suffix": "YEL-FND"},
+            "yellow_signature":  {"price_usd": 12500, "metal_label": "Yellow Gold · Signature",  "sku_suffix": "YEL-SIG"},
+            "yellow_heirloom":   {"price_usd": 17000, "metal_label": "Yellow Gold · Heirloom",   "sku_suffix": "YEL-HRL"},
+        },
+    },
 }
 
 FIXED_PRODUCT_SLUGS: Set[str] = frozenset(FIXED_PRODUCTS.keys())
