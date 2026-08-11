@@ -18,12 +18,26 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const CHECKOUT_ENDPOINT = `${API}/api/checkout/stripe/session`;
 
 // Every server-supported slug for the trusted checkout catalog. Kept in
-// sync with services/catalog.py `_SUPPORTED_SLUGS`. If a cart line's slug
-// is not in this set, it cannot be paid for online yet.
+// sync with services/catalog.py `_SUPPORTED_SLUGS` + pricing_engine_catalog.
+// If a cart line's slug is not in this set, it cannot be paid for online yet.
 const SUPPORTED_SLUGS = new Set([
+  // Original 4 static + 7 dynamic rings
   "scacco-matto", "ribbon-regale-edition", "quadriga-dominus", "bajan-joe",
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",
   "parabola", "parabola-heritage", "ovation",
+  // Full-catalog migration wave 2 — hand-set USD products
+  "boss-knot", "lady-boss-knot", "veyron-noir", "wynette-palette", "uncle-jo",
+  "rose-of-sharon", "battenti-della-villa", "gent", "stackrats", "coogi-dna-tag",
+  "katrina-cascata", "true-vine",
+  // Inspiration Vault fixed USD
+  "iv-first-discovery", "iv-noir-cadence", "iv-liaison", "iv-noir-tide",
+  "iv-prismatic-laurel", "iv-viridian-teardrops", "iv-orbit-lumiere", "iv-deco-eventail",
+  // Dynamic-CAD converted to USD (live-priced)
+  "bamburgh", "lady-bamburgh", "blessed", "apex", "bound", "morso", "la-bete",
+  "cypher", "coogi-i", "homage", "corinthians-15-14", "trace", "galatians-6-14",
+  "drape", "fondo-curvo", "prise-de-couronne", "nervatura", "the-don-gorgon",
+  "lady-jay", "porta-aurea", "monika-couture", "cocktail-jessica", "rosaria",
+  "alejandra-heels", "desir-corset", "forme-cuff", "ptp-cuff",
 ]);
 const DYNAMIC_SLUGS = new Set([
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",

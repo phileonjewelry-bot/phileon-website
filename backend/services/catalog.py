@@ -132,6 +132,14 @@ _SUPPORTED_SLUGS = {
     "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",
     "parabola", "parabola-heritage", "ovation",
 }
+# Full-catalog migration: additional slugs resolved via pricing_engine.
+try:
+    from services.pricing_engine_catalog import ALL_SLUGS as _PE_SLUGS, resolve as _pe_resolve, PricingEngineResolverError as _PEResolverError, PRICING_ENGINE_CATALOG as _PE_CATALOG  # noqa: E402
+    _SUPPORTED_SLUGS = _SUPPORTED_SLUGS | set(_PE_SLUGS)
+except Exception:  # pragma: no cover — defensive; core catalog must keep working
+    _PE_SLUGS, _PE_CATALOG = set(), {}
+    _pe_resolve = None
+    _PEResolverError = Exception
 
 # ---------------------------------------------------------------------------
 # DYNAMIC RINGS — 7 live-priced CAD products
@@ -244,7 +252,19 @@ DYNAMIC_RING_SLUGS = frozenset(_DYNAMIC_RING_TIERS.keys())
 
 def is_dynamic_priced(product_id: str) -> bool:
     """True when a product's checkout price depends on the current metal spot."""
-    return product_id in _DYNAMIC_RING_TIERS
+    if product_id in _DYNAMIC_RING_TIERS:
+        return True
+    if product_id in _PE_CATALOG:
+        # Look up the tier config to detect any weightGrams>0 entry — but the
+        # cheapest signal is: any product that *could* have live-metal effect
+        # if any of its tiers has weightGrams>0. We flag USD-converted products
+        # as dynamic (they participate in PRICE_MOVED) and hand-set
+        # (weightGrams=0) products as static.
+        from pricing_engine import LIVE_PRICING_CONFIG
+        cfg = _PE_CATALOG[product_id]
+        pcfg = LIVE_PRICING_CONFIG.get(cfg["product_key"], {})
+        return any(int(t.get("weightGrams", 0)) > 0 for t in pcfg.values())
+    return False
 
 
 def is_supported(product_id: str) -> bool:
@@ -502,6 +522,17 @@ def resolve_line_item(product_id: str,
         # Dynamic-priced ring — tier arrives via `tier` / `variant` / `karat`.
         t = tier or variant or karat
         return _resolve_dynamic_ring(product_id, t, ring_size, quantity, market_snapshot)
+
+    if product_id in _PE_CATALOG and _pe_resolve is not None:
+        # Pricing-engine-backed product (Inspiration Vault, hand-set USD, or
+        # dynamic USD-via-cadToUsdLuxury). Requires a market snapshot even for
+        # static products so PRICE_MOVED and LIVE_PRICE_UNAVAILABLE still fire
+        # deterministically for all cart items in the same flow.
+        t = tier or variant or karat
+        try:
+            return _pe_resolve(product_id, t, ring_size, quantity, market_snapshot)
+        except _PEResolverError as e:  # type: ignore
+            raise CatalogError(str(e))
 
     raise CatalogError(f"UNSUPPORTED_PRODUCT: '{product_id}' has no resolver.")
 

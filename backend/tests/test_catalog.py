@@ -15,16 +15,17 @@ def test_is_supported_expanded():
     assert is_supported("quadriga-dominus")
 
 def test_is_supported_rejects_unknown():
-    assert not is_supported("cresta-nera")
-    assert not is_supported("uncle-jo")
+    assert not is_supported("cresta-nera")  # not yet migrated
     assert not is_supported("")
 
-def test_supported_slugs_set_frozen():
-    assert _SUPPORTED_SLUGS == {
+def test_supported_slugs_set_contains_original_11():
+    # Original 11 must always remain supported. Additional slugs are added
+    # via subsequent migration passes and asserted elsewhere.
+    assert {
         "scacco-matto", "ribbon-regale-edition", "quadriga-dominus", "bajan-joe",
         "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",
         "parabola", "parabola-heritage", "ovation",
-    }
+    } <= _SUPPORTED_SLUGS
 
 
 # ────────────────────────────  BAJAN JOE (USD)  ────────────────────────────
