@@ -134,10 +134,15 @@ _SUPPORTED_SLUGS = {
 }
 # Full-catalog migration: additional slugs resolved via pricing_engine.
 try:
-    from services.pricing_engine_catalog import ALL_SLUGS as _PE_SLUGS, resolve as _pe_resolve, PricingEngineResolverError as _PEResolverError, PRICING_ENGINE_CATALOG as _PE_CATALOG  # noqa: E402
+    from services.pricing_engine_catalog import (
+        ALL_SLUGS as _PE_SLUGS, resolve as _pe_resolve,
+        PricingEngineResolverError as _PEResolverError,
+        PRICING_ENGINE_CATALOG as _PE_CATALOG,
+        FIXED_PRODUCTS as _PE_FIXED,
+    )  # noqa: E402
     _SUPPORTED_SLUGS = _SUPPORTED_SLUGS | set(_PE_SLUGS)
 except Exception:  # pragma: no cover — defensive; core catalog must keep working
-    _PE_SLUGS, _PE_CATALOG = set(), {}
+    _PE_SLUGS, _PE_CATALOG, _PE_FIXED = set(), {}, {}
     _pe_resolve = None
     _PEResolverError = Exception
 
@@ -255,15 +260,11 @@ def is_dynamic_priced(product_id: str) -> bool:
     if product_id in _DYNAMIC_RING_TIERS:
         return True
     if product_id in _PE_CATALOG:
-        # Look up the tier config to detect any weightGrams>0 entry — but the
-        # cheapest signal is: any product that *could* have live-metal effect
-        # if any of its tiers has weightGrams>0. We flag USD-converted products
-        # as dynamic (they participate in PRICE_MOVED) and hand-set
-        # (weightGrams=0) products as static.
         from pricing_engine import LIVE_PRICING_CONFIG
         cfg = _PE_CATALOG[product_id]
         pcfg = LIVE_PRICING_CONFIG.get(cfg["product_key"], {})
         return any(int(t.get("weightGrams", 0)) > 0 for t in pcfg.values())
+    # FIXED_PRODUCTS are always static
     return False
 
 
@@ -523,11 +524,9 @@ def resolve_line_item(product_id: str,
         t = tier or variant or karat
         return _resolve_dynamic_ring(product_id, t, ring_size, quantity, market_snapshot)
 
-    if product_id in _PE_CATALOG and _pe_resolve is not None:
-        # Pricing-engine-backed product (Inspiration Vault, hand-set USD, or
-        # dynamic USD-via-cadToUsdLuxury). Requires a market snapshot even for
-        # static products so PRICE_MOVED and LIVE_PRICE_UNAVAILABLE still fire
-        # deterministically for all cart items in the same flow.
+    if product_id in _PE_CATALOG or product_id in _PE_FIXED:
+        # Pricing-engine-backed OR fixed-product from wave 3. Both are routed
+        # via the same PE resolver which auto-dispatches to the right path.
         t = tier or variant or karat
         try:
             return _pe_resolve(product_id, t, ring_size, quantity, market_snapshot)

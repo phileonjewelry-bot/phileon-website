@@ -376,6 +376,160 @@ PRICING_ENGINE_CATALOG: Dict[str, Dict] = {
 ALL_SLUGS: Set[str] = frozenset(PRICING_ENGINE_CATALOG.keys())
 
 
+# ---------------------------------------------------------------------------
+# FIXED_PRODUCTS — page-declared fixed-price products NOT in
+# pricing_engine.LIVE_PRICING_CONFIG. All prices are the EXACT amount shown
+# on the storefront (integer dollars). Mirrors the source page's PRICE_USD
+# constants and variant tables verbatim. No new tiers invented.
+# ---------------------------------------------------------------------------
+# Schema per slug:
+#   currency          — always "USD" here (all migrated fixed products use USD)
+#   product_name / subtitle — customer-facing text
+#   sku_prefix        — deterministic prefix for internal SKU
+#   size_profile      — None | "ladies" | "gents" | "unisex" (ring-size validation)
+#   needs_size        — bool
+#   variants          — {variant_key: {price_usd, metal_label, sku_suffix (optional)}}
+FIXED_PRODUCTS: Dict[str, Dict] = {
+
+    # ── Inspiration Vault (single-tier fixed USD) ──────────────────
+    "iv-altar": {
+        "product_name": "ALTAR", "subtitle": "Architectural Cross Cuff · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-AL", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 40,  "metal_label": "Gold-Plated Stainless Steel", "sku_suffix": "CRX"}},
+    },
+    "iv-caged-wings": {
+        "product_name": "CAGED WINGS", "subtitle": "Earrings · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-CW", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 70,  "metal_label": "Rhodium-Plated Alloy", "sku_suffix": "PR"}},
+    },
+    "iv-driven": {
+        "product_name": "DRIVEN", "subtitle": "Bracelets · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-DR", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 75,  "metal_label": "Rhodium-Plated Alloy", "sku_suffix": "01"}},
+    },
+    "iv-echelle": {
+        "product_name": "ÉCHELLE", "subtitle": "Inspiration Vault · Archive",
+        "currency": "USD", "sku_prefix": "IV-EC", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 115, "metal_label": "Gold-Plated Alloy", "sku_suffix": "3TG"}},
+    },
+    "iv-lucent": {
+        "product_name": "LUCENT", "subtitle": "Inspiration Vault · Archive",
+        "currency": "USD", "sku_prefix": "IV-LC", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 70,  "metal_label": "Rhodium-Plated Alloy", "sku_suffix": "CHN"}},
+    },
+    "iv-monaco": {
+        "product_name": "MONACO", "subtitle": "Inspiration Vault · Archive",
+        "currency": "USD", "sku_prefix": "IV-MC", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 60,  "metal_label": "Two-Finger Ring · Rhodium-Plated Alloy", "sku_suffix": "2F"}},
+    },
+    "iv-nova": {
+        "product_name": "NOVA", "subtitle": "Earrings · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-NV", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 80,  "metal_label": "Rhodium-Plated Alloy", "sku_suffix": "PR"}},
+    },
+    "iv-oriel": {
+        "product_name": "ORIEL", "subtitle": "Inspiration Vault · Archive",
+        "currency": "USD", "sku_prefix": "IV-OR", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 40,  "metal_label": "Rose-Silver-White Ring", "sku_suffix": "RSW"}},
+    },
+    "iv-parabola-atelier": {
+        "product_name": "PARABOLA ATELIER", "subtitle": "Study · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-PA", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 100, "metal_label": "Alloy Study", "sku_suffix": "STUDY"}},
+    },
+    "iv-parallax-drop-earrings": {
+        "product_name": "PARALLAX", "subtitle": "Drop Earrings · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-PARALLAX", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 70,  "metal_label": "Rhodium-Plated Alloy", "sku_suffix": "DROPS"}},
+    },
+    "iv-ribbon-regale": {
+        "product_name": "RIBBON REGALE", "subtitle": "Inspiration Vault · Archive Piece",
+        "currency": "USD", "sku_prefix": "IV-RIBBON", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 30,  "metal_label": "Costume Alloy", "sku_suffix": "REGALE"}},
+    },
+    "iv-roseline": {
+        "product_name": "ROSELINE", "subtitle": "Rose-Gold Open Cuff Bangle · Inspiration Vault",
+        "currency": "USD", "sku_prefix": "IV-RL", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 50,  "metal_label": "Rose-Gold Plated Brass", "sku_suffix": "RG"}},
+    },
+    "iv-stampede-set": {
+        "product_name": "STAMPEDE SET", "subtitle": "Inspiration Vault · Archive Set",
+        "currency": "USD", "sku_prefix": "IV-STAMPEDE", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 150, "metal_label": "Mixed Alloy Set", "sku_suffix": "SET"}},
+    },
+    "iv-nightfang-set": {
+        "product_name": "NIGHTFANG SET", "subtitle": "Inspiration Vault · Archive Set",
+        "currency": "USD", "sku_prefix": "IV-NIGHTFANG", "size_profile": None, "needs_size": False,
+        "variants": {"default": {"price_usd": 185, "metal_label": "Mixed Alloy Set", "sku_suffix": "SET"}},
+    },
+
+    # ── Re-audit MIGRATED single-price products ──────────────────
+    "drew-face": {
+        "product_name": "DREW FACE", "subtitle": "Vault Collector Pendant",
+        "currency": "USD", "sku_prefix": "DREW", "size_profile": None, "needs_size": False,
+        "variants": {"vault": {"price_usd": 850, "metal_label": "Vault Collector Edition", "sku_suffix": "VAULT"}},
+    },
+    "la-madonna": {
+        "product_name": "LA MADONNA", "subtitle": "10K Yellow Gold · Signature",
+        "currency": "USD", "sku_prefix": "LMD", "size_profile": None, "needs_size": False,
+        "variants": {"10k-yellow": {"price_usd": 28500, "metal_label": "10K Yellow Gold", "sku_suffix": "10K"}},
+    },
+    "la-scarpa-della-regina": {
+        "product_name": "LA SCARPA DELLA REGINA", "subtitle": "18K Rose Gold · Signature Object",
+        "currency": "USD", "sku_prefix": "LSC", "size_profile": None, "needs_size": False,
+        "variants": {"18k-rose": {"price_usd": 9000, "metal_label": "18K Rose Gold", "sku_suffix": "18KR"}},
+    },
+    "midweek": {
+        "product_name": "MIDWEEK", "subtitle": "Sterling Silver Mesh Cuff",
+        "currency": "USD", "sku_prefix": "MDW", "size_profile": None, "needs_size": False,
+        "variants": {"silver-black-dia": {"price_usd": 850, "metal_label": "Sterling Silver + Black Diamonds", "sku_suffix": "SBDIA"}},
+    },
+
+    # ── Re-audit MIGRATED multi-variant products ──────────────────
+    "bape": {
+        "product_name": "BAPE", "subtitle": "PHILEON × BAPE · Ring",
+        "currency": "USD", "sku_prefix": "BAPE", "size_profile": "unisex", "needs_size": True,
+        "variants": {
+            "10k-yellow": {"price_usd":  9500, "metal_label": "10K Yellow Gold", "sku_suffix": "10KY"},
+            "14k-yellow": {"price_usd": 12500, "metal_label": "14K Yellow Gold", "sku_suffix": "14KY"},
+            "18k-yellow": {"price_usd": 17000, "metal_label": "18K Yellow Gold", "sku_suffix": "18KY"},
+        },
+    },
+    "lisa": {
+        "product_name": "LISA", "subtitle": "Emerald Dome Ring",
+        "currency": "USD", "sku_prefix": "LISA", "size_profile": "ladies", "needs_size": True,
+        "variants": {
+            "emerald-tight": {"price_usd": 5500, "metal_label": "Tight-Set Emeralds",  "sku_suffix": "TGHT"},
+            "emerald-open":  {"price_usd": 9000, "metal_label": "Open-Set Emeralds",   "sku_suffix": "OPEN"},
+        },
+    },
+    "the-carapace": {
+        "product_name": "THE CARAPACE", "subtitle": "Sculptural Lattice Dome Ring",
+        "currency": "USD", "sku_prefix": "CRP", "size_profile": "unisex", "needs_size": True,
+        "variants": {
+            "vermeil":      {"price_usd":  350, "metal_label": "Vermeil",           "sku_suffix": "VRM"},
+            "vermeil-pave": {"price_usd":  600, "metal_label": "Vermeil Pavé",      "sku_suffix": "VRMPV"},
+            "10k":          {"price_usd": 1100, "metal_label": "10K Gold",          "sku_suffix": "10K"},
+            "10k-pave":     {"price_usd": 1450, "metal_label": "10K Gold Pavé",     "sku_suffix": "10KPV"},
+        },
+    },
+    "neighborhood-nip": {
+        # BASE_PRICE_CAD=19950 → cadToUsdLuxury=$15,000. CUSTOM_FEE_CAD=1000 → +$750.
+        # 14K White only. Ring size required. Custom pattern is metadata (server
+        # does not validate the grid; the price already includes the +$750 fee).
+        "product_name": "NEIGHBORHOOD NIP", "subtitle": "14K White · Victory Patch Ring",
+        "currency": "USD", "sku_prefix": "NHN", "size_profile": "gents", "needs_size": True,
+        "variants": {
+            "original": {"price_usd": 15000, "metal_label": "14K White · Original Victory Patch", "sku_suffix": "ORIG"},
+            "custom":   {"price_usd": 15750, "metal_label": "14K White · Custom B/W Layout",      "sku_suffix": "CSTM"},
+        },
+    },
+}
+
+FIXED_PRODUCT_SLUGS: Set[str] = frozenset(FIXED_PRODUCTS.keys())
+ALL_SLUGS = frozenset(list(PRICING_ENGINE_CATALOG.keys()) + list(FIXED_PRODUCTS.keys()))
+
+
 class PricingEngineResolverError(Exception):
     """Raised for validation errors within this resolver."""
 
@@ -385,6 +539,71 @@ def _valid_sizes_for(profile: Optional[str]) -> Optional[frozenset]:
     if profile == "ladies": return _LADIES_SIZES
     if profile == "gents":  return _GENTS_SIZES
     return _UNISEX_SIZES
+
+
+def _resolve_fixed_product(product_id: str, tier_key: Optional[str],
+                           ring_size: Optional[str], quantity: int) -> Dict:
+    """Resolver for `FIXED_PRODUCTS` (page-declared exact USD amounts).
+    No market snapshot needed — the merchant sets each price directly.
+    """
+    cfg = FIXED_PRODUCTS[product_id]
+    if not tier_key:
+        # Single-variant products can safely default to their sole variant.
+        if len(cfg["variants"]) == 1:
+            tier_key = next(iter(cfg["variants"].keys()))
+        else:
+            raise PricingEngineResolverError(
+                f"MISSING_TIER: {cfg['product_name']} requires a variant selection."
+            )
+    tk = tier_key.strip()
+    if tk not in cfg["variants"]:
+        raise PricingEngineResolverError(
+            f"INVALID_TIER: '{tier_key}' is not a valid {cfg['product_name']} variant."
+        )
+    v = cfg["variants"][tk]
+
+    size_norm = None
+    if cfg["needs_size"]:
+        if not ring_size:
+            raise PricingEngineResolverError(f"MISSING_RING_SIZE: {cfg['product_name']} requires a ring size.")
+        size_norm = ring_size.replace("US ", "").strip()
+        valid = _valid_sizes_for(cfg["size_profile"])
+        if valid is not None and size_norm not in valid:
+            raise PricingEngineResolverError(
+                f"INVALID_RING_SIZE: '{ring_size}' is not a valid {cfg['product_name']} ring size."
+            )
+
+    price_usd = int(v["price_usd"])
+    if price_usd <= 0:
+        raise PricingEngineResolverError(f"PRICING_UNAVAILABLE: {cfg['product_name']}.")
+    unit_amount_cents = price_usd * 100
+
+    if cfg["needs_size"]:
+        size_token = (size_norm or "").replace(".", "-")
+        sku = f"{cfg['sku_prefix']}-{v.get('sku_suffix', tk.upper())}-SZ{size_token}"
+        variant = f"{v['metal_label']} · US {size_norm}"
+    else:
+        sku = f"{cfg['sku_prefix']}-{v.get('sku_suffix', tk.upper())}"
+        variant = v["metal_label"]
+
+    return {
+        "product_id": product_id,
+        "product_name": cfg["product_name"],
+        "subtitle": cfg["subtitle"],
+        "gemstones": None,
+        "sku": sku,
+        "variant": variant,
+        "karat": None,
+        "metal_colour": None,
+        "ring_size": f"US {size_norm}" if size_norm else None,
+        "unit_amount_cents": unit_amount_cents,
+        "currency": cfg["currency"],
+        "quantity": quantity,
+        "image": f"/products/{product_id}/hero.jpg",
+        "is_dynamic_priced": False,
+        "pricing_source": {"market_timestamp": 0, "market_source": "fixed-catalog", "is_stale": False},
+        "metadata": {"product_slug": product_id, "sku": sku, "tier": tk},
+    }
 
 
 def _tiers_are_all_static(product_key: str) -> bool:
@@ -405,6 +624,8 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
     - Ring products must supply `ring_size`.
     - Returns the standard resolver dict shape consumed by `resolve_line_item`.
     """
+    if product_id in FIXED_PRODUCTS:
+        return _resolve_fixed_product(product_id, tier_key, ring_size, quantity)
     if product_id not in PRICING_ENGINE_CATALOG:
         raise PricingEngineResolverError(f"UNSUPPORTED_PRODUCT: {product_id}")
     cfg = PRICING_ENGINE_CATALOG[product_id]

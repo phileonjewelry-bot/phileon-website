@@ -38,6 +38,13 @@ const SUPPORTED_SLUGS = new Set([
   "drape", "fondo-curvo", "prise-de-couronne", "nervatura", "the-don-gorgon",
   "lady-jay", "porta-aurea", "monika-couture", "cocktail-jessica", "rosaria",
   "alejandra-heels", "desir-corset", "forme-cuff", "ptp-cuff",
+  // Full-catalog migration wave 3 — Inspiration Vault fixed USD + re-audit
+  "iv-altar", "iv-caged-wings", "iv-driven", "iv-echelle", "iv-lucent",
+  "iv-monaco", "iv-nova", "iv-oriel", "iv-parabola-atelier",
+  "iv-parallax-drop-earrings", "iv-ribbon-regale", "iv-roseline",
+  "iv-stampede-set", "iv-nightfang-set",
+  "drew-face", "la-madonna", "la-scarpa-della-regina", "midweek",
+  "bape", "lisa", "the-carapace", "neighborhood-nip",
 ]);
 const DYNAMIC_SLUGS = new Set([
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",
