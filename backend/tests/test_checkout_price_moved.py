@@ -30,16 +30,6 @@ FRESH_MARKET = {
 MOVED_MARKET = {**FRESH_MARKET, "goldPerGram24kCad": 200.0}  # +$50/g
 
 
-@pytest.fixture(scope="module")
-def app_client():
-    """Module-scoped TestClient — Motor async client is bound to the first
-    event loop TestClient spins up. Reusing that loop across tests avoids
-    'Event loop is closed' after the first test tears down."""
-    from server import app
-    with TestClient(app) as c:
-        yield c
-
-
 @pytest.fixture
 def client(app_client, monkeypatch):
     from services import metal_spot as ms
