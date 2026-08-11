@@ -12,6 +12,7 @@ const tolaIIProduct = {
   category: "ring",
   sizeProfile: "gents",
   collection: "The TOLA Collection",
+  currency: "CAD",
   tagline: "Weight. Discipline. Presence.",
   
   tiers: {

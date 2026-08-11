@@ -1,11 +1,16 @@
-"""Phase 1 — Secure Stripe checkout (SCACCO MATTO pilot).
-Trusted server-side pricing, idempotency, protected order-status lookup."""
+"""Phase 1 — Secure Stripe checkout (SCACCO MATTO pilot + Fine Jewelry expansion).
+Trusted server-side pricing, idempotency, protected order-status lookup,
+live-metal PRICE_MOVED contract for the 7 dynamic rings."""
 import hashlib, hmac, json, logging, os, secrets
 from typing import List, Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Request, Header
 from pydantic import BaseModel, Field
 
-from services.catalog import resolve_line_item, compute_totals, CatalogError, is_supported
+from services.catalog import (
+    resolve_line_item, compute_totals, CatalogError, is_supported,
+    is_dynamic_priced, detect_price_move,
+)
+from services import metal_spot
 from models_orders import OrderV2, OrderV2Item, hash_status_token
 
 logger = logging.getLogger(__name__)
@@ -44,12 +49,21 @@ class CartItemIn(BaseModel):
     # catalog; client-supplied price/currency values are NEVER trusted.
     variant: Optional[str] = None      # e.g. RRE tier key: "plated" / "10k" / "14k" / "18k"
     colorway: Optional[str] = None     # e.g. QUADRIGA: "red-black" / "black-red" / …
+    tier: Optional[str] = None         # dynamic-ring tier key (foundation/signature/heirloom/…)
+    # Client-side snapshot of the price shown at Add-to-Cart. NEVER trusted for
+    # payment. Used only to detect price movement between add-to-cart and
+    # checkout for live-priced items.
+    displayed_unit_amount_cents: Optional[int] = Field(default=None, ge=0)
 
 
 class StripeSessionIn(BaseModel):
     items: List[CartItemIn]
     customer_email: Optional[str] = None
     idempotency_key: Optional[str] = None
+    # Client acknowledges the trusted updated quote returned by a prior
+    # PRICE_MOVED 409. Backend still re-verifies the market before creating
+    # the Stripe session.
+    price_move_acknowledged: bool = False
 
 
 async def _ensure_indexes(db):
@@ -76,23 +90,74 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
     db = get_db()
     await _ensure_indexes(db)
 
-    # 1. Guard: pilot-mode only supports SCACCO MATTO
+    # 1. Guard: every product must be listed in the trusted catalog.
     for it in body.items:
         if not is_supported(it.product_id):
             raise HTTPException(status_code=400, detail={
                 "code": "UNSUPPORTED_PRODUCT",
-                "message": f"Online checkout is currently available for SCACCO MATTO only. "
-                           f"'{it.product_id}' cannot be purchased through this flow yet."})
+                "message": f"Product '{it.product_id}' cannot be purchased through this flow yet."})
     if not body.items:
         raise HTTPException(status_code=400, detail={"code": "EMPTY_CART", "message": "Cart is empty."})
 
-    # 2. Resolve every item from trusted catalog
+    # 1b. If any item is live-priced, fetch a trusted market snapshot and
+    # enforce checkout-safe age (fresh ≤10m or stale-but-usable ≤30m).
+    needs_market = any(is_dynamic_priced(it.product_id) for it in body.items)
+    market_snapshot = None
+    if needs_market:
+        market_snapshot = metal_spot.get_spot()
+        if not metal_spot.is_checkout_safe(market_snapshot):
+            raise HTTPException(status_code=503, detail={
+                "code": "LIVE_PRICE_UNAVAILABLE",
+                "message": "We’re refreshing current precious-metal pricing. Please try again shortly."})
+
+    # 2. Resolve every item from trusted catalog.
     try:
-        resolved = [resolve_line_item(i.product_id, i.karat, i.metalColour, i.ringSize,
-                                      i.quantity, variant=i.variant, colorway=i.colorway)
-                    for i in body.items]
+        resolved = [resolve_line_item(
+                        i.product_id, i.karat, i.metalColour, i.ringSize,
+                        i.quantity, variant=i.variant, colorway=i.colorway,
+                        tier=i.tier, market_snapshot=market_snapshot,
+                    ) for i in body.items]
     except CatalogError as e:
-        raise HTTPException(status_code=400, detail={"code": "VALIDATION", "message": str(e)})
+        msg = str(e)
+        if msg.startswith("LIVE_PRICE_UNAVAILABLE"):
+            raise HTTPException(status_code=503, detail={
+                "code": "LIVE_PRICE_UNAVAILABLE",
+                "message": "We’re refreshing current precious-metal pricing. Please try again shortly."})
+        raise HTTPException(status_code=400, detail={"code": "VALIDATION", "message": msg})
+
+    # 2a. Live-price movement detection. Compare each dynamic-priced item's
+    # trusted server price vs the client-supplied displayed snapshot. If any
+    # exceeds the threshold, return 409 PRICE_MOVED and do NOT reach Stripe.
+    moved_items = []
+    for it_in, r in zip(body.items, resolved):
+        if not is_dynamic_priced(it_in.product_id):
+            continue
+        move = detect_price_move(it_in.displayed_unit_amount_cents, r["unit_amount_cents"])
+        if move is not None:
+            moved_items.append({
+                "product_slug": r["product_id"],
+                "variant": r["variant"],
+                "currency": r["currency"],
+                **move,
+            })
+    if moved_items and not body.price_move_acknowledged:
+        raise HTTPException(status_code=409, detail={
+            "code": "PRICE_MOVED",
+            "message": "Live precious-metal pricing has moved since this item was added to cart.",
+            "items": moved_items,
+        })
+    # If the customer acknowledged a previous quote, verify the LATEST trusted
+    # price is still within threshold of what they were shown. If it moved
+    # again, surface PRICE_MOVED once more — no race-condition bypass.
+    if moved_items and body.price_move_acknowledged:
+        # `displayed_unit_amount_cents` sent by the client on the retry MUST
+        # be the last trusted price we returned in the prior 409 response.
+        # A second movement means the market shifted again in flight.
+        raise HTTPException(status_code=409, detail={
+            "code": "PRICE_MOVED",
+            "message": "Live precious-metal pricing moved again while confirming the previous update.",
+            "items": moved_items,
+        })
 
     # 2b. Backend-authoritative mixed-currency guard — reject BEFORE Stripe.
     try:

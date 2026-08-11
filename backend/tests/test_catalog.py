@@ -20,7 +20,11 @@ def test_is_supported_rejects_unknown():
     assert not is_supported("")
 
 def test_supported_slugs_set_frozen():
-    assert _SUPPORTED_SLUGS == {"scacco-matto", "ribbon-regale-edition", "quadriga-dominus", "bajan-joe"}
+    assert _SUPPORTED_SLUGS == {
+        "scacco-matto", "ribbon-regale-edition", "quadriga-dominus", "bajan-joe",
+        "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",
+        "parabola", "parabola-heritage", "ovation",
+    }
 
 
 # ────────────────────────────  BAJAN JOE (USD)  ────────────────────────────

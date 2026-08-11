@@ -1,95 +1,83 @@
 """Trusted server-side metal spot-price service.
 
-Purpose
--------
-Single authority for the two units the PHILEON pricing engine consumes:
-  - goldPerGram24kCad   (CAD per gram of 24K gold)
-  - silverPerGramCad    (CAD per gram of silver)
+Cache policy (production-safe)
+------------------------------
+  FRESH     ( ageSeconds <= 600 )         → return cached trusted value; no network
+  STALE     ( 600 < ageSeconds <= 1800 )  → try provider; on failure return cached
+                                            trusted value flagged isStale=True
+  EXPIRED   ( ageSeconds  > 1800 )        → try provider; on failure return the
+                                            development fallback — the expired
+                                            trusted quote is NOT returned for
+                                            production checkout
 
-Design
-------
-Provider adapter for Metals-API is scaffolded but is NOT contacted unless
-`METALS_API_KEY` is present in the environment. When absent, the service
-returns the same conservative fallback constants the frontend and
-pricing_engine already treat as safe (150 CAD/g Au 24K, 1.25 CAD/g Ag),
-tagged as `isFallback: True` so callers can render a "prices provisional"
-UX where relevant.
+Contract
+--------
+get_spot() returns:
+  {
+    "goldPerGram24kCad": float,
+    "silverPerGramCad":  float,
+    "timestamp":         int,
+    "source":            "metals-api" | "phileon-fallback",
+    "isFallback":        bool,
+    "isStale":           bool,
+    "ageSeconds":        int,
+  }
 
-Flow (target)
--------------
-Metals-API  →  metal_spot.get_spot()  →  pricing_engine  →  /api/market-prices
-                                            ↓
-                              trusted checkout resolver  →  Stripe
-
-The frontend must NEVER call Metals-API directly. `METALS_API_KEY` must
-never appear in frontend code, logs, or Git.
+is_checkout_safe(snapshot) returns True only when the snapshot is a real
+provider quote (isFallback == False) with ageSeconds <= 1800.
 """
 from __future__ import annotations
-import os
-import time
-from typing import Dict
+import os, time
+from typing import Dict, Optional
 
-# Metals-API returns rates as: 1 base_ccy = X target (e.g. 1 USD = 0.000512 XAU).
-# So `1 XAU (troy oz of gold) in USD` = 1 / rate.
 TROY_OUNCE_GRAMS = 31.1034768
+
+# Cache windows (seconds)
+FRESH_MAX_AGE   = 10 * 60   # 10 minutes
+STALE_MAX_AGE   = 30 * 60   # 30 minutes (absolute upper bound for trusted-cache reuse)
 
 _FALLBACK_GOLD_PER_GRAM_24K_CAD = 150.0
 _FALLBACK_SILVER_PER_GRAM_CAD   = 1.25
 _FALLBACK_SOURCE                = "phileon-fallback"
 
-# In-memory soft cache. Deliberately not persisted so a process restart
-# forces a fresh fetch — safer for a low-volume boutique storefront than
-# a stale disk cache with obscure invalidation rules.
-_CACHE: Dict[str, object] = {"payload": None, "expires_at": 0.0}
-_CACHE_TTL_SECONDS = 15 * 60  # 15-minute soft cache; provider may be slow
+# Only trusted provider snapshots are cached here. Never a fallback payload.
+_TRUSTED_CACHE: Dict[str, Optional[Dict]] = {"snapshot": None}
+
+
+def _now() -> int: return int(time.time())
 
 
 def _fallback_payload() -> Dict:
+    ts = _now()
     return {
         "goldPerGram24kCad": _FALLBACK_GOLD_PER_GRAM_24K_CAD,
         "silverPerGramCad":  _FALLBACK_SILVER_PER_GRAM_CAD,
-        "timestamp": int(time.time()),
-        "source": _FALLBACK_SOURCE,
-        "isFallback": True,
+        "timestamp": ts, "source": _FALLBACK_SOURCE,
+        "isFallback": True, "isStale": False, "ageSeconds": 0,
     }
 
 
 def _normalise_metals_api(raw: Dict) -> Dict:
-    """Normalise a Metals-API `/latest` response into PHILEON units.
-
-    Metals-API convention: `rates.XAU` = amount of XAU per 1 unit of base.
-    So the base-currency price per troy ounce of gold = 1 / rates.XAU.
-
-    Expected input shape (parity with provider docs):
-        {"base": "CAD", "rates": {"XAU": 0.000488, "XAG": 0.0334}, "timestamp": 1734567890}
-    """
+    """Metals-API `/latest` → PHILEON units. Rates are XAU/XAG per 1 CAD."""
     base = (raw.get("base") or "").upper()
     rates = raw.get("rates") or {}
-    xau = rates.get("XAU")
-    xag = rates.get("XAG")
+    xau, xag = rates.get("XAU"), rates.get("XAG")
     if base != "CAD" or not xau or not xag:
         raise ValueError("Metals-API response not in expected CAD/XAU/XAG shape.")
-
-    # 1 troy ounce in CAD =  1 / rate
     gold_troyoz_cad   = 1.0 / float(xau)
     silver_troyoz_cad = 1.0 / float(xag)
-
-    # Per-gram (24K purity is by definition 100% Au — the karat multiplier
-    # is applied downstream in pricing_engine, not here).
-    gold_per_gram_24k_cad = gold_troyoz_cad   / TROY_OUNCE_GRAMS
-    silver_per_gram_cad   = silver_troyoz_cad / TROY_OUNCE_GRAMS
-
+    gold_per_gram_24k = gold_troyoz_cad   / TROY_OUNCE_GRAMS
+    silver_per_gram   = silver_troyoz_cad / TROY_OUNCE_GRAMS
     return {
-        "goldPerGram24kCad": round(gold_per_gram_24k_cad, 6),
-        "silverPerGramCad":  round(silver_per_gram_cad, 6),
-        "timestamp": int(raw.get("timestamp") or time.time()),
-        "source": "metals-api",
-        "isFallback": False,
+        "goldPerGram24kCad": round(gold_per_gram_24k, 6),
+        "silverPerGramCad":  round(silver_per_gram, 6),
+        "timestamp": int(raw.get("timestamp") or _now()),
+        "source": "metals-api", "isFallback": False,
+        "isStale": False, "ageSeconds": 0,
     }
 
 
 def _fetch_from_metals_api(api_key: str) -> Dict:
-    """Actual network call. Guarded so unit tests can monkeypatch."""
     import urllib.request, json
     url = f"https://metals-api.com/api/latest?access_key={api_key}&base=CAD&symbols=XAU,XAG"
     req = urllib.request.Request(url, headers={"User-Agent": "PHILEON-Backend/1.0"})
@@ -100,35 +88,54 @@ def _fetch_from_metals_api(api_key: str) -> Dict:
     return _normalise_metals_api(raw)
 
 
+def _with_age(snapshot: Dict, age: int, is_stale: bool) -> Dict:
+    """Return a copy of a trusted snapshot with current age/stale flags."""
+    out = dict(snapshot)
+    out["ageSeconds"] = int(age)
+    out["isStale"] = bool(is_stale)
+    return out
+
+
 def get_spot(force_refresh: bool = False) -> Dict:
-    """Return current spot payload with normalised PHILEON units.
+    """Return current spot payload following the fresh/stale/expired policy.
 
-    Never raises to callers — on any failure it degrades to the fallback
-    payload with `isFallback=True` so checkout stays operational.
+    Never raises to callers. Never overwrites a valid trusted cache with the
+    development fallback when the provider fails while cache is <= 30 min.
     """
-    now = time.time()
-    if not force_refresh and _CACHE["payload"] and now < float(_CACHE["expires_at"]):
-        return _CACHE["payload"]  # type: ignore
-
+    cached: Optional[Dict] = _TRUSTED_CACHE["snapshot"]
+    age = (_now() - cached["timestamp"]) if cached else None
     api_key = os.environ.get("METALS_API_KEY")
-    if not api_key:
-        payload = _fallback_payload()
-        _CACHE["payload"] = payload
-        _CACHE["expires_at"] = now + _CACHE_TTL_SECONDS
-        return payload
 
-    try:
-        payload = _fetch_from_metals_api(api_key)
-    except Exception:
-        # Any provider failure → fall back safely. Never expose provider
-        # error details to the customer surface.
-        payload = _fallback_payload()
+    # FRESH cache — return immediately unless caller forces a refresh
+    if cached is not None and age is not None and age <= FRESH_MAX_AGE and not force_refresh:
+        return _with_age(cached, age, is_stale=False)
 
-    _CACHE["payload"] = payload
-    _CACHE["expires_at"] = now + _CACHE_TTL_SECONDS
-    return payload
+    # Attempt provider only when a key is present
+    if api_key:
+        try:
+            fresh = _fetch_from_metals_api(api_key)
+            _TRUSTED_CACHE["snapshot"] = fresh
+            return _with_age(fresh, 0, is_stale=False)
+        except Exception:
+            # Provider failed. Decide whether to reuse cache or fall back.
+            pass
+
+    # No provider (or provider failed). Reuse trusted cache while age <= 30 min.
+    if cached is not None and age is not None and age <= STALE_MAX_AGE:
+        return _with_age(cached, age, is_stale=(age > FRESH_MAX_AGE))
+
+    # No usable cache — development fallback (never checkout-safe).
+    return _fallback_payload()
+
+
+def is_checkout_safe(snapshot: Dict) -> bool:
+    """A snapshot is checkout-safe only when it is a real provider quote
+    within the 30-minute usable window. Fallback is never safe."""
+    if not snapshot: return False
+    if snapshot.get("isFallback"): return False
+    age = int(snapshot.get("ageSeconds", 0))
+    return age <= STALE_MAX_AGE
 
 
 def clear_cache() -> None:
-    _CACHE["payload"] = None
-    _CACHE["expires_at"] = 0.0
+    _TRUSTED_CACHE["snapshot"] = None

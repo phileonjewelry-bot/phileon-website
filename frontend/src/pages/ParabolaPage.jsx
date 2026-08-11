@@ -108,6 +108,7 @@ const parabolaProduct = {
   category: "ring",
   sizeProfile: "ladies",
   collection: "Ladies First",
+  currency: "CAD",
   tagline: "Some jewelry reflects light. PARABOLA collects it.",
 
   tiers: {

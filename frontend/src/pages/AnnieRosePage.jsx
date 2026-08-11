@@ -12,6 +12,7 @@ const annieRoseProduct = {
   category: "ring",
   sizeProfile: "ladies",
   collection: "Featured Drop",
+  currency: "CAD",
   tagline: "Soft in tone. Strong in spirit.",
   
   tiers: {

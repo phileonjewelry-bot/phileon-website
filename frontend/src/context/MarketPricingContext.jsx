@@ -64,11 +64,27 @@ export function MarketPricingProvider({ children }) {
     }
 
     fetchMarketPrices();
-    const interval = setInterval(fetchMarketPrices, 15 * 60 * 1000);
+    // Refresh every 10 minutes while the app is active.
+    const interval = setInterval(fetchMarketPrices, 10 * 60 * 1000);
+
+    // Refresh when the tab returns to foreground after >10 minutes hidden.
+    let lastFetch = Date.now();
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") {
+        const age = Date.now() - lastFetch;
+        if (age > 10 * 60 * 1000) { fetchMarketPrices(); lastFetch = Date.now(); }
+      }
+    };
+    const wrappedFetch = async () => { lastFetch = Date.now(); await fetchMarketPrices(); };
+    document.addEventListener("visibilitychange", onVisibility);
+    // Fire a refresh when checkout begins (any page dispatches this event).
+    window.addEventListener("phileon:refresh-market", wrappedFetch);
 
     return () => {
       isMounted = false;
       clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("phileon:refresh-market", wrappedFetch);
     };
   }, []);
 

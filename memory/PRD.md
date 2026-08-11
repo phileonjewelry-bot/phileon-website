@@ -18,6 +18,9 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 ## Changelog
 
 ### Feb 2026
+- **[DONE Feb 11]** **Live-pricing engine wired to trusted checkout** — 7 dynamic CAD rings (LA MARVA, ANNIE ROSE, RHYTHM MESH, TOLA II, PARABOLA, PARABOLA HERITAGE, OVATION) resolvable via `services/catalog._resolve_dynamic_ring`. Server pulls `metal_spot.get_spot()`, enforces `is_checkout_safe()` (fresh ≤10m / stale-usable ≤30m), computes CAD cents via the shared gold/silver delta formula + `round_luxury`. Fallback / expired snapshots → `LIVE_PRICE_UNAVAILABLE` 503.
+- **[DONE Feb 11]** **PRICE_MOVED re-quote contract** — backend returns HTTP 409 when trusted price exceeds `MAX($50, 1%)` of the client's displayed snapshot. Redaction-safe payload: `product_slug`, `variant`, `old_display_price_cents`, `new_trusted_price_cents`, `currency`. `price_move_acknowledged=true` triggers a fresh market re-check; a second movement returns 409 again — no race-condition bypass. Frontend `Checkout.jsx` renders a cinematic PHILEON overlay (no `alert()`, no red marketplace styling).
+- **[DONE Feb 11]** `MarketPricingContext` refreshes every 10 min (was 15), on `visibilitychange` after >10 min hidden, and on `phileon:refresh-market` event fired by `Checkout.jsx` at mount.
 - **[DONE]** QUADRIGA DOMINUS — new gents statement ring with 4 colorway switch cards (Red/Black default, Black/Red, Green/Black, Black/Green), 10K/14K metal selector, gents US 7–15 half sizes, dynamic price matrix ($10,495–$13,750), shared `RingSizeSelector` reuse, size-guide CTA, substantial-band fit note. Registered in `/quadriga-dominus` (+ `/products/`, `/fine-jewelry/`) and appears in Gentleman's Club → Rings + Collective (excluded from Ladies and Inspiration Vault).
 - **[DONE]** BAJAN JOE gallery — presentation-box (red PHILEON box) added as 9th/final gallery image; existing order preserved
 - **[DONE]** CRESTA NERA Hinged Bangle — new product with metal (10K/14K YG) + wrist size (S/M/L/XL) required selectors, dynamic pricing matrix ($10,495–$12,595), bespoke page, hero video, main-page carousel placement, `WristSizeSelector` + `BraceletSizeGuideModal` shared components
@@ -27,8 +30,13 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Roadmap / Backlog
 
-### P1 — Paused, awaiting user
-- Stripe Phase 1 Checkout E2E testing (blocked on env-var injection workflow)
+### P0 — Blocked on user env
+- Provide `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` → unblock E2E checkout for all 11 catalog products
+- Provide `METALS_API_KEY` → replace deterministic fallback in `metal_spot.py` with live provider quotes
+
+### P1
+- Migrate remaining 60+ bespoke products into trusted catalog (needs merchant pricing CSV)
+- Analytics event when PRICE_MOVED is triggered (product, delta $, session id)
 
 ### P2
 - Phase 2 Stripe Financing (Affirm / Klarna / Afterpay)
@@ -36,7 +44,6 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Backend seed for CRESTA NERA if the `/api/products?featured=true` featured section is re-enabled on the homepage
 
 ### P3
-- Expand backend `catalog.py` for sitewide secure checkout
 - Abandoned-cart email logic
 - Companion gents signet piece to BAJAN JOE
 - Sticky mobile Add-to-Cart bar

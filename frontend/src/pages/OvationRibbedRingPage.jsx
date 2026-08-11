@@ -33,6 +33,7 @@ const ovationProduct = {
   category: "ring",
   sizeProfile: "unisex", // stackable ring, unisex sizing
   collection: "PHILEON Fine Jewelry",
+  currency: "CAD",
   tagline: "One was never the point.",
 
   tiers: {
