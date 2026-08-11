@@ -61,6 +61,8 @@ import MidweekPage from "@/pages/MidweekPage";
 import LaMadonnaPage from "@/pages/LaMadonnaPage";
 import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
+import DrewsVaultPage from "@/pages/DrewsVaultPage";
+import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
 import LisaPage from "@/pages/LisaPage";
 import LadyJayPage from "@/pages/LadyJayPage";
@@ -223,6 +225,11 @@ function App() {
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/vault/drews-world" element={<VaultPage />} />
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
+            {/* Drew's Vault — collectible releases (RETRO BRED etc.) */}
+            <Route path="/drews-vault" element={<DrewsVaultPage />} />
+            <Route path="/drews-vault/retro-bred" element={<RetroBredPage />} />
+            <Route path="/retro-bred" element={<RetroBredPage />} />
+            <Route path="/products/retro-bred" element={<RetroBredPage />} />
             <Route path="/la-scarpa-della-regina" element={<LaScarpaPage />} />
             <Route path="/lisa" element={<LisaPage />} />
             <Route path="/lady-jay" element={<LadyJayPage />} />
