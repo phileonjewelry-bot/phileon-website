@@ -15,13 +15,69 @@ def test_is_supported_expanded():
     assert is_supported("quadriga-dominus")
 
 def test_is_supported_rejects_unknown():
-    assert not is_supported("bajan-joe")
     assert not is_supported("cresta-nera")
     assert not is_supported("uncle-jo")
     assert not is_supported("")
 
 def test_supported_slugs_set_frozen():
-    assert _SUPPORTED_SLUGS == {"scacco-matto", "ribbon-regale-edition", "quadriga-dominus"}
+    assert _SUPPORTED_SLUGS == {"scacco-matto", "ribbon-regale-edition", "quadriga-dominus", "bajan-joe"}
+
+
+# ────────────────────────────  BAJAN JOE (USD)  ────────────────────────────
+@pytest.mark.parametrize("tier, expected_sku_prefix", [
+    ("polish", "BJ-POL-925"),
+    ("matte",  "BJ-MAT-925"),
+])
+def test_bajan_joe_both_tiers_same_price(tier, expected_sku_prefix):
+    r = resolve_line_item("bajan-joe", None, None, "US 10", 1, variant=tier)
+    assert r["product_id"] == "bajan-joe"
+    assert r["unit_amount_cents"] == 79500
+    assert r["currency"] == "USD"
+    assert r["sku"] == f"{expected_sku_prefix}-SZ10"
+    assert r["metadata"]["tier"] == tier
+
+def test_bajan_joe_lowest_size_us7():
+    r = resolve_line_item("bajan-joe", None, None, "US 7", 1, variant="polish")
+    assert r["sku"] == "BJ-POL-925-SZ7"
+    assert r["ring_size"] == "US 7"
+
+def test_bajan_joe_highest_size_us15():
+    r = resolve_line_item("bajan-joe", None, None, "US 15", 1, variant="matte")
+    assert r["sku"] == "BJ-MAT-925-SZ15"
+    assert r["ring_size"] == "US 15"
+
+def test_bajan_joe_half_size_supported():
+    r = resolve_line_item("bajan-joe", None, None, "US 10.5", 1, variant="polish")
+    assert r["sku"] == "BJ-POL-925-SZ10-5"
+
+def test_bajan_joe_accepts_tier_via_karat_field():
+    # Frontend payload compatibility — some pages send tier in `karat` slot
+    r = resolve_line_item("bajan-joe", "polish", None, "US 11", 1)
+    assert r["unit_amount_cents"] == 79500
+    assert r["metadata"]["tier"] == "polish"
+
+def test_bajan_joe_invalid_tier_rejected():
+    with pytest.raises(CatalogError, match="INVALID_TIER"):
+        resolve_line_item("bajan-joe", None, None, "US 10", 1, variant="brushed")
+
+def test_bajan_joe_missing_tier_rejected():
+    with pytest.raises(CatalogError, match="MISSING_TIER"):
+        resolve_line_item("bajan-joe", None, None, "US 10", 1)
+
+def test_bajan_joe_invalid_size_rejected():
+    # US 6 not in the gents 7-15 range
+    with pytest.raises(CatalogError, match="INVALID_RING_SIZE"):
+        resolve_line_item("bajan-joe", None, None, "US 6", 1, variant="polish")
+
+def test_bajan_joe_missing_size_rejected():
+    with pytest.raises(CatalogError, match="MISSING_RING_SIZE"):
+        resolve_line_item("bajan-joe", None, None, None, 1, variant="polish")
+
+def test_bajan_joe_client_supplied_price_ignored():
+    # The resolver takes NO price input from the request. Only slug + tier + size.
+    # Even if a caller mocked a `price` field, it cannot influence the result.
+    r = resolve_line_item("bajan-joe", None, None, "US 10", 1, variant="polish")
+    assert r["unit_amount_cents"] == 79500  # trusted server value, never client-driven
 
 
 # ────────────────────────  RIBBON REGALE ÉDITION (CAD)  ────────────────────────
@@ -156,7 +212,7 @@ def test_scacco_invalid_karat_still_rejected():
 # ─────────────────────────────  UNSUPPORTED / INVALID  ─────────────────────────
 def test_unsupported_product_rejected():
     with pytest.raises(CatalogError, match="UNSUPPORTED_PRODUCT"):
-        resolve_line_item("bajan-joe", None, None, None, 1)
+        resolve_line_item("cresta-nera", None, None, None, 1)
 
 def test_quantity_bounds():
     with pytest.raises(CatalogError, match="INVALID_QUANTITY"):

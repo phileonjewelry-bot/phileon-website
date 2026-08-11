@@ -68,7 +68,56 @@ class CatalogError(ValueError):
     pass
 
 
-_SUPPORTED_SLUGS = {"scacco-matto", "ribbon-regale-edition", "quadriga-dominus"}
+# ---------------------------------------------------------------------------
+# BAJAN JOE — USD (Signet ring, sterling silver, two finishes, static price)
+# ---------------------------------------------------------------------------
+# BAJAN JOE is static-priced (does not participate in the live-metal pricing
+# engine used by RHYTHM MESH / OVATION / TOLA II / PARABOLA / LA MARVA /
+# ANNIE ROSE / PARABOLA HERITAGE). Both finishes ship at the same $795 price.
+# Currency mirrors SCACCO / QUADRIGA (the site's other static-priced Fine
+# Jewelry rings, both USD).
+_BAJAN_JOE_TIERS: Dict[str, Dict] = {
+    "polish": {"sku": "BJ-POL-925", "unit_amount_cents": 79500, "metal": "Sterling Silver — High Polish", "finish": "High Polish"},
+    "matte":  {"sku": "BJ-MAT-925", "unit_amount_cents": 79500, "metal": "Sterling Silver — Matte",       "finish": "Matte"},
+}
+_BAJAN_JOE_VALID_SIZES = {
+    "7","7.5","8","8.5","9","9.5","10","10.5","11","11.5","12","12.5","13","13.5","14","14.5","15",
+}
+
+
+def _resolve_bajan_joe(tier_key, ring_size, quantity):
+    if not tier_key:
+        raise CatalogError("MISSING_TIER: BAJAN JOE requires a finish tier ('polish' or 'matte').")
+    key = tier_key.strip().lower()
+    if key not in _BAJAN_JOE_TIERS:
+        raise CatalogError(f"INVALID_TIER: '{tier_key}' is not a valid BAJAN JOE finish tier.")
+    if not ring_size:
+        raise CatalogError("MISSING_RING_SIZE: BAJAN JOE requires a ring size.")
+    size_norm = ring_size.replace("US ", "").strip()
+    if size_norm not in _BAJAN_JOE_VALID_SIZES:
+        raise CatalogError(f"INVALID_RING_SIZE: '{ring_size}' is not a valid BAJAN JOE gents size.")
+    t = _BAJAN_JOE_TIERS[key]
+    ring_size_label = f"US {size_norm}"
+    return {
+        "product_id": "bajan-joe",
+        "product_name": "BAJAN JOE",
+        "subtitle": "Black Spinel Reptile Signet",
+        "gemstones": "8×8mm Princess-Cut Black Spinel",
+        "sku": f"{t['sku']}-SZ{size_norm.replace('.', '-')}",
+        "variant": f"{t['metal']} · {ring_size_label}",
+        "karat": None, "metal_colour": t["metal"], "ring_size": ring_size_label,
+        "unit_amount_cents": t["unit_amount_cents"], "currency": "USD", "quantity": quantity,
+        "image": "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/p84yjqh9_1000169938.png",
+        "metadata": {
+            "product_slug": "bajan-joe",
+            "sku": f"{t['sku']}-SZ{size_norm.replace('.', '-')}",
+            "tier": key, "finish": t["finish"],
+            "metal": t["metal"], "ring_size": ring_size_label,
+        },
+    }
+
+
+_SUPPORTED_SLUGS = {"scacco-matto", "ribbon-regale-edition", "quadriga-dominus", "bajan-joe"}
 
 def is_supported(product_id: str) -> bool:
     return product_id in _SUPPORTED_SLUGS
@@ -198,6 +247,11 @@ def resolve_line_item(product_id: str,
         # depending on frontend payload shape.
         cw = colorway or metal_colour
         return _resolve_quadriga(karat, cw, ring_size, quantity)
+    if product_id == "bajan-joe":
+        # BAJAN JOE tier arrives via `variant` (polish|matte); older payloads
+        # may send it in `karat` slot.
+        t = variant or karat
+        return _resolve_bajan_joe(t, ring_size, quantity)
 
     raise CatalogError(f"UNSUPPORTED_PRODUCT: '{product_id}' has no resolver.")
 
