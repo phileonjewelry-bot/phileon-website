@@ -40,6 +40,10 @@ class CartItemIn(BaseModel):
     karat: Optional[str] = None
     metalColour: Optional[str] = None
     ringSize: Optional[str] = None
+    # New optional variant descriptors — only consumed by the trusted server
+    # catalog; client-supplied price/currency values are NEVER trusted.
+    variant: Optional[str] = None      # e.g. RRE tier key: "plated" / "10k" / "14k" / "18k"
+    colorway: Optional[str] = None     # e.g. QUADRIGA: "red-black" / "black-red" / …
 
 
 class StripeSessionIn(BaseModel):
@@ -84,12 +88,22 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
 
     # 2. Resolve every item from trusted catalog
     try:
-        resolved = [resolve_line_item(i.product_id, i.karat, i.metalColour, i.ringSize, i.quantity)
+        resolved = [resolve_line_item(i.product_id, i.karat, i.metalColour, i.ringSize,
+                                      i.quantity, variant=i.variant, colorway=i.colorway)
                     for i in body.items]
     except CatalogError as e:
         raise HTTPException(status_code=400, detail={"code": "VALIDATION", "message": str(e)})
 
-    totals = compute_totals(resolved)
+    # 2b. Backend-authoritative mixed-currency guard — reject BEFORE Stripe.
+    try:
+        totals = compute_totals(resolved)
+    except CatalogError as e:
+        msg = str(e)
+        if msg.startswith("MIXED_CURRENCY_CART"):
+            raise HTTPException(status_code=400, detail={
+                "code": "MIXED_CURRENCY_CART",
+                "message": "Items priced in different currencies must be purchased separately."})
+        raise HTTPException(status_code=400, detail={"code": "VALIDATION", "message": msg})
 
     # 3. Idempotency: caller-provided key OR (email + cart fingerprint)
     idem = (body.idempotency_key or idempotency_header or
@@ -145,7 +159,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             "currency": totals["currency"].lower(),
             "product_data": {"name": f"{r['product_name']} — {r['subtitle']}",
                              "description": r["variant"],
-                             "metadata": {"sku": r["sku"], "internal_product_id": r["product_id"]}},
+                             "metadata": (r.get("metadata") or {"sku": r["sku"], "internal_product_id": r["product_id"]})},
             "unit_amount": r["unit_amount_cents"],
         },
         "quantity": r["quantity"],
@@ -235,5 +249,10 @@ async def health():
         "stripe_api_verified": api_verified,
         "stripe_api_error_code": api_error_code,
         "mode": _cfg("STRIPE_MODE", "test"),
-        "supported_products": ["scacco-matto"],
+        "supported_products": sorted(list(_SUPPORTED_SLUGS_FOR_HEALTH)),
     }
+
+
+# Health-report list mirrors services.catalog._SUPPORTED_SLUGS. Kept as a
+# private constant so the health endpoint isn't lying about coverage.
+from services.catalog import _SUPPORTED_SLUGS as _SUPPORTED_SLUGS_FOR_HEALTH  # noqa: E402
