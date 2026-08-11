@@ -19,10 +19,11 @@ const IMG_VERTICAL = "https://customer-assets-jt897jd0.emergentagent.net/job_096
 const IMG_HINGE_CIRCLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5iyfpswg_1000169380.jpg";
 
 // ---- Price matrix ---------------------------------------------------------
-// [metal][wristSize] → USD price. Do not display internal costs.
+// [metal][wristSize] → USD price. Trusted server matrix (merchant Feb 2026).
+// Do not display internal costs.
 const PRICE_MATRIX = {
-  "10k-yellow-gold": { small: 10495, medium: 10495, large: 10845, xl: 11195 },
-  "14k-yellow-gold": { small: 11795, medium: 11795, large: 12195, xl: 12595 },
+  "10k-yellow-gold": { small: 10495, medium: 10745, large: 10995, xl: 11245 },
+  "14k-yellow-gold": { small: 11795, medium: 12045, large: 12295, xl: 12545 },
 };
 
 const METAL_OPTIONS = [
@@ -104,12 +105,16 @@ export default function CrestaNeraBanglePage() {
       name: `CRESTA NERA — ${metal.label} · ${wrist.label} · ${wrist.mm} mm`,
       image: IMG_VERTICAL,
       price,
+      currency: "USD",
       productKey: "cresta-nera",
       slug: "cresta-nera",
+      // Transmit machine-readable ids so the trusted server can validate.
+      variant: selectedMetal,           // "10k-yellow-gold" | "14k-yellow-gold"
+      wristSizeId: selectedWrist,       // "small" | "medium" | "large" | "xl"
       materials: [metal.label, "Black Diamond"],
       wristSize: wrist.label,
       wristSizeMm: wrist.mm,
-      sku: `CRESTA-${selectedMetal.toUpperCase().replace(/-/g, "")}-${wrist.mm}`,
+      sku: `CRESTA-${selectedMetal.startsWith("10k") ? "10K" : "14K"}-${selectedWrist === "xl" ? "XL" : selectedWrist.charAt(0).toUpperCase()}`,
     }, 1, `${metal.label} · ${wrist.label} · ${wrist.mm} mm`);
   };
 

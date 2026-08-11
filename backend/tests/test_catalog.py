@@ -15,7 +15,7 @@ def test_is_supported_expanded():
     assert is_supported("quadriga-dominus")
 
 def test_is_supported_rejects_unknown():
-    assert not is_supported("cresta-nera")  # not yet migrated
+    assert not is_supported("the-grand-dame-classic")  # not a real slug
     assert not is_supported("")
 
 def test_supported_slugs_set_contains_original_11():
@@ -217,7 +217,7 @@ def test_scacco_invalid_karat_still_rejected():
 # ─────────────────────────────  UNSUPPORTED / INVALID  ─────────────────────────
 def test_unsupported_product_rejected():
     with pytest.raises(CatalogError, match="UNSUPPORTED_PRODUCT"):
-        resolve_line_item("cresta-nera", None, None, None, 1)
+        resolve_line_item("some-nonexistent-slug", None, None, None, 1)
 
 def test_quantity_bounds():
     with pytest.raises(CatalogError, match="INVALID_QUANTITY"):

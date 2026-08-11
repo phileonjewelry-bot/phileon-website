@@ -50,6 +50,7 @@ class CartItemIn(BaseModel):
     variant: Optional[str] = None      # e.g. RRE tier key: "plated" / "10k" / "14k" / "18k"
     colorway: Optional[str] = None     # e.g. QUADRIGA: "red-black" / "black-red" / …
     tier: Optional[str] = None         # dynamic-ring tier key (foundation/signature/heirloom/…)
+    wristSize: Optional[str] = None    # CRESTA NERA wrist size id: small / medium / large / xl
     # Client-side snapshot of the price shown at Add-to-Cart. NEVER trusted for
     # payment. Used only to detect price movement between add-to-cart and
     # checkout for live-priced items.
@@ -116,6 +117,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
                         i.product_id, i.karat, i.metalColour, i.ringSize,
                         i.quantity, variant=i.variant, colorway=i.colorway,
                         tier=i.tier, market_snapshot=market_snapshot,
+                        wrist_size=i.wristSize,
                     ) for i in body.items]
     except CatalogError as e:
         msg = str(e)

@@ -548,7 +548,78 @@ FIXED_PRODUCTS: Dict[str, Dict] = {
 }
 
 FIXED_PRODUCT_SLUGS: Set[str] = frozenset(FIXED_PRODUCTS.keys())
-ALL_SLUGS = frozenset(list(PRICING_ENGINE_CATALOG.keys()) + list(FIXED_PRODUCTS.keys()))
+
+
+# ---------------------------------------------------------------------------
+# CRESTA NERA — Hinged Bangle · 2 metals × 4 wrist sizes with size-based uplift
+# ---------------------------------------------------------------------------
+# Merchant-signed trusted matrix. The customer-facing frontend page (Feb 2026)
+# publishes different values in its `PRICE_MATRIX` — the SERVER matrix here is
+# the authoritative one and supersedes any frontend deltas.
+CRESTA_NERA_MATRIX: Dict[str, Dict[str, int]] = {
+    "10k-yellow-gold": {"small": 10495, "medium": 10745, "large": 10995, "xl": 11245},
+    "14k-yellow-gold": {"small": 11795, "medium": 12045, "large": 12295, "xl": 12545},
+}
+CRESTA_NERA_METAL_LABELS = {
+    "10k-yellow-gold": "10K Yellow Gold",
+    "14k-yellow-gold": "14K Yellow Gold",
+}
+CRESTA_NERA_SIZE_LABELS = {
+    "small":  ("Small",       180),
+    "medium": ("Medium",      190),
+    "large":  ("Large",       200),
+    "xl":     ("Extra Large", 210),
+}
+
+
+def _resolve_cresta_nera(tier_key: Optional[str], wrist_size: Optional[str],
+                        quantity: int) -> Dict:
+    """CRESTA NERA hinged bangle resolver.
+
+    `tier_key` carries the metal id (`10k-yellow-gold` | `14k-yellow-gold`).
+    `wrist_size` carries the size id (`small` | `medium` | `large` | `xl`) —
+    NOT a US ring size. Missing/invalid values are rejected.
+    """
+    if not tier_key:
+        raise PricingEngineResolverError("MISSING_METAL: CRESTA NERA requires a metal selection (10K or 14K Yellow Gold).")
+    mkey = tier_key.strip().lower()
+    if mkey not in CRESTA_NERA_MATRIX:
+        raise PricingEngineResolverError(f"INVALID_METAL: '{tier_key}' is not a valid CRESTA NERA metal.")
+    if not wrist_size:
+        raise PricingEngineResolverError("MISSING_WRIST_SIZE: CRESTA NERA requires a wrist size (Small / Medium / Large / Extra Large).")
+    skey = wrist_size.strip().lower()
+    if skey not in CRESTA_NERA_MATRIX[mkey]:
+        raise PricingEngineResolverError(f"INVALID_WRIST_SIZE: '{wrist_size}' is not a valid CRESTA NERA wrist size.")
+
+    price_usd = int(CRESTA_NERA_MATRIX[mkey][skey])
+    metal_label = CRESTA_NERA_METAL_LABELS[mkey]
+    size_label, size_mm = CRESTA_NERA_SIZE_LABELS[skey]
+
+    # SKU: CRESTA-{10K|14K}-{S|M|L|XL}
+    karat_token = "10K" if mkey.startswith("10k") else "14K"
+    size_token = {"small": "S", "medium": "M", "large": "L", "xl": "XL"}[skey]
+    sku = f"CRESTA-{karat_token}-{size_token}"
+
+    return {
+        "product_id":  "cresta-nera",
+        "product_name": "CRESTA NERA HINGED BANGLE",
+        "subtitle":    "Yellow Gold Hinged Bangle",
+        "gemstones":   None,
+        "sku":         sku,
+        "variant":     f"{metal_label} · {size_label} ({size_mm} mm)",
+        "karat":       karat_token,
+        "metal_colour": "Yellow Gold",
+        "ring_size":   None,   # Not a ring — uses wrist_size instead.
+        "wrist_size":  f"{size_label} ({size_mm} mm)",
+        "unit_amount_cents": price_usd * 100,
+        "currency":    "USD",
+        "quantity":    quantity,
+        "image":       "/products/cresta-nera/hero.jpg",
+        "is_dynamic_priced": False,
+        "pricing_source": {"market_timestamp": 0, "market_source": "fixed-catalog", "is_stale": False},
+        "metadata": {"product_slug": "cresta-nera", "sku": sku, "metal": mkey, "wrist_size": skey},
+    }
+ALL_SLUGS = frozenset(list(PRICING_ENGINE_CATALOG.keys()) + list(FIXED_PRODUCTS.keys()) + ["cresta-nera"])
 
 
 class PricingEngineResolverError(Exception):
@@ -634,17 +705,17 @@ def _tiers_are_all_static(product_key: str) -> bool:
 
 
 def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
-            quantity: int, market_snapshot: Optional[Dict]) -> Dict:
+            quantity: int, market_snapshot: Optional[Dict],
+            wrist_size: Optional[str] = None) -> Dict:
     """Trusted resolver.
 
-    - For products with any weightGrams>0 tier, `market_snapshot` MUST be a
-      checkout-safe snapshot (caller enforces `is_checkout_safe`).
-    - For hand-set products (all tiers weightGrams=0), the formula collapses
-      to `lockedBasePriceCad` and no snapshot is required — we use a benign
-      fallback so the shared pricing helper still works.
+    - Cresta Nera → 2 metals × 4 wrist sizes matrix (uses `wrist_size` param).
+    - `FIXED_PRODUCTS` → static USD amounts (no market snapshot needed).
+    - `PRICING_ENGINE_CATALOG` → live-priced or hand-set via pricing_engine.
     - Ring products must supply `ring_size`.
-    - Returns the standard resolver dict shape consumed by `resolve_line_item`.
     """
+    if product_id == "cresta-nera":
+        return _resolve_cresta_nera(tier_key, wrist_size, quantity)
     if product_id in FIXED_PRODUCTS:
         return _resolve_fixed_product(product_id, tier_key, ring_size, quantity)
     if product_id not in PRICING_ENGINE_CATALOG:

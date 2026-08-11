@@ -495,7 +495,8 @@ def resolve_line_item(product_id: str,
                       variant: Optional[str] = None,
                       colorway: Optional[str] = None,
                       tier: Optional[str] = None,
-                      market_snapshot: Optional[Dict] = None) -> Dict:
+                      market_snapshot: Optional[Dict] = None,
+                      wrist_size: Optional[str] = None) -> Dict:
     if not is_supported(product_id):
         raise CatalogError(f"UNSUPPORTED_PRODUCT: '{product_id}' is not available for online checkout yet.")
     if not isinstance(quantity, int) or quantity < 1 or quantity > 5:
@@ -524,12 +525,13 @@ def resolve_line_item(product_id: str,
         t = tier or variant or karat
         return _resolve_dynamic_ring(product_id, t, ring_size, quantity, market_snapshot)
 
-    if product_id in _PE_CATALOG or product_id in _PE_FIXED:
-        # Pricing-engine-backed OR fixed-product from wave 3. Both are routed
-        # via the same PE resolver which auto-dispatches to the right path.
+    if product_id in _PE_CATALOG or product_id in _PE_FIXED or product_id == "cresta-nera":
+        # Pricing-engine-backed OR fixed-product OR cresta-nera. Dispatched
+        # inside the PE resolver.
         t = tier or variant or karat
         try:
-            return _pe_resolve(product_id, t, ring_size, quantity, market_snapshot)
+            return _pe_resolve(product_id, t, ring_size, quantity, market_snapshot,
+                               wrist_size=wrist_size)
         except _PEResolverError as e:  # type: ignore
             raise CatalogError(str(e))
 

@@ -48,6 +48,8 @@ const SUPPORTED_SLUGS = new Set([
   // Wave 4 — Grand Dame (page publishes final USD pricing; stale
   // pricing_engine entry retained but deprecated for checkout).
   "the-grand-dame",
+  // Wave 5 — CRESTA NERA (merchant-signed 2 metals × 4 wrist sizes).
+  "cresta-nera",
 ]);
 const DYNAMIC_SLUGS = new Set([
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",
@@ -81,6 +83,8 @@ const toPayloadItem = (i) => {
     variant: i.variant || null,
     colorway: i.colorway || null,
     tier: i.tierKey || null,
+    // Cresta Nera + any future bangle uses `wristSizeId` (machine key).
+    wristSize: i.wristSizeId || null,
     displayed_unit_amount_cents,
   };
   return row;
