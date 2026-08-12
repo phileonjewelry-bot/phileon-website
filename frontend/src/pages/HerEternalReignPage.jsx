@@ -3,11 +3,21 @@ import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 
 // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
-const IMG_HERO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png";
-const IMG_CIRCLE = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_top_ring.png";
-const IMG_CROWNS = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_crown_macro.png";
-const IMG_TOP    = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_top_ring.png";
-const IMG_LINE   = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_crown_macro.png";
+// 8 uploaded studio/lifestyle plates. Ordered newest-first from the artifact
+// bucket; the customer can re-sequence via `HER_GALLERY` below.
+const HER_GALLERY = [
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5qb3yyhd_1000170863.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/lsu6nn4a_1000170748.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dao8vvdy_1000170749.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/950e48ku_1000170747.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f427zkme_1000170745.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c2jzmr5n_1000170743.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7jpzqgk7_1000170742.png",
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png",
+];
+const IMG_HERO   = HER_GALLERY[0];
+const IMG_LINE   = HER_GALLERY[1];
+const IMG_CROWNS = HER_GALLERY[2];
 const IMG_PTP    = "/products/ptp-cuff/hero.jpg";
 
 // Server-authoritative — mirror of backend HER_SIZE_TO_FIGURES.
@@ -125,6 +135,44 @@ export default function HerEternalReignPage() {
                 <span className="w-3.5 h-3.5 rounded-full border border-[#c8a25f]/40" style={{ background: g.color }} />
                 <span className="text-[11px] tracking-[0.16em] text-[#efe6d5]/85 uppercase">{String(i+1).padStart(2,"0")} · {g.name}</span>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Editorial gallery — all 8 shots. Purposefully varied cell heights
+          to feel like a fashion editorial spread, not a spec grid. */}
+      <section className="border-b border-[#3d2f1a]/40 bg-[#080604]" aria-labelledby="her-procession-title" data-testid="her-procession-gallery">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-20">
+          <p className="text-[10px] tracking-[0.52em] text-[#c8a25f] uppercase">The Procession</p>
+          <h2 id="her-procession-title" className="mt-3 text-[32px] md:text-[42px] leading-[1.05] tracking-[0.02em] text-[#f2e6c8]">
+            Every crown, every angle.
+          </h2>
+          <p className="mt-4 text-[14px] leading-[1.7] text-[#efe6d5]/70 max-w-[560px]">
+            Studio and on-hand plates of H.E.R. — the sculptural procession of crowned figures, seen in gold and stone.
+          </p>
+
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            {HER_GALLERY.map((src, i) => (
+              <a
+                key={src}
+                href={src}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid={`her-gallery-plate-${i}`}
+                className={`group relative overflow-hidden bg-black border border-[#3d2f1a]/50 rounded-[2px] ${i === 0 || i === 5 ? "col-span-2 row-span-2 aspect-square" : "aspect-[4/5]"}`}
+                aria-label={`H.E.R. editorial plate ${i + 1} of 8`}
+              >
+                <img
+                  src={src}
+                  alt={`H.E.R. — HER ETERNAL REIGN editorial plate ${i + 1} of 8`}
+                  loading={i < 2 ? "eager" : "lazy"}
+                  className="w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                />
+                <div className="absolute bottom-2 left-2 text-[9px] tracking-[0.36em] text-[#efe6d5]/70 uppercase">
+                  {String(i + 1).padStart(2, "0")} · Reign
+                </div>
+              </a>
             ))}
           </div>
         </div>

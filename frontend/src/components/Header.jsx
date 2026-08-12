@@ -38,6 +38,7 @@ const Header = () => {
       name: 'The Collective', 
       path: '/shop',
       dropdown: [
+        { name: 'H.E.R. — Her Eternal Reign', path: '/her-eternal-reign' },
         { name: 'PTP Cuff', path: '/products/ptp-cuff' },
         { name: 'Rosaria', path: '/products/rosaria' },
         { name: 'La Marva', path: '/products/la-marva' },
@@ -72,6 +73,7 @@ const Header = () => {
     {
       name: 'The Collective',
       products: [
+        { name: 'H.E.R. — Her Eternal Reign', path: '/her-eternal-reign' },
         { name: 'PTP Cuff', path: '/products/ptp-cuff' },
         { name: 'Rosaria', path: '/products/rosaria' },
         { name: 'La Marva', path: '/products/la-marva' },
