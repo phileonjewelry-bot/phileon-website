@@ -2999,6 +2999,47 @@ This is expression — under control.`,
       whiteGold10k:   7800,
       yellowGold10k:  7800,
     },
+  },
+
+  // ==========================================
+  // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
+  // Sculptural procession of crowned female figures. Ring-size sensitive
+  // figure count. Merchant-signed CAD pricing.
+  // ==========================================
+  herEternalReign: {
+    name: "H.E.R.",
+    slug: "her-eternal-reign",
+    category: "rings",
+    audience: ["ladies", "collective"],
+    collections: ["ladies-rings", "ladies", "rings", "collective", "the-collective", "fine-jewelry", "new-arrivals", "featured"],
+    subtitle: "HER ETERNAL REIGN",
+    tagline: "No queen stands alone. Every woman in the circle wears her own crown.",
+    editorialHook: "NO QUEEN STANDS ALONE.",
+    priceFrom: "From $6,995 CAD",
+    basePrice: 6995,
+    currency: "CAD",
+    featured: true,
+    newArrival: true,
+    displayOrder: 6,
+    showOnHomepage: true,
+    showInCarousel: true,
+    showInCollective: true,
+    seoDescription: "H.E.R. — HER ETERNAL REIGN. A sculptural PHILEON Fine Jewelry ring. A continuous procession of crowned female figures — each with her own crown, her own gemstone identity. 10K, 14K or 18K Yellow Gold with genuine or lab-grown stones. Ladies · Fine Jewelry.",
+    imageUrl: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png",
+    shopCardImage: "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png",
+    dynamicPricing: false,
+    href: "/her-eternal-reign",
+    gallery: [
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png",
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_top_ring.png",
+      "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_crown_macro.png",
+    ],
+    pricing: {
+      "10k": 6995,
+      "14k": 8995,
+      "18k": 10495,
+    },
+    defaultTier: "14k",
   }
 
 };
@@ -3377,6 +3418,36 @@ export const catalogProducts = [
     isNew: true,
     isFeatured: true,
     displayOrder: 0,
+  },
+
+  // ── H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD ──────
+  {
+    id: 'her-eternal-reign',
+    name: 'H.E.R.',
+    slug: 'her-eternal-reign',
+    subtitle: 'HER ETERNAL REIGN',
+    materialLine: '10K / 14K / 18K Yellow Gold · Crown-Stone Procession',
+    imageUrl: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png',
+    shopCardImage: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png',
+    cardImage: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png',
+    thumbnail: 'https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png',
+    href: '/her-eternal-reign',
+    basePriceCAD: 6995,
+    priceFrom: 'From $6,995 CAD',
+    price_range: 'From $6,995 CAD',
+    currency: 'CAD',
+    editorialHook: 'NO QUEEN STANDS ALONE.',
+    inventory_count: 999,
+    is_core: true,
+    category: 'rings',
+    audience: ['ladies', 'collective'],
+    tags: ['Ladies', 'Fine Jewelry', 'Rings', 'Collective', 'Crown', 'Sculptural'],
+    isNew: true,
+    isFeatured: true,
+    showOnHomepage: true,
+    showInCarousel: true,
+    showInCollective: true,
+    displayOrder: 6,
   },
 ];
 

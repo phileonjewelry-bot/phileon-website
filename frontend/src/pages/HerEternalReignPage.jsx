@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 
 // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
-const IMG_HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hero.jpg";
-const IMG_CIRCLE = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_circle.jpg";
-const IMG_CROWNS = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_crowns.jpg";
-const IMG_TOP    = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_top.jpg";
-const IMG_LINE   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_lineup.jpg";
+const IMG_HERO = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_hand_wear.png";
+const IMG_CIRCLE = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_top_ring.png";
+const IMG_CROWNS = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_crown_macro.png";
+const IMG_TOP    = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_top_ring.png";
+const IMG_LINE   = "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/her_crown_macro.png";
 const IMG_PTP    = "/products/ptp-cuff/hero.jpg";
 
 // Server-authoritative — mirror of backend HER_SIZE_TO_FIGURES.
