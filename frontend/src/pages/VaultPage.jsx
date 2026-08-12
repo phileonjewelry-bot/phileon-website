@@ -13,6 +13,19 @@ const VaultPage = () => {
       tagline: 'A face drawn from sketch to gold.',
       image: '/vault/drew-face/drew-face-teaser.webp',
     },
+    {
+      // RETRO BRED — private release. Reuses the existing trusted product
+      // record + private product route. Lives here as the second drop
+      // inside the same EXCLUSIVE DROPS grid.
+      id: 'retro-bred',
+      name: 'RETRO BRED',
+      status: 'live',
+      href: '/drews-vault/retro-bred',
+      badge: 'LIVE',
+      tagline: 'The sole that built a religion, recast in stone.',
+      image: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8odwy75b_1000170617.png',
+      eyebrow: 'PRIVATE RELEASE',
+    },
     { id: 2, name: 'Coming Soon', status: 'unreleased' },
     { id: 3, name: 'Coming Soon', status: 'unreleased' },
   ];
@@ -84,6 +97,11 @@ const VaultPage = () => {
                 </div>
                 <div className="vault-drop-teaser-copy">
                   <div className="vault-drop-teaser-headline">
+                    {drop.eyebrow && (
+                      <p className="vault-drop-teaser-eyebrow" data-testid={`vault-drop-eyebrow-${drop.id}`}>
+                        {drop.eyebrow}
+                      </p>
+                    )}
                     <h3 className="vault-drop-teaser-name">{drop.name}</h3>
                     {drop.tagline && <p className="vault-drop-teaser-tagline">{drop.tagline}</p>}
                   </div>
@@ -480,6 +498,14 @@ const VaultPage = () => {
           background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.9) 100%);
         }
         .vault-drop-teaser-headline { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .vault-drop-teaser-eyebrow {
+          margin: 0 0 2px;
+          font-size: 9px;
+          letter-spacing: 0.42em;
+          text-transform: uppercase;
+          color: #d21b3d;
+          font-family: "Helvetica Neue", Arial, sans-serif;
+        }
         .vault-drop-teaser-name {
           margin: 0;
           font-family: 'Bebas Neue', 'Cinzel', serif; font-weight: 500;
