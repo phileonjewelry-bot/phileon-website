@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { products } from "@/data/products";
 
 // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
 // 8 uploaded studio/lifestyle plates. Ordered newest-first from the artifact
@@ -19,7 +20,12 @@ const HER_GALLERY = [
 const IMG_HERO   = HER_GALLERY[0];
 const IMG_LINE   = HER_GALLERY[1];
 const IMG_CROWNS = HER_GALLERY[2];
-const IMG_PTP    = "/products/ptp-cuff/hero.jpg";
+
+// Canonical PTP pairing — pulled straight from `products.ptpCuff` so the
+// image, name, price and route stay in lockstep with the PTP source of truth.
+const PTP_IMG   = products.ptpCuff.images.hero;
+const PTP_ROUTE = `/products/${products.ptpCuff.slug}`;
+const PTP_PRICE = `From $${products.ptpCuff.pricing.movement.toLocaleString("en-US")} USD`;
 
 // Server-authoritative — mirror of backend HER_SIZE_TO_FIGURES.
 const SIZE_FIGURES = {
@@ -266,19 +272,70 @@ export default function HerEternalReignPage() {
         </div>
       </section>
 
-      {/* PTP pairing */}
-      <section className="bg-[#080604]">
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="text-[10px] tracking-[0.52em] text-[#c8a25f] uppercase">Wear With</p>
-            <h2 className="mt-3 text-[32px] md:text-[42px] leading-[1.05] tracking-[0.02em] text-[#f2e6c8]">THE PTP BANGLE</h2>
-            <p className="mt-4 text-[16px] leading-[1.55] text-[#efe6d5]/80 max-w-[440px]">H.E.R. carries the procession.<br/>PTP brings the structure.</p>
-            <Link to="/products/ptp-cuff" data-testid="her-explore-ptp"
-              className="inline-block mt-8 border border-[#c8a25f] text-[#c8a25f] rounded-[2px] px-8 py-3 text-[11px] tracking-[0.32em] hover:bg-[#c8a25f] hover:text-[#0a0806] transition-colors">
-              EXPLORE THE PTP BANGLE
+      {/* WEAR WITH — canonical PTP Bangle pairing.
+          Image, name, price and CTA all pull from `products.ptpCuff`. */}
+      <section
+        className="bg-[#080604] border-t border-[#3d2f1a]/40"
+        aria-labelledby="her-wear-with-title"
+        data-testid="her-wear-with-section"
+      >
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-20 md:py-24">
+          <p className="text-[10px] tracking-[0.52em] text-[#c8a25f] uppercase text-center md:text-left">
+            Wear With
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-[1.05fr,1fr] gap-10 md:gap-14 items-center">
+            {/* Product thumbnail — clickable, links to canonical PTP page. */}
+            <Link
+              to={PTP_ROUTE}
+              className="group block relative overflow-hidden rounded-[2px] border border-[#3d2f1a]/60 bg-[#050505]"
+              data-testid="her-ptp-thumbnail-link"
+              aria-label="The PTP Bangle by PHILEON"
+              style={{ aspectRatio: "4 / 5" }}
+            >
+              <img
+                src={PTP_IMG}
+                alt="The PTP Bangle by PHILEON"
+                loading="lazy"
+                data-testid="her-ptp-thumbnail-image"
+                className="w-full h-full object-contain transition-transform duration-[900ms] ease-out group-hover:scale-[1.02]"
+              />
+              <div className="absolute top-4 left-4 text-[9px] tracking-[0.42em] text-[#c8a25f]/80 uppercase">
+                PHILEON · Pairing
+              </div>
             </Link>
+
+            {/* Editorial copy stack */}
+            <div className="text-center md:text-left">
+              <h2
+                id="her-wear-with-title"
+                data-testid="her-ptp-title"
+                className="text-[32px] md:text-[42px] leading-[1.05] tracking-[0.02em] text-[#f2e6c8]"
+              >
+                THE PTP BANGLE
+              </h2>
+
+              <p className="mt-5 text-[16px] leading-[1.55] text-[#efe6d5]/80 max-w-[440px] mx-auto md:mx-0" data-testid="her-ptp-copy">
+                H.E.R. carries the procession.<br />
+                PTP brings the structure.
+              </p>
+
+              <p
+                className="mt-6 text-[15px] tracking-[0.14em] text-[#c8a25f] uppercase"
+                data-testid="her-ptp-price"
+              >
+                {PTP_PRICE}
+              </p>
+
+              <Link
+                to={PTP_ROUTE}
+                data-testid="her-explore-ptp"
+                className="inline-block mt-8 border border-[#c8a25f] text-[#c8a25f] rounded-[2px] px-8 py-3 text-[11px] tracking-[0.32em] hover:bg-[#c8a25f] hover:text-[#0a0806] transition-colors"
+              >
+                EXPLORE THE PTP BANGLE
+              </Link>
+            </div>
           </div>
-          <img src={IMG_PTP} alt="PTP Bangle — suggested pairing" className="w-full h-auto object-cover rounded-[2px]" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
       </section>
     </div>
