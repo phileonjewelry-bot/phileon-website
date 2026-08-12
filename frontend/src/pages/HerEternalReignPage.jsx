@@ -6,6 +6,8 @@ import { useCart } from "@/contexts/CartContext";
 // 8 uploaded studio/lifestyle plates. Ordered newest-first from the artifact
 // bucket; the customer can re-sequence via `HER_GALLERY` below.
 const HER_GALLERY = [
+  // Slide 8 (originally last) is now the hero — the customer-approved hero shot.
+  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png",
   "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5qb3yyhd_1000170863.png",
   "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/lsu6nn4a_1000170748.png",
   "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dao8vvdy_1000170749.png",
@@ -13,7 +15,6 @@ const HER_GALLERY = [
   "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f427zkme_1000170745.png",
   "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c2jzmr5n_1000170743.png",
   "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7jpzqgk7_1000170742.png",
-  "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png",
 ];
 const IMG_HERO   = HER_GALLERY[0];
 const IMG_LINE   = HER_GALLERY[1];
@@ -169,9 +170,6 @@ export default function HerEternalReignPage() {
                   loading={i < 2 ? "eager" : "lazy"}
                   className="w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                 />
-                <div className="absolute bottom-2 left-2 text-[9px] tracking-[0.36em] text-[#efe6d5]/70 uppercase">
-                  {String(i + 1).padStart(2, "0")} · Reign
-                </div>
               </a>
             ))}
           </div>

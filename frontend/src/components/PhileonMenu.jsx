@@ -26,6 +26,11 @@ const menuCategories = [
     name: 'The Collective',
     items: [
       { name: 'H.E.R. — Her Eternal Reign', path: '/her-eternal-reign' },
+      { name: 'FONDO CURVO', path: '/products/fondo-curvo' },
+      { name: 'PARABOLA', path: '/products/parabola' },
+      { name: 'PARABOLA HERITAGE', path: '/products/parabola-heritage' },
+      { name: 'NEIGHBORHOOD NIP', path: '/tribute-series/neighborhood-nip' },
+      { name: 'DRAPE', path: '/products/drape' },
       { name: 'Forme Cuff', path: '/products/forme-cuff' },
       { name: 'La Marva', path: '/products/la-marva' },
       { name: 'PTP Cuff', path: '/products/ptp-cuff' },
