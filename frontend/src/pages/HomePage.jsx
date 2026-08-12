@@ -414,6 +414,12 @@ const HomePage = () => {
             subtitle: "Built to outlast its first owner. The Heritage expression of the PARABOLA family — ruby, yellow, emerald, and black diamond concentric fields on the same 22mm concave architecture. Sterling Silver, 10K White Gold, or 10K Yellow Gold. FROM $1,250 USD"
           },
           {
+            title: "H.E.R.",
+            image: products.herEternalReign?.imageUrl,
+            href: "/her-eternal-reign",
+            subtitle: "H.E.R. — HER ETERNAL REIGN. A sculptural procession of crowned women, each with her own crown, her own stone. Ladies Fine Jewelry ring in 10K, 14K or 18K Yellow Gold. FROM $6,995 CAD",
+          },
+          {
             title: "ROSE OF SHARON",
             image: "/rose-of-sharon/hero.png",
             href: "/products/rose-of-sharon",
@@ -477,6 +483,12 @@ const HomePage = () => {
             title: "DRAPE", 
             image: products.drape?.imageUrl, 
             href: "/products/drape" 
+          },
+          {
+            title: "FONDO CURVO",
+            image: products.fondoCurvo?.imageUrl,
+            href: "/products/fondo-curvo",
+            subtitle: "Statement earrings. Says everything to those who see it. Sterling Silver → 10K White Gold. FROM $2,950 USD",
           },
           { 
             title: "LE COCKTAIL DE JESSICA", 
