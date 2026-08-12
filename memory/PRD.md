@@ -54,6 +54,9 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Companion gents signet piece to BAJAN JOE
 - Sticky mobile Add-to-Cart bar
 
+## Changelog Highlights (Feb 2026)
+- **Drew's Vault RETRO BRED visibility fix (Feb 2026)** — `DrewsVaultPage.jsx` restructured from a small 3-col card grid into a full editorial hero feature (large obsidian-framed hero image, red radial background, DREW'S VAULT · PRIVATE RELEASE eyebrow, RETRO BRED wordmark, campaign line "THE SOLE THAT BUILT A RELIGION, RECAST IN STONE.", secondary "Rubber wears down. Stone doesn't.", THE MARK block, ENTER RETRO BRED CTA to `/drews-vault/retro-bred`). Unlock state is now tracked in React state with focus/storage listeners so refresh persistence works. `RetroBredPage.jsx` gained an explicit **THE MARK** section with the approved editorial copy and a macro of the ruby-set central silhouette. No third-party brand terminology anywhere. Backend `pricing_engine_catalog.py` `retro-bred` fixed prices (5995/10495/11795 CAD), SKUs (RB-FND-925 / RB-SIG-10K / RB-HRL-14K), specs, and checkout untouched. Verified visibly rendered at 390 / 768 / 1440 with data-testid probes; refresh persists; locked visitors redirect to `/secret-drop`.
+
 ## Strict Rules
 - Do NOT modify Stripe, `checkout.py`, `catalog.py`, `stripe_routes.py`, webhooks, or payment env vars
 - Do NOT modify the SCACCO MATTO pilot catalog

@@ -136,13 +136,35 @@ export default function RetroBredPage() {
               A familiar court-era silhouette, reconstructed as a PHILEON collectible.
             </p>
 
-            {/* Central figure section */}
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <p className="text-[10px] tracking-[0.42em] text-white/45 uppercase">One Silhouette, Cut in Ruby</p>
-              <p className="text-white/60 text-[13px] mt-2 leading-relaxed max-w-[520px]">
-                The only warm note on the piece — a ruby-set figure suspended against the black pavé field.
+            {/* THE MARK — editorial detail (no borrowed brand names). */}
+            <section
+              className="mt-8 border-t border-white/10 pt-6"
+              aria-labelledby="retro-bred-the-mark"
+              data-testid="retro-bred-the-mark-section"
+            >
+              <p
+                id="retro-bred-the-mark"
+                className="text-[10px] tracking-[0.42em] text-white/55 uppercase"
+                data-testid="retro-bred-the-mark-eyebrow"
+              >
+                The Mark
               </p>
-            </div>
+              <p className="text-white/78 text-[15px] mt-3 leading-relaxed max-w-[520px]" data-testid="retro-bred-the-mark-lead">
+                A familiar form, recast in stone.
+              </p>
+              <p className="text-white/55 text-[13px] mt-3 leading-relaxed max-w-[520px]" data-testid="retro-bred-the-mark-body">
+                No borrowed name. No borrowed throne. Only the mark that changed the floor beneath it.
+              </p>
+              <div className="mt-5 border border-white/[0.08] bg-black rounded-[2px] overflow-hidden max-w-[420px]">
+                <img
+                  src={IMG_FIG}
+                  alt="Macro detail of the ruby-set central silhouette"
+                  loading="lazy"
+                  className="w-full h-auto object-contain"
+                  data-testid="retro-bred-the-mark-image"
+                />
+              </div>
+            </section>
 
             {/* Specs */}
             <div className="mt-8 border-t border-white/10 pt-6">
