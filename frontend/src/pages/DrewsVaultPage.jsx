@@ -6,7 +6,10 @@ import { ArrowRight } from "lucide-react";
 // Not linked from public navigation, homepage, or shop. noindex/nofollow.
 // Uses existing RETRO BRED product; does NOT duplicate the product object.
 // No third-party brand terminology anywhere in visible copy.
-const RETRO_BRED_HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/g0vtj6qb_1000170753.png";
+// Hero and macro chosen from the RETRO BRED asset set so the red central
+// figure is unmistakably visible without zooming (front-on full pendant +
+// slight-angle full pendant for THE MARK).
+const RETRO_BRED_HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8odwy75b_1000170617.png";
 const RETRO_BRED_MARK = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1g1vg86d_1000170620.png";
 
 function readUnlocked() {
@@ -109,16 +112,18 @@ export default function DrewsVaultPage() {
             >
               <div
                 className="relative overflow-hidden rounded-[2px] border border-white/[0.08] bg-black"
-                style={{ aspectRatio: "4 / 5" }}
+                style={{ aspectRatio: "1 / 1" }}
               >
                 <img
                   src={RETRO_BRED_HERO}
                   alt="RETRO BRED pavé pendant — black and white pavé silhouette with ruby-set central figure"
                   loading="eager"
-                  className="w-full h-full object-contain transition-transform duration-[900ms] ease-out group-hover:scale-[1.02]"
+                  className="absolute inset-0 w-full h-full transition-transform duration-[900ms] ease-out group-hover:scale-[1.02]"
+                  style={{ objectFit: "contain", objectPosition: "center", padding: "4%" }}
                   data-testid="drews-vault-retro-bred-image"
                 />
-                {/* Corner meta plates */}
+                {/* Corner meta plates — kept outside safe zone so they never
+                    overlap the central red figure. */}
                 <div className="absolute top-4 left-4 text-[9px] tracking-[0.42em] text-white/70 uppercase">
                   Drew&apos;s Vault
                 </div>
