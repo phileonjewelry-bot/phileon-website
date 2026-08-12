@@ -861,96 +861,17 @@ export default function NeighborhoodNipPage() {
         <p className="nip-hero-sub">A blueprint carved in blue.</p>
       </div>
 
-      {/* PURCHASE BLOCK */}
-      <section className="nip-purchase" data-testid="nip-purchase-block">
-        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Tribute Series</p>
-        <p className="nip-buy-subtitle">14K White Gold Sapphire and Diamond Tribute Ring</p>
-        <p className="nip-buy-price" data-testid="nip-buy-price">{priceUsdLabel}</p>
-        <p className="nip-buy-material">
-          14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds
-        </p>
-
-        <ul className="nip-buy-details" data-testid="nip-buy-details">
-          <li>200 Stones</li>
-          <li>Approximately 18 g</li>
-          <li>Approximately 15 mm Band Width</li>
-          <li>Approximately 3 mm Band Thickness</li>
-          <li>Made to Order</li>
-          <li>Reference Size: US 10</li>
-        </ul>
-
-        <div
-          className="nip-size-wrap"
-          style={{
-            "--ring-accent": "#2D63C8",
-            "--ring-bg": "rgba(3, 6, 12, 0.82)",
-            "--ring-fg": "#eef2fb",
-            "--ring-muted": "rgba(197, 210, 234, 0.62)",
-          }}
-        >
-          <RingSizeSelector
-            value={selectedSize}
-            onChange={setSelectedSize}
-            sizes={NIP_SIZES}
-            label="RING SIZE"
-            bandWidthMm={15}
-            showSizingMicrocopy={false}
-            hideWideBandWarning={true}
-            testIdPrefix="nip-ring-size"
-          />
+      {/* GALLERY */}
+      <section className="nip-section d5" data-testid="nip-gallery-section">
+        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Study</p>
+        <h2 className="nip-h2">Eight Angles. One Idea.</h2>
+        <div className="nip-gallery" data-testid="nip-gallery">
+          {GALLERY.map((g, i) => (
+            <div key={i} className="nip-gallery-cell" data-testid={`nip-gallery-cell-${i + 1}`}>
+              <img src={g.src} alt={g.alt} loading="lazy" data-testid={`nip-gallery-image-${i + 1}`} />
+            </div>
+          ))}
         </div>
-
-        {/* COMPACT PATCH SUMMARY */}
-        <div className="nip-patch-summary" data-testid="nip-patch-summary">
-          <div className="nip-patch-summary-row">
-            <span className="nip-patch-summary-label">Victory Patch</span>
-            <span className="nip-patch-summary-value" data-testid="nip-patch-summary-value">
-              {patchLabel}
-              {patchType === "custom" && (
-                <em className="nip-patch-summary-fee"> · +{customFeeLabel}</em>
-              )}
-            </span>
-          </div>
-          <a href="#make-your-mark" onClick={scrollToCustomization} className="nip-patch-summary-cta" data-testid="nip-patch-edit-link">
-            EDIT PATCH →
-          </a>
-        </div>
-
-        {/* RING SIZING CUSTOMER INSTRUCTIONS */}
-        <div className="nip-sizing-block" data-testid="nip-sizing-block">
-          <p className="nip-sizing-eyebrow">Ring Sizing</p>
-          <p className="nip-sizing-lead">
-            NEIGHBORHOOD NIP is a substantial wide-band ring. Wide bands can feel tighter
-            than narrow rings, so accurate sizing is important.
-          </p>
-          <p className="nip-sizing-lead" style={{ margin: "0 0 8px" }}>For the best fit:</p>
-          <ul className="nip-sizing-list">
-            <li>Measure the finger on which the ring will be worn.</li>
-            <li>Measure near the end of the day, when fingers are at their normal size.</li>
-            <li>Do not measure when the hands are unusually cold or swollen.</li>
-            <li>Use the PHILEON Ring Size Guide before placing the order.</li>
-            <li>When between two sizes, select the larger size for this wide-band construction.</li>
-          </ul>
-        </div>
-
-        <button
-          type="button"
-          className="nip-add-btn"
-          onClick={onAddToCart}
-          disabled={isAdding}
-          aria-label="Add NEIGHBORHOOD NIP to cart"
-          data-testid="nip-add-to-cart"
-        >
-          {isAdding ? "✓ ADDED" : "ADD TO CART"}
-        </button>
-
-        {patchType === "custom" && !customValid && !isAdding && (
-          <p className="nip-inline-error" data-testid="nip-patch-inline-error">
-            {patternIncomplete
-              ? "Complete all 12 positions in your custom patch."
-              : "Use exactly 6 white diamonds and 6 black diamonds."}
-          </p>
-        )}
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
@@ -1153,6 +1074,98 @@ export default function NeighborhoodNipPage() {
         </div>
       </section>
 
+      {/* PURCHASE BLOCK */}
+      <section className="nip-purchase" data-testid="nip-purchase-block">
+        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Tribute Series</p>
+        <p className="nip-buy-subtitle">14K White Gold Sapphire and Diamond Tribute Ring</p>
+        <p className="nip-buy-price" data-testid="nip-buy-price">{priceUsdLabel}</p>
+        <p className="nip-buy-material">
+          14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds
+        </p>
+
+        <ul className="nip-buy-details" data-testid="nip-buy-details">
+          <li>200 Stones</li>
+          <li>Approximately 18 g</li>
+          <li>Approximately 15 mm Band Width</li>
+          <li>Approximately 3 mm Band Thickness</li>
+          <li>Made to Order</li>
+          <li>Reference Size: US 10</li>
+        </ul>
+
+        <div
+          className="nip-size-wrap"
+          style={{
+            "--ring-accent": "#2D63C8",
+            "--ring-bg": "rgba(3, 6, 12, 0.82)",
+            "--ring-fg": "#eef2fb",
+            "--ring-muted": "rgba(197, 210, 234, 0.62)",
+          }}
+        >
+          <RingSizeSelector
+            value={selectedSize}
+            onChange={setSelectedSize}
+            sizes={NIP_SIZES}
+            label="RING SIZE"
+            bandWidthMm={15}
+            showSizingMicrocopy={false}
+            hideWideBandWarning={true}
+            testIdPrefix="nip-ring-size"
+          />
+        </div>
+
+        {/* COMPACT PATCH SUMMARY */}
+        <div className="nip-patch-summary" data-testid="nip-patch-summary">
+          <div className="nip-patch-summary-row">
+            <span className="nip-patch-summary-label">Victory Patch</span>
+            <span className="nip-patch-summary-value" data-testid="nip-patch-summary-value">
+              {patchLabel}
+              {patchType === "custom" && (
+                <em className="nip-patch-summary-fee"> · +{customFeeLabel}</em>
+              )}
+            </span>
+          </div>
+          <a href="#make-your-mark" onClick={scrollToCustomization} className="nip-patch-summary-cta" data-testid="nip-patch-edit-link">
+            EDIT PATCH →
+          </a>
+        </div>
+
+        {/* RING SIZING CUSTOMER INSTRUCTIONS */}
+        <div className="nip-sizing-block" data-testid="nip-sizing-block">
+          <p className="nip-sizing-eyebrow">Ring Sizing</p>
+          <p className="nip-sizing-lead">
+            NEIGHBORHOOD NIP is a substantial wide-band ring. Wide bands can feel tighter
+            than narrow rings, so accurate sizing is important.
+          </p>
+          <p className="nip-sizing-lead" style={{ margin: "0 0 8px" }}>For the best fit:</p>
+          <ul className="nip-sizing-list">
+            <li>Measure the finger on which the ring will be worn.</li>
+            <li>Measure near the end of the day, when fingers are at their normal size.</li>
+            <li>Do not measure when the hands are unusually cold or swollen.</li>
+            <li>Use the PHILEON Ring Size Guide before placing the order.</li>
+            <li>When between two sizes, select the larger size for this wide-band construction.</li>
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          className="nip-add-btn"
+          onClick={onAddToCart}
+          disabled={isAdding}
+          aria-label="Add NEIGHBORHOOD NIP to cart"
+          data-testid="nip-add-to-cart"
+        >
+          {isAdding ? "✓ ADDED" : "ADD TO CART"}
+        </button>
+
+        {patchType === "custom" && !customValid && !isAdding && (
+          <p className="nip-inline-error" data-testid="nip-patch-inline-error">
+            {patternIncomplete
+              ? "Complete all 12 positions in your custom patch."
+              : "Use exactly 6 white diamonds and 6 black diamonds."}
+          </p>
+        )}
+      </section>
+
       {/* THE BLOCK BECAME THE BLUEPRINT */}
       <section className="nip-section d1" data-testid="nip-block-blueprint">
         <p className="nip-eyebrow" style={{ textAlign:"center" }}>I</p>
@@ -1258,19 +1271,6 @@ export default function NeighborhoodNipPage() {
           used. The piece is offered as an architectural study &mdash; a work
           of respect, made to order in a single edition.
         </p>
-      </section>
-
-      {/* GALLERY */}
-      <section className="nip-section d5" data-testid="nip-gallery-section">
-        <p className="nip-eyebrow" style={{ textAlign:"center" }}>Study</p>
-        <h2 className="nip-h2">Eight Angles. One Idea.</h2>
-        <div className="nip-gallery" data-testid="nip-gallery">
-          {GALLERY.map((g, i) => (
-            <div key={i} className="nip-gallery-cell" data-testid={`nip-gallery-cell-${i + 1}`}>
-              <img src={g.src} alt={g.alt} loading="lazy" data-testid={`nip-gallery-image-${i + 1}`} />
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* FINAL LINE */}
