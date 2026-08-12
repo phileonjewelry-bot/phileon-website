@@ -61,6 +61,7 @@ import MidweekPage from "@/pages/MidweekPage";
 import LaMadonnaPage from "@/pages/LaMadonnaPage";
 import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
+import HerEternalReignPage from "@/pages/HerEternalReignPage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -225,6 +226,11 @@ function App() {
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/vault/drews-world" element={<VaultPage />} />
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
+            {/* H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring */}
+            <Route path="/her-eternal-reign" element={<HerEternalReignPage />} />
+            <Route path="/products/her-eternal-reign" element={<HerEternalReignPage />} />
+            <Route path="/fine-jewelry/her-eternal-reign" element={<HerEternalReignPage />} />
+            <Route path="/ladies/rings/her-eternal-reign" element={<HerEternalReignPage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />

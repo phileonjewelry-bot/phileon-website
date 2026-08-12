@@ -52,6 +52,8 @@ const SUPPORTED_SLUGS = new Set([
   "cresta-nera",
   // Drew's Vault — RETRO BRED · Private Release · CAD (chain sold separately).
   "retro-bred",
+  // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
+  "her-eternal-reign",
 ]);
 const DYNAMIC_SLUGS = new Set([
   "la-marva", "annie-rose", "rhythm-mesh-ring", "tola-ii",

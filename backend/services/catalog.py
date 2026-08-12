@@ -525,7 +525,7 @@ def resolve_line_item(product_id: str,
         t = tier or variant or karat
         return _resolve_dynamic_ring(product_id, t, ring_size, quantity, market_snapshot)
 
-    if product_id in _PE_CATALOG or product_id in _PE_FIXED or product_id == "cresta-nera":
+    if product_id in _PE_CATALOG or product_id in _PE_FIXED or product_id in ("cresta-nera", "her-eternal-reign"):
         # Pricing-engine-backed OR fixed-product OR cresta-nera. Dispatched
         # inside the PE resolver.
         t = tier or variant or karat

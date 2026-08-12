@@ -631,7 +631,77 @@ def _resolve_cresta_nera(tier_key: Optional[str], wrist_size: Optional[str],
         "pricing_source": {"market_timestamp": 0, "market_source": "fixed-catalog", "is_stale": False},
         "metadata": {"product_slug": "cresta-nera", "sku": sku, "metal": mkey, "wrist_size": skey},
     }
-ALL_SLUGS = frozenset(list(PRICING_ENGINE_CATALOG.keys()) + list(FIXED_PRODUCTS.keys()) + ["cresta-nera"])
+ALL_SLUGS = frozenset(list(PRICING_ENGINE_CATALOG.keys()) + list(FIXED_PRODUCTS.keys()) + ["cresta-nera", "her-eternal-reign"])
+
+
+# ---------------------------------------------------------------------------
+# H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
+# ---------------------------------------------------------------------------
+# Size → figure-count mapping is server-authoritative (client cannot claim
+# a lower figure count to shave the price).
+HER_SIZE_TO_FIGURES: Dict[str, int] = {
+    "6": 17, "6.5": 17, "7": 17,
+    "7.5": 18, "8": 18,
+    "8.5": 19, "9": 19,
+    "9.5": 20, "10": 20,
+}
+HER_VALID_SIZES = frozenset(HER_SIZE_TO_FIGURES.keys())
+# Base (17-figure) CAD price per tier + per-figure surcharge above 17.
+HER_TIERS: Dict[str, Dict] = {
+    "10k": {"base_cad": 6995,  "per_figure_cad": 300, "metal_label": "10K Yellow Gold",
+            "stones_label": "Lab-Created & Synthetic Gemstones"},
+    "14k": {"base_cad": 8995,  "per_figure_cad": 350, "metal_label": "14K Yellow Gold",
+            "stones_label": "Genuine Gemstones"},
+    "18k": {"base_cad": 10495, "per_figure_cad": 400, "metal_label": "18K Yellow Gold",
+            "stones_label": "Genuine Gemstones"},
+}
+
+
+def _resolve_her_eternal_reign(tier_key: Optional[str], ring_size: Optional[str],
+                              quantity: int) -> Dict:
+    if not tier_key:
+        raise PricingEngineResolverError("MISSING_TIER: H.E.R. requires a metal selection (10K, 14K or 18K Yellow Gold).")
+    tk = tier_key.strip().lower()
+    if tk not in HER_TIERS:
+        raise PricingEngineResolverError(f"INVALID_TIER: '{tier_key}' is not a valid H.E.R. metal tier.")
+    if not ring_size:
+        raise PricingEngineResolverError("MISSING_RING_SIZE: H.E.R. requires a ring size.")
+    size_norm = ring_size.replace("US ", "").strip()
+    if size_norm not in HER_VALID_SIZES:
+        raise PricingEngineResolverError(f"INVALID_RING_SIZE: '{ring_size}' is not a valid H.E.R. ring size.")
+
+    figures = HER_SIZE_TO_FIGURES[size_norm]
+    tier_cfg = HER_TIERS[tk]
+    price_cad = tier_cfg["base_cad"] + (figures - 17) * tier_cfg["per_figure_cad"]
+    unit_amount_cents = int(price_cad) * 100
+    stones_total = figures * 3
+
+    size_token = size_norm.replace(".", "-")
+    sku = f"HER-{tk.upper()}-F{figures}-SZ{size_token}"
+    return {
+        "product_id":  "her-eternal-reign",
+        "product_name": "H.E.R.",
+        "subtitle":    "Her Eternal Reign · Sculptural Ladies Ring",
+        "gemstones":   None,
+        "sku":         sku,
+        "variant":     f"{tier_cfg['metal_label']} · {figures} Figures · US {size_norm}",
+        "karat":       tk.upper(),
+        "metal_colour": "Yellow Gold",
+        "ring_size":   f"US {size_norm}",
+        "figure_count": figures,
+        "stones_total": stones_total,
+        "unit_amount_cents": unit_amount_cents,
+        "currency":    "CAD",
+        "quantity":    quantity,
+        "image":       "/products/her-eternal-reign/hero.jpg",
+        "is_dynamic_priced": False,
+        "pricing_source": {"market_timestamp": 0, "market_source": "fixed-catalog", "is_stale": False},
+        "metadata": {
+            "product_slug": "her-eternal-reign", "sku": sku,
+            "tier": tk, "ring_size": f"US {size_norm}",
+            "figure_count": str(figures), "stones_total": str(stones_total),
+        },
+    }
 
 
 class PricingEngineResolverError(Exception):
@@ -728,6 +798,8 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
     """
     if product_id == "cresta-nera":
         return _resolve_cresta_nera(tier_key, wrist_size, quantity)
+    if product_id == "her-eternal-reign":
+        return _resolve_her_eternal_reign(tier_key, ring_size, quantity)
     if product_id in FIXED_PRODUCTS:
         return _resolve_fixed_product(product_id, tier_key, ring_size, quantity)
     if product_id not in PRICING_ENGINE_CATALOG:
