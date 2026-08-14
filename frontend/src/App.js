@@ -62,6 +62,7 @@ import LaMadonnaPage from "@/pages/LaMadonnaPage";
 import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
 import HerEternalReignPage from "@/pages/HerEternalReignPage";
+import VolutaPage from "@/pages/VolutaPage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -231,6 +232,10 @@ function App() {
             <Route path="/products/her-eternal-reign" element={<HerEternalReignPage />} />
             <Route path="/fine-jewelry/her-eternal-reign" element={<HerEternalReignPage />} />
             <Route path="/ladies/rings/her-eternal-reign" element={<HerEternalReignPage />} />
+            {/* VOLUTA — placeholder (working slug). Not yet in trusted catalog. */}
+            <Route path="/products/voluta" element={<VolutaPage />} />
+            <Route path="/voluta" element={<VolutaPage />} />
+            <Route path="/fine-jewelry/voluta" element={<VolutaPage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />
