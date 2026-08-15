@@ -25,6 +25,7 @@ const menuCategories = [
   {
     name: 'The Collective',
     items: [
+      { name: 'ROUGE SIREN', path: '/products/rouge-siren' },
       { name: 'H.E.R. — Her Eternal Reign', path: '/her-eternal-reign' },
       { name: 'FONDO CURVO', path: '/products/fondo-curvo' },
       { name: 'PARABOLA', path: '/products/parabola' },

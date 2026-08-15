@@ -236,10 +236,10 @@ function App() {
             <Route path="/products/rouge-siren" element={<VolutaPage />} />
             <Route path="/rouge-siren" element={<VolutaPage />} />
             <Route path="/fine-jewelry/rouge-siren" element={<VolutaPage />} />
-            {/* Legacy VOLUTA aliases — kept reachable so any prior link still resolves. */}
-            <Route path="/products/voluta" element={<VolutaPage />} />
-            <Route path="/voluta" element={<VolutaPage />} />
-            <Route path="/fine-jewelry/voluta" element={<VolutaPage />} />
+            {/* Legacy VOLUTA aliases — hard redirect to canonical ROUGE SIREN route. */}
+            <Route path="/products/voluta" element={<Navigate to="/products/rouge-siren" replace />} />
+            <Route path="/voluta" element={<Navigate to="/products/rouge-siren" replace />} />
+            <Route path="/fine-jewelry/voluta" element={<Navigate to="/products/rouge-siren" replace />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />

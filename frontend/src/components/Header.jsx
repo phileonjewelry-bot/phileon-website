@@ -38,6 +38,7 @@ const Header = () => {
       name: 'The Collective', 
       path: '/shop',
       dropdown: [
+        { name: 'ROUGE SIREN', path: '/products/rouge-siren' },
         { name: 'H.E.R. — Her Eternal Reign', path: '/her-eternal-reign' },
         { name: 'FONDO CURVO', path: '/products/fondo-curvo' },
         { name: 'PARABOLA', path: '/products/parabola' },
@@ -78,6 +79,7 @@ const Header = () => {
     {
       name: 'The Collective',
       products: [
+        { name: 'ROUGE SIREN', path: '/products/rouge-siren' },
         { name: 'H.E.R. — Her Eternal Reign', path: '/her-eternal-reign' },
         { name: 'FONDO CURVO', path: '/products/fondo-curvo' },
         { name: 'PARABOLA', path: '/products/parabola' },

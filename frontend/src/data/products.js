@@ -3098,6 +3098,7 @@ export const rougeSirenPlaceholder = {
   },
   earrings: { pair: true, note: 'Matching pair — same principal circular medallion motif as the anklet and pendant.' },
   expressions: [
+    { id: 'earrings', name: 'Earrings',              price: { amount: 2995, currency: 'CAD', display: '$2,995 CAD' }, includes: ['Earring Pair'] },
     { id: 'set',      name: 'Earring + Anklet Set', price: { amount: 5995, currency: 'CAD', display: '$5,995 CAD' }, includes: ['Earring Pair', 'Anklet'] },
     { id: 'pendant',  name: 'Pendant',              price: { amount: 2195, currency: 'CAD', display: '$2,195 CAD' }, includes: ['Pendant'], chainSoldSeparately: true },
     { id: 'complete', name: 'Complete Collection', price: { amount: 7495, currency: 'CAD', display: '$7,495 CAD' }, includes: ['Earring Pair', 'Anklet', 'Pendant'], chainSoldSeparately: true, default: true },
@@ -3124,6 +3125,24 @@ export const rougeSirenPlaceholder = {
 export const volutaPlaceholder = rougeSirenPlaceholder;
 
 export const catalogProducts = [
+  // ─── ROUGE SIREN — Public merchandising card (Fine Jewelry). Single canonical
+  // card. Frontend-only discoverability; NOT wired into backend trusted catalog.
+  // Individual category views may re-badge the subtitle/price at render-time
+  // (Ladies → Earrings shows $2,995 CAD · EARRINGS; Ladies → Pendants shows
+  // $2,195 CAD · PENDANT) — but all cards link to /products/rouge-siren.
+  { id: 'rouge-siren', name: 'ROUGE SIREN', slug: 'rouge-siren',
+    materialLine: 'Solid 10K Rose Gold', imageUrl: rougeSirenPlaceholder.imageUrl,
+    href: '/products/rouge-siren',
+    price_range: '$5,995 CAD', inventory_count: 0, is_core: true, category: 'sets',
+    audience: ['ladies', 'collective', 'fine-jewelry'],
+    categoriesPending: ['sets', 'earrings', 'pendants', 'anklets'],
+    purchasable: false, status: 'placeholder',
+    subtitle: 'EARRING + ANKLET SET',
+    expressions: rougeSirenPlaceholder.expressions,
+    pendantImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/y96fmfub_1000171223.png',
+    earringImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dfdtcf05_1000171241.png',
+    ankletImage:  'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
+  },
   // CORE — anchor cards at the top of the shop grid
   {
     id: 'rose-of-sharon',

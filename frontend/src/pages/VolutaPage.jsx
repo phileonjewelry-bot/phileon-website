@@ -21,6 +21,13 @@ const IMG = {
 };
 
 const EXPRESSIONS = {
+  earrings: {
+    id: "earrings",
+    name: "EARRINGS",
+    price: "$2,995 CAD",
+    hero: IMG.earWorn,
+    included: ["Earring Pair"],
+  },
   set: {
     id: "set",
     name: "EARRING + ANKLET SET",
@@ -185,6 +192,8 @@ export default function VolutaPage() {
             <ul className="voluta-detail-list">
               <li>Metal: Solid 10K Rose Gold</li>
               <li>Includes: {active.included.join(", ")}</li>
+              {expression === "earrings" && <li>Working medallion diameter: approx. 34 mm</li>}
+              {expression === "earrings" && <li>Working overall drop: approx. 45–50 mm</li>}
               {(expression === "set" || expression === "complete") && <li>Anklet: 25 cm / 9.8 in</li>}
               {(expression === "pendant" || expression === "complete") && <li>Pendant: 25 × 22 mm · approx. 8.5 g reference</li>}
               <li>Gemstones: None</li>
