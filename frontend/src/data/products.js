@@ -3077,22 +3077,32 @@ export const rougeSirenPlaceholder = {
   id: 'rouge-siren',
   slug: 'rouge-siren',
   legacySlug: 'voluta',                  // kept so any prior link still resolves
-  workingName: true,
   status: 'placeholder',                 // frontend-only, non-purchasable
   purchasable: false,
-  productType: 'earring-anklet-set',
+  productType: 'collection',             // 3-piece coordinated collection
   name: 'ROUGE SIREN',
-  displayName: 'ROUGE SIREN — Earring + Anklet Set',
+  displayName: 'ROUGE SIREN — PHILEON Fine Jewelry Collection',
   collection: 'phileon-fine-jewelry',
-  audience: ['ladies'],                  // eventual placement Ladies → Earrings + Ladies → Anklets
-  categoriesPending: ['earrings', 'anklets'],
+  audience: ['ladies'],                  // eventual placement Ladies → Earrings + Pendants + Anklets
+  categoriesPending: ['earrings', 'pendants', 'anklets'],
   material: '10K Rose Gold',
   metalTiers: ['10K Rose Gold'],
   gemstones: 'None',
   ankletLength: { cm: 25, inches: 9.8, display: '25 cm / 9.8 in' },
-  earrings: { pair: true, note: 'Matching pair — same principal circular medallion motif as the anklet.' },
-  price: { amount: 6995, currency: 'CAD', display: '$6,995 CAD', provisional: true },
-  pendingSpecs: ['Final Weight', 'Medallion Dimensions', 'Clasp Specification'],
+  pendant: {
+    body: { widthMm: 22.0, heightMm: 25.0, display: '25 × 22 mm' },
+    referenceWeightG: 8.5,
+    chainIncluded: false,
+    chainNote: 'Chain sold separately',
+    // Diagram "T: 18.0 mm" is NOT merchant-approved — thickness intentionally omitted.
+  },
+  earrings: { pair: true, note: 'Matching pair — same principal circular medallion motif as the anklet and pendant.' },
+  expressions: [
+    { id: 'set',      name: 'Earring + Anklet Set', price: { amount: 6995, currency: 'CAD', display: '$6,995 CAD' }, includes: ['Earring Pair', 'Anklet'] },
+    { id: 'pendant',  name: 'Pendant',              price: { amount: 2495, currency: 'CAD', display: '$2,495 CAD' }, includes: ['Pendant'], chainSoldSeparately: true },
+    { id: 'complete', name: 'Complete Collection', price: { amount: 8995, currency: 'CAD', display: '$8,995 CAD' }, includes: ['Earring Pair', 'Anklet', 'Pendant'], chainSoldSeparately: true, default: true },
+  ],
+  pendingSpecs: ['Earring CAD Mass', 'Anklet CAD Mass', 'Pendant CAD Mass', 'Medallion Dimensions', 'Anklet Clasp Specification'],
   href: '/products/rouge-siren',
   heroImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
   imageUrl: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
@@ -3102,9 +3112,12 @@ export const rougeSirenPlaceholder = {
     'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/s6bi9wst_1000171115.png',
     'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9bc4bl98_1000171116.png',
     'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/k47r3m0z_1000171114.png',
+    'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z2bfdgj2_1000171222.png',
+    'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/y96fmfub_1000171223.png',
   ],
-  campaignLine: 'ONE MOTIF. TWO POINTS OF THE BODY.',
-  robots: 'noindex,follow', // page discoverable via direct link, not indexed until sign-off
+  campaignLine: 'THREE POINTS. ONE PULL.',
+  secondaryLine: 'A single sculptural language, drawn from ear to neck to ankle.',
+  robots: 'noindex,follow',
 };
 
 // Alias kept for a soft transition of any old import paths.

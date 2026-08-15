@@ -1,39 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 
-// ROUGE SIREN — PLACEHOLDER PAGE (formerly VOLUTA · working name until merchant sign-off)
-// ─────────────────────────────────────────────────────────────────────────
-// FINAL PRODUCT #3 of 6.
-// This page renders the merchant-approved provisional retail configuration
-// ($6,995 CAD, 10K Rose Gold, 25 cm / 9.8 in anklet + matching earrings)
-// but does NOT expose an active Add to Cart, does NOT register a trusted
-// product, and does NOT touch the backend catalog. Trusted product count
-// remains 84. Migration to trusted checkout is gated on:
-//   1. final CAD weight
-//   2. final medallion dimensions
-//   3. final clasp/closure
-//   4. merchant reconfirms $6,995 CAD retail
-//   5. merchant explicit approval
+// ROUGE SIREN — PHILEON FINE JEWELRY collection page.
+// Product #3 of 6. Name is merchant-approved (no longer a working name).
+// Three coordinated expressions in solid 10K Rose Gold:
+//   • Earring + Anklet Set — $6,995 CAD
+//   • Pendant                — $2,495 CAD  (chain sold separately)
+//   • Complete Collection    — $8,995 CAD
+// Non-purchasable placeholder. Trusted backend catalog untouched (still 84).
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
+const IMG = {
+  set:       `${ART}/t4zwoen5_1000171127.png`,        // complete set composite
+  earPair:   `${ART}/d53p1y31_1000171117.png`,        // earring pair front
+  earMacro:  `${ART}/s6bi9wst_1000171115.png`,        // earring sculptural macro
+  earHoop:   `${ART}/9bc4bl98_1000171116.png`,        // hoop-and-drop macro
+  medallion: `${ART}/k47r3m0z_1000171114.png`,        // single medallion openwork
+  pendant:   `${ART}/y96fmfub_1000171223.png`,        // pendant on chain macro
+  onBody:    `${ART}/z2bfdgj2_1000171222.png`,        // model wearing full set (ear + neck + ankle)
+};
 
-// Complete-set composition (earrings + anklet on obsidian) — hero.
-const ROUGE_SIREN_HERO = `${ART}/t4zwoen5_1000171127.png`;
-
-// Editorial gallery — 5 studio plates. Sequence:
-//   1. Complete set (hero repeat)
-//   2. Earring pair front view
-//   3. Extreme earring macro (medallion + curves)
-//   4. Alternate earring macro (double-drop with hoop)
-//   5. Single-medallion macro (openwork architecture close-up)
-const ROUGE_SIREN_GALLERY = [
-  { src: ROUGE_SIREN_HERO,                    alt: "ROUGE SIREN — complete earring + anklet set in 10K Rose Gold on obsidian." },
-  { src: `${ART}/d53p1y31_1000171117.png`,    alt: "ROUGE SIREN earrings — front view pair in 10K Rose Gold." },
-  { src: `${ART}/s6bi9wst_1000171115.png`,    alt: "ROUGE SIREN earring macro — sculptural openwork medallion, front detail." },
-  { src: `${ART}/9bc4bl98_1000171116.png`,    alt: "ROUGE SIREN earrings — hoop-and-drop macro from above." },
-  { src: `${ART}/k47r3m0z_1000171114.png`,    alt: "ROUGE SIREN — single medallion macro, flowing concentric curves." },
-];
+const EXPRESSIONS = {
+  set: {
+    id: "set",
+    name: "EARRING + ANKLET SET",
+    price: "$6,995 CAD",
+    hero: IMG.set,
+    included: ["Earring Pair", "Anklet"],
+  },
+  pendant: {
+    id: "pendant",
+    name: "PENDANT",
+    price: "$2,495 CAD",
+    hero: IMG.pendant,
+    included: ["Pendant"],
+    chainNote: true,
+  },
+  complete: {
+    id: "complete",
+    name: "COMPLETE COLLECTION",
+    price: "$8,995 CAD",
+    hero: IMG.onBody,
+    included: ["Earring Pair", "Anklet", "Pendant"],
+    chainNote: true,
+  },
+};
 
 export default function VolutaPage() {
+  const [expression, setExpression] = useState("complete");
+  const active = EXPRESSIONS[expression];
+
   return (
     <div className="voluta-page" data-testid="voluta-page">
       {/* Hero */}
@@ -41,8 +56,8 @@ export default function VolutaPage() {
         <div className="voluta-hero-inner">
           <div className="voluta-hero-media">
             <img
-              src={ROUGE_SIREN_HERO}
-              alt="ROUGE SIREN — 10K Rose Gold earring and anklet set on obsidian"
+              src={active.hero}
+              alt={`ROUGE SIREN — ${active.name.toLowerCase()} in 10K Rose Gold`}
               className="voluta-hero-img"
               data-testid="voluta-hero-image"
               loading="eager"
@@ -52,28 +67,24 @@ export default function VolutaPage() {
           <div className="voluta-hero-copy">
             <p className="voluta-eyebrow" data-testid="voluta-eyebrow">PHILEON FINE JEWELRY</p>
             <h1 className="voluta-title" data-testid="voluta-title">ROUGE SIREN</h1>
-            <p className="voluta-subline" data-testid="voluta-subline">EARRING + ANKLET SET</p>
+            <p className="voluta-subline" data-testid="voluta-subline">EAR · NECK · ANKLE</p>
             <p className="voluta-material" data-testid="voluta-material">10K ROSE GOLD</p>
 
             <div className="voluta-price-row">
-              <span className="voluta-price" data-testid="voluta-price">$6,995 CAD</span>
+              <span className="voluta-price" data-testid="voluta-price">{active.price}</span>
               <span className="voluta-price-pill" data-testid="voluta-price-status">
                 Final production specification pending
               </span>
             </div>
 
             <p className="voluta-campaign" data-testid="voluta-campaign">
-              ONE MOTIF.<br />TWO POINTS OF THE BODY.
+              THREE POINTS.<br />ONE PULL.
+            </p>
+            <p className="voluta-secondary">
+              A single sculptural language, drawn from ear to neck to ankle.
             </p>
 
-            {/* Non-purchasable CTA — no cart wiring. */}
-            <button
-              type="button"
-              className="voluta-cta-disabled"
-              disabled
-              aria-disabled="true"
-              data-testid="voluta-cta-coming-soon"
-            >
+            <button type="button" className="voluta-cta-disabled" disabled aria-disabled="true" data-testid="voluta-cta-coming-soon">
               COMING SOON
             </button>
             <p className="voluta-cta-note">In final development · Reserve intent will open on production sign-off.</p>
@@ -81,255 +92,178 @@ export default function VolutaPage() {
         </div>
       </section>
 
-      {/* Intro */}
+      {/* Collection statement */}
       <section className="voluta-intro" data-testid="voluta-intro">
         <div className="voluta-container">
-          <p className="voluta-intro-lead">
-            ROUGE SIREN carries one sculptural gesture across two points of the body.
-          </p>
+          <p className="voluta-intro-lead">ROUGE SIREN moves through the body in one continuous language.</p>
           <p className="voluta-intro-body">
-            A procession of openwork rose-gold medallions encircles the ankle,
-            while the same flowing architecture is repeated at the ear.
+            Sculpted in solid 10K rose gold, its openwork curves repeat at the ear,
+            the neck and the ankle — three points connected by one unmistakable form.
           </p>
-          <p className="voluta-intro-tag">
-            One motif. One material. Two expressions.
-          </p>
+          <p className="voluta-intro-tag">No stones. No interruption. Only metal, movement and repetition.</p>
         </div>
       </section>
 
-      {/* Gallery */}
-      <section className="voluta-gallery" data-testid="voluta-gallery">
+      {/* On-body editorial */}
+      <section className="voluta-on-body" data-testid="voluta-on-body">
+        <div className="voluta-on-body-frame">
+          <img src={IMG.onBody} alt="ROUGE SIREN on body — earrings, pendant and anklet in 10K Rose Gold" loading="lazy" />
+        </div>
+      </section>
+
+      {/* Piece-by-piece */}
+      <section className="voluta-pieces" data-testid="voluta-pieces">
         <div className="voluta-container">
-          <p className="voluta-section-eyebrow">The Set</p>
-          <div className="voluta-gallery-grid">
-            {ROUGE_SIREN_GALLERY.map((plate, i) => (
-              <div
-                key={plate.src}
-                className={`voluta-gallery-cell ${i === 0 ? "is-hero" : ""}`}
-                data-testid={`voluta-gallery-plate-${i}`}
+          <p className="voluta-section-eyebrow">The Three Pieces</p>
+
+          <div className="voluta-piece" data-testid="voluta-piece-earrings">
+            <div className="voluta-piece-media"><img src={IMG.earPair} alt="ROUGE SIREN earring pair — 10K Rose Gold" loading="lazy" /></div>
+            <div className="voluta-piece-copy">
+              <h3>Earrings</h3>
+              <p>Matching pair of sculptural drops. Polished hoop connection. Circular openwork medallion.</p>
+              <ul><li>Solid 10K Rose Gold</li><li>Matching Pair</li><li>No stones</li></ul>
+            </div>
+          </div>
+
+          <div className="voluta-piece voluta-piece-reverse" data-testid="voluta-piece-pendant">
+            <div className="voluta-piece-media"><img src={IMG.pendant} alt="ROUGE SIREN pendant on chain — 10K Rose Gold" loading="lazy" /></div>
+            <div className="voluta-piece-copy">
+              <h3>Pendant</h3>
+              <p>An enlarged expression of the ROUGE SIREN medallion. Substantial polished rose-gold bail. Openwork architecture.</p>
+              <ul>
+                <li>Solid 10K Rose Gold</li>
+                <li>Body: 25.0 × 22.0 mm</li>
+                <li>Reference weight: approx. 8.5 g</li>
+                <li>No stones</li>
+                <li data-testid="pendant-chain-note">Chain sold separately</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="voluta-piece" data-testid="voluta-piece-anklet">
+            <div className="voluta-piece-media"><img src={IMG.medallion} alt="ROUGE SIREN medallion detail — 10K Rose Gold" loading="lazy" /></div>
+            <div className="voluta-piece-copy">
+              <h3>Anklet</h3>
+              <p>A procession of repeating ROUGE SIREN medallions ending in a central hanging medallion.</p>
+              <ul>
+                <li>Solid 10K Rose Gold</li>
+                <li data-testid="voluta-anklet-length">Length: 25 cm / 9.8 in</li>
+                <li>No stones</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Expression selector */}
+      <section className="voluta-select" data-testid="voluta-select-expression">
+        <div className="voluta-container">
+          <p className="voluta-section-eyebrow">Select Your Expression</p>
+          <div className="voluta-select-grid">
+            {Object.values(EXPRESSIONS).map((e) => (
+              <button
+                key={e.id}
+                type="button"
+                onClick={() => setExpression(e.id)}
+                aria-pressed={expression === e.id}
+                data-testid={`voluta-expression-${e.id}`}
+                className={`voluta-select-card ${expression === e.id ? "is-active" : ""}`}
               >
-                <img src={plate.src} alt={plate.alt} loading={i === 0 ? "eager" : "lazy"} />
-              </div>
+                <div className="voluta-select-media"><img src={e.hero} alt={`ROUGE SIREN ${e.name.toLowerCase()}`} loading="lazy" /></div>
+                <p className="voluta-select-name">{e.name}</p>
+                <p className="voluta-select-price">{e.price}</p>
+                {e.chainNote && <p className="voluta-select-chain">Chain sold separately</p>}
+              </button>
             ))}
           </div>
-          <p className="voluta-gallery-note" data-testid="voluta-gallery-note">
-            Additional on-body plates arrive with production sign-off.
-          </p>
-        </div>
-      </section>
 
-      {/* Product details */}
-      <section className="voluta-details" data-testid="voluta-details">
-        <div className="voluta-container">
-          <p className="voluta-section-eyebrow">Product</p>
-          <dl className="voluta-spec-list">
-            <div className="voluta-spec-row"><dt>Product</dt><dd>ROUGE SIREN Earring + Anklet Set</dd></div>
-            <div className="voluta-spec-row"><dt>Collection</dt><dd>PHILEON Fine Jewelry</dd></div>
-            <div className="voluta-spec-row"><dt>Metal</dt><dd>Solid 10K Rose Gold</dd></div>
-            <div className="voluta-spec-row"><dt>Anklet Length</dt><dd data-testid="voluta-anklet-length">25 cm / 9.8 in</dd></div>
-            <div className="voluta-spec-row"><dt>Earrings</dt><dd>Matching Pair</dd></div>
-            <div className="voluta-spec-row"><dt>Gemstones</dt><dd>None</dd></div>
-            <div className="voluta-spec-row voluta-spec-row-price"><dt>Price</dt><dd data-testid="voluta-price-details">$6,995 CAD</dd></div>
-          </dl>
-
-          <p className="voluta-pending-line" data-testid="voluta-pending-line">
-            Final Weight · Medallion Dimensions · Clasp Specification — To Be Confirmed
-          </p>
-        </div>
-      </section>
-
-      {/* Purchase summary */}
-      <section className="voluta-purchase" data-testid="voluta-purchase-summary">
-        <div className="voluta-container voluta-purchase-inner">
-          <div>
-            <p className="voluta-section-eyebrow">Set</p>
-            <h2 className="voluta-purchase-title">ROUGE SIREN</h2>
-            <p className="voluta-purchase-sub">EARRING + ANKLET SET</p>
-            <p className="voluta-purchase-line">10K ROSE GOLD</p>
-            <p className="voluta-purchase-line">25 CM / 9.8 IN ANKLET</p>
-            <p className="voluta-purchase-price" data-testid="voluta-purchase-price">$6,995 CAD</p>
-          </div>
-          <div className="voluta-purchase-status">
-            <p className="voluta-status-eyebrow">Status</p>
-            <p className="voluta-status-line" data-testid="voluta-status-line">
-              Final Production Specification Pending
-            </p>
-            <button
-              type="button"
-              className="voluta-cta-disabled voluta-cta-wide"
-              disabled
-              aria-disabled="true"
-              data-testid="voluta-cta-coming-soon-bottom"
-            >
+          {/* Dynamic detail for the selected expression */}
+          <div className="voluta-detail" data-testid="voluta-detail">
+            <p className="voluta-section-eyebrow">Selected</p>
+            <h3 className="voluta-detail-title" data-testid="voluta-detail-title">ROUGE SIREN — {active.name}</h3>
+            <ul className="voluta-detail-list">
+              <li>Metal: Solid 10K Rose Gold</li>
+              <li>Includes: {active.included.join(", ")}</li>
+              {(expression === "set" || expression === "complete") && <li>Anklet: 25 cm / 9.8 in</li>}
+              {(expression === "pendant" || expression === "complete") && <li>Pendant: 25 × 22 mm · approx. 8.5 g reference</li>}
+              <li>Gemstones: None</li>
+              {active.chainNote && <li data-testid={`chain-note-${expression}`}>Chain sold separately</li>}
+              <li className="voluta-detail-price" data-testid="voluta-detail-price">Price: {active.price}</li>
+              <li className="voluta-detail-status">Status: Final Production Specification Pending</li>
+            </ul>
+            <button type="button" className="voluta-cta-disabled voluta-cta-wide" disabled aria-disabled="true" data-testid="voluta-cta-coming-soon-bottom">
               IN FINAL DEVELOPMENT
             </button>
           </div>
         </div>
       </section>
 
+      <p className="voluta-pending-line" data-testid="voluta-pending-line">
+        Final Weight · Medallion Dimensions · Clasp Specification — To Be Confirmed
+      </p>
+
       <style>{`
-        .voluta-page {
-          background: #050505;
-          color: #efe6d5;
-          font-family: ui-serif, "Cormorant Garamond", Georgia, serif;
-          padding-top: 64px;
-        }
+        .voluta-page { background: #050505; color: #efe6d5; font-family: ui-serif, "Cormorant Garamond", Georgia, serif; padding-top: 64px; }
         .voluta-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-        /* Hero */
         .voluta-hero { padding: 0 0 64px; background: radial-gradient(ellipse at 15% 20%, rgba(196,131,105,0.10) 0%, rgba(0,0,0,0) 60%), #050505; }
-        .voluta-hero-inner {
-          max-width: 1400px; margin: 0 auto; padding: 40px 24px;
-          display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center;
-        }
-        @media (max-width: 900px) {
-          .voluta-hero-inner { grid-template-columns: 1fr; gap: 32px; padding: 24px 20px; }
-        }
-        .voluta-hero-media {
-          position: relative; width: 100%; aspect-ratio: 1 / 1; background: #000;
-          border: 1px solid rgba(196,131,105,0.20); border-radius: 2px; overflow: hidden;
-        }
-        .voluta-hero-img {
-          position: absolute; inset: 0; width: 100%; height: 100%;
-          object-fit: contain; object-position: center; padding: 3%;
-        }
-
-        .voluta-eyebrow, .voluta-section-eyebrow, .voluta-status-eyebrow {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 10px; letter-spacing: 0.42em; text-transform: uppercase;
-          color: #c48369; margin: 0;
-        }
-        .voluta-title {
-          font-size: clamp(48px, 7vw, 84px); font-weight: 300; line-height: 0.9;
-          letter-spacing: 0.02em; margin: 18px 0 0; color: #f2e6c8;
-        }
-        .voluta-subline {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 12px; letter-spacing: 0.36em; text-transform: uppercase;
-          margin: 16px 0 0; color: rgba(239,230,213,0.75);
-        }
-        .voluta-material {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 12px; letter-spacing: 0.36em; text-transform: uppercase;
-          margin: 8px 0 0; color: rgba(196,131,105,0.9);
-        }
-        .voluta-price-row {
-          margin-top: 28px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-        }
-        .voluta-price {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 22px; letter-spacing: 0.10em; color: #f2e6c8;
-        }
-        .voluta-price-pill {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 9px; letter-spacing: 0.36em; text-transform: uppercase;
-          color: #c48369; border: 1px solid rgba(196,131,105,0.35);
-          padding: 5px 10px; border-radius: 2px;
-        }
-        .voluta-campaign {
-          margin-top: 32px; font-size: clamp(18px, 2vw, 22px);
-          letter-spacing: 0.05em; line-height: 1.25; color: rgba(239,230,213,0.9);
-        }
-        .voluta-cta-disabled {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          display: inline-block; margin-top: 28px; padding: 16px 32px;
-          background: transparent; color: rgba(196,131,105,0.6);
-          border: 1px solid rgba(196,131,105,0.35); border-radius: 2px;
-          font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
-          cursor: not-allowed;
-        }
+        .voluta-hero-inner { max-width: 1400px; margin: 0 auto; padding: 40px 24px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+        @media (max-width: 900px) { .voluta-hero-inner { grid-template-columns: 1fr; gap: 32px; padding: 24px 20px; } }
+        .voluta-hero-media { position: relative; width: 100%; aspect-ratio: 1/1; background: #000; border: 1px solid rgba(196,131,105,0.20); border-radius: 2px; overflow: hidden; }
+        .voluta-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; padding: 3%; transition: opacity 400ms; }
+        .voluta-eyebrow, .voluta-section-eyebrow { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 10px; letter-spacing: 0.42em; text-transform: uppercase; color: #c48369; margin: 0; }
+        .voluta-title { font-size: clamp(48px, 7vw, 84px); font-weight: 300; line-height: 0.9; letter-spacing: 0.02em; margin: 18px 0 0; color: #f2e6c8; }
+        .voluta-subline, .voluta-material { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; letter-spacing: 0.36em; text-transform: uppercase; margin: 16px 0 0; color: rgba(239,230,213,0.75); }
+        .voluta-material { color: rgba(196,131,105,0.9); margin-top: 8px; }
+        .voluta-price-row { margin-top: 28px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .voluta-price { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 22px; letter-spacing: 0.10em; color: #f2e6c8; }
+        .voluta-price-pill { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; letter-spacing: 0.36em; text-transform: uppercase; color: #c48369; border: 1px solid rgba(196,131,105,0.35); padding: 5px 10px; border-radius: 2px; }
+        .voluta-campaign { margin-top: 32px; font-size: clamp(18px, 2vw, 22px); letter-spacing: 0.05em; line-height: 1.25; color: rgba(239,230,213,0.9); }
+        .voluta-secondary { margin-top: 12px; font-size: 14px; line-height: 1.55; color: rgba(239,230,213,0.65); max-width: 460px; }
+        .voluta-cta-disabled { font-family: "Helvetica Neue", Arial, sans-serif; display: inline-block; margin-top: 28px; padding: 16px 32px; background: transparent; color: rgba(196,131,105,0.6); border: 1px solid rgba(196,131,105,0.35); border-radius: 2px; font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; cursor: not-allowed; }
         .voluta-cta-wide { width: 100%; max-width: 320px; margin-top: 16px; }
-        .voluta-cta-note {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 10px; letter-spacing: 0.14em; color: rgba(239,230,213,0.4);
-          margin-top: 12px; max-width: 360px;
-        }
+        .voluta-cta-note { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 10px; letter-spacing: 0.14em; color: rgba(239,230,213,0.4); margin-top: 12px; max-width: 360px; }
 
-        /* Intro */
         .voluta-intro { padding: 72px 0; border-top: 1px solid rgba(196,131,105,0.15); }
         .voluta-intro-lead { font-size: clamp(20px, 2.4vw, 28px); color: #f2e6c8; margin: 0; max-width: 720px; }
         .voluta-intro-body { margin-top: 18px; font-size: 15px; line-height: 1.65; color: rgba(239,230,213,0.75); max-width: 620px; }
-        .voluta-intro-tag {
-          margin-top: 24px; font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 11px; letter-spacing: 0.36em; text-transform: uppercase; color: #c48369;
-        }
+        .voluta-intro-tag { margin-top: 24px; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 11px; letter-spacing: 0.36em; text-transform: uppercase; color: #c48369; }
 
-        /* Gallery */
-        .voluta-gallery { padding: 72px 0; background: #060404; }
-        .voluta-gallery-grid {
-          margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-        }
-        @media (max-width: 900px) { .voluta-gallery-grid { grid-template-columns: 1fr; } }
-        .voluta-gallery-cell {
-          background: #000; border: 1px solid rgba(196,131,105,0.15); border-radius: 2px;
-          overflow: hidden; aspect-ratio: 4 / 5;
-        }
-        .voluta-gallery-cell.is-hero {
-          grid-column: span 3; aspect-ratio: 3 / 2;
-        }
-        @media (max-width: 900px) {
-          .voluta-gallery-cell.is-hero { grid-column: span 1; aspect-ratio: 4 / 5; }
-        }
-        .voluta-gallery-cell img {
-          width: 100%; height: 100%; object-fit: contain; object-position: center; padding: 4%;
-        }
-        .voluta-gallery-note {
-          margin-top: 28px; font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
-          color: rgba(239,230,213,0.35);
-        }
+        .voluta-on-body { background: #060404; padding: 32px 0; }
+        .voluta-on-body-frame { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .voluta-on-body-frame img { width: 100%; height: auto; display: block; border-radius: 2px; border: 1px solid rgba(196,131,105,0.15); }
 
-        /* Details */
-        .voluta-details { padding: 72px 0; }
-        .voluta-spec-list {
-          margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 0;
-          border-top: 1px solid rgba(196,131,105,0.15);
-        }
-        .voluta-spec-row {
-          display: grid; grid-template-columns: 200px 1fr; gap: 16px;
-          padding: 18px 0; border-bottom: 1px solid rgba(196,131,105,0.10);
-          font-family: "Helvetica Neue", Arial, sans-serif;
-        }
-        @media (max-width: 640px) { .voluta-spec-row { grid-template-columns: 1fr; gap: 6px; } }
-        .voluta-spec-row dt {
-          font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
-          color: rgba(196,131,105,0.85); margin: 0;
-        }
-        .voluta-spec-row dd {
-          font-size: 14px; color: rgba(239,230,213,0.9); margin: 0;
-        }
-        .voluta-spec-row-price dd { font-size: 18px; letter-spacing: 0.08em; color: #f2e6c8; }
-        .voluta-pending-line {
-          margin-top: 28px; font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 10px; letter-spacing: 0.36em; text-transform: uppercase;
-          color: #c48369; padding: 14px 16px; border: 1px dashed rgba(196,131,105,0.45);
-          border-radius: 2px; display: inline-block;
-        }
+        .voluta-pieces { padding: 72px 0; }
+        .voluta-piece { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin: 48px 0; }
+        .voluta-piece-reverse { direction: rtl; }
+        .voluta-piece-reverse > * { direction: ltr; }
+        @media (max-width: 900px) { .voluta-piece, .voluta-piece-reverse { grid-template-columns: 1fr; direction: ltr; gap: 20px; } }
+        .voluta-piece-media { background: #000; border: 1px solid rgba(196,131,105,0.15); border-radius: 2px; aspect-ratio: 1/1; overflow: hidden; }
+        .voluta-piece-media img { width: 100%; height: 100%; object-fit: contain; object-position: center; padding: 4%; }
+        .voluta-piece-copy h3 { font-size: clamp(26px, 3.5vw, 40px); font-weight: 300; margin: 0; color: #f2e6c8; }
+        .voluta-piece-copy p { margin: 16px 0; font-size: 15px; line-height: 1.6; color: rgba(239,230,213,0.75); }
+        .voluta-piece-copy ul { list-style: none; padding: 0; margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; letter-spacing: 0.14em; color: rgba(239,230,213,0.7); }
+        .voluta-piece-copy li { padding: 6px 0; border-bottom: 1px solid rgba(196,131,105,0.10); }
 
-        /* Purchase summary */
-        .voluta-purchase { padding: 72px 0 128px; background: #060404; border-top: 1px solid rgba(196,131,105,0.15); }
-        .voluta-purchase-inner {
-          display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: start;
-        }
-        @media (max-width: 900px) { .voluta-purchase-inner { grid-template-columns: 1fr; gap: 32px; } }
-        .voluta-purchase-title {
-          font-size: clamp(36px, 5vw, 52px); font-weight: 300; letter-spacing: 0.02em;
-          margin: 12px 0 0; color: #f2e6c8;
-        }
-        .voluta-purchase-sub, .voluta-purchase-line {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase;
-          color: rgba(239,230,213,0.75); margin: 10px 0 0;
-        }
-        .voluta-purchase-price {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 24px; letter-spacing: 0.10em; color: #f2e6c8; margin: 24px 0 0;
-        }
-        .voluta-status-line {
-          font-family: "Helvetica Neue", Arial, sans-serif;
-          font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
-          color: #c48369; margin: 12px 0 0;
-        }
+        .voluta-select { padding: 72px 0; background: #060404; border-top: 1px solid rgba(196,131,105,0.15); }
+        .voluta-select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+        @media (max-width: 900px) { .voluta-select-grid { grid-template-columns: 1fr; } }
+        .voluta-select-card { background: #050303; border: 1px solid rgba(196,131,105,0.15); border-radius: 2px; padding: 18px; cursor: pointer; text-align: left; transition: border-color 200ms, background-color 200ms; color: inherit; font: inherit; }
+        .voluta-select-card:hover { border-color: rgba(196,131,105,0.5); }
+        .voluta-select-card.is-active { border-color: #c48369; background: #0a0605; }
+        .voluta-select-media { aspect-ratio: 1/1; overflow: hidden; background: #000; margin-bottom: 12px; }
+        .voluta-select-media img { width: 100%; height: 100%; object-fit: contain; object-position: center; padding: 6%; }
+        .voluta-select-name { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 11px; letter-spacing: 0.28em; margin: 0; color: #f2e6c8; }
+        .voluta-select-price { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 16px; margin: 6px 0 0; color: #c48369; letter-spacing: 0.08em; }
+        .voluta-select-chain { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; margin: 6px 0 0; color: rgba(239,230,213,0.4); }
+
+        .voluta-detail { margin-top: 40px; padding: 28px; border: 1px solid rgba(196,131,105,0.15); border-radius: 2px; background: #050303; }
+        .voluta-detail-title { font-weight: 300; font-size: clamp(24px, 3vw, 32px); margin: 12px 0 20px; color: #f2e6c8; }
+        .voluta-detail-list { list-style: none; padding: 0; margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 13px; color: rgba(239,230,213,0.8); }
+        .voluta-detail-list li { padding: 8px 0; border-bottom: 1px solid rgba(196,131,105,0.10); }
+        .voluta-detail-price { font-size: 18px !important; color: #f2e6c8 !important; letter-spacing: 0.08em; }
+        .voluta-detail-status { color: #c48369 !important; text-transform: uppercase; letter-spacing: 0.24em; font-size: 11px !important; }
+
+        .voluta-pending-line { max-width: 1200px; margin: 40px auto 128px; padding: 14px 16px; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 10px; letter-spacing: 0.36em; text-transform: uppercase; color: #c48369; border: 1px dashed rgba(196,131,105,0.45); border-radius: 2px; text-align: center; }
       `}</style>
     </div>
   );
