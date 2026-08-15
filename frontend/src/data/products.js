@@ -3098,9 +3098,9 @@ export const rougeSirenPlaceholder = {
   },
   earrings: { pair: true, note: 'Matching pair — same principal circular medallion motif as the anklet and pendant.' },
   expressions: [
-    { id: 'set',      name: 'Earring + Anklet Set', price: { amount: 6995, currency: 'CAD', display: '$6,995 CAD' }, includes: ['Earring Pair', 'Anklet'] },
-    { id: 'pendant',  name: 'Pendant',              price: { amount: 2495, currency: 'CAD', display: '$2,495 CAD' }, includes: ['Pendant'], chainSoldSeparately: true },
-    { id: 'complete', name: 'Complete Collection', price: { amount: 8995, currency: 'CAD', display: '$8,995 CAD' }, includes: ['Earring Pair', 'Anklet', 'Pendant'], chainSoldSeparately: true, default: true },
+    { id: 'set',      name: 'Earring + Anklet Set', price: { amount: 5995, currency: 'CAD', display: '$5,995 CAD' }, includes: ['Earring Pair', 'Anklet'] },
+    { id: 'pendant',  name: 'Pendant',              price: { amount: 2195, currency: 'CAD', display: '$2,195 CAD' }, includes: ['Pendant'], chainSoldSeparately: true },
+    { id: 'complete', name: 'Complete Collection', price: { amount: 7495, currency: 'CAD', display: '$7,495 CAD' }, includes: ['Earring Pair', 'Anklet', 'Pendant'], chainSoldSeparately: true, default: true },
   ],
   pendingSpecs: ['Earring CAD Mass', 'Anklet CAD Mass', 'Pendant CAD Mass', 'Medallion Dimensions', 'Anklet Clasp Specification'],
   href: '/products/rouge-siren',

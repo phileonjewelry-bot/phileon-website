@@ -17,20 +17,21 @@ const IMG = {
   medallion: `${ART}/k47r3m0z_1000171114.png`,        // single medallion openwork
   pendant:   `${ART}/y96fmfub_1000171223.png`,        // pendant on chain macro
   onBody:    `${ART}/z2bfdgj2_1000171222.png`,        // model wearing full set (ear + neck + ankle)
+  earWorn:   `${ART}/dfdtcf05_1000171241.png`,        // side profile — model wearing rose-gold earring
 };
 
 const EXPRESSIONS = {
   set: {
     id: "set",
     name: "EARRING + ANKLET SET",
-    price: "$6,995 CAD",
+    price: "$5,995 CAD",
     hero: IMG.set,
     included: ["Earring Pair", "Anklet"],
   },
   pendant: {
     id: "pendant",
     name: "PENDANT",
-    price: "$2,495 CAD",
+    price: "$2,195 CAD",
     hero: IMG.pendant,
     included: ["Pendant"],
     chainNote: true,
@@ -38,7 +39,7 @@ const EXPRESSIONS = {
   complete: {
     id: "complete",
     name: "COMPLETE COLLECTION",
-    price: "$8,995 CAD",
+    price: "$7,495 CAD",
     hero: IMG.onBody,
     included: ["Earring Pair", "Anklet", "Pendant"],
     chainNote: true,
@@ -73,7 +74,7 @@ export default function VolutaPage() {
             <div className="voluta-price-row">
               <span className="voluta-price" data-testid="voluta-price">{active.price}</span>
               <span className="voluta-price-pill" data-testid="voluta-price-status">
-                Final production specification pending
+                Chain sold separately
               </span>
             </div>
 
@@ -117,7 +118,7 @@ export default function VolutaPage() {
           <p className="voluta-section-eyebrow">The Three Pieces</p>
 
           <div className="voluta-piece" data-testid="voluta-piece-earrings">
-            <div className="voluta-piece-media"><img src={IMG.earPair} alt="ROUGE SIREN earring pair — 10K Rose Gold" loading="lazy" /></div>
+            <div className="voluta-piece-media"><img src={IMG.earWorn} alt="ROUGE SIREN earring on ear — side profile, 10K Rose Gold" loading="lazy" /></div>
             <div className="voluta-piece-copy">
               <h3>Earrings</h3>
               <p>Matching pair of sculptural drops. Polished hoop connection. Circular openwork medallion.</p>
