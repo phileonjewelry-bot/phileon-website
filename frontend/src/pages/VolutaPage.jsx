@@ -1,8 +1,8 @@
 import React from "react";
 
-// VOLUTA — PLACEHOLDER PAGE
+// ROUGE SIREN — PLACEHOLDER PAGE (formerly VOLUTA · working name until merchant sign-off)
 // ─────────────────────────────────────────────────────────────────────────
-// FINAL PRODUCT #3 of 6. Working name — merchant confirmation pending.
+// FINAL PRODUCT #3 of 6.
 // This page renders the merchant-approved provisional retail configuration
 // ($6,995 CAD, 10K Rose Gold, 25 cm / 9.8 in anklet + matching earrings)
 // but does NOT expose an active Add to Cart, does NOT register a trusted
@@ -14,13 +14,23 @@ import React from "react";
 //   4. merchant reconfirms $6,995 CAD retail
 //   5. merchant explicit approval
 
-const VOLUTA_HERO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png";
+const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
 
-// Additional plates will be wired here as more studio shots are supplied.
-// The gallery is intentionally driven from a single source so re-sequencing
-// or adding to it later is a one-line change.
-const VOLUTA_GALLERY = [
-  { src: VOLUTA_HERO, alt: "VOLUTA earring + anklet set — 10K Rose Gold on obsidian." },
+// Complete-set composition (earrings + anklet on obsidian) — hero.
+const ROUGE_SIREN_HERO = `${ART}/t4zwoen5_1000171127.png`;
+
+// Editorial gallery — 5 studio plates. Sequence:
+//   1. Complete set (hero repeat)
+//   2. Earring pair front view
+//   3. Extreme earring macro (medallion + curves)
+//   4. Alternate earring macro (double-drop with hoop)
+//   5. Single-medallion macro (openwork architecture close-up)
+const ROUGE_SIREN_GALLERY = [
+  { src: ROUGE_SIREN_HERO,                    alt: "ROUGE SIREN — complete earring + anklet set in 10K Rose Gold on obsidian." },
+  { src: `${ART}/d53p1y31_1000171117.png`,    alt: "ROUGE SIREN earrings — front view pair in 10K Rose Gold." },
+  { src: `${ART}/s6bi9wst_1000171115.png`,    alt: "ROUGE SIREN earring macro — sculptural openwork medallion, front detail." },
+  { src: `${ART}/9bc4bl98_1000171116.png`,    alt: "ROUGE SIREN earrings — hoop-and-drop macro from above." },
+  { src: `${ART}/k47r3m0z_1000171114.png`,    alt: "ROUGE SIREN — single medallion macro, flowing concentric curves." },
 ];
 
 export default function VolutaPage() {
@@ -31,8 +41,8 @@ export default function VolutaPage() {
         <div className="voluta-hero-inner">
           <div className="voluta-hero-media">
             <img
-              src={VOLUTA_HERO}
-              alt="VOLUTA — 10K Rose Gold earring and anklet set on obsidian"
+              src={ROUGE_SIREN_HERO}
+              alt="ROUGE SIREN — 10K Rose Gold earring and anklet set on obsidian"
               className="voluta-hero-img"
               data-testid="voluta-hero-image"
               loading="eager"
@@ -41,7 +51,7 @@ export default function VolutaPage() {
 
           <div className="voluta-hero-copy">
             <p className="voluta-eyebrow" data-testid="voluta-eyebrow">PHILEON FINE JEWELRY</p>
-            <h1 className="voluta-title" data-testid="voluta-title">VOLUTA</h1>
+            <h1 className="voluta-title" data-testid="voluta-title">ROUGE SIREN</h1>
             <p className="voluta-subline" data-testid="voluta-subline">EARRING + ANKLET SET</p>
             <p className="voluta-material" data-testid="voluta-material">10K ROSE GOLD</p>
 
@@ -75,7 +85,7 @@ export default function VolutaPage() {
       <section className="voluta-intro" data-testid="voluta-intro">
         <div className="voluta-container">
           <p className="voluta-intro-lead">
-            VOLUTA carries one sculptural gesture across two points of the body.
+            ROUGE SIREN carries one sculptural gesture across two points of the body.
           </p>
           <p className="voluta-intro-body">
             A procession of openwork rose-gold medallions encircles the ankle,
@@ -92,7 +102,7 @@ export default function VolutaPage() {
         <div className="voluta-container">
           <p className="voluta-section-eyebrow">The Set</p>
           <div className="voluta-gallery-grid">
-            {VOLUTA_GALLERY.map((plate, i) => (
+            {ROUGE_SIREN_GALLERY.map((plate, i) => (
               <div
                 key={plate.src}
                 className={`voluta-gallery-cell ${i === 0 ? "is-hero" : ""}`}
@@ -103,7 +113,7 @@ export default function VolutaPage() {
             ))}
           </div>
           <p className="voluta-gallery-note" data-testid="voluta-gallery-note">
-            Additional studio and on-body plates arrive with production sign-off.
+            Additional on-body plates arrive with production sign-off.
           </p>
         </div>
       </section>
@@ -113,7 +123,7 @@ export default function VolutaPage() {
         <div className="voluta-container">
           <p className="voluta-section-eyebrow">Product</p>
           <dl className="voluta-spec-list">
-            <div className="voluta-spec-row"><dt>Product</dt><dd>VOLUTA Earring + Anklet Set</dd></div>
+            <div className="voluta-spec-row"><dt>Product</dt><dd>ROUGE SIREN Earring + Anklet Set</dd></div>
             <div className="voluta-spec-row"><dt>Collection</dt><dd>PHILEON Fine Jewelry</dd></div>
             <div className="voluta-spec-row"><dt>Metal</dt><dd>Solid 10K Rose Gold</dd></div>
             <div className="voluta-spec-row"><dt>Anklet Length</dt><dd data-testid="voluta-anklet-length">25 cm / 9.8 in</dd></div>
@@ -133,7 +143,7 @@ export default function VolutaPage() {
         <div className="voluta-container voluta-purchase-inner">
           <div>
             <p className="voluta-section-eyebrow">Set</p>
-            <h2 className="voluta-purchase-title">VOLUTA</h2>
+            <h2 className="voluta-purchase-title">ROUGE SIREN</h2>
             <p className="voluta-purchase-sub">EARRING + ANKLET SET</p>
             <p className="voluta-purchase-line">10K ROSE GOLD</p>
             <p className="voluta-purchase-line">25 CM / 9.8 IN ANKLET</p>

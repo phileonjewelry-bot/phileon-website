@@ -232,7 +232,11 @@ function App() {
             <Route path="/products/her-eternal-reign" element={<HerEternalReignPage />} />
             <Route path="/fine-jewelry/her-eternal-reign" element={<HerEternalReignPage />} />
             <Route path="/ladies/rings/her-eternal-reign" element={<HerEternalReignPage />} />
-            {/* VOLUTA — placeholder (working slug). Not yet in trusted catalog. */}
+            {/* ROUGE SIREN (working name — formerly VOLUTA). Not yet in trusted catalog. */}
+            <Route path="/products/rouge-siren" element={<VolutaPage />} />
+            <Route path="/rouge-siren" element={<VolutaPage />} />
+            <Route path="/fine-jewelry/rouge-siren" element={<VolutaPage />} />
+            {/* Legacy VOLUTA aliases — kept reachable so any prior link still resolves. */}
             <Route path="/products/voluta" element={<VolutaPage />} />
             <Route path="/voluta" element={<VolutaPage />} />
             <Route path="/fine-jewelry/voluta" element={<VolutaPage />} />

@@ -3064,23 +3064,25 @@ const formatPrice = (basePrice, currency = 'USD') => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────
-// VOLUTA — Product #3 of 6. WORKING NAME · placeholder metadata only.
-// Merchant-approved provisional retail: $6,995 CAD (complete earring + anklet set)
-// Solid 10K Rose Gold. Anklet 25 cm / 9.8 in. Matching pair earrings.
-// NOT wired into the trusted backend catalog, NOT included in `catalogProducts`,
-// NOT surfaced on the homepage carousel, Collective, or Ladies grids.
-// Trusted-product count remains 84 until final CAD weight + medallion
-// dimensions + clasp are confirmed and merchant re-approves the retail price.
+// ROUGE SIREN — Product #3 of 6. WORKING NAME (formerly VOLUTA) · placeholder
+// metadata only. Merchant-approved provisional retail: $6,995 CAD
+// (complete earring + anklet set). Solid 10K Rose Gold. Anklet 25 cm / 9.8 in.
+// Matching pair earrings. NOT wired into the trusted backend catalog, NOT
+// included in `catalogProducts`, NOT surfaced on the homepage carousel,
+// Collective, or Ladies grids. Trusted-product count remains 84 until final
+// CAD weight + medallion dimensions + clasp are confirmed and merchant
+// re-approves the retail price.
 // ─────────────────────────────────────────────────────────────────────────
-export const volutaPlaceholder = {
-  id: 'voluta',
-  slug: 'voluta',
+export const rougeSirenPlaceholder = {
+  id: 'rouge-siren',
+  slug: 'rouge-siren',
+  legacySlug: 'voluta',                  // kept so any prior link still resolves
   workingName: true,
-  status: 'placeholder',                // frontend-only, non-purchasable
+  status: 'placeholder',                 // frontend-only, non-purchasable
   purchasable: false,
   productType: 'earring-anklet-set',
-  name: 'VOLUTA',
-  displayName: 'VOLUTA — Earring + Anklet Set',
+  name: 'ROUGE SIREN',
+  displayName: 'ROUGE SIREN — Earring + Anklet Set',
   collection: 'phileon-fine-jewelry',
   audience: ['ladies'],                  // eventual placement Ladies → Earrings + Ladies → Anklets
   categoriesPending: ['earrings', 'anklets'],
@@ -3091,15 +3093,22 @@ export const volutaPlaceholder = {
   earrings: { pair: true, note: 'Matching pair — same principal circular medallion motif as the anklet.' },
   price: { amount: 6995, currency: 'CAD', display: '$6,995 CAD', provisional: true },
   pendingSpecs: ['Final Weight', 'Medallion Dimensions', 'Clasp Specification'],
-  href: '/products/voluta',
+  href: '/products/rouge-siren',
   heroImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
   imageUrl: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
   gallery: [
     'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
+    'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d53p1y31_1000171117.png',
+    'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/s6bi9wst_1000171115.png',
+    'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9bc4bl98_1000171116.png',
+    'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/k47r3m0z_1000171114.png',
   ],
   campaignLine: 'ONE MOTIF. TWO POINTS OF THE BODY.',
   robots: 'noindex,follow', // page discoverable via direct link, not indexed until sign-off
 };
+
+// Alias kept for a soft transition of any old import paths.
+export const volutaPlaceholder = rougeSirenPlaceholder;
 
 export const catalogProducts = [
   // CORE — anchor cards at the top of the shop grid
