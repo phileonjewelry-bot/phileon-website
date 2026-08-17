@@ -60,79 +60,45 @@ export default function VolutaPage() {
   const heroVideoRef = useRef(null);
   const onBodyVideoRef = useRef(null);
 
-  // Bulletproof autoplay + loop for the ROUGE SIREN hero reel.
-  //
-  // Why this is needed:
-  //  • React has a known bug where `<video muted>` in JSX does not always
-  //    set the DOM `muted` property on first render — browsers then block
-  //    autoplay AND silently stop looping. We force `muted = true` and
-  //    `volume = 0` via a ref before calling `play()`.
-  //  • Some HD MP4s (moov-atom-at-end or non-standard duration metadata)
-  //    fail the `loop` attribute silently. We watch `timeupdate` and
-  //    proactively seek back to 0 shortly before the end.
+  // Poll-based loop. Every 500ms:
+  //   • re-force muted + volume 0 (defend against anything un-muting)
+  //   • if the video is paused, ended, or approaching its end (< 0.35s),
+  //     seek to 0 and play. No event listeners — pure poll — because
+  //     `loop`, `ended`, and `timeupdate` all silently fail on some MP4s.
   useEffect(() => {
-    const attach = (el) => {
-      if (!el) return () => {};
-      el.muted = true;         // hard-force muted (React quirk workaround)
+    const configure = (el) => {
+      if (!el) return;
+      el.muted = true;
       el.defaultMuted = true;
       el.volume = 0;
       el.loop = true;
-      try { el.setAttribute("webkit-playsinline", "true"); } catch(_e) { /* noop */ }
-      try { el.setAttribute("x5-playsinline", "true"); } catch(_e) { /* noop */ }
-      const kick = () => { if (el.paused) el.play().catch(() => {}); };
-      // 1) start ASAP
-      kick();
-      const onLoaded = () => kick();
-      const onEnded = () => { try { el.currentTime = 0; } catch (_e) { /* noop */ } kick(); };
-      // 2) seek-back-before-end — bulletproof loop
-      const onTimeUpdate = () => {
-        if (!isFinite(el.duration) || el.duration <= 0) return;
-        if (el.duration - el.currentTime <= 0.18) {
-          try { el.currentTime = 0; } catch (_e) { /* noop */ }
-          kick();
-        }
-      };
-      el.addEventListener("loadedmetadata", onLoaded);
-      el.addEventListener("canplay", onLoaded);
-      el.addEventListener("ended", onEnded);
-      el.addEventListener("pause", kick);
-      el.addEventListener("timeupdate", onTimeUpdate);
-      return () => {
-        el.removeEventListener("loadedmetadata", onLoaded);
-        el.removeEventListener("canplay", onLoaded);
-        el.removeEventListener("ended", onEnded);
-        el.removeEventListener("pause", kick);
-        el.removeEventListener("timeupdate", onTimeUpdate);
-      };
+      el.playsInline = true;
+      try { el.setAttribute("webkit-playsinline", "true"); } catch (_e) { /* noop */ }
+      try { el.setAttribute("x5-playsinline",     "true"); } catch (_e) { /* noop */ }
     };
-    const detachHero  = attach(heroVideoRef.current);
-    const detachBody  = attach(onBodyVideoRef.current);
-    const nudgeAll = () => {
-      [heroVideoRef.current, onBodyVideoRef.current].forEach((el) => {
-        if (el && el.paused) el.play().catch(() => {});
-      });
+    const restart = (el) => {
+      if (!el) return;
+      try { el.currentTime = 0; } catch (_e) { /* noop */ }
+      const p = el.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
     };
-    const t = setTimeout(nudgeAll, 300);
-    document.addEventListener("visibilitychange", nudgeAll);
-    // Ultimate loop guarantee: poll every 700ms and force-restart if the
-    // browser silently paused or ended without firing our handlers.
-    const forceLoop = setInterval(() => {
+    const tick = () => {
       [heroVideoRef.current, onBodyVideoRef.current].forEach((el) => {
         if (!el) return;
-        // Also guard against unexpected sound (belt-and-braces).
         if (!el.muted) { el.muted = true; el.volume = 0; }
-        if (el.ended || (el.paused && el.readyState >= 2)) {
-          try { el.currentTime = 0; } catch (_e) { /* noop */ }
-          el.play().catch(() => {});
+        if (el.paused || el.ended) return restart(el);
+        // Preempt tail: some MP4s stop 0.1–0.3s early without firing `ended`.
+        if (isFinite(el.duration) && el.duration > 0 && el.currentTime >= el.duration - 0.35) {
+          return restart(el);
         }
       });
-    }, 700);
-    return () => {
-      clearTimeout(t);
-      clearInterval(forceLoop);
-      document.removeEventListener("visibilitychange", nudgeAll);
-      detachHero(); detachBody();
     };
+    configure(heroVideoRef.current);
+    configure(onBodyVideoRef.current);
+    restart(heroVideoRef.current);
+    restart(onBodyVideoRef.current);
+    const iv = setInterval(tick, 500);
+    return () => clearInterval(iv);
   }, []);
 
   return (
