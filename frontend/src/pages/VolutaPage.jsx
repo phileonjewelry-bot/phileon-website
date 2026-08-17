@@ -9,7 +9,7 @@ import React, { useState } from "react";
 // Non-purchasable placeholder. Trusted backend catalog untouched (still 84).
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
-const ROUGE_SIREN_VIDEO = "/media/rouge-siren-glitch-hero.mp4";
+const ROUGE_SIREN_HERO_WEBP = "/media/rouge-siren-glitch-hero-loop.webp";
 const IMG = {
   set:       `${ART}/t4zwoen5_1000171127.png`,        // complete set composite
   earPair:   `${ART}/d53p1y31_1000171117.png`,        // earring pair front
@@ -59,27 +59,18 @@ export default function VolutaPage() {
   const active = EXPRESSIONS[expression];
   return (
     <div className="voluta-page" data-testid="voluta-page">
-      {/* Hero — full-bleed cinematic video band, copy stack below. */}
+      {/* Hero — full-bleed cinematic animated WebP band, copy stack below. */}
       <section className="voluta-hero" data-testid="voluta-hero">
         <div className="voluta-hero-video-wrap" data-testid="voluta-hero-media">
-          <video
+          <img
             className="voluta-hero-video-el"
             data-testid="voluta-hero-video"
-            src={ROUGE_SIREN_VIDEO}
-            poster={IMG.onBody}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            disableRemotePlayback
-            aria-label="ROUGE SIREN in 10K Rose Gold, hero motion"
-            onEnded={(e) => {
-              const v = e.currentTarget;
-              try { v.currentTime = 0; } catch (_e) { /* noop */ }
-              const p = v.play();
-              if (p && typeof p.catch === "function") p.catch(() => {});
-            }}
+            src={ROUGE_SIREN_HERO_WEBP}
+            alt="ROUGE SIREN by PHILEON — 10K Rose Gold, hero motion"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            draggable={false}
           />
         </div>
 
