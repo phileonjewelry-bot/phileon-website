@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // ROUGE SIREN — PHILEON FINE JEWELRY collection page.
 // Product #3 of 6. Name is merchant-approved (no longer a working name).
@@ -57,27 +57,38 @@ const EXPRESSIONS = {
 export default function VolutaPage() {
   const [expression, setExpression] = useState("complete");
   const active = EXPRESSIONS[expression];
+  const heroVideoRef = useRef(null);
+  const onBodyVideoRef = useRef(null);
+
+  // Nudge playback after mount — some mobile browsers pause autoplay until
+  // the element is fully ready. Muted + playsInline satisfies mobile policy.
+  useEffect(() => {
+    const nudge = (el) => { if (el && el.paused) el.play().catch(() => {}); };
+    const t = setTimeout(() => { nudge(heroVideoRef.current); nudge(onBodyVideoRef.current); }, 300);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <div className="voluta-page" data-testid="voluta-page">
-      {/* Hero */}
+      {/* Hero — full-bleed cinematic video band, copy stack below. */}
       <section className="voluta-hero" data-testid="voluta-hero">
-        <div className="voluta-hero-inner">
-          <div className="voluta-hero-media">
-            <video
-              className="voluta-hero-img"
-              data-testid="voluta-hero-video"
-              src={ROUGE_SIREN_VIDEO}
-              poster={active.hero}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label={`ROUGE SIREN — ${active.name.toLowerCase()} in 10K Rose Gold, hero motion`}
-            />
-          </div>
+        <div className="voluta-hero-video-wrap" data-testid="voluta-hero-media">
+          <video
+            ref={heroVideoRef}
+            className="voluta-hero-video-el"
+            data-testid="voluta-hero-video"
+            src={ROUGE_SIREN_VIDEO}
+            poster={active.hero}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label={`ROUGE SIREN — ${active.name.toLowerCase()} in 10K Rose Gold, hero motion`}
+          />
+        </div>
 
+        <div className="voluta-hero-inner">
           <div className="voluta-hero-copy">
             <p className="voluta-eyebrow" data-testid="voluta-eyebrow">PHILEON FINE JEWELRY</p>
             <h1 className="voluta-title" data-testid="voluta-title">ROUGE SIREN</h1>
@@ -123,6 +134,7 @@ export default function VolutaPage() {
       <section className="voluta-on-body" data-testid="voluta-on-body">
         <div className="voluta-on-body-frame">
           <video
+            ref={onBodyVideoRef}
             data-testid="voluta-on-body-video"
             src={ROUGE_SIREN_VIDEO}
             poster={IMG.onBody}
@@ -130,7 +142,7 @@ export default function VolutaPage() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             aria-label="ROUGE SIREN on body — earrings, pendant and anklet in 10K Rose Gold, editorial motion"
           />
         </div>
@@ -232,11 +244,30 @@ export default function VolutaPage() {
       <style>{`
         .voluta-page { background: #050505; color: #efe6d5; font-family: ui-serif, "Cormorant Garamond", Georgia, serif; padding-top: 64px; }
         .voluta-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        .voluta-hero { padding: 0 0 64px; background: radial-gradient(ellipse at 15% 20%, rgba(196,131,105,0.10) 0%, rgba(0,0,0,0) 60%), #050505; }
-        .voluta-hero-inner { max-width: 1400px; margin: 0 auto; padding: 40px 24px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
-        @media (max-width: 900px) { .voluta-hero-inner { grid-template-columns: 1fr; gap: 32px; padding: 24px 20px; } }
-        .voluta-hero-media { position: relative; width: 100%; aspect-ratio: 1/1; background: #000; border: 1px solid rgba(196,131,105,0.20); border-radius: 2px; overflow: hidden; }
-        .voluta-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; padding: 3%; transition: opacity 400ms; }
+        .voluta-hero { padding: 0 0 64px; background: #050505; }
+        /* Full-bleed cinematic hero. Video is width:100% with object-fit: cover
+           so no letterboxing regardless of viewport aspect. */
+        .voluta-hero-video-wrap {
+          position: relative; width: 100%;
+          height: 78vh; min-height: 560px; max-height: 900px;
+          background: #000; overflow: hidden;
+          border-bottom: 1px solid rgba(196,131,105,0.15);
+        }
+        @media (max-width: 900px) {
+          .voluta-hero-video-wrap { height: 68svh; min-height: 460px; }
+        }
+        @media (max-width: 480px) {
+          .voluta-hero-video-wrap { height: 62svh; min-height: 420px; }
+        }
+        .voluta-hero-video-el {
+          position: absolute; inset: 0; width: 100%; height: 100%;
+          object-fit: cover; object-position: center center; display: block;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .voluta-hero-video-el { animation: none; }
+        }
+        .voluta-hero-inner { max-width: 1200px; margin: 0 auto; padding: 48px 24px 0; }
+        @media (max-width: 900px) { .voluta-hero-inner { padding: 32px 20px 0; } }
         .voluta-eyebrow, .voluta-section-eyebrow { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 10px; letter-spacing: 0.42em; text-transform: uppercase; color: #c48369; margin: 0; }
         .voluta-title { font-size: clamp(48px, 7vw, 84px); font-weight: 300; line-height: 0.9; letter-spacing: 0.02em; margin: 18px 0 0; color: #f2e6c8; }
         .voluta-subline, .voluta-material { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12px; letter-spacing: 0.36em; text-transform: uppercase; margin: 16px 0 0; color: rgba(239,230,213,0.75); }
