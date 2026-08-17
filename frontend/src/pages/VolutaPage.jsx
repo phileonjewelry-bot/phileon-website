@@ -9,6 +9,7 @@ import React, { useState } from "react";
 // Non-purchasable placeholder. Trusted backend catalog untouched (still 84).
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
+const ROUGE_SIREN_VIDEO = `${ART}/ydb0dad6_XiaoYing_Video_1786931681853_HD.mp4`;
 const IMG = {
   set:       `${ART}/t4zwoen5_1000171127.png`,        // complete set composite
   earPair:   `${ART}/d53p1y31_1000171117.png`,        // earring pair front
@@ -63,12 +64,17 @@ export default function VolutaPage() {
       <section className="voluta-hero" data-testid="voluta-hero">
         <div className="voluta-hero-inner">
           <div className="voluta-hero-media">
-            <img
-              src={active.hero}
-              alt={`ROUGE SIREN — ${active.name.toLowerCase()} in 10K Rose Gold`}
+            <video
               className="voluta-hero-img"
-              data-testid="voluta-hero-image"
-              loading="eager"
+              data-testid="voluta-hero-video"
+              src={ROUGE_SIREN_VIDEO}
+              poster={active.hero}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={`ROUGE SIREN — ${active.name.toLowerCase()} in 10K Rose Gold, hero motion`}
             />
           </div>
 
@@ -112,10 +118,21 @@ export default function VolutaPage() {
         </div>
       </section>
 
-      {/* On-body editorial */}
+      {/* On-body editorial — hero motion loop. Falls back to the on-body
+          still via `poster` if the browser blocks autoplay. */}
       <section className="voluta-on-body" data-testid="voluta-on-body">
         <div className="voluta-on-body-frame">
-          <img src={IMG.onBody} alt="ROUGE SIREN on body — earrings, pendant and anklet in 10K Rose Gold" loading="lazy" />
+          <video
+            data-testid="voluta-on-body-video"
+            src={ROUGE_SIREN_VIDEO}
+            poster={IMG.onBody}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="ROUGE SIREN on body — earrings, pendant and anklet in 10K Rose Gold, editorial motion"
+          />
         </div>
       </section>
 
@@ -240,7 +257,7 @@ export default function VolutaPage() {
 
         .voluta-on-body { background: #060404; padding: 32px 0; }
         .voluta-on-body-frame { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
-        .voluta-on-body-frame img { width: 100%; height: auto; display: block; border-radius: 2px; border: 1px solid rgba(196,131,105,0.15); }
+        .voluta-on-body-frame img, .voluta-on-body-frame video { width: 100%; height: auto; display: block; border-radius: 2px; border: 1px solid rgba(196,131,105,0.15); }
 
         .voluta-pieces { padding: 72px 0; }
         .voluta-piece { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin: 48px 0; }
