@@ -3127,21 +3127,61 @@ export const volutaPlaceholder = rougeSirenPlaceholder;
 export const catalogProducts = [
   // ─── ROUGE SIREN — Public merchandising card (Fine Jewelry). Single canonical
   // card. Frontend-only discoverability; NOT wired into backend trusted catalog.
-  // Individual category views may re-badge the subtitle/price at render-time
-  // (Ladies → Earrings shows $2,995 CAD · EARRINGS; Ladies → Pendants shows
-  // $2,195 CAD · PENDANT) — but all cards link to /products/rouge-siren.
+  // Individual category views re-badge the subtitle/price/image at render-time
+  // via `categoryOverrides` (Ladies → Earrings shows $2,995 CAD · EARRINGS with
+  // earring-forward imagery; Ladies → Pendants shows $2,195 CAD · PENDANT with
+  // pendant-forward imagery; Ladies → Anklets and Ladies → Sets both show
+  // $5,995 CAD · EARRING + ANKLET SET but with anklet-forward vs. complete-set
+  // composition respectively). ALL cards link to the single canonical product
+  // page at /products/rouge-siren.
   { id: 'rouge-siren', name: 'ROUGE SIREN', slug: 'rouge-siren',
     materialLine: 'Solid 10K Rose Gold', imageUrl: rougeSirenPlaceholder.imageUrl,
     href: '/products/rouge-siren',
-    price_range: '$5,995 CAD', inventory_count: 0, is_core: true, category: 'sets',
+    price_range: '$5,995 CAD', inventory_count: 0, is_core: true,
+    // Multi-category so a single canonical card surfaces in Ladies → Earrings,
+    // Anklets, Sets, and Pendants filters.
+    category: ['sets', 'earrings', 'pendants', 'anklets'],
     audience: ['ladies', 'collective', 'fine-jewelry'],
-    categoriesPending: ['sets', 'earrings', 'pendants', 'anklets'],
     purchasable: false, status: 'placeholder',
     subtitle: 'EARRING + ANKLET SET',
     expressions: rougeSirenPlaceholder.expressions,
-    pendantImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/y96fmfub_1000171223.png',
-    earringImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dfdtcf05_1000171241.png',
-    ankletImage:  'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
+    // Dedicated per-expression source-of-truth image fields. These MUST be
+    // consumed by the category renderer — do NOT fall back to `imageUrl`
+    // when a dedicated image exists for the active category.
+    completeSetImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
+    pendantImage:     'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/y96fmfub_1000171223.png',
+    earringImage:     'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dfdtcf05_1000171241.png',
+    ankletImage:      'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z2bfdgj2_1000171222.png',
+    // Category-driven card overrides. Applied in ShopDropPage when a
+    // categoryParam is active. Each entry may override `cardImage`,
+    // `subtitle`, and `price_range` (all optional). All cards continue to
+    // link to the single canonical `/products/rouge-siren` route.
+    categoryOverrides: {
+      earrings: {
+        // Priority 1: side-profile close-up of model wearing the LARGE earring.
+        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dfdtcf05_1000171241.png',
+        subtitle:    'EARRINGS',
+        price_range: '$2,995 CAD',
+      },
+      anklets: {
+        // Priority 2: wider on-body ankle/foot lifestyle image (full set worn).
+        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z2bfdgj2_1000171222.png',
+        subtitle:    'EARRING + ANKLET SET',
+        price_range: '$5,995 CAD',
+      },
+      sets: {
+        // Complete earring + anklet set composition (canonical set composite).
+        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
+        subtitle:    'EARRING + ANKLET SET',
+        price_range: '$5,995 CAD',
+      },
+      pendants: {
+        // Pendant-on-chain macro of the actual ROUGE SIREN pendant.
+        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/y96fmfub_1000171223.png',
+        subtitle:    'PENDANT',
+        price_range: '$2,195 CAD',
+      },
+    },
   },
   // CORE — anchor cards at the top of the shop grid
   {

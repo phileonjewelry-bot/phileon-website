@@ -73,6 +73,7 @@ const SHOP_COLLECTION_MAP = {
   'boss-knot': 'collective',
   'lady-boss-knot': 'collective',
   'neighborhood-nip': 'collective',
+  'rouge-siren': 'collective',
 };
 
 const SHOP_COLLECTIONS = [
@@ -501,15 +502,23 @@ const ShopDropPage = () => {
             // Reusable card grid renderer
             const renderGrid = (productList, sectionIdx = 0) => (
               <div className="shop-drop__grid">
-                {productList.map((product, index) => {
+                {productList.map((rawProduct, index) => {
+                  // Apply per-category card overrides (image / subtitle /
+                  // price) when a categoryParam is active. This lets a single
+                  // canonical product record (e.g. ROUGE SIREN) surface with
+                  // the correct expression imagery + label per Ladies filter.
+                  const override =
+                    (categoryParam && rawProduct.categoryOverrides?.[categoryParam]) || null;
+                  const product = override ? { ...rawProduct, ...override } : rawProduct;
+
                   const globalIndex = sectionIdx * 100 + index;
                   const inventoryCount = product.inventory_count || product.stock || 0;
                   const isSoldOut = inventoryCount === 0;
                   const productUrl = product.href || `/products/${product.slug}`;
 
                   const cardImage =
-                    product.shopCardImage ||
                     product.cardImage ||
+                    product.shopCardImage ||
                     product.thumbnail ||
                     product.audienceImages?.[audienceParam] ||
                     product.audienceImages?.[audienceParam === 'gentlemens-club' ? 'gentlemensClub' : audienceParam] ||
@@ -645,7 +654,18 @@ const ShopDropPage = () => {
                         </div>
                         <div style={{ padding: '12px 16px 12px' }}>
                           <h3 className="shop-drop__card-name">{product.name}</h3>
-                          <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                          {product.subtitle && (
+                            <p
+                              className="shop-drop__card-material"
+                              data-testid={`card-subtitle-${product.slug}`}
+                              style={{ letterSpacing: '0.22em', textTransform: 'uppercase' }}
+                            >
+                              {product.subtitle}
+                            </p>
+                          )}
+                          {!product.subtitle && (
+                            <p className="shop-drop__card-material">{product.materials?.join(' · ') || product.materialLine}</p>
+                          )}
                           {Array.isArray(product.metals) && product.metals.length > 0 && (
                             <div
                               className="shop-drop__card-metals"

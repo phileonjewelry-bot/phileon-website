@@ -20,8 +20,10 @@ const Header = () => {
       dropdown: [
         { name: 'Rings', path: '/shop?category=rings' },
         { name: 'Earrings', path: '/shop?category=earrings' },
+        { name: 'Anklets', path: '/shop?category=anklets&audience=ladies' },
         { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets' },
         { name: 'Pendants', path: '/shop?category=pendants' },
+        { name: 'Sets', path: '/shop?category=sets&audience=ladies' },
       ]
     },
     { 
@@ -63,8 +65,10 @@ const Header = () => {
       subcategories: [
         { name: 'Rings', path: '/shop?category=rings' },
         { name: 'Earrings', path: '/shop?category=earrings' },
+        { name: 'Anklets', path: '/shop?category=anklets&audience=ladies' },
         { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets' },
         { name: 'Pendants', path: '/shop?category=pendants' },
+        { name: 'Sets', path: '/shop?category=sets&audience=ladies' },
       ]
     },
     {

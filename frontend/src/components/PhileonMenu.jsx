@@ -9,8 +9,10 @@ const menuCategories = [
     items: [
       { name: 'Rings', path: '/shop?category=rings&audience=ladies' },
       { name: 'Earrings', path: '/shop?category=earrings&audience=ladies' },
+      { name: 'Anklets', path: '/shop?category=anklets&audience=ladies' },
       { name: 'Bracelets / Cuffs', path: '/shop?category=bracelets&audience=ladies' },
       { name: 'Pendants', path: '/shop?category=pendants&audience=ladies' },
+      { name: 'Sets', path: '/shop?category=sets&audience=ladies' },
     ]
   },
   {
