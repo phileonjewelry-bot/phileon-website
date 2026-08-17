@@ -60,25 +60,64 @@ export default function VolutaPage() {
   const heroVideoRef = useRef(null);
   const onBodyVideoRef = useRef(null);
 
-  // Nudge playback after mount + on tab visibility. Muted + playsInline
-  // satisfies mobile autoplay policy. onEnded is a belt-and-braces backup
-  // for browsers that silently ignore the `loop` attribute on certain MP4s.
+  // Bulletproof autoplay + loop for the ROUGE SIREN hero reel.
+  //
+  // Why this is needed:
+  //  • React has a known bug where `<video muted>` in JSX does not always
+  //    set the DOM `muted` property on first render — browsers then block
+  //    autoplay AND silently stop looping. We force `muted = true` and
+  //    `volume = 0` via a ref before calling `play()`.
+  //  • Some HD MP4s (moov-atom-at-end or non-standard duration metadata)
+  //    fail the `loop` attribute silently. We watch `timeupdate` and
+  //    proactively seek back to 0 shortly before the end.
   useEffect(() => {
-    const nudge = (el) => { if (el && el.paused) el.play().catch(() => {}); };
-    const nudgeAll = () => { nudge(heroVideoRef.current); nudge(onBodyVideoRef.current); };
+    const attach = (el) => {
+      if (!el) return () => {};
+      el.muted = true;         // hard-force muted (React quirk workaround)
+      el.defaultMuted = true;
+      el.volume = 0;
+      el.loop = true;
+      const kick = () => { if (el.paused) el.play().catch(() => {}); };
+      // 1) start ASAP
+      kick();
+      const onLoaded = () => kick();
+      const onEnded = () => { try { el.currentTime = 0; } catch (_e) { /* noop */ } kick(); };
+      // 2) seek-back-before-end — bulletproof loop
+      const onTimeUpdate = () => {
+        if (!isFinite(el.duration) || el.duration <= 0) return;
+        if (el.duration - el.currentTime <= 0.18) {
+          try { el.currentTime = 0; } catch (_e) { /* noop */ }
+          kick();
+        }
+      };
+      el.addEventListener("loadedmetadata", onLoaded);
+      el.addEventListener("canplay", onLoaded);
+      el.addEventListener("ended", onEnded);
+      el.addEventListener("pause", kick);
+      el.addEventListener("timeupdate", onTimeUpdate);
+      return () => {
+        el.removeEventListener("loadedmetadata", onLoaded);
+        el.removeEventListener("canplay", onLoaded);
+        el.removeEventListener("ended", onEnded);
+        el.removeEventListener("pause", kick);
+        el.removeEventListener("timeupdate", onTimeUpdate);
+      };
+    };
+    const detachHero  = attach(heroVideoRef.current);
+    const detachBody  = attach(onBodyVideoRef.current);
+    const nudgeAll = () => {
+      [heroVideoRef.current, onBodyVideoRef.current].forEach((el) => {
+        if (el && el.paused) el.play().catch(() => {});
+      });
+    };
     const t = setTimeout(nudgeAll, 300);
     document.addEventListener("visibilitychange", nudgeAll);
     return () => {
       clearTimeout(t);
       document.removeEventListener("visibilitychange", nudgeAll);
+      detachHero(); detachBody();
     };
   }, []);
-
-  const handleVideoEnded = (e) => {
-    const v = e.currentTarget;
-    try { v.currentTime = 0; } catch (_e) { /* noop */ }
-    v.play().catch(() => {});
-  };
 
   return (
     <div className="voluta-page" data-testid="voluta-page">
@@ -89,7 +128,6 @@ export default function VolutaPage() {
             ref={heroVideoRef}
             className="voluta-hero-video-el"
             data-testid="voluta-hero-video"
-            onEnded={handleVideoEnded}
             src={ROUGE_SIREN_VIDEO}
             poster={active.hero}
             autoPlay
@@ -149,7 +187,6 @@ export default function VolutaPage() {
           <video
             ref={onBodyVideoRef}
             data-testid="voluta-on-body-video"
-            onEnded={handleVideoEnded}
             src={ROUGE_SIREN_VIDEO}
             poster={IMG.onBody}
             autoPlay
