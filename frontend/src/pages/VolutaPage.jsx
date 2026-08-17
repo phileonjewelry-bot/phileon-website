@@ -60,13 +60,25 @@ export default function VolutaPage() {
   const heroVideoRef = useRef(null);
   const onBodyVideoRef = useRef(null);
 
-  // Nudge playback after mount — some mobile browsers pause autoplay until
-  // the element is fully ready. Muted + playsInline satisfies mobile policy.
+  // Nudge playback after mount + on tab visibility. Muted + playsInline
+  // satisfies mobile autoplay policy. onEnded is a belt-and-braces backup
+  // for browsers that silently ignore the `loop` attribute on certain MP4s.
   useEffect(() => {
     const nudge = (el) => { if (el && el.paused) el.play().catch(() => {}); };
-    const t = setTimeout(() => { nudge(heroVideoRef.current); nudge(onBodyVideoRef.current); }, 300);
-    return () => clearTimeout(t);
+    const nudgeAll = () => { nudge(heroVideoRef.current); nudge(onBodyVideoRef.current); };
+    const t = setTimeout(nudgeAll, 300);
+    document.addEventListener("visibilitychange", nudgeAll);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener("visibilitychange", nudgeAll);
+    };
   }, []);
+
+  const handleVideoEnded = (e) => {
+    const v = e.currentTarget;
+    try { v.currentTime = 0; } catch (_e) { /* noop */ }
+    v.play().catch(() => {});
+  };
 
   return (
     <div className="voluta-page" data-testid="voluta-page">
@@ -77,6 +89,7 @@ export default function VolutaPage() {
             ref={heroVideoRef}
             className="voluta-hero-video-el"
             data-testid="voluta-hero-video"
+            onEnded={handleVideoEnded}
             src={ROUGE_SIREN_VIDEO}
             poster={active.hero}
             autoPlay
@@ -136,6 +149,7 @@ export default function VolutaPage() {
           <video
             ref={onBodyVideoRef}
             data-testid="voluta-on-body-video"
+            onEnded={handleVideoEnded}
             src={ROUGE_SIREN_VIDEO}
             poster={IMG.onBody}
             autoPlay
