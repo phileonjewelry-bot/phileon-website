@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 
 // ROUGE SIREN — PHILEON FINE JEWELRY collection page.
 // Product #3 of 6. Name is merchant-approved (no longer a working name).
@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 // Non-purchasable placeholder. Trusted backend catalog untouched (still 84).
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
-const ROUGE_SIREN_VIDEO = `${ART}/ydb0dad6_XiaoYing_Video_1786931681853_HD.mp4`;
+const ROUGE_SIREN_VIDEO = `${ART}/835e5335_XiaoYing_Video_1786938931766_1080HD.mp4`;
 const IMG = {
   set:       `${ART}/t4zwoen5_1000171127.png`,        // complete set composite
   earPair:   `${ART}/d53p1y31_1000171117.png`,        // earring pair front
@@ -57,57 +57,12 @@ const EXPRESSIONS = {
 export default function VolutaPage() {
   const [expression, setExpression] = useState("complete");
   const active = EXPRESSIONS[expression];
-  const heroVideoRef = useRef(null);
-  const onBodyVideoRef = useRef(null);
-
-  // Poll-based loop. Every 500ms:
-  //   • re-force muted + volume 0 (defend against anything un-muting)
-  //   • if the video is paused, ended, or approaching its end (< 0.35s),
-  //     seek to 0 and play. No event listeners — pure poll — because
-  //     `loop`, `ended`, and `timeupdate` all silently fail on some MP4s.
-  useEffect(() => {
-    const configure = (el) => {
-      if (!el) return;
-      el.muted = true;
-      el.defaultMuted = true;
-      el.volume = 0;
-      el.loop = true;
-      el.playsInline = true;
-      try { el.setAttribute("webkit-playsinline", "true"); } catch (_e) { /* noop */ }
-      try { el.setAttribute("x5-playsinline",     "true"); } catch (_e) { /* noop */ }
-    };
-    const restart = (el) => {
-      if (!el) return;
-      try { el.currentTime = 0; } catch (_e) { /* noop */ }
-      const p = el.play();
-      if (p && typeof p.catch === "function") p.catch(() => {});
-    };
-    const tick = () => {
-      [heroVideoRef.current, onBodyVideoRef.current].forEach((el) => {
-        if (!el) return;
-        if (!el.muted) { el.muted = true; el.volume = 0; }
-        if (el.paused || el.ended) return restart(el);
-        // Preempt tail: some MP4s stop 0.1–0.3s early without firing `ended`.
-        if (isFinite(el.duration) && el.duration > 0 && el.currentTime >= el.duration - 0.35) {
-          return restart(el);
-        }
-      });
-    };
-    configure(heroVideoRef.current);
-    configure(onBodyVideoRef.current);
-    restart(heroVideoRef.current);
-    restart(onBodyVideoRef.current);
-    const iv = setInterval(tick, 500);
-    return () => clearInterval(iv);
-  }, []);
-
   return (
     <div className="voluta-page" data-testid="voluta-page">
       {/* Hero — full-bleed cinematic video band, copy stack below. */}
       <section className="voluta-hero" data-testid="voluta-hero">
         <div className="voluta-hero-video-wrap" data-testid="voluta-hero-media">
           <video
-            ref={heroVideoRef}
             className="voluta-hero-video-el"
             data-testid="voluta-hero-video"
             src={ROUGE_SIREN_VIDEO}
@@ -168,7 +123,6 @@ export default function VolutaPage() {
       <section className="voluta-on-body" data-testid="voluta-on-body">
         <div className="voluta-on-body-frame">
           <video
-            ref={onBodyVideoRef}
             data-testid="voluta-on-body-video"
             src={ROUGE_SIREN_VIDEO}
             poster={IMG.onBody}
