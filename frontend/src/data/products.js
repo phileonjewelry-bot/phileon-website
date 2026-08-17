@@ -3154,23 +3154,28 @@ export const catalogProducts = [
     ankletImage:      'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z2bfdgj2_1000171222.png',
     // Category-driven card overrides. Applied in ShopDropPage when a
     // categoryParam is active. Each entry may override `cardImage`,
-    // `subtitle`, and `price_range` (all optional). All cards continue to
-    // link to the single canonical `/products/rouge-siren` route.
+    // `subtitle`, `price_range`, `cardImageFit` (object-fit), and
+    // `cardImagePosition` (object-position). All cards continue to link to
+    // the single canonical `/products/rouge-siren` route.
     categoryOverrides: {
       earrings: {
-        // Priority 1: side-profile close-up of model wearing the LARGE earring.
-        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dfdtcf05_1000171241.png',
+        // Isolated ROUGE SIREN earring PAIR on black obsidian —
+        // unmistakable product macro. NOT lifestyle / model / on-body.
+        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d53p1y31_1000171117.png',
         subtitle:    'EARRINGS',
         price_range: '$2,995 CAD',
       },
       anklets: {
-        // Priority 2: wider on-body ankle/foot lifestyle image (full set worn).
-        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z2bfdgj2_1000171222.png',
+        // Cropped isolated ROUGE SIREN ANKLET on black obsidian. Derived from
+        // the master composite by removing the top earring portion so the
+        // ANKLET is the sole visible product. Local asset (not CSS crop).
+        cardImage:   '/media/rouge-siren-anklet-crop.png',
         subtitle:    'EARRING + ANKLET SET',
         price_range: '$5,995 CAD',
       },
       sets: {
-        // Complete earring + anklet set composition (canonical set composite).
+        // Full composite of the ROUGE SIREN Earring + Anklet Set on
+        // obsidian — the complete set as a single editorial still.
         cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png',
         subtitle:    'EARRING + ANKLET SET',
         price_range: '$5,995 CAD',

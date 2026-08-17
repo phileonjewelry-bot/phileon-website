@@ -513,7 +513,11 @@ const ShopDropPage = () => {
 
                   const globalIndex = sectionIdx * 100 + index;
                   const inventoryCount = product.inventory_count || product.stock || 0;
-                  const isSoldOut = inventoryCount === 0;
+                  // Placeholder (non-purchasable) products (e.g. ROUGE SIREN
+                  // pre-launch) should not be desaturated as sold-out — they
+                  // must render in their true product colorway.
+                  const isPlaceholder = product.status === 'placeholder';
+                  const isSoldOut = inventoryCount === 0 && !isPlaceholder;
                   const productUrl = product.href || `/products/${product.slug}`;
 
                   const cardImage =
@@ -603,8 +607,15 @@ const ShopDropPage = () => {
                             src={cardImage}
                             alt={product.name}
                             loading="lazy"
+                            data-testid={`card-image-${product.slug}`}
                             className={`transition-all ease-out ${(product.slug === 'drape' || product.slug === 'le-cocktail-de-jessica') ? 'duration-500 group-hover:scale-[1.04] group-hover:opacity-0' : `duration-300 ${product.hoverImage ? 'group-hover:opacity-0' : ''}`}`}
-                            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: isSoldOut ? 'grayscale(1)' : 'none' }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: product.cardImageFit || 'contain',
+                              objectPosition: product.cardImagePosition || 'center center',
+                              filter: isSoldOut ? 'grayscale(1)' : 'none',
+                            }}
                             draggable="false"
                           />
                           {product.hoverImage && (
