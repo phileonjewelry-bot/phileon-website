@@ -77,6 +77,8 @@ export default function VolutaPage() {
       el.defaultMuted = true;
       el.volume = 0;
       el.loop = true;
+      try { el.setAttribute("webkit-playsinline", "true"); } catch(_e) { /* noop */ }
+      try { el.setAttribute("x5-playsinline", "true"); } catch(_e) { /* noop */ }
       const kick = () => { if (el.paused) el.play().catch(() => {}); };
       // 1) start ASAP
       kick();
@@ -112,8 +114,22 @@ export default function VolutaPage() {
     };
     const t = setTimeout(nudgeAll, 300);
     document.addEventListener("visibilitychange", nudgeAll);
+    // Ultimate loop guarantee: poll every 700ms and force-restart if the
+    // browser silently paused or ended without firing our handlers.
+    const forceLoop = setInterval(() => {
+      [heroVideoRef.current, onBodyVideoRef.current].forEach((el) => {
+        if (!el) return;
+        // Also guard against unexpected sound (belt-and-braces).
+        if (!el.muted) { el.muted = true; el.volume = 0; }
+        if (el.ended || (el.paused && el.readyState >= 2)) {
+          try { el.currentTime = 0; } catch (_e) { /* noop */ }
+          el.play().catch(() => {});
+        }
+      });
+    }, 700);
     return () => {
       clearTimeout(t);
+      clearInterval(forceLoop);
       document.removeEventListener("visibilitychange", nudgeAll);
       detachHero(); detachBody();
     };
@@ -129,13 +145,14 @@ export default function VolutaPage() {
             className="voluta-hero-video-el"
             data-testid="voluta-hero-video"
             src={ROUGE_SIREN_VIDEO}
-            poster={active.hero}
+            poster={IMG.onBody}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            aria-label={`ROUGE SIREN — ${active.name.toLowerCase()} in 10K Rose Gold, hero motion`}
+            disableRemotePlayback
+            aria-label="ROUGE SIREN in 10K Rose Gold, hero motion"
           />
         </div>
 
