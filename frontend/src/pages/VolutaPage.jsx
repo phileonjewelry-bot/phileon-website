@@ -9,7 +9,7 @@ import React, { useState } from "react";
 // Non-purchasable placeholder. Trusted backend catalog untouched (still 84).
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
-const ROUGE_SIREN_VIDEO = `${ART}/835e5335_XiaoYing_Video_1786938931766_1080HD.mp4`;
+const ROUGE_SIREN_VIDEO = "/media/rouge-siren-glitch-hero.mp4";
 const IMG = {
   set:       `${ART}/t4zwoen5_1000171127.png`,        // complete set composite
   earPair:   `${ART}/d53p1y31_1000171117.png`,        // earring pair front
@@ -74,6 +74,12 @@ export default function VolutaPage() {
             preload="auto"
             disableRemotePlayback
             aria-label="ROUGE SIREN in 10K Rose Gold, hero motion"
+            onEnded={(e) => {
+              const v = e.currentTarget;
+              try { v.currentTime = 0; } catch (_e) { /* noop */ }
+              const p = v.play();
+              if (p && typeof p.catch === "function") p.catch(() => {});
+            }}
           />
         </div>
 
@@ -118,20 +124,14 @@ export default function VolutaPage() {
         </div>
       </section>
 
-      {/* On-body editorial — hero motion loop. Falls back to the on-body
-          still via `poster` if the browser blocks autoplay. */}
+      {/* On-body editorial — static luxury still (no second video). */}
       <section className="voluta-on-body" data-testid="voluta-on-body">
         <div className="voluta-on-body-frame">
-          <video
-            data-testid="voluta-on-body-video"
-            src={ROUGE_SIREN_VIDEO}
-            poster={IMG.onBody}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-label="ROUGE SIREN on body — earrings, pendant and anklet in 10K Rose Gold, editorial motion"
+          <img
+            src={IMG.onBody}
+            alt="ROUGE SIREN on body — earrings, pendant and anklet in 10K Rose Gold"
+            data-testid="voluta-on-body-image"
+            loading="lazy"
           />
         </div>
       </section>
