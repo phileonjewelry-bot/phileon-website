@@ -14,14 +14,12 @@ const G = {
   // APPROVED black-background hero (only black-background image in use).
   hero:        `${ART}/8y43t0ml_1000171945.jpg`,
   // Facet Flow light-background technical alternate angles.
-  // Currently only the side/rear/structure is available in the asset library
-  // (small u60bkgkg render). Front-collection, opposite 3/4, and the
-  // dedicated heart-sphere macro are pending merchant supply — they are
-  // filtered out of the gallery until URLs are provided.
-  facetSide:   `${ART}/u60bkgkg_1000171928.jpg`,
-  facetFront:  null, // ← awaiting supplied Facet Flow front / collection render
-  facetOpp:    null, // ← awaiting supplied Facet Flow opposite 3/4 render
-  heartMacro:  null, // ← awaiting supplied heart-sphere + pavé macro
+  facetFront:  `${ART}/2h0v5rth_1000171985.jpg`, // landscape Facet Flow front / collection view
+  facetOpp:    `${ART}/tc7yzvzw_1000171990.png`, // square Facet Flow opposite 3/4 editorial
+  facetSide:   `${ART}/u60bkgkg_1000171928.jpg`, // rear / side / structure view
+  // Dedicated heart-sphere + pavé macro — feeds slot 5 AND the
+  // Heart in the Pull editorial section.
+  heartMacro:  `${ART}/xufgzck8_1000171987.jpg`,
 };
 
 // Gallery order per approved image strategy:
@@ -277,22 +275,31 @@ export default function GravitePage() {
         </div>
       </section>
 
-      {/* The Heart in the Pull — dedicated macro is pending merchant supply.
-          Text-only for now; a placeholder full-hero crop would misrepresent
-          the ~6 mm sphere at macro scale. */}
+      {/* The Heart in the Pull — dedicated heart-sphere + pavé macro */}
       <section style={styles.section} data-testid="gravite-heart-sphere">
-        <div style={styles.narrow}>
-          <p style={styles.eyebrow}>THE HEART IN THE PULL</p>
-          <h3 style={styles.h3}>A quiet gesture at the center of the tension.</h3>
-          <p style={styles.copy}>
-            A small engraved sphere sits inside the tension of the cluster —
-            intimate, almost hidden, and visible only when the ring is studied closely.
-          </p>
-          <ul style={styles.list}>
-            <li style={styles.li}>Approx. 6 mm rose-gold sphere</li>
-            <li style={styles.li}>Shallow engraved heart motifs — not pierced, not pavé</li>
-            <li style={styles.li}>Positioned between the upper peridot and the pavé shoulder</li>
-          </ul>
+        <div style={styles.splitRow}>
+          <div style={styles.splitMedia}>
+            <img
+              src={G.heartMacro}
+              alt="GRAVITÉ heart-sphere macro — approximately 6 mm rose-gold sphere with shallow engraved hearts and adjacent mixed green + white pavé"
+              style={styles.splitImg}
+              data-testid="gravite-heart-macro-image"
+              draggable={false}
+            />
+          </div>
+          <div style={styles.splitBody}>
+            <p style={styles.eyebrow}>THE HEART IN THE PULL</p>
+            <h3 style={styles.h3}>A quiet gesture at the center of the tension.</h3>
+            <p style={styles.copy}>
+              A small engraved sphere sits inside the tension of the cluster —
+              intimate, almost hidden, and visible only when the ring is studied closely.
+            </p>
+            <ul style={styles.list}>
+              <li style={styles.li}>Approx. 6 mm rose-gold sphere</li>
+              <li style={styles.li}>Shallow engraved heart motifs — not pierced, not pavé</li>
+              <li style={styles.li}>Positioned between the upper peridot and the pavé shoulder</li>
+            </ul>
+          </div>
         </div>
       </section>
 
