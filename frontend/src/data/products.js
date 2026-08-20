@@ -3140,16 +3140,10 @@ export const catalogProducts = [
     audience: ['ladies', 'collective', 'fine-jewelry'],
     purchasable: false, status: 'placeholder',
     subtitle: 'NATURAL PERIDOT · ROSE GOLD',
-    // Context-specific card art per merchant spec.
-    categoryOverrides: {
-      // Ladies → Rings uses the wider front / collection 3/4 that reads
-      // strongest at merchandising card sizes.
-      rings: {
-        cardImage:   'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/azx2ln7g_1000171941.jpg',
-        subtitle:    'NATURAL PERIDOT · ROSE GOLD',
-        price_range: 'FROM $5,995 CAD',
-      },
-    },
+    // All contexts (Ladies → Rings, Fine Jewelry, The Collective) use the
+    // single approved black-background hero. Later generated alternate
+    // angles are excluded from merchandising — they drifted from the
+    // approved geometry.
   },
 
   // ─── ROUGE SIREN — Public merchandising card (Fine Jewelry). Single canonical

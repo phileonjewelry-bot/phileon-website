@@ -11,23 +11,37 @@ import React, { useState } from "react";
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
 const G = {
-  // The four unique approved GRAVITÉ renders. Two of the five supplied
-  // assets were byte-identical duplicates; four unique compositions remain.
-  hero:      `${ART}/8y43t0ml_1000171945.jpg`, // strongest 3/4 — hero + Fine Jewelry + Collective card
-  front:     `${ART}/azx2ln7g_1000171941.jpg`, // wider 3/4 — Ladies → Rings card + gallery #2
-  opp:       `${ART}/cfef8i4i_1000171943.jpg`, // opposite 3/4 angle — gallery #3
-  rear:      `${ART}/u60bkgkg_1000171928.jpg`, // rear / structural view — gallery #5
+  // APPROVED black-background hero (only black-background image in use).
+  hero:        `${ART}/8y43t0ml_1000171945.jpg`,
+  // Facet Flow light-background technical alternate angles.
+  // Currently only the side/rear/structure is available in the asset library
+  // (small u60bkgkg render). Front-collection, opposite 3/4, and the
+  // dedicated heart-sphere macro are pending merchant supply — they are
+  // filtered out of the gallery until URLs are provided.
+  facetSide:   `${ART}/u60bkgkg_1000171928.jpg`,
+  facetFront:  null, // ← awaiting supplied Facet Flow front / collection render
+  facetOpp:    null, // ← awaiting supplied Facet Flow opposite 3/4 render
+  heartMacro:  null, // ← awaiting supplied heart-sphere + pavé macro
 };
 
-// Gallery order per merchant spec: hero, front-collection, opp 3/4, hero-structure, rear/detail.
-// We reuse `hero` for slot 4 (structure) so shank + head geometry stays consistent.
+// Gallery order per approved image strategy:
+//   • Slot 1 — approved BLACK-BACKGROUND front / 3/4 hero (dramatic luxury on black)
+//   • Slots 2 – 5 — FACET FLOW light-background technical alternate angles
+//     (front/collection, opposite 3/4, side/rear/structure) + dedicated
+//     heart-sphere / pavé macro.
+//
+// Only the approved black-background HERO is used from the black set. Later
+// generated black-background side/rear angles (azx2ln7g, cfef8i4i) are
+// intentionally excluded — they drifted from the approved geometry.
+// Slots 2, 3, and 5 are awaiting Facet Flow + heart-sphere macro URLs from
+// the merchant; they render only when their `src` is defined.
 const GALLERY = [
-  { src: G.hero,  alt: "GRAVITÉ 3/4 hero — three natural pear-cut peridots in rose gold with heart-engraved sphere and mixed green + white pavé shoulders" },
-  { src: G.front, alt: "GRAVITÉ front collection view — asymmetrical peridot cluster and full pavé shoulders" },
-  { src: G.opp,   alt: "GRAVITÉ opposite 3/4 — cluster overlap, pavé, and heart sphere" },
-  { src: G.hero,  alt: "GRAVITÉ full ring — shoulder taper into polished rose-gold shank" },
-  { src: G.rear,  alt: "GRAVITÉ rear / open gallery — setting depth and shank structure" },
-];
+  { src: G.hero,       alt: "GRAVITÉ 3/4 hero — three natural pear-cut peridots in rose gold with heart-engraved sphere and mixed green + white pavé shoulders" },
+  { src: G.facetFront, alt: "GRAVITÉ Facet Flow front / collection view" },
+  { src: G.facetOpp,   alt: "GRAVITÉ Facet Flow opposite 3/4" },
+  { src: G.facetSide,  alt: "GRAVITÉ Facet Flow side / rear / structure" },
+  { src: G.heartMacro, alt: "GRAVITÉ heart-sphere + pavé macro — approximately 6 mm rose-gold sphere with shallow engraved hearts" },
+].filter((g) => Boolean(g.src));
 
 const METALS = {
   "10k-rose": {
@@ -63,7 +77,7 @@ const RING_SIZES = [
 ];
 
 export default function GravitePage() {
-  const [metalId, setMetalId]     = useState("14k-rose"); // 14K default per merchant
+  const [metalId, setMetalId]     = useState("10k-rose"); // 10K default (FOUNDATION)
   const [ringSize, setRingSize]   = useState("7");        // US 7 default
   const [galleryIdx, setGalleryIdx] = useState(0);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
@@ -263,25 +277,22 @@ export default function GravitePage() {
         </div>
       </section>
 
-      {/* The Heart in the Pull — heart-sphere macro */}
+      {/* The Heart in the Pull — dedicated macro is pending merchant supply.
+          Text-only for now; a placeholder full-hero crop would misrepresent
+          the ~6 mm sphere at macro scale. */}
       <section style={styles.section} data-testid="gravite-heart-sphere">
-        <div style={styles.splitRow}>
-          <div style={styles.splitMedia}>
-            <img src={G.rear} alt="Heart-engraved rose-gold sphere macro" style={styles.splitImg} draggable={false} />
-          </div>
-          <div style={styles.splitBody}>
-            <p style={styles.eyebrow}>THE HEART IN THE PULL</p>
-            <h3 style={styles.h3}>A quiet gesture at the center of the tension.</h3>
-            <p style={styles.copy}>
-              A small engraved sphere sits inside the tension of the cluster —
-              intimate, almost hidden, and visible only when the ring is studied closely.
-            </p>
-            <ul style={styles.list}>
-              <li style={styles.li}>Approx. 6 mm rose-gold sphere</li>
-              <li style={styles.li}>Shallow engraved heart motifs — not pierced, not pavé</li>
-              <li style={styles.li}>Positioned between the upper peridot and the pavé shoulder</li>
-            </ul>
-          </div>
+        <div style={styles.narrow}>
+          <p style={styles.eyebrow}>THE HEART IN THE PULL</p>
+          <h3 style={styles.h3}>A quiet gesture at the center of the tension.</h3>
+          <p style={styles.copy}>
+            A small engraved sphere sits inside the tension of the cluster —
+            intimate, almost hidden, and visible only when the ring is studied closely.
+          </p>
+          <ul style={styles.list}>
+            <li style={styles.li}>Approx. 6 mm rose-gold sphere</li>
+            <li style={styles.li}>Shallow engraved heart motifs — not pierced, not pavé</li>
+            <li style={styles.li}>Positioned between the upper peridot and the pavé shoulder</li>
+          </ul>
         </div>
       </section>
 
