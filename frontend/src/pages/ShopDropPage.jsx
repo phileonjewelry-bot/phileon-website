@@ -74,6 +74,7 @@ const SHOP_COLLECTION_MAP = {
   'lady-boss-knot': 'collective',
   'neighborhood-nip': 'collective',
   'rouge-siren': 'collective',
+  'gravite': 'collective',
 };
 
 const SHOP_COLLECTIONS = [

@@ -63,6 +63,7 @@ import BapePage from "@/pages/BapePage";
 import DrewFacePage from "@/pages/DrewFacePage";
 import HerEternalReignPage from "@/pages/HerEternalReignPage";
 import VolutaPage from "@/pages/VolutaPage";
+import GravitePage from "@/pages/GravitePage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -240,6 +241,12 @@ function App() {
             <Route path="/products/voluta" element={<Navigate to="/products/rouge-siren" replace />} />
             <Route path="/voluta" element={<Navigate to="/products/rouge-siren" replace />} />
             <Route path="/fine-jewelry/voluta" element={<Navigate to="/products/rouge-siren" replace />} />
+            {/* GRAVITÉ — Product #4 of 6. PRE-CAD, non-purchasable placeholder.
+                Backend trusted catalog untouched (still 84). */}
+            <Route path="/products/gravite" element={<GravitePage />} />
+            <Route path="/gravite" element={<GravitePage />} />
+            <Route path="/fine-jewelry/gravite" element={<GravitePage />} />
+            <Route path="/ladies/rings/gravite" element={<GravitePage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />
