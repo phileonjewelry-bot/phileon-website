@@ -13,6 +13,8 @@ const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e73
 const G = {
   // APPROVED black-background hero (only black-background image in use).
   hero:        `${ART}/8y43t0ml_1000171945.jpg`,
+  // GRAVITÉ hero motion video — autoplay, muted, looping, no audio.
+  heroVideo:   `${ART}/7d7pvq85_XiaoYing_Video_1787276102537_HD.mp4`,
   // Facet Flow light-background technical alternate angles.
   facetFront:  `${ART}/2h0v5rth_1000171985.jpg`, // landscape Facet Flow front / collection view
   facetOpp:    `${ART}/tc7yzvzw_1000171990.png`, // square Facet Flow opposite 3/4 editorial
@@ -85,18 +87,42 @@ export default function GravitePage() {
 
   return (
     <div style={styles.page} data-testid="gravite-page">
-      {/* Hero — full-bleed image, editorial title stack below */}
+      {/* Hero — autoplay muted looping video by default. When a gallery thumb
+          is selected (galleryIdx > 0), render that still image instead. */}
       <section style={styles.hero} data-testid="gravite-hero">
         <div style={styles.heroMedia}>
-          <img
-            src={gallery[galleryIdx].src}
-            alt={gallery[galleryIdx].alt}
-            style={styles.heroImg}
-            data-testid="gravite-hero-image"
-            loading="eager"
-            fetchPriority="high"
-            draggable={false}
-          />
+          {galleryIdx === 0 ? (
+            <video
+              src={G.heroVideo}
+              poster={G.hero}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              disableRemotePlayback
+              controls={false}
+              aria-label="GRAVITÉ hero motion — three natural pear-cut peridots in rose gold"
+              data-testid="gravite-hero-video"
+              style={styles.heroImg}
+              onEnded={(e) => {
+                const v = e.currentTarget;
+                try { v.currentTime = 0; } catch (_e) { /* noop */ }
+                const p = v.play();
+                if (p && typeof p.catch === "function") p.catch(() => {});
+              }}
+            />
+          ) : (
+            <img
+              src={gallery[galleryIdx].src}
+              alt={gallery[galleryIdx].alt}
+              style={styles.heroImg}
+              data-testid="gravite-hero-image"
+              loading="eager"
+              fetchPriority="high"
+              draggable={false}
+            />
+          )}
         </div>
         <div style={styles.heroTitle}>
           <p style={styles.eyebrow}>PHILEON FINE JEWELRY</p>
