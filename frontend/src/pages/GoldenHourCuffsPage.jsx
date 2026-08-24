@@ -12,6 +12,7 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 
 const ART = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts";
 const HERO   = `${ART}/jiq8mpbd_1000172722.jpg`; // dramatic dark-bg stacked hero
+const HERO_VIDEO = `${ART}/imdp19jl_hf_20260824_011951_8280afb6-0502-4bae-879d-33d3afbbc8eb.mp4`; // hero autoplay loop (muted)
 const IMG_2  = `${ART}/atbbdsk0_1000172719.jpg`; // overhead study
 const IMG_3  = `${ART}/5i21514l_1000172720.jpg`; // nested profile
 const IMG_4  = `${ART}/160hkaji_1000172721.jpg`; // construction / open view
@@ -108,6 +109,7 @@ export default function GoldenHourCuffsPage() {
 
       <VaultHero
         image={HERO}
+        video={HERO_VIDEO}
         prominent
         altText="GOLDEN HOUR CUFFS — dramatic stacked Dubai-style gold-vermeil cuffs on dark reflective surface."
         eyebrow="Inspiration Vault"
