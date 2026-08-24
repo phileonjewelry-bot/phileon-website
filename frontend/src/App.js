@@ -101,6 +101,7 @@ import DrivenPage from "@/pages/DrivenPage";
 import StampedeSetPage from "@/pages/StampedeSetPage";
 import NightfangSetPage from "@/pages/NightfangSetPage";
 import ParallaxDropEarringsPage from "@/pages/ParallaxDropEarringsPage";
+import GoldenHourCuffsPage from "@/pages/GoldenHourCuffsPage";
 import OvationRibbedRingPage from "@/pages/OvationRibbedRingPage";
 import BajanJoeSignetRingPage from "@/pages/BajanJoeSignetRingPage";
 import QuadrigaDominusPage from "@/pages/QuadrigaDominusPage";
@@ -322,6 +323,7 @@ function App() {
             <Route path="/nightfang-set" element={<NightfangSetPage />} />
             <Route path="/inspiration-vault/parallax-drop-earrings" element={<ParallaxDropEarringsPage />} />
             <Route path="/parallax-drop-earrings" element={<ParallaxDropEarringsPage />} />
+            <Route path="/inspiration-vault/golden-hour-cuffs" element={<GoldenHourCuffsPage />} />
             <Route path="/ovation" element={<OvationRibbedRingPage />} />
             <Route path="/products/ovation" element={<OvationRibbedRingPage />} />
             <Route path="/bajan-joe" element={<BajanJoeSignetRingPage />} />

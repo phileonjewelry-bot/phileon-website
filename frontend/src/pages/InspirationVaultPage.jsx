@@ -14,6 +14,17 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 // ────────────────────────────────────────────────────────────────────────────────
 const VAULT_PIECES = [
   {
+    slug: "golden-hour-cuffs",
+    title: "GOLDEN HOUR CUFFS",
+    subtitle: "Dubai-Style Cuffs · Gold Vermeil",
+    price: 90,
+    href: "/inspiration-vault/golden-hour-cuffs",
+    heroVideo: null,
+    posterImage: "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jiq8mpbd_1000172722.jpg",
+    releasedAt: "2026-08-23",
+    category: "Bangles & Bracelets",
+  },
+  {
     slug: "parallax-drop-earrings",
     title: "PARALLAX DROP EARRINGS",
     subtitle: "Geometric Bi-Colour Drops",
@@ -1206,7 +1217,9 @@ export default function InspirationVaultPage() {
         .iv-card.nightfang-set-vault-card,
         [data-testid="iv-card-nightfang-set"],
         .iv-card.parallax-drop-earrings-vault-card,
-        [data-testid="iv-card-parallax-drop-earrings"] {
+        [data-testid="iv-card-parallax-drop-earrings"],
+        .iv-card.golden-hour-cuffs-vault-card,
+        [data-testid="iv-card-golden-hour-cuffs"] {
           width:100%;
           height:auto !important;
           min-height:0 !important;
@@ -1214,7 +1227,8 @@ export default function InspirationVaultPage() {
           overflow:visible !important;
         }
         .nightfang-set-vault-card .iv-card-media,
-        .parallax-drop-earrings-vault-card .iv-card-media {
+        .parallax-drop-earrings-vault-card .iv-card-media,
+        .golden-hour-cuffs-vault-card .iv-card-media {
           width:100%;
           height:auto !important;
           min-height:0;
@@ -1225,7 +1239,8 @@ export default function InspirationVaultPage() {
           background:#000;
         }
         .nightfang-set-vault-card .iv-card-img,
-        .parallax-drop-earrings-vault-card .iv-card-img {
+        .parallax-drop-earrings-vault-card .iv-card-img,
+        .golden-hour-cuffs-vault-card .iv-card-img {
           display:block;
           width:100%;
           height:auto;
@@ -1235,7 +1250,8 @@ export default function InspirationVaultPage() {
           transform:none;
         }
         .nightfang-set-vault-card .iv-card-title,
-        .parallax-drop-earrings-vault-card .iv-card-title {
+        .parallax-drop-earrings-vault-card .iv-card-title,
+        .golden-hour-cuffs-vault-card .iv-card-title {
           width:100%;
           max-width:100%;
           height:auto;
@@ -1247,7 +1263,8 @@ export default function InspirationVaultPage() {
           line-height:1.02;
         }
         .nightfang-set-vault-card .iv-card-meta,
-        .parallax-drop-earrings-vault-card .iv-card-meta {
+        .parallax-drop-earrings-vault-card .iv-card-meta,
+        .golden-hour-cuffs-vault-card .iv-card-meta {
           position:static;
           width:100%;
           height:auto !important;
@@ -1257,7 +1274,8 @@ export default function InspirationVaultPage() {
           padding:34px 28px 46px;
         }
         .nightfang-set-vault-card .iv-card-cta,
-        .parallax-drop-earrings-vault-card .iv-card-cta {
+        .parallax-drop-earrings-vault-card .iv-card-cta,
+        .golden-hour-cuffs-vault-card .iv-card-cta {
           position:static;
           display:inline-flex;
           align-items:center;
@@ -1273,7 +1291,9 @@ export default function InspirationVaultPage() {
           .iv-card.nightfang-set-vault-card,
           [data-testid="iv-card-nightfang-set"],
           .iv-card.parallax-drop-earrings-vault-card,
-          [data-testid="iv-card-parallax-drop-earrings"] {
+          [data-testid="iv-card-parallax-drop-earrings"],
+          .iv-card.golden-hour-cuffs-vault-card,
+          [data-testid="iv-card-golden-hour-cuffs"] {
             width:100%;
             height:auto !important;
             min-height:0 !important;
@@ -1281,14 +1301,16 @@ export default function InspirationVaultPage() {
             overflow:visible !important;
           }
           .nightfang-set-vault-card .iv-card-media,
-          .parallax-drop-earrings-vault-card .iv-card-media {
+          .parallax-drop-earrings-vault-card .iv-card-media,
+          .golden-hour-cuffs-vault-card .iv-card-media {
             width:100%;
             height:auto !important;
             aspect-ratio:auto !important;
             overflow:visible !important;
           }
           .nightfang-set-vault-card .iv-card-img,
-          .parallax-drop-earrings-vault-card .iv-card-img {
+          .parallax-drop-earrings-vault-card .iv-card-img,
+          .golden-hour-cuffs-vault-card .iv-card-img {
             width:100%;
             height:auto;
             max-height:none;
@@ -1296,19 +1318,22 @@ export default function InspirationVaultPage() {
             object-position:center;
           }
           .nightfang-set-vault-card .iv-card-title,
-          .parallax-drop-earrings-vault-card .iv-card-title {
+          .parallax-drop-earrings-vault-card .iv-card-title,
+          .golden-hour-cuffs-vault-card .iv-card-title {
             font-size:clamp(28px,7.4vw,44px);
             line-height:1.02;
           }
           .nightfang-set-vault-card .iv-card-meta,
-          .parallax-drop-earrings-vault-card .iv-card-meta {
+          .parallax-drop-earrings-vault-card .iv-card-meta,
+          .golden-hour-cuffs-vault-card .iv-card-meta {
             height:auto !important;
             max-height:none !important;
             overflow:visible !important;
             padding:30px 22px 46px;
           }
           .nightfang-set-vault-card .iv-card-cta,
-          .parallax-drop-earrings-vault-card .iv-card-cta {
+          .parallax-drop-earrings-vault-card .iv-card-cta,
+          .golden-hour-cuffs-vault-card .iv-card-cta {
             display:inline-flex !important;
             opacity:1 !important;
             visibility:visible !important;
@@ -1508,7 +1533,7 @@ export default function InspirationVaultPage() {
           <Link
             key={piece.slug}
             to={piece.href}
-            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'nightfang-set' ? 'nightfang-set-vault-card' : ''} ${piece.slug === 'parallax-drop-earrings' ? 'parallax-drop-earrings-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
+            className={`iv-card ${piece.slug === 'oriel' ? 'oriel-vault-card' : ''} ${piece.slug === 'monaco' ? 'monaco-vault-card' : ''} ${piece.slug === 'caged-wings' ? 'caged-wings-vault-card' : ''} ${piece.slug === 'nova' ? 'nova-vault-card' : ''} ${piece.slug === 'parabola-atelier' ? 'parabola-atelier-vault-card' : ''} ${piece.slug === 'driven' ? 'driven-vault-card' : ''} ${piece.slug === 'stampede-set' ? 'stampede-set-vault-card' : ''} ${piece.slug === 'nightfang-set' ? 'nightfang-set-vault-card' : ''} ${piece.slug === 'parallax-drop-earrings' ? 'parallax-drop-earrings-vault-card' : ''} ${piece.slug === 'gold-theory-ribbon' ? 'ribbon-regale-vault-card' : ''} ${piece.slug === 'golden-hour-cuffs' ? 'golden-hour-cuffs-vault-card' : ''} lm-cell-reveal lm-stagger-${(idx % 9) + 1}`}
             data-testid={`iv-card-${piece.slug}`}
             aria-label={`Enter ${piece.title} piece`}
           >
