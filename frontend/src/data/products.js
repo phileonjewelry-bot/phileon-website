@@ -3135,7 +3135,7 @@ export const catalogProducts = [
     materialLine: '10K / 14K Rose Gold · Natural Peridot',
     imageUrl: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8y43t0ml_1000171945.jpg',
     href: '/products/gravite',
-    price_range: 'FROM $5,995 CAD', inventory_count: 0, is_core: true,
+    price_range: 'FROM $4,395 USD', inventory_count: 0, is_core: true,
     category: ['rings'],
     audience: ['ladies', 'collective', 'fine-jewelry'],
     purchasable: false, status: 'placeholder',

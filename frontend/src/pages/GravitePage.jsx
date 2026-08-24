@@ -4,8 +4,8 @@ import React, { useState } from "react";
 // GRAVITÉ — PHILEON FINE JEWELRY. Product #4 of 6. PRE-CAD placeholder.
 // Not wired into trusted backend checkout (backend product count remains 84).
 // Two metal expressions:
-//   • FOUNDATION — 10K Rose Gold — $5,995 CAD
-//   • SIGNATURE  — 14K Rose Gold — $7,495 CAD (default, MOST CHOSEN)
+//   • FOUNDATION — 10K Rose Gold — $4,395 USD (default)
+//   • SIGNATURE  — 14K Rose Gold — $5,495 USD (MOST CHOSEN)
 // Ring sizes US 5 – US 10 in 0.5 steps. Price is FLAT across sizes.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -48,16 +48,16 @@ const METALS = {
     id: "10k-rose",
     label: "10K ROSE GOLD",
     tier: "FOUNDATION",
-    price: "$5,995 CAD",
-    priceNumeric: 5995,
+    price: "$4,395 USD",
+    priceNumeric: 4395,
     badge: null,
   },
   "14k-rose": {
     id: "14k-rose",
     label: "14K ROSE GOLD",
     tier: "SIGNATURE",
-    price: "$7,495 CAD",
-    priceNumeric: 7495,
+    price: "$5,495 USD",
+    priceNumeric: 5495,
     badge: "MOST CHOSEN",
   },
 };
