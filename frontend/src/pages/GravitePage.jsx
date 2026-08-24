@@ -262,7 +262,7 @@ export default function GravitePage() {
             data-testid="gravite-cta"
             style={styles.cta}
           >
-            CAD FINALIZATION IN PROGRESS
+            DESIGN FINALIZATION IN PROGRESS
           </button>
           <p style={styles.ctaSub}>
             GRAVITÉ is in final development. Add to Cart will open when production CAD is approved.
