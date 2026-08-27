@@ -327,7 +327,11 @@ export function applySeoHead(seo, jsonLdObjects = []) {
   setMeta('name', 'twitter:description', seo.socialDescription);
   setMeta('name', 'twitter:image', seo.socialImage);
 
-  // JSON-LD blocks
+  // JSON-LD blocks — remove any prior blocks emitted by this system before
+  // adding fresh ones so route-level + page-level callers do not stack.
+  Array.from(document.querySelectorAll('script[data-phileon-seo]')).forEach(
+    (el) => el.parentNode && el.parentNode.removeChild(el),
+  );
   const scripts = [];
   jsonLdObjects.filter(Boolean).forEach((json, i) => {
     const s = document.createElement('script');

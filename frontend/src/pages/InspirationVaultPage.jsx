@@ -12,7 +12,7 @@ import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/Luxury
 //   "Pendants & Necklaces").
 // No layout changes required for new releases.
 // ────────────────────────────────────────────────────────────────────────────────
-const VAULT_PIECES = [
+export const VAULT_PIECES = [
   {
     slug: "golden-hour-cuffs",
     title: "GOLDEN HOUR CUFFS",

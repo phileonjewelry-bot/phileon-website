@@ -65,6 +65,7 @@ import HerEternalReignPage from "@/pages/HerEternalReignPage";
 import VolutaPage from "@/pages/VolutaPage";
 import GravitePage from "@/pages/GravitePage";
 import TwoFingerRingPlaceholderPage from "@/pages/TwoFingerRingPlaceholderPage";
+import RouteSeoInjector from "@/components/RouteSeoInjector";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -154,6 +155,7 @@ function App() {
       <CartProvider>
         <WishlistProvider>
           <BrowserRouter>
+            <RouteSeoInjector />
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}
           <Route path="/drop" element={<DropPage />} />
