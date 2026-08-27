@@ -212,8 +212,8 @@ export const CATEGORY_SEO = {
   },
   '/': {
     type: 'category', name: 'Home',
-    title: 'PHILEON | Bespoke Fine Jewelry & Statement Rings',
-    description: 'PHILEON — architectural fine jewelry, statement rings, diamond pendants and editorial Inspiration Vault releases from the atelier.',
+    title: 'PHILEON | Black-Owned Canadian Fine Jewelry',
+    description: 'PHILEON — Black-owned Canadian fine jewelry brand. Architectural statement rings, luxury pendants, custom design and editorial Inspiration Vault releases.',
     href: '/',
   },
 };

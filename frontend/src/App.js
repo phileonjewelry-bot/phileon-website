@@ -68,6 +68,8 @@ import TwoFingerRingPlaceholderPage from "@/pages/TwoFingerRingPlaceholderPage";
 import RouteSeoInjector from "@/components/RouteSeoInjector";
 import CollectionPage from "@/components/CollectionPage";
 import { JournalIndexPage, JournalArticlePage } from "@/pages/JournalPage";
+import BlackOwnedJewelryPage from "@/pages/BlackOwnedJewelryPage";
+import CustomJewelryPage from "@/pages/CustomJewelryPage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -274,6 +276,18 @@ function App() {
             {/* Phase 4 — Journal scaffold. Zero placeholder content. */}
             <Route path="/journal" element={<JournalIndexPage />} />
             <Route path="/journal/:slug" element={<JournalArticlePage />} />
+
+            {/* Phase 4 — Identity + Origin brand-discovery landings.
+                Overlapping search intents consolidate to a single canonical page. */}
+            <Route path="/black-owned-canadian-jewelry" element={<BlackOwnedJewelryPage />} />
+            <Route path="/black-owned-jewelry-brand" element={<Navigate to="/black-owned-canadian-jewelry" replace />} />
+            <Route path="/black-owned-jewelry" element={<Navigate to="/black-owned-canadian-jewelry" replace />} />
+            <Route path="/canadian-jewelry-designer" element={<Navigate to="/black-owned-canadian-jewelry" replace />} />
+            <Route path="/canadian-jewelry-brand" element={<Navigate to="/black-owned-canadian-jewelry" replace />} />
+            <Route path="/custom-jewelry-canada" element={<CustomJewelryPage />} />
+            <Route path="/custom-jewelry-toronto" element={<Navigate to="/custom-jewelry-canada" replace />} />
+            <Route path="/custom-jewelry" element={<Navigate to="/custom-jewelry-canada" replace />} />
+            <Route path="/handmade-jewelry-canada" element={<Navigate to="/custom-jewelry-canada" replace />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />

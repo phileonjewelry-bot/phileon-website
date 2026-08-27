@@ -259,8 +259,15 @@ export function buildBreadcrumbJsonLd(product) {
 // an explicit `overrides` argument win over generated defaults.
 export function generateSeo(product, overrides = {}) {
   const merged = { ...(product.seo || {}), ...overrides };
-  const title = generateTitle(product, merged.title);
-  const description = generateDescription(product, merged.description);
+  // Category / static-landing records (e.g. CATEGORY_SEO entries) author
+  // their title/description at the top level. Product records author them
+  // inside a nested `seo:{}` block so the auto-generator can still enrich
+  // them from name/type/material/editorial-seed.
+  const isCategory = product.type === 'category';
+  const titleOverride = merged.title || (isCategory ? product.title : undefined);
+  const descOverride = merged.description || (isCategory ? product.description : undefined);
+  const title = generateTitle(product, titleOverride);
+  const description = generateDescription(product, descOverride);
   const canonical = canonicalFor(product, merged.canonical);
   const socialImage = merged.socialImage
     || product.image
@@ -350,3 +357,25 @@ export function applySeoHead(seo, jsonLdObjects = []) {
 }
 
 export const SEO_CONSTANTS = { BRAND, SITE_ORIGIN };
+
+// ─── Organization JSON-LD ──────────────────────────────────────────────────
+// Site-wide brand identity. Only real, owner-confirmable facts are emitted.
+// The consuming page decides whether to include it (typically only on home,
+// about, and brand-discovery pages) to avoid site-wide schema noise.
+export function buildOrganizationJsonLd(overrides = {}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_ORIGIN}#organization`,
+    name: BRAND,
+    url: SITE_ORIGIN,
+    logo: `${SITE_ORIGIN}/logo.png`,
+    description:
+      'PHILEON — Black-owned Canadian fine jewelry brand. Architectural statement rings, luxury pendants, custom design and editorial Inspiration Vault releases.',
+    // Country is safe to publish. City/street address require owner
+    // confirmation and are supplied only via `overrides.address`.
+    address: overrides.address || { '@type': 'PostalAddress', addressCountry: 'CA' },
+    // sameAs (social profiles) supplied by caller when known.
+    ...(overrides.sameAs ? { sameAs: overrides.sameAs } : {}),
+  };
+}

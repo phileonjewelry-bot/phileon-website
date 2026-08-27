@@ -47,6 +47,10 @@ STATIC_ROUTES = [
     "/statement-rings",
     "/gold-jewelry",
     "/lab-grown-diamond-jewelry",
+    # Phase 4 identity + origin brand-discovery landings (consolidated,
+    # not one URL per keyword — aliases redirect to these two canonicals).
+    "/black-owned-canadian-jewelry",
+    "/custom-jewelry-canada",
     # Phase 4 journal
     "/journal",
 ]

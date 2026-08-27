@@ -107,6 +107,127 @@ export const SEARCH_INTENTS = {
   anklets: 'Anklets',
 };
 
+// ─── Brand-level Identity + Origin + Design Influence ───────────────────────
+//
+// PHILEON's brand-discovery layer. Kept STRICTLY separate from commerce data
+// so no product page can inherit a brand claim by accident.
+//
+// PHILEON_BRAND establishes site-wide facts used by the Organization JSON-LD
+// emitter and brand-discovery pages. Fields here must be independently
+// confirmed by the owner before publication — see the `_owner_confirm` map
+// at the bottom for anything the codebase cannot verify.
+export const PHILEON_BRAND = {
+  name: 'PHILEON',
+  ownership: ['black-owned'],
+  designerIdentity: ['black-jewelry-designer', 'independent-designer'],
+  origin: {
+    // Facts the codebase can support (used in SEO metadata):
+    country: 'Canada',
+    // Toronto is used ONLY on the custom-jewelry landing; other pages stay
+    // country-level. Update via owner confirmation before promoting further.
+    city: 'Toronto',
+    designedIn: 'Canada',
+    // Do NOT set `manufacturedIn` here unless every product is truly made in
+    // Canada. Leave it null; per-product `origin_manufacturing` may override.
+    manufacturedIn: null,
+  },
+  craftsmanship: {
+    // Safe default terminology used site-wide. Individual products may use
+    // more specific terms where the workflow supports it.
+    defaultTerms: ['hand-finished', 'hand-set', 'made-to-order', 'bench-finished'],
+    // Terms that require owner confirmation before use:
+    //   - '100% handmade'
+    //   - 'Made in Canada' (as a product claim)
+    //   - specific artisan-origin claims
+  },
+  market: ['fine-jewelry', 'luxury-jewelry', 'canadian-jewelry-brand'],
+};
+
+// Product-level design-influence overrides.
+// KEY RULE: design influence ≠ manufacturing origin. A Bajan-inspired ring
+// is NOT necessarily made in Barbados; it is inspired by Barbadian design.
+export const DESIGN_INFLUENCE_MAP = {
+  'bajan-joe': {
+    regions: ['caribbean', 'west-indies'],
+    cultures: ['barbados'],
+    aesthetics: ['bajan-inspired', 'barbadian-inspired', 'caribbean-inspired', 'west-indian-inspired'],
+  },
+  'prise-de-couronne': {
+    regions: ['europe'],
+    aesthetics: ['european-inspired', 'architectural'],
+  },
+  drape: {
+    regions: ['europe'],
+    aesthetics: ['european-inspired', 'corset-architecture'],
+  },
+  'ribbon-regale-edition': {
+    regions: ['europe'],
+    aesthetics: ['european-inspired', 'architectural', 'ribbon-motif'],
+  },
+  'quadriga-dominus': {
+    regions: ['europe'],
+    aesthetics: ['european-inspired', 'roman-quadriga-motif'],
+  },
+  'scacco-matto': {
+    regions: ['europe'],
+    aesthetics: ['european-inspired', 'chessboard-motif'],
+  },
+  voluta: {
+    regions: ['europe'],
+    aesthetics: ['european-inspired', 'architectural-scroll'],
+  },
+};
+
+// Consolidated brand-discovery search intents. Overlapping phrases (e.g. "West
+// Indian jewelry" vs "Caribbean jewelry") route to the SAME canonical page —
+// no thin duplicate pages.
+export const BRAND_SEARCH_INTENTS = {
+  'black-owned-jewelry-brand': {
+    canonicalPath: '/black-owned-canadian-jewelry',
+    variants: [
+      'black-owned jewelry',
+      'black-owned jewelry brand',
+      'black-owned jewelry business',
+      'black-owned canadian jewelry brand',
+      'black jewelry designer',
+      'black-owned luxury jewelry',
+      'black-owned fine jewelry',
+      "black-owned men's jewelry brand",
+      'black-owned jewelry canada',
+    ],
+  },
+  'canadian-jewelry-designer': {
+    canonicalPath: '/black-owned-canadian-jewelry',
+    variants: [
+      'canadian jewelry designer',
+      'canadian jewelry brand',
+      'canadian-made jewelry',
+      'canadian fine jewelry',
+      'luxury jewelry canada',
+      "men's jewelry canada",
+      'designer jewelry canada',
+      'independent jewelry designer canada',
+    ],
+  },
+  'custom-jewelry-canada': {
+    canonicalPath: '/custom-jewelry-canada',
+    variants: [
+      'custom jewelry canada',
+      'custom jewelry toronto',
+      'handmade jewelry canada',
+      'handcrafted jewelry canada',
+      'handcrafted fine jewelry',
+      'custom rings canada',
+      "custom men's jewelry",
+      'custom diamond jewelry',
+      'jewelry designer toronto',
+      "men's jewelry toronto",
+      'luxury jewelry toronto',
+      'custom ring toronto',
+    ],
+  },
+};
+
 // ─── Auto-classifier — reads existing catalog fields safely ─────────────────
 const has = (arr, key) => (Array.isArray(arr) ? arr.includes(key) : arr === key);
 const materialText = (p) => (p.materialLine || '').toLowerCase();
@@ -184,7 +305,33 @@ export function getDiscovery(slugOrProduct) {
   if (!product) return null;
   const auto = autoClassify(product);
   const manual = DISCOVERY_MAP[product.slug] || {};
-  return mergeDiscovery(auto, manual);
+  const merged = mergeDiscovery(auto, manual);
+  // Attach the design-influence overlay if present. Never inferred; only set
+  // when the product has an explicit entry in DESIGN_INFLUENCE_MAP.
+  if (DESIGN_INFLUENCE_MAP[product.slug]) {
+    merged.designInfluence = DESIGN_INFLUENCE_MAP[product.slug];
+  }
+  return merged;
+}
+
+// Return every product carrying a given design-influence aesthetic.
+export function productsForDesignInfluence(aesthetic) {
+  return catalogProducts
+    .filter((p) => p.status !== 'placeholder' && p.purchasable !== false)
+    .filter((p) => (DESIGN_INFLUENCE_MAP[p.slug]?.aesthetics || []).includes(aesthetic));
+}
+
+// Map raw customer search query → canonical brand-discovery landing path.
+// Returns null if the query doesn't match any known brand intent.
+export function resolveBrandSearchIntent(query) {
+  if (!query) return null;
+  const q = query.toLowerCase().trim();
+  for (const [intent, cfg] of Object.entries(BRAND_SEARCH_INTENTS)) {
+    if (cfg.variants.some((v) => q.includes(v) || v.includes(q))) {
+      return { intent, canonicalPath: cfg.canonicalPath };
+    }
+  }
+  return null;
 }
 
 // Return every public catalog product whose merged discovery layer contains
