@@ -66,9 +66,10 @@
   },
   "scripts": {
     "start": "craco start",
-    "prebuild": "python3 ../backend/scripts/generate_sitemap.py || true",
+    "prebuild": "python3 ../backend/scripts/generate_sitemap.py && python3 ../backend/scripts/generate_merchant_feed.py || true",
     "build": "craco build",
     "sitemap": "python3 ../backend/scripts/generate_sitemap.py",
+    "merchant-feed": "python3 ../backend/scripts/generate_merchant_feed.py",
     "seo-audit": "python3 ../backend/scripts/seo_audit.py",
     "test": "craco test"
   },

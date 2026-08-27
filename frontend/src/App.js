@@ -66,6 +66,8 @@ import VolutaPage from "@/pages/VolutaPage";
 import GravitePage from "@/pages/GravitePage";
 import TwoFingerRingPlaceholderPage from "@/pages/TwoFingerRingPlaceholderPage";
 import RouteSeoInjector from "@/components/RouteSeoInjector";
+import CollectionPage from "@/components/CollectionPage";
+import { JournalIndexPage, JournalArticlePage } from "@/pages/JournalPage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -256,6 +258,22 @@ function App() {
                 Non-purchasable. Not in trusted checkout. Canonical + Fine Jewelry alias. */}
             <Route path="/products/two-finger-ring" element={<TwoFingerRingPlaceholderPage />} />
             <Route path="/fine-jewelry/two-finger-ring" element={<TwoFingerRingPlaceholderPage />} />
+
+            {/* Phase 4 — Search-intent collection routes. Discovery-classified,
+                editorially-worded, structured-data-emitting. Commerce untouched. */}
+            <Route path="/mens-rings" element={<CollectionPage intent="mens-rings" />} />
+            <Route path="/womens-rings" element={<CollectionPage intent="womens-rings" />} />
+            <Route path="/pendants" element={<CollectionPage intent="pendants" />} />
+            <Route path="/earrings" element={<CollectionPage intent="earrings" />} />
+            <Route path="/fine-jewelry" element={<CollectionPage intent="fine-jewelry" />} />
+            <Route path="/mens-jewelry" element={<CollectionPage intent="mens-jewelry" />} />
+            <Route path="/statement-rings" element={<CollectionPage intent="statement-rings" />} />
+            <Route path="/gold-jewelry" element={<CollectionPage intent="gold-jewelry" />} />
+            <Route path="/lab-grown-diamond-jewelry" element={<CollectionPage intent="lab-grown-diamond-jewelry" />} />
+
+            {/* Phase 4 — Journal scaffold. Zero placeholder content. */}
+            <Route path="/journal" element={<JournalIndexPage />} />
+            <Route path="/journal/:slug" element={<JournalArticlePage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />

@@ -37,6 +37,18 @@ STATIC_ROUTES = [
     "/atelier",
     "/craftsmanship",
     "/ring-size-guide",
+    # Phase 4 search-intent collections
+    "/fine-jewelry",
+    "/mens-rings",
+    "/womens-rings",
+    "/mens-jewelry",
+    "/pendants",
+    "/earrings",
+    "/statement-rings",
+    "/gold-jewelry",
+    "/lab-grown-diamond-jewelry",
+    # Phase 4 journal
+    "/journal",
 ]
 
 # Routes that are NEVER included in the public sitemap.
