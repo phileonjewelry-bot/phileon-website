@@ -51,12 +51,6 @@ STATIC_ROUTES = [
     # not one URL per keyword — aliases redirect to these two canonicals).
     "/black-owned-canadian-jewelry",
     "/custom-jewelry-canada",
-    # Phase 5 trust pages (structure live, owner content pending)
-    "/shipping",
-    "/returns",
-    "/warranty",
-    "/jewelry-care",
-    "/materials",
     # Phase 4 journal
     "/journal",
 ]

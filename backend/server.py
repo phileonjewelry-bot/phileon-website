@@ -750,18 +750,17 @@ app.add_middleware(
 
 
 # ============ TRY-ON ENDPOINTS ============
-from fastapi import File, UploadFile, Form
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 import hashlib
 import json
 import time
-from models import TryOnPhotoRequest, TryOnPhotoResponse, TryOnAssetsResponse, TryOnAnalytics
+from services.object_storage import put_object, get_object, object_exists, build_key, init_storage
 
-# Mock S3-compatible storage paths (in production, use actual S3)
+# Legacy path constants — kept for backward compatibility with any code that
+# might still reference them, but ALL new uploads/results go to Emergent
+# Object Storage (see put_object / get_object below).
 TRYON_UPLOADS_PATH = Path("/app/tryon_uploads")
 TRYON_RESULTS_PATH = Path("/app/tryon_results")
-TRYON_UPLOADS_PATH.mkdir(exist_ok=True)
-TRYON_RESULTS_PATH.mkdir(exist_ok=True)
 
 @api_router.post("/tryon/photo", response_model=TryOnPhotoResponse)
 async def process_tryon_photo(
@@ -784,11 +783,12 @@ async def process_tryon_photo(
         settings_str = f"{product_id}_{ring_size}_{metal_variant}_{stone_variant}_{finger_position}"
         cache_key = hashlib.md5(f"{image_hash}_{settings_str}".encode()).hexdigest()
         
+        # Object Storage keys
+        original_key = build_key("tryon/originals", f"{cache_key}.jpg")
+        result_key = build_key("tryon/results", f"{cache_key}.jpg")
+
         # Check if result already exists in cache
-        result_path = TRYON_RESULTS_PATH / f"{cache_key}.jpg"
-        
-        if result_path.exists():
-            # Return cached result
+        if object_exists(result_key):
             processing_time = time.time() - start_time
             return TryOnPhotoResponse(
                 result_url=f"/api/tryon/results/{cache_key}.jpg",
@@ -797,20 +797,17 @@ async def process_tryon_photo(
                 cache_hit=True
             )
         
-        # Save uploaded image
-        upload_path = TRYON_UPLOADS_PATH / f"{cache_key}_original.jpg"
-        with open(upload_path, "wb") as buffer:
-            buffer.write(image_content)
+        # Persist uploaded image to durable Object Storage
+        put_object(original_key, image_content, file.content_type or "image/jpeg")
         
         # Get product details for try-on processing
         product = await db.products.find_one({"id": product_id})
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
         
-        # Mock try-on processing (in production, integrate with AI service)
-        # For now, we'll copy the original image as a placeholder result
-        import shutil
-        shutil.copy2(upload_path, result_path)
+        # Mock try-on processing (in production, integrate with AI service).
+        # For now, we write the original image bytes as the result placeholder.
+        put_object(result_key, image_content, file.content_type or "image/jpeg")
         
         # Log analytics
         analytics_data = TryOnAnalytics(
@@ -923,22 +920,33 @@ async def check_inventory_alerts():
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-import mimetypes
 
-# Serve try-on result images
-@api_router.get("/tryon/results/{filename}")
+# Serve try-on result images from durable Object Storage.
+# Mounted on `app` directly because `api_router` is already included above.
+@app.get("/api/tryon/results/{filename}")
 async def serve_tryon_result(filename: str):
-    """Serve try-on result images"""
-    file_path = TRYON_RESULTS_PATH / filename
-    if not file_path.exists():
+    """Serve try-on result images from Emergent Object Storage."""
+    result_key = build_key("tryon/results", filename)
+    try:
+        data, content_type = get_object(result_key)
+    except Exception:
         raise HTTPException(status_code=404, detail="Result image not found")
-    
-    # Determine MIME type
-    mime_type, _ = mimetypes.guess_type(str(file_path))
-    if not mime_type:
-        mime_type = "image/jpeg"
-    
-    return FileResponse(path=str(file_path), media_type=mime_type)
+    return Response(content=data, media_type=content_type or "image/jpeg")
+
+
+# Generic backend proxy that streams any Object Storage file by its object key.
+# Path pattern: /api/files/phileon/<surface>/<filename>
+# Keeps raw storage URLs off the frontend and preserves server-side control.
+@app.get("/api/files/{object_key:path}")
+async def serve_stored_object(object_key: str):
+    """Stream a file from Emergent Object Storage by its full object key."""
+    if not object_key.startswith("phileon/"):
+        raise HTTPException(status_code=400, detail="Invalid object key")
+    try:
+        data, content_type = get_object(object_key)
+    except Exception:
+        raise HTTPException(status_code=404, detail="File not found")
+    return Response(content=data, media_type=content_type or "application/octet-stream")
 
 
 # ============ CUSTOMER AUTHENTICATION ============
@@ -948,7 +956,7 @@ from auth import (
     hash_password, verify_password, generate_token, create_access_token, 
     verify_access_token, send_verification_email, send_password_reset_email
 )
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 security = HTTPBearer(auto_error=False)
@@ -1335,8 +1343,10 @@ async def update_inventory(product_id: str, payload: InventoryUpdate):
                 {"$set": alert_updates}
             )
 
-        # Return final updated product
+        # Return final updated product (strip Mongo ObjectId to keep response JSON-serializable)
         final_product = await db.products.find_one({"id": product_id})
+        if final_product and "_id" in final_product:
+            final_product["_id"] = str(final_product["_id"])
         return final_product
 
     except Exception as e:
@@ -1354,6 +1364,13 @@ async def startup_db():
     await db.consultations.create_index("status")
     await db.tryon_analytics.create_index("timestamp")
     logger.info("Database indexes created")
+
+    # Warm up Emergent Object Storage — non-fatal if unavailable so the API can still start.
+    try:
+        init_storage()
+        logger.info("Emergent Object Storage initialized")
+    except Exception as e:
+        logger.error(f"Emergent Object Storage init failed: {e}")
 
 
 @app.on_event("shutdown")

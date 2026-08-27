@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from typing import List
 from models.customer_photo import CustomerPhoto, CustomerPhotoCreate
 import uuid
-import os
 from datetime import datetime
+from services.object_storage import put_object, build_key
 
 router = APIRouter(prefix="/customer-photos", tags=["customer_photos"])
 
@@ -50,23 +50,14 @@ async def delete_customer_photo(photo_id: str):
 
 @router.post("/upload")
 async def upload_customer_photo(file: UploadFile = File(...)):
-    """Upload customer photo image"""
-    
-    # Create uploads directory if it doesn't exist
-    upload_dir = "/app/backend/uploads/customers"
-    os.makedirs(upload_dir, exist_ok=True)
-    
-    # Generate unique filename
-    file_extension = file.filename.split(".")[-1]
+    """Upload customer photo to Emergent Object Storage."""
+    file_extension = (file.filename.rsplit(".", 1)[-1] if "." in (file.filename or "") else "bin").lower()
     unique_filename = f"{uuid.uuid4()}.{file_extension}"
-    file_path = os.path.join(upload_dir, unique_filename)
-    
-    # Save file
+    object_key = build_key("customers", unique_filename)
+
     contents = await file.read()
-    with open(file_path, "wb") as f:
-        f.write(contents)
-    
-    # Return URL
-    image_url = f"/uploads/customers/{unique_filename}"
-    
-    return {"imageUrl": image_url, "filename": unique_filename}
+    put_object(object_key, contents, file.content_type or "application/octet-stream")
+
+    image_url = f"/api/files/{object_key}"
+
+    return {"imageUrl": image_url, "filename": unique_filename, "storagePath": object_key}

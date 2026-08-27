@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from typing import List, Optional
 from models import Product, ProductCreate, ProductUpdate
 from inventory_alerts import get_inventory_status
-import os
 from datetime import datetime
 import base64
 import uuid
+from services.object_storage import put_object, build_key
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -177,46 +177,29 @@ async def update_product_inventory(product_id: str, inventory_count: int):
 
 @router.post("/upload-image")
 async def upload_product_image(file: UploadFile = File(...)):
-    """Upload product image (stores locally for now)"""
-    
-    # Create uploads directory if it doesn't exist
-    upload_dir = "/app/backend/uploads/products"
-    os.makedirs(upload_dir, exist_ok=True)
-    
-    # Generate unique filename
-    file_extension = file.filename.split(".")[-1]
+    """Upload product image to Emergent Object Storage (durable across deploys)."""
+    file_extension = (file.filename.rsplit(".", 1)[-1] if "." in (file.filename or "") else "bin").lower()
     unique_filename = f"{uuid.uuid4()}.{file_extension}"
-    file_path = os.path.join(upload_dir, unique_filename)
-    
-    # Save file
+    object_key = build_key("products/images", unique_filename)
+
     contents = await file.read()
-    with open(file_path, "wb") as f:
-        f.write(contents)
-    
-    # Return URL (in production, this would be S3/Cloudinary URL)
-    image_url = f"/uploads/products/{unique_filename}"
-    
-    return {"imageUrl": image_url, "filename": unique_filename}
+    put_object(object_key, contents, file.content_type or "application/octet-stream")
+
+    # Serve via backend proxy so we never expose raw storage URLs to the client.
+    image_url = f"/api/files/{object_key}"
+
+    return {"imageUrl": image_url, "filename": unique_filename, "storagePath": object_key}
 
 @router.post("/upload-video")
 async def upload_product_video(file: UploadFile = File(...)):
-    """Upload product video (360° rotation or promotional)"""
-    
-    # Create uploads directory if it doesn't exist
-    upload_dir = "/app/backend/uploads/videos"
-    os.makedirs(upload_dir, exist_ok=True)
-    
-    # Generate unique filename
-    file_extension = file.filename.split(".")[-1]
+    """Upload product video (360° rotation or promotional) to Emergent Object Storage."""
+    file_extension = (file.filename.rsplit(".", 1)[-1] if "." in (file.filename or "") else "bin").lower()
     unique_filename = f"{uuid.uuid4()}.{file_extension}"
-    file_path = os.path.join(upload_dir, unique_filename)
-    
-    # Save file
+    object_key = build_key("products/videos", unique_filename)
+
     contents = await file.read()
-    with open(file_path, "wb") as f:
-        f.write(contents)
-    
-    # Return URL
-    video_url = f"/uploads/videos/{unique_filename}"
-    
-    return {"videoUrl": video_url, "filename": unique_filename}
+    put_object(object_key, contents, file.content_type or "application/octet-stream")
+
+    video_url = f"/api/files/{object_key}"
+
+    return {"videoUrl": video_url, "filename": unique_filename, "storagePath": object_key}

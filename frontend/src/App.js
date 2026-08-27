@@ -1,158 +1,160 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import { Toaster } from "sonner";
 
-// Public Pages
+// Eager (critical) — landing + layouts + always-mounted UI
 import HomePage from "@/pages/HomePage";
-import CollectionsPage from "@/pages/CollectionsPage";
-import CollectionDetailPage from "@/pages/CollectionDetailPage";
-import ProductDetailPage from "@/pages/ProductDetailPage";
-import CustomDesignPage from "@/pages/CustomDesignPage";
-import ProcessPage from "@/pages/ProcessPage";
-import AboutPage from "@/pages/AboutPage";
-import TestimonialsPage from "@/pages/TestimonialsPage";
-import ContactPage from "@/pages/ContactPage";
-import FAQPage from "@/pages/FAQPage";
-import CraftsmanshipPage from "@/pages/CraftsmanshipPage";
-import PrivacyPage from "@/pages/PrivacyPage";
-import TermsPage from "@/pages/TermsPage";
-import RingTryOnPage from "@/pages/RingTryOnPage";
-import ShopDropPage from "@/pages/ShopDropPage";
-import DropPage from "@/pages/DropPage";
-import MobileDropPage from "@/pages/MobileDropPage";
-import SecretDropPage from "./pages/SecretDropPage";
-import VaultPage from "@/pages/VaultPage";
-import LaMarvaPage from "@/pages/LaMarvaPage";
-import ParabolaPage from "@/pages/ParabolaPage";
-import ParabolaHeritagePage from "@/pages/ParabolaHeritagePage";
-import AnnieRosePage from "@/pages/AnnieRosePage";
-import MonikaCouturePage from "@/pages/MonikaCouturePage";
-import AlejandraHeelsPage from "@/pages/AlejandraHeelsPage";
-import PTPCuffPage from "@/pages/PTPCuffPage";
-import RosariaPage from "@/pages/RosariaPage";
-import DesirCorsetPage from "@/pages/DesirCorsetPage";
-import FormeCuffPage from "@/pages/FormeCuffPage";
-import RhythmMeshRingPage from "@/pages/RhythmMeshRingPage";
-import TolaIIPage from "@/pages/TolaIIPage";
-import Galatians614Page from "@/pages/Galatians614Page";
-import TracePage from "@/pages/TracePage";
-import BoundPage from "@/pages/BoundPage";
-import ApexPage from "@/pages/ApexPage";
-import HomagePage from "@/pages/HomagePage";
-import CypherPage from "@/pages/CypherPage";
-import MorsoPage from "@/pages/MorsoPage";
-import LaBetePage from "@/pages/LaBetePage";
-import BlessedPage from "@/pages/BlessedPage";
-import CoogiPage from "@/pages/CoogiPage";
-import BamburghPage from "@/pages/BamburghPage";
-import BamburghCirclePage from "@/pages/BamburghCirclePage";
-import LadyBamburghPage from "@/pages/LadyBamburghPage";
-import DrapePage from "@/pages/DrapePage";
-import FondoCurvoPage from "@/pages/FondoCurvoPage";
-import CorinthiansPage from "@/pages/CorinthiansPage";
-import ChainsComingSoonPage from "@/pages/ChainsComingSoonPage";
-import CocktailJessicaPage from "@/pages/CocktailJessicaPage";
-import SizeGuidePage from "@/pages/SizeGuidePage";
-import CouronnePage from "@/pages/CouronnePage";
-import NervaturaPage from "@/pages/NervaturaPage";
-import DonGorgonPage from "@/pages/DonGorgonPage";
-import GrandDamePage from "@/pages/GrandDamePage";
-import CarapacePage from "@/pages/CarapacePage";
-import MidweekPage from "@/pages/MidweekPage";
-import LaMadonnaPage from "@/pages/LaMadonnaPage";
-import BapePage from "@/pages/BapePage";
-import DrewFacePage from "@/pages/DrewFacePage";
-import HerEternalReignPage from "@/pages/HerEternalReignPage";
-import VolutaPage from "@/pages/VolutaPage";
-import GravitePage from "@/pages/GravitePage";
-import TwoFingerRingPlaceholderPage from "@/pages/TwoFingerRingPlaceholderPage";
-import RouteSeoInjector from "@/components/RouteSeoInjector";
-import SearchOverlay from "@/components/SearchOverlay";
-import CollectionPage from "@/components/CollectionPage";
-import { JournalIndexPage, JournalArticlePage } from "@/pages/JournalPage";
-import BlackOwnedJewelryPage from "@/pages/BlackOwnedJewelryPage";
-import CustomJewelryPage from "@/pages/CustomJewelryPage";
-import TrustPage from "@/pages/TrustPage";
-import DrewsVaultPage from "@/pages/DrewsVaultPage";
-import RetroBredPage from "@/pages/RetroBredPage";
-import LaScarpaPage from "@/pages/LaScarpaPage";
-import LisaPage from "@/pages/LisaPage";
-import LadyJayPage from "@/pages/LadyJayPage";
-import TrueVinePage from "@/pages/TrueVinePage";
-import PortaAureaPage from "@/pages/PortaAureaPage";
-import BattentiDellaVillaPage from "@/pages/BattentiDellaVillaPage";
-import GentPage from "@/pages/GentPage";
-import StackratsPage from "@/pages/StackratsPage";
-import WynettePalettePage from "@/pages/WynettePalettePage";
-import VeyronNoirPage from "@/pages/VeyronNoirPage";
-import UncleJoPage from "@/pages/UncleJoPage";
-import InspirationVaultPage from "@/pages/InspirationVaultPage";
-import NoirCadencePage from "@/pages/NoirCadencePage";
-import FirstDiscoveryPage from "@/pages/FirstDiscoveryPage";
-import LiaisonPage from "@/pages/LiaisonPage";
-import NoirTidePage from "@/pages/NoirTidePage";
-import PrismaticLaurelPage from "@/pages/PrismaticLaurelPage";
-import ViridianTeardropsPage from "@/pages/ViridianTeardropsPage";
-import OrbitLumierePage from "@/pages/OrbitLumierePage";
-import DecoEventailPage from "@/pages/DecoEventailPage";
-import ParabolaAtelierPage from "@/pages/ParabolaAtelierPage";
-import EchellePage from "@/pages/EchellePage";
-import LucentPage from "@/pages/LucentPage";
-import RoselinePage from "@/pages/RoselinePage";
-import AltarPage from "@/pages/AltarPage";
-import OrielPage from "@/pages/OrielPage";
-import ArchitravePage from "@/pages/ArchitravePage";
-import RebellePage from "@/pages/RebellePage";
-import MonacoPage from "@/pages/MonacoPage";
-import CagedWingsPage from "@/pages/CagedWingsPage";
-import NovaPage from "@/pages/NovaPage";
-import DrivenPage from "@/pages/DrivenPage";
-import StampedeSetPage from "@/pages/StampedeSetPage";
-import NightfangSetPage from "@/pages/NightfangSetPage";
-import ParallaxDropEarringsPage from "@/pages/ParallaxDropEarringsPage";
-import GoldenHourCuffsPage from "@/pages/GoldenHourCuffsPage";
-import OvationRibbedRingPage from "@/pages/OvationRibbedRingPage";
-import BajanJoeSignetRingPage from "@/pages/BajanJoeSignetRingPage";
-import QuadrigaDominusPage from "@/pages/QuadrigaDominusPage";
-import CrestaNeraBanglePage from "@/pages/CrestaNeraBanglePage";
-import RibbonRegalePage from "@/pages/RibbonRegalePage";
-import RibbonRegaleEditionPage from "@/pages/RibbonRegaleEditionPage";
-import ScaccoMattoPage from "@/pages/ScaccoMattoPage";
-import TributeSeriesPage from "@/pages/TributeSeriesPage";
-import NeighborhoodNipPage from "@/pages/NeighborhoodNipPage";
-import RoseOfSharonPage from "@/pages/RoseOfSharonPage";
-import BossKnotPage from "@/pages/BossKnotPage";
-import LadyBossKnotPage from "@/pages/LadyBossKnotPage";
-import KatrinaCascataPage from "@/pages/KatrinaCascataPage";
-import RingSizeGuidePage from "@/pages/RingSizeGuidePage";
-import CoogiDnaTagPage from "@/pages/CoogiDnaTagPage";
-import AtelierPage from "@/pages/AtelierPage";
-import WishlistPage from "@/pages/WishlistPage";
-import Checkout from "@/pages/Checkout";
-import CheckoutSuccess from "@/pages/CheckoutSuccess";
-import CheckoutCancel from "@/pages/CheckoutCancel";
-
-// Admin Pages
-import AdminLoginPage from "@/pages/admin/AdminLoginPage";
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import AdminCollections from "@/pages/admin/AdminCollections";
-import AdminProducts from "@/pages/admin/AdminProducts";
-import AdminInquiries from "@/pages/admin/AdminInquiries";
-import AdminConsultations from "@/pages/admin/AdminConsultations";
-import AdminTestimonials from "@/pages/admin/AdminTestimonials";
-import AdminFAQ from "@/pages/admin/AdminFAQ";
-import AdminSettings from "@/pages/admin/AdminSettings";
-
-// Layout Components
 import PublicLayout from "@/components/layout/PublicLayout";
 import AdminLayout from "@/components/layout/AdminLayout";
+import RouteSeoInjector from "@/components/RouteSeoInjector";
+import SearchOverlay from "@/components/SearchOverlay";
+import CartDrawer from "@/components/CartDrawer";
 
 // Context Providers
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { MarketPricingProvider } from "@/context/MarketPricingContext";
 
-// Components
-import CartDrawer from "@/components/CartDrawer";
+// Phase 6 — non-critical, non-commerce lazy surfaces
+const JournalIndexPage = lazy(() => import("@/pages/JournalPage").then((m) => ({ default: m.JournalIndexPage })));
+const JournalArticlePage = lazy(() => import("@/pages/JournalPage").then((m) => ({ default: m.JournalArticlePage })));
+const BlackOwnedJewelryPage = lazy(() => import("@/pages/BlackOwnedJewelryPage"));
+const CustomJewelryPage = lazy(() => import("@/pages/CustomJewelryPage"));
+const TrustPage = lazy(() => import("@/pages/TrustPage"));
+const CollectionPage = lazy(() => import("@/components/CollectionPage"));
+
+// Phase 6.5 — Product / editorial routes (lazy)
+const CollectionsPage = lazy(() => import("@/pages/CollectionsPage"));
+const CollectionDetailPage = lazy(() => import("@/pages/CollectionDetailPage"));
+const ProductDetailPage = lazy(() => import("@/pages/ProductDetailPage"));
+const CustomDesignPage = lazy(() => import("@/pages/CustomDesignPage"));
+const ProcessPage = lazy(() => import("@/pages/ProcessPage"));
+const AboutPage = lazy(() => import("@/pages/AboutPage"));
+const TestimonialsPage = lazy(() => import("@/pages/TestimonialsPage"));
+const ContactPage = lazy(() => import("@/pages/ContactPage"));
+const FAQPage = lazy(() => import("@/pages/FAQPage"));
+const CraftsmanshipPage = lazy(() => import("@/pages/CraftsmanshipPage"));
+const PrivacyPage = lazy(() => import("@/pages/PrivacyPage"));
+const TermsPage = lazy(() => import("@/pages/TermsPage"));
+const RingTryOnPage = lazy(() => import("@/pages/RingTryOnPage"));
+const ShopDropPage = lazy(() => import("@/pages/ShopDropPage"));
+const DropPage = lazy(() => import("@/pages/DropPage"));
+const MobileDropPage = lazy(() => import("@/pages/MobileDropPage"));
+const SecretDropPage = lazy(() => import("./pages/SecretDropPage"));
+const VaultPage = lazy(() => import("@/pages/VaultPage"));
+const LaMarvaPage = lazy(() => import("@/pages/LaMarvaPage"));
+const ParabolaPage = lazy(() => import("@/pages/ParabolaPage"));
+const ParabolaHeritagePage = lazy(() => import("@/pages/ParabolaHeritagePage"));
+const AnnieRosePage = lazy(() => import("@/pages/AnnieRosePage"));
+const MonikaCouturePage = lazy(() => import("@/pages/MonikaCouturePage"));
+const AlejandraHeelsPage = lazy(() => import("@/pages/AlejandraHeelsPage"));
+const PTPCuffPage = lazy(() => import("@/pages/PTPCuffPage"));
+const RosariaPage = lazy(() => import("@/pages/RosariaPage"));
+const DesirCorsetPage = lazy(() => import("@/pages/DesirCorsetPage"));
+const FormeCuffPage = lazy(() => import("@/pages/FormeCuffPage"));
+const RhythmMeshRingPage = lazy(() => import("@/pages/RhythmMeshRingPage"));
+const TolaIIPage = lazy(() => import("@/pages/TolaIIPage"));
+const Galatians614Page = lazy(() => import("@/pages/Galatians614Page"));
+const TracePage = lazy(() => import("@/pages/TracePage"));
+const BoundPage = lazy(() => import("@/pages/BoundPage"));
+const ApexPage = lazy(() => import("@/pages/ApexPage"));
+const HomagePage = lazy(() => import("@/pages/HomagePage"));
+const CypherPage = lazy(() => import("@/pages/CypherPage"));
+const MorsoPage = lazy(() => import("@/pages/MorsoPage"));
+const LaBetePage = lazy(() => import("@/pages/LaBetePage"));
+const BlessedPage = lazy(() => import("@/pages/BlessedPage"));
+const CoogiPage = lazy(() => import("@/pages/CoogiPage"));
+const BamburghPage = lazy(() => import("@/pages/BamburghPage"));
+const BamburghCirclePage = lazy(() => import("@/pages/BamburghCirclePage"));
+const LadyBamburghPage = lazy(() => import("@/pages/LadyBamburghPage"));
+const DrapePage = lazy(() => import("@/pages/DrapePage"));
+const FondoCurvoPage = lazy(() => import("@/pages/FondoCurvoPage"));
+const CorinthiansPage = lazy(() => import("@/pages/CorinthiansPage"));
+const ChainsComingSoonPage = lazy(() => import("@/pages/ChainsComingSoonPage"));
+const CocktailJessicaPage = lazy(() => import("@/pages/CocktailJessicaPage"));
+const SizeGuidePage = lazy(() => import("@/pages/SizeGuidePage"));
+const CouronnePage = lazy(() => import("@/pages/CouronnePage"));
+const NervaturaPage = lazy(() => import("@/pages/NervaturaPage"));
+const DonGorgonPage = lazy(() => import("@/pages/DonGorgonPage"));
+const GrandDamePage = lazy(() => import("@/pages/GrandDamePage"));
+const CarapacePage = lazy(() => import("@/pages/CarapacePage"));
+const MidweekPage = lazy(() => import("@/pages/MidweekPage"));
+const LaMadonnaPage = lazy(() => import("@/pages/LaMadonnaPage"));
+const BapePage = lazy(() => import("@/pages/BapePage"));
+const DrewFacePage = lazy(() => import("@/pages/DrewFacePage"));
+const HerEternalReignPage = lazy(() => import("@/pages/HerEternalReignPage"));
+const VolutaPage = lazy(() => import("@/pages/VolutaPage"));
+const GravitePage = lazy(() => import("@/pages/GravitePage"));
+const TwoFingerRingPlaceholderPage = lazy(() => import("@/pages/TwoFingerRingPlaceholderPage"));
+const DrewsVaultPage = lazy(() => import("@/pages/DrewsVaultPage"));
+const RetroBredPage = lazy(() => import("@/pages/RetroBredPage"));
+const LaScarpaPage = lazy(() => import("@/pages/LaScarpaPage"));
+const LisaPage = lazy(() => import("@/pages/LisaPage"));
+const LadyJayPage = lazy(() => import("@/pages/LadyJayPage"));
+const TrueVinePage = lazy(() => import("@/pages/TrueVinePage"));
+const PortaAureaPage = lazy(() => import("@/pages/PortaAureaPage"));
+const BattentiDellaVillaPage = lazy(() => import("@/pages/BattentiDellaVillaPage"));
+const GentPage = lazy(() => import("@/pages/GentPage"));
+const StackratsPage = lazy(() => import("@/pages/StackratsPage"));
+const WynettePalettePage = lazy(() => import("@/pages/WynettePalettePage"));
+const VeyronNoirPage = lazy(() => import("@/pages/VeyronNoirPage"));
+const UncleJoPage = lazy(() => import("@/pages/UncleJoPage"));
+const InspirationVaultPage = lazy(() => import("@/pages/InspirationVaultPage"));
+const NoirCadencePage = lazy(() => import("@/pages/NoirCadencePage"));
+const FirstDiscoveryPage = lazy(() => import("@/pages/FirstDiscoveryPage"));
+const LiaisonPage = lazy(() => import("@/pages/LiaisonPage"));
+const NoirTidePage = lazy(() => import("@/pages/NoirTidePage"));
+const PrismaticLaurelPage = lazy(() => import("@/pages/PrismaticLaurelPage"));
+const ViridianTeardropsPage = lazy(() => import("@/pages/ViridianTeardropsPage"));
+const OrbitLumierePage = lazy(() => import("@/pages/OrbitLumierePage"));
+const DecoEventailPage = lazy(() => import("@/pages/DecoEventailPage"));
+const ParabolaAtelierPage = lazy(() => import("@/pages/ParabolaAtelierPage"));
+const EchellePage = lazy(() => import("@/pages/EchellePage"));
+const LucentPage = lazy(() => import("@/pages/LucentPage"));
+const RoselinePage = lazy(() => import("@/pages/RoselinePage"));
+const AltarPage = lazy(() => import("@/pages/AltarPage"));
+const OrielPage = lazy(() => import("@/pages/OrielPage"));
+const ArchitravePage = lazy(() => import("@/pages/ArchitravePage"));
+const RebellePage = lazy(() => import("@/pages/RebellePage"));
+const MonacoPage = lazy(() => import("@/pages/MonacoPage"));
+const CagedWingsPage = lazy(() => import("@/pages/CagedWingsPage"));
+const NovaPage = lazy(() => import("@/pages/NovaPage"));
+const DrivenPage = lazy(() => import("@/pages/DrivenPage"));
+const StampedeSetPage = lazy(() => import("@/pages/StampedeSetPage"));
+const NightfangSetPage = lazy(() => import("@/pages/NightfangSetPage"));
+const ParallaxDropEarringsPage = lazy(() => import("@/pages/ParallaxDropEarringsPage"));
+const GoldenHourCuffsPage = lazy(() => import("@/pages/GoldenHourCuffsPage"));
+const OvationRibbedRingPage = lazy(() => import("@/pages/OvationRibbedRingPage"));
+const BajanJoeSignetRingPage = lazy(() => import("@/pages/BajanJoeSignetRingPage"));
+const QuadrigaDominusPage = lazy(() => import("@/pages/QuadrigaDominusPage"));
+const CrestaNeraBanglePage = lazy(() => import("@/pages/CrestaNeraBanglePage"));
+const RibbonRegalePage = lazy(() => import("@/pages/RibbonRegalePage"));
+const RibbonRegaleEditionPage = lazy(() => import("@/pages/RibbonRegaleEditionPage"));
+const ScaccoMattoPage = lazy(() => import("@/pages/ScaccoMattoPage"));
+const TributeSeriesPage = lazy(() => import("@/pages/TributeSeriesPage"));
+const NeighborhoodNipPage = lazy(() => import("@/pages/NeighborhoodNipPage"));
+const RoseOfSharonPage = lazy(() => import("@/pages/RoseOfSharonPage"));
+const BossKnotPage = lazy(() => import("@/pages/BossKnotPage"));
+const LadyBossKnotPage = lazy(() => import("@/pages/LadyBossKnotPage"));
+const KatrinaCascataPage = lazy(() => import("@/pages/KatrinaCascataPage"));
+const RingSizeGuidePage = lazy(() => import("@/pages/RingSizeGuidePage"));
+const CoogiDnaTagPage = lazy(() => import("@/pages/CoogiDnaTagPage"));
+const AtelierPage = lazy(() => import("@/pages/AtelierPage"));
+const WishlistPage = lazy(() => import("@/pages/WishlistPage"));
+const Checkout = lazy(() => import("@/pages/Checkout"));
+const CheckoutSuccess = lazy(() => import("@/pages/CheckoutSuccess"));
+const CheckoutCancel = lazy(() => import("@/pages/CheckoutCancel"));
+
+// Admin Pages (lazy — admin surface never loaded by public visitors)
+const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
+const AdminCollections = lazy(() => import("@/pages/admin/AdminCollections"));
+const AdminProducts = lazy(() => import("@/pages/admin/AdminProducts"));
+const AdminInquiries = lazy(() => import("@/pages/admin/AdminInquiries"));
+const AdminConsultations = lazy(() => import("@/pages/admin/AdminConsultations"));
+const AdminTestimonials = lazy(() => import("@/pages/admin/AdminTestimonials"));
+const AdminFAQ = lazy(() => import("@/pages/admin/AdminFAQ"));
+const AdminSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 
 function App() {
   return (
@@ -163,6 +165,7 @@ function App() {
           <BrowserRouter>
             <RouteSeoInjector />
             <SearchOverlay />
+        <Suspense fallback={<div style={{minHeight: '100vh', background: '#0a0a0a'}} data-testid="route-fallback" />}>
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}
           <Route path="/drop" element={<DropPage />} />
@@ -426,6 +429,7 @@ function App() {
             <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>
+        </Suspense>
         <CartDrawer />
       </BrowserRouter>
       </WishlistProvider>

@@ -53,7 +53,7 @@ export default function TrustPage() {
     const record = {
       slug: cfg.slug, name: cfg.h1, href: pathname,
       type: 'category', description: cfg.description,
-      seo: { title: cfg.title, description: cfg.description },
+      seo: { title: cfg.title, description: cfg.description, index: false, follow: true },
     };
     const seo = generateSeo(record);
     return applySeoHead(seo, [buildBreadcrumbJsonLd(record)]);
