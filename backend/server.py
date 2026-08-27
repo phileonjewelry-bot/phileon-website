@@ -713,7 +713,10 @@ async def admin_get_stats(_: str = Depends(verify_admin)):
 
 
 # Include routers
-app.include_router(api_router)
+# NOTE: `app.include_router(api_router)` is deliberately moved to the very
+# bottom of this file. Many `@api_router.*` route decorators (auth, customers,
+# tryon, inventory-patch, file proxy) live below this point; registering
+# `api_router` here would freeze the route table before those decorators run.
 app.include_router(admin_router)
 
 # Add route imports
@@ -922,8 +925,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 # Serve try-on result images from durable Object Storage.
-# Mounted on `app` directly because `api_router` is already included above.
-@app.get("/api/tryon/results/{filename}")
+@api_router.get("/tryon/results/{filename}")
 async def serve_tryon_result(filename: str):
     """Serve try-on result images from Emergent Object Storage."""
     result_key = build_key("tryon/results", filename)
@@ -937,7 +939,7 @@ async def serve_tryon_result(filename: str):
 # Generic backend proxy that streams any Object Storage file by its object key.
 # Path pattern: /api/files/phileon/<surface>/<filename>
 # Keeps raw storage URLs off the frontend and preserves server-side control.
-@app.get("/api/files/{object_key:path}")
+@api_router.get("/files/{object_key:path}")
 async def serve_stored_object(object_key: str):
     """Stream a file from Emergent Object Storage by its full object key."""
     if not object_key.startswith("phileon/"):
@@ -1352,6 +1354,11 @@ async def update_inventory(product_id: str, payload: InventoryUpdate):
     except Exception as e:
         logger.error(f"Error updating inventory: {str(e)}")
         raise HTTPException(status_code=500, detail="Error updating inventory")
+
+
+# Register api_router LAST so every `@api_router.*` decorator declared above
+# is picked up. See note near admin_router include.
+app.include_router(api_router)
 
 
 @app.on_event("startup")

@@ -73,7 +73,7 @@ export const QUADRIGA_DOMINUS_SEO = {
   productType: "Men's Luxury Statement Ring",
   category: 'rings', audience: ['gents', 'fine-jewelry'],
   material: '10K / 14K Gold with Ruby, Black, Green and White Stones',
-  href: '/quadriga-dominus',
+  href: '/products/quadriga-dominus',
   description: "Four-colorway men's statement ring — Red/Black, Black/Red, Green/Black, Black/Green. Substantial gold band, mixed-stone pavé.",
   seo: {
     keywords: ["men's statement ring",'quadriga','colorway ring',"ruby men's ring","designer men's jewelry"],
@@ -152,6 +152,30 @@ export const SEO_REGISTRY = {
 // the default site meta from index.html.
 
 export const CATEGORY_SEO = {
+  '/checkout': {
+    type: 'category',
+    name: 'Checkout',
+    title: 'Checkout | PHILEON',
+    description: 'Complete your PHILEON order securely.',
+    href: '/checkout',
+    seo: { index: false, follow: false },
+  },
+  '/checkout/success': {
+    type: 'category',
+    name: 'Order Received',
+    title: 'Order Received | PHILEON',
+    description: 'Thank you — your PHILEON order has been received.',
+    href: '/checkout/success',
+    seo: { index: false, follow: false },
+  },
+  '/checkout/cancel': {
+    type: 'category',
+    name: 'Checkout Cancelled',
+    title: 'Checkout Cancelled | PHILEON',
+    description: 'Your PHILEON checkout was cancelled — your cart is still saved.',
+    href: '/checkout/cancel',
+    seo: { index: false, follow: false },
+  },
   '/shop': {
     type: 'category',
     name: 'Shop',

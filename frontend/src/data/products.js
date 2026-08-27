@@ -3465,7 +3465,7 @@ export const catalogProducts = [
     materialLine: '10K or 14K White Metal · 188 Pavé Stones + Centre Stone',
     imageUrl: '/quadriga/card-hero.jpg',
     hoverImage: '/quadriga/card-hero.jpg',
-    href: '/quadriga-dominus',
+    href: '/products/quadriga-dominus',
     price_range: 'From $10,495 USD',
     inventory_count: 20,
     is_core: true,
