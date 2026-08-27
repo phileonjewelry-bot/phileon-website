@@ -602,9 +602,9 @@ export default function WynettePalettePage() {
           <p className="wp-hero-phase wp-hero-phase--1" data-testid="wp-hero-phase-1">
             <span className="wp-hero-eyebrow">PHILEON</span>
           </p>
-          <p className="wp-hero-phase wp-hero-phase--2" data-testid="wp-hero-phase-2">
+          <h1 className="wp-hero-phase wp-hero-phase--2" data-testid="wp-hero-phase-2" style={{ margin: 0, fontSize: 'inherit', lineHeight: 'inherit', fontWeight: 'inherit' }}>
             <span className="wp-hero-title-overlay">WYNETTE&apos;S PALETTE</span>
-          </p>
+          </h1>
           <p className="wp-hero-phase wp-hero-phase--3" data-testid="wp-hero-phase-3">
             <em className="wp-hero-tag-overlay">Every island brought a colour.</em>
           </p>

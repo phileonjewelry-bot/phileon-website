@@ -33,11 +33,8 @@ STATIC_ROUTES = [
     "/shop?collection=signature",
     "/shop?collection=collective",
     "/shop?collection=editorial",
-    "/ladies",
-    "/gentlemens-club",
     "/inspiration-vault",
     "/atelier",
-    "/heritage",
     "/craftsmanship",
     "/ring-size-guide",
 ]

@@ -184,22 +184,6 @@ export const CATEGORY_SEO = {
     href: '/shop?collection=editorial',
     category: 'editorial',
   },
-  '/ladies': {
-    type: 'category',
-    name: 'Ladies',
-    title: "Women's Fine Jewelry | Statement Rings & Pendants | PHILEON",
-    description: "PHILEON women's fine jewelry — statement rings, luxury pendants, earrings and Fine Jewelry pieces in gold, white gold and rose gold.",
-    href: '/ladies',
-    category: 'ladies', audience: ['ladies'],
-  },
-  '/gentlemens-club': {
-    type: 'category',
-    name: "Gentleman's Club",
-    title: "Men's Luxury Rings & Jewelry | PHILEON Gentleman's Club",
-    description: "PHILEON men's luxury jewelry — statement rings, signet rings, diamond rings and designer men's pieces from the Gentleman's Club.",
-    href: '/gentlemens-club',
-    category: 'gentlemens-club', audience: ['gents'],
-  },
   '/inspiration-vault': {
     type: 'category',
     name: 'Inspiration Vault',
@@ -213,12 +197,6 @@ export const CATEGORY_SEO = {
     title: 'The Atelier | Bespoke Design & Commissions | PHILEON',
     description: 'The PHILEON atelier — bespoke jewelry design, commissions, private consultations and made-to-order fine jewelry.',
     href: '/atelier',
-  },
-  '/heritage': {
-    type: 'category', name: 'Heritage',
-    title: 'Heritage | The PHILEON Story',
-    description: 'The PHILEON heritage — architectural fine jewelry rooted in narrative, sculpture and metalwork tradition.',
-    href: '/heritage',
   },
   '/craftsmanship': {
     type: 'category', name: 'Craftsmanship',
