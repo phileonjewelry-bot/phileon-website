@@ -66,10 +66,12 @@ import VolutaPage from "@/pages/VolutaPage";
 import GravitePage from "@/pages/GravitePage";
 import TwoFingerRingPlaceholderPage from "@/pages/TwoFingerRingPlaceholderPage";
 import RouteSeoInjector from "@/components/RouteSeoInjector";
+import SearchOverlay from "@/components/SearchOverlay";
 import CollectionPage from "@/components/CollectionPage";
 import { JournalIndexPage, JournalArticlePage } from "@/pages/JournalPage";
 import BlackOwnedJewelryPage from "@/pages/BlackOwnedJewelryPage";
 import CustomJewelryPage from "@/pages/CustomJewelryPage";
+import TrustPage from "@/pages/TrustPage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -160,6 +162,7 @@ function App() {
         <WishlistProvider>
           <BrowserRouter>
             <RouteSeoInjector />
+            <SearchOverlay />
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}
           <Route path="/drop" element={<DropPage />} />
@@ -288,6 +291,13 @@ function App() {
             <Route path="/custom-jewelry-toronto" element={<Navigate to="/custom-jewelry-canada" replace />} />
             <Route path="/custom-jewelry" element={<Navigate to="/custom-jewelry-canada" replace />} />
             <Route path="/handmade-jewelry-canada" element={<Navigate to="/custom-jewelry-canada" replace />} />
+
+            {/* Phase 5 — Trust page shells. Structure live, copy owner-required. */}
+            <Route path="/shipping" element={<TrustPage />} />
+            <Route path="/returns" element={<TrustPage />} />
+            <Route path="/warranty" element={<TrustPage />} />
+            <Route path="/jewelry-care" element={<TrustPage />} />
+            <Route path="/materials" element={<TrustPage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />

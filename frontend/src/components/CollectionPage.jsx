@@ -291,5 +291,9 @@ const styles = {
     letterSpacing: '0.22em',
     fontSize: 12,
     textTransform: 'uppercase',
+    padding: '14px 12px',
+    minHeight: 44,
+    display: 'inline-flex',
+    alignItems: 'center',
   },
 };

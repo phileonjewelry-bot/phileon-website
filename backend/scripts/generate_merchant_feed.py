@@ -148,7 +148,7 @@ def build_feed(products: list[dict]) -> str:
         description = html.escape(
             p.get("subtitle") or f"{p['name']} — PHILEON fine jewelry"
         )
-        product_type = GOOGLE_CATEGORY.get(p.get("category") or "", "Apparel & Accessories > Jewelry")
+        product_type = html.escape(GOOGLE_CATEGORY.get(p.get("category") or "", "Apparel & Accessories > Jewelry"))
         gender = infer_gender(p.get("audience"))
         material = html.escape(p.get("material") or "")
 
