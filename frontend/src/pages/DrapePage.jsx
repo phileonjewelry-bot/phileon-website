@@ -4,6 +4,8 @@ import { ArrowLeft } from 'lucide-react';
 import { products } from '@/data/products';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { useLivePrice, useLiveTierPrices } from '@/hooks/useLivePrice';
+import ProductSeo from '@/components/ProductSeo';
+import { DRAPE_SEO } from '@/lib/seoProducts';
 
 export default function DrapePage() {
   const product = products.drape;
@@ -58,6 +60,7 @@ export default function DrapePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <ProductSeo product={{ ...DRAPE_SEO, image: product.gallery?.[0]?.src || product.image }} />
       {/* Back to Pendants */}
       <Link
         to="/shop?category=pendants&audience=ladies"

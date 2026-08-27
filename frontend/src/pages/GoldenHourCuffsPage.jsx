@@ -4,6 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import VaultHero from "@/components/VaultHero";
 import VaultArchiveNotice from "@/components/VaultArchiveNotice";
+import ProductSeo from "@/components/ProductSeo";
+import { GOLDEN_HOUR_CUFFS_SEO } from "@/lib/seoProducts";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 
 // GOLDEN HOUR CUFFS — Inspiration Vault · $90 USD · Gold Vermeil
@@ -55,6 +57,7 @@ export default function GoldenHourCuffsPage() {
 
   return (
     <div className="ghc-page" data-testid="golden-hour-cuffs-page">
+      <ProductSeo product={{ ...GOLDEN_HOUR_CUFFS_SEO, image: `${ART}/jiq8mpbd_1000172722.jpg` }} />
       <LuxuryMotionStyles />
       <style>{`
         .ghc-page { --bg:#050505; --bg-deep:#020202; --ink:#cfc8be; --ink-strong:#f4ede0;

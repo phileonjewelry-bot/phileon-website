@@ -24,6 +24,8 @@ import RingSizeSelector, {
   ringSizeSkuToken,
 } from "../components/RingSizeSelector";
 import { useAddToCart } from "../hooks/useAddToCart";
+import ProductSeo from "@/components/ProductSeo";
+import { QUADRIGA_DOMINUS_SEO } from "@/lib/seoProducts";
 
 // --------------------------------------------------------------------------
 // APPROVED ASSETS — one image per colorway. Do not swap or re-crop.
@@ -289,6 +291,7 @@ export default function QuadrigaDominusPage() {
       className="bg-black text-white min-h-screen overflow-x-hidden"
       data-testid="quadriga-dominus-page"
     >
+      <ProductSeo product={QUADRIGA_DOMINUS_SEO} />
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 gap-10 lg:grid-cols-[1.2fr_0.8fr]">
         {/* ================================================================
             LEFT — PERSISTENT HERO VIDEO (same clip for every colorway).

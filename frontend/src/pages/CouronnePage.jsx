@@ -4,6 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import ProductSeo from "@/components/ProductSeo";
+import { PRISE_DE_COURONNE_SEO } from "@/lib/seoProducts";
 import SizeGuideModal from "@/components/SizeGuideModal";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import RingSizeSelector, {
@@ -74,6 +76,7 @@ export default function CouronnePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <ProductSeo product={PRISE_DE_COURONNE_SEO} />
       <LuxuryMotionStyles />
       {/* HERO */}
       <section

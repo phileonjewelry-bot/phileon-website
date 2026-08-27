@@ -11,6 +11,8 @@
 
 import React from "react";
 import RingProductPage from "../components/RingProductPage";
+import ProductSeo from "@/components/ProductSeo";
+import { BAJAN_JOE_SEO } from "@/lib/seoProducts";
 
 // Approved BAJAN JOE assets (public artifact URLs, unmodified).
 const HERO_VIDEO   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ua7fhqo0_hf_20260808_045211_0c2ba646-60ce-406a-b04b-979db1d45083.mp4";
@@ -144,5 +146,10 @@ const bajanJoeProduct = {
 };
 
 export default function BajanJoeSignetRingPage() {
-  return <RingProductPage product={bajanJoeProduct} />;
+  return (
+    <>
+      <ProductSeo product={BAJAN_JOE_SEO} />
+      <RingProductPage product={bajanJoeProduct} />
+    </>
+  );
 }

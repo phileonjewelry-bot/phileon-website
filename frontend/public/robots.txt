@@ -1,0 +1,23 @@
+# PHILEON — robots.txt
+# Allow major search engines to crawl the public catalog.
+# Block internal / commerce-only routes.
+
+User-agent: *
+Allow: /
+
+Disallow: /checkout
+Disallow: /cart
+Disallow: /admin
+Disallow: /api/
+Disallow: /drews-vault/
+Disallow: /secret-drop
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+
+# Allow product images, JS and CSS so rendered pages evaluate correctly.
+Allow: /media/
+Allow: /images/
+Allow: /static/
+Allow: /logo.png
+
+Sitemap: https://phileon.com/sitemap.xml

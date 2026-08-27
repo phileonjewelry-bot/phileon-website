@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import ProductSeo from "@/components/ProductSeo";
+import { RIBBON_REGALE_EDITION_SEO } from "@/lib/seoProducts";
 
 // ── ASSETS (shared with the original archive piece — same photography) ─────
 const BASE = "/inspiration-vault/gold-theory-ribbon";
@@ -208,6 +210,7 @@ export default function RibbonRegaleEditionPage() {
 
   return (
     <div className="rre-page" data-testid="ribbon-regale-edition-page">
+      <ProductSeo product={RIBBON_REGALE_EDITION_SEO} />
       <LuxuryMotionStyles />
       <style>{`
         /* ───────────────────────  BASE  ─────────────────────── */
