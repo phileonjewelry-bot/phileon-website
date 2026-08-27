@@ -75,6 +75,7 @@ const SHOP_COLLECTION_MAP = {
   'neighborhood-nip': 'collective',
   'rouge-siren': 'collective',
   'gravite': 'collective',
+  'two-finger-ring': 'signature',
 };
 
 const SHOP_COLLECTIONS = [

@@ -3146,6 +3146,25 @@ export const catalogProducts = [
     // approved geometry.
   },
 
+  // ─── TWO-FINGER RING — WORKING CONCEPT. PHILEON FINE JEWELRY holding page.
+  // In development. Final CAD, sizing, stone specs, weight, SKU, price and
+  // photography all pending merchant + atelier sign-off. Non-purchasable.
+  // Placed ONLY in Fine Jewelry (SHOP_COLLECTION_MAP: 'signature'). Not in
+  // Ladies audience, not in Collective. Not wired into trusted backend.
+  { id: 'two-finger-ring', name: 'TWO-FINGER RING', slug: 'two-finger-ring',
+    materialLine: '10K White Gold · In Development',
+    // Editorial placeholder tile (matches the product page's `IMAGE PENDING` slot).
+    // Base64-encoded SVG so ShopDropPage's card grid does NOT fall through to
+    // its stock Unsplash fallback for the null-imageUrl case.
+    imageUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA4MDAgODAwJz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzgwMCcgZmlsbD0nIzBhMGEwYScvPjxyZWN0IHg9JzYwJyB5PSc2MCcgd2lkdGg9JzY4MCcgaGVpZ2h0PSc2ODAnIGZpbGw9J25vbmUnIHN0cm9rZT0ncmdiYSgxOTYsMTMxLDEwNSwwLjI4KScgc3Ryb2tlLXdpZHRoPScxLjUnIHN0cm9rZS1kYXNoYXJyYXk9JzYsOScvPjxjaXJjbGUgY3g9JzQwMCcgY3k9JzM0MCcgcj0nOScgZmlsbD0nI2M0ODM2OScgb3BhY2l0eT0nMC42Jy8+PHRleHQgeD0nNDAwJyB5PSc0MzgnIGZpbGw9JyNjNDgzNjknIGZvbnQtZmFtaWx5PSdHZW9yZ2lhLCBzZXJpZicgZm9udC1zaXplPScyMScgbGV0dGVyLXNwYWNpbmc9JzcuNScgdGV4dC1hbmNob3I9J21pZGRsZSc+SU1BR0UgUEVORElORzwvdGV4dD48dGV4dCB4PSc0MDAnIHk9JzQ4MCcgZmlsbD0ncmdiYSgyNDQsMjI4LDIyMCwwLjU1KScgZm9udC1mYW1pbHk9J0dlb3JnaWEsIHNlcmlmJyBmb250LXNpemU9JzE0JyBsZXR0ZXItc3BhY2luZz0nNC4wJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJz5UV08tRklOR0VSIFJJTkc8L3RleHQ+PC9zdmc+',
+    href: '/products/two-finger-ring',
+    price_range: 'COMING SOON', inventory_count: 0, is_core: false,
+    category: ['rings'],
+    audience: ['fine-jewelry'],
+    purchasable: false, status: 'placeholder',
+    subtitle: 'WORKING CONCEPT',
+  },
+
   // ─── ROUGE SIREN — Public merchandising card (Fine Jewelry). Single canonical
   // card. Frontend-only discoverability; NOT wired into backend trusted catalog.
   // Individual category views re-badge the subtitle/price/image at render-time

@@ -64,6 +64,7 @@ import DrewFacePage from "@/pages/DrewFacePage";
 import HerEternalReignPage from "@/pages/HerEternalReignPage";
 import VolutaPage from "@/pages/VolutaPage";
 import GravitePage from "@/pages/GravitePage";
+import TwoFingerRingPlaceholderPage from "@/pages/TwoFingerRingPlaceholderPage";
 import DrewsVaultPage from "@/pages/DrewsVaultPage";
 import RetroBredPage from "@/pages/RetroBredPage";
 import LaScarpaPage from "@/pages/LaScarpaPage";
@@ -248,6 +249,11 @@ function App() {
             <Route path="/gravite" element={<GravitePage />} />
             <Route path="/fine-jewelry/gravite" element={<GravitePage />} />
             <Route path="/ladies/rings/gravite" element={<GravitePage />} />
+
+            {/* TWO-FINGER RING — Working concept placeholder (Fine Jewelry).
+                Non-purchasable. Not in trusted checkout. Canonical + Fine Jewelry alias. */}
+            <Route path="/products/two-finger-ring" element={<TwoFingerRingPlaceholderPage />} />
+            <Route path="/fine-jewelry/two-finger-ring" element={<TwoFingerRingPlaceholderPage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />
