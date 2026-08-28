@@ -24,6 +24,7 @@ from pathlib import Path
 
 SITE_ORIGIN = "https://phileon.com"
 CATALOG_PATH = Path("/app/frontend/src/data/products.js")
+TRUST_PATH = Path("/app/frontend/src/data/trustPages.js")
 OUT_PATH = Path("/app/frontend/public/sitemap.xml")
 
 # Static / editorial routes that are always public and indexable.
@@ -54,6 +55,23 @@ STATIC_ROUTES = [
     # Phase 4 journal
     "/journal",
 ]
+
+
+def parse_approved_trust_routes() -> list[str]:
+    """Extract paths of trust pages whose `status` is 'approved'.
+
+    We do NOT import the JS module — instead we sweep the source with a
+    conservative regex so this generator stays language-agnostic.
+    """
+    if not TRUST_PATH.exists():
+        return []
+    src = TRUST_PATH.read_text(encoding="utf-8")
+    # Match each  '/foo': { ... status: 'approved' ... }
+    entry_re = re.compile(
+        r"['\"](\/[a-z0-9\-\/]+)['\"]\s*:\s*\{[^{}]*?status:\s*['\"]approved['\"]",
+        re.DOTALL,
+    )
+    return [m.group(1) for m in entry_re.finditer(src)]
 
 # Routes that are NEVER included in the public sitemap.
 EXCLUDE_ROUTES = {
@@ -154,9 +172,18 @@ def main() -> int:
     entries = parse_catalog(source)
     total = len(entries)
     indexable = sum(1 for e in entries if is_indexable(e))
+    # Merge approved trust pages into STATIC_ROUTES exactly once per run.
+    approved_trust = parse_approved_trust_routes()
+    for path in approved_trust:
+        if path not in STATIC_ROUTES:
+            STATIC_ROUTES.append(path)
     xml = build_sitemap(entries)
     OUT_PATH.write_text(xml, encoding="utf-8")
-    print(f"[sitemap] wrote {OUT_PATH} · products_scanned={total} · indexable={indexable} · static={len(STATIC_ROUTES)}")
+    print(
+        f"[sitemap] wrote {OUT_PATH} · products_scanned={total} "
+        f"· indexable={indexable} · static={len(STATIC_ROUTES)} "
+        f"· approved_trust={len(approved_trust)}"
+    )
     return 0
 
 

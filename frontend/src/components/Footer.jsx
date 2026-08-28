@@ -68,29 +68,29 @@ const Footer = () => {
             <h3 className="text-white font-semibold mb-4 text-lg">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
+                <Link to="/contact" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-contact">
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
-                  Shipping & Returns
-                </a>
+                <Link to="/ring-size-guide" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-ring-size">
+                  Ring Size Guide
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
-                  Size Guide
-                </a>
+                <Link to="/materials" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-materials">
+                  Materials
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
-                  Care Instructions
-                </a>
+                <Link to="/jewelry-care" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-jewelry-care">
+                  Jewelry Care
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
-                  Warranty
-                </a>
+                <Link to="/custom-jewelry-canada" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-custom">
+                  Custom Jewelry
+                </Link>
               </li>
             </ul>
           </div>
@@ -121,15 +121,12 @@ const Footer = () => {
             © 2024 Get Your Phileon. All rights reserved.
           </p>
           <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
+            <Link to="/privacy" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-privacy">
               Privacy Policy
-            </a>
-            <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
+            </Link>
+            <Link to="/terms" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-terms">
               Terms of Service
-            </a>
-            <a href="#" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm">
-              Cookie Policy
-            </a>
+            </Link>
             <Link to="/admin" className="text-gray-600 hover:text-yellow-500 transition-colors text-sm">
               Admin
             </Link>

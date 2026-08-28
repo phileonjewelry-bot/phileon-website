@@ -18,6 +18,7 @@ import {
   resolveBrandSearchIntent,
 } from '@/lib/discovery';
 import { SEO_REGISTRY } from '@/lib/seoProducts';
+import { listApprovedTrustPages } from '@/data/trustPages';
 
 // Controlled synonym layer. Each key → array of accepted alternates.
 export const SYNONYMS = {
@@ -144,6 +145,18 @@ export function searchPages(query) {
       href: brand.canonicalPath,
       subtitle: 'PHILEON',
     });
+  }
+  // Approved trust pages — draft pages never appear in search results.
+  const TRUST_KEYWORDS = {
+    materials: ['material', 'materials', 'gold', 'silver', '10k', '14k', '18k', 'karat', 'lab diamond', 'natural diamond', 'lab-grown', 'cubic zirconia', 'cz', 'vermeil', 'plating', 'plated', 'enamel', 'blackened'],
+    'jewelry-care': ['care', 'cleaning', 'clean', 'polish', 'tarnish', 'ultrasonic', 'ring care', 'jewelry care', 'store', 'storage'],
+  };
+  for (const page of listApprovedTrustPages()) {
+    const keywords = TRUST_KEYWORDS[page.slug] || [];
+    const matches = keywords.some((k) => q.includes(k)) || page.slug.includes(q) || page.h1.toLowerCase().includes(q);
+    if (matches) {
+      out.push({ kind: 'trust', name: page.h1, href: page.path, subtitle: 'PHILEON · Reference' });
+    }
   }
   // Dedup by href
   const seen = new Set();
