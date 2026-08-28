@@ -73,8 +73,23 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/ring-size-guide" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-ring-size">
-                  Ring Size Guide
+                <Link to="/shipping" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-shipping">
+                  Shipping
+                </Link>
+              </li>
+              <li>
+                <Link to="/returns" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-returns">
+                  Returns
+                </Link>
+              </li>
+              <li>
+                <Link to="/warranty" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-warranty">
+                  Warranty
+                </Link>
+              </li>
+              <li>
+                <Link to="/jewelry-care" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-jewelry-care">
+                  Jewelry Care
                 </Link>
               </li>
               <li>
@@ -83,8 +98,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/jewelry-care" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-jewelry-care">
-                  Jewelry Care
+                <Link to="/ring-size-guide" className="text-gray-400 hover:text-yellow-500 transition-colors text-sm" data-testid="footer-link-ring-size">
+                  Ring Size Guide
                 </Link>
               </li>
               <li>

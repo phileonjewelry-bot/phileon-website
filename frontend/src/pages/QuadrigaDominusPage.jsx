@@ -26,6 +26,7 @@ import RingSizeSelector, {
 import { useAddToCart } from "../hooks/useAddToCart";
 import ProductSeo from "@/components/ProductSeo";
 import { QUADRIGA_DOMINUS_SEO } from "@/lib/seoProducts";
+import FineJewelryConfidence from "@/components/FineJewelryConfidence";
 
 // --------------------------------------------------------------------------
 // APPROVED ASSETS — one image per colorway. Do not swap or re-crop.
@@ -657,6 +658,11 @@ export default function QuadrigaDominusPage() {
               <li>— Sold individually</li>
             </ul>
           </div>
+        </div>
+
+        {/* PHILEON Assurance — approved trust destinations only */}
+        <div className="max-w-[720px] mx-auto mt-16">
+          <FineJewelryConfidence testId="quadriga-confidence" />
         </div>
       </div>
     </div>

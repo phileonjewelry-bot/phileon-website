@@ -30,12 +30,12 @@
 export const TRUST_PAGES = {
   '/shipping': {
     slug: 'shipping',
-    status: 'draft',
+    status: 'approved',
     eyebrow: 'PHILEON · Delivery',
     h1: 'Shipping',
-    title: 'Shipping | PHILEON Fine Jewelry',
+    title: 'Shipping | Canada, United States & International | PHILEON',
     description:
-      'PHILEON shipping information — complimentary standard shipping within Canada, signature on high-value orders, US and international destinations, customs and duties, address accuracy and lost or damaged shipments.',
+      'Complimentary standard shipping across Canada with insured transit and a signature required on orders of C$1,000 or more. Tracked shipping to the United States and supported international destinations, with customs and duties paid by the recipient.',
     intro:
       'A PHILEON piece is prepared with care before it leaves our atelier. The information below distinguishes production time from transit time and covers our delivery practice for Canada, the United States and international destinations.',
     lastReviewed: '2026-02',
@@ -44,46 +44,42 @@ export const TRUST_PAGES = {
         title: 'Order Preparation',
         blocks: [
           { kind: 'p', text: 'PHILEON separates two timelines: (1) production and finishing time inside the atelier before a piece is ready to leave, and (2) carrier transit time from our door to yours. Production time is not shipping time — the two are quoted separately.' },
-          { kind: 'owner', label: 'Production lead time for ready-to-ship pieces' },
-          { kind: 'owner', label: 'Production lead time for made-to-order pieces' },
+          { kind: 'p', text: 'Ready-to-ship pieces are typically prepared within 1–3 business days. This estimate is not guaranteed, as inventory verification, fraud or payment review, or another operational check may reasonably delay fulfillment.' },
+          { kind: 'p', text: 'Made-to-order Fine Jewelry typically requires approximately 4–8 weeks before shipment. Production times may vary based on design complexity, stone availability, customization, sizing and production requirements. Custom and bespoke timelines are quoted separately for the specific commission.' },
         ],
       },
       {
         title: 'Canada',
         blocks: [
           { kind: 'p', text: 'PHILEON offers complimentary standard shipping within Canada. All qualifying orders are shipped with tracking.' },
-          { kind: 'p', text: 'Orders valued at C$1,000 or more require a signature upon delivery. High-value Fine Jewelry shipments are insured where supported by the selected carrier or service.' },
-          { kind: 'owner', label: 'Canadian shipping carrier(s)' },
-          { kind: 'owner', label: 'Standard transit estimate (Canada)' },
-          { kind: 'owner', label: 'Whether all Canadian shipments are insured, or only qualifying high-value shipments' },
+          { kind: 'p', text: 'Shipments travel with Canada Post or UPS. PHILEON selects the appropriate carrier based on destination, shipment value, service availability and package requirements.' },
+          { kind: 'p', text: 'Standard transit is approximately 2–7 business days after fulfillment. This is a transit estimate only — it does not include production or made-to-order lead time.' },
+          { kind: 'p', text: 'All PHILEON Fine Jewelry shipments are insured in transit where supported by the selected carrier or service.' },
+          { kind: 'p', text: 'Orders valued at C$1,000 or more require a signature upon delivery where supported by the carrier.' },
         ],
       },
       {
         title: 'United States',
         blocks: [
-          { kind: 'p', text: 'Shipping to the United States is available. Shipping charges are the responsibility of the customer unless a specific promotion states otherwise.' },
-          { kind: 'p', text: 'Tracking is provided where supported by the selected service. Orders valued at the equivalent of C$1,000 or more require a signature where supported.' },
-          { kind: 'owner', label: 'US shipping carrier(s)' },
-          { kind: 'owner', label: 'US shipping rate' },
-          { kind: 'owner', label: 'Standard transit estimate (United States)' },
+          { kind: 'p', text: 'Shipping to the United States is available. Shipping charges are calculated at checkout and are the responsibility of the customer unless a specific promotion states otherwise.' },
+          { kind: 'p', text: 'Shipments travel with UPS or FedEx. PHILEON selects the appropriate service based on destination, shipment value, carrier availability and package requirements.' },
+          { kind: 'p', text: 'Standard transit is approximately 3–8 business days after fulfillment. Production time is separate, customs or border delays may extend delivery, and transit estimates are not guarantees.' },
+          { kind: 'p', text: 'Orders valued at the equivalent of C$1,000 or more require a signature upon delivery where supported by the carrier.' },
         ],
       },
       {
         title: 'International',
         blocks: [
-          { kind: 'p', text: 'PHILEON may ship internationally to supported destinations. International shipping charges are the responsibility of the customer unless expressly stated otherwise.' },
-          { kind: 'p', text: 'Customers are responsible for all applicable customs duties, import taxes, brokerage charges and local fees associated with delivery into their country. These charges are not included in the PHILEON product price unless explicitly stated otherwise.' },
-          { kind: 'note', text: 'International customs clearance times can vary by destination and are outside PHILEON’s control. We do not guarantee international customs clearance timing.' },
-          { kind: 'owner', label: 'Regions currently served internationally' },
-          { kind: 'owner', label: 'International carrier(s)' },
-          { kind: 'owner', label: 'International shipping rate' },
-          { kind: 'owner', label: 'International transit estimate range' },
+          { kind: 'p', text: 'PHILEON ships to supported international destinations where suitable tracked delivery is available. International shipping is calculated at checkout and is the responsibility of the customer unless expressly stated otherwise.' },
+          { kind: 'p', text: 'International shipments travel with UPS, FedEx or DHL where available. Carrier selection may depend on destination and service availability.' },
+          { kind: 'p', text: 'Standard international transit is approximately 5–12 business days after fulfillment. Transit times do not include customs clearance delays, and PHILEON does not guarantee customs processing time.' },
+          { kind: 'p', text: 'The customer is responsible for all applicable customs duties, import taxes, brokerage charges and local fees associated with delivery into their country. These charges are not included in the PHILEON product price unless explicitly stated otherwise.' },
         ],
       },
       {
         title: 'High-Value Orders',
         blocks: [
-          { kind: 'p', text: 'For higher-value Fine Jewelry — including any order valued at C$1,000 or more, or the international equivalent where supported — a signature is required on delivery. Where supported by the selected carrier or service, high-value shipments are insured.' },
+          { kind: 'p', text: 'For higher-value Fine Jewelry — including any order valued at C$1,000 or more, or the international equivalent where supported — a signature is required on delivery. Where supported by the selected carrier or service, high-value shipments are insured in transit.' },
         ],
       },
       {
@@ -110,12 +106,12 @@ export const TRUST_PAGES = {
 
   '/returns': {
     slug: 'returns',
-    status: 'draft',
+    status: 'approved',
     eyebrow: 'PHILEON · Returns',
     h1: 'Returns',
     title: 'Returns | 30-Day Return Window on Eligible Gold Jewelry | PHILEON',
     description:
-      'PHILEON returns policy — 30-day return window on eligible gold jewelry from the confirmed delivery date. Silver, custom / bespoke, engraved and resized pieces follow separate final-sale rules.',
+      'PHILEON offers a 30-day return window on eligible gold jewelry from the confirmed delivery date. Silver, custom / bespoke, engraved and resized pieces follow separate final-sale rules. Approved refunds are typically processed within 5–10 business days after inspection.',
     intro:
       'PHILEON offers a 30-day return window on eligible gold jewelry, beginning on the confirmed delivery date. Silver jewelry, custom and bespoke pieces, and altered or resized items follow separate rules described below.',
     lastReviewed: '2026-02',
@@ -165,8 +161,8 @@ export const TRUST_PAGES = {
         title: 'Refunds',
         blocks: [
           { kind: 'p', text: 'Approved refunds are returned to the original payment method where practical. Refunds are not issued until the returned piece has been received and inspected.' },
+          { kind: 'p', text: 'Once an eligible return has been received, inspected and approved by PHILEON, the refund is typically processed within 5–10 business days. Your financial institution may require additional time before the refund appears on your account.' },
           { kind: 'p', text: 'Original outbound shipping charges, international customs duties, import taxes and brokerage fees are not refundable unless PHILEON specifically approves them or applicable law requires reimbursement.' },
-          { kind: 'owner', label: 'Refund processing timeframe once inspection is complete' },
         ],
       },
       {
@@ -180,12 +176,12 @@ export const TRUST_PAGES = {
 
   '/warranty': {
     slug: 'warranty',
-    status: 'draft',
+    status: 'approved',
     eyebrow: 'PHILEON · Guarantee',
     h1: 'Warranty',
     title: 'Warranty | 12-Month Limited Manufacturing Warranty | PHILEON',
     description:
-      'PHILEON’s 12-month limited warranty covers manufacturing and workmanship defects from the original delivery date. Normal wear, accidental damage, plating wear and third-party repairs are treated separately.',
+      'PHILEON provides a 12-month limited warranty against manufacturing defects from the original delivery date. Normal wear, accidental damage, plating wear, third-party repairs and stone loss from impact are treated separately. Annual professional inspection is recommended but not required.',
     intro:
       'PHILEON provides a 12-month limited warranty against manufacturing defects, beginning from the original delivery date. The warranty is intended to cover defects attributable to the original manufacture or workmanship of the jewelry.',
     lastReviewed: '2026-02',
@@ -269,9 +265,9 @@ export const TRUST_PAGES = {
       {
         title: 'Inspection & Maintenance',
         blocks: [
-          { kind: 'p', text: 'Periodic inspection helps identify small issues before they become significant. Contact PHILEON to arrange an inspection.' },
-          { kind: 'owner', label: 'Recommended inspection interval' },
-          { kind: 'owner', label: 'Whether periodic inspection is required to maintain coverage' },
+          { kind: 'p', text: 'PHILEON recommends that Fine Jewelry be professionally inspected approximately once every 12 months. Inspection may include review of prongs, stone security, settings, clasps, structural wear and finishes where appropriate.' },
+          { kind: 'p', text: 'Periodic inspection is recommended but is not a mandatory condition of PHILEON’s 12-month limited manufacturing warranty. A missed annual inspection does not automatically void otherwise valid manufacturing-defect coverage.' },
+          { kind: 'p', text: 'However, damage caused by prolonged wear, ignored loose stones, impact, neglect, misuse or unauthorized alteration may still fall outside warranty coverage based on inspection.' },
         ],
       },
       {

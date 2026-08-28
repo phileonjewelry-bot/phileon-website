@@ -150,6 +150,9 @@ export function searchPages(query) {
   const TRUST_KEYWORDS = {
     materials: ['material', 'materials', 'gold', 'silver', '10k', '14k', '18k', 'karat', 'lab diamond', 'natural diamond', 'lab-grown', 'cubic zirconia', 'cz', 'vermeil', 'plating', 'plated', 'enamel', 'blackened'],
     'jewelry-care': ['care', 'cleaning', 'clean', 'polish', 'tarnish', 'ultrasonic', 'ring care', 'jewelry care', 'store', 'storage'],
+    shipping: ['ship', 'shipping', 'delivery', 'canada shipping', 'us shipping', 'usa shipping', 'united states shipping', 'international shipping', 'tracking', 'signature', 'duties', 'customs', 'brokerage', 'transit'],
+    returns: ['return', 'returns', '30 day return', '30-day return', 'refund', 'exchange', 'final sale', 'send back'],
+    warranty: ['warranty', '12 month warranty', 'twelve month warranty', 'guarantee', 'defect', 'ring inspection', 'inspection', 'repair'],
   };
   for (const page of listApprovedTrustPages()) {
     const keywords = TRUST_KEYWORDS[page.slug] || [];

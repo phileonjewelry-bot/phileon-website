@@ -212,8 +212,33 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                <Link to="/contact" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-contact">
                   Contact
+                </Link>
+              </li>
+              <li>
+                <Link to="/shipping" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-shipping">
+                  Shipping
+                </Link>
+              </li>
+              <li>
+                <Link to="/returns" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-returns">
+                  Returns
+                </Link>
+              </li>
+              <li>
+                <Link to="/warranty" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-warranty">
+                  Warranty
+                </Link>
+              </li>
+              <li>
+                <Link to="/jewelry-care" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-jewelry-care">
+                  Jewelry Care
+                </Link>
+              </li>
+              <li>
+                <Link to="/materials" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-materials">
+                  Materials
                 </Link>
               </li>
             </ul>
@@ -223,12 +248,12 @@ const Footer = () => {
           <div className="md:col-span-4">
             <ul className="space-y-4">
               <li>
-                <Link to="/privacy" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                <Link to="/privacy" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-privacy">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors">
+                <Link to="/terms" className="text-sm text-phileon-ivory-muted hover:text-phileon-gold transition-colors" data-testid="footer-link-terms">
                   Terms
                 </Link>
               </li>
