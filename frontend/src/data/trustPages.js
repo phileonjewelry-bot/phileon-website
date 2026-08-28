@@ -35,15 +35,15 @@ export const TRUST_PAGES = {
     h1: 'Shipping',
     title: 'Shipping | PHILEON Fine Jewelry',
     description:
-      'PHILEON shipping information — production time, transit estimates, tracking, insurance and customs guidance for Canada, the United States and international destinations.',
+      'PHILEON shipping information — complimentary standard shipping within Canada, signature on high-value orders, US and international destinations, customs and duties, address accuracy and lost or damaged shipments.',
     intro:
-      'A PHILEON piece is prepared with care before it leaves our atelier. The information below distinguishes production time from transit time so you can plan around each release with confidence.',
-    lastReviewed: null,
+      'A PHILEON piece is prepared with care before it leaves our atelier. The information below distinguishes production time from transit time and covers our delivery practice for Canada, the United States and international destinations.',
+    lastReviewed: '2026-02',
     sections: [
       {
         title: 'Order Preparation',
         blocks: [
-          { kind: 'p', text: 'PHILEON separates two timelines: (1) production/finishing time inside the atelier before a piece is ready to leave, and (2) carrier transit time from our door to yours.' },
+          { kind: 'p', text: 'PHILEON separates two timelines: (1) production and finishing time inside the atelier before a piece is ready to leave, and (2) carrier transit time from our door to yours. Production time is not shipping time — the two are quoted separately.' },
           { kind: 'owner', label: 'Production lead time for ready-to-ship pieces' },
           { kind: 'owner', label: 'Production lead time for made-to-order pieces' },
         ],
@@ -51,58 +51,58 @@ export const TRUST_PAGES = {
       {
         title: 'Canada',
         blocks: [
-          { kind: 'owner', label: 'Domestic carrier(s)' },
-          { kind: 'owner', label: 'Standard transit estimate' },
-          { kind: 'owner', label: 'Tracking policy' },
-          { kind: 'owner', label: 'Insurance coverage' },
-          { kind: 'owner', label: 'Signature-on-delivery threshold' },
-          { kind: 'owner', label: 'Shipping cost / free-shipping threshold (if any)' },
+          { kind: 'p', text: 'PHILEON offers complimentary standard shipping within Canada. All qualifying orders are shipped with tracking.' },
+          { kind: 'p', text: 'Orders valued at C$1,000 or more require a signature upon delivery. High-value Fine Jewelry shipments are insured where supported by the selected carrier or service.' },
+          { kind: 'owner', label: 'Canadian shipping carrier(s)' },
+          { kind: 'owner', label: 'Standard transit estimate (Canada)' },
+          { kind: 'owner', label: 'Whether all Canadian shipments are insured, or only qualifying high-value shipments' },
         ],
       },
       {
         title: 'United States',
         blocks: [
-          { kind: 'owner', label: 'US carrier(s)' },
-          { kind: 'owner', label: 'Standard transit estimate' },
-          { kind: 'owner', label: 'Tracking policy' },
-          { kind: 'owner', label: 'Insurance coverage' },
-          { kind: 'owner', label: 'Signature-on-delivery threshold' },
-          { kind: 'owner', label: 'Shipping cost / free-shipping threshold (if any)' },
+          { kind: 'p', text: 'Shipping to the United States is available. Shipping charges are the responsibility of the customer unless a specific promotion states otherwise.' },
+          { kind: 'p', text: 'Tracking is provided where supported by the selected service. Orders valued at the equivalent of C$1,000 or more require a signature where supported.' },
+          { kind: 'owner', label: 'US shipping carrier(s)' },
+          { kind: 'owner', label: 'US shipping rate' },
+          { kind: 'owner', label: 'Standard transit estimate (United States)' },
         ],
       },
       {
         title: 'International',
         blocks: [
-          { kind: 'owner', label: 'Regions served' },
+          { kind: 'p', text: 'PHILEON may ship internationally to supported destinations. International shipping charges are the responsibility of the customer unless expressly stated otherwise.' },
+          { kind: 'p', text: 'Customers are responsible for all applicable customs duties, import taxes, brokerage charges and local fees associated with delivery into their country. These charges are not included in the PHILEON product price unless explicitly stated otherwise.' },
+          { kind: 'note', text: 'International customs clearance times can vary by destination and are outside PHILEON’s control. We do not guarantee international customs clearance timing.' },
+          { kind: 'owner', label: 'Regions currently served internationally' },
           { kind: 'owner', label: 'International carrier(s)' },
-          { kind: 'owner', label: 'Transit estimate range' },
-          { kind: 'owner', label: 'Tracking, insurance and signature policy' },
-        ],
-      },
-      {
-        title: 'Customs & Duties',
-        blocks: [
-          { kind: 'owner', label: 'Who is responsible for duties/taxes on international orders (PHILEON vs recipient)' },
+          { kind: 'owner', label: 'International shipping rate' },
+          { kind: 'owner', label: 'International transit estimate range' },
         ],
       },
       {
         title: 'High-Value Orders',
         blocks: [
-          { kind: 'p', text: 'For higher-value Fine Jewelry pieces, PHILEON may apply additional protection.' },
-          { kind: 'owner', label: 'Threshold for enhanced insurance / signature requirement' },
-          { kind: 'owner', label: 'Delivery verification steps' },
+          { kind: 'p', text: 'For higher-value Fine Jewelry — including any order valued at C$1,000 or more, or the international equivalent where supported — a signature is required on delivery. Where supported by the selected carrier or service, high-value shipments are insured.' },
         ],
       },
       {
-        title: 'Address Changes',
+        title: 'Address Accuracy',
         blocks: [
-          { kind: 'owner', label: 'Window for changing a shipping address after order confirmation' },
+          { kind: 'p', text: 'Customers are responsible for providing a complete and accurate shipping address at checkout.' },
+          { kind: 'p', text: 'If an address correction is required, please contact PHILEON as soon as possible. We cannot guarantee that an address can be changed once an order has entered production or shipment.' },
         ],
       },
       {
         title: 'Lost or Damaged Shipments',
         blocks: [
-          { kind: 'owner', label: 'PHILEON process for lost / damaged shipments and liability' },
+          { kind: 'p', text: 'Please contact PHILEON promptly if a shipment arrives damaged or appears to be lost. PHILEON will review the shipment and carrier information before determining the appropriate resolution. An immediate refund or replacement cannot be promised in advance of the carrier or insurance review.' },
+        ],
+      },
+      {
+        title: 'Your Rights',
+        blocks: [
+          { kind: 'note', text: 'Nothing in this policy limits any rights or remedies available to customers under applicable consumer-protection law.' },
         ],
       },
     ],
@@ -113,63 +113,66 @@ export const TRUST_PAGES = {
     status: 'draft',
     eyebrow: 'PHILEON · Returns',
     h1: 'Returns',
-    title: 'Returns | PHILEON Fine Jewelry',
+    title: 'Returns | 30-Day Return Window on Eligible Gold Jewelry | PHILEON',
     description:
-      'PHILEON returns policy — ready-to-ship pieces, made-to-order Fine Jewelry, custom / bespoke commissions, engraved and resized items each have their own terms.',
+      'PHILEON returns policy — 30-day return window on eligible gold jewelry from the confirmed delivery date. Silver, custom / bespoke, engraved and resized pieces follow separate final-sale rules.',
     intro:
-      'Return terms depend on how a piece was produced. Ready-to-ship jewelry, made-to-order Fine Jewelry and custom / bespoke commissions are each handled separately.',
-    lastReviewed: null,
+      'PHILEON offers a 30-day return window on eligible gold jewelry, beginning on the confirmed delivery date. Silver jewelry, custom and bespoke pieces, and altered or resized items follow separate rules described below.',
+    lastReviewed: '2026-02',
     sections: [
       {
-        title: 'Ready-to-Ship Pieces',
+        title: 'Return Window & Condition',
         blocks: [
-          { kind: 'owner', label: 'Return eligibility for stock/ready-to-ship pieces' },
-          { kind: 'owner', label: 'Return window (days)' },
-          { kind: 'owner', label: 'Condition requirements (unworn, original packaging, etc.)' },
-          { kind: 'owner', label: 'Return authorization / RMA process' },
-          { kind: 'owner', label: 'Return shipping responsibility' },
-          { kind: 'owner', label: 'Refund destination, timing and treatment of shipping fees' },
+          { kind: 'p', text: 'The 30-day return window begins on the confirmed delivery date.' },
+          { kind: 'p', text: 'Returned merchandise must be unworn, unused, unaltered and undamaged, and returned with its original packaging and included materials where applicable. PHILEON may inspect all returned jewelry before approving a refund.' },
         ],
       },
       {
-        title: 'Made-to-Order Fine Jewelry',
+        title: 'Gold Jewelry',
         blocks: [
-          { kind: 'p', text: 'Made-to-order Fine Jewelry is produced against a customer’s specifications (size, metal, stone variant). Return terms differ from ready-to-ship pieces.' },
-          { kind: 'owner', label: 'Return eligibility for made-to-order pieces' },
-          { kind: 'owner', label: 'Return window (if any)' },
-          { kind: 'owner', label: 'Restocking / cancellation fee (if any)' },
+          { kind: 'p', text: 'Eligible standard gold jewelry may be returned within 30 days of delivery, provided the piece remains in original saleable condition. Any item that has been worn, damaged or altered may be refused.' },
         ],
       },
       {
-        title: 'Custom & Bespoke Commissions',
+        title: 'Silver Jewelry',
         blocks: [
-          { kind: 'p', text: 'Bespoke commissions are designed to individual specification, with CAD review and stone selection. They are typically not treated the same as stock returns.' },
-          { kind: 'owner', label: 'Return / cancellation policy for bespoke commissions' },
-          { kind: 'owner', label: 'Deposit treatment on cancellation (if applicable)' },
+          { kind: 'p', text: 'Silver jewelry is final sale.' },
+          { kind: 'p', text: 'Silver pieces are not eligible for change-of-mind returns or exchanges unless PHILEON determines that the item arrived defective, damaged or incorrect, or applicable law requires another remedy.' },
         ],
       },
       {
-        title: 'Engraved or Personalized Pieces',
+        title: 'Custom & Bespoke Jewelry',
         blocks: [
-          { kind: 'owner', label: 'Return policy for engraved / personalized pieces' },
+          { kind: 'p', text: 'Custom and bespoke jewelry is final sale. This includes pieces created or materially altered specifically for the customer — including custom designs, personalized pieces, engraved pieces, customer-selected modifications, special stone combinations, and customer-approved bespoke CAD designs.' },
+          { kind: 'note', text: 'Standard gold pieces are not automatically classified as final sale simply because they are produced after purchase.' },
         ],
       },
       {
-        title: 'Resized Rings',
+        title: 'Resized or Altered Jewelry',
         blocks: [
-          { kind: 'owner', label: 'Return policy for rings that have been resized' },
+          { kind: 'p', text: 'Jewelry that has been resized, engraved or otherwise altered specifically at your request is treated as final sale unless otherwise approved by PHILEON.' },
         ],
       },
       {
-        title: 'Inspiration Vault Pieces',
+        title: 'Return Shipping',
         blocks: [
-          { kind: 'owner', label: 'Return policy for Inspiration Vault pieces' },
+          { kind: 'p', text: 'Customers are responsible for the cost of return shipping.' },
+          { kind: 'p', text: 'PHILEON will cover reasonable return shipping where the return results from an incorrect item supplied by PHILEON, a verified manufacturing defect, or shipping damage attributable to the original shipment.' },
+          { kind: 'p', text: 'PHILEON strongly recommends tracked and insured return shipping for valuable jewelry. Subject to applicable law, PHILEON is not responsible for customer return shipments that are lost before being received by PHILEON.' },
         ],
       },
       {
-        title: 'Earrings & Hygienic Items',
+        title: 'Refunds',
         blocks: [
-          { kind: 'owner', label: 'Return policy for pierced earrings (hygiene rules)' },
+          { kind: 'p', text: 'Approved refunds are returned to the original payment method where practical. Refunds are not issued until the returned piece has been received and inspected.' },
+          { kind: 'p', text: 'Original outbound shipping charges, international customs duties, import taxes and brokerage fees are not refundable unless PHILEON specifically approves them or applicable law requires reimbursement.' },
+          { kind: 'owner', label: 'Refund processing timeframe once inspection is complete' },
+        ],
+      },
+      {
+        title: 'Your Rights',
+        blocks: [
+          { kind: 'note', text: 'Nothing in this policy limits any rights or remedies available to customers under applicable consumer-protection law.' },
         ],
       },
     ],
@@ -180,80 +183,101 @@ export const TRUST_PAGES = {
     status: 'draft',
     eyebrow: 'PHILEON · Guarantee',
     h1: 'Warranty',
-    title: 'Warranty | PHILEON Fine Jewelry',
+    title: 'Warranty | 12-Month Limited Manufacturing Warranty | PHILEON',
     description:
-      'PHILEON warranty overview — manufacturing defects, stone-setting integrity, plating, resizing, third-party repairs and periodic inspection.',
+      'PHILEON’s 12-month limited warranty covers manufacturing and workmanship defects from the original delivery date. Normal wear, accidental damage, plating wear and third-party repairs are treated separately.',
     intro:
-      'PHILEON stands behind the way its Fine Jewelry is made. Warranty coverage differs by cause — manufacturing versus normal wear versus accidental damage — and by finish type.',
-    lastReviewed: null,
+      'PHILEON provides a 12-month limited warranty against manufacturing defects, beginning from the original delivery date. The warranty is intended to cover defects attributable to the original manufacture or workmanship of the jewelry.',
+    lastReviewed: '2026-02',
     sections: [
       {
-        title: 'Manufacturing Defects',
+        title: 'Potentially Covered',
         blocks: [
-          { kind: 'owner', label: 'Warranty duration for manufacturing defects' },
-          { kind: 'owner', label: 'What qualifies as a manufacturing defect' },
+          { kind: 'p', text: 'Subject to inspection, warranty coverage may include:' },
+          { kind: 'ul', items: [
+            'manufacturing defects',
+            'workmanship defects',
+            'setting defects attributable to original manufacture',
+            'structural issues attributable to original manufacture',
+          ] },
+          { kind: 'p', text: 'PHILEON determines warranty eligibility after inspection.' },
         ],
       },
       {
-        title: 'Stone & Setting Integrity',
+        title: 'Not Automatically Covered',
         blocks: [
-          { kind: 'owner', label: 'Coverage for lost / dislodged stones' },
-          { kind: 'owner', label: 'Melee stone replacement policy' },
+          { kind: 'p', text: 'The warranty does not automatically cover:' },
+          { kind: 'ul', items: [
+            'normal wear and tear',
+            'scratches, dents and bending',
+            'accidental impact and misuse',
+            'loss or theft',
+            'improper storage',
+            'chemical exposure',
+            'damage caused by improper cleaning',
+            'gradual finish wear, plating wear and blackened-finish wear',
+            'enamel damage caused by impact or abrasion',
+            'damage resulting from another jeweler modifying or repairing the piece',
+          ] },
         ],
       },
       {
-        title: 'Normal Wear',
+        title: 'Stone Loss',
         blocks: [
-          { kind: 'p', text: 'Everyday jewelry accumulates surface wear over time. Coverage for cosmetic wear differs from coverage for structural failure.' },
-          { kind: 'owner', label: 'What counts as normal wear vs. structural issue' },
-        ],
-      },
-      {
-        title: 'Accidental Damage',
-        blocks: [
-          { kind: 'owner', label: 'Accidental damage policy' },
-          { kind: 'owner', label: 'Whether accidental damage is covered, repaired at cost, or excluded' },
+          { kind: 'p', text: 'Stone loss is not automatically covered simply because it occurs within the 12-month period.' },
+          { kind: 'p', text: 'PHILEON will inspect the piece to determine whether the loss resulted from a manufacturing or setting defect, accidental impact, wear, damage, or outside modification.' },
+          { kind: 'p', text: 'If PHILEON determines the loss resulted from a covered manufacturing defect, the repair may be covered under warranty.' },
         ],
       },
       {
         title: 'Resizing & Alterations',
         blocks: [
-          { kind: 'owner', label: 'Effect of resizing on warranty coverage' },
-          { kind: 'owner', label: 'Alteration requirements (must be done by PHILEON, etc.)' },
-        ],
-      },
-      {
-        title: 'Plating & Blackened Finishes',
-        blocks: [
-          { kind: 'p', text: 'Plated and blackened surface finishes evolve with wear. Their coverage typically differs from solid-metal jewelry.' },
-          { kind: 'owner', label: 'Coverage for plated / vermeil pieces' },
-          { kind: 'owner', label: 'Coverage for blackened / patinated finishes' },
-        ],
-      },
-      {
-        title: 'Enamel',
-        blocks: [
-          { kind: 'owner', label: 'Coverage for enamel chips / wear' },
-        ],
-      },
-      {
-        title: 'Chains & Clasps',
-        blocks: [
-          { kind: 'owner', label: 'Coverage for chain / clasp failure' },
+          { kind: 'p', text: 'Resizing and other alterations can affect fit, structural integrity and warranty coverage. Where alterations contributed to the problem, warranty coverage may not apply.' },
         ],
       },
       {
         title: 'Third-Party Repairs',
         blocks: [
-          { kind: 'owner', label: 'Effect of third-party jeweler repair on warranty' },
+          { kind: 'p', text: 'Repairs, alterations or resizing performed by a third party may affect warranty eligibility where that work contributed to the problem.' },
+        ],
+      },
+      {
+        title: 'Plating & Blackened Finishes',
+        blocks: [
+          { kind: 'p', text: 'Plated, oxidised and blackened surface finishes evolve with wear. Gradual finish change on high-contact areas is expected and is not treated as a manufacturing defect.' },
+        ],
+      },
+      {
+        title: 'Enamel',
+        blocks: [
+          { kind: 'p', text: 'Enamel is durable in normal wear but can chip or crack if struck. Damage caused by impact or abrasion is not automatically covered.' },
+        ],
+      },
+      {
+        title: 'Chains & Clasps',
+        blocks: [
+          { kind: 'p', text: 'Chain and clasp failure caused by a manufacturing defect may be reviewed under this warranty. Failure resulting from wear, impact or excessive load is not automatically covered.' },
+        ],
+      },
+      {
+        title: 'Warranty Claims',
+        blocks: [
+          { kind: 'p', text: 'To request warranty service, contact PHILEON with your order information, a description of the issue, and clear photographs where possible.' },
+          { kind: 'p', text: 'PHILEON may require physical inspection before determining coverage. Shipping responsibility for warranty evaluation is determined case by case.' },
         ],
       },
       {
         title: 'Inspection & Maintenance',
         blocks: [
+          { kind: 'p', text: 'Periodic inspection helps identify small issues before they become significant. Contact PHILEON to arrange an inspection.' },
           { kind: 'owner', label: 'Recommended inspection interval' },
           { kind: 'owner', label: 'Whether periodic inspection is required to maintain coverage' },
-          { kind: 'owner', label: 'Shipping responsibility for warranty repairs' },
+        ],
+      },
+      {
+        title: 'Your Rights',
+        blocks: [
+          { kind: 'note', text: 'Nothing in this policy limits any rights or remedies available to customers under applicable consumer-protection law.' },
         ],
       },
     ],
