@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from typing import List, Optional
 from models import Product, ProductCreate, ProductUpdate
 from inventory_alerts import get_inventory_status
@@ -7,12 +7,44 @@ import base64
 import uuid
 from services.object_storage import put_object, build_key
 
+# SEC-001: gate every mutating route behind the admin JWT. `verify_admin` is
+# defined in server.py; by the time this module is imported (server.py:819),
+# server.verify_admin is already defined (server.py:84), so this import
+# resolves against the partially-loaded server module without a cycle.
+from server import verify_admin
+
 router = APIRouter(prefix="/products", tags=["products"])
 
 # Get database from app state (will be injected)
 def get_db():
     from server import db
     return db
+
+
+# SEC-002 helper: strict magic-byte allowlist. We never trust the client's
+# stated `content_type`; the safe response type is computed from bytes and
+# is what /api/files/* returns.
+_IMAGE_ALLOWED = {
+    "image/jpeg": (".jpg", lambda b: b[:3] == b"\xff\xd8\xff"),
+    "image/png": (".png", lambda b: b[:8] == b"\x89PNG\r\n\x1a\n"),
+    "image/webp": (".webp", lambda b: len(b) >= 12 and b[:4] == b"RIFF" and b[8:12] == b"WEBP"),
+}
+_VIDEO_ALLOWED = {
+    "video/mp4": (".mp4", lambda b: len(b) >= 12 and b[4:8] == b"ftyp"),
+    "video/webm": (".webm", lambda b: b[:4] == b"\x1a\x45\xdf\xa3"),
+}
+
+
+def _validate_by_magic(contents: bytes, allowed: dict):
+    """Return (safe_content_type, safe_extension) or raise 415."""
+    for ct, (ext, sniff) in allowed.items():
+        try:
+            if sniff(contents):
+                return ct, ext
+        except Exception:
+            continue
+    raise HTTPException(status_code=415, detail="Unsupported or malformed file")
+
 
 @router.get("")
 async def get_products(
@@ -67,7 +99,7 @@ async def get_product(product_id: str):
     return result
 
 @router.post("", response_model=Product)
-async def create_product(product: ProductCreate):
+async def create_product(product: ProductCreate, _: str = Depends(verify_admin)):
     """Create new product (Admin only)"""
     db = get_db()
     
@@ -82,7 +114,7 @@ async def create_product(product: ProductCreate):
     return product_obj
 
 @router.put("/{product_id}", response_model=Product)
-async def update_product(product_id: str, product_update: ProductUpdate):
+async def update_product(product_id: str, product_update: ProductUpdate, _: str = Depends(verify_admin)):
     """Update product (Admin only)"""
     db = get_db()
     
@@ -104,7 +136,7 @@ async def update_product(product_id: str, product_update: ProductUpdate):
     return Product(**updated_product)
 
 @router.delete("/{product_id}")
-async def delete_product(product_id: str):
+async def delete_product(product_id: str, _: str = Depends(verify_admin)):
     """Delete product (Admin only)"""
     db = get_db()
     
@@ -116,7 +148,7 @@ async def delete_product(product_id: str):
     return {"message": "Product deleted successfully"}
 
 @router.put("/{product_id}/inventory")
-async def update_product_inventory(product_id: str, inventory_count: int):
+async def update_product_inventory(product_id: str, inventory_count: int, _: str = Depends(verify_admin)):
     """Update product inventory and trigger DROP MODE alerts"""
     db = get_db()
     
@@ -176,14 +208,25 @@ async def update_product_inventory(product_id: str, inventory_count: int):
     return result
 
 @router.post("/upload-image")
-async def upload_product_image(file: UploadFile = File(...)):
-    """Upload product image to Emergent Object Storage (durable across deploys)."""
-    file_extension = (file.filename.rsplit(".", 1)[-1] if "." in (file.filename or "") else "bin").lower()
-    unique_filename = f"{uuid.uuid4()}.{file_extension}"
+async def upload_product_image(file: UploadFile = File(...), _: str = Depends(verify_admin)):
+    """Upload product image to Emergent Object Storage (durable across deploys).
+
+    SEC-002: only real JPEG/PNG/WebP magic-byte headers are accepted, and the
+    stored content-type is derived from the bytes — never from the client-
+    supplied header. This prevents an unauthenticated (or in future, admin-
+    compromised) uploader from planting `text/html` under phileon.com/api/files.
+    """
+    contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Empty file")
+    if len(contents) > 20 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="File too large")
+
+    safe_ct, safe_ext = _validate_by_magic(contents, _IMAGE_ALLOWED)
+    unique_filename = f"{uuid.uuid4()}{safe_ext}"
     object_key = build_key("products/images", unique_filename)
 
-    contents = await file.read()
-    put_object(object_key, contents, file.content_type or "application/octet-stream")
+    put_object(object_key, contents, safe_ct)
 
     # Serve via backend proxy so we never expose raw storage URLs to the client.
     image_url = f"/api/files/{object_key}"
@@ -191,14 +234,23 @@ async def upload_product_image(file: UploadFile = File(...)):
     return {"imageUrl": image_url, "filename": unique_filename, "storagePath": object_key}
 
 @router.post("/upload-video")
-async def upload_product_video(file: UploadFile = File(...)):
-    """Upload product video (360° rotation or promotional) to Emergent Object Storage."""
-    file_extension = (file.filename.rsplit(".", 1)[-1] if "." in (file.filename or "") else "bin").lower()
-    unique_filename = f"{uuid.uuid4()}.{file_extension}"
+async def upload_product_video(file: UploadFile = File(...), _: str = Depends(verify_admin)):
+    """Upload product video (360° rotation or promotional) to Emergent Object Storage.
+
+    SEC-002: real MP4 / WebM magic bytes required; stored content-type is
+    derived from the bytes, not from the client header.
+    """
+    contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Empty file")
+    if len(contents) > 200 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="File too large")
+
+    safe_ct, safe_ext = _validate_by_magic(contents, _VIDEO_ALLOWED)
+    unique_filename = f"{uuid.uuid4()}{safe_ext}"
     object_key = build_key("products/videos", unique_filename)
 
-    contents = await file.read()
-    put_object(object_key, contents, file.content_type or "application/octet-stream")
+    put_object(object_key, contents, safe_ct)
 
     video_url = f"/api/files/{object_key}"
 

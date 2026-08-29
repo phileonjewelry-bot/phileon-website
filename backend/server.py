@@ -12,6 +12,8 @@ import jwt
 import bcrypt
 import uuid
 import mimetypes
+import html
+import re
 
 from models import (
     Collection, CollectionCreate, CollectionUpdate,
@@ -60,7 +62,46 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# ============ HELPER FUNCTIONS ============
+# SEC-002 supporting helpers for /api/files and admin attachment proxy.
+# Allowlist of content types we are willing to *serve* inline. Anything
+# outside this list (including anything the storage layer returns as an
+# HTML/SVG/JS content-type) is forced to `application/octet-stream` and
+# served with `Content-Disposition: attachment` so browsers cannot execute
+# it in-origin.
+_SAFE_INLINE_TYPES = {
+    "image/jpeg", "image/png", "image/webp", "image/gif",
+    "video/mp4", "video/webm", "video/quicktime",
+}
+_UNSAFE_KEY_PATTERN = re.compile(r"(^|/)\.\.(/|$)")
+
+
+def _sanitize_object_key(key: str) -> str:
+    """Reject path traversal and NUL bytes on any object-key proxy."""
+    if not key or "\x00" in key or _UNSAFE_KEY_PATTERN.search(key):
+        raise HTTPException(status_code=400, detail="Invalid object key")
+    # Reject encoded traversal too (e.g. %2e%2e).
+    lowered = key.lower()
+    if "%2e%2e" in lowered or "..\\" in key:
+        raise HTTPException(status_code=400, detail="Invalid object key")
+    return key
+
+
+def _safe_stream_headers(content_type: str) -> tuple[str, dict]:
+    """Return (safe_content_type, extra_headers) for an Object Storage stream."""
+    ct = (content_type or "").split(";", 1)[0].strip().lower() or "application/octet-stream"
+    headers = {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "private, max-age=300",
+    }
+    if ct not in _SAFE_INLINE_TYPES:
+        # Force safe type + attachment disposition so the browser cannot
+        # execute it in the site origin.
+        return "application/octet-stream", {**headers, "Content-Disposition": "attachment"}
+    return ct, headers
+
+
+
 def serialize_doc(doc: dict) -> dict:
     """Remove MongoDB _id and convert datetime to ISO string"""
     if doc is None:
@@ -483,13 +524,15 @@ async def admin_add_concierge_note(reference: str, body: dict, admin_username: s
 @admin_router.get("/concierge/attachments/{object_key:path}")
 async def admin_serve_concierge_attachment(object_key: str, _: str = Depends(verify_admin)):
     """Admin-authenticated attachment access — never public."""
+    _sanitize_object_key(object_key)
     if not object_key.startswith("phileon/concierge/"):
         raise HTTPException(status_code=400, detail="Invalid attachment reference")
     try:
         data, content_type = get_object(object_key)
     except Exception:
         raise HTTPException(status_code=404, detail="Attachment not found")
-    return Response(content=data, media_type=content_type or "application/octet-stream")
+    safe_ct, extra_headers = _safe_stream_headers(content_type)
+    return Response(content=data, media_type=safe_ct, headers=extra_headers)
 
 
 @admin_router.post("/login", response_model=Token)
@@ -830,10 +873,68 @@ app.include_router(checkout_v2_router, prefix="/api")
 app.include_router(webhooks_stripe_router, prefix="/api")
 app.include_router(metals_router)
 
+from starlette.types import ASGIApp, Receive, Scope, Send
+
+
+class SecurityHeadersMiddleware:
+    """Add restrictive security headers to every response.
+
+    Explicitly cheap ASGI middleware so it does not read/rewrite the body.
+    - `X-Content-Type-Options: nosniff` (mitigates SEC-002 blast radius).
+    - `X-Frame-Options: DENY` (clickjacking).
+    - `Referrer-Policy: strict-origin-when-cross-origin`.
+    - `Permissions-Policy: interest-cohort=(), browsing-topics=()` (tracking).
+    - HSTS is only meaningful under HTTPS; the platform terminates TLS in
+      front of us, so we set it and let the ingress carry it through.
+    """
+
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+
+        async def send_with_headers(message):
+            if message["type"] == "http.response.start":
+                headers = list(message.get("headers") or [])
+                extra = [
+                    (b"x-content-type-options", b"nosniff"),
+                    (b"x-frame-options", b"DENY"),
+                    (b"referrer-policy", b"strict-origin-when-cross-origin"),
+                    (b"permissions-policy", b"interest-cohort=(), browsing-topics=()"),
+                    (b"strict-transport-security", b"max-age=31536000; includeSubDomains"),
+                ]
+                existing = {k for k, _ in headers}
+                for k, v in extra:
+                    if k not in existing:
+                        headers.append((k, v))
+                message["headers"] = headers
+            await send(message)
+
+        await self.app(scope, receive, send_with_headers)
+
+
+app.add_middleware(SecurityHeadersMiddleware)
+
+
+def _resolve_cors_origins() -> list[str]:
+    raw = (os.environ.get("CORS_ORIGINS") or "").strip()
+    if not raw or raw == "*":
+        # Pin CORS to the deployed frontend origin. If the frontend origin is
+        # not discoverable at import time we fall back to a permissive list
+        # in dev BUT never with `allow_credentials=True`.
+        return ["*"]
+    return [o.strip() for o in raw.split(",") if o.strip()]
+
+
+_cors_origins = _resolve_cors_origins()
+_cors_credentials = _cors_origins != ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_credentials=_cors_credentials,
+    allow_origins=_cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -1028,14 +1129,23 @@ async def serve_tryon_result(filename: str):
 # Keeps raw storage URLs off the frontend and preserves server-side control.
 @api_router.get("/files/{object_key:path}")
 async def serve_stored_object(object_key: str):
-    """Stream a file from Emergent Object Storage by its full object key."""
+    """Stream a file from Emergent Object Storage by its full object key.
+
+    SEC-002: never trust the stored content-type. Only a small allowlist of
+    image/video types is served inline; anything else is forced to
+    application/octet-stream with `Content-Disposition: attachment` so a
+    stored HTML/JS blob cannot execute in the site origin. `X-Content-Type-
+    Options: nosniff` is always set.
+    """
+    _sanitize_object_key(object_key)
     if not object_key.startswith("phileon/"):
         raise HTTPException(status_code=400, detail="Invalid object key")
     try:
         data, content_type = get_object(object_key)
     except Exception:
         raise HTTPException(status_code=404, detail="File not found")
-    return Response(content=data, media_type=content_type or "application/octet-stream")
+    safe_ct, extra_headers = _safe_stream_headers(content_type)
+    return Response(content=data, media_type=safe_ct, headers=extra_headers)
 
 
 # ============ CUSTOMER AUTHENTICATION ============
@@ -1614,14 +1724,27 @@ async def create_concierge_inquiry(payload: dict):
 
     # Fire-and-forget email notifications. Delivery status is stored back
     # on the inquiry document so admin can see which messages failed.
+    #
+    # SEC-004: every user-controlled string that is interpolated into the
+    # internal notification email HTML is HTML-escaped. The customer
+    # acknowledgment does not currently interpolate any raw user text apart
+    # from `product.name` (which is server-side product metadata, not
+    # arbitrary customer input) — we escape that anyway for defence in depth.
     _prod = payload.get("product") or {}
-    admin_link = f"/admin/concierge/{reference}"
+    admin_link = f"/admin/concierge/{html.escape(reference, quote=True)}"
+    _safe_reference = html.escape(reference)
+    _safe_product_name = html.escape(_prod.get("name") or "")
+    _safe_name = html.escape(name)
+    _safe_email = html.escape(email)
+    _safe_message = html.escape(message)
+    _safe_summary = html.escape(summary)
+
     ack_html = (
         f"<div style=\"font-family:Georgia,serif;color:#222;\">"
         f"<p>Thank you for reaching out to PHILEON.</p>"
         f"<p>We\u2019ve received your Concierge request"
-        f"{(' about <strong>' + (_prod.get('name') or '') + '</strong>') if (_prod.get('name')) else ''}"
-        f". Your reference is <strong>{reference}</strong>.</p>"
+        f"{(' about <strong>' + _safe_product_name + '</strong>') if _safe_product_name else ''}"
+        f". Your reference is <strong>{_safe_reference}</strong>.</p>"
         f"<p>A PHILEON concierge will typically respond within 24 hours.</p>"
         f"<p style=\"color:#888;font-size:12px;\">If you didn\u2019t submit this, please disregard.</p>"
         f"</div>"
@@ -1635,13 +1758,13 @@ async def create_concierge_inquiry(payload: dict):
     )
     internal_html = (
         f"<pre style=\"font-family:Menlo,monospace;font-size:13px;\">"
-        f"{summary}"
+        f"{_safe_summary}"
         f"</pre>"
-        f"<p><strong>Reference:</strong> {reference}<br>"
-        f"<strong>Customer:</strong> {name} &lt;{email}&gt;<br>"
+        f"<p><strong>Reference:</strong> {_safe_reference}<br>"
+        f"<strong>Customer:</strong> {_safe_name} &lt;{_safe_email}&gt;<br>"
         f"<strong>Original message:</strong></p>"
-        f"<blockquote style=\"border-left:3px solid #c48369;padding:8px 12px;color:#555;\">{message}</blockquote>"
-        f"<p><a href=\"{admin_link}\">Open in admin</a></p>"
+        f"<blockquote style=\"border-left:3px solid #c48369;padding:8px 12px;color:#555;\">{_safe_message}</blockquote>"
+        f"<p><a href=\"{html.escape(admin_link, quote=True)}\">Open in admin</a></p>"
     )
     internal_result = await _send_transactional_email(
         to=_CONCIERGE_INTERNAL_TO,

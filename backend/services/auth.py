@@ -1,4 +1,5 @@
 import hashlib
+import os
 import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -9,8 +10,15 @@ from passlib.context import CryptContext
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# JWT settings
-SECRET_KEY = "phileon-customer-jwt-secret-key-change-in-production"
+# JWT settings — SECRET_KEY MUST come from env; no default (fail-closed).
+# Rotating the env value invalidates all previously issued customer tokens,
+# which is the desired behaviour for SEC-003 remediation.
+SECRET_KEY = (os.environ.get("CUSTOMER_JWT_SECRET") or "").strip()
+if not SECRET_KEY:
+    raise RuntimeError(
+        "CUSTOMER_JWT_SECRET is not set. Refusing to start the customer auth "
+        "layer with a missing/empty secret."
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60  # 30 days
 
@@ -60,16 +68,23 @@ def generate_order_number() -> str:
 
 
 def send_verification_email(email: str, token: str):
-    """Send email verification (mock implementation)."""
-    verification_link = f"https://phileon.com/verify-email?token={token}"
-    print(f"[EMAIL] Verification email sent to {email}")
-    print(f"[EMAIL] Verification link: {verification_link}")
-    # TODO: Integrate with actual email service
+    """Send email verification.
+
+    NOTE: Verification / reset tokens must NEVER be written to server logs
+    (they are single-use auth credentials). Wire to the Resend helper once
+    the sending domain is verified. Until then this call is a no-op that
+    fails silently — customer flows that require verification are guarded
+    server-side, not by log inspection.
+    """
+    # TODO: send via services.email.send_email once Resend is live.
+    return None
 
 
 def send_password_reset_email(email: str, token: str):
-    """Send password reset email (mock implementation)."""
-    reset_link = f"https://phileon.com/reset-password?token={token}"
-    print(f"[EMAIL] Password reset email sent to {email}")
-    print(f"[EMAIL] Reset link: {reset_link}")
-    # TODO: Integrate with actual email service
+    """Send password reset email.
+
+    NOTE: Reset tokens must NEVER be written to server logs. This is a no-op
+    until Resend is live; see send_verification_email above.
+    """
+    # TODO: send via services.email.send_email once Resend is live.
+    return None
