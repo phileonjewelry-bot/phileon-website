@@ -16,6 +16,7 @@ import {
 
 const sidebarLinks = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { name: 'Concierge', path: '/admin/concierge', icon: MessageSquare },
   { name: 'Collections', path: '/admin/collections', icon: FolderOpen },
   { name: 'Products', path: '/admin/products', icon: Gem },
   { name: 'Inquiries', path: '/admin/inquiries', icon: MessageSquare },

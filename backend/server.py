@@ -406,6 +406,92 @@ This consultation request was submitted through the Phileon website.
 
 
 # ============ ADMIN ROUTES ============
+CONCIERGE_STATUS_ORDER = ["new", "reviewing", "consultation-requested", "quote-in-progress", "replied", "closed"]
+ALLOWED_CONCIERGE_STATUS = set(CONCIERGE_STATUS_ORDER)
+
+
+def _serialize_inquiry(doc: dict) -> dict:
+    if not doc:
+        return doc
+    doc = {k: v for k, v in doc.items() if k != "_id"}
+    return doc
+
+
+@admin_router.get("/concierge/inquiries")
+async def admin_list_concierge(
+    status: Optional[str] = None,
+    priority: Optional[str] = None,
+    intent: Optional[str] = None,
+    product: Optional[str] = None,
+    _: str = Depends(verify_admin),
+):
+    q: dict = {}
+    if status: q["status"] = status
+    if priority: q["priority"] = priority
+    if intent: q["intent"] = intent
+    if product: q["product.slug"] = product
+    cursor = db.concierge_inquiries.find(q).sort("created_at", -1).limit(500)
+    items = [_serialize_inquiry(d) async for d in cursor]
+    order_idx = {s: i for i, s in enumerate(CONCIERGE_STATUS_ORDER)}
+    items.sort(key=lambda x: (order_idx.get(x.get("status", "new"), 99), -1 * int(x.get("created_at", "").replace("-", "").replace(":", "").replace("T", "").replace(".", "").replace("Z", "").replace("+", "").ljust(20, "0")[:20] or 0)))
+    new_count = sum(1 for x in items if x.get("status") == "new")
+    return {"items": items, "counts": {"new": new_count, "total": len(items)}}
+
+
+@admin_router.get("/concierge/inquiries/{reference}")
+async def admin_get_concierge(reference: str, _: str = Depends(verify_admin)):
+    doc = await db.concierge_inquiries.find_one({"reference": reference})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Inquiry not found")
+    return _serialize_inquiry(doc)
+
+
+@admin_router.patch("/concierge/inquiries/{reference}/status")
+@admin_router.post("/concierge/inquiries/{reference}/status")
+async def admin_update_concierge_status(reference: str, body: dict, _: str = Depends(verify_admin)):
+    new_status = (body or {}).get("status", "").lower()
+    if new_status not in ALLOWED_CONCIERGE_STATUS:
+        raise HTTPException(status_code=422, detail="Invalid status")
+    now = datetime.now(timezone.utc).isoformat()
+    result = await db.concierge_inquiries.update_one(
+        {"reference": reference},
+        {"$set": {"status": new_status, "updated_at": now},
+         "$push": {"status_history": {"status": new_status, "at": now}}},
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Inquiry not found")
+    return {"reference": reference, "status": new_status, "updated_at": now}
+
+
+@admin_router.post("/concierge/inquiries/{reference}/notes")
+async def admin_add_concierge_note(reference: str, body: dict, admin_username: str = Depends(verify_admin)):
+    note = (body or {}).get("note", "").strip()
+    if not note:
+        raise HTTPException(status_code=422, detail="Note is required")
+    if len(note) > 4000:
+        raise HTTPException(status_code=422, detail="Note is too long")
+    entry = {"note": note, "createdAt": datetime.now(timezone.utc).isoformat(), "author": admin_username}
+    result = await db.concierge_inquiries.update_one(
+        {"reference": reference},
+        {"$push": {"admin_notes": entry}, "$set": {"updated_at": entry["createdAt"]}},
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Inquiry not found")
+    return entry
+
+
+@admin_router.get("/concierge/attachments/{object_key:path}")
+async def admin_serve_concierge_attachment(object_key: str, _: str = Depends(verify_admin)):
+    """Admin-authenticated attachment access — never public."""
+    if not object_key.startswith("phileon/concierge/"):
+        raise HTTPException(status_code=400, detail="Invalid attachment reference")
+    try:
+        data, content_type = get_object(object_key)
+    except Exception:
+        raise HTTPException(status_code=404, detail="Attachment not found")
+    return Response(content=data, media_type=content_type or "application/octet-stream")
+
+
 @admin_router.post("/login", response_model=Token)
 async def admin_login(login: AdminLogin):
     # Check for default admin or existing admin
@@ -1372,6 +1458,7 @@ async def update_inventory(product_id: str, payload: InventoryUpdate):
 # commerce. Reference code is customer-facing (short, human-readable).
 # ═══════════════════════════════════════════════════════════════════════════
 import secrets
+from services.email import send_email as _send_transactional_email, INTERNAL_TO as _CONCIERGE_INTERNAL_TO
 
 CONCIERGE_ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp"}
 CONCIERGE_MAX_BYTES = 8 * 1024 * 1024  # 8 MB per image
@@ -1523,6 +1610,48 @@ async def create_concierge_inquiry(payload: dict):
         "internal_summary": summary,
     }
     await db.concierge_inquiries.insert_one(doc)
+
+    # Fire-and-forget email notifications. Delivery status is stored back
+    # on the inquiry document so admin can see which messages failed.
+    _prod = payload.get("product") or {}
+    admin_link = f"/admin/concierge/{reference}"
+    ack_html = (
+        f"<div style=\"font-family:Georgia,serif;color:#222;\">"
+        f"<p>Thank you for reaching out to PHILEON.</p>"
+        f"<p>We\u2019ve received your Concierge request"
+        f"{(' about <strong>' + (_prod.get('name') or '') + '</strong>') if (_prod.get('name')) else ''}"
+        f". Your reference is <strong>{reference}</strong>.</p>"
+        f"<p>A PHILEON concierge will typically respond within 24 hours.</p>"
+        f"<p style=\"color:#888;font-size:12px;\">If you didn\u2019t submit this, please disregard.</p>"
+        f"</div>"
+    )
+    ack_text = f"Thank you for reaching out to PHILEON.\nReference: {reference}\nA PHILEON concierge will typically respond within 24 hours."
+    ack_result = await _send_transactional_email(
+        to=email,
+        subject=f"We received your PHILEON Concierge request \u2014 {reference}",
+        html=ack_html,
+        text=ack_text,
+    )
+    internal_html = (
+        f"<pre style=\"font-family:Menlo,monospace;font-size:13px;\">"
+        f"{summary}"
+        f"</pre>"
+        f"<p><strong>Reference:</strong> {reference}<br>"
+        f"<strong>Customer:</strong> {name} &lt;{email}&gt;<br>"
+        f"<strong>Original message:</strong></p>"
+        f"<blockquote style=\"border-left:3px solid #c48369;padding:8px 12px;color:#555;\">{message}</blockquote>"
+        f"<p><a href=\"{admin_link}\">Open in admin</a></p>"
+    )
+    internal_result = await _send_transactional_email(
+        to=_CONCIERGE_INTERNAL_TO,
+        subject=f"New PHILEON Concierge Inquiry \u2014 {reference}",
+        html=internal_html,
+        text=f"Reference {reference} from {name} <{email}>\n\n{summary}\n\nMessage:\n{message}",
+    )
+    await db.concierge_inquiries.update_one(
+        {"reference": reference},
+        {"$set": {"notifications": {"customerAck": ack_result, "internalAlert": internal_result}}},
+    )
     return {
         "reference": reference,
         "intent": intent,
