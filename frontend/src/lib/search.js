@@ -153,7 +153,14 @@ export function searchPages(query) {
     shipping: ['ship', 'shipping', 'delivery', 'canada shipping', 'us shipping', 'usa shipping', 'united states shipping', 'international shipping', 'tracking', 'signature', 'duties', 'customs', 'brokerage', 'transit'],
     returns: ['return', 'returns', '30 day return', '30-day return', 'refund', 'exchange', 'final sale', 'send back'],
     warranty: ['warranty', '12 month warranty', 'twelve month warranty', 'guarantee', 'defect', 'ring inspection', 'inspection', 'repair'],
+    privacy: ['privacy', 'privacy policy', 'personal information', 'data'],
+    terms: ['terms', 'terms of service', 'terms of use', 'agreement'],
   };
+  // Concierge / bespoke / redesign — points to the primary Concierge entry page.
+  const CONCIERGE_KEYWORDS = ['custom jewelry', 'custom ring', 'custom pendant', 'bespoke', 'bespoke jewelry', 'redesign', 'redesign jewelry', 'jewelry consultation', 'consultation', 'change stone', 'change metal', 'commission'];
+  if (CONCIERGE_KEYWORDS.some((k) => q.includes(k))) {
+    out.push({ kind: 'concierge', name: 'Custom Jewelry & Bespoke', href: '/custom-jewelry-canada', subtitle: 'PHILEON · Concierge' });
+  }
   for (const page of listApprovedTrustPages()) {
     const keywords = TRUST_KEYWORDS[page.slug] || [];
     const matches = keywords.some((k) => q.includes(k)) || page.slug.includes(q) || page.h1.toLowerCase().includes(q);

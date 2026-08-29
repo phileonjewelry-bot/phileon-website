@@ -14,6 +14,7 @@ import RingProductPage from "../components/RingProductPage";
 import ProductSeo from "@/components/ProductSeo";
 import { BAJAN_JOE_SEO } from "@/lib/seoProducts";
 import FineJewelryConfidence from "@/components/FineJewelryConfidence";
+import ConciergeButton from "@/components/ConciergeButton";
 
 // Approved BAJAN JOE assets (public artifact URLs, unmodified).
 const HERO_VIDEO   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ua7fhqo0_hf_20260808_045211_0c2ba646-60ce-406a-b04b-979db1d45083.mp4";
@@ -159,6 +160,11 @@ export default function BajanJoeSignetRingPage() {
         }}
       >
         <FineJewelryConfidence testId="bajan-joe-confidence" />
+        <ConciergeButton
+          source="pdp:bajan-joe"
+          testId="bajan-joe-concierge-open"
+          productContext={{ name: 'BAJAN JOE Signet Ring', slug: 'bajan-joe', url: '/products/bajan-joe' }}
+        />
       </section>
     </>
   );

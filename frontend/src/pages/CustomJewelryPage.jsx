@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ConciergeButton from '@/components/ConciergeButton';
 import {
   applySeoHead,
   buildBreadcrumbJsonLd,
@@ -71,6 +72,14 @@ export default function CustomJewelryPage() {
             Every commission is quoted individually. Timeframes are confirmed once the concept,
             metal and stone selection are finalised — no fixed promise is made in advance.
           </p>
+          <div style={{ marginTop: 32 }}>
+            <ConciergeButton
+              source="custom-jewelry-canada"
+              bespoke
+              variant="primary"
+              testId="custom-concierge-open"
+            />
+          </div>
         </div>
       </section>
 

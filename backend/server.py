@@ -1356,6 +1356,185 @@ async def update_inventory(product_id: str, payload: InventoryUpdate):
         raise HTTPException(status_code=500, detail="Error updating inventory")
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# CONCIERGE AGENT — High-intent product / bespoke / redesign inquiry intake
+# (Phase 9)
+#
+# Two endpoints:
+#   POST /api/concierge/attachments  — accept an image, store to Emergent
+#                                       Object Storage under a private key
+#   POST /api/concierge/inquiries    — persist the inquiry with structured
+#                                       intent, optional attachments, and an
+#                                       auto-generated internal summary
+#
+# All product context is passed verbatim from the client — the server does
+# not price-look-up or validate the product, since Concierge is intake, not
+# commerce. Reference code is customer-facing (short, human-readable).
+# ═══════════════════════════════════════════════════════════════════════════
+import secrets
+
+CONCIERGE_ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp"}
+CONCIERGE_MAX_BYTES = 8 * 1024 * 1024  # 8 MB per image
+CONCIERGE_MAX_MESSAGE = 4000
+CONCIERGE_MAX_ATTACHMENTS = 5
+
+
+def _concierge_reference() -> str:
+    """Short customer-facing reference like PHL-9F3K-42B."""
+    alpha = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+    return "PHL-" + "".join(secrets.choice(alpha) for _ in range(4)) + "-" + "".join(secrets.choice(alpha) for _ in range(3))
+
+
+def _classify_intent(message: str, has_attachments: bool, product_slug: str) -> str:
+    """Lightweight rule-based intent classification. Manual override supported client-side."""
+    m = (message or "").lower()
+    if any(k in m for k in ("bespoke", "from scratch", "commission")):
+        return "bespoke"
+    if any(k in m for k in ("redesign", "old ring", "existing jewelry", "melt down", "reuse my")):
+        return "redesign"
+    if any(k in m for k in ("size ", "sizing", "what size", "ring size", "fit")):
+        return "sizing"
+    if any(k in m for k in ("rose gold", "yellow gold", "white gold", "in gold", "in silver", "different metal", "10k", "14k", "18k")):
+        return "metal-change"
+    if any(k in m for k in ("stone", "diamond", "sapphire", "ruby", "emerald", "lab-grown", "natural diamond")):
+        return "stone-change"
+    if any(k in m for k in ("under $", "under c$", "under cad", "budget", "cheaper")):
+        return "pricing"
+    if any(k in m for k in ("available", "in stock", "when can", "how long", "timeline")):
+        return "availability"
+    if any(k in m for k in ("wider", "bigger", "smaller", "shorter", "longer", "custom", "customize")):
+        return "custom-variation"
+    if product_slug:
+        return "product-question"
+    if has_attachments:
+        return "custom-variation"
+    return "other"
+
+
+def _build_internal_summary(payload: dict, intent: str, attachment_count: int, priority: str) -> str:
+    lines = []
+    product = payload.get("product") or {}
+    if product.get("name"):
+        lines.append(f"Product: {product.get('name')}")
+        if product.get("variant"):
+            lines.append(f"Variant: {product.get('variant')}")
+    lines.append(f"Intent: {intent.replace('-', ' ').title()}")
+    if payload.get("message"):
+        lines.append(f"Customer request: {payload['message'].strip()[:280]}")
+    details = payload.get("optional_details") or {}
+    for key in ("budget", "ring_size", "metal", "stone", "desired_timeline", "occasion"):
+        if details.get(key):
+            lines.append(f"{key.replace('_', ' ').title()}: {details[key]}")
+    lines.append(f"Reference images: {attachment_count}")
+    customer = payload.get("customer") or {}
+    if customer.get("preferred_contact"):
+        lines.append(f"Preferred contact: {customer['preferred_contact']}")
+    lines.append(f"Priority: {priority}")
+    lines.append("Response target: Typically within 24 hours")
+    return "\n".join(lines)
+
+
+def _priority_for(intent: str, payload: dict, attachment_count: int) -> str:
+    details = payload.get("optional_details") or {}
+    high_intent_intents = {"bespoke", "custom-variation", "redesign", "stone-change", "metal-change"}
+    signals = 0
+    if intent in high_intent_intents:
+        signals += 1
+    if details.get("budget"):
+        signals += 1
+    if attachment_count >= 2:
+        signals += 1
+    if (payload.get("product") or {}).get("slug"):
+        signals += 1
+    if signals >= 2:
+        return "high-intent"
+    if signals == 1:
+        return "elevated"
+    return "standard"
+
+
+@api_router.post("/concierge/attachments")
+async def upload_concierge_attachment(reference: str = Form(...), file: UploadFile = File(...)):
+    """Upload a reference image for a concierge inquiry. Returns durable object key."""
+    if not reference or len(reference) > 32 or not all(c.isalnum() or c == "-" for c in reference):
+        raise HTTPException(status_code=400, detail="Invalid reference")
+    if file.content_type not in CONCIERGE_ALLOWED_MIME:
+        raise HTTPException(status_code=415, detail="Unsupported image type")
+    contents = await file.read()
+    if len(contents) > CONCIERGE_MAX_BYTES:
+        raise HTTPException(status_code=413, detail="Image too large")
+
+    ext_map = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp"}
+    ext = ext_map[file.content_type]
+    obj_id = uuid.uuid4().hex
+    object_key = build_key(f"concierge/{reference}", f"{obj_id}.{ext}")
+    put_object(object_key, contents, file.content_type)
+    return {"storagePath": object_key, "contentType": file.content_type, "size": len(contents)}
+
+
+@api_router.post("/concierge/inquiries")
+async def create_concierge_inquiry(payload: dict):
+    """Persist a Concierge inquiry with structured context, intent and summary."""
+    # Basic server-side validation — client is untrusted.
+    customer = (payload.get("customer") or {})
+    name = (customer.get("name") or "").strip()
+    email = (customer.get("email") or "").strip()
+    message = (payload.get("message") or "").strip()
+    if not name or not email or "@" not in email:
+        raise HTTPException(status_code=422, detail="Name and a valid email are required.")
+    if not message:
+        raise HTTPException(status_code=422, detail="Please describe what you're looking for.")
+    if len(message) > CONCIERGE_MAX_MESSAGE:
+        raise HTTPException(status_code=422, detail="Message is too long.")
+    attachments = payload.get("attachments") or []
+    if not isinstance(attachments, list) or len(attachments) > CONCIERGE_MAX_ATTACHMENTS:
+        raise HTTPException(status_code=422, detail="Too many attachments.")
+    # Only accept storage keys inside our own prefix.
+    for att in attachments:
+        key = (att or {}).get("storagePath", "")
+        if not key.startswith("phileon/concierge/"):
+            raise HTTPException(status_code=400, detail="Invalid attachment reference.")
+
+    # Client can hint intent; otherwise classify.
+    hinted = (payload.get("intent") or "").strip().lower()
+    product_slug = ((payload.get("product") or {}).get("slug") or "").strip()
+    intent = hinted or _classify_intent(message, bool(attachments), product_slug)
+    priority = _priority_for(intent, payload, len(attachments))
+    summary = _build_internal_summary(payload, intent, len(attachments), priority)
+    reference = payload.get("reference") or _concierge_reference()
+
+    doc = {
+        "reference": reference,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "source": payload.get("source") or "web",
+        "product": payload.get("product") or {},
+        "customer": {
+            "name": name,
+            "email": email,
+            "phone": (customer.get("phone") or "").strip() or None,
+            "preferred_contact": (customer.get("preferred_contact") or "email").strip().lower(),
+        },
+        "intent": intent,
+        "message": message,
+        "optional_details": payload.get("optional_details") or {},
+        "attachments": attachments,
+        "status": "new",
+        "priority": priority,
+        "internal_summary": summary,
+    }
+    await db.concierge_inquiries.insert_one(doc)
+    return {
+        "reference": reference,
+        "intent": intent,
+        "priority": priority,
+        "attachmentCount": len(attachments),
+        "message": "Your request is with PHILEON. A concierge will typically respond within 24 hours.",
+    }
+
+
+
+
+
 # Register api_router LAST so every `@api_router.*` decorator declared above
 # is picked up. See note near admin_router include.
 app.include_router(api_router)
