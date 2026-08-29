@@ -28,6 +28,249 @@
 //   { kind: 'owner', label: '...' }         // OWNER DECISION REQUIRED marker (draft only)
 
 export const TRUST_PAGES = {
+  '/privacy': {
+    slug: 'privacy',
+    status: 'approved',
+    eyebrow: 'PHILEON · Legal',
+    h1: 'Privacy Policy',
+    title: 'Privacy Policy | PHILEON',
+    description:
+      'How PHILEON collects, uses, stores and protects personal information across the website, customer accounts, checkout, custom-jewelry inquiries and features such as Ring Try-On. Payments are processed by Stripe.',
+    intro:
+      'PHILEON is a Canadian Fine Jewelry brand. This Privacy Policy describes what personal information we may collect, how we use it, who processes it on our behalf, and the choices you have. It applies to the PHILEON website, our checkout, and features such as Ring Try-On.',
+    lastReviewed: '2026-02',
+    sections: [
+      {
+        title: 'Information We Collect',
+        blocks: [
+          { kind: 'p', text: 'PHILEON collects only what is reasonably necessary to operate the store and support you.' },
+          { kind: 'p', text: 'Contact information — such as your name, email address, telephone number, and shipping and billing address — when you place an order, submit an inquiry, or contact customer service.' },
+          { kind: 'p', text: 'Order information — including the products ordered, selected variants, sizing, pricing, and order history.' },
+          { kind: 'p', text: 'Custom and bespoke inquiry information — including design preferences, ring size, stone and metal preferences, customer notes, and reference imagery you choose to share.' },
+          { kind: 'p', text: 'Customer-uploaded images from features such as Ring Try-On. These images are used only to provide the feature you requested (for example, to preview a ring on your own photograph) and associated customer support. PHILEON does not perform biometric identification.' },
+          { kind: 'p', text: 'Account information, where you choose to create a PHILEON account (email, password stored in hashed form, and order history associated with your account).' },
+          { kind: 'p', text: 'Technical information that is standard for websites, such as IP address, browser and device information, and site-usage events. PHILEON uses on-device browser storage (localStorage) for essential functions such as cart persistence, wishlist persistence, session/authentication state, and lightweight on-device search-quality signals. PHILEON does not currently use third-party analytics, advertising pixels, or cross-site trackers.' },
+        ],
+      },
+      {
+        title: 'Payment Information',
+        blocks: [
+          { kind: 'p', text: 'Payments on the PHILEON website are processed by Stripe. When you pay, your card details are provided directly to Stripe under Stripe’s security controls.' },
+          { kind: 'p', text: 'PHILEON does not intentionally store complete payment card numbers on its own servers. We may receive limited transaction confirmation information (for example, the last four digits and the payment status) so that we can operate the store, fulfill orders, and support you.' },
+        ],
+      },
+      {
+        title: 'How We Use Information',
+        blocks: [
+          { kind: 'p', text: 'PHILEON uses personal information to:' },
+          { kind: 'ul', items: [
+            'process and fulfill your orders, including production, shipping and returns',
+            'operate customer accounts and let you review your order history',
+            'answer questions and provide customer service',
+            'design, produce and deliver custom and bespoke jewelry you have requested',
+            'operate features such as Ring Try-On on the image you have provided',
+            'review orders for fraud, payment risk and security purposes',
+            'improve site functionality and diagnose technical issues',
+            'meet accounting, tax, warranty and other legal obligations',
+            'send communications you have requested (for example, order updates)',
+            'send marketing communications only where we have your consent or another lawful basis, and where you can unsubscribe at any time',
+          ] },
+        ],
+      },
+      {
+        title: 'Service Providers',
+        blocks: [
+          { kind: 'p', text: 'PHILEON works with a small number of service providers necessary to operate the business. These service providers process personal information on PHILEON’s behalf, and only for the purposes for which we engage them.' },
+          { kind: 'ul', items: [
+            'Payment processing — Stripe',
+            'Shipping — Canada Post, UPS, FedEx and DHL where applicable',
+            'Hosting and file storage — including Emergent Object Storage for images you upload (for example, Ring Try-On)',
+          ] },
+          { kind: 'p', text: 'These providers are contractually or operationally restricted to using your information to provide the service, and are not authorized to use it for their own unrelated marketing purposes.' },
+        ],
+      },
+      {
+        title: 'International Data Processing',
+        blocks: [
+          { kind: 'p', text: 'Because our payment, hosting and other service providers may operate outside your province or Canada, personal information may be processed or stored in jurisdictions outside Canada. Where that is the case, it may be subject to the laws of those jurisdictions in addition to Canadian law.' },
+        ],
+      },
+      {
+        title: 'Data Retention',
+        blocks: [
+          { kind: 'p', text: 'PHILEON retains personal information only for as long as reasonably necessary for the purposes for which it was collected, including order fulfillment, customer service, fraud prevention, warranty support, accounting, and other legal obligations.' },
+        ],
+      },
+      {
+        title: 'Cookies & On-Device Storage',
+        blocks: [
+          { kind: 'p', text: 'PHILEON currently relies on essential browser storage rather than third-party marketing cookies. That storage supports functions such as your cart, your wishlist, and — if you have created an account — your login session.' },
+          { kind: 'p', text: 'PHILEON does not currently deploy third-party analytics vendors, advertising pixels or cross-site trackers. If that changes, this Privacy Policy will be updated and, where required, a consent mechanism will be provided.' },
+        ],
+      },
+      {
+        title: 'Your Choices & Contact',
+        blocks: [
+          { kind: 'p', text: 'You may contact PHILEON to ask a privacy question, request access to the personal information we hold about you where applicable, request correction of inaccurate information, or ask us to delete your account. Some information may need to be retained to comply with accounting, tax, warranty and other legal obligations.' },
+          { kind: 'p', text: 'You may unsubscribe from marketing communications you have consented to at any time.' },
+          { kind: 'p', text: 'Please reach us through the PHILEON contact page.' },
+        ],
+      },
+      {
+        title: 'Security',
+        blocks: [
+          { kind: 'p', text: 'PHILEON uses reasonable administrative, technical and organizational safeguards appropriate to the nature of the information we handle, including secure payment processing by Stripe. No method of transmission over the internet or method of electronic storage is completely secure.' },
+        ],
+      },
+      {
+        title: 'Children',
+        blocks: [
+          { kind: 'p', text: 'The PHILEON website is intended for adult customers. It is not directed to children, and PHILEON does not knowingly collect personal information from children.' },
+        ],
+      },
+      {
+        title: 'Changes to This Policy',
+        blocks: [
+          { kind: 'p', text: 'PHILEON may update this Privacy Policy from time to time. Material changes will be reflected here, and the "Last reviewed" date at the top of this page will be updated accordingly.' },
+        ],
+      },
+      {
+        title: 'Your Rights',
+        blocks: [
+          { kind: 'note', text: 'Nothing in this Privacy Policy limits any rights or remedies available to customers under applicable privacy or consumer-protection law, including Canadian federal privacy law and applicable provincial law.' },
+        ],
+      },
+    ],
+  },
+
+  '/terms': {
+    slug: 'terms',
+    status: 'approved',
+    eyebrow: 'PHILEON · Legal',
+    h1: 'Terms of Service',
+    title: 'Terms of Service | PHILEON',
+    description:
+      'The terms that apply to using the PHILEON website and placing orders — product information, pricing and currency, order acceptance, shipping, returns, warranty, custom and bespoke work, intellectual property and consumer-protection preservation.',
+    intro:
+      'These Terms of Service govern your use of the PHILEON website and any purchase you make from it. They are written to be readable and to preserve the rights you already have under applicable consumer-protection law.',
+    lastReviewed: '2026-02',
+    sections: [
+      {
+        title: 'Agreement to These Terms',
+        blocks: [
+          { kind: 'p', text: 'By using the PHILEON website or placing an order, you agree that the version of these Terms in effect at the time applies to your visit or transaction. If you do not agree, please do not use the site.' },
+          { kind: 'p', text: 'At checkout, you will have the opportunity to review your order, correct errors, and choose whether to complete the purchase.' },
+        ],
+      },
+      {
+        title: 'Product Information',
+        blocks: [
+          { kind: 'p', text: 'PHILEON aims to describe its jewelry accurately — including dimensions, materials, stone information and pricing. Because monitors and devices render colour differently, and because natural stones and hand-finished elements can vary slightly piece to piece, on-screen imagery may not exactly match the piece you receive.' },
+          { kind: 'p', text: 'PHILEON does not use these Terms to excuse listings that are materially inaccurate.' },
+        ],
+      },
+      {
+        title: 'Pricing and Currency',
+        blocks: [
+          { kind: 'p', text: 'Prices on the PHILEON website are shown in either Canadian dollars (CAD) or United States dollars (USD) depending on the product page. The currency shown on the product page controls the transaction unless otherwise stated.' },
+          { kind: 'p', text: 'Applicable taxes and shipping charges may be added at checkout. On international orders, customs duties, import taxes, brokerage charges and local fees are the responsibility of the recipient (see our Shipping page).' },
+          { kind: 'p', text: 'In the case of an obvious typographical or system pricing error, PHILEON may correct the price or decline the order before fulfillment, subject to applicable law.' },
+        ],
+      },
+      {
+        title: 'Orders and Acceptance',
+        blocks: [
+          { kind: 'p', text: 'Submitting an order through the website is your offer to purchase. Your order is not accepted until payment authorization has completed and PHILEON has confirmed the order for fulfillment.' },
+          { kind: 'p', text: 'PHILEON may decline or cancel an order in reasonable circumstances such as payment failure, suspected fraud, unavailability of the item or materials, an obvious pricing error, or inability to fulfill custom specifications.' },
+          { kind: 'p', text: 'If PHILEON declines an order after payment authorization, PHILEON will not collect payment for that order or will refund it in accordance with applicable law.' },
+        ],
+      },
+      {
+        title: 'Payment',
+        blocks: [
+          { kind: 'p', text: 'Payment on the PHILEON website is processed by Stripe. Card details are provided directly to Stripe. PHILEON does not intentionally store complete payment card numbers on its own servers.' },
+        ],
+      },
+      {
+        title: 'Shipping',
+        blocks: [
+          { kind: 'p', text: 'PHILEON offers complimentary standard shipping within Canada; shipping to the United States and to supported international destinations is calculated at checkout. Orders valued at C$1,000 or more, or the international equivalent where supported, require a signature on delivery. Customs duties, import taxes and brokerage fees on international orders are the responsibility of the recipient.' },
+          { kind: 'p', text: 'Transit estimates are estimates, not guarantees, and are separate from production time. Full details are set out in our Shipping page.' },
+        ],
+      },
+      {
+        title: 'Returns',
+        blocks: [
+          { kind: 'p', text: 'Eligible gold jewelry may be returned within 30 days of the confirmed delivery date, subject to the condition requirements set out in our Returns page.' },
+          { kind: 'p', text: 'Silver jewelry, custom and bespoke jewelry (including engraved pieces and customer-approved CAD designs), and jewelry that has been resized, engraved or otherwise altered at your request are treated as final sale, unless PHILEON determines the item arrived defective, damaged or incorrect, or applicable law requires another remedy.' },
+        ],
+      },
+      {
+        title: 'Warranty',
+        blocks: [
+          { kind: 'p', text: 'PHILEON provides a 12-month limited warranty against manufacturing defects from the original delivery date. Normal wear, accidental damage, plating and finish wear, stone loss from impact, and damage resulting from work performed by another jeweler are treated separately. See our Warranty page for full detail.' },
+        ],
+      },
+      {
+        title: 'Custom & Bespoke Work',
+        blocks: [
+          { kind: 'p', text: 'Custom and bespoke work may involve a design consultation, CAD approval, stone and metal selection, and customer-approved specifications. Because these pieces are produced specifically for the customer, they are final sale, subject to applicable law and covered defects.' },
+          { kind: 'p', text: 'Timelines, deposits and revision terms for a specific custom project are agreed between you and PHILEON in writing for that commission.' },
+        ],
+      },
+      {
+        title: 'Intellectual Property',
+        blocks: [
+          { kind: 'p', text: 'The PHILEON name, logo, product designs, photography, video, editorial copy, graphics and other website content are owned by PHILEON or its licensors. You may not copy, reproduce, modify, distribute, publish or commercially exploit that content without prior authorization, except where applicable law permits.' },
+        ],
+      },
+      {
+        title: 'Material You Submit',
+        blocks: [
+          { kind: 'p', text: 'If you submit content to PHILEON — such as reference imagery, a Ring Try-On photograph, or notes for a custom design — you represent that you have the right to share that content with us.' },
+          { kind: 'p', text: 'You grant PHILEON only the limited rights necessary to process your request, provide the related feature or service, and support you afterwards. PHILEON does not use your uploaded photographs in public marketing without your separate authorization.' },
+        ],
+      },
+      {
+        title: 'Prohibited Use',
+        blocks: [
+          { kind: 'p', text: 'You agree not to use the PHILEON website for unlawful activity, to attempt to compromise site security, to introduce malicious code, to commit fraud, to abusively scrape the site at scale, or to infringe the rights of PHILEON or of third parties.' },
+        ],
+      },
+      {
+        title: 'Third-Party Services',
+        blocks: [
+          { kind: 'p', text: 'The PHILEON website relies on third-party services (for example, payment processing and shipping). Where a link takes you to an external website, that site’s terms and privacy practices apply to your use of it. PHILEON remains responsible for its own obligations to you.' },
+        ],
+      },
+      {
+        title: 'Limitation & Consumer Protection',
+        blocks: [
+          { kind: 'p', text: 'PHILEON works to describe products accurately and to fulfill orders as offered. Except as required by law, PHILEON is not responsible for delays or issues caused by matters outside its reasonable control (for example, carrier customs clearance).' },
+          { kind: 'note', text: 'Nothing in these Terms limits any rights or remedies that cannot legally be limited or excluded under applicable consumer-protection law, including under Ontario’s consumer-protection framework and federal Canadian law.' },
+        ],
+      },
+      {
+        title: 'Governing Law',
+        blocks: [
+          { kind: 'p', text: 'These Terms are governed by the laws of the Province of Ontario and the applicable federal laws of Canada. This governing-law choice does not remove any mandatory consumer protection available to you in your jurisdiction.' },
+        ],
+      },
+      {
+        title: 'Changes to These Terms',
+        blocks: [
+          { kind: 'p', text: 'PHILEON may update these Terms from time to time. Updates apply prospectively — the version in effect at the time of a completed transaction continues to govern that transaction where legally appropriate.' },
+        ],
+      },
+      {
+        title: 'Contact',
+        blocks: [
+          { kind: 'p', text: 'For questions about these Terms or your order, please reach us through the PHILEON contact page.' },
+        ],
+      },
+    ],
+  },
+
   '/shipping': {
     slug: 'shipping',
     status: 'approved',

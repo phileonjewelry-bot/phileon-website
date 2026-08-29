@@ -34,8 +34,6 @@ const TestimonialsPage = lazy(() => import("@/pages/TestimonialsPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
 const FAQPage = lazy(() => import("@/pages/FAQPage"));
 const CraftsmanshipPage = lazy(() => import("@/pages/CraftsmanshipPage"));
-const PrivacyPage = lazy(() => import("@/pages/PrivacyPage"));
-const TermsPage = lazy(() => import("@/pages/TermsPage"));
 const RingTryOnPage = lazy(() => import("@/pages/RingTryOnPage"));
 const ShopDropPage = lazy(() => import("@/pages/ShopDropPage"));
 const DropPage = lazy(() => import("@/pages/DropPage"));
@@ -235,8 +233,8 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/craftsmanship" element={<CraftsmanshipPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<TrustPage />} />
+            <Route path="/terms" element={<TrustPage />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
