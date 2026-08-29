@@ -39,7 +39,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # JWT Configuration
-JWT_SECRET = os.environ.get('JWT_SECRET', 'phileon-jewelry-secret-key-2024')
+JWT_SECRET = os.environ['JWT_SECRET']
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
@@ -494,23 +494,24 @@ async def admin_serve_concierge_attachment(object_key: str, _: str = Depends(ver
 
 @admin_router.post("/login", response_model=Token)
 async def admin_login(login: AdminLogin):
-    # Check for default admin or existing admin
-    admin = await db.admins.find_one({"username": login.username})
-    
-    if not admin:
-        # Create default admin if none exists and credentials match default
-        if login.username == "admin" and login.password == "phileon2024":
-            password_hash = bcrypt.hashpw(login.password.encode(), bcrypt.gensalt()).decode()
-            await db.admins.insert_one({
-                "username": "admin",
-                "password_hash": password_hash
-            })
+    """Admin login. Credentials live in env vars (ADMIN_USERNAME +
+    ADMIN_PASSWORD_HASH bcrypt). A previously seeded doc in db.admins is
+    accepted for backward compatibility, but the env credential is the
+    canonical source of truth."""
+    env_username = os.environ.get("ADMIN_USERNAME", "").strip()
+    env_hash = os.environ.get("ADMIN_PASSWORD_HASH", "").strip()
+
+    if env_username and env_hash:
+        if login.username == env_username and bcrypt.checkpw(login.password.encode(), env_hash.encode()):
             return Token(access_token=create_token(login.username))
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
+    # Fallback path (should not run in production — env creds required)
+    admin = await db.admins.find_one({"username": login.username})
+    if not admin:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
     if not bcrypt.checkpw(login.password.encode(), admin['password_hash'].encode()):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
     return Token(access_token=create_token(login.username))
 
 

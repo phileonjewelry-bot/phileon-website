@@ -85,6 +85,7 @@ export const TRUST_PAGES = {
             'Payment processing — Stripe',
             'Shipping — Canada Post, UPS, FedEx and DHL where applicable',
             'Hosting and file storage — including Emergent Object Storage for images you upload (for example, Ring Try-On)',
+            'Transactional email delivery — a third-party email service provider used to send order confirmations, shipping updates and Concierge acknowledgments',
           ] },
           { kind: 'p', text: 'These providers are contractually or operationally restricted to using your information to provide the service, and are not authorized to use it for their own unrelated marketing purposes.' },
         ],
