@@ -54,6 +54,7 @@ STATIC_ROUTES = [
     "/custom-jewelry-canada",
     # Phase 4 journal
     "/journal",
+    "/journal/ring-sizing-guide",
     "/journal/10k-vs-14k-vs-18k-gold",
     "/journal/lab-grown-vs-natural-diamonds",
 ]

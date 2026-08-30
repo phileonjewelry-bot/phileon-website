@@ -17,6 +17,30 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **PHILEON Journal Article #3 — Ring Sizing 101 Published.**
+  - **Route:** `/journal/ring-sizing-guide` (public, indexable `index,follow`, canonical `https://phileon.com/journal/ring-sizing-guide`, sitemap-registered).
+  - **Copy:** ~1,757 words spanning 18 substantive sections (what a ring size measures · how a proper fit should feel · why finger size changes · band width · comfort vs standard fit · knuckle geometry · two home-measurement methods with a hard warning against unverified printed charts · when to measure · which hand · statement rings · two-finger rings · sizing up for wide bands · resizing feasibility · eternity/pavé complications · surprise gifts · conversion charts · the most reliable method · PHILEON philosophy), plus a Quick guide table, a 5-question FAQ, an Ask PHILEON Concierge CTA, and a "Explore PHILEON Rings" contextual-links section.
+  - **Editorial voice:** matches Articles #1 and #2 — neutral, practical, uses design-dependent language throughout. Zero fabricated numbers: no US/UK/EU size-conversion table published (per brief), no proprietary sizing math, no "always size up half a size" prescription, no medical claims, no resizing guarantees, no invented manufacturing tolerances or statistics.
+  - **SEO:**
+    - `<title>` — **"Ring Sizing Guide: How to Find the Right Fit | PHILEON"** (custom `seoTitle`)
+    - Meta description matches brief: "Learn how ring sizing works, why finger size changes, how width affects fit, when home measurements help, and when to have your finger professionally sized."
+    - OG title/description + Twitter title all inherit these strings.
+    - `<link rel="canonical">` = `https://phileon.com/journal/ring-sizing-guide`; robots `index,follow`; single H1 verified.
+    - **JSON-LD emitted:** `Article` (organization author "PHILEON Atelier", organization publisher "PHILEON", `mainEntityOfPage` = canonical, `datePublished`/`dateModified` = 2026-02-29, no invented image) + `BreadcrumbList` (Home → Journal → Ring Sizing 101) + `FAQPage` (5 questions).
+  - **Concierge integration:** ASK PHILEON CTA opens the existing sitewide `ConciergeAgent` with `source="journal:ring-sizing-guide"`. Phase 2 open-beacon fired exactly **once** to `POST /api/events` on the closed→open transition (verified via Playwright network intercept). No second contact form was created; no analytics implementation was altered.
+  - **Journal index (`/journal`):** now shows exactly 3 real entries, newest-first: **Ring Sizing 101** → Lab-Grown vs Natural Diamonds → 10K vs 14K vs 18K Gold. Card renders with `Fit Guide` category, brief excerpt, "Read Article →" CTA, typography-led presentation (no invented imagery).
+  - **Internal linking:** Contextual links inside the article + the closing links block resolve to `/mens-rings`, `/womens-rings`, `/statement-rings`, `/fine-jewelry`, `/custom-jewelry-canada`. No keyword-stuffing.
+  - **Renderer extension:** `JournalPage.jsx` now honours optional `article.seoTitle` and `article.seoDescription` when present, falling back to `${title} | PHILEON` + `excerpt` — Articles #1 and #2 unchanged (they carry no seoTitle/seoDescription so their behavior is identical).
+  - **Sitemap:** `/journal/ring-sizing-guide` added to `STATIC_ROUTES` in `backend/scripts/generate_sitemap.py`; sitemap regenerated and verified live at `/sitemap.xml`. Total scanned 60 · indexable 58 · static 31 · approved trust 7.
+  - **Regression verified at 390×844:** `/journal`, `/journal/ring-sizing-guide`, `/journal/lab-grown-vs-natural-diamonds`, `/journal/10k-vs-14k-vs-18k-gold`, `/`, `/mens-rings`, `/womens-rings`, `/statement-rings`, `/fine-jewelry` — all HTTP 200, zero horizontal overflow, no new console errors (only pre-existing Metals-API ticker fetch failures — Metals key still a documented backlog item), no new CSP violations. Trusted catalog count still **84**. Existing Concierge intake, ASK PHILEON sitewide injection, PDPs, prices, cart, wishlist, Stripe/CSP/rate-limits/Object-Storage/Resend all untouched.
+  - **Files changed (3):**
+    - `frontend/src/lib/journal.js` — Article #3 prepended (newest-first).
+    - `frontend/src/pages/JournalPage.jsx` — optional `seoTitle`/`seoDescription` respected in the SEO effect (backward-compatible).
+    - `backend/scripts/generate_sitemap.py` — `/journal/ring-sizing-guide` added to `STATIC_ROUTES`.
+  - **Claims deliberately softened / excluded (per brief):** no US/UK/EU conversion table (no authoritative source in hand); no universal "add half a size for wide bands" rule; no proprietary PHILEON sizing numbers; no manufacturing/CAD tolerance figures; no exact swelling percentages; no medical guidance; no resizing pricing; no universal "every PHILEON ring can be resized" claim; comfort-fit statement scoped to product-specific data; the two-finger-ring section references no unreleased CAD/product specs.
+
+
+
 - **[DONE Feb 29]** **H.E.R. — HER ETERNAL REIGN · storefront AND trusted-catalog currency corrected to USD.**
   - **Scope:** Both frontend and backend/trusted-catalog authority updated. Unlike GRAVITÉ (frontend-label only), H.E.R. is a live trusted-checkout product, so pricing migration required backend + server-side test suite changes too.
   - **New USD retail pricing (17-figure base):**

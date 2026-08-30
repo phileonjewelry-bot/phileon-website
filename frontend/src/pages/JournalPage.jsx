@@ -77,10 +77,10 @@ export function JournalArticlePage() {
       name: article.title,
       href: `/journal/${article.slug}`,
       type: 'category',
-      description: article.excerpt,
+      description: article.seoDescription || article.excerpt,
       seo: {
-        title: `${article.title} | PHILEON`,
-        description: article.excerpt,
+        title: article.seoTitle || `${article.title} | PHILEON`,
+        description: article.seoDescription || article.excerpt,
       },
     };
     const seo = generateSeo(record);

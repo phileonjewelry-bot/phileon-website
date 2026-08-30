@@ -26,6 +26,225 @@
 
 export const journalArticles = [
   {
+    slug: 'ring-sizing-guide',
+    title: 'Ring Sizing 101: How to Find the Right Fit',
+    seoTitle: 'Ring Sizing Guide: How to Find the Right Fit | PHILEON',
+    seoDescription:
+      'Learn how ring sizing works, why finger size changes, how width affects fit, when home measurements help, and when to have your finger professionally sized.',
+    excerpt:
+      'Finger size is only part of the equation. Learn how band width, knuckles, temperature and ring architecture affect the way a ring actually fits.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Fit Guide',
+    tags: ['ring sizing', 'fit', 'materials', 'bespoke'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'A ring can be the correct numerical size and still feel wrong.' },
+      { type: 'p', text: 'Finger shape, band width, temperature, time of day, dominant hand, knuckle size and the architecture of the ring all influence fit.' },
+      { type: 'p', text: 'That is why PHILEON treats sizing as part of the design process rather than a final dropdown selection.' },
+      { type: 'p', text: 'A good fit should feel secure without feeling restrictive, pass over the knuckle with reasonable resistance, and sit comfortably once in position.' },
+      { type: 'p', text: 'This guide explains how to get as close as possible before ordering — and when it is worth having your finger measured professionally.' },
+
+      { type: 'h2', text: 'What does a ring size actually measure?' },
+      { type: 'p', text: 'Ring sizing systems represent the internal dimensions of the finished ring. In North America, PHILEON primarily works with US ring sizes.' },
+      { type: 'ul', items: [
+        'A ring size corresponds to an internal diameter and circumference range',
+        'Half sizes represent smaller increments between full sizes',
+        'Other countries use different sizing systems',
+        'Conversions between systems should be treated as approximate unless verified against a proper sizing standard',
+      ] },
+
+      { type: 'h2', text: 'What should a properly fitted ring feel like?' },
+      { type: 'p', text: 'A well-fitted ring should:' },
+      { type: 'ul', items: [
+        'Slide over the knuckle with light to moderate resistance',
+        'Feel secure once seated at the base of the finger',
+        'Not spin excessively during normal wear',
+        'Not leave the finger numb, painful or deeply indented',
+        'Not feel as though it could slide off with a casual hand movement',
+      ] },
+      { type: 'quote', text: 'Secure does not mean tight.' },
+      { type: 'p', text: 'A slight impression after wearing a ring can be normal. Persistent pain, tingling, discoloration or significant swelling is not a desirable fit.' },
+
+      { type: 'h2', text: 'Why your finger size changes' },
+      { type: 'p', text: 'Fingers are not dimensionally static.' },
+      { type: 'ul', items: [
+        'Heat can make fingers swell',
+        'Cold can make fingers temporarily smaller',
+        'Hydration can affect swelling',
+        'Physical activity can temporarily increase finger volume',
+        'Morning and evening measurements can differ',
+        'Dominant-hand fingers may differ from the opposite hand',
+        'Individual fingers are not necessarily the same size on both hands',
+      ] },
+      { type: 'note', label: 'Recommendation', text: 'Measure more than once, under normal conditions, before committing to a size.' },
+
+      { type: 'h2', text: 'Band width changes how a ring fits' },
+      { type: 'p', text: 'A wider ring places more metal against the finger than a narrow band. As a result, wider rings can feel tighter even when their internal diameter is technically the same.' },
+      { type: 'ul', items: [
+        'Narrow bands often tolerate a more exact measured size',
+        'Substantial bands may require additional fit allowance',
+        'Very wide rings or multi-finger structures need to be evaluated as designs, not just numeric sizes',
+        'Interior profile matters too',
+      ] },
+      { type: 'p', text: 'Width adjustments should be made according to the actual ring architecture, not a one-size-fits-all formula.' },
+
+      { type: 'h2', text: 'Comfort fit vs standard fit' },
+      { type: 'p', text: 'Standard-fit bands typically have a flatter interior profile. Comfort-fit rings generally use a more rounded interior contour, reducing the amount of metal contacting the finger at the edges. This can make a substantial ring feel easier to wear.' },
+      { type: 'p', text: 'However:' },
+      { type: 'ul', items: [
+        'Comfort-fit geometry varies by manufacturer and design',
+        'It does not eliminate the need for accurate sizing',
+        'The same nominal size may feel different between two rings with different internal profiles',
+      ] },
+      { type: 'p', text: 'If a specific PHILEON piece is designed with a comfort-fit interior, that product-specific detail should guide the sizing decision.' },
+
+      { type: 'h2', text: 'The knuckle matters' },
+      { type: 'p', text: 'Some wearers have a knuckle significantly wider than the base of the finger.' },
+      { type: 'ul', items: [
+        'If a ring is sized only for the base, it may not pass the knuckle',
+        'If sized only for the knuckle, it may spin once seated',
+      ] },
+      { type: 'p', text: 'Balancing those dimensions may require careful sizing, interior sizing features where appropriate, design-specific adjustment, or professional consultation.' },
+      { type: 'quote', text: 'The correct size is sometimes a compromise between getting over the knuckle and remaining stable at the base of the finger.' },
+
+      { type: 'h2', text: 'How to measure your ring size at home' },
+      { type: 'h3', text: 'Method 1 — Measure a ring that already fits' },
+      { type: 'p', text: 'This is the best home method when it is available.' },
+      { type: 'ol', items: [
+        'Choose a ring that fits the intended finger properly',
+        'Confirm it is worn on the same hand and finger',
+        'Measure the internal diameter across the widest inside point — do not include the metal walls',
+        'Measure in millimetres with a precise ruler or caliper if available',
+        'Compare the measurement with a reputable US ring-size chart, or provide the measurement directly to PHILEON',
+      ] },
+      { type: 'note', label: 'Important', text: 'Do not measure from a screenshot or a printed chart whose scale cannot be verified. Browser and printer scaling can distort a chart enough to change the size.' },
+
+      { type: 'h3', text: 'Method 2 — Paper or non-stretch strip' },
+      { type: 'p', text: 'A narrow strip of paper can provide a rough finger circumference estimate.' },
+      { type: 'ol', items: [
+        'Wrap it around the intended finger',
+        'Keep it snug but not tight',
+        'Mark where the ends meet',
+        'Lay it flat and measure the length in millimetres',
+      ] },
+      { type: 'p', text: 'This method is less reliable than measuring a properly fitting ring or using professional ring gauges. String, in particular, can stretch or compress and should not be presented as precision sizing.' },
+
+      { type: 'h2', text: 'When should you measure?' },
+      { type: 'p', text: 'Measure:' },
+      { type: 'ul', items: [
+        'When hands are at a comfortable, normal temperature',
+        'After the body has returned to normal after strenuous activity',
+        'More than once',
+        'Ideally at different times of day',
+      ] },
+      { type: 'p', text: 'Avoid measuring when:' },
+      { type: 'ul', items: [
+        'Hands are extremely cold',
+        'Fingers are visibly swollen',
+        'Immediately after intense exercise',
+        'Immediately after significant temperature exposure',
+      ] },
+
+      { type: 'h2', text: 'Which hand are you sizing?' },
+      { type: 'p', text: 'Measure the exact finger and exact hand where the ring will be worn.' },
+      { type: 'p', text: 'Do not assume that the left ring finger matches the right, that index fingers match, or that dominant and non-dominant hands are identical.' },
+      { type: 'quote', text: 'A size from another finger is a clue, not a measurement.' },
+
+      { type: 'h2', text: 'What about statement rings?' },
+      { type: 'quote', text: 'Statement rings need more sizing attention, not less.' },
+      { type: 'p', text: 'A substantial head, broad shoulders, heavier mass or wide shank can change perceived fit. For PHILEON pieces with large top architecture, wide shanks, sculptural shoulders, heavy heads or asymmetrical construction, fit should consider both circumference and stability.' },
+      { type: 'p', text: 'A ring that is technically large enough but constantly rotates may not be properly sized for the design.' },
+
+      { type: 'h2', text: 'What about two-finger rings?' },
+      { type: 'p', text: 'A two-finger ring cannot be sized like two unrelated single rings.' },
+      { type: 'p', text: 'The important relationships include:' },
+      { type: 'ul', items: [
+        'Size of each finger',
+        'Spacing between the fingers',
+        'Angle between the openings',
+        'Bridge width',
+        'Relative finger height',
+        'Interior geometry',
+      ] },
+      { type: 'p', text: 'For a true two-finger structure, both fingers should be measured and the relationship between them should be considered during CAD and fit development.' },
+
+      { type: 'h2', text: 'Should you size up for a wide band?' },
+      { type: 'p', text: 'Sometimes, but not automatically.' },
+      { type: 'p', text: 'Wide bands can feel tighter because more surface area contacts the finger. However, the correct adjustment depends on width, internal contour, finger shape, knuckle size, design and desired fit.' },
+      { type: 'p', text: 'Do not automatically add a half size or a full size without considering the actual ring.' },
+
+      { type: 'h2', text: 'Can a finished ring be resized?' },
+      { type: 'quote', text: 'Many rings can be resized. Some should not be.' },
+      { type: 'p', text: 'Resizing feasibility depends on:' },
+      { type: 'ul', items: [
+        'Metal',
+        'Stone placement',
+        'Pavé',
+        'Channel setting',
+        'Engraving',
+        'Enamel',
+        'Continuous patterns',
+        'Structural architecture',
+        'How much size change is required',
+      ] },
+      { type: 'p', text: 'Some designs may tolerate only a narrow adjustment range. Where product-specific resizing information exists, that information should control.' },
+
+      { type: 'h2', text: 'Eternity bands, pavé and complex designs' },
+      { type: 'p', text: 'Rings with stones or design features extending around much of the circumference may be more difficult to resize because altering the shank can disrupt stone spacing, setting geometry, engraving, repeating patterns and finish continuity.' },
+      { type: 'p', text: 'Customers buying these designs should prioritize accurate sizing before production.' },
+
+      { type: 'h2', text: 'Surprise rings and gifts' },
+      { type: 'p', text: 'If someone is buying a ring as a surprise, potential clues include an existing ring worn on the same finger, discreet assistance from someone close to the recipient, or professional measurement of an existing ring.' },
+      { type: 'p', text: 'If exact sizing cannot be established, choose a design whose resizing options are understood before purchase.' },
+
+      { type: 'h2', text: 'Ring size conversion charts' },
+      { type: 'p', text: 'Different regions use different systems, including US and Canadian numeric sizing, UK letter sizing, and European circumference-based sizing.' },
+      { type: 'p', text: 'Online conversion charts can be useful references, but small discrepancies exist between charts and manufacturing standards.' },
+      { type: 'note', label: 'Recommendation', text: 'Whenever possible, provide PHILEON with the original size system or an actual internal diameter or circumference measurement, rather than repeatedly converting between systems.' },
+
+      { type: 'h2', text: 'The most reliable method' },
+      { type: 'p', text: 'For an important ring, the most reliable method is still a professional sizing with physical ring gauges.' },
+      { type: 'p', text: 'A jeweller can assess base-of-finger fit, knuckle clearance, wide-band fit, dominant-hand differences and design-specific considerations. For bespoke PHILEON work, sizing can be addressed during the design conversation rather than treated as an afterthought.' },
+
+      { type: 'h2', text: 'PHILEON sizing philosophy' },
+      { type: 'quote', text: 'The number is the beginning. The fit is the decision.' },
+      { type: 'p', text: 'PHILEON considers ring size alongside width, weight, architecture, interior profile and how the piece is intended to sit on the hand.' },
+      { type: 'p', text: 'A delicate band and a substantial sculptural ring may both be marked with the same numeric size and still require different fit decisions. For that reason, sizing guidance should follow the actual object.' },
+
+      { type: 'h2', text: 'Quick guide' },
+      { type: 'table', headers: ['Situation', 'Best approach'], rows: [
+        ['You already own a ring that fits', 'Measure its internal diameter'],
+        ['Buying a narrow everyday band', 'Professional gauge or accurate existing-ring measurement'],
+        ['Buying a wide or substantial ring', 'Confirm sizing with the specific design in mind'],
+        ['Large knuckle / smaller finger base', 'Professional fitting recommended'],
+        ['Two-finger ring', 'Measure both fingers and design relationship'],
+        ['Bespoke piece', 'Confirm sizing during consultation'],
+        ['Surprise gift', 'Measure a correctly fitting existing ring if possible'],
+        ['Unsure between two sizes', 'Ask PHILEON before production'],
+      ] },
+
+      { type: 'cta', heading: 'Not sure about your size? Ask PHILEON.', text: 'Send us the piece you\u2019re considering, the finger it will be worn on and any sizing information you already have. For substantial, wide or sculptural rings, we can help you think about fit in the context of the design.', buttonLabel: 'ASK PHILEON' },
+
+      { type: 'links', heading: 'Explore PHILEON Rings', items: [
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: 'Statement Rings', href: '/statement-rings' },
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+    ],
+    faq: [
+      { q: 'Should a ring be slightly tight?', a: 'A ring should feel secure but not restrictive. It should normally require some resistance to pass over the knuckle while remaining comfortable once seated.' },
+      { q: 'Is your ring size the same on both hands?', a: 'Not necessarily. Corresponding fingers on opposite hands can differ in size, so measure the exact hand and finger where the ring will be worn.' },
+      { q: 'Do wide rings fit tighter?', a: 'They often can because more metal contacts the finger. The amount of adjustment required depends on the width and internal geometry of the specific ring.' },
+      { q: 'Is measuring with string accurate?', a: 'It can provide a rough estimate, but stretch and compression make string less reliable than a properly fitting ring, physical ring gauges or professional sizing.' },
+      { q: 'Can PHILEON resize a ring later?', a: 'It depends on the design, metal, stone setting and amount of adjustment required. Confirm resizing options for the specific piece before relying on future resizing.' },
+    ],
+  },
+  {
     slug: 'lab-grown-vs-natural-diamonds',
     title: 'Lab-Grown vs Natural Diamonds: How to Choose',
     excerpt:
