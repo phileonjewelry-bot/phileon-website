@@ -17,6 +17,19 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **Journal Article #2 published: `/journal/lab-grown-vs-natural-diamonds`** — Second hand-authored PHILEON Journal entry shipped on the existing renderer. Neutral, factual comparison of lab-grown vs natural diamonds — no marketing claims about superiority, sustainability or resale value. No content, layout or SEO scaffolding was rebuilt.
+  - Route: `/journal/lab-grown-vs-natural-diamonds`. Public, indexable, canonical `https://phileon.com/journal/lab-grown-vs-natural-diamonds`. Title tag: `Lab-Grown vs Natural Diamonds: How to Choose | PHILEON`. Meta description matches the excerpt.
+  - Structured data verified live: exactly one `Article` JSON-LD, one `BreadcrumbList` JSON-LD, one `FAQPage` JSON-LD (5 FAQs). OG title + Twitter card present via the shared SEO helper.
+  - Structure: 1 H1, 15 H2s, 1 comparison table, multiple ULs, one editorial pull-quote, one "Ask PHILEON" CTA, one product-discovery block with the same six internal links as Article #1 (`/fine-jewelry`, `/mens-rings`, `/womens-rings`, `/pendants`, `/gold-jewelry`, `/custom-jewelry-canada`). Body word count ≈ **1,490** — within the target 1,500-2,200 window.
+  - Concierge integration: `data-testid="journal-concierge-open-lab-grown-vs-natural-diamonds"` opens the existing `ConciergeAgent` modal with `source="journal:lab-grown-vs-natural-diamonds"`. No new inquiry system.
+  - Journal index: two real cards now render at `/journal` — `lab-grown-vs-natural-diamonds` (Diamond Guide) and `10k-vs-14k-vs-18k-gold` (Gold Guide). Both use the typography-led fallback (no imagery invented).
+  - Sitemap: `public/sitemap.xml` regenerated. Now contains `/journal`, `/journal/10k-vs-14k-vs-18k-gold` and `/journal/lab-grown-vs-natural-diamonds`.
+  - Mobile @ 390×844: `document.scrollWidth == window.innerWidth = 390` → no horizontal scroll. Table wraps in the same accessible `role="region"` + `tabIndex` scroll container.
+  - Regression matrix: zero CSP violations on `/journal`, both articles, `/`, `/fine-jewelry`, `/products/drape`, `/checkout`. Trusted catalog still exactly **84**. Nothing else touched — no commerce, no policy, no Concierge behaviour change, no security-middleware change, no admin behaviour change.
+  - **Content-integrity refusals** (as with Article #1): no invented sustainability figures, no invented resale-percentage claims, no invented producer or supply-chain names, no "investment-grade" positioning, no author credentials beyond the PHILEON Atelier organisation, no hero image, no absolute claims that one category is universally better. The environmental / sourcing section explicitly warns that marketing claims must be checked against the specific supply chain.
+  - **Files changed (3):** `frontend/src/lib/journal.js` (article prepended to `journalArticles`), `backend/scripts/generate_sitemap.py` (article slug added to the include list), `frontend/public/sitemap.xml` (regenerated).
+
+
 - **[DONE Feb 29]** **Journal Launch — Article #1 published: `/journal/10k-vs-14k-vs-18k-gold`** — First hand-authored PHILEON Journal article shipped on the existing Phase 4 Journal scaffold. Purpose: help customers choose the right karat, give Concierge a durable answer to common metal questions, and open a high-intent SEO surface without altering any commerce logic.
   - Route: `/journal/10k-vs-14k-vs-18k-gold` (Journal index at `/journal` continues to work; article is the sole real entry). Public, indexable, no noindex.
   - Title: `10K vs 14K vs 18K Gold: Which Is Right for You? | PHILEON`. Meta description: "Gold karat is a design decision, not a ranking. A practical guide to purity, colour, durability and which karat makes sense for your jewelry." Canonical: `https://phileon.com/journal/10k-vs-14k-vs-18k-gold`.

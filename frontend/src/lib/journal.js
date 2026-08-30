@@ -26,6 +26,152 @@
 
 export const journalArticles = [
   {
+    slug: 'lab-grown-vs-natural-diamonds',
+    title: 'Lab-Grown vs Natural Diamonds: How to Choose',
+    excerpt:
+      'Lab-grown and natural diamonds are chemically identical but tell very different stories. A neutral, practical guide to origin, grading, appearance, pricing, resale and which route may suit different buyers.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Diamond Guide',
+    tags: ['diamonds', 'lab-grown', 'natural', 'materials'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'Lab-grown and natural diamonds are both real diamonds. They share the same crystal structure, the same core physical and optical properties, and the same grading language. What separates them is origin, availability, price behaviour and the story each carries.' },
+      { type: 'p', text: 'Neither is universally better. The right choice depends on the piece, the wearer, the intent behind the gift, and how the diamond will be lived with over time.' },
+      { type: 'p', text: 'At PHILEON, both options are approached as materials — chosen alongside metal, setting and design — rather than as a moral position.' },
+      { type: 'p', text: 'This guide is a neutral, practical breakdown of the differences so you can decide with clarity.' },
+
+      { type: 'h2', text: 'What is a natural diamond?' },
+      { type: 'p', text: 'A natural diamond is a diamond formed geologically deep in the Earth over long timescales under extreme heat and pressure, then brought closer to the surface by geological processes and eventually mined.' },
+      { type: 'ul', items: [
+        'Origin: geological, formed within the Earth',
+        'Composition: crystalline carbon',
+        'Supply: finite — dependent on discovery, extraction and long-established supply chains',
+        'Grading language: the same 4Cs used across the industry (cut, colour, clarity, carat weight)',
+      ] },
+
+      { type: 'h2', text: 'What is a lab-grown diamond?' },
+      { type: 'p', text: 'A lab-grown diamond is a diamond produced in a controlled setting, most commonly by one of two methods: high-pressure/high-temperature (HPHT) or chemical vapour deposition (CVD). The output is a real diamond — crystalline carbon — not a simulant.' },
+      { type: 'ul', items: [
+        'Origin: produced in a laboratory or specialised facility',
+        'Composition: crystalline carbon — same as natural',
+        'Supply: producible at scale; not constrained by geological rarity',
+        'Grading language: graded using the same 4Cs as natural diamonds by major grading bodies',
+      ] },
+      { type: 'p', text: 'A cubic zirconia or a moissanite is not a lab-grown diamond — those are different materials. Lab-grown diamonds are diamonds.' },
+
+      { type: 'h2', text: 'Are they chemically the same?' },
+      { type: 'p', text: 'For practical purposes: yes. Lab-grown and natural diamonds share the same crystal structure, hardness, refractive index and thermal properties. To the unaided eye, well-cut examples of each are indistinguishable.' },
+      { type: 'p', text: 'Confirming whether a specific stone is lab-grown or natural requires specialised gemological equipment — not a jeweller\u2019s loupe alone.' },
+
+      { type: 'h2', text: 'Grading' },
+      { type: 'p', text: 'Both lab-grown and natural diamonds are graded using the same core language of the 4Cs. Certificates from recognised grading bodies typically state:' },
+      { type: 'ul', items: [
+        'Cut — proportion, symmetry and polish',
+        'Colour — where the stone sits on the colour scale',
+        'Clarity — the size and position of inclusions',
+        'Carat weight — the weight of the stone',
+      ] },
+      { type: 'p', text: 'Certificates for lab-grown stones will state that the stone is laboratory-grown. Certificates for natural stones will state a natural origin. Read the certificate itself rather than relying on verbal descriptions.' },
+
+      { type: 'h2', text: 'Appearance' },
+      { type: 'p', text: 'A well-cut lab-grown diamond and a well-cut natural diamond can be visually indistinguishable. Cut quality — how the stone returns light — usually has more day-to-day influence on how a diamond looks than whether it is lab-grown or natural.' },
+      { type: 'ul', items: [
+        'Colour and clarity ranges are directly comparable across both categories',
+        'Fluorescence, fancy colour and inclusion patterns exist in both',
+        'Two diamonds of the same 4C grade can still look different in the same piece — cut and setting matter',
+      ] },
+
+      { type: 'h2', text: 'Rarity' },
+      { type: 'p', text: 'This is where the two diverge meaningfully.' },
+      { type: 'ul', items: [
+        'Natural diamonds are formed geologically over long timescales and are finite. Larger, higher-colour, higher-clarity examples are meaningfully rarer.',
+        'Lab-grown diamonds are producible at scale. Supply is not constrained by geology and has grown substantially over recent years.',
+      ] },
+      { type: 'p', text: 'If rarity is part of what the diamond is meant to represent — an heirloom, a milestone marker, a piece intended to carry a specific story — the origin story of a natural stone is part of that value. If the priority is a larger or higher-grade stone at a given budget, lab-grown may allow a step up in size or quality.' },
+
+      { type: 'h2', text: 'Pricing considerations' },
+      { type: 'p', text: 'At any given moment, lab-grown diamonds typically trade at a lower per-carat price than comparably-graded natural diamonds. The gap has widened over time as lab-grown production has scaled. Specific pricing depends on:' },
+      { type: 'ul', items: [
+        'Size and grade of the individual stone',
+        'Cut quality and finish',
+        'Certification and origin documentation',
+        'The specific vendor, market and moment of purchase',
+      ] },
+      { type: 'p', text: 'PHILEON does not publish universal price differentials because the honest answer changes with the market. Any promise of an exact "percentage saving" without a specific stone in front of you should be treated with caution.' },
+
+      { type: 'h2', text: 'Resale considerations' },
+      { type: 'p', text: 'Resale is a real consideration for both categories and deserves honesty rather than marketing.' },
+      { type: 'ul', items: [
+        'Natural diamonds have a long-established secondary market. Resale value depends heavily on the specific stone, current market conditions and how it is sold — resale is rarely at the original retail price for either category.',
+        'Lab-grown diamonds have a shorter secondary-market history, and their resale behaviour is still evolving as supply grows.',
+      ] },
+      { type: 'p', text: 'Neither category should be purchased primarily as an investment. Both should be purchased because the piece is right for the wearer.' },
+
+      { type: 'h2', text: 'A note on environmental and sourcing claims' },
+      { type: 'p', text: 'Both categories carry active marketing around sustainability and ethics. Some claims are well-supported; some are not.' },
+      { type: 'ul', items: [
+        'Natural-diamond sourcing quality varies significantly by supplier. Look for clear origin documentation and adherence to recognised responsible-sourcing frameworks.',
+        'Lab-grown diamond production has energy requirements that vary by facility, method and energy source. "Sustainable" claims should be checked against the specific producer, not the category as a whole.',
+      ] },
+      { type: 'p', text: 'PHILEON does not make blanket environmental claims about either category. If sourcing is important to you, ask about the specific stone and the specific supply chain — not the marketing.' },
+
+      { type: 'h2', text: 'Which one is right for you?' },
+      { type: 'h3', text: 'Lab-grown may suit you if' },
+      { type: 'ul', items: [
+        'You want a larger or higher-grade diamond at a given budget',
+        'You are drawn to the piece and design more than to geological origin',
+        'You are comfortable with a shorter secondary-market history',
+        'You value clear documentation of a laboratory origin',
+      ] },
+      { type: 'h3', text: 'Natural may suit you if' },
+      { type: 'ul', items: [
+        'The geological origin is part of what the diamond is meant to represent',
+        'You are creating a piece intended as a long-held heirloom',
+        'You prefer the established secondary-market history that natural diamonds carry',
+        'The rarity of a specific natural stone is part of the story of the piece',
+      ] },
+      { type: 'p', text: 'Both are real diamonds. Both can be beautifully cut, beautifully set, and beautifully worn.' },
+
+      { type: 'h2', text: 'The PHILEON approach' },
+      { type: 'p', text: 'There is no single PHILEON stone. The correct diamond depends on the piece, the wearer and the intent.' },
+      { type: 'p', text: 'A piece designed as a substantial statement may make sense with a larger lab-grown centre so scale and design can be pursued together. A piece designed as a long-held heirloom may make sense with a smaller, well-cut natural stone whose provenance is part of its meaning.' },
+      { type: 'quote', text: 'The question is not "which is better." The question is "which is right for this piece, for this wearer."' },
+
+      { type: 'h2', text: 'Quick comparison' },
+      { type: 'table', headers: ['', 'Lab-grown diamonds', 'Natural diamonds'], rows: [
+        ['Origin', 'Grown in a lab (HPHT or CVD)', 'Formed geologically within the Earth'],
+        ['Composition', 'Crystalline carbon', 'Crystalline carbon'],
+        ['Grading', 'Same 4Cs (cut, colour, clarity, carat)', 'Same 4Cs (cut, colour, clarity, carat)'],
+        ['Appearance', 'Visually indistinguishable to the eye', 'Visually indistinguishable to the eye'],
+        ['Rarity', 'Producible at scale', 'Finite geological supply'],
+        ['Per-carat pricing', 'Generally lower at comparable grade', 'Generally higher at comparable grade'],
+        ['Secondary market', 'Shorter history, still evolving', 'Long-established, stone- and market-dependent'],
+        ['Typical use', 'Scale, design flexibility, value', 'Heirloom, provenance, long-held pieces'],
+      ] },
+
+      { type: 'cta', heading: 'Choosing a stone? Ask PHILEON.', text: 'The right diamond depends on the piece it belongs to. Tell us what you are considering — a specific PHILEON design, a size target, a colour or clarity preference, or a story you want the piece to carry — and we\u2019ll walk you through the trade-offs honestly.', buttonLabel: 'ASK PHILEON' },
+
+      { type: 'links', heading: 'Explore PHILEON Fine Jewelry', items: [
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: 'Pendants', href: '/pendants' },
+        { label: 'Gold Jewelry', href: '/gold-jewelry' },
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+    ],
+    faq: [
+      { q: 'Are lab-grown diamonds real diamonds?', a: 'Yes. Lab-grown diamonds are diamonds — the same crystalline carbon, with the same core physical and optical properties as natural diamonds. They are not simulants such as cubic zirconia or moissanite.' },
+      { q: 'Can a jeweller tell the difference by looking?', a: 'Not reliably. Well-cut lab-grown and natural diamonds are visually indistinguishable to the unaided eye. Confirming origin requires specialised gemological equipment and, ideally, a certificate from a recognised grading body.' },
+      { q: 'Which one holds value better?', a: 'Neither should be purchased as an investment. Natural diamonds have a longer secondary-market history, but resale for either category rarely matches original retail and depends heavily on the specific stone, current conditions and how it is sold.' },
+      { q: 'Are lab-grown diamonds more sustainable?', a: 'It depends on the specific producer, method and energy source — not the category as a whole. Broad "sustainable" claims about either category should be verified against the specific supply chain.' },
+      { q: 'Do lab-grown and natural diamonds use the same grading system?', a: 'Yes. Both are graded using the 4Cs — cut, colour, clarity and carat weight — by major grading bodies. Certificates for lab-grown stones will state that the stone is laboratory-grown.' },
+    ],
+  },
+  {
     slug: '10k-vs-14k-vs-18k-gold',
     title: '10K vs 14K vs 18K Gold: Which Is Right for You?',
     excerpt:

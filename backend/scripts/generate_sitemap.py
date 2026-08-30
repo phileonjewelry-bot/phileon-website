@@ -55,6 +55,7 @@ STATIC_ROUTES = [
     # Phase 4 journal
     "/journal",
     "/journal/10k-vs-14k-vs-18k-gold",
+    "/journal/lab-grown-vs-natural-diamonds",
 ]
 
 
