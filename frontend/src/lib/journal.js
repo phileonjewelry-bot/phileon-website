@@ -26,6 +26,304 @@
 
 export const journalArticles = [
   {
+    slug: 'wedding-band-pairing-guide',
+    title: 'Wedding Band Pairing: How to Match Your Engagement Ring',
+    seoTitle: 'Wedding Band Pairing Guide: How to Match Your Engagement Ring | PHILEON',
+    seoDescription:
+      'Learn how to pair an engagement ring with a wedding band — from flush vs gapped fits to curved bands, metal matching, width, stone settings and custom-fit options.',
+    excerpt:
+      'Flush fit, intentional gap, curved band or custom contour — learn how profile, clearance, metal, width and setting determine whether two rings truly work together.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Band Guide',
+    tags: ['wedding bands', 'engagement rings', 'stacking', 'bespoke'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'Two rings can look perfect separately and still fight each other on the hand.' },
+      { type: 'p', text: 'A wedding band may sit flush beneath one engagement ring and leave a deliberate gap beside another. A straight band may disappear cleanly under a raised setting, while a low basket or projecting gallery may require a curved or open design.' },
+      { type: 'p', text: 'The right pairing is not determined by matching metal alone. It comes from understanding how the two ring architectures meet.' },
+      { type: 'p', text: 'A strong pairing should feel intentional from the top, side and inside — whether the goal is seamless stacking, visible separation or a completely custom relationship between the two pieces.' },
+
+      { type: 'h2', text: 'What does "flush fit" mean?' },
+      { type: 'p', text: 'A flush fit means the wedding band can sit directly beside the engagement ring with little or no visible gap between the two shanks.' },
+      { type: 'p', text: 'Whether this is possible depends on:' },
+      { type: 'ul', items: [
+        'Head height',
+        'Bridge clearance',
+        'Gallery shape',
+        'Protruding prongs',
+        'Halo diameter',
+        'Side stones',
+        'Shoulder architecture',
+      ] },
+      { type: 'quote', text: 'Flush fit is an architectural outcome, not a quality ranking.' },
+
+      { type: 'h2', text: 'Is a gap between rings a problem?' },
+      { type: 'p', text: 'No.' },
+      { type: 'p', text: 'A visible gap may be unavoidable because of the engagement-ring architecture, intentionally designed, visually desirable, or useful for allowing each ring to read independently.' },
+      { type: 'quote', text: 'A gap can be part of the composition. It is not automatically a fit defect.' },
+
+      { type: 'h2', text: 'Straight wedding bands' },
+      { type: 'p', text: 'A straight band has a conventional continuous circular profile without a deliberate contour around the engagement ring.' },
+      { type: 'h3', text: 'Best suited when' },
+      { type: 'ul', items: [
+        'Engagement ring has sufficient bridge clearance',
+        'Setting sits high enough for the band to pass beneath',
+        'Side architecture does not protrude into the band path',
+      ] },
+      { type: 'p', text: 'Effect: simple, architectural, independent and easy to wear separately. Straight bands do not always sit flush — that depends on the specific engagement-ring geometry.' },
+
+      { type: 'h2', text: 'Curved or contoured wedding bands' },
+      { type: 'p', text: 'A curved band changes its front profile so it can follow around the shape of the engagement-ring head or setting.' },
+      { type: 'p', text: 'It may:' },
+      { type: 'ul', items: [
+        'Create closer visual contact',
+        'Follow a halo',
+        'Wrap around a low centre setting',
+        'Accommodate projecting shoulders or side stones',
+      ] },
+      { type: 'quote', text: 'A contour should respond to the actual ring geometry, not to a generic engagement-ring outline.' },
+
+      { type: 'h2', text: 'Open wedding bands' },
+      { type: 'p', text: 'An open band leaves a deliberate gap or break at the front.' },
+      { type: 'p', text: 'This can allow a centre setting to occupy the open space, unusual ring architecture to nest between the ends, or a more sculptural stacking relationship.' },
+      { type: 'h3', text: 'Considerations' },
+      { type: 'ul', items: [
+        'Open ends must be proportioned carefully',
+        'Alignment matters',
+        'Rotation on the finger can affect appearance',
+      ] },
+
+      { type: 'h2', text: 'Shadow bands and fitted bands' },
+      { type: 'p', text: 'A fitted or shadow band is designed specifically to follow the outline of an engagement ring. It may be curved, asymmetrical, notched, sculptural, stone-set or plain.' },
+      { type: 'quote', text: 'The closer the fit, the more important it becomes to design the two rings as a system.' },
+      { type: 'p', text: 'Not every fitted band can be worn attractively on its own.' },
+
+      { type: 'h2', text: 'When a custom wedding band makes sense' },
+      { type: 'p', text: 'Custom-fit design can make sense when the engagement ring has:' },
+      { type: 'ul', items: [
+        'A low basket',
+        'An unusual halo',
+        'An asymmetrical head',
+        'Large side stones',
+        'Sculptural shoulders',
+        'Multi-finger or unconventional architecture',
+        'Projecting gallery details',
+      ] },
+      { type: 'p', text: 'A custom band is not automatically necessary. It becomes useful when standard geometry cannot respond cleanly to the engagement ring. Our Custom Jewelry service (/custom-jewelry-canada) can help develop a band around an existing piece.' },
+
+      { type: 'h2', text: 'Setting height changes the pairing' },
+      { type: 'p', text: 'Higher centre settings may create more vertical clearance for a straight band. Lower settings may bring the stone or basket closer to the finger, leaving less space beside the shank.' },
+      { type: 'ul', items: [
+        'High profile does not guarantee flush fit',
+        'Low profile does not automatically require a curved band',
+        'Bridge and gallery geometry still matter',
+      ] },
+      { type: 'p', text: 'For a full anatomy walkthrough, see Engagement Ring Anatomy (/journal/engagement-ring-anatomy).' },
+
+      { type: 'h2', text: 'The bridge matters' },
+      { type: 'p', text: 'The bridge beneath the engagement-ring head is one of the most important pairing zones.' },
+      { type: 'p', text: 'If the bridge is raised, recessed, narrow, projecting, decorated or stone-set, it can affect whether another ring can sit beside it.' },
+      { type: 'quote', text: 'Wedding-band compatibility often depends on what happens under the centre stone, not what is visible from the top.' },
+
+      { type: 'h2', text: 'Halos and wedding bands' },
+      { type: 'p', text: 'Halo rings can create pairing challenges depending on halo diameter, underside height, gallery projection, the lower halo edge and shoulder width.' },
+      { type: 'p', text: 'Possible solutions include a straight band with sufficient clearance, a curved band, a fitted band, or an intentional gap. Not all halo rings require a contoured band.' },
+
+      { type: 'h2', text: 'Side-stone engagement rings' },
+      { type: 'p', text: 'Side stones may extend the width of the engagement-ring head and influence how closely a wedding band can sit.' },
+      { type: 'p', text: 'Potential issues include contact between stone settings, differing heights, visual crowding and asymmetric gaps.' },
+      { type: 'quote', text: 'The more width the engagement ring occupies across the finger, the more important proportional balance becomes.' },
+
+      { type: 'h2', text: 'Pavé and stone-set bands' },
+      { type: 'p', text: 'A stone-set wedding band can visually connect to a pavé engagement ring, but matching stone coverage exactly is not always necessary.' },
+      { type: 'p', text: 'Consider stone size, setting style, metal exposure, height, edge contact and shared visual rhythm. The rings do not need matching pavé to work.' },
+
+      { type: 'h2', text: 'Plain wedding bands' },
+      { type: 'p', text: 'A plain band can create contrast beside a highly detailed engagement ring.' },
+      { type: 'ul', items: [
+        'Visual rest',
+        'Simpler maintenance',
+        'Stronger metal presence',
+        'Independent wear',
+      ] },
+      { type: 'quote', text: 'Contrast can make the engagement ring read more clearly rather than less cohesively.' },
+
+      { type: 'h2', text: 'Matching metals' },
+      { type: 'p', text: 'Using the same metal creates continuity — for example, 14K yellow with 14K yellow, or 18K white with 18K white.' },
+      { type: 'p', text: 'But exact appearance can still differ because of alloy recipe, finish, age, wear or rhodium plating where applicable. Same karat does not always mean an exact colour match.' },
+      { type: 'p', text: 'For karat-level differences, see 10K vs 14K vs 18K Gold (/journal/10k-vs-14k-vs-18k-gold).' },
+
+      { type: 'h2', text: 'Mixing metals' },
+      { type: 'p', text: 'Mixed-metal wedding sets can be intentional — a yellow-gold engagement ring with a white-gold band, a rose-gold band with a white-gold engagement ring, or a tri-colour stack.' },
+      { type: 'p', text: 'Consider contrast, long-term finish and whether the rings are meant to read separately or as one composition. Mixed metal is a design decision, not a compromise.' },
+
+      { type: 'h2', text: 'Does the karat need to match?' },
+      { type: 'p', text: 'No, but understand the implications.' },
+      { type: 'p', text: 'Different karats can differ in colour, hardness, wear behavior and material value. When rings rub together continuously, differences in hardness and surface finish may influence wear patterns.' },
+      { type: 'quote', text: 'Matching karat simplifies material behavior, but it is not an absolute requirement for a successful pairing.' },
+
+      { type: 'h2', text: 'Band width and proportion' },
+      { type: 'p', text: 'Wedding-band width influences how the combined set reads.' },
+      { type: 'h3', text: 'A narrow band can' },
+      { type: 'ul', items: [
+        'Keep the engagement ring visually dominant',
+        'Add subtle definition',
+      ] },
+      { type: 'h3', text: 'A wider band can' },
+      { type: 'ul', items: [
+        'Create stronger visual balance',
+        'Make the overall stack feel more substantial',
+      ] },
+      { type: 'p', text: 'Width should respond to the engagement ring, finger and intended visual weight rather than a universal millimetre rule.' },
+
+      { type: 'h2', text: 'Matching widths vs contrasting widths' },
+      { type: 'p', text: 'Matching band widths can create continuity. Contrasting widths can create intentional hierarchy — a narrow engagement shank with a wider wedding band, or a substantial engagement ring with a slim wedding band.' },
+      { type: 'p', text: 'Symmetry is not automatically better.' },
+
+      { type: 'h2', text: 'Ring profile and thickness' },
+      { type: 'p', text: 'The side profile of both rings matters. Two rings may have similar visible width but very different thickness, edge shape, comfort profile or height off the finger.' },
+      { type: 'p', text: 'These differences affect contact, movement and visual alignment. For related fit implications, see Ring Sizing 101 (/journal/ring-sizing-guide).' },
+
+      { type: 'h2', text: 'Should the setting styles match?' },
+      { type: 'p', text: 'Not necessarily. A pavé engagement ring can pair with a pavé band, a channel-set band, a plain metal band, a bezel-set band or another complementary architecture.' },
+      { type: 'quote', text: 'The setting styles should relate, not necessarily repeat.' },
+      { type: 'p', text: 'For deeper detail on setting families, see Jewelry Setting Styles Explained (/journal/jewelry-setting-styles).' },
+
+      { type: 'h2', text: 'Matching stone shapes' },
+      { type: 'p', text: 'A wedding band may use stones that match the engagement-ring centre shape, echo side stones, contrast deliberately, or use simple round melee regardless of centre shape. Matching cuts is not a requirement.' },
+
+      { type: 'h2', text: 'Shared prong, channel and bezel-set wedding bands' },
+      { type: 'h3', text: 'Shared prong' },
+      { type: 'ul', items: [
+        'Open gemstone line',
+        'Minimal visible metal',
+        'Continuous sparkle',
+      ] },
+      { type: 'h3', text: 'Channel' },
+      { type: 'ul', items: [
+        'Structured stone row',
+        'Stronger metal boundaries',
+        'Clean linear appearance',
+      ] },
+      { type: 'h3', text: 'Bezel' },
+      { type: 'ul', items: [
+        'Individual framed stones',
+        'More visible metal',
+        'Architectural rhythm',
+      ] },
+      { type: 'p', text: 'No setting family is universally more durable; the correct choice depends on the specific band, stones and daily wear.' },
+
+      { type: 'h2', text: 'Eternity vs partial-eternity bands' },
+      { type: 'h3', text: 'Full eternity' },
+      { type: 'ul', items: [
+        'Stones around the full circumference',
+        'Continuous visual effect',
+        'Resizing can be more limited or complex',
+      ] },
+      { type: 'h3', text: 'Partial eternity' },
+      { type: 'ul', items: [
+        'Stones across only part of the ring',
+        'Leaves more plain metal',
+        'May allow greater flexibility depending on design',
+      ] },
+      { type: 'p', text: 'Resizing feasibility belongs to the specific ring, not the eternity style alone.' },
+
+      { type: 'h2', text: 'How the rings touch each other' },
+      { type: 'p', text: 'When two rings sit together, their edges may contact during wear. Over time this can result in surface polishing, scratches, wear at contact points, or interaction with prongs or stone settings.' },
+      { type: 'quote', text: 'Two rings worn together should be evaluated as moving metal objects, not static display pieces.' },
+
+      { type: 'h2', text: 'Protecting exposed prongs and stones' },
+      { type: 'p', text: 'If a wedding band presses directly against prongs, pavé edges, stone girdles or delicate gallery work, that contact deserves closer evaluation. The goal is to avoid designing constant hard contact into vulnerable areas where practical — the specific spacing depends on the rings involved.' },
+
+      { type: 'h2', text: 'Wedding band + halo interaction' },
+      { type: 'p', text: 'A halo can sometimes overhang the shank. A straight band may contact the halo underside, lower prongs, gallery or pavé edge.' },
+      { type: 'p', text: 'A fitted contour may solve that, or an intentional gap may be preferable. No single solution is always right.' },
+
+      { type: 'h2', text: 'What about asymmetrical engagement rings?' },
+      { type: 'p', text: 'Asymmetrical heads or shoulder layouts often pair poorly with generic symmetrical contour bands.' },
+      { type: 'p', text: 'Possible approaches include a custom asymmetrical band, a straight band with an intentional gap, an open band, or a visually independent band.' },
+      { type: 'quote', text: 'The wedding band should respond to the actual composition, not force symmetry where the engagement ring does not have it.' },
+
+      { type: 'h2', text: 'Stacking more than one wedding band' },
+      { type: 'p', text: 'Some customers stack a wedding band with an anniversary band, two matching bands around an engagement ring, mixed-width bands or mixed-metal bands.' },
+      { type: 'p', text: 'Consider total stack width, finger coverage, movement, spacing and visual hierarchy. There is no fixed maximum.' },
+
+      { type: 'h2', text: 'Ring jackets and guards' },
+      { type: 'p', text: 'Ring jackets or guards are structures designed to frame or surround an engagement ring. They may use two-sided bands, open centre space, decorative stone rows or sculptural framing.' },
+      { type: 'p', text: 'They do not fit universally; a jacket should be matched to actual engagement-ring dimensions.' },
+
+      { type: 'h2', text: 'Should the engagement ring and wedding band be designed together?' },
+      { type: 'p', text: 'Sometimes that is ideal, but not mandatory.' },
+      { type: 'h3', text: 'Benefits of designing together' },
+      { type: 'ul', items: [
+        'Flush-fit decisions can be made early',
+        'Proportion can be controlled',
+        'Curves can be coordinated',
+        'Stone-setting relationships can be planned',
+      ] },
+      { type: 'p', text: 'That said, many existing engagement rings can still be paired successfully later.' },
+      { type: 'quote', text: 'Designing the two together gives control. Designing the band later requires response. Both can work.' },
+
+      { type: 'h2', text: 'Can you wear the wedding band alone?' },
+      { type: 'p', text: 'Consider whether the band should function independently.' },
+      { type: 'p', text: 'A strongly contoured band may look unusual alone. A straight or gently curved band may be easier to wear separately. Independent wearability is a preference, not a requirement.' },
+
+      { type: 'h2', text: 'Which ring goes on first?' },
+      { type: 'p', text: 'Many people traditionally wear the wedding band closer to the base of the finger, with the engagement ring above it. But personal, cultural and practical preferences vary.' },
+      { type: 'quote', text: 'There is no PHILEON rule that requires one wearing order.' },
+
+      { type: 'h2', text: 'When should you size the two rings together?' },
+      { type: 'p', text: 'If two substantial rings will be worn together, combined width can change perceived fit. A wide stack may feel tighter than either ring alone.' },
+      { type: 'p', text: 'There is no universal "size up" rule; fit should be evaluated for the stack you intend to wear, not only each ring in isolation. See Ring Sizing 101 (/journal/ring-sizing-guide) for how width, temperature and knuckles affect fit.' },
+
+      { type: 'h2', text: 'What does PHILEON recommend?' },
+      { type: 'quote', text: 'Pair the architecture, not just the metal.' },
+      { type: 'p', text: 'The engagement ring and wedding band should relate through proportion, clearance, profile, movement, visual weight, setting, metal and fit.' },
+      { type: 'p', text: 'A perfect colour match cannot fix two structures that collide. And a deliberate gap can be more successful than forcing two rings into an artificial flush fit.' },
+      { type: 'quote', text: 'The right pairing is the one that makes the two rings feel intentional together.' },
+
+      { type: 'h2', text: 'Quick pairing guide' },
+      { type: 'table', headers: ['Engagement-ring situation', 'Wedding-band direction to consider'], rows: [
+        ['Raised head with clear bridge', 'Straight band may fit flush'],
+        ['Low basket / projecting gallery', 'Curved or fitted band may help'],
+        ['Large halo', 'Contour, fitted band or intentional gap'],
+        ['Wide side stones', 'Proportionally balanced or custom-fit band'],
+        ['Pavé engagement ring', 'Pavé or contrasting plain band'],
+        ['Asymmetrical ring', 'Custom asymmetrical, open or independent band'],
+        ['Want band wearable alone', 'Straight or gently contoured design'],
+        ['Wide combined stack', 'Evaluate sizing as a complete stack'],
+      ] },
+      { type: 'note', label: 'Note', text: 'These are design directions, not universal rules.' },
+
+      { type: 'cta', heading: 'Need help pairing your rings? Ask PHILEON.', text: 'Send us your engagement ring, the PHILEON piece you\u2019re considering, or a clear reference image. We can help you think through flush fit, contour, width, metal, setting and overall proportion before you choose the band.', buttonLabel: 'ASK PHILEON' },
+
+      { type: 'links', heading: 'Continue the PHILEON Journal', items: [
+        { label: 'Understanding ring anatomy', href: '/journal/engagement-ring-anatomy' },
+        { label: 'Understanding setting styles', href: '/journal/jewelry-setting-styles' },
+        { label: 'Finding the right ring size', href: '/journal/ring-sizing-guide' },
+        { label: 'Choosing gold karat', href: '/journal/10k-vs-14k-vs-18k-gold' },
+      ] },
+
+      { type: 'links', heading: 'Explore PHILEON Rings', items: [
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: 'Statement Rings', href: '/statement-rings' },
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+    ],
+    faq: [
+      { q: 'Does my wedding band need to sit flush with my engagement ring?', a: 'No. Some rings are designed to sit flush, while others naturally create a gap. Either can be intentional and visually successful.' },
+      { q: 'Do the engagement ring and wedding band need to be the same metal?', a: 'No. Matching metals create continuity, while mixed metals create contrast. Consider colour, karat, finish and how the rings will wear together.' },
+      { q: 'Should I size up when wearing two rings together?', a: 'Not automatically. A wider combined stack can feel tighter, but the correct size depends on the rings, finger and overall width. Evaluate the intended stack rather than using a universal size adjustment.' },
+      { q: 'Can a straight wedding band fit with a halo engagement ring?', a: "Sometimes. It depends on the halo's underside, gallery, bridge and setting height. Some halo rings accept straight bands while others pair better with contoured or fitted bands." },
+      { q: 'When is a custom wedding band worth it?', a: 'A custom band can be useful when the engagement ring has unusual geometry, low clearance, asymmetry, large side stones or architectural details that standard bands do not accommodate well.' },
+    ],
+  },
+  {
     slug: 'jewelry-hallmarks-stamps',
     title: 'Jewelry Hallmarks & Stamps Explained: What Those Marks Actually Mean',
     seoTitle: 'Jewelry Hallmarks & Stamps Explained | PHILEON',
