@@ -53,7 +53,7 @@ export const journalArticles = [
       { type: 'p', text: 'The remaining percentage is made up of other metals used to create strength, colour and working characteristics. Those alloying metals vary depending on whether the finished metal is yellow, white or rose gold.' },
 
       { type: 'h2', text: '10K gold' },
-      { type: 'p', text: '10K gold is the most durable of the three in everyday wear because it contains the highest proportion of alloying metals.' },
+      { type: 'p', text: 'For broadly comparable alloy families, 10K gold is generally harder and more resistant to deformation than 14K or 18K because it contains a higher proportion of alloying metals.' },
       { type: 'ul', items: [
         '41.7% pure gold',
         'Generally harder and more resistant to scratching and deformation than higher-karat gold',
