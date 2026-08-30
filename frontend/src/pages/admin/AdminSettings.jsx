@@ -162,10 +162,13 @@ const AdminSettings = () => {
         <div className="bg-phileon-near-black border border-phileon-charcoal p-6">
           <h3 className="text-phileon-gold text-sm tracking-wider mb-3">Admin Credentials</h3>
           <p className="text-sm text-phileon-ivory-muted">
-            Default login: <span className="text-phileon-ivory">admin</span> / <span className="text-phileon-ivory">phileon2024</span>
+            Admin credentials are managed via environment variables
+            (<span className="text-phileon-ivory">ADMIN_USERNAME</span> and
+            <span className="text-phileon-ivory"> ADMIN_PASSWORD_HASH</span>).
+            The rotated plaintext lives only in an untracked local file.
           </p>
           <p className="text-xs text-phileon-ivory-muted mt-2">
-            For security, please change the default credentials in production.
+            Never place admin credentials in source, screenshots, or documentation.
           </p>
         </div>
       </div>

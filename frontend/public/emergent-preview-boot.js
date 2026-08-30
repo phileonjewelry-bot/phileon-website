@@ -18,7 +18,7 @@
   document.head.appendChild(debugMonitorScript);
 
   window.tailwind = window.tailwind || {};
-  tailwind.config = {
+  window.tailwind.config = {
     corePlugins: { preflight: false },
   };
 

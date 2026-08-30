@@ -68,10 +68,6 @@ const AdminLoginPage = () => {
             {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
-
-        <p className="text-center text-phileon-ivory-muted text-xs mt-8">
-          Default: admin / phileon2024
-        </p>
       </div>
     </div>
   );
