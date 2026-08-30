@@ -6,8 +6,6 @@ import { useAddToCart } from '../hooks/useAddToCart';
 import { useLivePrice, useLiveTierPrices } from '@/hooks/useLivePrice';
 import ProductSeo from '@/components/ProductSeo';
 import { DRAPE_SEO } from '@/lib/seoProducts';
-import FineJewelryConfidence from '@/components/FineJewelryConfidence';
-import ConciergeButton from '@/components/ConciergeButton';
 
 export default function DrapePage() {
   const product = products.drape;
@@ -310,15 +308,9 @@ export default function DrapePage() {
         </div>
       </section>
 
-      {/* PHILEON Assurance — approved trust destinations only */}
-      <section className="max-w-[720px] mx-auto px-6 md:px-12 mb-12">
-        <FineJewelryConfidence testId="drape-confidence" />
-        <ConciergeButton
-          source="pdp:drape"
-          testId="drape-concierge-open"
-          productContext={{ name: 'DRAPE', slug: 'drape', url: '/products/drape' }}
-        />
-      </section>
+      {/* PHILEON Assurance + Ask PHILEON — injected sitewide via PublicLayout
+          (see components/PhileonPdpFooter). Kept out of the page body from
+          Phase 10.2 Part B onward to avoid duplicate mounts. */}
 
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }

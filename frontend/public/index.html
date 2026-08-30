@@ -4,6 +4,15 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0a0a0a" />
+        <!--
+          Content Security Policy (Final Security Hardening).
+          Enforced (not report-only). frame-ancestors is enforced by the
+          backend security-headers middleware + X-Frame-Options: DENY on
+          API responses; storefront HTML relies on X-Frame-Options from
+          the static-hosting layer. Nonce-based script-src tightening is a
+          documented P3 follow-up (see backend/server.py:SecurityHeadersMiddleware).
+        -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data: blob: https:; media-src 'self' https: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https: wss:; script-src 'self' 'unsafe-inline' https://assets.emergent.sh https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://js.stripe.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src https://js.stripe.com https://hooks.stripe.com; form-action 'self'; upgrade-insecure-requests" />
         <meta name="description" content="PHILEON — bespoke fine jewelry, architectural statement rings, editorial pendants and Inspiration Vault releases." />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://phileon.com/" />

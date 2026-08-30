@@ -13,9 +13,6 @@ import React from "react";
 import RingProductPage from "../components/RingProductPage";
 import ProductSeo from "@/components/ProductSeo";
 import { BAJAN_JOE_SEO } from "@/lib/seoProducts";
-import FineJewelryConfidence from "@/components/FineJewelryConfidence";
-import ConciergeButton from "@/components/ConciergeButton";
-
 // Approved BAJAN JOE assets (public artifact URLs, unmodified).
 const HERO_VIDEO   = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ua7fhqo0_hf_20260808_045211_0c2ba646-60ce-406a-b04b-979db1d45083.mp4";
 const RENDER_FRONT = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/p0nvtaur_1000168342.png";
@@ -152,20 +149,8 @@ export default function BajanJoeSignetRingPage() {
     <>
       <ProductSeo product={BAJAN_JOE_SEO} />
       <RingProductPage product={bajanJoeProduct} />
-      <section
-        style={{
-          maxWidth: 720,
-          margin: '0 auto',
-          padding: '0 24px 96px',
-        }}
-      >
-        <FineJewelryConfidence testId="bajan-joe-confidence" />
-        <ConciergeButton
-          source="pdp:bajan-joe"
-          testId="bajan-joe-concierge-open"
-          productContext={{ name: 'BAJAN JOE Signet Ring', slug: 'bajan-joe', url: '/products/bajan-joe' }}
-        />
-      </section>
+      {/* PHILEON Assurance + Ask PHILEON — injected sitewide via PublicLayout
+          (see components/PhileonPdpFooter) from Phase 10.2 Part B onward. */}
     </>
   );
 }

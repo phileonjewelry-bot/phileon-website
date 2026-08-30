@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, Form
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, File, UploadFile, Form, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -14,6 +14,7 @@ import uuid
 import mimetypes
 import html
 import re
+from services.rate_limit import check_and_bump as _rl_check, clear_on_success as _rl_clear
 
 from models import (
     Collection, CollectionCreate, CollectionUpdate,
@@ -536,16 +537,24 @@ async def admin_serve_concierge_attachment(object_key: str, _: str = Depends(ver
 
 
 @admin_router.post("/login", response_model=Token)
-async def admin_login(login: AdminLogin):
+async def admin_login(login: AdminLogin, request: Request):
     """Admin login. Credentials live in env vars (ADMIN_USERNAME +
     ADMIN_PASSWORD_HASH bcrypt). A previously seeded doc in db.admins is
     accepted for backward compatibility, but the env credential is the
-    canonical source of truth."""
+    canonical source of truth.
+
+    Final Security Hardening: rate limited to 5 attempts per 15 min per
+    (IP, username-hash). Successful logins reset the counter.
+    """
+    # Throttle BEFORE bcrypt so brute force is cut off cheaply.
+    _rl_check("admin-login", request, identity=login.username, max_attempts=5, window_secs=15 * 60)
+
     env_username = os.environ.get("ADMIN_USERNAME", "").strip()
     env_hash = os.environ.get("ADMIN_PASSWORD_HASH", "").strip()
 
     if env_username and env_hash:
         if login.username == env_username and bcrypt.checkpw(login.password.encode(), env_hash.encode()):
+            _rl_clear("admin-login", request, identity=login.username)
             return Token(access_token=create_token(login.username))
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -555,6 +564,7 @@ async def admin_login(login: AdminLogin):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     if not bcrypt.checkpw(login.password.encode(), admin['password_hash'].encode()):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    _rl_clear("admin-login", request, identity=login.username)
     return Token(access_token=create_token(login.username))
 
 
@@ -881,12 +891,48 @@ class SecurityHeadersMiddleware:
 
     Explicitly cheap ASGI middleware so it does not read/rewrite the body.
     - `X-Content-Type-Options: nosniff` (mitigates SEC-002 blast radius).
-    - `X-Frame-Options: DENY` (clickjacking).
+    - `X-Frame-Options: DENY` (clickjacking; kept for legacy browsers).
     - `Referrer-Policy: strict-origin-when-cross-origin`.
     - `Permissions-Policy: interest-cohort=(), browsing-topics=()` (tracking).
-    - HSTS is only meaningful under HTTPS; the platform terminates TLS in
-      front of us, so we set it and let the ingress carry it through.
+    - `Strict-Transport-Security` — meaningful under the platform's HTTPS
+      terminator; harmless if downgraded.
+    - `Content-Security-Policy` — enforced, audited allowlist.
+
+    CSP audited origins (Final Security Hardening):
+      script-src:  self + Emergent platform loader + Tailwind CDN (used in
+                   preview iframes) + jsDelivr (a shared UI dep) + Stripe.js.
+                   `'unsafe-inline'` remains for the inline branching script
+                   in `public/index.html`; a nonce-based tightening is
+                   documented as a P3 follow-up.
+      style-src:   self + Google Fonts + `'unsafe-inline'` (React inline
+                   `style={}` props and Tailwind classes).
+      img-src:     self + data: + blob: + any https (many product photos
+                   are served from emergentagent CDN subdomains).
+      media-src:   self + any https + blob: (hero videos on emergentagent).
+      font-src:    self + Google Fonts + data:.
+      connect-src: self + Stripe API.
+      frame-src:   Stripe.js + Stripe hooks (checkout iframes).
+      frame-ancestors 'none' — PHILEON must never be embedded.
+      object-src / base-uri / form-action — locked to safe defaults.
     """
+
+    _CSP = (
+        "default-src 'self'; "
+        "base-uri 'self'; "
+        "object-src 'none'; "
+        "frame-ancestors 'none'; "
+        "img-src 'self' data: blob: https:; "
+        "media-src 'self' https: blob:; "
+        "font-src 'self' https://fonts.gstatic.com data:; "
+        "connect-src 'self' https://api.stripe.com; "
+        "script-src 'self' 'unsafe-inline' https://assets.emergent.sh "
+        "https://cdn.tailwindcss.com https://cdn.jsdelivr.net "
+        "https://js.stripe.com https://static.cloudflareinsights.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "frame-src https://js.stripe.com https://hooks.stripe.com; "
+        "form-action 'self'; "
+        "upgrade-insecure-requests"
+    ).encode()
 
     def __init__(self, app: ASGIApp) -> None:
         self.app = app
@@ -904,6 +950,7 @@ class SecurityHeadersMiddleware:
                     (b"referrer-policy", b"strict-origin-when-cross-origin"),
                     (b"permissions-policy", b"interest-cohort=(), browsing-topics=()"),
                     (b"strict-transport-security", b"max-age=31536000; includeSubDomains"),
+                    (b"content-security-policy", self._CSP),
                 ]
                 existing = {k for k, _ in headers}
                 for k, v in extra:
@@ -1193,8 +1240,14 @@ async def get_current_customer(credentials: HTTPAuthorizationCredentials = Depen
 
 
 @api_router.post("/auth/register", response_model=CustomerToken)
-async def register_customer(customer_data: CustomerRegister):
-    """Register a new customer."""
+async def register_customer(customer_data: CustomerRegister, request: Request):
+    """Register a new customer.
+
+    Final Security Hardening: rate limited to 5 registrations per 15 min
+    per IP to prevent bulk account farming.
+    """
+    _rl_check("customer-register", request, identity=customer_data.email,
+              max_attempts=5, window_secs=15 * 60)
     try:
         # Check if customer already exists
         existing_customer = await db.customers.find_one({"email": customer_data.email.lower()})
@@ -1250,8 +1303,14 @@ async def register_customer(customer_data: CustomerRegister):
 
 
 @api_router.post("/auth/login", response_model=CustomerToken)
-async def login_customer(login_data: CustomerLogin):
-    """Login customer."""
+async def login_customer(login_data: CustomerLogin, request: Request):
+    """Login customer.
+
+    Final Security Hardening: rate limited to 5 attempts per 15 min per
+    (IP, email-hash). Successful logins reset the counter.
+    """
+    _rl_check("customer-login", request, identity=login_data.email,
+              max_attempts=5, window_secs=15 * 60)
     try:
         # Find customer
         customer = await db.customers.find_one({"email": login_data.email.lower()})
@@ -1279,7 +1338,7 @@ async def login_customer(login_data: CustomerLogin):
         
         # Return customer data
         customer_obj = Customer(**customer)
-        
+        _rl_clear("customer-login", request, identity=login_data.email)
         return CustomerToken(
             access_token=access_token,
             customer=customer_obj
@@ -1296,8 +1355,14 @@ async def login_customer(login_data: CustomerLogin):
 
 
 @api_router.post("/auth/verify-email")
-async def verify_email(verification: EmailVerification):
-    """Verify customer email."""
+async def verify_email(verification: EmailVerification, request: Request):
+    """Verify customer email.
+
+    Final Security Hardening: rate limited to 10 token attempts per 15 min
+    per IP. Prevents brute-force guessing of verification tokens.
+    """
+    _rl_check("email-verify", request, identity=None,
+              max_attempts=10, window_secs=15 * 60)
     try:
         customer = await db.customers.find_one({"verification_token": verification.token})
         if not customer:
@@ -1331,8 +1396,15 @@ async def verify_email(verification: EmailVerification):
 
 
 @api_router.post("/auth/reset-password")
-async def request_password_reset(reset_data: PasswordReset):
-    """Request password reset."""
+async def request_password_reset(reset_data: PasswordReset, request: Request):
+    """Request password reset.
+
+    Final Security Hardening: rate limited to 3 requests per 15 min per
+    (IP, email-hash). Prevents using PHILEON to spam arbitrary inboxes
+    with reset emails.
+    """
+    _rl_check("password-reset-request", request, identity=reset_data.email,
+              max_attempts=3, window_secs=15 * 60)
     try:
         customer = await db.customers.find_one({"email": reset_data.email.lower()})
         if not customer:
@@ -1369,8 +1441,14 @@ async def request_password_reset(reset_data: PasswordReset):
 
 
 @api_router.post("/auth/reset-password/confirm")
-async def confirm_password_reset(reset_data: PasswordResetConfirm):
-    """Confirm password reset."""
+async def confirm_password_reset(reset_data: PasswordResetConfirm, request: Request):
+    """Confirm password reset.
+
+    Final Security Hardening: rate limited to 5 token attempts per 15 min
+    per IP. Prevents brute-force guessing of reset tokens.
+    """
+    _rl_check("password-reset-confirm", request, identity=None,
+              max_attempts=5, window_secs=15 * 60)
     try:
         customer = await db.customers.find_one({
             "reset_token": reset_data.token,
@@ -1731,6 +1809,9 @@ async def create_concierge_inquiry(payload: dict):
     # from `product.name` (which is server-side product metadata, not
     # arbitrary customer input) — we escape that anyway for defence in depth.
     _prod = payload.get("product") or {}
+    _customer = payload.get("customer") or {}
+    _phone = (_customer.get("phone") or "").strip()
+    _preferred = (_customer.get("preferred_contact") or "").strip()
     admin_link = f"/admin/concierge/{html.escape(reference, quote=True)}"
     _safe_reference = html.escape(reference)
     _safe_product_name = html.escape(_prod.get("name") or "")
@@ -1738,6 +1819,8 @@ async def create_concierge_inquiry(payload: dict):
     _safe_email = html.escape(email)
     _safe_message = html.escape(message)
     _safe_summary = html.escape(summary)
+    _safe_phone = html.escape(_phone) if _phone else ""
+    _safe_preferred = html.escape(_preferred) if _preferred else ""
 
     ack_html = (
         f"<div style=\"font-family:Georgia,serif;color:#222;\">"
@@ -1761,8 +1844,10 @@ async def create_concierge_inquiry(payload: dict):
         f"{_safe_summary}"
         f"</pre>"
         f"<p><strong>Reference:</strong> {_safe_reference}<br>"
-        f"<strong>Customer:</strong> {_safe_name} &lt;{_safe_email}&gt;<br>"
-        f"<strong>Original message:</strong></p>"
+        f"<strong>Customer:</strong> {_safe_name} &lt;{_safe_email}&gt;"
+        f"{('<br><strong>Phone:</strong> ' + _safe_phone) if _safe_phone else ''}"
+        f"{('<br><strong>Preferred contact:</strong> ' + _safe_preferred) if _safe_preferred else ''}"
+        f"<br><strong>Original message:</strong></p>"
         f"<blockquote style=\"border-left:3px solid #c48369;padding:8px 12px;color:#555;\">{_safe_message}</blockquote>"
         f"<p><a href=\"{html.escape(admin_link, quote=True)}\">Open in admin</a></p>"
     )

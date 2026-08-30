@@ -5,6 +5,7 @@ import LiveMetalTicker from '@/components/LiveMetalTicker';
 import PhileonMenu from '@/components/PhileonMenu';
 import VaultUnlockSequence from '@/components/VaultUnlockSequence';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
+import PhileonPdpFooter from '@/components/PhileonPdpFooter';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import '@/styles/phileon-header.css';
@@ -318,6 +319,9 @@ const PublicLayout = () => {
         {/* Main content - account for ticker height */}
         <main className="flex-grow pt-[36px]">
           <Outlet />
+          {/* Phase 10.2 Part B — Concierge sitewide rollout. Renders only on
+              eligible Fine Jewelry PDPs; returns null everywhere else. */}
+          <PhileonPdpFooter />
         </main>
         
         <Footer />

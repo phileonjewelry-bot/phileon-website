@@ -26,8 +26,6 @@ import RingSizeSelector, {
 import { useAddToCart } from "../hooks/useAddToCart";
 import ProductSeo from "@/components/ProductSeo";
 import { QUADRIGA_DOMINUS_SEO } from "@/lib/seoProducts";
-import FineJewelryConfidence from "@/components/FineJewelryConfidence";
-import ConciergeButton from "@/components/ConciergeButton";
 
 // --------------------------------------------------------------------------
 // APPROVED ASSETS — one image per colorway. Do not swap or re-crop.
@@ -661,15 +659,8 @@ export default function QuadrigaDominusPage() {
           </div>
         </div>
 
-        {/* PHILEON Assurance — approved trust destinations only */}
-        <div className="max-w-[720px] mx-auto mt-16">
-          <FineJewelryConfidence testId="quadriga-confidence" />
-          <ConciergeButton
-            source="pdp:quadriga-dominus"
-            testId="quadriga-concierge-open"
-            productContext={{ name: 'QUADRIGA DOMINUS', slug: 'quadriga-dominus', url: '/products/quadriga-dominus' }}
-          />
-        </div>
+        {/* PHILEON Assurance + Ask PHILEON — injected sitewide via PublicLayout
+            (see components/PhileonPdpFooter) from Phase 10.2 Part B onward. */}
       </div>
     </div>
   );

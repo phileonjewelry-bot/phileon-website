@@ -1,13 +1,19 @@
 import { Link } from 'react-router-dom';
 import { listApprovedTrustPages } from '@/data/trustPages';
+import ConciergeButton from '@/components/ConciergeButton';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PHILEON — Fine Jewelry Confidence block (Phase 8).
+// PHILEON — Fine Jewelry Confidence block (Phase 8, extended in Phase 10.2).
 //
 // Reusable compact editorial component intended for Fine Jewelry product
 // pages and Atelier surfaces. It only surfaces trust destinations that are
 // currently `status: 'approved'` in /data/trustPages.js — draft policy
 // pages are never publicly promoted here.
+//
+// When a `productContext` prop is provided, an "Ask PHILEON" Concierge CTA
+// is rendered beneath the assurance grid — this is the shared integration
+// pattern used sitewide from Phase 10.2 onward. See PhileonPdpFooter for the
+// route-level injection that decides eligibility.
 //
 // Restrained by design — small labels, no icons, no card-wall aesthetic.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,7 +32,10 @@ const APPROVED_LABEL = {
   warranty: 'Warranty',
 };
 
-export default function FineJewelryConfidence({ testId = 'fj-confidence' }) {
+export default function FineJewelryConfidence({
+  testId = 'fj-confidence',
+  productContext = null,
+}) {
   const approved = listApprovedTrustPages()
     .map((p) => ({ key: p.slug, href: p.path, label: APPROVED_LABEL[p.slug] || p.h1 }));
 
@@ -53,6 +62,15 @@ export default function FineJewelryConfidence({ testId = 'fj-confidence' }) {
           </li>
         ))}
       </ul>
+      {productContext ? (
+        <div style={styles.conciergeSlot}>
+          <ConciergeButton
+            productContext={productContext}
+            source={`pdp:${productContext.slug || 'unknown'}`}
+            testId={`${testId}-concierge-open`}
+          />
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -101,5 +119,10 @@ const styles = {
     color: rose,
     marginLeft: 12,
     letterSpacing: 0,
+  },
+  conciergeSlot: {
+    marginTop: 18,
+    paddingTop: 14,
+    borderTop: '1px solid rgba(196,131,105,0.08)',
   },
 };
