@@ -635,7 +635,7 @@ ALL_SLUGS = frozenset(list(PRICING_ENGINE_CATALOG.keys()) + list(FIXED_PRODUCTS.
 
 
 # ---------------------------------------------------------------------------
-# H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
+# H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · USD
 # ---------------------------------------------------------------------------
 # Size → figure-count mapping is server-authoritative (client cannot claim
 # a lower figure count to shave the price).
@@ -646,13 +646,13 @@ HER_SIZE_TO_FIGURES: Dict[str, int] = {
     "9.5": 20, "10": 20,
 }
 HER_VALID_SIZES = frozenset(HER_SIZE_TO_FIGURES.keys())
-# Base (17-figure) CAD price per tier + per-figure surcharge above 17.
+# Base (17-figure) USD price per tier + per-figure surcharge above 17.
 HER_TIERS: Dict[str, Dict] = {
-    "10k": {"base_cad": 6995,  "per_figure_cad": 300, "metal_label": "10K Yellow Gold",
+    "10k": {"base_usd": 4995, "per_figure_usd": 225, "metal_label": "10K Yellow Gold",
             "stones_label": "Lab-Created & Synthetic Gemstones"},
-    "14k": {"base_cad": 8995,  "per_figure_cad": 350, "metal_label": "14K Yellow Gold",
+    "14k": {"base_usd": 6495, "per_figure_usd": 250, "metal_label": "14K Yellow Gold",
             "stones_label": "Genuine Gemstones"},
-    "18k": {"base_cad": 10495, "per_figure_cad": 400, "metal_label": "18K Yellow Gold",
+    "18k": {"base_usd": 7595, "per_figure_usd": 300, "metal_label": "18K Yellow Gold",
             "stones_label": "Genuine Gemstones"},
 }
 
@@ -672,8 +672,8 @@ def _resolve_her_eternal_reign(tier_key: Optional[str], ring_size: Optional[str]
 
     figures = HER_SIZE_TO_FIGURES[size_norm]
     tier_cfg = HER_TIERS[tk]
-    price_cad = tier_cfg["base_cad"] + (figures - 17) * tier_cfg["per_figure_cad"]
-    unit_amount_cents = int(price_cad) * 100
+    price_usd = tier_cfg["base_usd"] + (figures - 17) * tier_cfg["per_figure_usd"]
+    unit_amount_cents = int(price_usd) * 100
     stones_total = figures * 3
 
     size_token = size_norm.replace(".", "-")
@@ -691,7 +691,7 @@ def _resolve_her_eternal_reign(tier_key: Optional[str], ring_size: Optional[str]
         "figure_count": figures,
         "stones_total": stones_total,
         "unit_amount_cents": unit_amount_cents,
-        "currency":    "CAD",
+        "currency":    "USD",
         "quantity":    quantity,
         "image":       "/products/her-eternal-reign/hero.jpg",
         "is_dynamic_priced": False,

@@ -17,6 +17,29 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **H.E.R. — HER ETERNAL REIGN · storefront AND trusted-catalog currency corrected to USD.**
+  - **Scope:** Both frontend and backend/trusted-catalog authority updated. Unlike GRAVITÉ (frontend-label only), H.E.R. is a live trusted-checkout product, so pricing migration required backend + server-side test suite changes too.
+  - **New USD retail pricing (17-figure base):**
+    - FOUNDATION · 10K Yellow Gold → **$4,995 USD** (was $6,995 CAD)
+    - SIGNATURE · 14K Yellow Gold → **$6,495 USD** (was $8,995 CAD) · retains **MOST CHOSEN**
+    - HEIRLOOM · 18K Yellow Gold → **$7,595 USD** (was $10,495 CAD)
+  - **Per-additional-figure surcharges:** 10K **+$225 USD** (was +$300 CAD) · 14K **+$250 USD** (was +$350 CAD) · 18K **+$300 USD** (was +$400 CAD).
+  - **Size → figure-count matrix unchanged:** US 6/6.5/7 → 17 · US 7.5/8 → 18 · US 8.5/9 → 19 · US 9.5/10 → 20.
+  - **Files changed (5):**
+    - `backend/services/pricing_engine_catalog.py` — `HER_TIERS` renamed `base_cad`/`per_figure_cad` → `base_usd`/`per_figure_usd` with new USD values; resolver now returns `"currency": "USD"`.
+    - `backend/tests/test_her_eternal_reign.py` — 17 pricing-matrix branches updated to USD cents (e.g. US 7 · 10K = 499500 cents; US 10 · 18K = 849500 cents); mixed-currency test now pairs H.E.R. (USD) with **retro-bred** (CAD, `foundation` tier) since H.E.R. is no longer CAD.
+    - `frontend/src/pages/HerEternalReignPage.jsx` — `TIERS` values updated; all `toLocaleString("en-CA")`+CAD strings switched to `en-US`+USD; cart snapshot `currency: "USD"`.
+    - `frontend/src/data/products.js` — `herEternalReign.priceFrom`/`basePrice`/`currency`/`pricing` updated; catalog-card record `priceFrom`/`price_range`/`currency`/`basePriceUSD` updated.
+    - `frontend/src/pages/HomePage.jsx` — H.E.R. carousel subtitle "FROM $6,995 CAD" → "FROM $4,995 USD".
+  - **Verification:**
+    - Backend: `pytest tests/test_her_eternal_reign.py tests/test_full_checkout_audit.py tests/test_retro_bred.py` → **306 passed**. All 17 pricing branches match spec, mixed-currency guard still fires, SKU deterministic, resolver ignores client price hints.
+    - `/api/checkout/health` → **84 supported products** (unchanged) and `her-eternal-reign` present.
+    - PDP `/her-eternal-reign` at 390px viewport: default price `$6,495 USD`, MOST CHOSEN on 14K, no horizontal overflow. US 10 surcharges verified live in DOM — 10K→$5,670 USD, 14K→$7,245 USD, 18K→$8,495 USD (matches `base + 3 × per_figure`).
+    - Collection cards on `/fine-jewelry` and `/womens-rings` show **From $4,995 USD**; grep of full frontend confirms zero remaining `$6,995 CAD`/`$8,995 CAD`/`$10,495 CAD` H.E.R. strings.
+  - **Preserved:** title, tagline, campaign copy, 17–20 figure architecture, crown design, three stones per crown, size range, imagery, gallery, routes, SKUs, product descriptions, MOST CHOSEN on 14K, PTP pairing, Stripe/Metals config, trusted catalog count (84), CSP, Concierge behavior, GRAVITÉ, ROUGE SIREN, RETRO BRED, and all unrelated products.
+
+
+
 - **[DONE Feb 29]** **Concierge Analytics Phase 2 — Real Open-to-Inquiry Conversion Live.**
   - New public event endpoint `POST /api/events` — narrow allowlist (`concierge_open` only), server-set `created_at`, rate-limited (60 events per 5 min per IP via the existing `services/rate_limit.py`), CSP unchanged (same-origin). Response is a minimal `{"ok": true}` — no session id or storage id ever echoed. Payload validation: `source` must start with `product:`, `journal:`, or `bespoke:`, or match the `custom-jewelry-canada` fallback; `session_id` ≤ 128 chars; anything else is silently ignored. **No PII accepted** — customer/email/phone/message/budget/attachment/IP/UA fields have no code path into the collection.
   - Storage: dedicated `phileon_events` collection with two indexes wired in `startup_db`: **unique compound** on `(event, source, session_id)` → single unique open per (session, source), and **TTL** on `created_at` at 365 days.

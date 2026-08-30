@@ -3002,9 +3002,9 @@ This is expression — under control.`,
   },
 
   // ==========================================
-  // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
+  // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · USD
   // Sculptural procession of crowned female figures. Ring-size sensitive
-  // figure count. Merchant-signed CAD pricing.
+  // figure count. Merchant-signed USD pricing.
   // ==========================================
   herEternalReign: {
     name: "H.E.R.",
@@ -3015,9 +3015,9 @@ This is expression — under control.`,
     subtitle: "HER ETERNAL REIGN",
     tagline: "No queen stands alone. Every woman in the circle wears her own crown.",
     editorialHook: "NO QUEEN STANDS ALONE.",
-    priceFrom: "From $6,995 CAD",
-    basePrice: 6995,
-    currency: "CAD",
+    priceFrom: "From $4,995 USD",
+    basePrice: 4995,
+    currency: "USD",
     featured: true,
     newArrival: true,
     displayOrder: 6,
@@ -3040,9 +3040,9 @@ This is expression — under control.`,
       "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5qb3yyhd_1000170863.png",
     ],
     pricing: {
-      "10k": 6995,
-      "14k": 8995,
-      "18k": 10495,
+      "10k": 4995,
+      "14k": 6495,
+      "18k": 7595,
     },
     defaultTier: "14k",
   }
@@ -3589,7 +3589,7 @@ export const catalogProducts = [
     displayOrder: 0,
   },
 
-  // ── H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD ──────
+  // ── H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · USD ──────
   {
     id: 'her-eternal-reign',
     name: 'H.E.R.',
@@ -3601,10 +3601,10 @@ export const catalogProducts = [
     cardImage: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png',
     thumbnail: 'https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png',
     href: '/her-eternal-reign',
-    basePriceCAD: 6995,
-    priceFrom: 'From $6,995 CAD',
-    price_range: 'From $6,995 CAD',
-    currency: 'CAD',
+    basePriceUSD: 4995,
+    priceFrom: 'From $4,995 USD',
+    price_range: 'From $4,995 USD',
+    currency: 'USD',
     editorialHook: 'NO QUEEN STANDS ALONE.',
     inventory_count: 999,
     is_core: true,

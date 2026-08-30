@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { products } from "@/data/products";
 
-// H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · CAD
+// H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · USD
 // 8 uploaded studio/lifestyle plates. Ordered newest-first from the artifact
 // bucket; the customer can re-sequence via `HER_GALLERY` below.
 const HER_GALLERY = [
@@ -36,9 +36,9 @@ const SIZE_FIGURES = {
 };
 const SIZES = ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"];
 const TIERS = [
-  { key: "10k", name: "FOUNDATION", metal: "10K Yellow Gold", stones: "Lab-Created & Synthetic Gemstones", base: 6995, per: 300, most: false },
-  { key: "14k", name: "SIGNATURE",  metal: "14K Yellow Gold", stones: "Genuine Gemstones",                  base: 8995, per: 350, most: true  },
-  { key: "18k", name: "HEIRLOOM",   metal: "18K Yellow Gold", stones: "Genuine Gemstones",                  base: 10495, per: 400, most: false },
+  { key: "10k", name: "FOUNDATION", metal: "10K Yellow Gold", stones: "Lab-Created & Synthetic Gemstones", base: 4995, per: 225, most: false },
+  { key: "14k", name: "SIGNATURE",  metal: "14K Yellow Gold", stones: "Genuine Gemstones",                  base: 6495, per: 250, most: true  },
+  { key: "18k", name: "HEIRLOOM",   metal: "18K Yellow Gold", stones: "Genuine Gemstones",                  base: 7595, per: 300, most: false },
 ];
 
 const GEM_IDENTITIES = [
@@ -80,7 +80,7 @@ export default function HerEternalReignPage() {
     addToCart({
       id: `her-eternal-reign-${tierKey}-${size.replace(".", "-")}`,
       name: `H.E.R. — ${tier.metal} · US ${size}`,
-      image: IMG_HERO, price, currency: "CAD",
+      image: IMG_HERO, price, currency: "USD",
       productKey: "her-eternal-reign", slug: "her-eternal-reign",
       tierKey, karat: tierKey.toUpperCase(),
       ringSize: size, ringSizeLabel: `US ${size}`,
@@ -217,7 +217,7 @@ export default function HerEternalReignPage() {
                         <p className="text-[11px] tracking-[0.32em] uppercase">{t.name}{t.most && <span className="ml-3 text-[9px] tracking-[0.32em] text-[#c8a25f]">MOST CHOSEN</span>}</p>
                         <p className="text-[13px] text-[#efe6d5]/70 mt-1">{t.metal} · {t.stones}</p>
                       </div>
-                      <p className="text-[15px] text-[#f2e6c8] whitespace-nowrap">${(t.base + (figures - 17) * t.per).toLocaleString("en-CA")} CAD</p>
+                      <p className="text-[15px] text-[#f2e6c8] whitespace-nowrap">${(t.base + (figures - 17) * t.per).toLocaleString("en-US")} USD</p>
                     </div>
                   </button>
                 ))}
@@ -234,13 +234,13 @@ export default function HerEternalReignPage() {
                   <p>{tier.metal}</p>
                   <p className="text-[#efe6d5]/55 text-[12px] mt-1">{tier.stones}</p>
                 </div>
-                <p className="text-[26px] md:text-[30px] text-[#f2e6c8]" data-testid="her-price">${price.toLocaleString("en-CA")} CAD</p>
+                <p className="text-[26px] md:text-[30px] text-[#f2e6c8]" data-testid="her-price">${price.toLocaleString("en-US")} USD</p>
               </div>
             </div>
 
             <button onClick={handleAdd} data-testid="her-add-to-cart"
               className="mt-6 w-full bg-[#c8a25f] text-[#0a0806] rounded-[2px] py-4 text-[11px] tracking-[0.32em] font-medium hover:bg-[#d4b070] transition-colors">
-              ADD TO CART · ${price.toLocaleString("en-CA")} CAD
+              ADD TO CART · ${price.toLocaleString("en-US")} USD
             </button>
             <p className="mt-3 text-[11px] tracking-[0.06em] text-[#efe6d5]/45">SKU {sku}</p>
           </div>

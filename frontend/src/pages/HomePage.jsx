@@ -417,7 +417,7 @@ const HomePage = () => {
             title: "H.E.R.",
             image: products.herEternalReign?.imageUrl,
             href: "/her-eternal-reign",
-            subtitle: "H.E.R. — HER ETERNAL REIGN. A sculptural procession of crowned women, each with her own crown, her own stone. Ladies Fine Jewelry ring in 10K, 14K or 18K Yellow Gold. FROM $6,995 CAD",
+            subtitle: "H.E.R. — HER ETERNAL REIGN. A sculptural procession of crowned women, each with her own crown, her own stone. Ladies Fine Jewelry ring in 10K, 14K or 18K Yellow Gold. FROM $4,995 USD",
           },
           {
             title: "ROSE OF SHARON",
