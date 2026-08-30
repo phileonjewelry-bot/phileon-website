@@ -54,6 +54,7 @@ STATIC_ROUTES = [
     "/custom-jewelry-canada",
     # Phase 4 journal
     "/journal",
+    "/journal/jewelry-hallmarks-stamps",
     "/journal/engagement-ring-anatomy",
     "/journal/jewelry-setting-styles",
     "/journal/ring-sizing-guide",

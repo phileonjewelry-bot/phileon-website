@@ -26,6 +26,300 @@
 
 export const journalArticles = [
   {
+    slug: 'jewelry-hallmarks-stamps',
+    title: 'Jewelry Hallmarks & Stamps Explained: What Those Marks Actually Mean',
+    seoTitle: 'Jewelry Hallmarks & Stamps Explained | PHILEON',
+    seoDescription:
+      'Learn what common jewelry stamps such as 10K, 14K, 18K, 417, 585 and 750 generally mean, how maker\u2019s marks differ from hallmarks, and why a stamp alone does not prove authenticity.',
+    excerpt:
+      'From 10K and 585 to maker\u2019s marks and assay stamps, learn what common jewelry marks can tell you — and why a stamp alone does not prove authenticity.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Hallmark Guide',
+    tags: ['hallmarks', 'jewelry stamps', 'gold', 'authentication'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'The smallest detail on a piece of jewelry can carry some of its most important information.' },
+      { type: 'p', text: 'Inside a ring, behind a pendant or near the clasp of a chain, you may find marks such as 10K, 14K, 18K, 417, 585 or 750.' },
+      { type: 'p', text: 'You may also find letters, logos, assay symbols, date marks or other tiny stamps.' },
+      { type: 'p', text: 'Some identify metal fineness. Some identify the maker or responsible business. Some belong to formal hallmarking systems. Others may be internal manufacturing marks with little meaning to the customer.' },
+      { type: 'p', text: 'The important part is knowing what a mark can reasonably tell you — and what it cannot.' },
+
+      { type: 'h2', text: 'What is a jewelry stamp?' },
+      { type: 'p', text: 'A jewelry stamp is any mark applied to a piece that communicates information about the object.' },
+      { type: 'p', text: 'It may indicate:' },
+      { type: 'ul', items: [
+        'Metal fineness',
+        'Maker or manufacturer',
+        'Sponsor or responsible party',
+        'Assay office',
+        'Date',
+        'Location',
+        'Patent or design information',
+        'Internal manufacturing reference',
+      ] },
+      { type: 'quote', text: '"Stamp" is a broad term. "Hallmark" has a more specific meaning in many jurisdictions.' },
+
+      { type: 'h2', text: 'What is a fineness mark?' },
+      { type: 'p', text: 'A fineness mark identifies the claimed proportion of precious metal in an alloy.' },
+      { type: 'p', text: 'For gold, common karat marks include 10K, 14K and 18K. Common millesimal fineness marks include 417, 585 and 750.' },
+      { type: 'ul', items: [
+        '417 corresponds approximately to 41.7% gold',
+        '585 corresponds approximately to 58.5% gold',
+        '750 corresponds to 75.0% gold',
+      ] },
+      { type: 'p', text: 'For a detailed comparison of the three most common karats, see 10K vs 14K vs 18K Gold (/journal/10k-vs-14k-vs-18k-gold).' },
+      { type: 'p', text: 'The mark communicates a claim about the alloy — it does not, by itself, independently verify it.' },
+
+      { type: 'h2', text: 'Why do some pieces say 585 instead of 14K?' },
+      { type: 'p', text: 'Different markets commonly use different fineness conventions.' },
+      { type: 'p', text: 'North American consumers often encounter karat marks such as 10K, 14K and 18K. Many international markets use millesimal fineness — 417, 585 and 750.' },
+      { type: 'quote', text: 'These systems express the same underlying idea — precious-metal content — in different numerical formats.' },
+
+      { type: 'h2', text: 'What do 417, 585 and 750 mean?' },
+      { type: 'table', headers: ['Mark', 'Approximate gold content', 'Common equivalent'], rows: [
+        ['417', '41.7%', '10K'],
+        ['585', '58.5%', '14K'],
+        ['750', '75.0%', '18K'],
+      ] },
+      { type: 'p', text: 'These are common equivalences. Actual legal tolerances, marking rules and permitted standards vary by jurisdiction, and nothing here should be read as legal advice.' },
+
+      { type: 'h2', text: 'What is a hallmark?' },
+      { type: 'p', text: 'In many jurisdictions, a hallmark refers to an official or formally recognized set of marks applied under a regulated precious-metal testing or assay system.' },
+      { type: 'p', text: 'Depending on the country, a hallmark may identify:' },
+      { type: 'ul', items: [
+        'Fineness',
+        'Assay office',
+        'Sponsor or maker',
+        'Date or year',
+        'Other regulated information',
+      ] },
+      { type: 'quote', text: 'Not every purity stamp is a formal hallmark.' },
+      { type: 'p', text: 'A piece stamped "14K" may carry a fineness mark without participating in a formal assay-office hallmarking system.' },
+
+      { type: 'h2', text: 'Hallmark vs fineness mark' },
+      { type: 'h3', text: 'Fineness mark' },
+      { type: 'p', text: 'Typically communicates claimed precious-metal content. Examples: 10K, 14K, 18K, 585, 750.' },
+      { type: 'h3', text: 'Hallmark' },
+      { type: 'p', text: 'May refer to a broader regulated mark or set of marks associated with an official hallmarking system.' },
+      { type: 'quote', text: 'A fineness mark tells you what the metal is claimed to be. A formal hallmark may also tell you who tested or takes responsibility for that claim, depending on the jurisdiction.' },
+
+      { type: 'h2', text: "What is a maker's mark?" },
+      { type: 'p', text: "A maker's mark identifies the maker, manufacturer, designer or responsible production entity where that system is used." },
+      { type: 'p', text: 'It may be initials, letters, a symbol, a logo or a registered mark.' },
+      { type: 'p', text: "A maker's mark identifies responsibility or origin within a marking system; it does not by itself tell you metal purity, and the specifics of any given mark should be confirmed against current production documentation rather than assumed." },
+
+      { type: 'h2', text: "What is a sponsor's mark?" },
+      { type: 'p', text: "In some hallmarking systems, the responsible party may be identified through a sponsor's mark rather than a literal bench jeweller's signature." },
+      { type: 'p', text: 'That party may be the manufacturer, importer, retailer, designer or another registered business. One country\u2019s legal definition should not be generalized globally.' },
+
+      { type: 'h2', text: 'Assay office marks' },
+      { type: 'p', text: 'In formal hallmarking jurisdictions, an assay office may test precious-metal items and apply its own identifying mark. Different countries have different systems.' },
+      { type: 'quote', text: 'An assay-office mark can indicate that the piece passed through a recognized testing system, but the exact meaning belongs to the legal system that issued it.' },
+
+      { type: 'h2', text: 'Date letters and date marks' },
+      { type: 'p', text: 'Some hallmarking systems have historically used date letters or symbols to indicate when a piece was hallmarked.' },
+      { type: 'ul', items: [
+        'Systems vary',
+        'Date-letter cycles can repeat',
+        'Not every jurisdiction uses them',
+        'Not every piece carries one',
+      ] },
+
+      { type: 'h2', text: 'Why does my ring have several stamps?' },
+      { type: 'p', text: 'Multiple marks can coexist because each may communicate a different piece of information — fineness, maker or sponsor, assay office, date, brand or manufacturing code.' },
+      { type: 'quote', text: 'Several marks do not necessarily mean conflicting information. They may form a marking system.' },
+
+      { type: 'h2', text: 'Can a stamp prove gold is real?' },
+      { type: 'quote', text: 'A stamp is evidence of a claim, not absolute proof.' },
+      { type: 'p', text: 'Stamps can be genuine, incorrect, worn, misread, added later or counterfeit.' },
+      { type: 'p', text: 'Actual metal verification may require:' },
+      { type: 'ul', items: [
+        'Professional inspection',
+        'Electronic testing',
+        'Acid testing',
+        'XRF analysis',
+        'Other appropriate methods',
+      ] },
+      { type: 'note', label: 'Important', text: 'Metal testing should be performed by a qualified professional. This article does not provide DIY testing instructions.' },
+
+      { type: 'h2', text: 'Can fake jewelry be stamped 14K or 18K?' },
+      { type: 'p', text: 'Counterfeit or misrepresented jewelry can carry false marks.' },
+      { type: 'p', text: 'Therefore:' },
+      { type: 'ul', items: [
+        'Buy from reputable sellers',
+        'Obtain documentation where appropriate',
+        'Have important pieces professionally evaluated if authenticity is uncertain',
+      ] },
+
+      { type: 'h2', text: 'What if there is no stamp?' },
+      { type: 'p', text: 'A missing stamp does not automatically prove that a piece is not precious metal.' },
+      { type: 'p', text: 'Possible reasons include:' },
+      { type: 'ul', items: [
+        'Age',
+        'Wear',
+        'Resizing',
+        'Repair',
+        'Handmade or small-production context',
+        'Jurisdictional differences',
+        'A mark located somewhere difficult to see',
+      ] },
+      { type: 'quote', text: 'No mark is not proof of fake metal, and a mark is not proof of genuine metal. Testing resolves uncertainty.' },
+
+      { type: 'h2', text: 'Can resizing remove a hallmark?' },
+      { type: 'p', text: 'Depending on where the marks are located, resizing can affect them. Resizing may involve cutting the lower shank, adding or removing metal, refinishing or polishing — and a mark in the sizing area could be altered as a result.' },
+      { type: 'p', text: 'This does not happen every time. For how sizing works and where a sizing area is typically located, see Ring Sizing 101 (/journal/ring-sizing-guide).' },
+
+      { type: 'h2', text: 'Can polishing make stamps harder to read?' },
+      { type: 'p', text: 'Repeated polishing and refinishing can soften shallow marks over time. Other factors include general wear, abrasion, repair work and the original casting or finishing quality.' },
+      { type: 'p', text: 'Polishing does not automatically destroy hallmarks, but it can reduce their crispness over the life of the piece.' },
+
+      { type: 'h2', text: 'White gold, rose gold and yellow gold marks' },
+      { type: 'p', text: 'The karat and fineness mark relate to gold purity, not necessarily colour.' },
+      { type: 'p', text: 'A 14K yellow-gold piece and a 14K rose-gold piece can both carry a 14K or 585 fineness mark even though their alloying metals differ.' },
+      { type: 'p', text: 'For how the karat itself changes the alloy, see 10K vs 14K vs 18K Gold (/journal/10k-vs-14k-vs-18k-gold).' },
+      { type: 'quote', text: 'Karat tells you how much gold is present. It does not tell you the full alloy recipe.' },
+
+      { type: 'h2', text: 'What about platinum stamps?' },
+      { type: 'p', text: 'Platinum has its own fineness-marking conventions, often expressed in parts per thousand. Specific standards and legal requirements vary by market; any example should be treated as common rather than universal.' },
+
+      { type: 'h2', text: 'What about sterling silver?' },
+      { type: 'p', text: 'Sterling silver is commonly associated with the mark "925," which generally refers to 92.5% silver.' },
+      { type: 'ul', items: [
+        '925 is a fineness mark',
+        'It is not automatically an official hallmark',
+        'Jurisdictional requirements still vary',
+      ] },
+
+      { type: 'h2', text: 'What does GP, GEP or plated mean?' },
+      { type: 'p', text: 'Common commercial abbreviations may indicate plated constructions. Terminology and legal labeling requirements can vary.' },
+      { type: 'ul', items: [
+        'GP — gold plated',
+        'GEP — gold electroplated',
+      ] },
+      { type: 'quote', text: 'A plated mark describes a surface treatment or construction, not solid-gold purity.' },
+
+      { type: 'h2', text: 'Gold-filled and rolled-gold marks' },
+      { type: 'p', text: 'Gold-filled and rolled-gold products use mechanically bonded layers of gold alloy over a base metal. They are not the same construction as solid gold or ordinary thin electroplating.' },
+      { type: 'p', text: 'The mark should be interpreted as a construction description, not as a solid-gold fineness claim.' },
+
+      { type: 'h2', text: 'Vermeil marks' },
+      { type: 'p', text: 'Vermeil generally refers to gold applied over sterling silver under defined standards that vary by jurisdiction.' },
+      { type: 'quote', text: 'Vermeil is not solid gold; it is a precious-metal-over-silver construction.' },
+
+      { type: 'h2', text: 'Are hallmarks the same worldwide?' },
+      { type: 'p', text: 'No. Different countries can differ on:' },
+      { type: 'ul', items: [
+        'Mandatory vs voluntary marking',
+        'Minimum fineness standards',
+        'Tolerance rules',
+        'Assay systems',
+        'Sponsor registration',
+        'Marking exemptions',
+        'Terminology',
+      ] },
+      { type: 'quote', text: 'A hallmark should always be interpreted in the context of the jurisdiction that issued it.' },
+
+      { type: 'h2', text: 'Canadian jewelry marks' },
+      { type: 'p', text: 'PHILEON operates in Canada. Canadian precious-metal marking and advertising are governed by Canadian law, and specific compliance requirements can depend on how a piece is represented and sold.' },
+      { type: 'p', text: 'This article does not summarize those statutory requirements and does not describe any PHILEON marking practice that is not documented in current production.' },
+
+      { type: 'h2', text: 'US jewelry marks' },
+      { type: 'p', text: 'US precious-metal marking practices differ from formal hallmarking systems used in some other countries. Not all US jewelry participates in assay-office marking, and the treatment above should not be read as legal advice for any specific market.' },
+
+      { type: 'h2', text: 'UK and European hallmarking' },
+      { type: 'p', text: 'Some European jurisdictions, including the UK, have long-established formal hallmarking systems. However, requirements vary substantially by country.' },
+      { type: 'quote', text: 'European jewelry may carry more complex groups of marks than North American customers are accustomed to seeing.' },
+
+      { type: 'h2', text: 'Vintage and antique jewelry' },
+      { type: 'p', text: 'Older jewelry can require more careful interpretation because:' },
+      { type: 'ul', items: [
+        'Marks may use obsolete standards',
+        'Maker registrations change',
+        'Countries and assay systems change',
+        'Repairs may alter marks',
+        'Marks may be worn',
+      ] },
+      { type: 'quote', text: 'A vintage stamp should be researched in its historical context rather than interpreted only through modern conventions.' },
+
+      { type: 'h2', text: 'Why placement varies' },
+      { type: 'p', text: 'Marks may appear inside a ring shank, on a pendant bail, on the back of a pendant, on a bracelet clasp, on a chain tag, on an earring post or back, or on the underside of a setting.' },
+      { type: 'p', text: 'Placement depends on design, available space, manufacturing process and legal or industry practice. No single placement is mandatory globally.' },
+
+      { type: 'h2', text: 'Laser marks vs struck stamps' },
+      { type: 'p', text: 'Marks may be applied through different techniques such as mechanical stamping, laser marking, casting-in or engraving. The application method does not automatically determine authenticity.' },
+      { type: 'quote', text: 'How a mark was applied matters less than whether the mark is accurate and legitimately associated with the piece.' },
+
+      { type: 'h2', text: 'What should you check when buying fine jewelry?' },
+      { type: 'ul', items: [
+        'A clear metal description from the seller',
+        'Fineness or karat information',
+        'Consistent invoice and product description',
+        'Reputable seller identity',
+        'Stone documentation where relevant',
+        'Return and warranty information',
+        'A hallmark or stamp where applicable',
+        'Professional testing if material authenticity is uncertain',
+      ] },
+      { type: 'p', text: 'A stamp is helpful, but its absence is not automatically a red flag in every context.' },
+
+      { type: 'h2', text: 'What should you ask PHILEON?' },
+      { type: 'p', text: 'When evaluating a PHILEON piece or discussing a bespoke design, useful questions include:' },
+      { type: 'ul', items: [
+        'What metal and karat is specified?',
+        'Is the piece solid gold, plated, vermeil or another construction?',
+        'What stones are being used?',
+        'What documentation accompanies the piece?',
+        'What sizing or finishing considerations apply?',
+      ] },
+
+      { type: 'h2', text: "PHILEON\u2019s hallmark philosophy" },
+      { type: 'quote', text: 'A mark should support the object, not substitute for trust in the object.' },
+      { type: 'p', text: 'The karat, alloy, stones, construction and documentation should agree with one another. A stamp can be useful evidence — the piece itself, and the integrity of how it is represented, matters more.' },
+
+      { type: 'h2', text: 'Quick mark guide' },
+      { type: 'table', headers: ['Mark / term', 'Generally indicates'], rows: [
+        ['10K', 'Approximately 41.7% gold'],
+        ['14K', 'Approximately 58.5% gold'],
+        ['18K', '75% gold'],
+        ['417', 'Approximately 41.7% gold'],
+        ['585', 'Approximately 58.5% gold'],
+        ['750', '75% gold'],
+        ['925', 'Sterling-silver fineness'],
+        ["Maker's mark", 'Maker or responsible entity'],
+        ['Assay mark', 'Assay office or formal testing system where applicable'],
+        ['GP / plated', 'Gold-plated construction'],
+      ] },
+      { type: 'note', label: 'Note', text: 'Exact legal meaning and marking requirements vary by jurisdiction.' },
+
+      { type: 'cta', heading: 'Have a question about a jewelry mark? Ask PHILEON.', text: 'If you\u2019re considering a PHILEON piece or trying to understand a stamp on a piece you already own, send us the mark and the context. We can help explain what the mark generally indicates and when professional metal testing may be the better next step.', buttonLabel: 'ASK PHILEON' },
+
+      { type: 'links', heading: 'Continue the PHILEON Journal', items: [
+        { label: 'Understanding gold karat', href: '/journal/10k-vs-14k-vs-18k-gold' },
+        { label: 'Understanding engagement-ring anatomy', href: '/journal/engagement-ring-anatomy' },
+        { label: 'Understanding setting styles', href: '/journal/jewelry-setting-styles' },
+        { label: 'Finding the right ring fit', href: '/journal/ring-sizing-guide' },
+      ] },
+
+      { type: 'links', heading: 'Explore PHILEON Fine Jewelry', items: [
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: 'Pendants', href: '/pendants' },
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+    ],
+    faq: [
+      { q: 'Does 585 mean real gold?', a: '585 is a common fineness mark corresponding to approximately 58.5% gold, commonly associated with 14K. The presence of the mark is evidence of a claimed fineness, but professional testing may be required if authenticity is uncertain.' },
+      { q: 'Is 750 the same as 18K?', a: 'Yes. 750 indicates 750 parts gold per thousand, equivalent to 75% gold, which corresponds to 18K.' },
+      { q: 'Does every real gold ring have a stamp?', a: 'Not necessarily. Marking requirements and practices vary by jurisdiction, age and production context, and marks can also be lost during wear or repair.' },
+      { q: 'Can a fake ring have a 14K stamp?', a: 'Yes. A false stamp can be applied to non-gold or lower-purity material. A stamp alone should not be treated as definitive proof.' },
+      { q: "What is the difference between a hallmark and a maker's mark?", a: "A hallmark may be part of a formal precious-metal verification system, while a maker's or sponsor's mark identifies the responsible maker or business within the relevant system. Exact definitions vary by jurisdiction." },
+    ],
+  },
+  {
     slug: 'engagement-ring-anatomy',
     title: 'Engagement Ring Anatomy: Every Part Explained',
     seoTitle: 'Engagement Ring Anatomy: Every Part Explained | PHILEON',

@@ -17,6 +17,27 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **PHILEON Journal Article #6 — Jewelry Hallmarks & Stamps Explained Published.**
+  - **Route:** `/journal/jewelry-hallmarks-stamps` (public, indexable `index,follow`, canonical `https://phileon.com/journal/jewelry-hallmarks-stamps`, sitemap-registered).
+  - **Copy:** ~2,153 words across 32 sections (what a jewelry stamp is · fineness marks · 585 vs 14K systems · 417/585/750 mini-table · hallmark vs fineness mark · maker's/sponsor's/assay-office marks · date letters · multiple stamps · whether a stamp proves gold is real · fake stamps · missing stamps · resizing and polishing effects · gold colour vs karat · platinum · sterling silver · GP/GEP · gold-filled/rolled-gold · vermeil · jurisdictional differences · Canadian/US/UK/European context · vintage pieces · placement · laser vs struck · buying checklist · questions to ask PHILEON · PHILEON hallmark philosophy) + Quick Mark Guide table (10 rows) + jurisdiction note + 5-question FAQ + Ask PHILEON CTA + "Continue the PHILEON Journal" cross-linking block (all 4 sibling guides) + "Explore PHILEON Fine Jewelry" links block.
+  - **Factual-integrity constraints observed (per brief):** no invented PHILEON marking procedures, no claim that PHILEON applies any specific hallmark or maker's mark, no exhaustive global conversion or assay-office table, no jurisdiction-specific statutory summary, no DIY testing instructions, no invented fraud statistics, no "a stamp proves gold is real" claim (article explicitly says the opposite), no destructive-testing suggestion, no invented date-letter chart, no invented platinum/silver legal thresholds. All country sections written conservatively and framed as context, not legal advice.
+  - **Cross-linking (per brief):** contextual references to `/journal/10k-vs-14k-vs-18k-gold` (fineness intro + colour section), `/journal/ring-sizing-guide` (sizing-area section), and a restrained editorial "Continue the PHILEON Journal" block listing gold karat, engagement-ring anatomy, setting styles and ring fit.
+  - **SEO:**
+    - `<title>` — **"Jewelry Hallmarks & Stamps Explained | PHILEON"** (custom `seoTitle`)
+    - Meta description matches brief exactly.
+    - OG title/description + Twitter title all inherit the same strings.
+    - `<link rel="canonical">` = `https://phileon.com/journal/jewelry-hallmarks-stamps`; robots `index,follow`; single H1 verified.
+    - **JSON-LD emitted:** `Article` (Organization author "PHILEON Atelier", Organization publisher "PHILEON", `mainEntityOfPage` = canonical, `datePublished`/`dateModified` = 2026-02-29, no invented image) + `BreadcrumbList` (Home → article) + `FAQPage` (5 questions).
+  - **Concierge integration:** ASK PHILEON CTA opens the existing sitewide `ConciergeAgent` with `source="journal:jewelry-hallmarks-stamps"`. Phase 2 open-beacon fired exactly **once** to `POST /api/events` on the closed→open transition (verified via Playwright network intercept). No second inquiry system; analytics implementation unchanged.
+  - **Journal index (`/journal`):** now shows exactly 6 real entries, newest-first: **Jewelry Hallmarks & Stamps Explained** → Engagement Ring Anatomy → Jewelry Setting Styles Explained → Ring Sizing 101 → Lab-Grown vs Natural Diamonds → 10K vs 14K vs 18K Gold. Card renders with `Hallmark Guide` category, brief-provided excerpt, "Read Article →" CTA, typography-led presentation (no invented imagery).
+  - **Sitemap:** `/journal/jewelry-hallmarks-stamps` added to `STATIC_ROUTES` in `backend/scripts/generate_sitemap.py`; regenerated with 92 total urls · products_scanned=60 · indexable=58 · static=34 · approved_trust=7.
+  - **Regression verified at 390×844:** `/journal`, all 6 `/journal/*` articles, `/`, `/mens-rings`, `/womens-rings`, `/statement-rings`, `/fine-jewelry`, `/pendants`, `/jewelry-care`, `/custom-jewelry-canada`, `/checkout`, `/her-eternal-reign` — all HTTP 200, zero horizontal overflow, zero non-metals console errors (only pre-existing Metals-API ticker fetch failures — Metals key remains on backlog), no new CSP violations. Trusted catalog count still **84**. Existing Concierge intake, PDPs, prices, cart, wishlist, Stripe/CSP/rate-limits/Object-Storage/Resend, and Articles #1–#5 all untouched.
+  - **Files changed (2):**
+    - `frontend/src/lib/journal.js` — Article #6 prepended (newest-first).
+    - `backend/scripts/generate_sitemap.py` — `/journal/jewelry-hallmarks-stamps` added to `STATIC_ROUTES`.
+
+
+
 - **[DONE Feb 29]** **PHILEON Journal Article #5 — Engagement Ring Anatomy Published.**
   - **Route:** `/journal/engagement-ring-anatomy` (public, indexable `index,follow`, canonical `https://phileon.com/journal/engagement-ring-anatomy`, sitemap-registered).
   - **Copy:** ~2,451 words across 32 sections (centre stone, head, setting, prongs/claws, basket, gallery, gallery rail, bridge, shoulders, split shanks, shank, shank width, shank thickness, taper, cathedral shoulders, halo, hidden halo, side stones, accent stones, under-gallery, pavilion clearance, seat, culet area, inside of the shank, sizing area, hallmark, maker's mark, how the parts work together, daily wear, wedding-band fit, resizing, PHILEON design philosophy) + Quick Anatomy Guide table (13 rows) + 5-question FAQ + Ask PHILEON CTA + a "Continue the PHILEON Journal" cross-linking block (all four prior articles) + "Explore PHILEON Rings" links block. Voice matches Articles #1–#4.
