@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import ConciergeAnalytics from './ConciergeAnalytics';
 
 // PHILEON — Admin Concierge Inbox (Phase 10). Requires the existing admin JWT.
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -99,6 +100,8 @@ export default function AdminConcierge() {
           <button onClick={load} className="border border-phileon-gold text-phileon-gold px-4 py-2 tracking-[0.2em] text-xs uppercase">Refresh</button>
         </div>
       </div>
+
+      <ConciergeAnalytics />
 
       <div className="flex gap-3 mb-4 flex-wrap">
         <button onClick={() => setStatusFilter('')} className={`text-xs uppercase tracking-[0.2em] px-3 py-2 border ${!statusFilter ? 'border-phileon-gold text-phileon-gold' : 'border-white/10 text-white/60'}`}>All</button>

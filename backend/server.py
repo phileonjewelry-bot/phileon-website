@@ -480,6 +480,158 @@ async def admin_list_concierge(
     return {"items": items, "counts": {"new": new_count, "total": len(items)}}
 
 
+# ── Concierge Analytics Phase 1 ─────────────────────────────────────────────
+# Aggregated, PII-free source performance for /admin/concierge. Reads only
+# `concierge_inquiries.source` + product/journal slug. No customer identity
+# is ever returned. Open-to-inquiry conversion is currently unavailable
+# because Concierge "open" beacons live in the browser's localStorage
+# (frontend components/ConciergeButton.jsx + ConciergeAgent.jsx) and are
+# never sent to the backend; we surface that limitation explicitly rather
+# than fabricate a number.
+
+_PERIOD_DAYS = {"7d": 7, "30d": 30, "90d": 90, "all": None}
+
+# Test / synthetic source markers that must never surface in operational
+# analytics even if a residual document exists in Mongo.
+_SYNTHETIC_SOURCES = {
+    "phase10-test", "phase-10.2-live", "phase-10.2-security-regression",
+    "phase-10.1-verify", "phase-10.2-verify",
+}
+
+# Reverse map of Journal slug → article title (kept in sync manually so the
+# analytics layer never has to import frontend code).
+_JOURNAL_TITLES = {
+    "10k-vs-14k-vs-18k-gold": "10K vs 14K vs 18K Gold",
+    "lab-grown-vs-natural-diamonds": "Lab-Grown vs Natural Diamonds",
+}
+
+
+def _classify_source(raw: Optional[str], product: Optional[dict]) -> dict:
+    """Normalize a raw source string to {kind, slug, key, label}.
+    kind is one of: 'product' | 'journal' | 'bespoke' | 'other'."""
+    s = (raw or "").strip()
+    if not s:
+        s = "unknown"
+
+    if s in _SYNTHETIC_SOURCES:
+        return {"kind": "synthetic", "slug": s, "key": s, "label": s}
+
+    # Product PDP: "pdp:<slug>" or "product:<slug>"
+    if s.startswith("pdp:") or s.startswith("product:"):
+        slug = s.split(":", 1)[1].strip().lower()
+        # Prefer the product name captured on the inquiry (never a live
+        # commerce lookup — analytics reads its own stored context).
+        name = (product or {}).get("name") if isinstance(product, dict) else None
+        label = name or slug.replace("-", " ").upper()
+        return {"kind": "product", "slug": slug, "key": f"product:{slug}", "label": label}
+
+    # Journal article: "journal:<slug>"
+    if s.startswith("journal:"):
+        slug = s.split(":", 1)[1].strip().lower()
+        label = _JOURNAL_TITLES.get(slug) or slug.replace("-", " ").title()
+        return {"kind": "journal", "slug": slug, "key": f"journal:{slug}", "label": label}
+
+    # Bespoke / custom jewelry surface
+    if s in {"custom-jewelry-canada", "bespoke-page", "bespoke"}:
+        return {"kind": "bespoke", "slug": s, "key": "bespoke:custom-jewelry", "label": "Custom Jewelry"}
+
+    return {"kind": "other", "slug": s, "key": f"other:{s.lower()}", "label": s}
+
+
+def _parse_created_at(v) -> Optional[datetime]:
+    """Historical Concierge docs store `created_at` as an ISO string. Best-
+    effort parse; return None if unparseable so the doc is silently skipped
+    from period filters (but still counted in 'all')."""
+    if isinstance(v, datetime):
+        return v if v.tzinfo else v.replace(tzinfo=timezone.utc)
+    if isinstance(v, str) and v:
+        try:
+            return datetime.fromisoformat(v.replace("Z", "+00:00"))
+        except Exception:
+            return None
+    return None
+
+
+@admin_router.get("/concierge/analytics")
+async def admin_concierge_analytics(
+    period: str = "30d",
+    _: str = Depends(verify_admin),
+):
+    """Aggregated Concierge source performance (PII-free)."""
+    period = period if period in _PERIOD_DAYS else "30d"
+    days = _PERIOD_DAYS[period]
+    cutoff = None
+    if days is not None:
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+
+    # Small dataset (thousands, not millions) — a single scan is cheaper
+    # than an aggregation pipeline that would still have to fold on the
+    # normalized source string.
+    projection = {"source": 1, "product": 1, "created_at": 1, "_id": 0}
+    docs = await db.concierge_inquiries.find({}, projection).to_list(50000)
+
+    buckets: dict[str, dict] = {}
+    total = 0
+    for doc in docs:
+        ts = _parse_created_at(doc.get("created_at"))
+        if cutoff is not None and (ts is None or ts < cutoff):
+            continue
+        cls = _classify_source(doc.get("source"), doc.get("product"))
+        if cls["kind"] == "synthetic":
+            continue
+        total += 1
+        b = buckets.setdefault(cls["key"], {"kind": cls["kind"], "slug": cls["slug"], "label": cls["label"], "inquiries": 0})
+        b["inquiries"] += 1
+
+    def _pack(kind: str):
+        rows = [
+            {"slug": b["slug"], "label": b["label"], "inquiries": b["inquiries"],
+             "share": round(b["inquiries"] / total, 4) if total else 0.0}
+            for b in buckets.values() if b["kind"] == kind
+        ]
+        rows.sort(key=lambda x: x["inquiries"], reverse=True)
+        return rows
+
+    products = _pack("product")
+    journal = _pack("journal")
+    bespoke = _pack("bespoke")
+    other = _pack("other")
+
+    top_sources = sorted(
+        [
+            {"key": k, "kind": b["kind"], "slug": b["slug"], "label": b["label"],
+             "inquiries": b["inquiries"],
+             "share": round(b["inquiries"] / total, 4) if total else 0.0}
+            for k, b in buckets.items()
+        ],
+        key=lambda x: x["inquiries"],
+        reverse=True,
+    )[:3]
+
+    return {
+        "period": period,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "totals": {
+            "inquiries": total,
+            "concierge_opens": None,
+            "conversion_rate": None,
+            "conversion_note": (
+                "Concierge open beacons are recorded in localStorage only "
+                "(components/ConciergeButton.jsx, ConciergeAgent.jsx) and "
+                "are never sent to the backend, so open-to-inquiry "
+                "conversion is not available server-side."
+            ),
+        },
+        "top_sources": top_sources,
+        "products": products,
+        "journal": journal,
+        "bespoke": bespoke,
+        "other": other,
+    }
+
+
+
+
 @admin_router.get("/concierge/inquiries/{reference}")
 async def admin_get_concierge(reference: str, _: str = Depends(verify_admin)):
     doc = await db.concierge_inquiries.find_one({"reference": reference})
