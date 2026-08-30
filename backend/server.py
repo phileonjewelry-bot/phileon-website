@@ -900,10 +900,19 @@ class SecurityHeadersMiddleware:
 
     CSP audited origins (Final Security Hardening):
       script-src:  self + Emergent platform loader + Tailwind CDN (used in
-                   preview iframes) + jsDelivr (a shared UI dep) + Stripe.js.
-                   `'unsafe-inline'` remains for the inline branching script
-                   in `public/index.html`; a nonce-based tightening is
-                   documented as a P3 follow-up.
+                   preview iframes) + jsDelivr (a shared UI dep) + Stripe.js
+                   + Cloudflare Web Analytics beacon.
+
+                   `'unsafe-inline'` remains for ONE reason only:
+                   Cloudflare's edge injects a per-request __CF$cv$params
+                   bootstrap (Bot Fight Mode / JavaScript Detection). It
+                   is added after our origin sends the response and
+                   contains a per-request timestamp, so it cannot carry a
+                   nonce and its hash changes every request. Every
+                   PHILEON-owned inline script has been moved to an
+                   external file (/emergent-preview-boot.js). To drop
+                   `'unsafe-inline'`, disable Bot Fight Mode + JavaScript
+                   Detections in the Cloudflare dashboard first.
       style-src:   self + Google Fonts + `'unsafe-inline'` (React inline
                    `style={}` props and Tailwind classes).
       img-src:     self + data: + blob: + any https (many product photos

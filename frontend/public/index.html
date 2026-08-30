@@ -6,11 +6,18 @@
         <meta name="theme-color" content="#0a0a0a" />
         <!--
           Content Security Policy (Final Security Hardening).
-          Enforced (not report-only). frame-ancestors is enforced by the
-          backend security-headers middleware + X-Frame-Options: DENY on
-          API responses; storefront HTML relies on X-Frame-Options from
-          the static-hosting layer. Nonce-based script-src tightening is a
-          documented P3 follow-up (see backend/server.py:SecurityHeadersMiddleware).
+          Enforced. `frame-ancestors` is enforced by the backend security-
+          headers middleware + X-Frame-Options: DENY on API responses;
+          storefront HTML relies on X-Frame-Options from the static-hosting
+          layer.
+
+          `'unsafe-inline'` remains in script-src for ONE reason only:
+          Cloudflare's edge injects a per-request __CF$cv$params bootstrap
+          (part of Bot Fight Mode / JavaScript Detection). That script is
+          added AFTER our origin sends the response and contains a per-
+          request timestamp, so it cannot carry a nonce and its hash
+          changes every request. Every PHILEON-owned inline script has
+          been moved out to /emergent-preview-boot.js.
         -->
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data: blob: https:; media-src 'self' https: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https: wss:; script-src 'self' 'unsafe-inline' https://assets.emergent.sh https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://js.stripe.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src https://js.stripe.com https://hooks.stripe.com; form-action 'self'; upgrade-insecure-requests" />
         <meta name="description" content="PHILEON — bespoke fine jewelry, architectural statement rings, editorial pendants and Inspiration Vault releases." />
@@ -30,20 +37,15 @@
         <link rel="apple-touch-icon" href="/logo.png" />
         <title>PHILEON | Bespoke Fine Jewelry</title>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
-        <script>
-            if (window.self !== window.top) {
-                var debugMonitorScript = document.createElement('script');
-                debugMonitorScript.src = 'https://assets.emergent.sh/scripts/debug-monitor.js';
-                document.head.appendChild(debugMonitorScript);
-                window.tailwind = window.tailwind || {};
-                tailwind.config = {
-                    corePlugins: { preflight: false },
-                };
-                var tailwindScript = document.createElement('script');
-                tailwindScript.src = 'https://cdn.tailwindcss.com';
-                document.head.appendChild(tailwindScript);
-            }
-        </script>
+        <!--
+          Emergent preview boot — externalised to reduce the served HTML
+          inline surface. Loads the Emergent debug monitor + tailwind CDN
+          only when the storefront is framed by the design surface.
+          `unsafe-inline` remains in script-src ONLY because Cloudflare's
+          edge injects a per-request __CF$cv$params bootstrap that cannot
+          carry a nonce or a hash.
+        -->
+        <script src="/emergent-preview-boot.js"></script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
