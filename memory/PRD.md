@@ -17,6 +17,33 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **Concierge Analytics Phase 2 — Real Open-to-Inquiry Conversion Live.**
+  - New public event endpoint `POST /api/events` — narrow allowlist (`concierge_open` only), server-set `created_at`, rate-limited (60 events per 5 min per IP via the existing `services/rate_limit.py`), CSP unchanged (same-origin). Response is a minimal `{"ok": true}` — no session id or storage id ever echoed. Payload validation: `source` must start with `product:`, `journal:`, or `bespoke:`, or match the `custom-jewelry-canada` fallback; `session_id` ≤ 128 chars; anything else is silently ignored. **No PII accepted** — customer/email/phone/message/budget/attachment/IP/UA fields have no code path into the collection.
+  - Storage: dedicated `phileon_events` collection with two indexes wired in `startup_db`: **unique compound** on `(event, source, session_id)` → single unique open per (session, source), and **TTL** on `created_at` at 365 days.
+  - Client instrumentation: single canonical fire point in `components/ConciergeAgent.jsx` — a `useEffect([open])` that fires exactly on the closed→open transition. Uses `crypto.randomUUID()` in `sessionStorage` under `phileon_session_id` (session-scoped, no persistent visitor id, no fingerprinting). Delivery uses `navigator.sendBeacon` when available and a fire-and-forget `fetch keepalive` fallback. Never blocks the modal. Source is normalized locally to `product:<slug>`, `journal:<slug>`, `bespoke:custom-jewelry` before send. `ConciergeButton` was not instrumented → no duplicate events.
+  - `GET /api/admin/concierge/analytics` upgraded (backward-compatible superset):
+    - Adds `concierge_opens` (unique per (session, source) inside the period, synthetic sources excluded), `conversion_rate` (inquiries ÷ opens, `null` when opens = 0 to avoid dividing by zero), `open_tracking_since` (first event `created_at`), and `conversion_note` (only set when opens = 0).
+    - Per-source rows now carry `opens` and `conversion_rate` on `products`, `journal`, `bespoke` and `top_sources`. Ranking still primary-key inquiries desc, opens as tiebreak.
+    - Sources with opens but zero inquiries (this period) now surface with `inquiries: 0, conversion_rate: 0.0` — so PHILEON can see under-performing surfaces, not just performing ones.
+  - Admin UI (`pages/admin/ConciergeAnalytics.jsx`): metric row now shows real numbers ("Concierge opens" + "Open → inquiry %"); a small tracking-since note appears under the metrics only when `open_tracking_since` is present; breakdown tables gained `Opens · Inq. · Conv. · Share` columns. Top-sources ranked line now reads `01 · DRAPE · Product · 2 opens · 2 inquiries · 100.0%`. Empty state unchanged, mobile 390 clean.
+  - **Verification (live E2E, cleaned up):**
+    - Dedupe: 5× DRAPE opens with one session id → **1** unique. +1 BAJAN with same session → **+1**. +1 DRAPE with a new session → **+1**. +1 Journal (Article #1) with S1 → **+1**. +1 Custom Jewelry with S1 → **+1**. Correct.
+    - Invalid source (`random-junk`) and non-allowlisted event (`page_view`) → returned 200 but did not persist. Correct silent drop per spec.
+    - Conversion: overall 5 opens / 2 inquiries = **40%**. DRAPE-specific 2 opens / 2 inquiries = **100%**. Correct.
+    - `open_tracking_since` populated with the first event's ISO timestamp.
+    - Indexes present in `phileon_events`: `uniq_event_source_session` (unique) + `ttl_created_at` (expireAfterSeconds=31,536,000).
+    - PII sanity: assertion pass — `test-session-`, `@example.com`, `session_id`, `ip`, `user-agent` all absent from the analytics response.
+    - Post-cleanup: `total_opens = 0`, `conversion_rate = null`, `conversion_note = "No Concierge open events recorded in the selected period yet."` — exactly the fallback copy the UI expects.
+  - **Regression retained:** trusted catalog still exactly **84**; SEC-001..004, CSP, rate limits, admin auth, Concierge intake, live Resend send path, sitewide Concierge injection, Journal Article #1/#2 content, and every P0 fix all untouched.
+  - **Historical-data honesty:** because server-side open tracking begins now, conversion is only meaningful from `open_tracking_since` forward. The UI states this explicitly.
+  - **Files changed (4):**
+    - `backend/server.py` — new `POST /api/events`, `_ensure_event_indexes`, `_valid_source`; analytics endpoint upgraded to fold in `phileon_events`; startup hook wires the indexes.
+    - `frontend/src/components/ConciergeAgent.jsx` — single fire point on open transition; `sendBeacon` first with `fetch keepalive` fallback.
+    - `frontend/src/pages/admin/ConciergeAnalytics.jsx` — Opens / Conv. columns; tracking-since note; conversion hint respects backend `conversion_note`.
+    - `memory/PRD.md` — this entry.
+  - **Remaining P3 limitations:** (1) session-based dedupe is *per browser session*, so someone in a fresh incognito window is a new session — fine for operational analytics, not a marketing-grade unique-visitor number; (2) `phileon_events` is single-instance-in-Mongo and does not use Redis, matching the current single-replica backend model.
+
+
 - **[DONE Feb 29]** **Concierge Analytics Phase 1 — Live in `/admin/concierge`** — First-party, admin-only source-performance layer added above the Concierge inbox. No third-party analytics. No storefront changes. No PII surfaced.
   - Backend endpoint `GET /api/admin/concierge/analytics?period={7d|30d|90d|all}` (default `30d`) protected by `verify_admin`. Unauth = **403**. Reads only `concierge_inquiries.{source, product, created_at}` — customer name / email / phone / message / notes / attachments / IP / UA never touched. Explicit PII-leak assertion in the verification pass passed.
   - Source normalisation model returned per row: `product:<slug>`, `journal:<slug>`, `bespoke:custom-jewelry`, `other:<raw>`. Synthetic markers (`phase10-test`, `phase-10.1-verify`, `phase-10.2-live`, `phase-10.2-security-regression`, `phase-10.2-verify`) are excluded from counts. Labels resolve DRAPE / BAJAN JOE (from inquiry `product.name`), Journal titles from a small in-module dictionary, and "Custom Jewelry" for bespoke — with clean-slug fallback so a deleted source never breaks the request.

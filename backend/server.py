@@ -480,14 +480,65 @@ async def admin_list_concierge(
     return {"items": items, "counts": {"new": new_count, "total": len(items)}}
 
 
+# ── Phase 2: first-party event ingest (Concierge open tracking) ─────────────
+_EVENT_ALLOWLIST = {"concierge_open"}
+_SOURCE_PREFIXES = ("product:", "journal:", "bespoke:")
+_SOURCE_FALLBACKS = {"custom-jewelry-canada"}
+_SOURCE_MAX = 200
+_SESSION_ID_MAX = 128
+_EVENT_TTL_SECONDS = 60 * 60 * 24 * 365  # 12 months
+
+
+async def _ensure_event_indexes():
+    try:
+        await db.phileon_events.create_index(
+            [("event", 1), ("source", 1), ("session_id", 1)],
+            name="uniq_event_source_session", unique=True)
+    except Exception:
+        pass
+    try:
+        await db.phileon_events.create_index(
+            [("created_at", 1)], name="ttl_created_at",
+            expireAfterSeconds=_EVENT_TTL_SECONDS)
+    except Exception:
+        pass
+
+
+def _valid_source(s: str) -> bool:
+    if not isinstance(s, str) or not s or len(s) > _SOURCE_MAX:
+        return False
+    if any(ord(c) < 32 for c in s):
+        return False
+    if s in _SOURCE_FALLBACKS:
+        return True
+    return any(s.startswith(p) for p in _SOURCE_PREFIXES)
+
+
+@api_router.post("/events")
+async def ingest_event(payload: dict, request: Request):
+    """First-party analytics ingest. Narrow allowlist. No PII."""
+    _rl_check("events-ingest", request, identity=None,
+              max_attempts=60, window_secs=5 * 60)
+    event = str(payload.get("event") or "").strip()
+    source = str(payload.get("source") or "").strip()
+    session_id = str(payload.get("session_id") or "").strip()
+    if event not in _EVENT_ALLOWLIST or not _valid_source(source):
+        return {"ok": True}
+    if not session_id or len(session_id) > _SESSION_ID_MAX:
+        return {"ok": True}
+    try:
+        await db.phileon_events.insert_one({
+            "event": event, "source": source, "session_id": session_id,
+            "created_at": datetime.now(timezone.utc),
+        })
+    except Exception:
+        pass  # dedupe (unique-index collision) is expected
+    return {"ok": True}
+
+
+
+
 # ── Concierge Analytics Phase 1 ─────────────────────────────────────────────
-# Aggregated, PII-free source performance for /admin/concierge. Reads only
-# `concierge_inquiries.source` + product/journal slug. No customer identity
-# is ever returned. Open-to-inquiry conversion is currently unavailable
-# because Concierge "open" beacons live in the browser's localStorage
-# (frontend components/ConciergeButton.jsx + ConciergeAgent.jsx) and are
-# never sent to the backend; we surface that limitation explicitly rather
-# than fabricate a number.
 
 _PERIOD_DAYS = {"7d": 7, "30d": 30, "90d": 90, "all": None}
 
@@ -570,6 +621,35 @@ async def admin_concierge_analytics(
     projection = {"source": 1, "product": 1, "created_at": 1, "_id": 0}
     docs = await db.concierge_inquiries.find({}, projection).to_list(50000)
 
+    # ── Phase 2: fold in Concierge open events ──
+    ev_query = {"event": "concierge_open"}
+    if cutoff is not None:
+        ev_query["created_at"] = {"$gte": cutoff}
+    events = await db.phileon_events.find(
+        ev_query, {"source": 1, "session_id": 1, "created_at": 1, "_id": 0}
+    ).to_list(100000)
+    unique_opens_by_source: dict[str, int] = {}
+    seen: set[tuple[str, str]] = set()
+    total_opens = 0
+    for ev in events:
+        pair = (ev.get("source") or "", ev.get("session_id") or "")
+        if not pair[0] or not pair[1] or pair in seen:
+            continue
+        seen.add(pair)
+        cls = _classify_source(ev["source"], None)
+        if cls["kind"] == "synthetic":
+            continue
+        unique_opens_by_source[cls["key"]] = unique_opens_by_source.get(cls["key"], 0) + 1
+        total_opens += 1
+
+    open_first = await db.phileon_events.find_one(
+        {"event": "concierge_open"}, {"created_at": 1, "_id": 0},
+        sort=[("created_at", 1)],
+    )
+    open_tracking_since = (
+        open_first["created_at"].isoformat() if open_first and open_first.get("created_at") else None
+    )
+
     buckets: dict[str, dict] = {}
     total = 0
     for doc in docs:
@@ -584,12 +664,33 @@ async def admin_concierge_analytics(
         b["inquiries"] += 1
 
     def _pack(kind: str):
-        rows = [
-            {"slug": b["slug"], "label": b["label"], "inquiries": b["inquiries"],
-             "share": round(b["inquiries"] / total, 4) if total else 0.0}
-            for b in buckets.values() if b["kind"] == kind
-        ]
-        rows.sort(key=lambda x: x["inquiries"], reverse=True)
+        rows = []
+        for b in buckets.values():
+            if b["kind"] != kind:
+                continue
+            key = f"{kind}:{b['slug']}"
+            opens = unique_opens_by_source.get(key, 0)
+            conv = round(b["inquiries"] / opens, 4) if opens else None
+            rows.append({
+                "slug": b["slug"], "label": b["label"],
+                "inquiries": b["inquiries"],
+                "share": round(b["inquiries"] / total, 4) if total else 0.0,
+                "opens": opens, "conversion_rate": conv,
+            })
+        # Also surface sources that had opens but zero inquiries this period.
+        for key, opens in unique_opens_by_source.items():
+            if not key.startswith(f"{kind}:"):
+                continue
+            slug = key.split(":", 1)[1]
+            if any(r["slug"] == slug for r in rows):
+                continue
+            label = _JOURNAL_TITLES.get(slug) if kind == "journal" else None
+            label = label or ("Custom Jewelry" if kind == "bespoke" else slug.replace("-", " ").upper())
+            rows.append({
+                "slug": slug, "label": label, "inquiries": 0,
+                "share": 0.0, "opens": opens, "conversion_rate": 0.0,
+            })
+        rows.sort(key=lambda x: (x["inquiries"], x["opens"]), reverse=True)
         return rows
 
     products = _pack("product")
@@ -601,25 +702,30 @@ async def admin_concierge_analytics(
         [
             {"key": k, "kind": b["kind"], "slug": b["slug"], "label": b["label"],
              "inquiries": b["inquiries"],
-             "share": round(b["inquiries"] / total, 4) if total else 0.0}
+             "share": round(b["inquiries"] / total, 4) if total else 0.0,
+             "opens": unique_opens_by_source.get(k, 0),
+             "conversion_rate": (
+                 round(b["inquiries"] / unique_opens_by_source[k], 4)
+                 if unique_opens_by_source.get(k) else None
+             )}
             for k, b in buckets.items()
         ],
-        key=lambda x: x["inquiries"],
+        key=lambda x: (x["inquiries"], x["opens"]),
         reverse=True,
     )[:3]
 
+    conversion_rate = round(total / total_opens, 4) if total_opens else None
     return {
         "period": period,
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "open_tracking_since": open_tracking_since,
         "totals": {
             "inquiries": total,
-            "concierge_opens": None,
-            "conversion_rate": None,
+            "concierge_opens": total_opens,
+            "conversion_rate": conversion_rate,
             "conversion_note": (
-                "Concierge open beacons are recorded in localStorage only "
-                "(components/ConciergeButton.jsx, ConciergeAgent.jsx) and "
-                "are never sent to the backend, so open-to-inquiry "
-                "conversion is not available server-side."
+                None if total_opens
+                else "No Concierge open events recorded in the selected period yet."
             ),
         },
         "top_sources": top_sources,
@@ -2048,6 +2154,7 @@ async def startup_db():
     await db.inquiries.create_index("status")
     await db.consultations.create_index("status")
     await db.tryon_analytics.create_index("timestamp")
+    await _ensure_event_indexes()
     logger.info("Database indexes created")
 
     # Warm up Emergent Object Storage — non-fatal if unavailable so the API can still start.

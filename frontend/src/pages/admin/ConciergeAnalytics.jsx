@@ -85,16 +85,23 @@ export default function ConciergeAnalytics() {
       {!loading && !error && data && (
         <>
           {/* Row 1 — summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
             <Metric label={`Inquiries · ${period.toUpperCase()}`} value={String(total)} testid="analytics-total" />
             <Metric label="Concierge opens" value={opens == null ? '—' : String(opens)} testid="analytics-opens" />
             <Metric
               label="Open → inquiry"
               value={conv == null ? '—' : pct(conv)}
-              hint={conv == null ? 'Open-to-inquiry conversion unavailable for this period' : null}
+              hint={conv == null ? (data.totals?.conversion_note || 'Open-to-inquiry conversion unavailable for this period') : null}
               testid="analytics-conversion"
             />
           </div>
+
+          {data.open_tracking_since && (
+            <p className="text-[11px] text-white/40 mb-6" data-testid="analytics-tracking-since">
+              Open tracking began {new Date(data.open_tracking_since).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}.
+              Conversion reflects tracked sessions from that date forward.
+            </p>
+          )}
 
           {/* Row 2 — top 3 sources */}
           <div className="mb-6">
@@ -110,7 +117,10 @@ export default function ConciergeAnalytics() {
                       <span className="mr-2">{s.label}</span>
                       <span className="text-white/50 text-xs">· {KIND_LABEL[s.kind] || s.kind}</span>
                     </span>
-                    <span className="text-xs text-white/70">{s.inquiries} inquir{s.inquiries === 1 ? 'y' : 'ies'} · {pct(s.share)}</span>
+                    <span className="text-xs text-white/70">
+                      {s.opens} open{s.opens === 1 ? '' : 's'} · {s.inquiries} inquir{s.inquiries === 1 ? 'y' : 'ies'}
+                      {s.conversion_rate != null ? ` · ${pct(s.conversion_rate)}` : ''}
+                    </span>
                   </li>
                 ))}
               </ol>
@@ -159,7 +169,9 @@ function Breakdown({ title, rows, kind }) {
           <thead>
             <tr className="text-white/50 text-[10px] uppercase tracking-[0.2em]">
               <th className="text-left py-1">Source</th>
-              <th className="text-right py-1">Inquiries</th>
+              <th className="text-right py-1">Opens</th>
+              <th className="text-right py-1">Inq.</th>
+              <th className="text-right py-1">Conv.</th>
               <th className="text-right py-1">Share</th>
             </tr>
           </thead>
@@ -167,8 +179,10 @@ function Breakdown({ title, rows, kind }) {
             {rows.map((r) => (
               <tr key={r.slug} className="border-t border-white/5">
                 <td className="py-2 pr-2">{r.label}</td>
+                <td className="py-2 text-right">{r.opens ?? 0}</td>
                 <td className="py-2 text-right">{r.inquiries}</td>
-                <td className="py-2 text-right text-white/70">{pct(r.share)}</td>
+                <td className="py-2 text-right text-white/70">{r.conversion_rate == null ? '—' : pct(r.conversion_rate)}</td>
+                <td className="py-2 text-right text-white/60">{pct(r.share)}</td>
               </tr>
             ))}
           </tbody>

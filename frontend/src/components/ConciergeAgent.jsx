@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PHILEON — Concierge Agent (Phase 9).
@@ -26,6 +26,47 @@ function generateClientReference() {
 }
 
 export default function ConciergeAgent({ open, onClose, productContext, source = 'concierge', bespoke = false }) {
+  // Phase 2 analytics: fire ONE `concierge_open` event per (session, source)
+  // when the agent transitions from closed → open. sessionStorage keeps the
+  // anonymous id session-scoped; no localStorage, no fingerprinting.
+  useEffect(() => {
+    if (!open || typeof window === 'undefined') return;
+    try {
+      let sid = window.sessionStorage.getItem('phileon_session_id');
+      if (!sid) {
+        sid = (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID()
+          : String(Math.random()).slice(2) + Date.now();
+        window.sessionStorage.setItem('phileon_session_id', sid);
+      }
+      // Resolve normalized source: prefer explicit product/journal, else
+      // fall back to the plain `source` prop.
+      let normalized = source;
+      if (bespoke) normalized = 'bespoke:custom-jewelry';
+      else if (productContext && productContext.slug) normalized = `product:${productContext.slug}`;
+      else if (source && !source.includes(':')) {
+        // Legacy `pdp:<slug>` and `journal:<slug>` already pass through
+        // untouched; other bare strings are also passed through and the
+        // backend will decide whether to accept them.
+        normalized = source;
+      }
+      const body = JSON.stringify({ event: 'concierge_open', source: normalized, session_id: sid });
+      const url = `${API}/api/events`;
+      // navigator.sendBeacon is fire-and-forget and cannot block the modal.
+      if (navigator && typeof navigator.sendBeacon === 'function') {
+        try {
+          navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
+          return;
+        } catch (_) { /* fall through to fetch */ }
+      }
+      fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true })
+        .catch(() => {});
+    } catch (_) {
+      // Analytics must never block Concierge.
+    }
+    // Only fire on close→open transition, not on every prop change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
   const [message, setMessage] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
