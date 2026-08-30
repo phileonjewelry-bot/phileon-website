@@ -17,6 +17,27 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **PHILEON Journal Article #5 — Engagement Ring Anatomy Published.**
+  - **Route:** `/journal/engagement-ring-anatomy` (public, indexable `index,follow`, canonical `https://phileon.com/journal/engagement-ring-anatomy`, sitemap-registered).
+  - **Copy:** ~2,451 words across 32 sections (centre stone, head, setting, prongs/claws, basket, gallery, gallery rail, bridge, shoulders, split shanks, shank, shank width, shank thickness, taper, cathedral shoulders, halo, hidden halo, side stones, accent stones, under-gallery, pavilion clearance, seat, culet area, inside of the shank, sizing area, hallmark, maker's mark, how the parts work together, daily wear, wedding-band fit, resizing, PHILEON design philosophy) + Quick Anatomy Guide table (13 rows) + 5-question FAQ + Ask PHILEON CTA + a "Continue the PHILEON Journal" cross-linking block (all four prior articles) + "Explore PHILEON Rings" links block. Voice matches Articles #1–#4.
+  - **Factual-integrity constraints observed (per brief):** no universal prong-count safety claim, no cathedral-implies-durability claim, no split-shank-is-stronger claim, no universal minimum-thickness / clearance / resizing numbers, no promise of flush wedding-band stacking, no invented PHILEON maker's mark, no claim that PHILEON applies a specific hallmark, no "open gallery improves brilliance" claim, no occupational-safety guarantees, and the seat/culet/pavilion sections explicitly say they are not DIY.
+  - **Cross-linking (per brief):** contextual references to `/journal/lab-grown-vs-natural-diamonds`, `/journal/ring-sizing-guide`, `/journal/jewelry-setting-styles`, `/journal/10k-vs-14k-vs-18k-gold` woven into the prose, plus a restrained editorial links block "Continue the PHILEON Journal" listing all four sibling guides.
+  - **SEO:**
+    - `<title>` — **"Engagement Ring Anatomy: Every Part Explained | PHILEON"** (custom `seoTitle`)
+    - Meta description matches brief exactly.
+    - OG title/description + Twitter title all inherit the same strings.
+    - `<link rel="canonical">` = `https://phileon.com/journal/engagement-ring-anatomy`; robots `index,follow`; single H1 verified.
+    - **JSON-LD emitted:** `Article` (Organization author "PHILEON Atelier", Organization publisher "PHILEON", `mainEntityOfPage` = canonical, `datePublished`/`dateModified` = 2026-02-29, no invented image) + `BreadcrumbList` (Home → article) + `FAQPage` (5 questions).
+  - **Concierge integration:** ASK PHILEON CTA opens the existing sitewide `ConciergeAgent` with `source="journal:engagement-ring-anatomy"`. Phase 2 open-beacon fired exactly **once** to `POST /api/events` on the closed→open transition (verified via Playwright network intercept). No second inquiry system; analytics implementation unchanged.
+  - **Journal index (`/journal`):** now shows exactly 5 real entries, newest-first: **Engagement Ring Anatomy** → Jewelry Setting Styles Explained → Ring Sizing 101 → Lab-Grown vs Natural Diamonds → 10K vs 14K vs 18K Gold. Card renders with `Ring Guide` category, brief-provided excerpt, "Read Article →" CTA, typography-led presentation (no invented imagery).
+  - **Sitemap:** `/journal/engagement-ring-anatomy` added to `STATIC_ROUTES` in `backend/scripts/generate_sitemap.py`; regenerated with 91 total urls · products_scanned=60 · indexable=58 · static=33 · approved_trust=7.
+  - **Regression verified at 390×844:** `/journal`, all 5 `/journal/*` articles, `/`, `/mens-rings`, `/womens-rings`, `/statement-rings`, `/fine-jewelry`, `/pendants`, `/jewelry-care`, `/custom-jewelry-canada`, `/checkout`, `/her-eternal-reign` — all HTTP 200, zero horizontal overflow, zero non-metals console errors (only pre-existing Metals-API ticker fetch failures — Metals key remains on backlog), no new CSP violations. Trusted catalog count still **84**. Existing Concierge intake, PDPs, prices, cart, wishlist, Stripe/CSP/rate-limits/Object-Storage/Resend, and Articles #1–#4 all untouched.
+  - **Files changed (2):**
+    - `frontend/src/lib/journal.js` — Article #5 prepended (newest-first).
+    - `backend/scripts/generate_sitemap.py` — `/journal/engagement-ring-anatomy` added to `STATIC_ROUTES`.
+
+
+
 - **[DONE Feb 29]** **PHILEON Journal Article #4 — Setting Styles Explained Published.**
   - **Route:** `/journal/jewelry-setting-styles` (public, indexable `index,follow`, canonical `https://phileon.com/journal/jewelry-setting-styles`, sitemap-registered).
   - **Copy:** ~1,989 words across 22 sections + Quick comparison table (8 rows) + 5-question FAQ + Ask PHILEON Concierge CTA + "Explore PHILEON Fine Jewelry" links block. Voice matches Articles #1–#3: neutral, cautious, education-first. Every setting style is described in trade-off terms rather than being ranked.
