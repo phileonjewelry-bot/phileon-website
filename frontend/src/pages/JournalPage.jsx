@@ -12,55 +12,177 @@ import ConciergeAgent from '@/components/ConciergeAgent';
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function JournalIndexPage() {
+  const [conciergeOpen, setConciergeOpen] = useState(false);
+  const bySlug = Object.fromEntries(journalArticles.map((a) => [a.slug, a]));
+
+  const paths = [
+    {
+      id: 'shopping',
+      label: "I\u2019m shopping",
+      copy: 'Compare the choices that change how a piece looks, fits and wears before you decide what belongs on your hand.',
+      cta: null,
+      guides: [
+        { slug: 'engagement-ring-stone-shapes',    descriptor: 'Compare round, oval, pear, emerald, princess and other shapes through proportion, setting and overall ring architecture.' },
+        { slug: 'lab-grown-vs-natural-diamonds',   descriptor: 'Understand what actually differs — and what does not — when choosing between lab-grown and natural diamonds.' },
+        { slug: '10k-vs-14k-vs-18k-gold',          descriptor: 'Compare gold purity, colour, wear considerations and how karat affects the finished piece.' },
+        { slug: 'ring-sizing-guide',               descriptor: 'Understand why the number is only the beginning and how width, profile and design affect fit.' },
+        { slug: 'wedding-band-pairing-guide',      descriptor: 'Learn how flush fit, intentional gaps, contour, width and setting geometry affect a two-ring stack.' },
+      ],
+    },
+    {
+      id: 'designing',
+      label: "I\u2019m designing",
+      copy: 'Understand how an idea becomes a wearable object — from the centre stone and setting to proportion, fit, CAD and the relationship between every part.',
+      cta: {
+        heading: 'Have something specific in mind?',
+        copy: 'If you already have a stone, reference, existing piece or idea, you do not need to finish the design before starting the conversation.',
+        buttonLabel: 'START A BESPOKE CONVERSATION',
+        secondary: { label: 'Explore PHILEON Bespoke', href: '/custom-jewelry-canada' },
+      },
+      guides: [
+        { slug: 'bespoke-jewelry-design-process',  descriptor: 'Follow the path from initial idea through design direction, materials, technical development and production.' },
+        { slug: 'engagement-ring-anatomy',         descriptor: 'Learn how the head, basket, gallery, shoulders, shank and setting work together as one structure.' },
+        { slug: 'jewelry-setting-styles',          descriptor: 'Compare prong, bezel, pavé, channel and other setting approaches without treating one as universally superior.' },
+        { slug: 'engagement-ring-stone-shapes',    descriptor: 'See how changing the centre-stone outline changes the geometry the rest of the ring must answer.' },
+        { slug: 'wedding-band-pairing-guide',      descriptor: 'Design the relationship between an engagement ring and wedding band rather than treating them as separate objects.' },
+      ],
+    },
+    {
+      id: 'learning',
+      label: "I\u2019m learning",
+      copy: "Build the vocabulary behind fine jewelry — metal, stone, structure, setting and the marks that tell part of an object's story.",
+      cta: null,
+      guides: [
+        { slug: 'jewelry-hallmarks-stamps',        descriptor: "Understand 10K, 14K, 18K, 417, 585, 750, maker's marks and why a stamp alone does not prove authenticity." },
+        { slug: '10k-vs-14k-vs-18k-gold',          descriptor: 'Understand how gold content changes alloy composition, appearance and design considerations.' },
+        { slug: 'lab-grown-vs-natural-diamonds',   descriptor: 'Separate origin from appearance, grading and the other factors that determine what a diamond actually is.' },
+        { slug: 'engagement-ring-anatomy',         descriptor: 'Learn the terminology behind the structure of a ring rather than seeing only the centre stone.' },
+        { slug: 'jewelry-setting-styles',          descriptor: 'Understand the structural and visual differences between common stone-setting approaches.' },
+      ],
+    },
+  ];
+
   useEffect(() => {
     const record = {
       slug: 'journal', name: 'Journal', href: '/journal', type: 'category',
       seo: {
-        title: 'Journal | PHILEON Guides & Editorial',
-        description: 'PHILEON journal — atelier guides on gold, diamonds, ring sizing, custom process and craftsmanship. Editorial from the workshop.',
+        title: 'The PHILEON Journal | Fine Jewelry Guides & Education',
+        description: 'Explore PHILEON guides on diamonds, gold, ring sizing, settings, stone shapes, wedding bands, hallmarks and bespoke jewelry design.',
       },
     };
     const seo = generateSeo(record);
-    return applySeoHead(seo, [buildBreadcrumbJsonLd(record)]);
+    const itemList = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: journalArticles.map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${seo.canonical.replace(/\/journal$/, '')}/journal/${a.slug}`,
+        name: a.title,
+      })),
+    };
+    return applySeoHead(seo, [buildBreadcrumbJsonLd(record), itemList]);
   }, []);
+
+  // ConciergeAgent fires the concierge_open beacon internally when it
+  // transitions closed→open with a source prop, so we do not duplicate it here.
 
   return (
     <div style={styles.page} data-testid="journal-index">
+      <style>{HUB_CSS}</style>
       <section style={styles.hero}>
-        <p style={styles.eyebrow}>PHILEON · Journal</p>
-        <h1 style={styles.h1}>The Journal</h1>
-        <p style={styles.lede}>Atelier guides, material notes and process pieces. Written by the workshop.</p>
+        <p style={styles.eyebrow}>DESIGN · MATERIAL · CRAFT · KNOWLEDGE</p>
+        <h1 style={styles.h1}>The PHILEON Journal</h1>
+        <p style={styles.lede}>Fine jewelry becomes easier to understand when you know what you are actually looking at. The PHILEON Journal breaks down the decisions behind the object — stones, metals, settings, proportion, fit and design — so you can shop with more context, develop a bespoke piece with greater clarity or simply understand jewelry beyond the surface.</p>
+        <p style={styles.lede}>Start with what you are trying to do.</p>
       </section>
-      {journalArticles.length === 0 ? (
-        <section style={styles.emptyState} data-testid="journal-empty">
-          <p style={styles.emptyLabel}>Guides in production</p>
-          <p style={styles.emptyCopy}>New guides on gold karats, lab-grown diamonds, ring sizing and setting styles are being authored in the atelier.</p>
-        </section>
-      ) : (
-        <section style={styles.grid} data-testid="journal-grid">
-          {journalArticles.map((a) => (
-            <Link key={a.slug} to={`/journal/${a.slug}`} style={styles.card} data-testid={`journal-card-${a.slug}`}>
-              {a.heroImage ? (
-                <img src={a.heroImage} alt={a.title} style={styles.cardImg} loading="lazy" />
-              ) : (
-                <div style={styles.cardTypo} aria-hidden="true">
-                  <p style={styles.cardTypoEyebrow}>{a.category || 'Journal'}</p>
-                  <p style={styles.cardTypoMark}>PHILEON</p>
+
+      <section className="phileon-hub" aria-labelledby="journal-start-here" data-testid="journal-start-here">
+        <div className="phileon-hub__header">
+          <h2 id="journal-start-here" className="phileon-hub__title">Start here</h2>
+          <p className="phileon-hub__sub">Choose the path closest to what brought you here.</p>
+        </div>
+        <div className="phileon-hub__paths">
+          {paths.map((p) => (
+            <section key={p.id} id={p.id} className="phileon-hub__path" data-testid={`journal-path-${p.id}`}
+              aria-labelledby={`path-h-${p.id}`}>
+              <h3 id={`path-h-${p.id}`} className="phileon-hub__pathLabel">{p.label}</h3>
+              <p className="phileon-hub__pathCopy">{p.copy}</p>
+              <ol className="phileon-hub__guides">
+                {p.guides.map((g) => {
+                  const a = bySlug[g.slug];
+                  if (!a) return null;
+                  return (
+                    <li key={g.slug} className="phileon-hub__guide">
+                      <Link to={`/journal/${a.slug}`} className="phileon-hub__guideLink"
+                        data-testid={`journal-path-${p.id}-guide-${a.slug}`}>
+                        <p className="phileon-hub__guideTitle">{a.title} <span aria-hidden="true">→</span></p>
+                        <p className="phileon-hub__guideDesc">{g.descriptor}</p>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ol>
+              {p.cta && (
+                <div className="phileon-hub__cta">
+                  <p className="phileon-hub__ctaHead">{p.cta.heading}</p>
+                  <p className="phileon-hub__ctaCopy">{p.cta.copy}</p>
+                  <button type="button" onClick={() => setConciergeOpen(true)}
+                    className="phileon-hub__ctaBtn"
+                    data-testid="journal-hub-concierge-open-designing">
+                    {p.cta.buttonLabel}
+                  </button>
+                  {p.cta.secondary && (
+                    <Link to={p.cta.secondary.href} className="phileon-hub__ctaSecondary"
+                      data-testid="journal-hub-bespoke-link">
+                      {p.cta.secondary.label} <span aria-hidden="true">→</span>
+                    </Link>
+                  )}
                 </div>
               )}
-              <div style={styles.cardBody}>
-                <p style={styles.cardDate}>
-                  {a.publishedAt}
-                  {a.category ? <span style={styles.cardCat}> · {a.category}</span> : null}
-                </p>
-                <h2 style={styles.cardTitle}>{a.title}</h2>
-                <p style={styles.cardExcerpt}>{a.excerpt}</p>
-                <span style={styles.cardCta}>Read Article →</span>
-              </div>
-            </Link>
+            </section>
           ))}
-        </section>
-      )}
+        </div>
+      </section>
+
+      <section aria-labelledby="journal-latest">
+        <div className="phileon-hub__latestHead">
+          <h2 id="journal-latest" className="phileon-hub__title">Latest from the PHILEON Journal</h2>
+          <p className="phileon-hub__sub">All guides, newest first.</p>
+        </div>
+        {journalArticles.length === 0 ? (
+          <div style={styles.emptyState} data-testid="journal-empty">
+            <p style={styles.emptyLabel}>Guides in production</p>
+            <p style={styles.emptyCopy}>New guides on gold karats, lab-grown diamonds, ring sizing and setting styles are being authored in the atelier.</p>
+          </div>
+        ) : (
+          <div style={styles.grid} data-testid="journal-grid">
+            {journalArticles.map((a) => (
+              <Link key={a.slug} to={`/journal/${a.slug}`} style={styles.card} data-testid={`journal-card-${a.slug}`}>
+                {a.heroImage ? (
+                  <img src={a.heroImage} alt={a.title} style={styles.cardImg} loading="lazy" />
+                ) : (
+                  <div style={styles.cardTypo} aria-hidden="true">
+                    <p style={styles.cardTypoEyebrow}>{a.category || 'Journal'}</p>
+                    <p style={styles.cardTypoMark}>PHILEON</p>
+                  </div>
+                )}
+                <div style={styles.cardBody}>
+                  <p style={styles.cardDate}>
+                    {a.publishedAt}
+                    {a.category ? <span style={styles.cardCat}> · {a.category}</span> : null}
+                  </p>
+                  <h2 style={styles.cardTitle}>{a.title}</h2>
+                  <p style={styles.cardExcerpt}>{a.excerpt}</p>
+                  <span style={styles.cardCta}>Read Article →</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <ConciergeAgent open={conciergeOpen} onClose={() => setConciergeOpen(false)} source="journal:hub-designing" />
     </div>
   );
 }
@@ -557,4 +679,90 @@ const DIAGRAM_CSS = `
   font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
   color: rgba(244,228,220,0.88); text-align: center;
 }
+`;
+
+// ────────────────────────────────────────────────────────────────
+// Journal hub CSS — Start Here + intent-path columns.
+// ────────────────────────────────────────────────────────────────
+const HUB_CSS = `
+.phileon-hub { margin: 48px 0 64px; }
+.phileon-hub__header, .phileon-hub__latestHead {
+  margin: 0 0 32px; padding-bottom: 16px;
+  border-bottom: 1px solid rgba(196,131,105,0.18);
+}
+.phileon-hub__latestHead { margin-top: 24px; }
+.phileon-hub__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px; font-weight: 400; letter-spacing: 0.02em;
+  color: #f4e4dc; margin: 0 0 8px;
+}
+.phileon-hub__sub {
+  font-size: 13px; color: rgba(244,228,220,0.6); margin: 0;
+  letter-spacing: 0.04em;
+}
+.phileon-hub__paths {
+  display: grid; grid-template-columns: 1fr; gap: 40px;
+}
+@media (min-width: 720px) { .phileon-hub__paths { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1080px) { .phileon-hub__paths { grid-template-columns: repeat(3, 1fr); } }
+.phileon-hub__path { padding: 4px 0; }
+.phileon-hub__pathLabel {
+  letter-spacing: 0.28em; text-transform: uppercase;
+  font-size: 12px; color: #c48369;
+  margin: 0 0 12px; padding-bottom: 12px;
+  border-bottom: 1px solid rgba(196,131,105,0.24);
+  font-family: inherit; font-weight: 500;
+}
+.phileon-hub__pathCopy {
+  font-size: 14px; line-height: 1.65;
+  color: rgba(244,228,220,0.72); margin: 0 0 22px;
+}
+.phileon-hub__guides { list-style: none; margin: 0; padding: 0; counter-reset: guide; }
+.phileon-hub__guide { padding: 16px 0; border-top: 1px solid rgba(196,131,105,0.12); counter-increment: guide; }
+.phileon-hub__guide:first-child { border-top: none; padding-top: 0; }
+.phileon-hub__guideLink {
+  display: block; text-decoration: none; color: inherit;
+}
+.phileon-hub__guideLink:hover .phileon-hub__guideTitle { color: #c48369; }
+.phileon-hub__guideLink:focus-visible {
+  outline: 1px solid #c48369; outline-offset: 4px;
+}
+.phileon-hub__guideTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 17px; line-height: 1.35; margin: 0 0 6px;
+  color: rgba(244,228,220,0.94);
+  transition: color 0.2s ease;
+}
+.phileon-hub__guideDesc {
+  font-size: 13px; line-height: 1.6;
+  color: rgba(244,228,220,0.6); margin: 0;
+}
+.phileon-hub__cta {
+  margin-top: 28px; padding: 24px 20px;
+  border: 1px solid rgba(196,131,105,0.24);
+}
+.phileon-hub__ctaHead {
+  letter-spacing: 0.24em; text-transform: uppercase;
+  font-size: 11px; color: #c48369; margin: 0 0 10px;
+}
+.phileon-hub__ctaCopy {
+  font-size: 13px; line-height: 1.6;
+  color: rgba(244,228,220,0.78); margin: 0 0 18px;
+}
+.phileon-hub__ctaBtn {
+  display: inline-block; width: 100%;
+  background: #c48369; color: #0a0806; border: 0; cursor: pointer;
+  padding: 14px 20px;
+  font: inherit; letter-spacing: 0.28em; text-transform: uppercase;
+  font-size: 11px; font-weight: 500;
+  transition: background 0.2s ease;
+}
+.phileon-hub__ctaBtn:hover { background: #d4967c; }
+.phileon-hub__ctaBtn:focus-visible { outline: 1px solid #f4e4dc; outline-offset: 2px; }
+.phileon-hub__ctaSecondary {
+  display: inline-block; margin-top: 14px;
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #c48369; text-decoration: none;
+}
+.phileon-hub__ctaSecondary:hover { text-decoration: underline; }
 `;
