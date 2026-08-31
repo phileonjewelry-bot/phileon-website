@@ -1,33 +1,33 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 const LiveGoldPriceTicker = () => {
   const [goldPrice, setGoldPrice] = useState({ price: 2650.00, change: 0, loading: true });
   const prevPriceRef = useRef(2650.00);
 
   const fetchGoldPrice = useCallback(async () => {
     try {
-      const response = await fetch(
-        'https://api.metalpriceapi.com/v1/latest?api_key=demo&base=USD&currencies=XAU'
-      );
-      
+      // Route through the same-origin backend proxy so we (a) stay inside
+      // our strict CSP `connect-src` allowlist, and (b) reuse the trusted
+      // provider chain already serving /api/metals.
+      const response = await fetch(`${API_URL}/api/metals`, { cache: "no-store" });
+
       if (response.ok) {
         const data = await response.json();
-        if (data.rates?.XAU) {
-          const newPrice = parseFloat((1 / data.rates.XAU).toFixed(2));
-          const change = ((newPrice - prevPriceRef.current) / prevPriceRef.current * 100).toFixed(2);
+        const newPrice = parseFloat(Number(data?.gold_usd_oz).toFixed(2));
+        if (isFinite(newPrice) && newPrice > 0) {
+          const prev = prevPriceRef.current || newPrice;
+          const change = ((newPrice - prev) / prev * 100).toFixed(2);
           prevPriceRef.current = newPrice;
           setGoldPrice({ price: newPrice, change: parseFloat(change), loading: false });
           return;
         }
       }
-      
-      // Fallback with realistic price simulation
-      const basePrice = prevPriceRef.current || 2650;
-      const newPrice = parseFloat((basePrice + (Math.random() * 10 - 5)).toFixed(2));
-      const change = ((newPrice - prevPriceRef.current) / prevPriceRef.current * 100).toFixed(2);
-      prevPriceRef.current = newPrice;
-      setGoldPrice({ price: newPrice, change: parseFloat(change), loading: false });
+
+      // Provider unavailable — hold the last known value.
+      setGoldPrice(prev => ({ ...prev, loading: false }));
     } catch (error) {
       setGoldPrice(prev => ({ ...prev, loading: false }));
     }

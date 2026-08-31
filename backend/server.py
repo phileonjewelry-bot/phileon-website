@@ -149,32 +149,64 @@ async def health_check():
 
 
 # Metal Prices Endpoint
+# ---------------------------------------------------------------------------
+# Sources the same provider chain already used by /api/metals (gold-api.com,
+# keyless) and converts USD/oz → CAD/g using the standard troy-ounce constant
+# and the site-wide USD↔CAD constant (mirror of the frontend PHILEON_FX = 0.75).
+# The last successful snapshot is retained in-process so a transient provider
+# blip does not fall back to the static base within a single pod lifetime.
+_MARKET_PRICES_CACHE: dict = {"gold_cad_g": None, "silver_cad_g": None, "updated_at": None}
+_TROY_OUNCE_GRAMS = 31.1034768
+_PHILEON_USD_TO_CAD = 1.0 / 0.75  # inverse of frontend PHILEON_FX
+
+def _fetch_live_gold_silver_cad_per_gram():
+    """Return (goldCadPerGram24k, silverCadPerGram, source) or raise."""
+    from routes.metals import _try_metals_live
+    gold_usd_oz, silver_usd_oz, source = _try_metals_live()
+    if not (1500 < gold_usd_oz < 6000):
+        raise ValueError("gold quote out of sane band")
+    gold_cad_g   = (gold_usd_oz   * _PHILEON_USD_TO_CAD) / _TROY_OUNCE_GRAMS
+    silver_cad_g = (silver_usd_oz * _PHILEON_USD_TO_CAD) / _TROY_OUNCE_GRAMS
+    return round(gold_cad_g, 2), round(silver_cad_g, 4), source
+
+
 @api_router.get("/market-prices")
 async def get_market_prices(test_gold_multiplier: float = None):
     """
-    Returns live market prices per gram in CAD for pricing engine.
-    Gold: 24K per gram CAD, Silver: per gram CAD.
-    Optional: ?test_gold_multiplier=1.1 to simulate 10% gold increase for testing.
+    Returns live market prices per gram in CAD for the storefront pricing
+    engine. Gold: 24K per gram CAD. Silver: per gram CAD.
+    Optional: ?test_gold_multiplier=1.1 to simulate a 10 % gold increase.
     """
-    import random
-    
-    # Base 24K gold per gram CAD (approx $150/g as of early 2026)
-    base_gold = 152.40
-    base_silver = 1.31
-    
-    # Apply test multiplier if provided (for validation only)
+    STATIC_FALLBACK_GOLD_CAD_G   = 152.40
+    STATIC_FALLBACK_SILVER_CAD_G = 1.31
+
+    try:
+        gold_cad_g, silver_cad_g, source = _fetch_live_gold_silver_cad_per_gram()
+        _MARKET_PRICES_CACHE["gold_cad_g"]   = gold_cad_g
+        _MARKET_PRICES_CACHE["silver_cad_g"] = silver_cad_g
+        _MARKET_PRICES_CACHE["updated_at"]   = datetime.now(timezone.utc).isoformat()
+        feed_source = source
+    except Exception:
+        # Provider failed. Reuse last in-process success if we have one,
+        # otherwise degrade to the historical static base.
+        if _MARKET_PRICES_CACHE["gold_cad_g"] is not None:
+            gold_cad_g   = _MARKET_PRICES_CACHE["gold_cad_g"]
+            silver_cad_g = _MARKET_PRICES_CACHE["silver_cad_g"]
+            feed_source  = "cached"
+        else:
+            gold_cad_g   = STATIC_FALLBACK_GOLD_CAD_G
+            silver_cad_g = STATIC_FALLBACK_SILVER_CAD_G
+            feed_source  = "static-fallback"
+
     if test_gold_multiplier and 0.5 <= test_gold_multiplier <= 2.0:
-        gold_price = round(base_gold * test_gold_multiplier, 2)
-        silver_price = round(base_silver * test_gold_multiplier, 2)
-    else:
-        # Small fluctuation ±0.8%
-        gold_price = round(base_gold * (1 + random.uniform(-0.008, 0.008)), 2)
-        silver_price = round(base_silver * (1 + random.uniform(-0.008, 0.008)), 2)
-    
+        gold_cad_g   = round(gold_cad_g   * test_gold_multiplier, 2)
+        silver_cad_g = round(silver_cad_g * test_gold_multiplier, 4)
+
     return {
-        "goldPerGram24kCad": gold_price,
-        "silverPerGramCad": silver_price,
-        "updatedAt": datetime.now(timezone.utc).isoformat(),
+        "goldPerGram24kCad": gold_cad_g,
+        "silverPerGramCad":  silver_cad_g,
+        "updatedAt": _MARKET_PRICES_CACHE["updated_at"] or datetime.now(timezone.utc).isoformat(),
+        "source": feed_source,
     }
 
 

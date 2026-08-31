@@ -406,7 +406,28 @@ def compute_live_price(product_key: str, tier_key: str, market: dict) -> int:
 
 
 def get_current_market() -> dict:
-    """Get current market prices (with small fluctuation)."""
+    """Get current market prices.
+
+    Sources the same live provider chain used by the storefront's
+    `/api/market-prices` feed (gold-api.com via `routes.metals._try_metals_live`),
+    then falls back to the historical static base if the provider is
+    unavailable. This keeps frontend live-priced displays and server-side
+    `/validate-cart` in agreement so cart snapshots remain within tolerance.
+    Pricing formulas are unchanged — only the market input is real.
+    """
+    TROY_OUNCE_GRAMS = 31.1034768
+    USD_TO_CAD = 1.0 / 0.75  # inverse of frontend PHILEON_FX
+    try:
+        from routes.metals import _try_metals_live
+        gold_usd_oz, silver_usd_oz, _src = _try_metals_live()
+        if 1500 < gold_usd_oz < 6000:
+            return {
+                "goldPerGram24kCad": round((gold_usd_oz   * USD_TO_CAD) / TROY_OUNCE_GRAMS, 2),
+                "silverPerGramCad":  round((silver_usd_oz * USD_TO_CAD) / TROY_OUNCE_GRAMS, 4),
+            }
+    except Exception:
+        pass
+    # Static historical fallback (identical to previous static base).
     base_gold = 152.40
     base_silver = 1.31
     return {

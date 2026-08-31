@@ -23,6 +23,7 @@ export function JournalIndexPage() {
       cta: null,
       guides: [
         { slug: 'engagement-ring-stone-shapes',    descriptor: 'Compare round, oval, pear, emerald, princess and other shapes through proportion, setting and overall ring architecture.' },
+        { slug: 'coloured-gemstones-explained',    descriptor: 'Understand colour, treatments, inclusions, durability and design considerations across sapphire, ruby, emerald and other coloured stones.' },
         { slug: 'lab-grown-vs-natural-diamonds',   descriptor: 'Understand what actually differs — and what does not — when choosing between lab-grown and natural diamonds.' },
         { slug: '10k-vs-14k-vs-18k-gold',          descriptor: 'Compare gold purity, colour, wear considerations and how karat affects the finished piece.' },
         { slug: 'ring-sizing-guide',               descriptor: 'Understand why the number is only the beginning and how width, profile and design affect fit.' },
@@ -44,6 +45,7 @@ export function JournalIndexPage() {
         { slug: 'engagement-ring-anatomy',         descriptor: 'Learn how the head, basket, gallery, shoulders, shank and setting work together as one structure.' },
         { slug: 'jewelry-setting-styles',          descriptor: 'Compare prong, bezel, pavé, channel and other setting approaches without treating one as universally superior.' },
         { slug: 'engagement-ring-stone-shapes',    descriptor: 'See how changing the centre-stone outline changes the geometry the rest of the ring must answer.' },
+        { slug: 'coloured-gemstones-explained',    descriptor: 'See how gemstone colour, physical characteristics, dimensions and treatment history become inputs to the setting and finished design.' },
         { slug: 'wedding-band-pairing-guide',      descriptor: 'Design the relationship between an engagement ring and wedding band rather than treating them as separate objects.' },
       ],
     },
@@ -54,6 +56,7 @@ export function JournalIndexPage() {
       cta: null,
       guides: [
         { slug: 'jewelry-hallmarks-stamps',        descriptor: "Understand 10K, 14K, 18K, 417, 585, 750, maker's marks and why a stamp alone does not prove authenticity." },
+        { slug: 'coloured-gemstones-explained',    descriptor: 'Learn how gemstone species, colour, treatments, inclusions, hardness, toughness and stability differ.' },
         { slug: '10k-vs-14k-vs-18k-gold',          descriptor: 'Understand how gold content changes alloy composition, appearance and design considerations.' },
         { slug: 'lab-grown-vs-natural-diamonds',   descriptor: 'Separate origin from appearance, grading and the other factors that determine what a diamond actually is.' },
         { slug: 'engagement-ring-anatomy',         descriptor: 'Learn the terminology behind the structure of a ring rather than seeing only the centre stone.' },

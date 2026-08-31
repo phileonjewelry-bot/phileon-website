@@ -26,6 +26,257 @@
 
 export const journalArticles = [
   {
+    slug: 'coloured-gemstones-explained',
+    title: 'Coloured Gemstones Explained: Sapphire, Ruby, Emerald, Spinel, Tourmaline & More',
+    seoTitle: 'Coloured Gemstones Explained: A Buying & Design Guide | PHILEON',
+    seoDescription:
+      'Explore sapphire, ruby, emerald, spinel, tourmaline, aquamarine, garnet, peridot and amethyst — including colour, treatments, inclusions, durability and design considerations.',
+    excerpt:
+      'Colour is only the beginning. Learn how gemstone identity, hue, treatments, inclusions, durability and setting considerations shape the stone you actually wear.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Gemstone Guide',
+    tags: ['coloured gemstones', 'sapphire', 'ruby', 'emerald', 'bespoke'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'Colour changes the conversation.' },
+      { type: 'p', text: 'With diamonds, buyers often begin with familiar grading language. Coloured gemstones ask different questions.' },
+      { type: 'p', text: 'How strong is the colour? Is it too dark? Too light? Is the colour evenly distributed? What does the stone look like in different light? Has it been heated or otherwise treated? Are its inclusions part of its character, or do they affect how the stone should be set?' },
+      { type: 'p', text: 'A sapphire, ruby, emerald, spinel or tourmaline is not defined by its name alone. The material matters. The colour matters. The cut matters. The treatment history matters. And once the stone becomes jewelry, the setting and intended wear matter too.' },
+
+      { type: 'diagram', variant: 'decisions',
+        title: 'A gem name can describe a species or a variety',
+        center: 'GEM NAMING IS LAYERED',
+        branches: [
+          { label: 'Corundum', items: ['Ruby', 'Sapphire'] },
+          { label: 'Beryl', items: ['Emerald', 'Aquamarine', 'Other beryl varieties'] },
+          { label: 'Tourmaline group', items: ['Multiple coloured varieties and trade descriptions'] },
+          { label: 'Garnet group', items: ['Multiple species and varieties'] },
+          { label: 'Named by material', items: ['Spinel', 'Peridot (olivine)', 'Amethyst (quartz variety)'] },
+        ],
+        caption: 'Conceptual illustration — selected relationships only, not a complete mineralogical taxonomy. Some familiar gem names are varieties within a broader mineral species or group.',
+      },
+
+      { type: 'h2', text: 'Gemstone species vs variety' },
+      { type: 'p', text: 'A gem species describes a mineral or material with a particular chemical and crystal identity. A variety is a recognized appearance or gemological category within that material.' },
+      { type: 'ul', items: ['Corundum → ruby / sapphire', 'Beryl → emerald / aquamarine', 'Quartz → amethyst'] },
+      { type: 'quote', text: 'The trade name may be familiar. The underlying material explains why different gems can share physical properties while looking completely different.' },
+
+      { type: 'h2', text: 'Natural, laboratory-grown and simulant are not the same thing' },
+      { type: 'h3', text: 'Natural' }, { type: 'p', text: 'Formed through geological processes.' },
+      { type: 'h3', text: 'Laboratory-grown / lab-created' }, { type: 'p', text: 'Created in a controlled environment with essentially the same material identity as its natural counterpart.' },
+      { type: 'h3', text: 'Simulant' }, { type: 'p', text: 'A different material used to imitate another gem\u2019s appearance.' },
+      { type: 'quote', text: 'Origin and identity are different questions. Synthetic or lab-grown does not mean simulant.' },
+
+      { type: 'h2', text: 'Colour is more than the colour name' },
+      { type: 'p', text: 'Gem colour is commonly understood through hue, tone and saturation. "Blue sapphire" still leaves a great deal unanswered.' },
+
+      { type: 'diagram', variant: 'flow',
+        title: 'Colour is not one variable',
+        steps: [
+          { label: 'Hue', question: 'What colour family are we seeing?' },
+          { label: 'Tone', question: 'How light or dark does the colour appear?' },
+          { label: 'Saturation', question: 'How weak or vivid does the colour appear?' },
+        ],
+        caption: 'Conceptual illustration only — not a grading scale. Hue, tone and saturation work together; two gemstones described by the same colour word can look dramatically different.',
+      },
+
+      { type: 'h2', text: 'Hue' },
+      { type: 'p', text: 'Hue is the basic colour impression. A gemstone may show one dominant hue, modifying secondary hues, or a different appearance under different lighting.' },
+      { type: 'h2', text: 'Tone' },
+      { type: 'p', text: 'Tone describes relative lightness or darkness. A stone can become visually too dark for a given design even if its colour is highly saturated. Medium tone is not universally superior.' },
+      { type: 'h2', text: 'Saturation' },
+      { type: 'p', text: 'Saturation describes the strength or intensity of colour. More saturated is not automatically more appropriate for every design.' },
+
+      { type: 'h2', text: 'Lighting changes what you see' },
+      { type: 'p', text: 'Gemstones can appear different under daylight, warm indoor light, cool artificial light and directional jewelry lighting.' },
+      { type: 'quote', text: 'Evaluate important coloured stones in more than one lighting environment whenever practical.' },
+
+      { type: 'h2', text: 'Cut matters differently in coloured gemstones' },
+      { type: 'p', text: 'Cut influences brightness, extinction, windowing, colour distribution, symmetry and overall face-up character. Coloured-stone cutting may sometimes prioritize retaining desirable colour or rough weight alongside optical performance. Coloured stones do not follow the same cut-grading system as round brilliant diamonds. See Stone Shapes (/journal/engagement-ring-stone-shapes) for shape context.' },
+
+      { type: 'h2', text: 'What is windowing?' },
+      { type: 'p', text: 'A window is an area where the viewer can see through the stone more than intended because of the relationship between pavilion geometry and refractive behaviour. Not every visible light area is a window.' },
+      { type: 'h2', text: 'What is extinction?' },
+      { type: 'p', text: 'Extinction describes dark areas where little light returns to the viewer. Some contrast is part of normal faceting; excessive darkness may affect appearance.' },
+
+      { type: 'h2', text: 'Inclusions are not automatically defects' },
+      { type: 'p', text: 'Coloured gemstones commonly contain inclusions. Their importance depends on gemstone type, visibility, location, effect on appearance, effect on durability, and whether treatment is involved.' },
+      { type: 'quote', text: 'Clarity expectations should be appropriate to the gemstone, not imported blindly from diamond buying.' },
+
+      { type: 'h2', text: 'Treatments matter' },
+      { type: 'p', text: 'Many coloured gemstones may be treated to improve or alter appearance. Categories can include heating, fracture filling, diffusion, oil or resin filling, irradiation and other recognized processes depending on material. The issue is not simply whether treatment exists — it is whether it is understood, appropriately disclosed and considered in valuation and care.' },
+      { type: 'h2', text: 'Why disclosure matters' },
+      { type: 'p', text: 'Treatment can affect value, rarity, care and repair considerations. Where documentation exists, it should accurately describe material and known treatment information. For downstream care implications, see Jewelry Care (/jewelry-care).' },
+
+      { type: 'h2', text: 'Sapphire' },
+      { type: 'p', text: 'Sapphire belongs to corundum and exists in many colours, with blue being the most familiar. Colour can vary widely, cutting changes light return, zoning may be visible, treatment history matters, and the setting should respond to actual stone geometry.' },
+      { type: 'quote', text: '"Sapphire" describes the material. The individual stone still has to be judged.' },
+
+      { type: 'h2', text: 'Ruby' },
+      { type: 'p', text: 'Ruby is the red variety of corundum. Colour is central to visual character, inclusions are common, and treatment history can be important. Origin should not be inferred from appearance alone, and geographic-origin premiums should not be assumed without verified evidence.' },
+
+      { type: 'h2', text: 'Emerald' },
+      { type: 'p', text: 'Emerald is a green variety of beryl. Inclusions are common; fissures can be relevant to durability; clarity enhancement is common in the trade; care and setting may require additional consideration. Emerald is a useful example of why hardness alone does not describe how a gemstone behaves in jewelry.' },
+
+      { type: 'h2', text: 'Spinel' },
+      { type: 'p', text: 'Spinel is a distinct gemstone material, not a type of ruby or sapphire. It occurs in multiple colours. Historically, some famous red spinels were confused with ruby before modern gemology distinguished them.' },
+      { type: 'quote', text: 'Spinel should not be framed merely as a ruby alternative.' },
+
+      { type: 'h2', text: 'Tourmaline' },
+      { type: 'p', text: 'Tourmaline represents a complex group with a very broad colour range — vivid pink, green, blue, bi-colour and multi-colour stones. Certain geographic or trade descriptors have specific gemological and commercial implications and should not be applied casually.' },
+
+      { type: 'h2', text: 'Aquamarine' },
+      { type: 'p', text: 'Aquamarine is a blue to blue-green variety of beryl. Visual character often includes a lighter tone, transparency, long geometric cuts and a clean, open appearance — but individual stones vary.' },
+
+      { type: 'h2', text: 'Garnet' },
+      { type: 'p', text: '"Garnet" refers to a broader group rather than a single red gemstone identity. Garnets can appear in red, orange, green and other colours. The word describes more diversity than the traditional dark-red stereotype suggests.' },
+
+      { type: 'h2', text: 'Peridot' },
+      { type: 'p', text: 'Peridot is the gem variety of olivine, known for green colour that can range in tone and saturation. Individual colour, clarity, cutting and setting/wear context all matter.' },
+
+      { type: 'h2', text: 'Amethyst' },
+      { type: 'p', text: 'Amethyst is the purple variety of quartz. Colour can vary from pale to medium to deep purple, sometimes with visible zoning. Deeper colour does not automatically equal objectively better.' },
+
+      { type: 'h2', text: 'What about opal, pearl and other gem materials?' },
+      { type: 'p', text: 'Not all gems behave like crystalline faceted stones. Opal, pearl, turquoise and other organic or porous materials can demand very different wear and care decisions. Gemstone is a broader category than faceted mineral crystal.' },
+
+      { type: 'h2', text: 'Hardness is not the same as durability' },
+      { type: 'h3', text: 'Hardness' }, { type: 'p', text: 'Resistance to scratching.' },
+      { type: 'h3', text: 'Toughness' }, { type: 'p', text: 'Resistance to breaking, chipping or fracture.' },
+      { type: 'h3', text: 'Stability' }, { type: 'p', text: 'How a material responds to heat, light, chemicals and environmental changes.' },
+      { type: 'quote', text: 'A hard stone can still chip. A softer stone can still perform well when the design and wear expectations suit it.' },
+
+      { type: 'diagram', variant: 'matrix',
+        title: '"Durable" is not one measurement',
+        items: [
+          'Hardness — resistance to scratching',
+          'Toughness — resistance to breaking',
+          'Stability — resistance to environmental change',
+          'Setting',
+          'Stone condition',
+          'Treatment',
+          'Wear pattern',
+          'Maintenance',
+        ],
+        center: 'JEWELRY DURABILITY',
+        caption: 'Conceptual illustration — no single number tells you whether a gemstone is appropriate for a particular piece of jewelry. The material and the design have to be considered together.',
+      },
+
+      { type: 'h2', text: 'The Mohs scale: useful but limited' },
+      { type: 'p', text: 'The Mohs scale compares relative scratch resistance. It does not measure toughness, fracture resistance, thermal stability, setting security or whether a ring is suitable for a specific customer.' },
+
+      { type: 'h2', text: 'Everyday wear is a design question' },
+      { type: 'p', text: '"Can I wear this every day?" is not answered by the gem name alone. It depends on the material, inclusions, fractures, treatments, setting, exposure, ring profile, wear habits and maintenance.' },
+
+      { type: 'h2', text: 'Setting coloured gemstones' },
+      { type: 'p', text: 'Considerations include prong placement, bezel protection, pointed corners, existing fissures, stone depth, pavilion geometry, fragile edges and visual colour interaction with surrounding metal. See Setting Styles Explained (/journal/jewelry-setting-styles).' },
+
+      { type: 'h2', text: 'Metal colour changes the presentation' },
+      { type: 'p', text: 'Yellow, white and rose metal can change the perceived relationship around a coloured stone. See 10K vs 14K vs 18K Gold (/journal/10k-vs-14k-vs-18k-gold).' },
+      { type: 'quote', text: 'The stone stays the stone. The surrounding colour changes how the composition is read.' },
+
+      { type: 'h2', text: 'Coloured stones and side stones' },
+      { type: 'p', text: 'Side stones can amplify colour, introduce contrast, create a gradient, frame a centre stone or change the perceived scale. No rigid pairing rules apply.' },
+
+      { type: 'h2', text: 'Natural inclusions vs damage' },
+      { type: 'p', text: 'Not every internal feature visible in a gemstone is damage, but cracks, chips or surface-reaching features may warrant professional evaluation. A photograph may reveal a feature; it cannot always tell you what that feature means.' },
+
+      { type: 'h2', text: 'Certificates and laboratory reports' },
+      { type: 'p', text: 'A reputable independent gemological report may provide identification, natural / laboratory-grown origin where applicable, detectable treatments, weight, measurements, and sometimes geographic origin where the laboratory provides that service and evidence supports it. Not every coloured gemstone requires a report.' },
+
+      { type: 'h2', text: 'Geographic origin' },
+      { type: 'p', text: 'Origin can affect market perception, rarity and value, but origin determination is specialized and should not be guessed visually. Country of origin should be supported by appropriate evidence when represented as a material value factor.' },
+
+      { type: 'h2', text: 'Why two sapphires can have completely different prices' },
+      { type: 'p', text: 'Price may vary because of colour, size, transparency, clarity, cut, treatment, natural vs laboratory-grown origin, established provenance, rarity and market conditions.' },
+      { type: 'quote', text: 'Gemstone pricing is multidimensional because the stones themselves are multidimensional.' },
+
+      { type: 'h2', text: 'Natural vs laboratory-grown coloured gemstones' },
+      { type: 'p', text: 'Lab-grown versions exist for several coloured gemstone materials and may share the same fundamental material identity while differing in origin. Disclosure matters. See Lab-Grown vs Natural Diamonds (/journal/lab-grown-vs-natural-diamonds) for a parallel discussion.' },
+      { type: 'quote', text: 'Origin is one attribute of the stone, not a complete quality judgment.' },
+
+      { type: 'h2', text: 'What should you inspect in person?' },
+      { type: 'ul', items: ['Colour in several lighting conditions', 'Face-up appearance', 'Transparency', 'Inclusions', 'Cut', 'Windowing and extinction', 'Dimensions', 'Treatment and disclosure information', 'How the stone interacts with the intended metal'] },
+      { type: 'p', text: 'The actual stone matters more than the category description attached to it. Not every online purchase requires physical inspection.' },
+
+      { type: 'h2', text: 'Photographs are not the stone' },
+      { type: 'p', text: 'White balance, camera sensor, lighting, editing, screen calibration, background colour and magnification all affect what an image shows. A digital image can communicate character but cannot guarantee exact colour reproduction, treatment status, origin or structural condition.' },
+
+      { type: 'h2', text: 'Dimensions matter' },
+      { type: 'p', text: 'For design work, relevant information can include length, width, depth, outline and orientation. Carat weight alone does not define setting geometry. See The Bespoke Jewelry Design Process (/journal/bespoke-jewelry-design-process) for how dimensions feed into design.' },
+
+      { type: 'h2', text: 'Designing around colour' },
+      { type: 'p', text: 'Colour can become the organizing principle for metal choice, accent stones, setting geometry, negative space, contrast, scale and visual rhythm. A coloured stone can be the centre of a design without the rest of the piece becoming decoration around it.' },
+
+      { type: 'diagram', variant: 'journey',
+        title: 'The stone changes the design problem',
+        steps: [
+          'Gem material — species, variety, natural or lab-grown, treatment',
+          'Visible character — hue, tone, saturation, inclusions, cut',
+          'Physical character — dimensions, geometry, hardness, toughness, stability',
+          'Setting decisions — protection, exposure, profile, prong / bezel / other',
+          'Design decisions — metal, side stones, scale, proportion, intended wear',
+          'Finished jewelry',
+        ],
+        caption: 'Conceptual illustration. The gemstone is not an isolated purchase. Once it enters a piece of jewelry, its optical and physical characteristics become design inputs.',
+      },
+
+      { type: 'h2', text: 'Which coloured gemstone is best?' },
+      { type: 'quote', text: 'There is no universally best coloured gemstone.' },
+      { type: 'p', text: 'The useful questions are: what visual character do you want, how will the piece be worn, what scale and setting are planned, what treatment history is acceptable to you, what material and origin characteristics matter to you, and what budget is being designed around.' },
+
+      { type: 'h2', text: 'What does PHILEON recommend?' },
+      { type: 'quote', text: 'Choose the stone in front of you, not the gemstone name in your head.' },
+      { type: 'p', text: '"Sapphire", "Emerald" and "Tourmaline" are categories. The design has to work with one actual stone.' },
+      { type: 'p', text: 'Look at its colour, its proportions, its dimensions, its inclusions, its treatment history, its physical characteristics, the way it behaves in light, and the object you intend to build around it.' },
+      { type: 'quote', text: 'A gemstone becomes part of the design when its individual characteristics stop being variables and start becoming decisions.' },
+
+      { type: 'h2', text: 'Quick gemstone guide' },
+      { type: 'table', headers: ['Gemstone', 'Material relationship', 'Visual/design note'], rows: [
+        ['Sapphire', 'Corundum', 'Broad colour range; evaluate actual colour and treatment'],
+        ['Ruby', 'Red corundum', 'Colour central; inclusions and treatment can be important'],
+        ['Emerald', 'Green beryl', 'Inclusions and enhancement require nuanced evaluation'],
+        ['Spinel', 'Distinct mineral', 'Broad colour range; should not be treated merely as a substitute'],
+        ['Tourmaline', 'Mineral group', 'Exceptionally broad colour range'],
+        ['Aquamarine', 'Beryl variety', 'Blue to blue-green; often open, transparent visual character'],
+        ['Garnet', 'Mineral group', 'Much broader colour range than traditional red stereotype'],
+        ['Peridot', 'Olivine variety', 'Characteristic green range'],
+        ['Amethyst', 'Quartz variety', 'Purple colour varies widely in tone and saturation'],
+      ] },
+      { type: 'note', label: 'Note', text: 'This table is an orientation guide, not a quality or durability ranking.' },
+
+      { type: 'cta', heading: 'Choosing a coloured gemstone? Ask PHILEON.', text: 'Send us the gemstone, laboratory report, measurements or reference you\u2019re considering. We can help you think through colour, proportion, setting, metal and how the stone could influence the finished piece.', buttonLabel: 'ASK PHILEON' },
+
+      { type: 'links', heading: 'Continue the PHILEON Journal', items: [
+        { label: 'Choosing between lab-grown and natural diamonds', href: '/journal/lab-grown-vs-natural-diamonds' },
+        { label: 'Understanding stone shapes', href: '/journal/engagement-ring-stone-shapes' },
+        { label: 'Understanding setting styles', href: '/journal/jewelry-setting-styles' },
+        { label: 'Understanding ring anatomy', href: '/journal/engagement-ring-anatomy' },
+        { label: 'Choosing gold karat', href: '/journal/10k-vs-14k-vs-18k-gold' },
+        { label: 'Understanding the bespoke process', href: '/journal/bespoke-jewelry-design-process' },
+        { label: 'PHILEON Jewelry Care', href: '/jewelry-care' },
+      ] },
+
+      { type: 'links', heading: 'Explore PHILEON', items: [
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: 'Statement Rings', href: '/statement-rings' },
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+    ],
+    faq: [
+      { q: 'What is the best coloured gemstone for an engagement ring?', a: 'There is no universal best choice. Suitability depends on the actual gemstone, its condition and treatment, how the ring will be designed, and how the wearer expects to use it.' },
+      { q: 'Is sapphire more durable than emerald?', a: 'They differ in several physical properties, but reducing durability to a single ranking can be misleading. Hardness, toughness, stability, inclusions, treatment, setting and wear all matter.' },
+      { q: 'Are laboratory-grown sapphires and rubies real gemstones?', a: 'Laboratory-grown sapphire and ruby can have essentially the same material identity as their natural counterparts while having a different origin. They should be accurately disclosed as laboratory-grown.' },
+      { q: 'Does a darker gemstone mean better quality?', a: 'No. Tone is only one part of colour. Hue, saturation, transparency, cutting, treatment, personal preference and the specific gem variety all affect the result.' },
+      { q: 'Do all coloured gemstones need a certificate?', a: 'No. Whether an independent gemological report is warranted depends on the material, value, treatment or origin questions, transaction, and the level of documentation required.' },
+    ],
+  },
+  {
     slug: 'engagement-ring-stone-shapes',
     title: 'Engagement Ring Stone Shapes Explained: Round, Oval, Pear, Emerald, Princess & More',
     seoTitle: 'Engagement Ring Stone Shapes Explained | PHILEON',
