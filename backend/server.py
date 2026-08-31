@@ -199,8 +199,12 @@ async def get_market_prices(test_gold_multiplier: float = None):
             feed_source  = "static-fallback"
 
     if test_gold_multiplier and 0.5 <= test_gold_multiplier <= 2.0:
-        gold_cad_g   = round(gold_cad_g   * test_gold_multiplier, 2)
-        silver_cad_g = round(silver_cad_g * test_gold_multiplier, 4)
+        # Test/dev-only lever. Ignored in production so a public URL param
+        # cannot inflate customer-visible prices once real payments are live.
+        stripe_mode = (os.environ.get("STRIPE_MODE") or "test").strip().lower()
+        if stripe_mode != "live":
+            gold_cad_g   = round(gold_cad_g   * test_gold_multiplier, 2)
+            silver_cad_g = round(silver_cad_g * test_gold_multiplier, 4)
 
     return {
         "goldPerGram24kCad": gold_cad_g,
@@ -300,42 +304,35 @@ async def create_private_consultation(payload: PrivateConsultationRequest):
 
 @api_router.get("/metal-prices")
 async def get_metal_prices():
+    """Deprecated compatibility shim.
+
+    Historically returned USD/oz for GOLD/SILVER/PLATINUM/PALLADIUM with random
+    fluctuation, which is unsafe for any customer-facing price calculation.
+    It is not consumed by the current frontend. This endpoint now proxies the
+    ticker `/api/metals` response (deterministic, live) and preserves the old
+    envelope shape for any residual integration tests. Platinum and palladium
+    are omitted because they are not part of PHILEON's real pricing authority.
     """
-    Returns live metal prices.
-    Using realistic base prices with small random fluctuations for demo.
-    In production, integrate with a metals API like Metals.dev or GoldAPI.
-    """
-    import random
-    
-    # Base prices (realistic as of late 2024)
-    base_prices = {
-        "GOLD": 2650.00,
-        "SILVER": 31.50,
-        "PLATINUM": 980.00,
-        "PALLADIUM": 1050.00
-    }
-    
-    prices = []
-    for metal, base in base_prices.items():
-        # Add small random fluctuation (±0.5%)
-        fluctuation = base * random.uniform(-0.005, 0.005)
-        price = round(base + fluctuation, 2)
-        
-        # Random change percentage for display
-        change = round(random.uniform(-1.5, 1.5), 2)
-        
-        prices.append({
-            "symbol": metal,
-            "price": price,
-            "change": change,
-            "currency": "USD"
-        })
-    
-    return {
-        "prices": prices,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "source": "simulated"
-    }
+    from routes.metals import _try_metals_live
+    try:
+        gold_usd_oz, silver_usd_oz, source = _try_metals_live()
+        return {
+            "prices": [
+                {"symbol": "GOLD",   "price": gold_usd_oz,   "change": 0, "currency": "USD"},
+                {"symbol": "SILVER", "price": silver_usd_oz, "change": 0, "currency": "USD"},
+            ],
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "source": source,
+        }
+    except Exception:
+        return {
+            "prices": [
+                {"symbol": "GOLD",   "price": 2650.00, "change": 0, "currency": "USD"},
+                {"symbol": "SILVER", "price": 31.50,  "change": 0, "currency": "USD"},
+            ],
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "source": "static-fallback",
+        }
 
 
 # Collections (Public)

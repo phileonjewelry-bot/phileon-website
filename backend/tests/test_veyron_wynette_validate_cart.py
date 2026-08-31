@@ -68,18 +68,23 @@ EXISTING_CONTROLS = [
 ]
 
 
-# --- UNCLE JO regression: new 16-SKU entry; verify it doesn't break others ---
+# --- UNCLE JO regression: 6-SKU product (2 metals × 3 selections) ---
+# Product architecture: Sterling Silver + 10K White Gold ONLY. Selections:
+# ring / cuff / set. Prices are hand-set USD-mirrored via LIVE_PRICING_CONFIG
+# (weightGrams=0 → server_price == client_price on /validate-cart).
 UNCLE_JO_PROBES = [
-    ("silver_amethyst_synthetic", 1100),
-    ("silver_sapphire_genuine",   1450),
-    ("gold14k_sapphire_genuine",  3900),
-    ("gold18k_sapphire_genuine",  5400),
+    ("silver_ring",  1100),
+    ("silver_cuff",  2200),
+    ("silver_set",   3000),
+    ("gold10k_ring", 2800),
+    ("gold10k_cuff", 5500),
+    ("gold10k_set",  7800),
 ]
 
 
 @pytest.mark.parametrize("tier_key,client_price", UNCLE_JO_PROBES)
 def test_validate_cart_uncle_jo_tier(tier_key, client_price):
-    """UNCLE JO has 16 SKUs (4 metals x 2 stones x 2 qualities). Validate a sample."""
+    """UNCLE JO — 6 SKUs (Sterling / 10K WG × Ring / Cuff / Set)."""
     r = _post({"items": [{"product_key": "uncleJo", "tier_key": tier_key, "quantity": 1, "client_price": client_price}]})
     assert r.status_code == 200, f"HTTP {r.status_code}: {r.text}"
     data = r.json()
@@ -91,10 +96,10 @@ def test_validate_cart_uncle_jo_tier(tier_key, client_price):
 
 
 def test_validate_cart_mixed_cart_veyron_plus_uncle_jo():
-    """Mixed cart: Veyron Noir gold14k + Uncle Jo silver_amethyst_synthetic — both must validate."""
+    """Mixed cart: Veyron Noir gold14k + Uncle Jo silver_ring — both must validate."""
     payload = {"items": [
-        {"product_key": "veyronNoir", "tier_key": "gold14k", "quantity": 1, "client_price": 5000},
-        {"product_key": "uncleJo",    "tier_key": "silver_amethyst_synthetic", "quantity": 1, "client_price": 1100},
+        {"product_key": "veyronNoir", "tier_key": "gold14k",     "quantity": 1, "client_price": 5000},
+        {"product_key": "uncleJo",    "tier_key": "silver_ring", "quantity": 1, "client_price": 1100},
     ]}
     r = _post(payload)
     assert r.status_code == 200

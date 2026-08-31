@@ -414,6 +414,10 @@ def get_current_market() -> dict:
     unavailable. This keeps frontend live-priced displays and server-side
     `/validate-cart` in agreement so cart snapshots remain within tolerance.
     Pricing formulas are unchanged — only the market input is real.
+
+    No random noise. If the provider is unavailable, static values are
+    returned exactly (no jitter) so customer pricing never depends on
+    randomness anywhere in the pipeline.
     """
     TROY_OUNCE_GRAMS = 31.1034768
     USD_TO_CAD = 1.0 / 0.75  # inverse of frontend PHILEON_FX
@@ -427,12 +431,10 @@ def get_current_market() -> dict:
             }
     except Exception:
         pass
-    # Static historical fallback (identical to previous static base).
-    base_gold = 152.40
-    base_silver = 1.31
+    # Deterministic static fallback (no randomness in customer pricing).
     return {
-        "goldPerGram24kCad": round(base_gold * (1 + random.uniform(-0.008, 0.008)), 2),
-        "silverPerGramCad": round(base_silver * (1 + random.uniform(-0.008, 0.008)), 2),
+        "goldPerGram24kCad": 152.40,
+        "silverPerGramCad":  1.31,
     }
 
 

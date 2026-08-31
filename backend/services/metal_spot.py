@@ -96,8 +96,37 @@ def _with_age(snapshot: Dict, age: int, is_stale: bool) -> Dict:
     return out
 
 
+def _fetch_from_gold_api_cad_per_gram() -> Dict:
+    """Fallback provider chain: reuses the same keyless gold-api.com source
+    already serving `/api/metals` and `/api/market-prices`. This keeps the
+    trusted checkout snapshot and the storefront market feed on a single
+    price authority so live-priced customer displays and Stripe amounts
+    cannot diverge for policy reasons.
+    """
+    from routes.metals import _try_metals_live
+    PHILEON_USD_TO_CAD = 1.0 / 0.75  # mirror of frontend PHILEON_FX
+    gold_usd_oz, silver_usd_oz, source = _try_metals_live()
+    if not (1500 < gold_usd_oz < 6000):
+        raise ValueError("gold quote outside sane band")
+    gold_per_gram_24k = (gold_usd_oz   * PHILEON_USD_TO_CAD) / TROY_OUNCE_GRAMS
+    silver_per_gram   = (silver_usd_oz * PHILEON_USD_TO_CAD) / TROY_OUNCE_GRAMS
+    return {
+        "goldPerGram24kCad": round(gold_per_gram_24k, 6),
+        "silverPerGramCad":  round(silver_per_gram, 6),
+        "timestamp": _now(),
+        "source": f"gold-api.com:{source}",
+        "isFallback": False, "isStale": False, "ageSeconds": 0,
+    }
+
+
 def get_spot(force_refresh: bool = False) -> Dict:
     """Return current spot payload following the fresh/stale/expired policy.
+
+    Provider preference:
+      1. `metals-api.com` when `METALS_API_KEY` is configured (existing path,
+         base=CAD, checkout-safe).
+      2. `gold-api.com` (keyless, same source as `/api/market-prices`) —
+         the site's single price authority when no paid key is present.
 
     Never raises to callers. Never overwrites a valid trusted cache with the
     development fallback when the provider fails while cache is <= 30 min.
@@ -110,17 +139,21 @@ def get_spot(force_refresh: bool = False) -> Dict:
     if cached is not None and age is not None and age <= FRESH_MAX_AGE and not force_refresh:
         return _with_age(cached, age, is_stale=False)
 
-    # Attempt provider only when a key is present
-    if api_key:
-        try:
+    # Attempt provider (metals-api primary if key present, otherwise gold-api).
+    provider_error = False
+    try:
+        if api_key:
             fresh = _fetch_from_metals_api(api_key)
-            _TRUSTED_CACHE["snapshot"] = fresh
-            return _with_age(fresh, 0, is_stale=False)
-        except Exception:
-            # Provider failed. Decide whether to reuse cache or fall back.
-            pass
+        else:
+            fresh = _fetch_from_gold_api_cad_per_gram()
+        _TRUSTED_CACHE["snapshot"] = fresh
+        return _with_age(fresh, 0, is_stale=False)
+    except Exception:
+        provider_error = True
 
-    # No provider (or provider failed). Reuse trusted cache while age <= 30 min.
+    # Provider failed. If a paid key is configured, DO NOT silently downgrade
+    # to the free provider — that would defeat the operator's choice to use
+    # a metered/reliable provider. Reuse trusted cache while age <= 30 min.
     if cached is not None and age is not None and age <= STALE_MAX_AGE:
         return _with_age(cached, age, is_stale=(age > FRESH_MAX_AGE))
 

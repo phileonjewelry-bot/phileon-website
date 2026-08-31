@@ -2,6 +2,7 @@
    Run: cd /app/backend && python -m pytest tests/test_metal_spot.py -v
 """
 import os
+import time as _time_mod
 from unittest.mock import patch
 import pytest
 from services import metal_spot as ms
@@ -25,16 +26,33 @@ def _fake_fresh_provider_payload(ts=None):
 
 
 # 1
-def test_no_api_key_returns_fallback():
-    p = ms.get_spot()
-    assert p["isFallback"] is True
-    assert p["source"] == "phileon-fallback"
-    assert p["goldPerGram24kCad"] == 150.0 and p["silverPerGramCad"] == 1.25
+def test_no_api_key_uses_gold_api_fallback(monkeypatch):
+    """Without METALS_API_KEY, get_spot() consolidates on the same keyless
+    gold-api.com source used by /api/market-prices. Result is a real trusted
+    quote, not the development phileon-fallback."""
+    monkeypatch.setattr(
+        ms, "_fetch_from_gold_api_cad_per_gram",
+        lambda: {
+            "goldPerGram24kCad": 190.0, "silverPerGramCad": 2.85,
+            "timestamp": int(_time_mod.time()),
+            "source": "gold-api.com:gold-api.com",
+            "isFallback": False, "isStale": False, "ageSeconds": 0,
+        },
+    )
+    p = ms.get_spot(force_refresh=True)
+    assert p["isFallback"] is False
+    assert p["source"].startswith("gold-api.com")
+    assert p["goldPerGram24kCad"] == 190.0 and p["silverPerGramCad"] == 2.85
 
 # 2
-def test_fallback_has_isFallback_true_and_notStale():
-    p = ms.get_spot()
+def test_no_key_and_gold_api_down_returns_dev_fallback(monkeypatch):
+    """Only when BOTH providers fail AND there's no usable cache does
+    get_spot() return the dev fallback, which is never checkout-safe."""
+    monkeypatch.setattr(ms, "_fetch_from_gold_api_cad_per_gram",
+                        lambda: (_ for _ in ()).throw(RuntimeError("all down")))
+    p = ms.get_spot(force_refresh=True)
     assert p["isFallback"] is True and p["isStale"] is False
+    assert p["source"] == "phileon-fallback"
 
 # 3
 def test_provider_success_returns_trusted_fresh():
