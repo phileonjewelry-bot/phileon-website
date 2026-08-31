@@ -26,6 +26,285 @@
 
 export const journalArticles = [
   {
+    slug: 'bespoke-jewelry-design-process',
+    title: 'The Bespoke Jewelry Design Process: From Idea to Finished Piece',
+    seoTitle: 'Bespoke Jewelry Design Process: From Idea to Finished Piece | PHILEON',
+    seoDescription:
+      'See how a bespoke jewelry idea develops from initial conversation and design direction through stones, metal, sizing, CAD, refinement, production and final finishing.',
+    excerpt:
+      'From the first idea to metal, stones, fit, CAD, refinement and production, see how a bespoke piece develops into one resolved object.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Bespoke Guide',
+    tags: ['bespoke', 'custom jewelry', 'design process', 'CAD'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'A bespoke piece rarely begins with a finished drawing. It begins with a reason.' },
+      { type: 'p', text: 'It may start with a stone, a memory, an existing piece of jewelry, a reference image, a shape, a person, a phrase or simply the feeling that nothing already available is quite right.' },
+      { type: 'p', text: 'From there, the work is not to copy the reference. The work is to determine what the piece should become.' },
+      { type: 'p', text: 'Metal, stones, proportion, fit, setting, structure and finish all have to resolve into one object that can actually be worn. That is the difference between choosing options from a product page and developing a bespoke piece.' },
+      { type: 'p', text: 'This guide explains how that process typically moves from first conversation to finished jewelry — and why the decisions before production matter just as much as the production itself.' },
+
+      // DIAGRAM 1
+      { type: 'diagram', variant: 'journey',
+        title: 'The bespoke journey at a glance',
+        steps: [
+          'Conversation',
+          'Design Direction',
+          'Metal & Stone Decisions',
+          'Size & Wear',
+          'Technical Development / CAD',
+          'Review & Refinement',
+          'Approved Design',
+          'Production',
+          'Setting & Finishing',
+          'Final Review & Delivery',
+        ],
+        caption: 'A typical bespoke project moves through these stages, but the exact path depends on the piece. Some decisions happen together, and complex designs may require additional technical development.',
+      },
+
+      { type: 'h2', text: 'It starts with the reason for the piece' },
+      { type: 'p', text: 'The first useful question is not "what style do you want?" It is: why is this piece being made?' },
+      { type: 'p', text: 'Possible starting points:' },
+      { type: 'ul', items: [
+        'Engagement', 'Wedding', 'Anniversary', 'Memorial or tribute', 'Milestone',
+        'Heirloom', 'Redesign', 'Personal statement', 'Gift',
+        'A stone already owned', 'A design idea that does not exist commercially',
+      ] },
+      { type: 'p', text: 'Purpose affects design choices. A daily-wear ring and an occasional sculptural piece may require different decisions even when the visual inspiration is similar.' },
+
+      { type: 'h2', text: 'The first conversation' },
+      { type: 'p', text: 'An initial bespoke conversation may establish:' },
+      { type: 'ul', items: [
+        'Type of piece', 'Intended wearer', 'Intended use', 'General design direction',
+        'Preferred metal', 'Stone ideas', 'Approximate scale', 'Ring size where relevant',
+        'Timing requirements where relevant', 'Budget context where the customer chooses to provide it',
+      ] },
+      { type: 'p', text: 'Not every customer needs to arrive with every field decided. Custom Jewelry (/custom-jewelry-canada) is where PHILEON begins that conversation.' },
+
+      { type: 'h2', text: 'References are a starting point, not a tracing template' },
+      { type: 'p', text: 'Customers may bring screenshots, existing jewelry, architecture, clothing, art, symbols, family pieces, gemstones, sketches or photographs.' },
+      { type: 'quote', text: 'A reference should explain what is resonating — not become an instruction to copy another designer\u2019s work.' },
+      { type: 'p', text: 'The useful discussion asks: is it the proportion, the shape, the movement, the metal texture, the stone arrangement, the colour, the era or the emotional association?' },
+
+      { type: 'h2', text: 'Design direction comes before detail' },
+      { type: 'p', text: 'Jumping immediately into prong shape, melee size, engraving or exact stone count can be premature if the main form is unresolved.' },
+      { type: 'quote', text: 'Resolve the object first. Resolve the details inside the object second.' },
+      { type: 'p', text: 'Design direction covers overall silhouette, scale, symmetry or asymmetry, visual weight, orientation and proportion.' },
+
+      // DIAGRAM 2
+      { type: 'diagram', variant: 'decisions',
+        title: 'What actually shapes a bespoke piece?',
+        center: 'BESPOKE PIECE',
+        branches: [
+          { label: 'Purpose', items: ['Everyday', 'Statement', 'Ceremonial', 'Heirloom', 'Gift'] },
+          { label: 'Form', items: ['Ring', 'Pendant', 'Earrings', 'Bracelet / cuff', 'Other'] },
+          { label: 'Material', items: ['Metal', 'Karat', 'Finish'] },
+          { label: 'Stones', items: ['Type', 'Shape', 'Size', 'Colour', 'Origin where relevant'] },
+          { label: 'Wear', items: ['Size / fit', 'Profile', 'Movement', 'Contact', 'Maintenance'] },
+          { label: 'Structure', items: ['Setting', 'Gallery', 'Shank / body', 'Support', 'Construction'] },
+        ],
+        caption: 'These decisions influence one another. Changing the stone can change the setting. Changing the setting can change the profile. Changing the width can change the fit. Bespoke design is iterative because the object is a system.',
+      },
+
+      { type: 'h2', text: 'Choosing the metal' },
+      { type: 'p', text: 'The decision may include gold karat, yellow / white / rose gold, platinum or other materials where appropriate, finish, surface texture and structural requirements.' },
+      { type: 'p', text: 'See 10K vs 14K vs 18K Gold (/journal/10k-vs-14k-vs-18k-gold) for how karat itself changes the alloy.' },
+      { type: 'quote', text: 'The highest karat is not automatically the correct choice. Metal should respond to the design and how it will be worn.' },
+
+      { type: 'h2', text: 'Choosing the stones' },
+      { type: 'p', text: 'Decisions may include natural vs lab-grown diamond, coloured gemstone, centre vs accent stones, shape, proportion, colour, clarity where relevant, stone availability and budget.' },
+      { type: 'p', text: 'For the natural / lab-grown decision specifically, see Lab-Grown vs Natural Diamonds (/journal/lab-grown-vs-natural-diamonds). Stone availability depends on the market; a specific piece may require sourcing rather than pulling from inventory.' },
+
+      { type: 'h2', text: 'Designing around an existing stone' },
+      { type: 'p', text: 'When a client already owns a gemstone, the stone becomes a fixed technical input. The design must respond to its actual dimensions, shape, depth, condition, orientation, vulnerable corners or points and setting requirements.' },
+      { type: 'quote', text: 'Carat weight alone is not enough information to design a setting. Actual stone dimensions matter.' },
+
+      { type: 'h2', text: 'Selecting the setting' },
+      { type: 'p', text: 'The setting is not chosen independently of the rest of the ring. Approaches include prong / claw, bezel, pavé, channel, flush, halo, shared-prong or combinations.' },
+      { type: 'p', text: 'For deeper detail see Jewelry Setting Styles Explained (/journal/jewelry-setting-styles).' },
+      { type: 'quote', text: 'The setting should belong to the stone and the object around it.' },
+
+      { type: 'h2', text: 'Proportion is where the piece starts becoming real' },
+      { type: 'p', text: 'Relationships to consider include centre stone to halo, head to shank, pendant to chain, earring size to movement, stone size to metal mass and shoulder width to centre architecture.' },
+      { type: 'p', text: 'A technically possible arrangement is not automatically a resolved design.' },
+
+      { type: 'h2', text: 'Size and fit are design inputs' },
+      { type: 'p', text: 'For rings, size influences circumference, shank proportions, stone distribution, engraving, pavé layout and overall visual balance. Wide or sculptural designs may require fit consideration beyond the nominal number.' },
+      { type: 'p', text: 'See Ring Sizing 101 (/journal/ring-sizing-guide) for how width, temperature and knuckles affect fit.' },
+
+      { type: 'h2', text: 'Designing for how the piece will be worn' },
+      { type: 'ul', items: [
+        'Daily or occasional?',
+        'High or low profile?',
+        'Does it need to stack?',
+        'Will a pendant move freely?',
+        'Are earrings intended to sit close or move?',
+        'Are surfaces likely to make frequent contact?',
+      ] },
+      { type: 'quote', text: 'Wearability is not something added after the design. It should influence the design from the beginning.' },
+
+      { type: 'h2', text: 'When the design moves into technical development' },
+      { type: 'p', text: 'Once the design direction is sufficiently resolved, it can move into technical development. This may involve measured drawings, CAD, stone-layout planning, construction planning, setting development and dimensional review.' },
+      { type: 'p', text: 'Not every project uses identical software or workflow; the tools serve the design rather than dictate it.' },
+
+      { type: 'h2', text: 'What CAD actually does' },
+      { type: 'p', text: 'CAD can help define dimensions, geometry, stone positions, setting architecture, thickness relationships, internal clearances, overall volume and manufacturing-ready geometry.' },
+      { type: 'quote', text: 'CAD is a tool for resolving the design. It is not the design itself.' },
+
+      // DIAGRAM 3
+      { type: 'diagram', variant: 'flow',
+        title: 'CAD is one stage, not the beginning',
+        steps: [
+          { label: 'Reference / Idea', question: 'What matters?' },
+          { label: 'Design Interpretation', question: 'What should the object become?' },
+          { label: 'Proportion & Material Decisions', question: 'How should it work?' },
+          { label: 'Technical Development / CAD', question: 'Can the geometry be resolved?' },
+          { label: 'Review & Refinement', question: 'Does the design still do what it was meant to do?' },
+          { label: 'Approved Design → Production' },
+        ],
+        caption: 'Starting in CAD before the concept is resolved can make an unresolved idea look deceptively finished. Technical precision does not replace design direction.',
+      },
+
+      { type: 'h2', text: 'A render is not the finished jewelry' },
+      { type: 'p', text: 'A render uses digital lighting, digital metal and digital gemstones. The finished object exists in real metal, real stones, real weight, real light and real movement, on real screens or the real body — none of which behave the way a computer image does.' },
+      { type: 'quote', text: 'A render is a communication tool. The finished object exists in metal, stone, weight, light and movement.' },
+
+      { type: 'h2', text: 'Review and refinement' },
+      { type: 'p', text: 'Review may address proportion, profile, stone orientation, setting character, width, fit, visual balance and technical feasibility. The appropriate number of rounds depends on the project and the agreed scope.' },
+      { type: 'quote', text: 'Refinement should solve the piece, not endlessly redesign it.' },
+
+      { type: 'h2', text: 'What happens when one decision changes?' },
+      { type: 'p', text: 'A larger centre stone may affect head dimensions, prong placement, gallery, shoulder transition and overall ring balance. A wider shank may affect fit, weight, pavé layout and proportion. A different metal may affect colour, material behaviour and cost.' },
+      { type: 'p', text: 'This is why bespoke design is treated as a system rather than a checklist.' },
+
+      { type: 'h2', text: 'Approval means the design is ready to move forward' },
+      { type: 'p', text: 'Approval should confirm the agreed design direction before production begins. Depending on project type, that may involve the final design representation, selected materials, confirmed stone direction, size and key specifications. The specifics of any commission belong to that commission\u2019s terms.' },
+
+      { type: 'h2', text: 'Production' },
+      { type: 'p', text: 'Production method depends on the piece and may involve different jewelry manufacturing techniques. PHILEON does not claim a single universal process for every piece — the approved design determines the appropriate production path.' },
+      { type: 'p', text: 'Where public product data specifies a process for a particular piece, that specific information controls there rather than this general guide.' },
+
+      { type: 'h2', text: 'Stone setting' },
+      { type: 'p', text: 'Stone setting comes after the metal structure is appropriately prepared. Depending on the design, setting may include centre stones, side stones, halos, pavé, channels, flush-set accents or other structures.' },
+
+      { type: 'h2', text: 'Finishing' },
+      { type: 'p', text: 'Finishing stages may include polishing, satin or matte treatment, texture, engraving, cleaning and final surface refinement. Not every piece uses every finishing method.' },
+      { type: 'quote', text: 'Finish changes how the same geometry is read.' },
+
+      // DIAGRAM 4
+      { type: 'diagram', variant: 'matrix',
+        title: 'The finished piece is the intersection of eight decisions',
+        items: ['Design', 'Proportion', 'Material', 'Stone', 'Setting', 'Fit', 'Wearability', 'Finish'],
+        center: 'THE FINISHED OBJECT',
+        caption: 'A bespoke piece succeeds when these decisions reinforce one another rather than competing for attention.',
+      },
+
+      { type: 'h2', text: 'Final review' },
+      { type: 'p', text: 'A completed piece should be reviewed for the attributes relevant to that design — finish, stone security, visual alignment, size, construction and agreed specifications. This article does not describe any specific inspection or certification procedure.' },
+
+      { type: 'h2', text: 'How long does bespoke jewelry take?' },
+      { type: 'p', text: 'There is no universal bespoke timeline. Timing depends on design complexity, CAD development, client decisions, stone availability, sourcing, manufacturing complexity, setting, finishing and required revisions.' },
+      { type: 'p', text: 'If a specific deadline matters, it should be discussed before production begins rather than treated as a guarantee afterwards.' },
+
+      { type: 'h2', text: 'What affects bespoke pricing?' },
+      { type: 'p', text: 'Pricing can depend on metal, metal weight, karat, stones, stone size and type, setting complexity, design complexity, production, finishing and customization.' },
+      { type: 'quote', text: 'Two pieces of similar visual size can require very different amounts of material and work.' },
+
+      { type: 'h2', text: 'Bespoke vs customization' },
+      { type: 'h3', text: 'Customization' },
+      { type: 'p', text: 'Modifies an existing design. Examples may include metal, finish, stone selection, size or limited details.' },
+      { type: 'h3', text: 'Bespoke' },
+      { type: 'p', text: 'Begins with a design problem or concept and develops the object around it.' },
+      { type: 'quote', text: 'Customization changes an existing answer. Bespoke begins with the question.' },
+
+      { type: 'h2', text: 'Redesigning existing jewelry' },
+      { type: 'p', text: 'A bespoke project may begin with an existing piece — to reuse stones, preserve sentimental material, change style, improve wearability or create a new object from an old one.' },
+      { type: 'quote', text: 'Sentimental value does not remove technical limits. Existing materials still have to be suitable for the new design.' },
+
+      { type: 'h2', text: 'Heirloom pieces' },
+      { type: 'p', text: 'An heirloom-focused design may prioritize longevity of visual language, repairability, material selection, stone security, symbolic meaning and documentation.' },
+      { type: 'p', text: 'Heirloom intent influences design decisions; it does not make jewelry immune to wear. For related context on marks and provenance, see Jewelry Hallmarks & Stamps Explained (/journal/jewelry-hallmarks-stamps).' },
+
+      { type: 'h2', text: 'What should you bring to a bespoke conversation?' },
+      { type: 'ul', items: [
+        'Reference images',
+        'Intended piece type',
+        'Metal preference',
+        'Stones already owned',
+        'Ring size if known',
+        'Photos of existing jewelry if being redesigned',
+        'Important symbols or details',
+        'Intended use',
+        'Timing requirement if one exists',
+        'Budget context if the customer wishes to establish one',
+      ] },
+      { type: 'quote', text: 'You do not need to know the answer before starting the conversation.' },
+
+      { type: 'h2', text: 'What if you only have an idea?' },
+      { type: 'p', text: 'That is enough to begin. A useful bespoke conversation can begin with "I want something based on…", "I have this stone.", "I want to redesign this.", "I know how I want it to feel." or "I cannot find the ring I have in my head."' },
+
+      { type: 'h2', text: 'What PHILEON protects during the process' },
+      { type: 'p', text: 'The process should protect the reason for the piece, originality, proportion, wearability, structural logic, material honesty and customer intent.' },
+      { type: 'quote', text: 'The goal is not to add more detail at every stage. The goal is to remove the decisions that do not belong.' },
+
+      { type: 'h2', text: "PHILEON\u2019s bespoke philosophy" },
+      { type: 'quote', text: 'Bespoke is not freedom from constraints. It is the ability to make the constraints belong to the piece.' },
+      { type: 'p', text: 'The stone has dimensions. The finger has a size. The metal has properties. The object has to be worn.' },
+      { type: 'p', text: 'Those realities do not restrict the design. They give the design something to answer.' },
+      { type: 'p', text: 'PHILEON\u2019s role is to bring those decisions into one coherent object — one that could not have been reached by simply choosing from a list of options.' },
+
+      { type: 'h2', text: 'Quick process guide' },
+      { type: 'table', headers: ['Stage', 'Core question'], rows: [
+        ['Conversation', 'Why is the piece being made?'],
+        ['Design direction', 'What should the object become?'],
+        ['Metal & stones', 'What materials belong to it?'],
+        ['Fit / wear', 'How will it live on the body?'],
+        ['Technical development', 'How should the geometry work?'],
+        ['CAD / representation', 'Has the design been resolved clearly?'],
+        ['Review', 'What still needs refinement?'],
+        ['Approval', 'Is the design ready for production?'],
+        ['Production', 'How is the approved object made?'],
+        ['Setting & finishing', 'How is the final surface and stone work resolved?'],
+        ['Final review', 'Does the completed piece match the agreed design?'],
+      ] },
+      { type: 'note', label: 'Note', text: 'The exact sequence can vary by project.' },
+
+      { type: 'cta', heading: 'Have an idea? Start with PHILEON.', text: 'You do not need a finished drawing. Send us the idea, stone, reference or existing piece you want to build from. Tell us what matters about it, and we can start the design conversation from there.', buttonLabel: 'START A BESPOKE CONVERSATION' },
+
+      { type: 'links', heading: 'Explore PHILEON Bespoke', items: [
+        { label: 'PHILEON Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+
+      { type: 'links', heading: 'Continue the PHILEON Journal', items: [
+        { label: 'Choosing your gold', href: '/journal/10k-vs-14k-vs-18k-gold' },
+        { label: 'Choosing between lab-grown and natural diamonds', href: '/journal/lab-grown-vs-natural-diamonds' },
+        { label: 'Finding the right ring size', href: '/journal/ring-sizing-guide' },
+        { label: 'Understanding setting styles', href: '/journal/jewelry-setting-styles' },
+        { label: 'Understanding ring anatomy', href: '/journal/engagement-ring-anatomy' },
+        { label: 'Understanding jewelry hallmarks', href: '/journal/jewelry-hallmarks-stamps' },
+        { label: 'Pairing an engagement ring and wedding band', href: '/journal/wedding-band-pairing-guide' },
+      ] },
+
+      { type: 'links', heading: 'Explore PHILEON', items: [
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: 'Statement Rings', href: '/statement-rings' },
+      ] },
+    ],
+    faq: [
+      { q: 'Do I need a finished sketch before starting a bespoke jewelry project?', a: 'No. References, a stone, a general idea or even the purpose of the piece can be enough to begin a design conversation.' },
+      { q: 'Does every bespoke piece require CAD?', a: 'Not necessarily. Technical development depends on the design and production method. CAD is common for complex modern jewelry, but it should support the design rather than define the process automatically.' },
+      { q: 'Can I use stones from jewelry I already own?', a: 'Possibly. Existing stones need to be assessed for dimensions, condition and suitability before reuse can be confirmed.' },
+      { q: 'How many revisions are included in bespoke design?', a: 'The appropriate review process depends on the project and the agreed scope. Do not assume unlimited revisions or a universal number without confirming the terms of that specific commission.' },
+      { q: 'How long does bespoke jewelry take?', a: 'Timing depends on design complexity, approvals, stone availability, production and finishing. If a specific deadline matters, it should be discussed before production begins.' },
+    ],
+  },
+  {
     slug: 'wedding-band-pairing-guide',
     title: 'Wedding Band Pairing: How to Match Your Engagement Ring',
     seoTitle: 'Wedding Band Pairing Guide: How to Match Your Engagement Ring | PHILEON',

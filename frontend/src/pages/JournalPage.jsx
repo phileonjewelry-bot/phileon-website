@@ -125,6 +125,7 @@ export function JournalArticlePage() {
 
   return (
     <article style={styles.page} data-testid={`journal-article-${article.slug}`}>
+      <style>{DIAGRAM_CSS}</style>
       <section style={styles.hero}>
         <p style={styles.eyebrow}>
           PHILEON JOURNAL{article.category ? ` · ${article.category.toUpperCase()}` : ''}
@@ -217,6 +218,62 @@ export function JournalArticlePage() {
                     ))}
                   </ul>
                 </section>
+              );
+            case 'diagram':
+              return (
+                <figure
+                  key={i}
+                  className={`phileon-diagram phileon-diagram--${block.variant || 'journey'}`}
+                  data-testid={`journal-diagram-${block.variant || 'journey'}-${i}`}
+                >
+                  {block.title && <figcaption className="phileon-diagram__title">{block.title}</figcaption>}
+                  {block.variant === 'journey' && (
+                    <ol className="phileon-diagram__journey">
+                      {(block.steps || []).map((s, j) => (
+                        <li key={j} className="phileon-diagram__journey-row">
+                          <span className="phileon-diagram__num" aria-hidden="true">{String(j + 1).padStart(2, '0')}</span>
+                          <span className="phileon-diagram__step">{s}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                  {block.variant === 'decisions' && (
+                    <div className="phileon-diagram__decisions">
+                      <div className="phileon-diagram__center" aria-hidden="true">{block.center || 'BESPOKE PIECE'}</div>
+                      <div className="phileon-diagram__branches">
+                        {(block.branches || []).map((br, j) => (
+                          <div key={j} className="phileon-diagram__branch">
+                            <p className="phileon-diagram__branchLabel">{br.label}</p>
+                            <ul className="phileon-diagram__branchList">
+                              {(br.items || []).map((it, k) => <li key={k}>{it}</li>)}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {block.variant === 'flow' && (
+                    <ol className="phileon-diagram__flow">
+                      {(block.steps || []).map((s, j) => (
+                        <li key={j} className="phileon-diagram__flowRow">
+                          <p className="phileon-diagram__flowLabel">{s.label}</p>
+                          {s.question && <p className="phileon-diagram__flowQ">&ldquo;{s.question}&rdquo;</p>}
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                  {block.variant === 'matrix' && (
+                    <div className="phileon-diagram__matrix">
+                      {(block.items || []).map((it, j) => (
+                        <div key={j} className="phileon-diagram__matrixCell">{it}</div>
+                      ))}
+                      <div className="phileon-diagram__matrixCenter" aria-hidden="true">{block.center || 'THE FINISHED OBJECT'}</div>
+                    </div>
+                  )}
+                  {block.caption && (
+                    <p className="phileon-diagram__caption">{block.caption}</p>
+                  )}
+                </figure>
               );
             default:
               return <p key={i} style={styles.p}>{block.text}</p>;
@@ -311,3 +368,115 @@ const styles = {
   cardCta: { display: 'inline-block', marginTop: 12, letterSpacing: '0.22em', fontSize: 11, color: rose, textTransform: 'uppercase' },
   backLink: { color: rose, textDecoration: 'underline', letterSpacing: '0.18em', fontSize: 12, textTransform: 'uppercase' },
 };
+
+// ────────────────────────────────────────────────────────────────
+// Editorial diagram CSS — used only when an article body includes
+// a { type: 'diagram' } block. Palette matches the Journal styles
+// object above (rose #c48369 · ink #f4e4dc · dark background).
+// ────────────────────────────────────────────────────────────────
+const DIAGRAM_CSS = `
+.phileon-diagram { margin: 48px 0; padding: 0; }
+.phileon-diagram__title {
+  letter-spacing: 0.22em; font-size: 11px; text-transform: uppercase;
+  color: #c48369; margin: 0 0 18px; padding-bottom: 10px;
+  border-bottom: 1px solid rgba(196,131,105,0.24);
+}
+.phileon-diagram__caption {
+  font-size: 13px; line-height: 1.6; color: rgba(244,228,220,0.6);
+  font-style: italic; margin: 18px 0 0; max-width: 640px;
+}
+
+/* Journey — numbered vertical sequence */
+.phileon-diagram__journey { list-style: none; margin: 0; padding: 0; }
+.phileon-diagram__journey-row {
+  display: grid; grid-template-columns: 56px 1fr;
+  align-items: center; gap: 20px;
+  padding: 18px 0; border-top: 1px solid rgba(196,131,105,0.14);
+}
+.phileon-diagram__journey-row:first-child { border-top: none; }
+.phileon-diagram__num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px; color: #c48369; letter-spacing: 0.04em;
+}
+.phileon-diagram__step {
+  font-size: 16px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(244,228,220,0.9);
+}
+
+/* Decision map — center + branches */
+.phileon-diagram__decisions {
+  border: 1px solid rgba(196,131,105,0.2); padding: 28px 20px;
+}
+.phileon-diagram__center {
+  text-align: center; letter-spacing: 0.32em; text-transform: uppercase;
+  font-size: 12px; color: #c48369; padding: 14px 0; margin-bottom: 24px;
+  border-bottom: 1px solid rgba(196,131,105,0.18);
+}
+.phileon-diagram__branches {
+  display: grid; grid-template-columns: 1fr; gap: 24px;
+}
+@media (min-width: 640px) {
+  .phileon-diagram__branches { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .phileon-diagram__branches { grid-template-columns: repeat(3, 1fr); }
+}
+.phileon-diagram__branch {
+  padding: 12px 0;
+  border-top: 1px solid rgba(196,131,105,0.14);
+}
+.phileon-diagram__branchLabel {
+  letter-spacing: 0.24em; text-transform: uppercase; font-size: 11px;
+  color: #c48369; margin: 0 0 8px;
+}
+.phileon-diagram__branchList {
+  list-style: none; margin: 0; padding: 0;
+  font-size: 14px; line-height: 1.75; color: rgba(244,228,220,0.82);
+}
+.phileon-diagram__branchList li { padding: 2px 0; }
+
+/* Flow — linear transformation with question annotation */
+.phileon-diagram__flow { list-style: none; margin: 0; padding: 0; }
+.phileon-diagram__flowRow {
+  padding: 20px 0; border-top: 1px solid rgba(196,131,105,0.14);
+}
+.phileon-diagram__flowRow:first-child { border-top: none; }
+.phileon-diagram__flowLabel {
+  letter-spacing: 0.24em; text-transform: uppercase; font-size: 12px;
+  color: rgba(244,228,220,0.92); margin: 0 0 6px;
+}
+.phileon-diagram__flowQ {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic; font-size: 17px; line-height: 1.5;
+  color: #c48369; margin: 0;
+}
+
+/* Matrix — 8 decisions converging on a centre cell */
+.phileon-diagram__matrix {
+  display: grid; grid-template-columns: 1fr; gap: 0;
+  border: 1px solid rgba(196,131,105,0.2);
+}
+@media (min-width: 640px) {
+  .phileon-diagram__matrix { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .phileon-diagram__matrix { grid-template-columns: repeat(3, 1fr); }
+}
+.phileon-diagram__matrixCell {
+  padding: 22px 20px; text-align: center;
+  letter-spacing: 0.24em; text-transform: uppercase; font-size: 12px;
+  color: rgba(244,228,220,0.88);
+  border-top: 1px solid rgba(196,131,105,0.14);
+  border-left: 1px solid rgba(196,131,105,0.08);
+}
+@media (min-width: 900px) {
+  .phileon-diagram__matrixCell:nth-child(-n+3) { border-top: none; }
+}
+.phileon-diagram__matrixCenter {
+  padding: 26px 20px; text-align: center;
+  letter-spacing: 0.28em; text-transform: uppercase; font-size: 13px;
+  color: #c48369; grid-column: 1 / -1;
+  background: rgba(196,131,105,0.06);
+  border-top: 1px solid rgba(196,131,105,0.24);
+}
+`;
