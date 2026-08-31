@@ -24,16 +24,72 @@ def _cfg(name: str, default=None):
     v = os.environ.get(name, default)
     return v.strip() if isinstance(v, str) else v
 
+
+class PaymentConfigError(HTTPException):
+    """Fail-closed payment configuration error. Never leaks key contents."""
+    def __init__(self, code: str, message: str):
+        super().__init__(status_code=503, detail={"code": code, "message": message})
+
+
 def _payment_configured() -> bool:
     return bool(_cfg("STRIPE_SECRET_KEY") and _cfg("STRIPE_WEBHOOK_SECRET"))
 
+
+def _resolve_stripe_mode() -> str:
+    mode = (_cfg("STRIPE_MODE") or "test").lower()
+    if mode not in ("test", "live"):
+        raise PaymentConfigError(
+            "PAYMENT_MISCONFIGURED",
+            "STRIPE_MODE must be 'test' or 'live'.",
+        )
+    return mode
+
+
+def _validate_stripe_config() -> str:
+    """Fail-closed environment/key compatibility check.
+
+    Rules (never logs or returns the key itself):
+      • STRIPE_MODE must be 'test' or 'live' (defaults to 'test' when unset).
+      • STRIPE_SECRET_KEY must be present and start with the mode-appropriate
+        prefix — 'sk_test_' in test mode, 'sk_live_' in live mode.
+      • STRIPE_WEBHOOK_SECRET must be present and start with 'whsec_'
+        (Stripe does not distinguish test vs live in the whsec_ prefix, so
+        we only verify shape, per the brief's `where reliably determinable`
+        clause).
+      • Rejects mixed-environment ('test' mode + sk_live_… or vice versa).
+      • Rejects missing / malformed keys.
+    Returns the resolved mode string.
+    """
+    mode = _resolve_stripe_mode()
+    secret = _cfg("STRIPE_SECRET_KEY") or ""
+    whsec = _cfg("STRIPE_WEBHOOK_SECRET") or ""
+    if not secret or not whsec:
+        raise PaymentConfigError(
+            "PAYMENT_NOT_CONFIGURED",
+            "Payment service is not configured.",
+        )
+    expected_secret_prefix = "sk_live_" if mode == "live" else "sk_test_"
+    if not secret.startswith(expected_secret_prefix):
+        # Never include the key or its length in the response/log.
+        raise PaymentConfigError(
+            "PAYMENT_MODE_MISMATCH",
+            f"Configured Stripe key does not match STRIPE_MODE={mode}.",
+        )
+    if not whsec.startswith("whsec_"):
+        raise PaymentConfigError(
+            "PAYMENT_MISCONFIGURED",
+            "Stripe webhook secret is malformed.",
+        )
+    return mode
+
+
 def _require_payment_config():
-    if not _payment_configured():
-        raise HTTPException(status_code=503, detail={"code": "PAYMENT_NOT_CONFIGURED",
-                                                    "message": "Payment service is not configured."})
+    """Preserved public name. Now delegates to the fail-closed validator."""
+    _validate_stripe_config()
+
 
 def _stripe():
-    _require_payment_config()
+    _validate_stripe_config()
     import stripe
     stripe.api_key = _cfg("STRIPE_SECRET_KEY")
     return stripe
@@ -232,33 +288,51 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         "quantity": r["quantity"],
     } for r in resolved]
 
+    # ── Shipping — approved PHILEON policy ─────────────────────────────
+    # Canada: free standard shipping (Canada Post + UPS).
+    # United States: shipping is calculated at checkout via UPS/FedEx —
+    #   dynamic-rate integration is NOT yet wired, so US destinations are
+    #   deliberately blocked at Stripe until that integration lands.
+    # International: DHL/UPS/FedEx where available — same story, blocked
+    #   at Stripe until dynamic rates are wired.
+    # Duties, taxes and brokerage remain the customer's responsibility per
+    # the published Shipping trust page — no prepayment collected here.
+    canada_free_shipping = {
+        "shipping_rate_data": {
+            "type": "fixed_amount",
+            "display_name": "Standard Shipping — Canada",
+            "fixed_amount": {"amount": 0, "currency": totals["currency"].lower()},
+            "delivery_estimate": {
+                "minimum": {"unit": "business_day", "value": 3},
+                "maximum": {"unit": "business_day", "value": 7},
+            },
+        },
+    }
+
+    session_kwargs = dict(
+        mode="payment",
+        line_items=line_items,
+        success_url=f"{success_url}?order={order.order_number}&session_id={{CHECKOUT_SESSION_ID}}",
+        cancel_url=f"{cancel_url}?order={order.order_number}",
+        customer_email=body.customer_email,
+        billing_address_collection="required",
+        shipping_address_collection={"allowed_countries": ["CA"]},
+        shipping_options=[canada_free_shipping],
+        metadata={"internal_order_id": order.id, "public_order_number": order.order_number},
+    )
+
     try:
         session = stripe.checkout.Session.create(
-            mode="payment",
-            line_items=line_items,
             automatic_payment_methods={"enabled": True, "allow_redirects": "always"},
-            success_url=f"{success_url}?order={order.order_number}&session_id={{CHECKOUT_SESSION_ID}}",
-            cancel_url=f"{cancel_url}?order={order.order_number}",
-            customer_email=body.customer_email,
-            billing_address_collection="required",
-            shipping_address_collection={"allowed_countries": ["US","CA","GB","AU"]},
-            metadata={"internal_order_id": order.id, "public_order_number": order.order_number},
             idempotency_key=hashlib.sha256(f"session:{idem}".encode()).hexdigest(),
+            **session_kwargs,
         )
     except stripe.error.StripeError as e:  # type: ignore
-        logger.error(f"Stripe error: {str(e)}")
+        logger.error(f"Stripe error: {type(e).__name__}")
         raise HTTPException(status_code=502, detail={"code": "STRIPE_ERROR", "message": "Payment provider error."})
     except TypeError:
-        # Older SDK without automatic_payment_methods: fall back to omitting payment_method_types entirely
-        session = stripe.checkout.Session.create(
-            mode="payment", line_items=line_items,
-            success_url=f"{success_url}?order={order.order_number}&session_id={{CHECKOUT_SESSION_ID}}",
-            cancel_url=f"{cancel_url}?order={order.order_number}",
-            customer_email=body.customer_email,
-            billing_address_collection="required",
-            shipping_address_collection={"allowed_countries": ["US","CA","GB","AU"]},
-            metadata={"internal_order_id": order.id, "public_order_number": order.order_number},
-        )
+        # Older SDK without automatic_payment_methods: fall back gracefully.
+        session = stripe.checkout.Session.create(**session_kwargs)
 
     await db.orders_v2.update_one({"id": order.id}, {"$set": {
         "provider_session_id": session.id,
