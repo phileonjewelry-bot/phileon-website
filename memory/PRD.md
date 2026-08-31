@@ -17,6 +17,28 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 
 ## Changelog
 
+- **[DONE Feb 29]** **PHILEON Stripe Production Audit — TEST MODE ONLY (Offline Portion Complete).**
+  - **Test credentials status:** neither `STRIPE_SECRET_KEY` nor `STRIPE_WEBHOOK_SECRET` are configured in the deployed environment. All Stripe-traffic-dependent steps of the brief (real test payment, webhook delivery, replay, cancel/abandon/decline flows, refresh/deep-link, cross-order access, environment-separation validation) are **BLOCKED — test credentials required** until Stripe test keys are set in `backend/.env`. No secrets requested in chat.
+  - **Live-launch blocker found and closed (surgical fix, no live keys touched):** `GET /api/stripe/session/{session_id}` in `routes/stripe_routes.py` was still active and would insert orders into the deprecated `db.orders` collection from client-driven Stripe metadata (`items_data` JSON). This violated the "success page must never mint a paid order from a URL visit" rule and would have shadowed the trusted `orders_v2` lifecycle. Legacy sibling `POST /api/stripe/webhook` (log-only) and `GET /api/stripe/config` (misleading publishable-key literal) were also still live. All three now return **HTTP 410 `LEGACY_ENDPOINT_DISABLED`** exactly like the other legacy Stripe endpoints. The single trusted webhook is `POST /api/webhooks/stripe` (signature verified, dedup via unique `(provider, event_id)` index, atomic reservation, updates only `orders_v2`).
+  - **Payment authority (audited, unchanged):** `services.catalog.resolve_line_item()` invoked exclusively by `routes/checkout.py`. `unit_amount_cents` is integer and passed directly to Stripe `price_data.unit_amount`. Client-supplied prices, currencies, and query params are never trusted. Verified by inspection: resolver signature does **not** accept a `currency` parameter.
+  - **Offline verification results:**
+    - LA MARVA heirloom size 7 → 2,265,000 CAD cents · `is_dynamic=True` · integer · single-round · round-trip exact.
+    - SCACCO 14K Yellow size 7 → 430,000 USD cents · integer · single-round · round-trip exact.
+    - Mixed-currency guard blocks pre-Stripe with `MIXED_CURRENCY_CART`.
+    - Tampering rejected: unsupported slug, invalid tier, invalid ring size, quantity {0, -1, 100}, invalid karat.
+    - Stripe session amount immutability: `create_stripe_session` never calls `stripe.checkout.Session.modify` — a created session's amount cannot be rewritten server-side.
+    - Metadata contains only `product_slug`, `sku`, `tier`, `metal`, `ring_size`, `market_source`, `market_timestamp` — no PII (customer email is a Stripe field, not our metadata).
+    - Idempotency: unique index on `orders_v2.idempotency_key`; same key + same cart returns cached session URL; same key + different cart returns `HTTP 409 IDEMPOTENCY_CONFLICT`; Stripe API call itself sends a derived `idempotency_key`.
+    - Webhook dedup: unique compound index on `(provider, event_id)` in `webhook_events`; duplicate delivery returns `{"received": True, "duplicate": True}` without touching orders.
+    - Order status model: `pending | requires_action | authorized | paid | failed | cancelled | refunded | partially_refunded | disputed`.
+    - `POST /api/webhooks/stripe` correctly returns 503 `PAYMENT_NOT_CONFIGURED` when no signing secret is set.
+    - `POST /api/checkout/stripe/session` correctly returns 503 `PAYMENT_NOT_CONFIGURED` when no Stripe secret is set.
+    - `GET /api/checkout/health` returns credentials_present=False, mode=test, api_verified=False, supported_products=84.
+  - **`test_gold_multiplier`** verified inert under `STRIPE_MODE=live` (ephemeral env swap).
+  - **All 564 pricing/catalog/checkout tests still green. Trusted catalog still exactly 84 products.**
+  - **Files changed:** `backend/routes/stripe_routes.py` (three legacy endpoints gated to 410).
+  - **Stripe live mode remains OFF.** No live keys added. No real card charged. No production-mode Checkout Session created.
+
 - **[DONE Feb 29]** **PHILEON Pricing Source-of-Truth Hardened & Ready for Stripe Production Audit.**
   - **Full flow map (audited, one authority end-to-end):** spot feed (`_try_metals_live` → gold-api.com, keyless) → `/api/market-prices` (CAD/g conversion) + `/api/metals` (USD/oz ticker) → PDP display (`useLivePrice` via `MarketPricingContext`) → cart snapshot (`CartContext.addToCart`, client-side, never trusted for payment) → `/validate-cart` (advisory) → **`services.catalog.resolve_line_item` (AUTHORITATIVE PAYMENT SOURCE)** → integer `unit_amount_cents` → Stripe `price_data.unit_amount` byte-for-byte.
   - **Consolidated `services/metal_spot.py`** onto the same gold-api.com provider chain used by the storefront so dynamic-priced checkout is no longer gated on `METALS_API_KEY`. `metals-api.com` remains an opt-in overlay when the key is later provisioned (existing behaviour preserved on that path). This collapses the previous `gold-api.com for storefront vs metals-api.com for payment` fragmentation into **one price authority**.

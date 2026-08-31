@@ -206,7 +206,15 @@ async def confirm_payment(payment_data: Dict[str, Any]):
 
 @router.get("/session/{session_id}")
 async def get_checkout_session(session_id: str):
-    """Retrieve checkout session details"""
+    """DEPRECATED — legacy client-driven order finalisation from Stripe session
+    metadata. Disabled 2026-02. All order lifecycle transitions are now driven
+    exclusively by the signature-verified webhook receiver at
+    ``POST /api/webhooks/stripe`` and read back through the token-authenticated
+    ``GET /api/checkout/order/{order_number}/status`` endpoint.
+    """
+    raise HTTPException(status_code=410, detail={
+        "code": "LEGACY_ENDPOINT_DISABLED",
+        "message": "Order status is now provided by /api/checkout/order/{order_number}/status."})
     try:
         session = stripe.checkout.Session.retrieve(session_id)
         
@@ -273,7 +281,15 @@ async def get_checkout_session(session_id: str):
 
 @router.post("/webhook")
 async def stripe_webhook(request: Request):
-    """Handle Stripe webhooks"""
+    """DEPRECATED — legacy webhook receiver. Disabled 2026-02. The
+    signature-verified receiver is at ``POST /api/webhooks/stripe``
+    (``routes/webhooks_stripe.py``). This shim returns 410 so any
+    accidentally-configured legacy webhook URL cannot silently 200-OK and
+    delivery retries surface in the Stripe dashboard.
+    """
+    raise HTTPException(status_code=410, detail={
+        "code": "LEGACY_ENDPOINT_DISABLED",
+        "message": "Legacy webhook receiver removed. Configure Stripe to POST to /api/webhooks/stripe."})
     payload = await request.body()
     sig_header = request.headers.get('stripe-signature')
     
@@ -308,7 +324,12 @@ async def stripe_webhook(request: Request):
 
 @router.get("/config")
 async def get_stripe_config():
-    """Get Stripe publishable key for frontend"""
+    """DEPRECATED — the frontend now redirects to Stripe-hosted Checkout so no
+    publishable key is exposed to the browser. Disabled 2026-02.
+    """
+    raise HTTPException(status_code=410, detail={
+        "code": "LEGACY_ENDPOINT_DISABLED",
+        "message": "Publishable key exposure endpoint removed."})
     from config import STRIPE_SECRET_KEY
     
     # Return publishable key (starts with pk_)
