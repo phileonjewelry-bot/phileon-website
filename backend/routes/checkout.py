@@ -303,7 +303,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             "display_name": "Standard Shipping — Canada",
             "fixed_amount": {"amount": 0, "currency": totals["currency"].lower()},
             "delivery_estimate": {
-                "minimum": {"unit": "business_day", "value": 3},
+                "minimum": {"unit": "business_day", "value": 2},
                 "maximum": {"unit": "business_day", "value": 7},
             },
         },

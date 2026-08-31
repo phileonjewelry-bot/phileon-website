@@ -143,7 +143,12 @@ def test_paid_order_email_shipping_wording_matches_policy():
                                       "total_cents": 100, "items": []})
     usd = build_customer_paid_email({"order_number": "PHI-2", "currency": "USD",
                                       "total_cents": 100, "items": []})
+    # Canada: policy wording + approximate 2–7 business-day window after fulfillment.
     assert "Canada" in cad["text"]
+    assert "Canada Post or UPS" in cad["text"]
+    assert "2" in cad["text"] and "7" in cad["text"] and "business days" in cad["text"]
+    assert "after fulfillment" in cad["text"]
+    # US / International: no rate promised, duties remain customer responsibility.
     assert "calculated at checkout" in usd["text"]
     assert "duties" in usd["text"] and "customer's responsibility" in usd["text"]
 
@@ -151,11 +156,15 @@ def test_paid_order_email_shipping_wording_matches_policy():
 # ─────────────────────────────  5) Canada-only shipping in session args  ───
 def test_canada_only_shipping_in_stripe_session_args():
     """Static assertion: routes/checkout.py must configure Canada-only
-    allowed_countries and a zero-amount Standard Shipping option.
+    allowed_countries, a zero-amount Standard Shipping option, and the
+    approved 2–7 business-day delivery estimate.
     """
     src = open("/app/backend/routes/checkout.py").read()
     assert '"allowed_countries": ["CA"]' in src, "Stripe session must restrict shipping to Canada"
     assert '"fixed_amount": {"amount": 0' in src, "Canada free-shipping option missing"
+    # Delivery estimate window: 2–7 business days after fulfillment.
+    assert '"unit": "business_day", "value": 2' in src, "Canada shipping minimum must be 2 business days"
+    assert '"unit": "business_day", "value": 7' in src, "Canada shipping maximum must be 7 business days"
     # US / Intl allowed_countries must NOT be present as a hardcoded list.
     assert '"allowed_countries": ["US","CA","GB","AU"]' not in src, (
         "Removed until US/Intl dynamic shipping is wired"

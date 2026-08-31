@@ -38,7 +38,10 @@ def _shipping_line(currency: str) -> str:
     responsibility.
     """
     if (currency or "").upper() == "CAD":
-        return "Standard shipping to Canada is included (Canada Post or UPS)."
+        return (
+            "Standard shipping to Canada is included (Canada Post or UPS). "
+            "Approximately 2–7 business days after fulfillment."
+        )
     return "Shipping will be calculated at checkout by UPS, FedEx or DHL. International duties, taxes and brokerage remain the customer's responsibility."
 
 
