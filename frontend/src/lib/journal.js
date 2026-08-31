@@ -26,6 +26,333 @@
 
 export const journalArticles = [
   {
+    slug: 'engagement-ring-stone-shapes',
+    title: 'Engagement Ring Stone Shapes Explained: Round, Oval, Pear, Emerald, Princess & More',
+    seoTitle: 'Engagement Ring Stone Shapes Explained | PHILEON',
+    seoDescription:
+      'Compare round, oval, pear, marquise, emerald, princess, cushion, radiant and heart-shaped stones — including proportions, visual spread, settings and design considerations.',
+    excerpt:
+      'Round, oval, pear, marquise, emerald, princess, cushion, radiant and heart shapes all change the architecture of a ring. Learn how proportion, spread, setting and geometry work together.',
+    heroImage: null,
+    author: 'PHILEON Atelier',
+    publishedAt: '2026-02-29',
+    updatedAt: '2026-02-29',
+    category: 'Stone Guide',
+    tags: ['stone shapes', 'engagement rings', 'diamonds', 'bespoke'],
+    relatedProductSlugs: ['drape', 'bajan-joe', 'quadriga-dominus'],
+    body: [
+      { type: 'p', text: 'The centre stone changes the ring before the metal is even drawn.' },
+      { type: 'p', text: 'A round stone creates one kind of balance. An emerald cut introduces long architectural lines. A pear creates direction. A marquise stretches the composition. A cushion softens it. A princess introduces corners and geometry.' },
+      { type: 'p', text: 'That outline influences the setting, shoulders, halo, side stones and even how the ring appears across the finger.' },
+      { type: 'p', text: 'Choosing a stone shape is therefore not just choosing what the stone looks like. It is choosing the geometry the rest of the ring has to answer.' },
+
+      // DIAGRAM 1 — Silhouette family
+      { type: 'diagram', variant: 'silhouettes',
+        title: 'The major stone shapes at a glance',
+        groups: [
+          { label: 'Curved', items: [
+            { label: 'Round', shape: 'round' },
+            { label: 'Oval', shape: 'oval' },
+            { label: 'Pear', shape: 'pear' },
+            { label: 'Marquise', shape: 'marquise' },
+            { label: 'Cushion', shape: 'cushion' },
+            { label: 'Heart', shape: 'heart' },
+          ] },
+          { label: 'Geometric', items: [
+            { label: 'Emerald', shape: 'emerald' },
+            { label: 'Princess', shape: 'princess' },
+            { label: 'Radiant', shape: 'radiant' },
+          ] },
+        ],
+        caption: 'Conceptual illustration — not to scale. The outline changes how the stone occupies space, but shape alone does not tell you carat weight, depth, cut quality or value. The Curved / Geometric grouping is visual, not gemological.',
+      },
+
+      { type: 'h2', text: 'Shape vs cut: what is the difference?' },
+      { type: 'p', text: 'Shape describes the stone\u2019s face-up outline or general form. Cut quality describes how proportions, facet arrangement, symmetry, polish and optical performance have been executed within that shape.' },
+      { type: 'ul', items: [
+        'Round = shape · round brilliant = a common cutting style associated with that shape',
+        'Emerald = an outline commonly associated with step-cut faceting',
+        'Radiant = a shape combined with a brilliant-style facet approach',
+      ] },
+      { type: 'quote', text: 'A diamond can be oval in shape and still be well cut or poorly cut. Shape tells you the outline. It does not by itself tell you quality.' },
+
+      { type: 'h2', text: 'Carat weight does not tell you face-up size' },
+      { type: 'p', text: 'Carat measures weight, not width. Two stones of the same carat can have different length, width, depth, face-up area and proportions.' },
+      { type: 'quote', text: 'A one-carat stone is not a standardized physical diameter across all shapes.' },
+
+      { type: 'h2', text: 'Face-up spread' },
+      { type: 'p', text: 'Face-up spread refers informally to how much visible surface area a stone occupies when viewed from above. Elongated shapes may create different visual coverage than compact shapes of similar weight, but spread depends on length, width, depth, proportions and stone shape together.' },
+      { type: 'p', text: 'Visual spread is a relationship between carat weight and geometry, not a guarantee attached to a shape name.' },
+
+      // DIAGRAM 2 — Same weight, different geometry
+      { type: 'diagram', variant: 'silhouettes',
+        title: 'Same weight does not mean same outline',
+        groups: [
+          { label: 'Same carat weight — conceptual', items: [
+            { label: 'Compact', shape: 'compact' },
+            { label: 'Elongated', shape: 'elongated' },
+            { label: 'Deeper profile', shape: 'deep' },
+          ] },
+        ],
+        caption: 'Conceptual illustration — not to scale. Carat is weight. Length, width and depth determine how that weight is distributed, which is why two stones with the same carat weight can look different from above.',
+      },
+
+      { type: 'h2', text: 'Round' },
+      { type: 'p', text: 'Round stones create rotational symmetry and a balanced outline.' },
+      { type: 'ul', items: [
+        'Symmetrical from all directions',
+        'Works with many setting styles',
+        'Easy to centre visually',
+        'Pairs naturally with straight or symmetrical shoulders',
+        'Halos can follow the circular outline or deliberately contrast it',
+      ] },
+      { type: 'p', text: 'For diamonds, round brilliant is one of the most common faceting styles. That does not automatically make a round diamond more brilliant than every fancy shape.' },
+      { type: 'note', label: 'Best suited to', text: 'Customers who want a visually balanced, highly adaptable centre-stone geometry.' },
+
+      { type: 'h2', text: 'Oval' },
+      { type: 'p', text: 'Oval stones elongate the round outline.' },
+      { type: 'ul', items: [
+        'Elongated face-up appearance',
+        'Can visually extend along the finger',
+        'Retains curved edges',
+        'Works with prongs, bezels and halos',
+        'Orientation is normally lengthwise but design can intentionally vary',
+      ] },
+      { type: 'p', text: 'Oval diamonds can display a bow-tie effect to varying degrees. Not every bow tie is a defect, and not every oval should have none.' },
+      { type: 'quote', text: 'An oval is not simply a stretched round. Its proportions strongly affect its character.' },
+
+      { type: 'h2', text: 'Pear' },
+      { type: 'p', text: 'Pear shape combines a rounded end with a tapered point, creating directional asymmetry.' },
+      { type: 'ul', items: [
+        'Orientation matters',
+        'The point may require deliberate protection',
+        'Halo geometry must follow the directional form',
+        'Shoulders may respond asymmetrically or symmetrically',
+      ] },
+      { type: 'p', text: 'The point can be protected by appropriate setting architecture such as a V-prong or bezel approach where suitable.' },
+      { type: 'quote', text: 'A pear has a front and a direction. The ring has to decide what to do with both.' },
+
+      { type: 'h2', text: 'Marquise' },
+      { type: 'p', text: 'Marquise stones are elongated with pointed ends.' },
+      { type: 'ul', items: [
+        'Strong directional silhouette',
+        'Long finger coverage',
+        'Symmetrical lengthwise geometry',
+        'Pointed tips require setting consideration',
+      ] },
+      { type: 'quote', text: 'The marquise creates extension. That length becomes part of the ring\u2019s architecture.' },
+
+      { type: 'h2', text: 'Emerald cut' },
+      { type: 'p', text: 'Emerald-cut stones typically use a rectangular or elongated outline, clipped corners and step-cut faceting.' },
+      { type: 'ul', items: [
+        'Broad flashes',
+        'Geometric symmetry',
+        'Visible internal architecture',
+        'Less "crushed ice" appearance than many brilliant-style fancy shapes',
+      ] },
+      { type: 'quote', text: 'Emerald cut is less about hiding structure and more about revealing it.' },
+
+      { type: 'h2', text: 'Princess' },
+      { type: 'p', text: 'Princess-cut stones typically have a square or near-square outline, pointed corners and brilliant-style faceting.' },
+      { type: 'ul', items: [
+        'Corners influence prong and setting decisions',
+        'Geometric outline works naturally with architectural rings',
+        'Halo geometry may stay square or soften around the corners',
+      ] },
+      { type: 'p', text: 'The corners are part of the identity — and part of what the setting must account for.' },
+
+      { type: 'h2', text: 'Cushion' },
+      { type: 'p', text: 'Cushion-shaped stones generally combine square or rectangular overall proportions with rounded corners and a softer perimeter. Cushion facet patterns and proportions vary substantially.' },
+      { type: 'quote', text: 'Cushion is a family of proportions rather than one exact outline.' },
+      { type: 'p', text: 'Potential character: softer than princess, more structured than round, adaptable to vintage-inspired or contemporary architecture.' },
+
+      { type: 'h2', text: 'Radiant' },
+      { type: 'p', text: 'Radiant-cut stones often combine a rectangular or square outline with clipped corners and brilliant-style faceting, creating a geometric outline with a different optical character from an emerald cut.' },
+      { type: 'quote', text: 'Radiant and emerald cuts can share a similar perimeter while behaving very differently visually.' },
+
+      { type: 'h2', text: 'Heart' },
+      { type: 'p', text: 'Heart-shaped stones have a cleft at the top, central symmetry and a pointed lower tip.' },
+      { type: 'ul', items: [
+        'Symmetry matters strongly',
+        'Point protection',
+        'Cleft definition',
+        'Orientation',
+        'Halo shape',
+      ] },
+      { type: 'quote', text: 'The symbolism is obvious. The geometry still has to work.' },
+
+      { type: 'h2', text: 'Other shapes' },
+      { type: 'p', text: 'Many additional shapes exist — asscher, trillion, kite, hexagonal, shield, portrait cuts and custom or fantasy cuts among them. The nine shapes in this guide are common starting points, not the limits of jewelry design.' },
+
+      { type: 'h2', text: 'Asscher vs emerald' },
+      { type: 'h3', text: 'Asscher' },
+      { type: 'p', text: 'Generally square or near-square, cropped corners, step-cut visual character.' },
+      { type: 'h3', text: 'Emerald' },
+      { type: 'p', text: 'Generally rectangular, elongated step-cut architecture.' },
+
+      { type: 'h2', text: 'Length-to-width ratio' },
+      { type: 'p', text: 'Length-to-width ratio describes the relationship between a stone\u2019s length and width. It affects whether a stone feels compact, balanced or elongated, and is particularly relevant for oval, pear, marquise, emerald, radiant and cushion shapes.' },
+      { type: 'quote', text: 'Ratio is a design preference within technical limits, not a universal beauty score.' },
+
+      // DIAGRAM 3 — Length-to-width concept
+      { type: 'diagram', variant: 'silhouettes',
+        title: 'One shape can have several personalities',
+        groups: [
+          { label: 'The same shape at three ratios', items: [
+            { label: 'Compact', shape: 'compact' },
+            { label: 'Balanced', shape: 'balanced' },
+            { label: 'Elongated', shape: 'elongated' },
+          ] },
+        ],
+        caption: 'Conceptual illustration — not to scale. Changing length relative to width can significantly alter the character of the same stone shape. There is no single proportion that is automatically correct for every design.',
+      },
+
+      { type: 'h2', text: 'How stone shape changes finger coverage' },
+      { type: 'p', text: 'Elongated stones can draw the eye vertically along the finger. Wider or compact shapes may create stronger lateral presence. But appearance depends on actual stone dimensions, halo, shoulders, side stones, finger proportions and ring scale.' },
+      { type: 'p', text: 'This guide does not prescribe which shape "flatters" any particular hand.' },
+
+      { type: 'h2', text: 'Shape and setting work together' },
+      { type: 'ul', items: [
+        'Round — prong, bezel, halo',
+        'Pear — setting must respond to the point',
+        'Princess — corners influence setting geometry',
+        'Emerald — setting may emphasize long architectural lines',
+      ] },
+      { type: 'p', text: 'For a fuller discussion of setting families, see Jewelry Setting Styles Explained (/journal/jewelry-setting-styles).' },
+      { type: 'quote', text: 'The setting should respond to the stone\u2019s geometry rather than forcing every shape into the same framework.' },
+
+      { type: 'h2', text: 'Vulnerable points and corners' },
+      { type: 'p', text: 'Certain stones — pear, marquise, princess, heart — have pointed corners or tips that deserve design consideration. Potential setting responses include V-prongs, protective prongs, bezels or structural surrounding metal.' },
+      { type: 'quote', text: 'A point is not a defect. It is a structural feature that the setting must acknowledge.' },
+
+      { type: 'h2', text: 'Shape and halo design' },
+      { type: 'p', text: 'Halo geometry can mirror the centre-stone outline, soften it, exaggerate it, or create a contrasting outer form — round around round, cushion halo around round, geometric halo around emerald, asymmetric treatment around pear.' },
+      { type: 'p', text: 'Halos are one option, not a requirement for any shape.' },
+
+      { type: 'h2', text: 'Shape and side stones' },
+      { type: 'p', text: 'Side stones can echo the centre shape, contrast it, extend width, create taper or introduce asymmetry — emerald centre with tapered baguettes, round centre with pears, oval centre with rounds, or unconventional combinations.' },
+
+      { type: 'h2', text: 'Shape and ring anatomy' },
+      { type: 'p', text: 'The centre-stone outline influences the head, basket, gallery, shoulder transition and overall width. Stone geometry propagates through the rest of the ring — see Engagement Ring Anatomy (/journal/engagement-ring-anatomy) for a full walkthrough.' },
+
+      { type: 'h2', text: 'Shape and wedding-band pairing' },
+      { type: 'p', text: 'A stone shape itself does not determine wedding-band fit. Head height, basket, halo, bridge and shoulder projection matter more than the outline of the centre stone.' },
+      { type: 'p', text: 'See Wedding Band Pairing Guide (/journal/wedding-band-pairing-guide) for the full pairing framework.' },
+
+      { type: 'h2', text: 'Shape and ring sizing' },
+      { type: 'p', text: 'The stone shape does not change the finger measurement itself, but a large elongated or wide centre architecture can affect balance, rotation, perceived scale and overall wear experience.' },
+      { type: 'p', text: 'Ring Sizing 101 (/journal/ring-sizing-guide) covers how width, temperature and knuckles affect fit.' },
+
+      { type: 'h2', text: 'Natural vs lab-grown and shape availability' },
+      { type: 'p', text: 'Both natural and lab-grown diamonds can be cut into many shapes. Availability and pricing can vary by shape, size, quality, current inventory and market conditions.' },
+      { type: 'p', text: 'For the natural / lab-grown decision itself, see Lab-Grown vs Natural Diamonds (/journal/lab-grown-vs-natural-diamonds).' },
+
+      { type: 'h2', text: 'Which shape gives the most sparkle?' },
+      { type: 'p', text: 'Optical performance depends on facet design, proportions, symmetry, polish and material quality — not shape name alone. Brilliant-style cuts produce many small, numerous flashes; step cuts produce broader, more architectural flashes. Both are valid visual languages.' },
+
+      { type: 'h2', text: 'Brilliant-style vs step-cut character' },
+      { type: 'h3', text: 'Brilliant-style examples' },
+      { type: 'p', text: 'Round brilliant, many ovals, pears, marquise, princess, radiant and many cushions.' },
+      { type: 'h3', text: 'Step-cut examples' },
+      { type: 'p', text: 'Emerald and asscher.' },
+      { type: 'quote', text: 'Brilliant and step-cut styles organize light differently. The preference is visual, not simply numerical.' },
+
+      { type: 'h2', text: 'Bow-tie effects' },
+      { type: 'p', text: 'Some elongated brilliant-style shapes — commonly oval, pear and marquise — can show darker "bow-tie" areas across the centre. Visibility and severity vary from stone to stone.' },
+      { type: 'quote', text: 'Judge the actual stone, not the shape category.' },
+
+      { type: 'h2', text: 'Symmetry' },
+      { type: 'p', text: 'Symmetry can matter visually, especially for pear, heart, oval, marquise and square or rectangular geometry.' },
+      { type: 'p', text: 'This article is not a substitute for professional grading.' },
+
+      { type: 'h2', text: 'Choosing shape from photographs' },
+      { type: 'p', text: 'Online images can distort perception due to camera angle, focal length, magnification, cropping, lighting and screen scale. A photograph can show character. It cannot reliably tell you physical scale without dimensions.' },
+
+      { type: 'h2', text: 'Choosing shape from dimensions' },
+      { type: 'p', text: 'Actual length, width and depth measurements are more useful than carat alone when understanding scale. For bespoke design, useful inputs may include exact length, width, depth, shape and orientation.' },
+
+      { type: 'h2', text: 'Should the stone shape match the wearer?' },
+      { type: 'quote', text: 'The stone should match the design intent, not a rule about what a particular hand is "supposed" to wear.' },
+      { type: 'p', text: 'Personal preference, ring architecture and intended visual character matter more than generic flattering rules. This guide does not use "short fingers should…" / "wide fingers should…" language.' },
+
+      { type: 'h2', text: 'Choosing a shape for bespoke work' },
+      { type: 'p', text: 'A bespoke project may start with a shape already loved, an existing stone, an emotional motif, an overall ring concept or a proportion rather than a shape name. Sometimes the stone drives the ring. Sometimes the ring concept determines the stone.' },
+      { type: 'p', text: 'See The Bespoke Jewelry Design Process (/journal/bespoke-jewelry-design-process) and PHILEON Custom Jewelry (/custom-jewelry-canada) for how the design conversation typically develops.' },
+
+      // DIAGRAM 4 — Shape → Ring architecture
+      { type: 'diagram', variant: 'decisions',
+        title: 'Change the shape, change the ring',
+        center: 'STONE SHAPE',
+        branches: [
+          { label: 'Setting', items: ['Prong', 'Bezel', 'Halo', 'Other'] },
+          { label: 'Profile', items: ['Low', 'Elevated', 'Sculptural'] },
+          { label: 'Shoulders', items: ['Straight', 'Tapered', 'Split', 'Asymmetrical'] },
+          { label: 'Side stones', items: ['None', 'Matching', 'Contrasting', 'Graduated'] },
+          { label: 'Band relationship', items: ['Independent', 'Flush-capable', 'Contoured pairing', 'Custom relationship'] },
+        ],
+        caption: 'Conceptual illustration — not to scale. The stone shape does not determine every decision, but it changes the design problem every other part of the ring has to solve. These branches ultimately converge on the final ring architecture.',
+      },
+
+      { type: 'h2', text: 'How should you choose?' },
+      { type: 'p', text: 'Instead of "what shape is best?", ask:' },
+      { type: 'ul', items: [
+        'Do I want symmetry or direction?',
+        'Curved or geometric?',
+        'Compact or elongated?',
+        'Open brilliant character or architectural step-cut character?',
+        'Minimal setting or metal-forward setting?',
+        'Will the stone lead the design or integrate into a larger composition?',
+      ] },
+      { type: 'quote', text: 'Choose the stone that creates the right design problem for the ring you want to make.' },
+
+      { type: 'h2', text: 'What does PHILEON recommend?' },
+      { type: 'quote', text: 'Start with the outline, then design everything that has to answer it.' },
+      { type: 'p', text: 'A stone should not be selected because a chart says it is the most flattering, or because one shape is currently fashionable.' },
+      { type: 'p', text: 'Look at actual proportions, actual dimensions, facet character, setting, scale and the architecture that will surround it.' },
+      { type: 'quote', text: 'The strongest choice is the one that gives the whole piece somewhere coherent to go.' },
+
+      { type: 'h2', text: 'Quick shape guide' },
+      { type: 'table', headers: ['Shape', 'Visual character', 'Key design consideration'], rows: [
+        ['Round', 'Balanced / rotational', 'Highly adaptable geometry'],
+        ['Oval', 'Elongated / curved', 'Proportion and bow-tie evaluation'],
+        ['Pear', 'Directional / asymmetrical', 'Point protection and orientation'],
+        ['Marquise', 'Long / pointed', 'Tip protection and proportion'],
+        ['Emerald', 'Architectural / step-cut', 'Clarity of geometry and proportion'],
+        ['Princess', 'Square / sharp', 'Corner protection'],
+        ['Cushion', 'Soft geometric', 'Wide variation in proportions and faceting'],
+        ['Radiant', 'Geometric / brilliant-style', 'Balance of outline and facet character'],
+        ['Heart', 'Symbolic / directional', 'Symmetry, cleft and point geometry'],
+      ] },
+      { type: 'note', label: 'Note', text: 'These are design observations, not quality rankings.' },
+
+      { type: 'cta', heading: 'Choosing a stone shape? Ask PHILEON.', text: 'Send us the shape, stone, certificate, dimensions or reference you\u2019re considering. We can help you think through proportion, setting, orientation and how that stone could influence the architecture of the finished piece.', buttonLabel: 'ASK PHILEON' },
+
+      { type: 'links', heading: 'Continue the PHILEON Journal', items: [
+        { label: 'Choosing between lab-grown and natural diamonds', href: '/journal/lab-grown-vs-natural-diamonds' },
+        { label: 'Understanding setting styles', href: '/journal/jewelry-setting-styles' },
+        { label: 'Understanding engagement-ring anatomy', href: '/journal/engagement-ring-anatomy' },
+        { label: 'Finding the right ring size', href: '/journal/ring-sizing-guide' },
+        { label: 'Pairing an engagement ring and wedding band', href: '/journal/wedding-band-pairing-guide' },
+        { label: 'Understanding the bespoke process', href: '/journal/bespoke-jewelry-design-process' },
+      ] },
+
+      { type: 'links', heading: 'Explore PHILEON Rings', items: [
+        { label: "Women's Rings", href: '/womens-rings' },
+        { label: "Men's Rings", href: '/mens-rings' },
+        { label: 'Statement Rings', href: '/statement-rings' },
+        { label: 'Fine Jewelry', href: '/fine-jewelry' },
+        { label: 'Custom Jewelry', href: '/custom-jewelry-canada' },
+      ] },
+    ],
+    faq: [
+      { q: 'Which diamond shape looks the largest?', a: 'There is no universal answer. Face-up appearance depends on the stone\u2019s actual length, width, depth and proportions, not just its shape or carat weight.' },
+      { q: 'What is the most popular engagement-ring stone shape?', a: 'Popularity changes over time and by market. This guide does not recommend choosing a shape based on trend ranking; the better question is which geometry suits the design you want.' },
+      { q: 'Are oval diamonds better than round diamonds?', a: 'No. They create different proportions and visual effects. Quality depends on the individual stone and how it is cut, graded, proportioned and set.' },
+      { q: 'Are pointed shapes more fragile?', a: 'Points and corners can be more exposed than rounded edges and should be considered in the setting design, but the overall durability of a ring depends on the stone, setting, construction and wear.' },
+      { q: 'Does carat weight tell me how big a diamond will look?', a: 'Not by itself. Carat measures weight. Face-up dimensions and proportions determine how much visual area the stone occupies.' },
+    ],
+  },
+  {
     slug: 'bespoke-jewelry-design-process',
     title: 'The Bespoke Jewelry Design Process: From Idea to Finished Piece',
     seoTitle: 'Bespoke Jewelry Design Process: From Idea to Finished Piece | PHILEON',

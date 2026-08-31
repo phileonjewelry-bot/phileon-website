@@ -270,6 +270,26 @@ export function JournalArticlePage() {
                       <div className="phileon-diagram__matrixCenter" aria-hidden="true">{block.center || 'THE FINISHED OBJECT'}</div>
                     </div>
                   )}
+                  {block.variant === 'silhouettes' && (
+                    <div className="phileon-diagram__silhouettes">
+                      {(block.groups || [{ label: null, items: block.items || [] }]).map((g, gi) => (
+                        <div key={gi} className="phileon-diagram__silGroup">
+                          {g.label && <p className="phileon-diagram__silGroupLabel">{g.label}</p>}
+                          <div className="phileon-diagram__silGrid">
+                            {(g.items || []).map((it, k) => (
+                              <figure key={k} className="phileon-diagram__silCell">
+                                <svg viewBox="0 0 60 60" className="phileon-diagram__silSvg" role="img" aria-label={it.label}>
+                                  <title>{it.label}</title>
+                                  <ShapeOutline shape={it.shape} />
+                                </svg>
+                                <figcaption className="phileon-diagram__silLabel">{it.label}</figcaption>
+                              </figure>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {block.caption && (
                     <p className="phileon-diagram__caption">{block.caption}</p>
                   )}
@@ -374,6 +394,26 @@ const styles = {
 // a { type: 'diagram' } block. Palette matches the Journal styles
 // object above (rose #c48369 · ink #f4e4dc · dark background).
 // ────────────────────────────────────────────────────────────────
+
+// Reusable stone-shape outlines used by the `silhouettes` diagram variant.
+// Single-stroke geometry only, no fill, restrained rose-gold hairlines.
+const SHAPE_PATHS = {
+  round:     <circle cx="30" cy="30" r="20" />,
+  oval:      <ellipse cx="30" cy="30" rx="14" ry="20" />,
+  pear:      <path d="M30 10 C40 22, 44 34, 30 50 C16 34, 20 22, 30 10 Z" />,
+  marquise:  <path d="M30 8 C42 20, 42 40, 30 52 C18 40, 18 20, 30 8 Z" />,
+  emerald:   <path d="M18 12 L42 12 L48 20 L48 40 L42 48 L18 48 L12 40 L12 20 Z" />,
+  princess:  <rect x="12" y="12" width="36" height="36" />,
+  cushion:   <path d="M18 10 L42 10 Q50 10 50 18 L50 42 Q50 50 42 50 L18 50 Q10 50 10 42 L10 18 Q10 10 18 10 Z" />,
+  radiant:   <path d="M20 10 L40 10 L48 18 L48 42 L40 50 L20 50 L12 42 L12 18 Z" />,
+  heart:     <path d="M30 50 C18 40, 8 30, 12 20 C15 12, 24 12, 30 20 C36 12, 45 12, 48 20 C52 30, 42 40, 30 50 Z" />,
+  compact:   <rect x="15" y="18" width="30" height="24" rx="2" />,
+  balanced:  <rect x="10" y="18" width="40" height="24" rx="2" />,
+  elongated: <rect x="6" y="20" width="48" height="20" rx="2" />,
+  deep:      <rect x="18" y="10" width="24" height="40" rx="2" />,
+};
+const ShapeOutline = ({ shape }) => SHAPE_PATHS[shape] || null;
+
 const DIAGRAM_CSS = `
 .phileon-diagram { margin: 48px 0; padding: 0; }
 .phileon-diagram__title {
@@ -478,5 +518,43 @@ const DIAGRAM_CSS = `
   color: #c48369; grid-column: 1 / -1;
   background: rgba(196,131,105,0.06);
   border-top: 1px solid rgba(196,131,105,0.24);
+}
+
+/* Silhouettes — labeled outline grid */
+.phileon-diagram__silhouettes {
+  border: 1px solid rgba(196,131,105,0.2);
+  padding: 24px 16px;
+}
+.phileon-diagram__silGroup + .phileon-diagram__silGroup {
+  margin-top: 28px; padding-top: 24px;
+  border-top: 1px solid rgba(196,131,105,0.14);
+}
+.phileon-diagram__silGroupLabel {
+  letter-spacing: 0.28em; text-transform: uppercase;
+  font-size: 11px; color: #c48369;
+  margin: 0 0 18px; text-align: center;
+}
+.phileon-diagram__silGrid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 20px 12px;
+}
+@media (min-width: 520px) {
+  .phileon-diagram__silGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px) {
+  .phileon-diagram__silGrid { grid-template-columns: repeat(6, 1fr); }
+}
+.phileon-diagram__silCell {
+  margin: 0; display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+}
+.phileon-diagram__silSvg {
+  width: 60px; height: 60px;
+  stroke: #c48369; stroke-width: 1.2; fill: none;
+  overflow: visible;
+}
+.phileon-diagram__silLabel {
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(244,228,220,0.88); text-align: center;
 }
 `;
