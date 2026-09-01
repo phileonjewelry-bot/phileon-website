@@ -322,16 +322,30 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
     )
 
     try:
-        session = stripe.checkout.Session.create(
-            automatic_payment_methods={"enabled": True, "allow_redirects": "always"},
-            idempotency_key=hashlib.sha256(f"session:{idem}".encode()).hexdigest(),
-            **session_kwargs,
-        )
+        # `automatic_payment_methods` is only accepted on newer Stripe API
+        # versions; when the installed SDK / configured API version rejects
+        # it, retry once with Stripe's default payment-method behaviour so
+        # the Checkout Session still creates safely with the same trusted
+        # amount, currency, and metadata.
+        try:
+            session = stripe.checkout.Session.create(
+                automatic_payment_methods={"enabled": True, "allow_redirects": "always"},
+                idempotency_key=hashlib.sha256(f"session:{idem}".encode()).hexdigest(),
+                **session_kwargs,
+            )
+        except stripe.error.InvalidRequestError as ire:  # type: ignore
+            if "automatic_payment_methods" in (str(getattr(ire, "param", "") or "") + str(ire)):
+                session = stripe.checkout.Session.create(
+                    idempotency_key=hashlib.sha256(f"session-apm-off:{idem}".encode()).hexdigest(),
+                    **session_kwargs,
+                )
+            else:
+                raise
     except stripe.error.StripeError as e:  # type: ignore
         logger.error(f"Stripe error: {type(e).__name__}")
         raise HTTPException(status_code=502, detail={"code": "STRIPE_ERROR", "message": "Payment provider error."})
     except TypeError:
-        # Older SDK without automatic_payment_methods: fall back gracefully.
+        # Older SDK signature: fall back without keyword-only extras.
         session = stripe.checkout.Session.create(**session_kwargs)
 
     await db.orders_v2.update_one({"id": order.id}, {"$set": {
