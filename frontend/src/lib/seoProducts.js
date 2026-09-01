@@ -58,13 +58,21 @@ export const BAJAN_JOE_SEO = {
 
 export const RIBBON_REGALE_EDITION_SEO = {
   slug: 'ribbon-regale-edition', name: 'RIBBON REGALE ÉDITION',
-  productType: 'Diamond Ribbon Statement Ring',
-  category: 'rings', audience: ['ladies', 'fine-jewelry'],
-  material: '10K / 14K White Gold with Diamonds',
+  productType: 'Sculptural Yellow Gold Statement Earrings',
+  category: 'earrings', audience: ['ladies', 'fine-jewelry'],
+  material: '18K Yellow Gold Plated Sterling Silver, or Solid 10K / 14K / 18K Yellow Gold',
   href: '/fine-jewelry/ribbon-regale-edition',
-  description: 'A ribbon rendered in white gold and diamonds — architectural bow ring with tension-set diamond passages.',
+  // Owner-approved direct USD tier prices — fixed, no FX conversion.
+  priceAmount: 350, priceCurrency: 'USD', availability: 'InStock',
+  offerVariants: [
+    { name: 'RIBBON REGALE ÉDITION — 18K Yellow Gold Plated Sterling Silver', priceAmount: 350,  priceCurrency: 'USD', availability: 'InStock', sku: 'RRED-GPSS' },
+    { name: 'RIBBON REGALE ÉDITION — 10K Solid Yellow Gold',                   priceAmount: 1100, priceCurrency: 'USD', availability: 'InStock', sku: 'RRED-10KYG' },
+    { name: 'RIBBON REGALE ÉDITION — 14K Solid Yellow Gold',                   priceAmount: 1400, priceCurrency: 'USD', availability: 'InStock', sku: 'RRED-14KYG' },
+    { name: 'RIBBON REGALE ÉDITION — 18K Solid Yellow Gold',                   priceAmount: 1800, priceCurrency: 'USD', availability: 'InStock', sku: 'RRED-18KYG' },
+  ],
+  description: 'Sculptural ribbon-and-bow earrings in yellow gold — an original PHILEON design reissued as Fine Jewelry. 18K yellow-gold plated sterling silver, or solid 10K, 14K and 18K yellow gold.',
   seo: {
-    keywords: ['diamond ribbon ring','bow ring','luxury white gold ring','statement ring','PHILEON ribbon regale'],
+    keywords: ['sculptural yellow gold earrings','ribbon earrings','solid gold earrings','luxury statement earrings','PHILEON ribbon regale'],
   },
 };
 

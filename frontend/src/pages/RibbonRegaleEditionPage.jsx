@@ -28,11 +28,14 @@ const VIDEO_1_POSTER    = `${BASE}/video-1-poster.jpg`;
 const VIDEO_2           = `${BASE}/video-2.mp4`;
 const VIDEO_2_POSTER    = `${BASE}/video-2-poster.jpg`;
 
-// ── PRICES (CAD) ────────────────────────────────────────────────────────────
-const PRICE_GOLD_PLATED_STERLING_SILVER_CAD = 495;
-const PRICE_10K_SOLID_YELLOW_GOLD_CAD       = 1495;
-const PRICE_14K_SOLID_YELLOW_GOLD_CAD       = 1895;
-const PRICE_18K_SOLID_YELLOW_GOLD_CAD       = 2395;
+// ── PRICES (USD · direct fixed, owner-approved) ─────────────────────────────
+// Historical CAD anchors ($495 / $1,495 / $1,895 / $2,395 CAD) were converted
+// once via the sitewide luxury USD rule and locked in as the permanent USD
+// selling prices. No runtime FX conversion is applied to these values.
+const PRICE_GOLD_PLATED_STERLING_SILVER_USD = 350;
+const PRICE_10K_SOLID_YELLOW_GOLD_USD       = 1100;
+const PRICE_14K_SOLID_YELLOW_GOLD_USD       = 1400;
+const PRICE_18K_SOLID_YELLOW_GOLD_USD       = 1800;
 const CURRENCY_CODE = "USD";
 
 const METAL_OPTIONS = [
@@ -41,7 +44,7 @@ const METAL_OPTIONS = [
     shortLabel: "Gold Plated",
     label: "GOLD PLATED STERLING SILVER",
     cartMetalLabel: "18K Yellow Gold Plated Sterling Silver",
-    price: PRICE_GOLD_PLATED_STERLING_SILVER_CAD,
+    price: PRICE_GOLD_PLATED_STERLING_SILVER_USD,
     sku: "RRED-GPSS",
     baseMetal: "Sterling Silver",
     finish: "18K Yellow Gold Plated",
@@ -52,7 +55,7 @@ const METAL_OPTIONS = [
     shortLabel: "10K",
     label: "10K YELLOW GOLD",
     cartMetalLabel: "10K Solid Yellow Gold",
-    price: PRICE_10K_SOLID_YELLOW_GOLD_CAD,
+    price: PRICE_10K_SOLID_YELLOW_GOLD_USD,
     sku: "RRED-10KYG",
     karat: "10K",
     isSolidGold: true,
@@ -62,7 +65,7 @@ const METAL_OPTIONS = [
     shortLabel: "14K",
     label: "14K YELLOW GOLD",
     cartMetalLabel: "14K Solid Yellow Gold",
-    price: PRICE_14K_SOLID_YELLOW_GOLD_CAD,
+    price: PRICE_14K_SOLID_YELLOW_GOLD_USD,
     sku: "RRED-14KYG",
     karat: "14K",
     isSolidGold: true,
@@ -72,7 +75,7 @@ const METAL_OPTIONS = [
     shortLabel: "18K",
     label: "18K YELLOW GOLD",
     cartMetalLabel: "18K Solid Yellow Gold",
-    price: PRICE_18K_SOLID_YELLOW_GOLD_CAD,
+    price: PRICE_18K_SOLID_YELLOW_GOLD_USD,
     sku: "RRED-18KYG",
     karat: "18K",
     isSolidGold: true,
@@ -92,7 +95,7 @@ const GALLERY = [
   { type: "image", src: PAIR_WHITE,        alt: "RIBBON REGALE ÉDITION — the pair on a white background" },
 ];
 
-function formatCad(n) {
+function formatUsd(n) {
   return `$${Number(n).toLocaleString("en-US")} ${CURRENCY_CODE}`;
 }
 
@@ -510,7 +513,7 @@ export default function RibbonRegaleEditionPage() {
                 data-testid={`rre-metal-${m.id}`}
               >
                 <span className="metal-name">{m.label}</span>
-                <span className="metal-price">{formatCad(m.price)}</span>
+                <span className="metal-price">{formatUsd(m.price)}</span>
               </button>
             );
           })}
@@ -555,7 +558,7 @@ export default function RibbonRegaleEditionPage() {
         </section>
 
         <div className="rre-cta" data-testid="rre-cta">
-          <p className="rre-price" data-testid="rre-price">{formatCad(activePrice)}</p>
+          <p className="rre-price" data-testid="rre-price">{formatUsd(activePrice)}</p>
           <p className="rre-price-note">
             PHILEON Fine Jewelry · Sold as one pair · Prices in {CURRENCY_CODE}
           </p>

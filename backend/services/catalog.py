@@ -4,7 +4,7 @@ prices, currency and SKU identity. Never trust client-supplied values.
 
 Supported products:
   - scacco-matto             (USD) — Phase 1 pilot ring · static price
-  - ribbon-regale-edition    (CAD) — Fine Jewelry earring, 4 metal variants · static price
+  - ribbon-regale-edition    (USD) — Fine Jewelry earring, 4 metal variants · static USD price
   - quadriga-dominus         (USD) — Gents statement ring · static price
   - bajan-joe                (USD) — Signet ring · static price
   - la-marva                 (CAD) — Live-priced dynamic ring
@@ -30,12 +30,17 @@ _SCACCO_PRICE_CENTS_USD = {
 _SCACCO_VALID_SIZES = {"4","4.5","5","5.5","6","6.5","7","7.5","8","8.5","9","9.5","10","10.5","11","11.5","12","custom"}
 
 # ---------------------------------------------------------------------------
-# RIBBON REGALE ÉDITION — CAD (Fine Jewelry earring, 4 metals)
+# RIBBON REGALE ÉDITION — USD (Fine Jewelry earring, 4 metals · fixed USD price)
 # ---------------------------------------------------------------------------
+# Owner-approved direct USD anchors — no runtime FX conversion.
+# Historical CAD selling prices ($495 / $1,495 / $1,895 / $2,395 CAD)
+# converted once via the sitewide luxury USD rule and locked in as the
+# permanent USD price for this product. `_resolve_ribbon_regale_edition`
+# returns these cents directly; `cad_to_usd_luxury` is NOT applied here.
 _RRE_METALS: Dict[str, Dict] = {
     "plated": {
         "sku": "RRED-GPSS",
-        "unit_amount_cents": 49500,
+        "unit_amount_cents": 35000,
         "metal_label": "18K Yellow Gold Plated Sterling Silver",
         "base_metal": "Sterling Silver",
         "finish": "18K Yellow Gold Plated",
@@ -43,17 +48,17 @@ _RRE_METALS: Dict[str, Dict] = {
         "is_solid_gold": False,
     },
     "10k": {
-        "sku": "RRED-10KYG", "unit_amount_cents": 149500,
+        "sku": "RRED-10KYG", "unit_amount_cents": 110000,
         "metal_label": "10K Solid Yellow Gold", "base_metal": None, "finish": None,
         "karat": "10K", "is_solid_gold": True,
     },
     "14k": {
-        "sku": "RRED-14KYG", "unit_amount_cents": 189500,
+        "sku": "RRED-14KYG", "unit_amount_cents": 140000,
         "metal_label": "14K Solid Yellow Gold", "base_metal": None, "finish": None,
         "karat": "14K", "is_solid_gold": True,
     },
     "18k": {
-        "sku": "RRED-18KYG", "unit_amount_cents": 239500,
+        "sku": "RRED-18KYG", "unit_amount_cents": 180000,
         "metal_label": "18K Solid Yellow Gold", "base_metal": None, "finish": None,
         "karat": "18K", "is_solid_gold": True,
     },
@@ -435,10 +440,8 @@ def _resolve_ribbon_regale_edition(variant_key, quantity):
     if key not in _RRE_METALS:
         raise CatalogError(f"INVALID_VARIANT: '{variant_key}' is not a valid RIBBON REGALE ÉDITION metal.")
     m = _RRE_METALS[key]
-    # PHILEON is USD-only sitewide. Convert the CAD-anchored variant price
-    # to USD via the single authoritative helper.
-    from services.pricing_engine_catalog import cad_to_usd_luxury
-    unit_cents_usd = int(cad_to_usd_luxury(m["unit_amount_cents"] / 100.0)) * 100
+    # RIBBON REGALE ÉDITION is priced in direct USD (fixed price). No FX
+    # conversion — `_RRE_METALS.unit_amount_cents` is the final USD amount.
     return {
         "product_id": "ribbon-regale-edition",
         "product_name": "RIBBON REGALE ÉDITION",
@@ -447,7 +450,7 @@ def _resolve_ribbon_regale_edition(variant_key, quantity):
         "sku": m["sku"],
         "variant": f"{m['metal_label']} · One Pair",
         "karat": m["karat"], "metal_colour": m["metal_label"], "ring_size": None,
-        "unit_amount_cents": unit_cents_usd, "currency": "USD", "quantity": quantity,
+        "unit_amount_cents": m["unit_amount_cents"], "currency": "USD", "quantity": quantity,
         "image": "/inspiration-vault/gold-theory-ribbon/hero-pair-black.png",
         "metadata": {
             "product_slug": "ribbon-regale-edition", "sku": m["sku"],

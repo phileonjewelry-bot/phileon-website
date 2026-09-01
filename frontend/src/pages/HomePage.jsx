@@ -388,11 +388,11 @@ const HomePage = () => {
             title: "RIBBON REGALE ÉDITION",
             image: "/inspiration-vault/gold-theory-ribbon/hero-pair-black.png",
             href: "/ribbon-regale-edition",
-            subtitle: "The Fine Jewelry reissue of the sculptural ribbon earrings. 18K yellow-gold plated sterling silver, or solid 10K, 14K and 18K yellow gold. FROM $495 CAD",
+            subtitle: "The Fine Jewelry reissue of the sculptural ribbon earrings. 18K yellow-gold plated sterling silver, or solid 10K, 14K and 18K yellow gold. FROM $350 USD",
             editorialOverlay: {
               dimLine: "THEY SELL IT IN BRASS.",
               dominantLine: "WE MAKE IT IN GOLD.",
-              priceLine: "From $495 CAD",
+              priceLine: "From $350 USD",
             },
           },
           {
