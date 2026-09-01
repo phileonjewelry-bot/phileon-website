@@ -107,27 +107,33 @@ def test_dynamic_resolver_requires_market_snapshot(slug, tier, size):
     ("ovation",           "white18k",      "US 10", 140000),
 ])
 def test_dynamic_pricing_at_reference_market(slug, tier, size, cents):
+    """`cents` in this parametrize is the historical CAD amount (kept as
+    the human-readable anchor). Post-migration the resolver returns USD via
+    cad_to_usd_luxury, so we convert once here to build the expected."""
+    from services.pricing_engine_catalog import cad_to_usd_luxury
+    expected_usd_cents = int(cad_to_usd_luxury(cents / 100.0)) * 100
     r = resolve_line_item(slug, None, None, size, 1, tier=tier, market_snapshot=FRESH_MARKET)
-    assert r["currency"] == "CAD"
-    assert r["unit_amount_cents"] == cents
+    assert r["currency"] == "USD"
+    assert r["unit_amount_cents"] == expected_usd_cents
     assert r["is_dynamic_priced"] is True
 
 
 # ────────────────────────  Market movement (Au +$5/g)  ───────────────────────
 def test_gold_price_uplift_moves_only_gold_tiers():
     """+$5/g on 24K gold. LA MARVA foundation (10K, 18g) should move by:
-       0.416667 * 5 * 18 = $37.50 → rounded to $50 luxury increment. So
-       new price = 8000 + 50 = 8050. Silver-only tiers stay unchanged.
+       0.416667 * 5 * 18 = $37.50 → rounded to $50 luxury increment (CAD).
+       Post-migration the CAD result then converts to USD via cad_to_usd_luxury.
     """
+    from services.pricing_engine_catalog import cad_to_usd_luxury
     up_market = {**FRESH_MARKET, "goldPerGram24kCad": 155.0}
     r_la = resolve_line_item("la-marva", None, None, "US 6", 1, tier="foundation",
                              market_snapshot=up_market)
-    assert r_la["unit_amount_cents"] == 805000  # $8,050
+    assert r_la["unit_amount_cents"] == int(cad_to_usd_luxury(8050)) * 100
 
     r_silver = resolve_line_item("rhythm-mesh-ring", None, None, "US 10", 1,
                                  tier="foundation", market_snapshot=up_market)
     # Sterling silver tier unaffected by gold spot movement.
-    assert r_silver["unit_amount_cents"] == 145000
+    assert r_silver["unit_amount_cents"] == int(cad_to_usd_luxury(1450)) * 100
 
 
 # ────────────────────────  Invalid tier / size  ─────────────────────────────
@@ -166,7 +172,9 @@ def test_client_supplied_price_ignored():
     # influence the outcome by construction. The server value is fixed.
     r = resolve_line_item("tola-ii", None, None, "US 10", 1,
                           tier="foundation", market_snapshot=FRESH_MARKET)
-    assert r["unit_amount_cents"] == 520000
+    # Post USD-only migration: 520000 CAD cents → 400000 USD cents.
+    from services.pricing_engine_catalog import cad_to_usd_luxury
+    assert r["unit_amount_cents"] == int(cad_to_usd_luxury(5200)) * 100
 
 
 # ────────────────────────  Market-safety semantics via metal_spot  ─────────────
@@ -233,9 +241,10 @@ def test_regression_scacco_still_static_usd():
     r = resolve_line_item("scacco-matto", "10K", "Yellow Gold", "US 7", 1)
     assert r["currency"] == "USD" and r["unit_amount_cents"] == 390000
 
-def test_regression_rre_still_static_cad():
+def test_regression_rre_migrated_to_usd():
+    """Post Feb 2026 USD-only migration: RRE 14K CAD $1,895 → USD $1,400."""
     r = resolve_line_item("ribbon-regale-edition", None, None, None, 1, variant="14k")
-    assert r["currency"] == "CAD" and r["unit_amount_cents"] == 189500
+    assert r["currency"] == "USD" and r["unit_amount_cents"] == 140000
 
 def test_regression_quadriga_still_static_usd():
     r = resolve_line_item("quadriga-dominus", "14K", "red-black", "US 11", 1)
@@ -246,19 +255,23 @@ def test_regression_bajan_joe_still_static_795_usd():
     assert r["currency"] == "USD" and r["unit_amount_cents"] == 79500
 
 
-# ────────────────────────  Mixed-currency guard: dynamic + static  ────────
-def test_mixed_currency_rejected_bajan_usd_plus_parabola_cad():
+# ────────────────────────  Defensive mixed-currency guard  ────────────────
+def test_mixed_currency_defensive_guard_via_fabricated_cad():
+    """Post USD-only migration no legitimate product yields CAD. Fabricate a
+    CAD-tagged resolver output at the seam to prove the defensive guard is
+    still active in compute_totals."""
     r_usd = resolve_line_item("bajan-joe", None, None, "US 10", 1, variant="polish")
-    r_cad = resolve_line_item("parabola", None, None, "US 6", 1,
-                              tier="sterling", market_snapshot=FRESH_MARKET)
+    r_para = resolve_line_item("parabola", None, None, "US 6", 1,
+                                tier="sterling", market_snapshot=FRESH_MARKET)
+    fabricated_cad = {**r_para, "currency": "CAD"}
     with pytest.raises(CatalogError, match="MIXED_CURRENCY_CART"):
-        compute_totals([r_usd, r_cad])
+        compute_totals([r_usd, fabricated_cad])
 
-def test_two_dynamic_cad_items_ok():
+def test_two_dynamic_items_ok_all_usd():
     a = resolve_line_item("la-marva", None, None, "US 6", 1,
                           tier="foundation", market_snapshot=FRESH_MARKET)
     b = resolve_line_item("tola-ii", None, None, "US 10", 1,
                           tier="foundation", market_snapshot=FRESH_MARKET)
     t = compute_totals([a, b])
-    assert t["currency"] == "CAD"
+    assert t["currency"] == "USD"
     assert t["subtotal_cents"] == a["unit_amount_cents"] + b["unit_amount_cents"]

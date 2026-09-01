@@ -125,7 +125,7 @@ const parabolaHeritageProduct = {
   category: "ring",
   sizeProfile: "gents",
   collection: "Gentleman's Club",
-  currency: "CAD",
+  currency: "USD",
   tagline: "Built to outlast its first owner.",
 
   tiers: {

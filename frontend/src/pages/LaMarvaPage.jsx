@@ -12,7 +12,7 @@ const laMarvaProduct = {
   category: "ring",
   sizeProfile: "ladies",
   collection: "Core Collection",
-  currency: "CAD",
+  currency: "USD",
   tagline: "Soft in tone. Strong in spirit.",
   
   tiers: {

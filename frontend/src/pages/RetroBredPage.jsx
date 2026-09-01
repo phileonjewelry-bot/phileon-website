@@ -78,7 +78,7 @@ export default function RetroBredPage() {
       name: `RETRO BRED — ${currentTier.name} · ${currentTier.metal}`,
       image: IMG_HERO,
       price: currentTier.price,
-      currency: "CAD",
+      currency: "USD",
       productKey: "retro-bred",
       slug: "retro-bred",
       tierKey,

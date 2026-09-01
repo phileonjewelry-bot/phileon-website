@@ -85,12 +85,12 @@ def test_bajan_joe_client_supplied_price_ignored():
     assert r["unit_amount_cents"] == 79500  # trusted server value, never client-driven
 
 
-# ────────────────────────  RIBBON REGALE ÉDITION (CAD)  ────────────────────────
+# ────────────────────────  RIBBON REGALE ÉDITION (USD, post 2026-02 migration)  ─
 @pytest.mark.parametrize("variant, expected_cents, expected_sku", [
-    ("plated", 49500,  "RRED-GPSS"),
-    ("10k",    149500, "RRED-10KYG"),
-    ("14k",    189500, "RRED-14KYG"),
-    ("18k",    239500, "RRED-18KYG"),
+    ("plated", 35000,  "RRED-GPSS"),
+    ("10k",    110000, "RRED-10KYG"),
+    ("14k",    140000, "RRED-14KYG"),
+    ("18k",    180000, "RRED-18KYG"),
 ])
 def test_rre_all_four_variants_resolve_correctly(variant, expected_cents, expected_sku):
     r = resolve_line_item("ribbon-regale-edition", None, None, None, 1, variant=variant)
@@ -98,13 +98,13 @@ def test_rre_all_four_variants_resolve_correctly(variant, expected_cents, expect
     assert r["product_name"] == "RIBBON REGALE ÉDITION"
     assert r["unit_amount_cents"] == expected_cents
     assert r["sku"] == expected_sku
-    assert r["currency"] == "CAD"
+    assert r["currency"] == "USD"
     assert r["quantity"] == 1
 
 def test_rre_variant_accepts_karat_field_as_tierkey():
     # Frontend uses `karat` field to carry the tier key ("plated"/"10k"/"14k"/"18k")
     r = resolve_line_item("ribbon-regale-edition", "18k", None, None, 1)
-    assert r["unit_amount_cents"] == 239500
+    assert r["unit_amount_cents"] == 180000
     assert r["sku"] == "RRED-18KYG"
 
 def test_rre_case_insensitive_variant():
@@ -230,9 +230,9 @@ def test_quantity_bounds():
 def test_compute_totals_rre_cad():
     r14 = resolve_line_item("ribbon-regale-edition", None, None, None, 2, variant="14k")
     t = compute_totals([r14])
-    assert t["currency"] == "CAD"
-    assert t["subtotal_cents"] == 189500 * 2
-    assert t["total_cents"] == 189500 * 2
+    assert t["currency"] == "USD"
+    assert t["subtotal_cents"] == 140000 * 2
+    assert t["total_cents"] == 140000 * 2
 
 def test_compute_totals_quadriga_usd():
     r = resolve_line_item("quadriga-dominus", "14K", "red-black", "US 11", 1)
@@ -246,18 +246,21 @@ def test_compute_totals_scacco_usd_preserved():
     assert t["currency"] == "USD"
 
 def test_compute_totals_mixed_currency_rejected():
-    rre  = resolve_line_item("ribbon-regale-edition", None, None, None, 1, variant="14k")
-    quad = resolve_line_item("quadriga-dominus", "14K", "red-black", "US 11", 1)
+    """Post USD-only migration, no legitimate product yields CAD, so we
+    fabricate a hand-crafted mixed-currency payload directly at the totals
+    layer to prove the defensive guard is still active."""
+    usd_item = resolve_line_item("quadriga-dominus", "14K", "red-black", "US 11", 1)
+    fabricated_cad = {**usd_item, "currency": "CAD"}
     with pytest.raises(CatalogError, match="MIXED_CURRENCY_CART"):
-        compute_totals([rre, quad])
+        compute_totals([usd_item, fabricated_cad])
 
 def test_compute_totals_same_currency_multi_item_ok():
     # Two RRE items — same currency, must succeed
     a = resolve_line_item("ribbon-regale-edition", None, None, None, 1, variant="plated")
     b = resolve_line_item("ribbon-regale-edition", None, None, None, 1, variant="18k")
     t = compute_totals([a, b])
-    assert t["currency"] == "CAD"
-    assert t["subtotal_cents"] == 49500 + 239500
+    assert t["currency"] == "USD"
+    assert t["subtotal_cents"] == 35000 + 180000
 
 def test_compute_totals_empty_cart_rejected():
     with pytest.raises(CatalogError, match="EMPTY_CART"):

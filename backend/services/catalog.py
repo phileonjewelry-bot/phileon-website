@@ -322,7 +322,13 @@ def _resolve_dynamic_ring(product_id: str, tier_key: Optional[str],
         raise CatalogError(f"INVALID_RING_SIZE: '{ring_size}' is not a valid {cfg['product_name']} ring size.")
 
     tier_cfg = cfg["tiers"][tk]
-    unit_cents = _compute_dynamic_cents_cad(tier_cfg, market_snapshot)
+    unit_cents_cad = _compute_dynamic_cents_cad(tier_cfg, market_snapshot)
+    # PHILEON is USD-only sitewide. Convert the CAD-derived live-metal price
+    # to USD via the single authoritative helper (identical rounding rule
+    # used by the frontend cadToUsdLuxury and by every other trusted USD
+    # product with convert_usd_luxury=True). No per-product FX hacks.
+    from services.pricing_engine_catalog import cad_to_usd_luxury
+    unit_cents = int(cad_to_usd_luxury(unit_cents_cad / 100.0)) * 100
 
     ring_size_label = f"US {size_norm}"
     slug_upper = product_id.upper().replace("-", "")
@@ -337,7 +343,7 @@ def _resolve_dynamic_ring(product_id: str, tier_key: Optional[str],
         "karat": tier_cfg["metalType"], "metal_colour": tier_cfg["metal_label"],
         "ring_size": ring_size_label,
         "unit_amount_cents": unit_cents,
-        "currency": "CAD",
+        "currency": "USD",
         "quantity": quantity,
         "image": cfg["image"],
         "is_dynamic_priced": True,
@@ -429,6 +435,10 @@ def _resolve_ribbon_regale_edition(variant_key, quantity):
     if key not in _RRE_METALS:
         raise CatalogError(f"INVALID_VARIANT: '{variant_key}' is not a valid RIBBON REGALE ÉDITION metal.")
     m = _RRE_METALS[key]
+    # PHILEON is USD-only sitewide. Convert the CAD-anchored variant price
+    # to USD via the single authoritative helper.
+    from services.pricing_engine_catalog import cad_to_usd_luxury
+    unit_cents_usd = int(cad_to_usd_luxury(m["unit_amount_cents"] / 100.0)) * 100
     return {
         "product_id": "ribbon-regale-edition",
         "product_name": "RIBBON REGALE ÉDITION",
@@ -437,7 +447,7 @@ def _resolve_ribbon_regale_edition(variant_key, quantity):
         "sku": m["sku"],
         "variant": f"{m['metal_label']} · One Pair",
         "karat": m["karat"], "metal_colour": m["metal_label"], "ring_size": None,
-        "unit_amount_cents": m["unit_amount_cents"], "currency": "CAD", "quantity": quantity,
+        "unit_amount_cents": unit_cents_usd, "currency": "USD", "quantity": quantity,
         "image": "/inspiration-vault/gold-theory-ribbon/hero-pair-black.png",
         "metadata": {
             "product_slug": "ribbon-regale-edition", "sku": m["sku"],

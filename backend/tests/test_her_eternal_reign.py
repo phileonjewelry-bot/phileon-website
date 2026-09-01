@@ -97,14 +97,16 @@ def test_figure_count_is_derived_server_side():
     assert r["unit_amount_cents"] == 567000
 
 
-# ────────────────────────  Mixed currency  ─────
-# H.E.R. is now USD. Pair with RETRO BRED (CAD) to verify mixed-currency
-# protection still fires.
-def test_mixed_currency_her_usd_plus_retro_bred_cad_rejected():
+# ────────────────────────  Mixed currency (defensive guard, post USD migration)  ─
+# Post the Feb 2026 USD-only migration, RETRO BRED is also USD. Fabricate a
+# CAD-tagged resolver output at the seam so the defensive guard is still
+# exercised.
+def test_mixed_currency_defensive_guard_still_active_post_migration():
     a = resolve_line_item("her-eternal-reign", None, None, "US 7", 1, tier="14k")
     b = resolve_line_item("retro-bred", None, None, None, 1, tier="foundation")
+    fabricated_cad = {**b, "currency": "CAD"}
     with pytest.raises(CatalogError, match="MIXED_CURRENCY_CART"):
-        compute_totals([a, b])
+        compute_totals([a, fabricated_cad])
 
 
 # ────────────────────────  Deterministic SKU  ─────

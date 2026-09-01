@@ -525,15 +525,17 @@ FIXED_PRODUCTS: Dict[str, Dict] = {
         },
     },
 
-    # ── RETRO BRED — DREW'S VAULT · PRIVATE RELEASE (CAD, chain separate) ─
-    # Pendant only. Chain sold separately. 3 tiers, all CAD.
+    # ── RETRO BRED — DREW'S VAULT · PRIVATE RELEASE (USD after 2026-02 migration) ─
+    # Pendant only. Chain sold separately. 3 tiers. Prices are the approved USD
+    # amounts from the sitewide CAD→USD normalization (previous CAD anchors:
+    # $5,995 / $10,495 / $11,795 CAD → $4,500 / $8,000 / $9,000 USD).
     "retro-bred": {
         "product_name": "RETRO BRED", "subtitle": "Drew's Vault · Private Release",
-        "currency": "CAD", "sku_prefix": "RB", "size_profile": None, "needs_size": False,
+        "currency": "USD", "sku_prefix": "RB", "size_profile": None, "needs_size": False,
         "variants": {
-            "foundation": {"price_usd":  5995, "metal_label": "Sterling Silver · Synthetic Stones", "sku_suffix": "FND-925"},
-            "signature":  {"price_usd": 10495, "metal_label": "10K Gold · Lab-Grown Stones",        "sku_suffix": "SIG-10K"},
-            "heirloom":   {"price_usd": 11795, "metal_label": "14K Gold · Lab-Grown Stones",        "sku_suffix": "HRL-14K"},
+            "foundation": {"price_usd":  4500, "metal_label": "Sterling Silver · Synthetic Stones", "sku_suffix": "FND-925"},
+            "signature":  {"price_usd":  8000, "metal_label": "10K Gold · Lab-Grown Stones",        "sku_suffix": "SIG-10K"},
+            "heirloom":   {"price_usd":  9000, "metal_label": "14K Gold · Lab-Grown Stones",        "sku_suffix": "HRL-14K"},
         },
     },
 

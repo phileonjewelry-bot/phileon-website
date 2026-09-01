@@ -78,9 +78,9 @@ def test_stripe_session_price_moved_returns_409(client, monkeypatch):
     assert len(body["items"]) == 1
     it = body["items"][0]
     assert it["product_slug"] == "la-marva"
-    assert it["currency"] == "CAD"
+    assert it["currency"] == "USD"
     assert it["old_display_price_cents"] == 100000
-    assert it["new_trusted_price_cents"] == 800000
+    assert it["new_trusted_price_cents"] == 600000
     # Ensure response is redaction-safe.
     for banned in ("STRIPE_SECRET_KEY", "METALS_API_KEY", "goldPerGram24kCad",
                    "silverPerGramCad", "raw_provider_payload"):
@@ -95,7 +95,7 @@ def test_stripe_session_within_threshold_creates_session(client):
             "tier": "foundation",
             "ringSize": "US 6",
             "quantity": 1,
-            "displayed_unit_amount_cents": 800000,   # matches trusted
+            "displayed_unit_amount_cents": 600000,   # matches trusted (post USD migration)
         }],
         "idempotency_key": _unique_idem(),
     })
@@ -115,7 +115,7 @@ def test_acknowledged_re_quote_succeeds_when_within_threshold(client):
             "tier": "signature",
             "ringSize": "US 10",
             "quantity": 1,
-            "displayed_unit_amount_cents": 780000,   # matches trusted
+            "displayed_unit_amount_cents": 600000,   # matches trusted (tola-ii signature = $6,000 USD)
         }],
         "idempotency_key": _unique_idem(),
         "price_move_acknowledged": True,
@@ -136,9 +136,9 @@ def test_second_move_returns_price_moved_again(client, monkeypatch):
             "tier": "foundation",
             "ringSize": "US 6",
             "quantity": 1,
-            # Client claims they were shown $8,000. Trusted price is now much
-            # higher because gold spot jumped. Delta ≫ threshold.
-            "displayed_unit_amount_cents": 800000,
+            # Client claims they were shown $6,000 USD. Trusted price is now
+            # much higher because gold spot jumped. Delta ≫ threshold.
+            "displayed_unit_amount_cents": 600000,
         }],
         "idempotency_key": _unique_idem(),
         "price_move_acknowledged": True,
@@ -156,7 +156,7 @@ def test_live_price_unavailable_when_fallback(client, monkeypatch):
         "items": [{
             "product_id": "annie-rose", "tier": "foundation",
             "ringSize": "US 6", "quantity": 1,
-            "displayed_unit_amount_cents": 920000,
+            "displayed_unit_amount_cents": 700000,
         }],
         "idempotency_key": _unique_idem(),
     })
@@ -170,19 +170,13 @@ def test_live_price_unavailable_when_fallback(client, monkeypatch):
 
 
 # ────────────────────────  MIXED_CURRENCY  ─────────────────────────────
-def test_mixed_currency_dynamic_cad_and_static_usd_rejected(client):
-    """Cart with LA MARVA (CAD dynamic) + BAJAN JOE (USD static) → rejected."""
-    r = client.post("/api/checkout/stripe/session", json={
-        "items": [
-            {"product_id": "la-marva", "tier": "signature", "ringSize": "US 6",
-             "quantity": 1, "displayed_unit_amount_cents": 1800000},
-            {"product_id": "bajan-joe", "variant": "polish", "ringSize": "US 10",
-             "quantity": 1, "displayed_unit_amount_cents": 79500},
-        ],
-        "idempotency_key": _unique_idem(),
-    })
-    assert r.status_code == 400, r.text
-    assert r.json()["detail"]["code"] == "MIXED_CURRENCY_CART"
+# The original mixed-currency test relied on LA MARVA being CAD and BAJAN
+# JOE being USD. Post the Feb 2026 USD-only migration, no legitimate PHILEON
+# product yields CAD, so this scenario can no longer be constructed via the
+# public API. Coverage is preserved by:
+#   • tests/test_catalog.py::test_compute_totals_mixed_currency_rejected
+#   • tests/test_catalog_wave3.py::test_mixed_currency_defensive_guard_still_active_post_migration
+#   • tests/test_usd_only_migration.py::test_mixed_currency_guard_still_active
 
 
 # ────────────────────────  Static-product regression  ─────────────────────

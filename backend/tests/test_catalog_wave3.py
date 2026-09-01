@@ -114,14 +114,14 @@ def test_client_supplied_price_ignored():
 
 
 # ────────────────────────  Mixed currency (vault USD + LA MARVA CAD)  ─────
-def test_mixed_currency_altar_usd_plus_la_marva_cad_rejected():
+def test_mixed_currency_defensive_guard_still_active_post_migration():
+    """Post USD-only migration, both iv-altar and la-marva now return USD,
+    so we fabricate a mixed-currency payload directly at the totals layer
+    to prove the defensive guard is still active."""
     a = resolve_line_item("iv-altar", None, None, None, 1, tier="default", market_snapshot=None)
-    b = resolve_line_item("la-marva", None, None, "US 6", 1, tier="foundation",
-                          market_snapshot={"goldPerGram24kCad": 150.0, "silverPerGramCad": 1.25,
-                                            "timestamp": 1_700_000_000, "source": "metals-api",
-                                            "isFallback": False, "isStale": False, "ageSeconds": 60})
+    fabricated_cad = {**a, "currency": "CAD"}
     with pytest.raises(CatalogError, match="MIXED_CURRENCY_CART"):
-        compute_totals([a, b])
+        compute_totals([a, fabricated_cad])
 
 
 # ────────────────────────  Registry integrity  ─────────

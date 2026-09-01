@@ -158,14 +158,18 @@ def test_dynamic_usd_products_are_flagged_dynamic():
         assert is_dynamic_priced(slug), f"{slug} should be dynamic"
 
 
-# ────────────────────────  Mixed-currency guard  ──────────────
-def test_mixed_currency_boss_knot_usd_plus_la_marva_cad_rejected():
+# ────────────────────────  Mixed-currency guard (post USD migration)  ──────
+def test_mixed_currency_defensive_guard_via_fabricated_cad():
+    """Post USD-only migration no legitimate product yields CAD. Fabricate a
+    CAD-tagged resolver output at the seam to prove the defensive guard is
+    still active in compute_totals."""
     r_usd = resolve_line_item("boss-knot", None, None, None, 1,
                               tier="silver", market_snapshot=FRESH_MARKET)
-    r_cad = resolve_line_item("la-marva", None, None, "US 6", 1,
+    r_lm  = resolve_line_item("la-marva", None, None, "US 6", 1,
                               tier="foundation", market_snapshot=FRESH_MARKET)
+    fabricated_cad = {**r_lm, "currency": "CAD"}
     with pytest.raises(CatalogError, match="MIXED_CURRENCY_CART"):
-        compute_totals([r_usd, r_cad])
+        compute_totals([r_usd, fabricated_cad])
 
 
 def test_two_usd_products_totals_ok():

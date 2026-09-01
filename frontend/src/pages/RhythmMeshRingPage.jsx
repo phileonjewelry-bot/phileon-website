@@ -14,7 +14,7 @@ const rhythmMeshProduct = {
   category: "ring",
   sizeProfile: "gents", // Unisex ring, gents sizes as default
   collection: "Unisex Collection",
-  currency: "CAD",
+  currency: "USD",
   tagline: "Structured motion. Captured in metal.",
   
   tiers: {
