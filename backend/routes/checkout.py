@@ -300,7 +300,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
     canada_free_shipping = {
         "shipping_rate_data": {
             "type": "fixed_amount",
-            "display_name": "Standard Shipping — Canada",
+            "display_name": "Standard Shipping — Canada · After Fulfillment",
             "fixed_amount": {"amount": 0, "currency": totals["currency"].lower()},
             "delivery_estimate": {
                 "minimum": {"unit": "business_day", "value": 2},
