@@ -153,6 +153,77 @@ def test_paid_order_email_shipping_wording_matches_policy():
     assert "duties" in usd["text"] and "customer's responsibility" in usd["text"]
 
 
+def _mk_order(currency, total, item_amount_cents, item_currency_field=None):
+    item = {"product_name": "LA MARVA", "variant": "Heirloom · US 7",
+            "quantity": 1, "unit_amount_cents": item_amount_cents}
+    # item-level currency field, when present, MUST NOT influence rendering
+    if item_currency_field is not None:
+        item["currency"] = item_currency_field
+    return {"order_number": "PHI-REGR-1", "currency": currency,
+            "total_cents": total, "customer_email": "c@example.com",
+            "items": [item]}
+
+
+def test_customer_email_line_item_currency_follows_order_currency_cad():
+    from services.order_emails import build_customer_paid_email
+    o = _mk_order("CAD", 2265000, 2265000)          # no per-item currency
+    m = build_customer_paid_email(o)
+    for blob in (m["html"], m["text"]):
+        assert "$22,650.00 CAD" in blob, blob
+        assert "USD" not in blob, "must not emit USD for a CAD order"
+
+
+def test_customer_email_line_item_currency_follows_order_currency_usd():
+    from services.order_emails import build_customer_paid_email
+    o = _mk_order("USD", 430000, 430000)
+    m = build_customer_paid_email(o)
+    for blob in (m["html"], m["text"]):
+        assert "$4,300.00 USD" in blob, blob
+        assert "CAD" not in blob, "must not emit CAD for a USD order"
+
+
+def test_customer_email_ignores_stale_per_item_currency_field():
+    """orders_v2 items do not persist currency. If a stale item-level
+    currency is present it must be ignored in favour of order-level."""
+    from services.order_emails import build_customer_paid_email
+    o = _mk_order("CAD", 2265000, 2265000, item_currency_field="USD")
+    m = build_customer_paid_email(o)
+    assert "$22,650.00 CAD" in m["html"]
+    assert "USD" not in m["html"]
+
+
+def test_internal_notification_line_item_currency_follows_order_currency_cad_and_usd():
+    from services.order_emails import build_internal_paid_notification
+    for ccy, cents, expected in [("CAD", 2265000, "$22,650.00 CAD"),
+                                  ("USD", 430000,  "$4,300.00 USD")]:
+        o = _mk_order(ccy, cents, cents, item_currency_field=("USD" if ccy == "CAD" else "CAD"))
+        m = build_internal_paid_notification(o)
+        assert expected in m["html"]
+        assert expected in m["text"]
+        # Opposite currency must not appear in the same email.
+        opposite = "USD" if ccy == "CAD" else "CAD"
+        assert opposite not in m["html"], f"leaked opposite currency in internal HTML: {opposite}"
+        assert opposite not in m["text"], f"leaked opposite currency in internal text: {opposite}"
+
+
+def test_customer_email_mobile_heading_stacked_and_responsive():
+    """Editorial ORDER / CONFIRMED. must render on two intentional lines and
+    include a mobile media-query fallback so no client wraps mid-word."""
+    from services.order_emails import build_customer_paid_email
+    m = build_customer_paid_email({"order_number": "PHI-R", "currency": "CAD",
+                                    "total_cents": 100, "items": []})
+    html = m["html"]
+    # Stacked masthead lines
+    assert "<span style='display:block'>ORDER</span>" in html
+    assert "<span style='display:block'>CONFIRMED.</span>" in html
+    # No mid-word breaking allowed
+    assert "word-break:keep-all" in html
+    assert "overflow-wrap:normal" in html
+    # Mobile media query shrinks the heading further on small screens.
+    assert "@media (max-width: 480px)" in html
+    assert ".phi-h1" in html
+
+
 # ─────────────────────────────  5) Canada-only shipping in session args  ───
 def test_canada_only_shipping_in_stripe_session_args():
     """Static assertion: routes/checkout.py must configure Canada-only

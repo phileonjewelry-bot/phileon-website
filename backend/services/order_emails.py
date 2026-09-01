@@ -13,6 +13,14 @@ by the unique index on `webhook_events(provider, event_id)`.
 
 The email body deliberately excludes payment/card data, Stripe identifiers,
 internal pricing detail, and any metadata not needed for the customer.
+
+Currency rule
+-------------
+Every rendered money amount — the total AND every line-item — MUST use the
+trusted order-level currency (``orders_v2.currency``), NEVER the per-item
+``currency`` field, which is not persisted on all order documents. This
+preserves mixed CAD/USD catalog support (each order stays single-currency)
+while eliminating the "line item shows USD, total shows CAD" divergence.
 """
 from __future__ import annotations
 
@@ -45,7 +53,7 @@ def _shipping_line(currency: str) -> str:
     return "Shipping will be calculated at checkout by UPS, FedEx or DHL. International duties, taxes and brokerage remain the customer's responsibility."
 
 
-def _items_html(items: List[Dict]) -> str:
+def _items_html(items: List[Dict], order_currency: str) -> str:
     rows = []
     for i in items or []:
         name = i.get("product_name") or "PHILEON piece"
@@ -61,29 +69,44 @@ def _items_html(items: List[Dict]) -> str:
             f"</td>"
             f"<td style='padding:12px 0;border-bottom:1px dotted #33322a;text-align:right;"
             f"font-family:Georgia,serif;color:#e8e0cf;font-size:14px;white-space:nowrap;'>"
-            f"{_fmt_money(line_cents, i.get('currency') or '')}"
+            f"{_fmt_money(line_cents, order_currency)}"
             f"</td>"
             f"</tr>"
         )
     return "".join(rows)
 
 
-def _items_text(items: List[Dict]) -> str:
+def _items_text(items: List[Dict], order_currency: str) -> str:
     lines = []
     for i in items or []:
         name = i.get("product_name") or "PHILEON piece"
         variant = i.get("variant") or ""
         qty = int(i.get("quantity") or 1)
         line_cents = int(i.get("unit_amount_cents") or 0) * qty
-        lines.append(f"  · {name} — {variant} × {qty}   {_fmt_money(line_cents, i.get('currency') or '')}")
+        lines.append(f"  · {name} — {variant} × {qty}   {_fmt_money(line_cents, order_currency)}")
     return "\n".join(lines)
+
+
+# Mobile-safe editorial masthead: two intentional stacked spans so nothing
+# ever mid-word-breaks in a narrow email column. Font-size scaled down
+# slightly from 26px → 22px so ORDER / CONFIRMED. fit inside 320-CSS-px
+# viewports even with tracking .14em, and a <style>@media block gives Gmail
+# mobile an extra step down for very small screens.
+_CUSTOMER_HEAD_STYLE = (
+    "<style>"
+    "@media (max-width: 480px){"
+    " .phi-h1{font-size:20px !important;letter-spacing:.10em !important;}"
+    " .phi-total-value{font-size:13px !important;letter-spacing:.16em !important;}"
+    "}"
+    "</style>"
+)
 
 
 def build_customer_paid_email(order: Dict) -> Dict[str, str]:
     """Return {subject, html, text} for the customer's paid-order email.
 
     Uses only:  order_number, items[{product_name, variant, quantity,
-    unit_amount_cents}], total_cents, currency.
+    unit_amount_cents}], total_cents, currency (order-level).
     """
     order_no = order.get("order_number") or ""
     currency = order.get("currency") or "USD"
@@ -91,16 +114,20 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
     subject = f"PHILEON — Order {order_no} Confirmed"
     shipping_line = _shipping_line(currency)
     html = (
+        f"{_CUSTOMER_HEAD_STYLE}"
         f"<div style='background:#0a0a0c;color:#e8e0cf;font-family:Georgia,serif;padding:48px 24px;'>"
         f"  <div style='max-width:560px;margin:0 auto;'>"
         f"    <p style='font-family:\"Cinzel\",serif;letter-spacing:.5em;font-size:11px;color:#c8a24a;margin:0 0 24px;'>PHILEON</p>"
-        f"    <h1 style='font-family:\"Cinzel\",serif;letter-spacing:.14em;font-size:26px;color:#f4ecd6;margin:0 0 12px;'>ORDER CONFIRMED.</h1>"
+        f"    <h1 class='phi-h1' style='font-family:\"Cinzel\",serif;letter-spacing:.14em;font-size:22px;line-height:1.15;color:#f4ecd6;margin:0 0 12px;word-break:keep-all;overflow-wrap:normal;'>"
+        f"      <span style='display:block'>ORDER</span>"
+        f"      <span style='display:block'>CONFIRMED.</span>"
+        f"    </h1>"
         f"    <p style='font-family:\"Playfair Display\",Georgia,serif;font-style:italic;color:#a89f89;margin:0 0 32px;'>Your PHILEON piece is now in motion.</p>"
         f"    <p style='font-size:14px;color:#e8e0cf;margin:0 0 8px;'>Order reference: <strong>{order_no}</strong></p>"
-        f"    <table style='width:100%;border-collapse:collapse;margin-top:24px;'>{_items_html(order.get('items') or [])}</table>"
+        f"    <table style='width:100%;border-collapse:collapse;margin-top:24px;'>{_items_html(order.get('items') or [], currency)}</table>"
         f"    <div style='display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid #33322a;margin-top:8px;'>"
         f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;color:#a89f89'>TOTAL</span>"
-        f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
+        f"      <span class='phi-total-value' style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
         f"    </div>"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>{shipping_line}</p>"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;'>Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch.</p>"
@@ -110,7 +137,7 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
     text = (
         f"PHILEON — Order Confirmed.\n\n"
         f"Order reference: {order_no}\n\n"
-        f"{_items_text(order.get('items') or [])}\n\n"
+        f"{_items_text(order.get('items') or [], currency)}\n\n"
         f"Total: {total}\n\n"
         f"{shipping_line}\n\n"
         f"Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch."
@@ -122,7 +149,7 @@ def build_internal_paid_notification(order: Dict) -> Dict[str, str]:
     order_no = order.get("order_number") or ""
     currency = order.get("currency") or "USD"
     total = _fmt_money(order.get("total_cents") or 0, currency)
-    items_text = _items_text(order.get("items") or [])
+    items_text = _items_text(order.get("items") or [], currency)
     subject = f"[PHILEON] Paid order — {order_no}"
     html = (
         f"<div style='font-family:Georgia,serif;'>"
