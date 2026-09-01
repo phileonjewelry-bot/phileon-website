@@ -224,6 +224,36 @@ def test_customer_email_mobile_heading_stacked_and_responsive():
     assert ".phi-h1" in html
 
 
+def test_customer_email_line_item_stacks_on_narrow_mobile():
+    """Narrow-mobile line-item layout must stack metadata and price so the
+    variant ('Heirloom · US 7') never wraps awkwardly. Desktop rendering is
+    unaffected (media query only applies at max-width: 480px)."""
+    from services.order_emails import build_customer_paid_email
+    m = build_customer_paid_email({
+        "order_number": "PHI-STACK",
+        "currency": "CAD",
+        "total_cents": 2265000,
+        "items": [{"product_name": "LA MARVA", "variant": "Heirloom · US 7",
+                    "quantity": 1, "unit_amount_cents": 2265000}],
+    })
+    html = m["html"]
+    # Classes present on both cells so the media query can address them.
+    assert "class='phi-li-meta'" in html
+    assert "class='phi-li-price'" in html
+    assert "class='phi-li-variant'" in html
+    # Media query stacks the two cells at ≤ 480px.
+    assert ".phi-li-meta{display:block !important" in html
+    assert ".phi-li-price{display:block !important" in html
+    # Price left-aligns in the stacked layout so it remains associated with the item.
+    assert "text-align:left !important" in html
+    # Variant becomes nowrap only inside the stacked layout — desktop unchanged.
+    assert ".phi-li-variant{white-space:nowrap !important" in html
+    # Desktop rendering NOT touched: variant div itself does NOT carry inline nowrap.
+    assert "font-style:italic'>Heirloom · US 7" in html
+    # Line-item price still renders correctly with currency.
+    assert "$22,650.00 CAD" in html
+
+
 # ─────────────────────────────  5) Canada-only shipping in session args  ───
 def test_canada_only_shipping_in_stripe_session_args():
     """Static assertion: routes/checkout.py must configure Canada-only

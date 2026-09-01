@@ -62,12 +62,12 @@ def _items_html(items: List[Dict], order_currency: str) -> str:
         line_cents = int(i.get("unit_amount_cents") or 0) * qty
         rows.append(
             f"<tr>"
-            f"<td style='padding:12px 0;border-bottom:1px dotted #33322a;font-family:Georgia,serif;color:#f4ecd6;'>"
+            f"<td class='phi-li-meta' style='padding:12px 0;border-bottom:1px dotted #33322a;font-family:Georgia,serif;color:#f4ecd6;'>"
             f"<div style='font-size:15px'>{name}</div>"
-            f"<div style='font-size:13px;color:#a89f89;font-style:italic'>{variant}</div>"
+            f"<div class='phi-li-variant' style='font-size:13px;color:#a89f89;font-style:italic'>{variant}</div>"
             f"<div style='font-size:12px;color:#7d7565'>Qty {qty}</div>"
             f"</td>"
-            f"<td style='padding:12px 0;border-bottom:1px dotted #33322a;text-align:right;"
+            f"<td class='phi-li-price' style='padding:12px 0;border-bottom:1px dotted #33322a;text-align:right;"
             f"font-family:Georgia,serif;color:#e8e0cf;font-size:14px;white-space:nowrap;'>"
             f"{_fmt_money(line_cents, order_currency)}"
             f"</td>"
@@ -97,6 +97,12 @@ _CUSTOMER_HEAD_STYLE = (
     "@media (max-width: 480px){"
     " .phi-h1{font-size:20px !important;letter-spacing:.10em !important;}"
     " .phi-total-value{font-size:13px !important;letter-spacing:.16em !important;}"
+    " .phi-li-meta{display:block !important;width:100% !important;"
+    "  padding:12px 0 2px !important;border-bottom:0 !important;}"
+    " .phi-li-price{display:block !important;width:100% !important;"
+    "  text-align:left !important;padding:0 0 14px !important;"
+    "  border-bottom:1px dotted #33322a !important;}"
+    " .phi-li-variant{white-space:nowrap !important;}"
     "}"
     "</style>"
 )
