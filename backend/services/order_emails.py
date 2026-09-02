@@ -214,43 +214,126 @@ def build_internal_integrity_review_notification(order: Dict) -> Dict[str, str]:
     return {"subject": subject, "html": html, "text": text}
 
 
-async def send_paid_order_emails(order: Dict) -> Dict[str, Optional[Dict]]:
-    """Send the customer paid-order email and (if configured) an internal
-    notification. Returns a small status dict for optional persistence.
-    Never raises — email is a notification, not the source of truth.
-
-    Shipping-integrity separation (Phase 1):
-      - When `shipping_integrity_status == "pending_review"`, the customer's
-        normal "ORDER CONFIRMED." email is SUPPRESSED (fulfillment is on
-        hold), and the internal notification is REPLACED with a
-        shipping-integrity review alert. Payment truth is preserved — the
-        order remains `payment_status = "paid"`.
-      - For every other integrity state (including `None` and `"ok"`),
-        the previous dual-email behavior is preserved unchanged.
+def build_customer_payment_received_email(order: Dict) -> Dict[str, str]:
+    """PHILEON customer email for a paid order placed under a shipping-details
+    review hold. It confirms payment WITHOUT claiming fulfillment is
+    proceeding, and never exposes internal integrity terminology.
     """
-    result: Dict[str, Optional[Dict]] = {"customer": None, "internal": None}
+    order_no = order.get("order_number") or ""
+    currency = order.get("currency") or "USD"
+    total = _fmt_money(order.get("total_cents") or 0, currency)
+    subject = f"PHILEON — Payment Received · Order {order_no} Review"
+    html = (
+        f"{_CUSTOMER_HEAD_STYLE}"
+        f"<div style='background:#0a0a0c;color:#e8e0cf;font-family:Georgia,serif;padding:48px 24px;'>"
+        f"  <div style='max-width:560px;margin:0 auto;'>"
+        f"    <p style='font-family:\"Cinzel\",serif;letter-spacing:.5em;font-size:11px;color:#c8a24a;margin:0 0 24px;'>PHILEON</p>"
+        f"    <h1 class='phi-h1' style='font-family:\"Cinzel\",serif;letter-spacing:.14em;font-size:22px;line-height:1.15;color:#f4ecd6;margin:0 0 12px;word-break:keep-all;overflow-wrap:normal;'>"
+        f"      <span style='display:block'>PAYMENT</span>"
+        f"      <span style='display:block'>RECEIVED.</span>"
+        f"    </h1>"
+        f"    <p style='font-family:\"Playfair Display\",Georgia,serif;font-style:italic;color:#a89f89;margin:0 0 32px;'>Your PHILEON piece is with our atelier team.</p>"
+        f"    <p style='font-size:14px;color:#e8e0cf;margin:0 0 8px;'>Order reference: <strong>{order_no}</strong></p>"
+        f"    <table style='width:100%;border-collapse:collapse;margin-top:24px;'>{_items_html(order.get('items') or [], currency)}</table>"
+        f"    <div style='display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid #33322a;margin-top:8px;'>"
+        f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;color:#a89f89'>TOTAL</span>"
+        f"      <span class='phi-total-value' style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
+        f"    </div>"
+        f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>"
+        f"      Your payment was successfully received. Your order has been placed "
+        f"under a brief shipping-details review by our concierge team. No "
+        f"additional payment is being requested. Fulfillment will proceed "
+        f"automatically once the review is cleared — we will contact you only "
+        f"if anything is required."
+        f"    </p>"
+        f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;'>Thank you for your patience — every PHILEON piece is prepared with intention.</p>"
+        f"  </div>"
+        f"</div>"
+    )
+    text = (
+        f"PHILEON — Payment Received.\n\n"
+        f"Order reference: {order_no}\n\n"
+        f"{_items_text(order.get('items') or [], currency)}\n\n"
+        f"Total: {total}\n\n"
+        f"Your payment was successfully received. Your order has been placed "
+        f"under a brief shipping-details review by our concierge team. No "
+        f"additional payment is being requested. Fulfillment will proceed "
+        f"automatically once the review is cleared — we will contact you only "
+        f"if anything is required.\n\n"
+        f"Thank you for your patience — every PHILEON piece is prepared with intention."
+    )
+    return {"subject": subject, "html": html, "text": text}
+
+
+async def send_paid_order_emails(order: Dict) -> Dict[str, Optional[Dict]]:
+    """Notification router for a paid order. Returns a status dict the caller
+    (webhook) uses to update `customer_notification_sent` and
+    `internal_review_notification_sent` in `orders_v2`. Never raises — a
+    failed notification is a signal, not a payment failure.
+
+    Payment truth is never mutated here; the caller sets `payment_status`.
+
+    Branches on `order.shipping_integrity_status`:
+
+      * "pending_review"  →  customer PAYMENT RECEIVED email  +  internal
+                             REVIEW alert. The customer never receives the
+                             normal ORDER CONFIRMED email in this branch.
+                             `mode == "pending_review"`.
+
+      * any other value   →  customer ORDER CONFIRMED email  +  internal
+                             plain paid notification (unchanged).
+                             `mode == "ok"`.
+
+    Each field in the returned dict carries a `status` key matching the
+    underlying `services.email.send_email` contract:
+        {"status": "sent"|"skipped"|"failed", ...}
+    The webhook treats `"sent"` as a real delivery. Everything else must
+    NOT be recorded as delivered on the OrderV2.
+    """
     integrity = (order.get("shipping_integrity_status") or "").strip()
+    to_customer = (order.get("customer_email") or "").strip()
     internal_to = (os.environ.get("PHILEON_ORDER_NOTIFICATION_EMAIL")
                    or os.environ.get("PHILEON_CONCIERGE_NOTIFICATION_EMAIL") or "").strip()
 
+    result: Dict[str, Optional[Dict]] = {"customer": None, "internal": None,
+                                          "mode": "pending_review" if integrity == "pending_review" else "ok"}
+
     if integrity == "pending_review":
-        # Do NOT send the customer's ORDER CONFIRMED email while the order
-        # is on an integrity hold — it would falsely imply fulfillment is
-        # proceeding normally.
-        result["customer"] = {"skipped": "shipping_integrity_review"}
+        # Customer PAYMENT RECEIVED — never ORDER CONFIRMED for this transition.
+        if to_customer:
+            payload = build_customer_payment_received_email(order)
+            try:
+                result["customer"] = await send_email(to_customer, payload["subject"], payload["html"], payload["text"])
+            except Exception as e:
+                result["customer"] = {"status": "failed", "error": f"{type(e).__name__}: {str(e)[:180]}"}
+        else:
+            result["customer"] = {"status": "skipped", "reason": "no_recipient"}
+        # Internal REVIEW alert — kept intentionally blunt for ops.
         if internal_to:
             payload = build_internal_integrity_review_notification(order)
-            result["internal"] = await send_email(internal_to, payload["subject"], payload["html"], payload["text"])
+            try:
+                result["internal"] = await send_email(internal_to, payload["subject"], payload["html"], payload["text"])
+            except Exception as e:
+                result["internal"] = {"status": "failed", "error": f"{type(e).__name__}: {str(e)[:180]}"}
         else:
-            result["internal"] = {"skipped": "no_internal_recipient_configured"}
+            result["internal"] = {"status": "skipped", "reason": "no_internal_recipient_configured"}
         return result
 
-    # Normal (integrity OK or not set) — preserve existing behavior exactly.
-    to = (order.get("customer_email") or "").strip()
-    if to:
+    # Normal branch — behavior preserved from prior release.
+    if to_customer:
         payload = build_customer_paid_email(order)
-        result["customer"] = await send_email(to, payload["subject"], payload["html"], payload["text"])
+        try:
+            result["customer"] = await send_email(to_customer, payload["subject"], payload["html"], payload["text"])
+        except Exception as e:
+            result["customer"] = {"status": "failed", "error": f"{type(e).__name__}: {str(e)[:180]}"}
+    else:
+        result["customer"] = {"status": "skipped", "reason": "no_recipient"}
     if internal_to:
         payload = build_internal_paid_notification(order)
-        result["internal"] = await send_email(internal_to, payload["subject"], payload["html"], payload["text"])
+        try:
+            result["internal"] = await send_email(internal_to, payload["subject"], payload["html"], payload["text"])
+        except Exception as e:
+            result["internal"] = {"status": "failed", "error": f"{type(e).__name__}: {str(e)[:180]}"}
+    else:
+        result["internal"] = {"status": "skipped", "reason": "no_internal_recipient_configured"}
     return result

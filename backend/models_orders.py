@@ -66,6 +66,12 @@ class OrderV2(BaseModel):
     # webhook detects a shipping-amount mismatch against the trusted zone.
     # Never falsifies `payment_status` — a paid order stays paid.
     shipping_integrity_status: Optional[str] = None
+    # Notification delivery — each set to True ONLY when the corresponding
+    # message reached the recipient (send_email returned status="sent").
+    # `paid_notification_sent` remains the legacy "paid transition
+    # processed" gate for backward compatibility and idempotency.
+    customer_notification_sent: Optional[bool] = None
+    internal_review_notification_sent: Optional[bool] = None
     shipping: Optional[OrderV2Shipping] = None
     webhook_event_ids: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

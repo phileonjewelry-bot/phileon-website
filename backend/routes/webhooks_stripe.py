@@ -241,13 +241,25 @@ async def stripe_webhook(request: Request):
                 )
             result = await db.orders_v2.update_one(filt, update)
             if result.modified_count == 1:
-                # We won the first-paid transition. Send emails exactly once.
+                # We won the first-paid transition. Send notifications
+                # exactly once. Each channel's actual delivery status is
+                # written into the OrderV2 so ops can distinguish "sent"
+                # from "skipped/failed" without a second webhook pass.
                 fresh = await db.orders_v2.find_one({"id": order["id"]}, {"_id": 0})
                 try:
                     from services.order_emails import send_paid_order_emails
-                    await send_paid_order_emails(fresh or order)
+                    email_result = await send_paid_order_emails(fresh or order)
                 except Exception as email_err:  # never break the webhook on email
                     logger.warning(f"paid-order email send failed for {order['id']}: {type(email_err).__name__}")
+                    email_result = {"customer": {"status": "failed", "error": type(email_err).__name__},
+                                    "internal": {"status": "failed", "error": type(email_err).__name__}}
+                _cust = email_result.get("customer") or {}
+                _intl = email_result.get("internal") or {}
+                await db.orders_v2.update_one({"id": order["id"]}, {"$set": {
+                    "customer_notification_sent": _cust.get("status") == "sent",
+                    "internal_review_notification_sent": _intl.get("status") == "sent",
+                    "updated_at": datetime.now(timezone.utc),
+                }})
         else:
             # Async pending (e.g., Klarna/Afterpay/bank redirect) — leave pending
             await db.orders_v2.update_one({"id": order["id"]},
@@ -281,9 +293,18 @@ async def stripe_webhook(request: Request):
                 fresh = await db.orders_v2.find_one({"id": order["id"]}, {"_id": 0})
                 try:
                     from services.order_emails import send_paid_order_emails
-                    await send_paid_order_emails(fresh or order)
+                    email_result = await send_paid_order_emails(fresh or order)
                 except Exception as email_err:
                     logger.warning(f"paid-order email send failed for {order['id']}: {type(email_err).__name__}")
+                    email_result = {"customer": {"status": "failed", "error": type(email_err).__name__},
+                                    "internal": {"status": "failed", "error": type(email_err).__name__}}
+                _cust = email_result.get("customer") or {}
+                _intl = email_result.get("internal") or {}
+                await db.orders_v2.update_one({"id": order["id"]}, {"$set": {
+                    "customer_notification_sent": _cust.get("status") == "sent",
+                    "internal_review_notification_sent": _intl.get("status") == "sent",
+                    "updated_at": datetime.now(timezone.utc),
+                }})
 
     elif etype == "checkout.session.async_payment_failed" or etype == "payment_intent.payment_failed":
         if order:
