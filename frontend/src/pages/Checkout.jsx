@@ -102,9 +102,15 @@ export default function Checkout() {
   const [submitting, setSubmitting] = useState(false);
   const [redirectPending, setRedirectPending] = useState(false);
 
+  // Destination selector state — CLIENT-SUPPLIED but NON-MONETARY.
+  // The trusted `rate_cents` comes back from the backend and is display-only.
+  const [shippingCountry, setShippingCountry] = useState("");
+  const [allowedCountries, setAllowedCountries] = useState([]);
+  const [shippingQuote, setShippingQuote] = useState(null);
+  const [shippingQuoteError, setShippingQuoteError] = useState("");
+  const [shippingQuoteLoading, setShippingQuoteLoading] = useState(false);
+
   // PRICE_MOVED / LIVE_PRICE_UNAVAILABLE UX state.
-  //   priceMoved   : array of { product_slug, variant, currency, old_display_price_cents, new_trusted_price_cents }
-  //   liveUnavailable : boolean
   const [priceMoved, setPriceMoved] = useState(null);
   const [liveUnavailable, setLiveUnavailable] = useState(false);
 
@@ -115,6 +121,46 @@ export default function Checkout() {
     const t = setTimeout(() => { if (!cart || cart.length === 0) setRedirectPending(true); }, 400);
     return () => clearTimeout(t);
   }, [cart]);
+
+  // Load the trusted shipping-country allowlist from the backend authority.
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API}/api/checkout/shipping-countries`)
+      .then((r) => r.json())
+      .then((d) => { if (!cancelled) setAllowedCountries(d?.allowed_countries || []); })
+      .catch(() => { /* selector still usable; server re-validates on session-create */ });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Refresh the trusted shipping quote whenever the shopper picks a country.
+  useEffect(() => {
+    if (!shippingCountry) { setShippingQuote(null); setShippingQuoteError(""); return; }
+    let cancelled = false;
+    setShippingQuoteLoading(true);
+    setShippingQuoteError("");
+    fetch(`${API}/api/checkout/shipping-quote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ country: shippingCountry }),
+    })
+      .then(async (r) => {
+        const d = await r.json().catch(() => ({}));
+        if (cancelled) return;
+        if (!r.ok) {
+          setShippingQuote(null);
+          setShippingQuoteError(d?.detail?.message || d?.detail?.code || "Shipping quote unavailable.");
+        } else {
+          setShippingQuote(d);
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setShippingQuote(null);
+        setShippingQuoteError("Network error — please try again.");
+      })
+      .finally(() => { if (!cancelled) setShippingQuoteLoading(false); });
+    return () => { cancelled = true; };
+  }, [shippingCountry]);
 
   useEffect(() => {
     if (redirectPending && (!cart || cart.length === 0)) navigate("/cart");
@@ -132,7 +178,13 @@ export default function Checkout() {
     const resp = await fetch(CHECKOUT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Idempotency-Key": idempotency_key },
-      body: JSON.stringify({ items, customer_email: email.trim(), idempotency_key, price_move_acknowledged }),
+      body: JSON.stringify({
+        items,
+        customer_email: email.trim(),
+        idempotency_key,
+        price_move_acknowledged,
+        shipping_country: shippingCountry,
+      }),
     });
     const data = await resp.json().catch(() => ({}));
     return { resp, data };
@@ -147,6 +199,8 @@ export default function Checkout() {
     }
     if (!supported.length) { setError("Your cart is empty."); return; }
     if (!/^\S+@\S+\.\S+$/.test(email)) { setError("Please enter a valid email address."); return; }
+    if (!shippingCountry) { setError("Please select your shipping destination."); return; }
+    if (!shippingQuote) { setError("Please wait for the shipping quote to load."); return; }
 
     setSubmitting(true);
     try {
@@ -233,10 +287,60 @@ export default function Checkout() {
               </p>
             </div>
           ))}
+          <div className="flex justify-between items-baseline py-3 border-b border-white/[0.04]" data-testid="checkout-shipping-row">
+            <p className="text-white/60 text-[13px]">Shipping</p>
+            <p className="text-white/75 text-[13px]" data-testid="checkout-shipping-amount">
+              {shippingQuote
+                ? (shippingQuote.rate_cents === 0
+                    ? "Complimentary"
+                    : `$${(shippingQuote.rate_cents / 100).toLocaleString("en-US")} USD`)
+                : "Calculated by destination"}
+            </p>
+          </div>
         </div>
 
         {/* Email */}
         <form onSubmit={handleSubmit} className="mt-8">
+          {/* Shipping destination selector — server-authoritative quote */}
+          <div className="mb-6" data-testid="checkout-shipping-block">
+            <span className="block text-[9px] tracking-[0.42em] text-white/30 uppercase">Shipping destination</span>
+            <select
+              value={shippingCountry}
+              onChange={(e) => setShippingCountry(e.target.value)}
+              className="mt-2 w-full bg-transparent border border-white/15 rounded-md px-4 py-3 text-white/90 text-[15px] focus:outline-none focus:border-white/40 transition-colors appearance-none"
+              data-testid="shipping-country-select"
+            >
+              <option value="" className="bg-black">Select destination…</option>
+              {allowedCountries.map((c) => (
+                <option key={c} value={c} className="bg-black">{c}</option>
+              ))}
+            </select>
+            <p className="text-white/25 text-[11px] mt-2">
+              Your full shipping address will be entered securely at checkout.
+            </p>
+            <div className="mt-3 min-h-[24px]" data-testid="shipping-quote-display">
+              {!shippingCountry && (
+                <p className="text-white/40 text-[13px]">Shipping calculated by destination</p>
+              )}
+              {shippingCountry && shippingQuoteLoading && (
+                <p className="text-white/40 text-[13px]">Loading trusted quote…</p>
+              )}
+              {shippingCountry && shippingQuote && !shippingQuoteLoading && (
+                <p className="text-white/85 text-[13px]" data-testid="shipping-quote-line">
+                  {shippingQuote.rate_cents === 0
+                    ? "Shipping — Complimentary"
+                    : `Shipping — $${(shippingQuote.rate_cents / 100).toLocaleString("en-US")} USD`}
+                  <span className="text-white/40"> · {shippingQuote.service_label}</span>
+                </p>
+              )}
+              {shippingCountry && shippingQuoteError && !shippingQuoteLoading && (
+                <p className="text-orange-300 text-[12px]" data-testid="shipping-quote-error">
+                  {shippingQuoteError}
+                </p>
+              )}
+            </div>
+          </div>
+
           <label className="block">
             <span className="text-[9px] tracking-[0.42em] text-white/30 uppercase">Email</span>
             <input
@@ -262,7 +366,7 @@ export default function Checkout() {
 
           <button
             type="submit"
-            disabled={submitting || hasUnsupported}
+            disabled={submitting || hasUnsupported || !shippingCountry || !shippingQuote}
             className="w-full bg-white text-black rounded-md py-4 mt-6 text-[10px] tracking-[0.18em] font-medium hover:bg-white/92 disabled:opacity-25 disabled:cursor-not-allowed transition-all duration-300"
             data-testid="checkout-continue-btn"
           >

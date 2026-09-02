@@ -71,6 +71,7 @@ def test_stripe_session_price_moved_returns_409(client, monkeypatch):
             "displayed_unit_amount_cents": 100000,   # $1,000 CAD (stale)
         }],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
     })
     assert r.status_code == 409, r.text
     body = r.json()["detail"]
@@ -98,6 +99,7 @@ def test_stripe_session_within_threshold_creates_session(client):
             "displayed_unit_amount_cents": 600000,   # matches trusted (post USD migration)
         }],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
     })
     assert r.status_code == 200, r.text
     body = r.json()
@@ -118,6 +120,7 @@ def test_acknowledged_re_quote_succeeds_when_within_threshold(client):
             "displayed_unit_amount_cents": 600000,   # matches trusted (tola-ii signature = $6,000 USD)
         }],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
         "price_move_acknowledged": True,
     })
     assert r.status_code == 200, r.text
@@ -141,6 +144,7 @@ def test_second_move_returns_price_moved_again(client, monkeypatch):
             "displayed_unit_amount_cents": 600000,
         }],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
         "price_move_acknowledged": True,
     })
     assert r.status_code == 409, r.text
@@ -159,6 +163,7 @@ def test_live_price_unavailable_when_fallback(client, monkeypatch):
             "displayed_unit_amount_cents": 700000,
         }],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
     })
     assert r.status_code == 503, r.text
     body = r.json()["detail"]
@@ -184,6 +189,7 @@ def test_regression_bajan_joe_still_795_usd(client):
     r = client.post("/api/checkout/stripe/session", json={
         "items": [{"product_id": "bajan-joe", "variant": "polish", "ringSize": "US 10", "quantity": 1}],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
     })
     assert r.status_code == 200, r.text
     # We don't leak the trusted price in the response body — order_number is
@@ -196,5 +202,6 @@ def test_regression_missing_dynamic_snapshot_field_still_ok(client):
     r = client.post("/api/checkout/stripe/session", json={
         "items": [{"product_id": "parabola", "tier": "sterling", "ringSize": "US 6", "quantity": 1}],
         "idempotency_key": _unique_idem(),
+        "shipping_country": "CA",
     })
     assert r.status_code == 200, r.text

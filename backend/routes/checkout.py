@@ -10,8 +10,17 @@ from services.catalog import (
     resolve_line_item, compute_totals, CatalogError, is_supported,
     is_dynamic_priced, detect_price_move,
 )
+from services.shipping_zones import (
+    ZONES,
+    ShippingZoneError,
+    resolve_zone_for_country,
+    all_allowed_countries,
+    build_stripe_shipping_option,
+    signature_required_for_subtotal,
+    CURRENCY as SHIPPING_CURRENCY,
+)
 from services import metal_spot
-from models_orders import OrderV2, OrderV2Item, hash_status_token
+from models_orders import OrderV2, OrderV2Item, OrderV2Shipping, hash_status_token
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/checkout", tags=["checkout-v2"])
@@ -96,6 +105,7 @@ def _stripe():
 
 
 class CartItemIn(BaseModel):
+    model_config = {"extra": "forbid"}
     product_id: str
     quantity: int = Field(default=1, ge=1, le=5)
     karat: Optional[str] = None
@@ -114,6 +124,10 @@ class CartItemIn(BaseModel):
 
 
 class StripeSessionIn(BaseModel):
+    # `extra="forbid"` — the client cannot inject shipping_amount, rate_cents,
+    # zone_price, shipping_total, carrier_price, or any other monetary field.
+    # Only ISO-3166-1 alpha-2 shipping_country and cart primitives are accepted.
+    model_config = {"extra": "forbid"}
     items: List[CartItemIn]
     customer_email: Optional[str] = None
     idempotency_key: Optional[str] = None
@@ -121,6 +135,16 @@ class StripeSessionIn(BaseModel):
     # PRICE_MOVED 409. Backend still re-verifies the market before creating
     # the Stripe session.
     price_move_acknowledged: bool = False
+    # Destination country — non-monetary, ISO-3166-1 alpha-2. Required.
+    # Validated server-side against the approved shipping-zone allowlist.
+    shipping_country: str = Field(min_length=2, max_length=2)
+
+
+class ShippingQuoteIn(BaseModel):
+    """Non-monetary destination lookup. The client sends ONLY the country;
+    the backend returns a display-only trusted quote."""
+    model_config = {"extra": "forbid"}
+    country: str = Field(min_length=2, max_length=2)
 
 
 async def _ensure_indexes(db):
@@ -138,6 +162,53 @@ async def _ensure_indexes(db):
 def _cart_fingerprint(items: List[CartItemIn]) -> str:
     payload = json.dumps([i.model_dump() for i in items], sort_keys=True)
     return hashlib.sha256(payload.encode()).hexdigest()[:20]
+
+
+# ────────────────────────────  Shipping · Phase 1  ─────────────────
+@router.get("/shipping-countries")
+async def shipping_countries():
+    """Approved allowlist for the checkout country selector. Read-only."""
+    countries = sorted(all_allowed_countries())
+    zones = {
+        key: {
+            "display_name": z.display_name,
+            "countries": sorted(z.countries),
+            "delivery_estimate_business_days": list(z.delivery_estimate_business_days),
+        }
+        for key, z in ZONES.items()
+    }
+    return {"currency": SHIPPING_CURRENCY, "allowed_countries": countries, "zones": zones}
+
+
+@router.post("/shipping-quote")
+async def shipping_quote(body: ShippingQuoteIn):
+    """Return a display-only trusted shipping quote for the given country.
+    The response is authoritative but non-mutating — the client cannot
+    influence any monetary value; the backend is the sole authority.
+    """
+    try:
+        zone = resolve_zone_for_country(body.country)
+    except ShippingZoneError as e:
+        code = str(e) or "UNSUPPORTED_DESTINATION"
+        raise HTTPException(status_code=400, detail={
+            "code": code,
+            "message": {
+                "UNSUPPORTED_DESTINATION": "We do not ship to this destination.",
+                "SHIPPING_ZONES_UNCONFIGURED": "Shipping is temporarily unavailable — please try again shortly.",
+                "INVALID_COUNTRY_FORMAT": "Please provide a valid two-letter country code.",
+            }.get(code, "Shipping quote unavailable."),
+        })
+    return {
+        "country": body.country.upper(),
+        "zone_key": zone.key,
+        "rate_cents": zone.rate_cents,
+        "currency": SHIPPING_CURRENCY,
+        "service_label": zone.display_name,
+        "carrier_label": zone.carrier_label,
+        "delivery_estimate_business_days": list(zone.delivery_estimate_business_days),
+        "insurance_required": zone.insurance_required,
+        "supports_signature_confirmation": zone.supports_signature_confirmation,
+    }
 
 
 @router.post("/stripe/session")
@@ -218,8 +289,24 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         })
 
     # 2b. Backend-authoritative mixed-currency guard — reject BEFORE Stripe.
+    # Shipping zone is resolved server-side from the client-supplied
+    # non-monetary country. If the destination is not allowed, fail before
+    # any Stripe call. `zone.rate_cents` is the trusted shipping amount.
     try:
-        totals = compute_totals(resolved)
+        zone = resolve_zone_for_country(body.shipping_country)
+    except ShippingZoneError as e:
+        code = str(e) or "UNSUPPORTED_DESTINATION"
+        raise HTTPException(status_code=400, detail={
+            "code": code,
+            "message": {
+                "UNSUPPORTED_DESTINATION": "We do not ship to this destination.",
+                "SHIPPING_ZONES_UNCONFIGURED": "Shipping is temporarily unavailable — please try again shortly.",
+                "INVALID_COUNTRY_FORMAT": "Please provide a valid two-letter country code.",
+            }.get(code, "Shipping unavailable."),
+        })
+
+    try:
+        totals = compute_totals(resolved, shipping_cents=zone.rate_cents)
     except CatalogError as e:
         msg = str(e)
         if msg.startswith("MIXED_CURRENCY_CART"):
@@ -251,6 +338,16 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         order = OrderV2(**existing)
     else:
         items = [OrderV2Item(**{k: v for k, v in r.items() if k != "currency"}) for r in resolved]
+        # Trusted shipping snapshot at session-create. Reconciled with the
+        # Stripe-collected values on `checkout.session.completed`.
+        shipping_block = OrderV2Shipping(
+            zone_key=zone.key,
+            country=body.shipping_country.upper(),
+            service_label=zone.display_name,
+            carrier_label=zone.carrier_label,
+            signature_required=signature_required_for_subtotal(totals["subtotal_cents"], zone),
+            insurance_required=zone.insurance_required,
+        )
         order = OrderV2(
             idempotency_key=idem,
             customer_email=body.customer_email,
@@ -261,6 +358,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             total_cents=totals["total_cents"],
             currency=totals["currency"],
             status_token_hash=hash_status_token(status_token),
+            shipping=shipping_block,
         )
         try:
             await db.orders_v2.insert_one(order.model_dump(mode="json"))
@@ -288,26 +386,12 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         "quantity": r["quantity"],
     } for r in resolved]
 
-    # ── Shipping — approved PHILEON policy ─────────────────────────────
-    # Canada: free standard shipping (Canada Post + UPS).
-    # United States: shipping is calculated at checkout via UPS/FedEx —
-    #   dynamic-rate integration is NOT yet wired, so US destinations are
-    #   deliberately blocked at Stripe until that integration lands.
-    # International: DHL/UPS/FedEx where available — same story, blocked
-    #   at Stripe until dynamic rates are wired.
-    # Duties, taxes and brokerage remain the customer's responsibility per
-    # the published Shipping trust page — no prepayment collected here.
-    canada_free_shipping = {
-        "shipping_rate_data": {
-            "type": "fixed_amount",
-            "display_name": "Standard Shipping — Canada · After Fulfillment",
-            "fixed_amount": {"amount": 0, "currency": totals["currency"].lower()},
-            "delivery_estimate": {
-                "minimum": {"unit": "business_day", "value": 2},
-                "maximum": {"unit": "business_day", "value": 7},
-            },
-        },
-    }
+    # ── Shipping — destination-driven trusted zone (Phase 1, D1..D11) ──
+    # `zone` was resolved server-side above from the client-supplied
+    # non-monetary country. Stripe receives EXACTLY ONE trusted shipping
+    # option and `allowed_countries` is locked to the same single country
+    # so Stripe-hosted Checkout cannot broaden the destination after entry.
+    trusted_shipping_option = build_stripe_shipping_option(body.shipping_country)
 
     session_kwargs = dict(
         mode="payment",
@@ -316,8 +400,8 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         cancel_url=f"{cancel_url}?order={order.order_number}",
         customer_email=body.customer_email,
         billing_address_collection="required",
-        shipping_address_collection={"allowed_countries": ["CA"]},
-        shipping_options=[canada_free_shipping],
+        shipping_address_collection={"allowed_countries": [body.shipping_country.upper()]},
+        shipping_options=[trusted_shipping_option],
         metadata={"internal_order_id": order.id, "public_order_number": order.order_number},
     )
 

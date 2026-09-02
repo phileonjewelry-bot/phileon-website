@@ -254,19 +254,39 @@ def test_customer_email_line_item_stacks_on_narrow_mobile():
     assert "$22,650.00 CAD" in html
 
 
-# ─────────────────────────────  5) Canada-only shipping in session args  ───
-def test_canada_only_shipping_in_stripe_session_args():
-    """Static assertion: routes/checkout.py must configure Canada-only
-    allowed_countries, a zero-amount Standard Shipping option, and the
-    approved 2–7 business-day delivery estimate.
+# ─────────────────────────────  5) Destination-driven shipping in session args  ───
+def test_destination_driven_shipping_in_stripe_session_args():
+    """Static assertion: routes/checkout.py must build EXACTLY ONE trusted
+    Stripe shipping option per resolved zone and lock `allowed_countries`
+    to the shopper's selected country. No hard-coded Canada-only rate; no
+    multi-option surfacing.
     """
     src = open("/app/backend/routes/checkout.py").read()
-    assert '"allowed_countries": ["CA"]' in src, "Stripe session must restrict shipping to Canada"
-    assert '"fixed_amount": {"amount": 0' in src, "Canada free-shipping option missing"
-    # Delivery estimate window: 2–7 business days after fulfillment.
-    assert '"unit": "business_day", "value": 2' in src, "Canada shipping minimum must be 2 business days"
-    assert '"unit": "business_day", "value": 7' in src, "Canada shipping maximum must be 7 business days"
-    # US / Intl allowed_countries must NOT be present as a hardcoded list.
-    assert '"allowed_countries": ["US","CA","GB","AU"]' not in src, (
-        "Removed until US/Intl dynamic shipping is wired"
+    assert 'build_stripe_shipping_option(body.shipping_country)' in src, (
+        "Stripe session must derive shipping from the trusted zone service"
     )
+    assert '"allowed_countries": [body.shipping_country.upper()]' in src, (
+        "Stripe allowed_countries must equal the shopper's selected country"
+    )
+    # Legacy hard-coded configurations must NOT be present.
+    assert '"allowed_countries": ["CA"]' not in src, "Canada-only lockdown removed in Phase 1"
+    assert '"allowed_countries": ["US","CA","GB","AU"]' not in src
+
+
+def test_shipping_zone_rates_are_owner_approved():
+    """D1..D4 values must match owner-approved USD anchors exactly."""
+    from services.shipping_zones import ZONES, SIGNATURE_REQUIRED_ABOVE_USD_CENTS
+    assert ZONES["CA"].rate_cents == 0                # D1
+    assert ZONES["US"].rate_cents == 3500             # D2 · $35 USD
+    assert ZONES["INTL_TIER_1"].rate_cents == 6500    # D3 · $65 USD
+    assert ZONES["INTL_TIER_2"].rate_cents == 9500    # D4 · $95 USD
+    assert SIGNATURE_REQUIRED_ABOVE_USD_CENTS == 50000  # D8 · $500 USD
+
+
+def test_paid_order_email_shipping_wording_matches_policy_retained():
+    """The paid-order email wording still branches on order currency — this
+    is a Phase 2 rewrite target (destination-based wording) and remains
+    intentionally unchanged in Phase 1."""
+    from services.order_emails import _shipping_line
+    assert "Canada Post" in _shipping_line("CAD")
+    assert "UPS, FedEx or DHL" in _shipping_line("USD")

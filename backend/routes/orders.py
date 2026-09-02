@@ -1,111 +1,50 @@
+"""Legacy orders router — DISABLED (Phase 1 shipping migration, Feb 2026).
+
+All endpoints previously mounted at `/api/orders/*` are replaced by the
+trusted Stripe-hosted checkout flow at `/api/checkout/*` and the
+server-authoritative shipping zone service at `services/shipping_zones.py`.
+
+Every endpoint returns HTTP 410 `LEGACY_ENDPOINT_DISABLED` — matching the
+disposition pattern already used in `routes/stripe_routes.py`. This
+prevents any second shipping authority from re-entering the system.
+"""
 from fastapi import APIRouter, HTTPException
-from typing import List, Optional
-from models import Order, OrderCreate
-import uuid
-from datetime import datetime
 
-router = APIRouter(prefix="/orders", tags=["orders"])
+router = APIRouter(prefix="/orders", tags=["orders-legacy-disabled"])
 
-def get_db():
-    from server import db
-    return db
+_LEGACY_DETAIL = {
+    "code": "LEGACY_ENDPOINT_DISABLED",
+    "message": (
+        "This legacy orders endpoint has been permanently removed. "
+        "Use POST /api/checkout/stripe/session for new orders."
+    ),
+}
 
-@router.post("", response_model=Order)
-async def create_order(order_request: OrderCreate):
-    """Create new order"""
-    db = get_db()
-    
-    # Calculate totals
-    subtotal = sum(item.price * item.quantity for item in order_request.items)
-    
-    # Calculate shipping (mock for now, will integrate EasyPost)
-    shipping_cost = 0.0 if subtotal >= 100 else 15.0
-    
-    total = subtotal + shipping_cost
-    
-    # Create order
-    order = Order(
-        id=str(uuid.uuid4()),
-        email=order_request.email,
-        items=[item.dict() for item in order_request.items],
-        shippingAddress=order_request.shippingAddress.dict(),
-        subtotal=subtotal,
-        shippingCost=shipping_cost,
-        total=total,
-        paymentMethod=order_request.paymentMethod,
-        paymentStatus="pending",
-        orderStatus="processing",
-        createdAt=datetime.utcnow(),
-        updatedAt=datetime.utcnow()
-    )
-    
-    await db.orders.insert_one(order.dict())
-    
-    return order
 
-@router.get("", response_model=List[Order])
-async def get_orders(
-    email: Optional[str] = None,
-    status: Optional[str] = None
-):
-    """Get all orders (with optional filters)"""
-    db = get_db()
-    query = {}
-    
-    if email:
-        query["email"] = email
-    if status:
-        query["orderStatus"] = status
-    
-    orders = await db.orders.find(query).sort("createdAt", -1).to_list(1000)
-    return [Order(**order) for order in orders]
+def _gone() -> None:
+    raise HTTPException(status_code=410, detail=_LEGACY_DETAIL)
 
-@router.get("/{order_id}", response_model=Order)
-async def get_order(order_id: str):
-    """Get single order by ID"""
-    db = get_db()
-    
-    order = await db.orders.find_one({"id": order_id})
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    return Order(**order)
+
+@router.post("")
+async def legacy_create_order():
+    _gone()
+
+
+@router.get("")
+async def legacy_list_orders():
+    _gone()
+
+
+@router.get("/{order_id}")
+async def legacy_get_order(order_id: str):  # noqa: ARG001
+    _gone()
+
 
 @router.put("/{order_id}/status")
-async def update_order_status(order_id: str, status: str, tracking_number: Optional[str] = None):
-    """Update order status (Admin only)"""
-    db = get_db()
-    
-    update_data = {
-        "orderStatus": status,
-        "updatedAt": datetime.utcnow()
-    }
-    
-    if tracking_number:
-        update_data["trackingNumber"] = tracking_number
-    
-    result = await db.orders.update_one(
-        {"id": order_id},
-        {"$set": update_data}
-    )
-    
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="Order not found")
-    
-    updated_order = await db.orders.find_one({"id": order_id})
-    return Order(**updated_order)
+async def legacy_update_order_status(order_id: str):  # noqa: ARG001
+    _gone()
+
 
 @router.post("/calculate-shipping")
-async def calculate_shipping(country: str, state: str, subtotal: float):
-    """Calculate shipping cost (Mock - will integrate EasyPost)"""
-    
-    # Mock shipping calculation
-    if subtotal >= 100:
-        return {"shippingCost": 0.0, "freeShipping": True}
-    
-    if country == "USA":
-        shipping_cost = 15.0
-    else:
-        shipping_cost = 35.0
-    
-    return {"shippingCost": shipping_cost, "freeShipping": False}
+async def legacy_calculate_shipping():
+    _gone()

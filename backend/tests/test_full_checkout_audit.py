@@ -266,6 +266,7 @@ def test_http_normal_path_reaches_stripe_or_payment_gate(http_client, slug, kwar
     payload = {
         "items": [_to_payload(slug, kwargs)],
         "idempotency_key": f"audit-{slug}-{uuid.uuid4()}",
+        "shipping_country": "CA",
     }
     r = http_client.post("/api/checkout/stripe/session", json=payload)
     if r.status_code == 200:
@@ -294,6 +295,7 @@ def test_static_products_ignore_client_price(http_client, slug, kwargs):
     r = http_client.post("/api/checkout/stripe/session", json={
         "items": [payload],
         "idempotency_key": f"tamper-{slug}-{uuid.uuid4()}",
+        "shipping_country": "CA",
     })
     # Static → 200 (session created at TRUSTED amount, not $0.01).
     assert r.status_code == 200, f"{slug} expected 200 (client price ignored); got {r.status_code}: {r.text}"
@@ -311,6 +313,7 @@ def test_dynamic_products_reject_tampered_price(http_client, slug, kwargs):
     r = http_client.post("/api/checkout/stripe/session", json={
         "items": [payload],
         "idempotency_key": f"tamper-{slug}-{uuid.uuid4()}",
+        "shipping_country": "CA",
     })
     assert r.status_code == 409, f"{slug} expected 409 PRICE_MOVED; got {r.status_code}: {r.text}"
     assert r.json()["detail"]["code"] == "PRICE_MOVED"
@@ -330,6 +333,7 @@ def test_mixed_currency_forged_request_rejected(http_client):
             {"product_id": "bajan-joe", "variant": "polish", "ringSize": "US 10", "quantity": 1},
         ],
         "idempotency_key": f"mixed-{uuid.uuid4()}",
+        "shipping_country": "CA",
     })
     # Either succeeds (both USD, no mismatch) OR returns 409 PRICE_MOVED
     # if live spot drifted the la-marva price. Either is acceptable — the

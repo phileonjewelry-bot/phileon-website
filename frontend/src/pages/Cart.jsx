@@ -42,8 +42,7 @@ const Cart = () => {
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = subtotal >= 100 ? 0 : 15;
-  const total = subtotal + shipping;
+  const total = subtotal;   // Shipping is calculated server-side at checkout by destination.
 
   if (cartItems.length === 0) {
     return (
@@ -131,20 +130,18 @@ const Cart = () => {
                   </div>
                   <div className="flex justify-between text-gray-400">
                     <span>Shipping</span>
-                    <span className={shipping === 0 ? 'text-green-500 font-semibold' : 'text-white'}>
-                      {shipping === 0 ? 'FREE' : `$${Math.round(shipping).toLocaleString("en-US")} USD`}
+                    <span className="text-white/70" data-testid="cart-shipping-note">
+                      Calculated by destination
                     </span>
                   </div>
-                  {subtotal < 100 && (
-                    <p className="text-yellow-500 text-sm">
-                      Add ${Math.round(100 - subtotal).toLocaleString("en-US")} USD more for free shipping!
-                    </p>
-                  )}
                   <div className="border-t border-gray-800 pt-4">
                     <div className="flex justify-between text-white text-xl font-bold">
-                      <span>Total</span>
+                      <span>Subtotal</span>
                       <span className="text-yellow-500">${Math.round(total).toLocaleString("en-US")} USD</span>
                     </div>
+                    <p className="text-white/40 text-xs mt-2">
+                      Your full shipping address will be entered securely at checkout.
+                    </p>
                   </div>
                 </div>
                 <Button

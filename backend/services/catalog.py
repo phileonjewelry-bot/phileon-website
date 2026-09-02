@@ -554,7 +554,7 @@ def resolve_line_item(product_id: str,
 # ---------------------------------------------------------------------------
 # Totals + mixed-currency guard
 # ---------------------------------------------------------------------------
-def compute_totals(items: List[Dict]) -> Dict:
+def compute_totals(items: List[Dict], shipping_cents: int = 0, tax_cents: int = 0) -> Dict:
     if not items:
         raise CatalogError("EMPTY_CART: cannot compute totals for zero items.")
 
@@ -568,9 +568,12 @@ def compute_totals(items: List[Dict]) -> Dict:
     if not currency:
         raise CatalogError("MISSING_CURRENCY: resolved item is missing currency.")
 
+    if not isinstance(shipping_cents, int) or shipping_cents < 0:
+        raise CatalogError("INVALID_SHIPPING_CENTS: shipping_cents must be a non-negative integer.")
+    if not isinstance(tax_cents, int) or tax_cents < 0:
+        raise CatalogError("INVALID_TAX_CENTS: tax_cents must be a non-negative integer.")
+
     subtotal_cents = sum(i["unit_amount_cents"] * i["quantity"] for i in items)
-    shipping_cents = 0
-    tax_cents = 0
     total_cents = subtotal_cents + shipping_cents + tax_cents
     return {"subtotal_cents": subtotal_cents, "shipping_cents": shipping_cents,
             "tax_cents": tax_cents, "total_cents": total_cents, "currency": currency}
