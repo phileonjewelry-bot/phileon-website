@@ -20,7 +20,8 @@ from services.shipping_zones import (
     CURRENCY as SHIPPING_CURRENCY,
 )
 from services import metal_spot
-from models_orders import OrderV2, OrderV2Item, OrderV2Shipping, hash_status_token
+from services.fx_display import SUPPORTED_DISPLAY_CURRENCIES
+from models_orders import OrderV2, OrderV2Item, OrderV2Shipping, OrderV2Presentment, hash_status_token
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/checkout", tags=["checkout-v2"])
@@ -138,6 +139,12 @@ class StripeSessionIn(BaseModel):
     # Destination country — non-monetary, ISO-3166-1 alpha-2. Required.
     # Validated server-side against the approved shipping-zone allowlist.
     shipping_country: str = Field(min_length=2, max_length=2)
+    # OPTIONAL non-monetary UX preference recording the display currency the
+    # shopper had selected in the frontend when they submitted checkout.
+    # ── STRICTLY DISPLAY-ONLY. It NEVER drives Stripe, shipping, tax, the
+    # trusted amount, or the canonical order currency. Validated against
+    # the server-approved allowlist; any other value is rejected.
+    display_currency: Optional[str] = Field(default=None, min_length=3, max_length=3)
 
 
 class ShippingQuoteIn(BaseModel):
@@ -334,6 +341,18 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
                     "reused": True}
 
     status_token = secrets.token_urlsafe(32) if not existing else None
+    # Validate optional display-currency UX preference. This never touches
+    # money — only recorded on OrderV2 for audit.
+    display_currency_normalized: Optional[str] = None
+    if body.display_currency:
+        cand = body.display_currency.strip().upper()
+        if cand in SUPPORTED_DISPLAY_CURRENCIES:
+            display_currency_normalized = cand
+        else:
+            raise HTTPException(status_code=400, detail={
+                "code": "INVALID_DISPLAY_CURRENCY",
+                "message": "Display currency is not supported.",
+            })
     if existing:
         order = OrderV2(**existing)
     else:
@@ -348,6 +367,11 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             signature_required=signature_required_for_subtotal(totals["subtotal_cents"], zone),
             insurance_required=zone.insurance_required,
         )
+        presentment_block = None
+        if display_currency_normalized:
+            presentment_block = OrderV2Presentment(
+                display_currency_selected_at_session=display_currency_normalized,
+            )
         order = OrderV2(
             idempotency_key=idem,
             customer_email=body.customer_email,
@@ -359,6 +383,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             currency=totals["currency"],
             status_token_hash=hash_status_token(status_token),
             shipping=shipping_block,
+            presentment=presentment_block,
         )
         try:
             await db.orders_v2.insert_one(order.model_dump(mode="json"))
@@ -402,6 +427,11 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         billing_address_collection="required",
         shipping_address_collection={"allowed_countries": [body.shipping_country.upper()]},
         shipping_options=[trusted_shipping_option],
+        # Stripe Adaptive Pricing — customer is charged in their local
+        # currency when eligible. Falls back to canonical USD when Stripe
+        # deems ineligible. Server never quotes the local amount; only
+        # Stripe does.
+        adaptive_pricing={"enabled": True},
         metadata={"internal_order_id": order.id, "public_order_number": order.order_number},
     )
 
@@ -418,7 +448,17 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
                 **session_kwargs,
             )
         except stripe.error.InvalidRequestError as ire:  # type: ignore
-            if "automatic_payment_methods" in (str(getattr(ire, "param", "") or "") + str(ire)):
+            err_txt = str(getattr(ire, "param", "") or "") + str(ire)
+            if "adaptive_pricing" in err_txt:
+                # Account or API version doesn't support Adaptive Pricing —
+                # drop the flag and retry with the same trusted amount.
+                session_kwargs.pop("adaptive_pricing", None)
+                session = stripe.checkout.Session.create(
+                    automatic_payment_methods={"enabled": True, "allow_redirects": "always"},
+                    idempotency_key=hashlib.sha256(f"session-noap:{idem}".encode()).hexdigest(),
+                    **session_kwargs,
+                )
+            elif "automatic_payment_methods" in err_txt:
                 session = stripe.checkout.Session.create(
                     idempotency_key=hashlib.sha256(f"session-apm-off:{idem}".encode()).hexdigest(),
                     **session_kwargs,

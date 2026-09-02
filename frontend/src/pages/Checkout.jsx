@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { usePresentment } from "@/context/PresentmentContext";
 
 /**
  * PHILEON Secure Checkout.
@@ -97,6 +98,8 @@ const toPayloadItem = (i) => {
 export default function Checkout() {
   const navigate = useNavigate();
   const { items: cart } = useCart();
+  const presentment = usePresentment();
+  const isApprox = presentment.isApproximate;
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -184,6 +187,7 @@ export default function Checkout() {
         idempotency_key,
         price_move_acknowledged,
         shipping_country: shippingCountry,
+        display_currency: presentment.currency || null,
       }),
     });
     const data = await resp.json().catch(() => ({}));
@@ -282,8 +286,12 @@ export default function Checkout() {
                   </p>
                 )}
               </div>
-              <p className="text-white/75 text-[14px]">
-                ${formatMoney((i.unit_amount_cents || 0) * (i.qty || i.quantity || 1), (i.currency || "USD").toUpperCase())} {(i.currency || "USD").toUpperCase()}
+              <p className="text-white/75 text-[14px]" data-testid={`checkout-item-price-${idx}`}>
+                {(() => {
+                  const cents = (i.unit_amount_cents || 0) * (i.qty || i.quantity || 1);
+                  if (isApprox && cents) return `Approx. ${presentment.formatUsdCents(cents)}`;
+                  return `$${formatMoney(cents, (i.currency || "USD").toUpperCase())} ${(i.currency || "USD").toUpperCase()}`;
+                })()}
               </p>
             </div>
           ))}
@@ -293,7 +301,9 @@ export default function Checkout() {
               {shippingQuote
                 ? (shippingQuote.rate_cents === 0
                     ? "Complimentary"
-                    : `$${(shippingQuote.rate_cents / 100).toLocaleString("en-US")} USD`)
+                    : (isApprox
+                        ? `Approx. ${presentment.formatUsdCents(shippingQuote.rate_cents)}`
+                        : `$${(shippingQuote.rate_cents / 100).toLocaleString("en-US")} USD`))
                 : "Calculated by destination"}
             </p>
           </div>
@@ -329,7 +339,9 @@ export default function Checkout() {
                 <p className="text-white/85 text-[13px]" data-testid="shipping-quote-line">
                   {shippingQuote.rate_cents === 0
                     ? "Shipping — Complimentary"
-                    : `Shipping — $${(shippingQuote.rate_cents / 100).toLocaleString("en-US")} USD`}
+                    : (isApprox
+                        ? `Shipping — Approx. ${presentment.formatUsdCents(shippingQuote.rate_cents)}`
+                        : `Shipping — $${(shippingQuote.rate_cents / 100).toLocaleString("en-US")} USD`)}
                   <span className="text-white/40"> · {shippingQuote.service_label}</span>
                 </p>
               )}
@@ -378,6 +390,11 @@ export default function Checkout() {
               Payments are securely processed by Stripe. Card details never touch PHILEON servers.<br/>
               Flexible payment options (Affirm, Klarna, Afterpay, Apple Pay, Google Pay) may appear at checkout when eligible.
             </p>
+            {isApprox && (
+              <p className="text-white/40 text-[10px] tracking-[0.14em] mt-3" data-testid="checkout-adaptive-note">
+                Prices shown in {presentment.currency} are approximate. Final local amount confirmed at secure checkout.
+              </p>
+            )}
           </div>
         </form>
       </div>

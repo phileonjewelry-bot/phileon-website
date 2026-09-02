@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import { usePresentment } from '@/context/PresentmentContext';
 import { Minus, Plus, X, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +27,8 @@ const CartDrawer = () => {
     isOpen, 
     setIsOpen 
   } = useCart();
+  const presentment = usePresentment();
+  const isApprox = presentment.isApproximate;
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -116,8 +119,10 @@ const CartDrawer = () => {
                       </div>
                       
                       <div className="flex items-center gap-2">
-                        <span className="text-yellow-500 font-semibold text-sm">
-                          ${Math.round((item.unit_amount_cents * item.qty) / 100).toLocaleString("en-US")} {item.currency || "USD"}
+                        <span className="text-yellow-500 font-semibold text-sm" data-testid={`cart-drawer-item-price-${item.product_id}`}>
+                          {isApprox
+                            ? `Approx. ${presentment.formatUsdCents(item.unit_amount_cents * item.qty)}`
+                            : `$${Math.round((item.unit_amount_cents * item.qty) / 100).toLocaleString("en-US")} ${item.currency || "USD"}`}
                         </span>
                         <Button
                           onClick={() => removeFromCart(item.product_id, item.variant)}
@@ -141,15 +146,24 @@ const CartDrawer = () => {
               {/* Subtotal */}
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Subtotal</span>
-                <span className="text-white text-xl font-bold">
-                  ${getFormattedTotal()} {(() => {
-                    // If every line shares a single currency, show that.
-                    // Mixed-currency carts fall back to USD (unchanged).
+                <span className="text-white text-xl font-bold" data-testid="cart-drawer-subtotal">
+                  {(() => {
                     const currencies = Array.from(new Set(items.map(i => i.currency || "USD")));
-                    return currencies.length === 1 ? currencies[0] : "USD";
+                    const isSingleUsd = currencies.length === 1 && currencies[0] === "USD";
+                    const cents = items.reduce((s, i) => s + (i.unit_amount_cents * i.qty), 0);
+                    if (isSingleUsd && isApprox && cents > 0) {
+                      return `Approx. ${presentment.formatUsdCents(cents)}`;
+                    }
+                    const cur = currencies.length === 1 ? currencies[0] : "USD";
+                    return `$${getFormattedTotal()} ${cur}`;
                   })()}
                 </span>
               </div>
+              {isApprox && (
+                <p className="text-white/40 text-[10px] tracking-[0.14em]" data-testid="cart-drawer-approx-note">
+                  Final local amount confirmed at secure checkout.
+                </p>
+              )}
               
               {/* Shipping Note */}
               <p className="text-gray-500 text-xs">

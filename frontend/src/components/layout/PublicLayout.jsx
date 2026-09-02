@@ -6,6 +6,7 @@ import PhileonMenu from '@/components/PhileonMenu';
 import VaultUnlockSequence from '@/components/VaultUnlockSequence';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import PhileonPdpFooter from '@/components/PhileonPdpFooter';
+import CurrencySelector from '@/components/CurrencySelector';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import '@/styles/phileon-header.css';
@@ -126,6 +127,10 @@ const Header = ({ onVaultOpen }) => {
 
           {/* RIGHT ICONS (inline row) */}
           <div className="ph-right">
+            <div className="ph-desktop-only" data-testid="header-currency-selector">
+              <CurrencySelector compact />
+            </div>
+
             <Link
               to="/atelier"
               className="ph-atelier-link ph-desktop-only"

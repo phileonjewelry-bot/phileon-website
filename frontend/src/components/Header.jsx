@@ -4,6 +4,7 @@ import { Heart, Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import LiveGoldPriceTicker from './LiveGoldPriceTicker';
 import HeaderCartButton from './HeaderCartButton';
+import CurrencySelector from './CurrencySelector';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -183,6 +184,9 @@ const Header = () => {
 
             {/* Right Actions */}
             <div className="flex items-center space-x-3">
+              <div className="hidden sm:block" data-testid="header-currency-selector">
+                <CurrencySelector />
+              </div>
               <Link 
                 to="/wishlist"
                 className="relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/10 hover:border-white/25"
@@ -287,6 +291,15 @@ const Header = () => {
                 >
                   Contact
                 </Link>
+              </div>
+
+              {/* Currency selector — mobile */}
+              <div className="pt-4 border-t border-white/10" data-testid="mobile-currency-selector">
+                <p className="text-white/40 text-[10px] tracking-[0.35em] uppercase mb-3">Display currency</p>
+                <CurrencySelector />
+                <p className="text-white/30 text-[11px] leading-relaxed mt-3">
+                  Final local amount confirmed at secure checkout.
+                </p>
               </div>
             </div>
             

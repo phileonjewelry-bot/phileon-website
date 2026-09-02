@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, X } from 'lucide-react';
+import CurrencySelector from './CurrencySelector';
 
 // Navigation structure with categories and audiences
 const menuCategories = [
@@ -247,6 +248,31 @@ const PhileonMenu = ({ isOpen, onClose }) => {
         >
           Contact
         </Link>
+
+        {/* Currency selector — mobile */}
+        <div
+          style={{
+            marginTop: '24px',
+            paddingTop: '20px',
+            borderTop: '1px solid rgba(164,116,51,0.18)',
+          }}
+          data-testid="mobile-currency-selector-block"
+        >
+          <p style={{
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: '10px',
+            letterSpacing: '0.35em',
+            textTransform: 'uppercase',
+            marginBottom: '12px',
+          }}>Display currency</p>
+          <CurrencySelector />
+          <p style={{
+            color: 'rgba(255,255,255,0.3)',
+            fontSize: '11px',
+            lineHeight: '1.55',
+            marginTop: '10px',
+          }}>Final local amount confirmed at secure checkout.</p>
+        </div>
 
         {/* Footer */}
         <div style={{

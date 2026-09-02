@@ -4,11 +4,14 @@ import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { useToast } from '../hooks/use-toast';
+import { usePresentment } from '../context/PresentmentContext';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const presentment = usePresentment();
+  const isApprox = presentment.isApproximate;
 
   useEffect(() => {
     loadCart();
@@ -87,7 +90,9 @@ const Cart = () => {
                         </h3>
                       </Link>
                       <p className="text-gray-400 text-sm mb-4">{item.material}</p>
-                      <p className="text-yellow-500 font-bold text-xl">${Math.round(item.price).toLocaleString("en-US")} USD</p>
+                      <p className="text-yellow-500 font-bold text-xl" data-testid={`cart-item-price-${item.id}`}>
+                        {isApprox ? `Approx. ${presentment.formatDollars(item.price)}` : `$${Math.round(item.price).toLocaleString("en-US")} USD`}
+                      </p>
                     </div>
                     <div className="flex flex-col items-end justify-between">
                       <button
@@ -126,7 +131,9 @@ const Cart = () => {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-gray-400">
                     <span>Subtotal</span>
-                    <span className="text-white">${Math.round(subtotal).toLocaleString("en-US")} USD</span>
+                    <span className="text-white" data-testid="cart-subtotal">
+                      {isApprox ? `Approx. ${presentment.formatDollars(subtotal)}` : `$${Math.round(subtotal).toLocaleString("en-US")} USD`}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-400">
                     <span>Shipping</span>
@@ -137,8 +144,15 @@ const Cart = () => {
                   <div className="border-t border-gray-800 pt-4">
                     <div className="flex justify-between text-white text-xl font-bold">
                       <span>Subtotal</span>
-                      <span className="text-yellow-500">${Math.round(total).toLocaleString("en-US")} USD</span>
+                      <span className="text-yellow-500" data-testid="cart-total">
+                        {isApprox ? `Approx. ${presentment.formatDollars(total)}` : `$${Math.round(total).toLocaleString("en-US")} USD`}
+                      </span>
                     </div>
+                    {isApprox && (
+                      <p className="text-white/50 text-[11px] mt-2" data-testid="cart-approx-disclaimer">
+                        Final local amount confirmed at secure checkout. Canonical: ${Math.round(total).toLocaleString("en-US")} USD.
+                      </p>
+                    )}
                     <p className="text-white/40 text-xs mt-2">
                       Your full shipping address will be entered securely at checkout.
                     </p>

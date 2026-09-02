@@ -1,0 +1,31 @@
+{
+  "summary": "Phase A–E (Stripe Adaptive Pricing + PHILEON Display Localization) verified end-to-end. All 33 targeted backend unit tests (test_fx_display 9 / test_i18n_routes 3 / test_stripe_presentment_extractor 8 / test_display_currency_trust_boundary 13) pass. New live-integration suite (25 tests hitting REACT_APP_BACKEND_URL) also passes — covers /api/i18n/currencies|/rates|/currency-preview, /api/checkout/health (mode=test, 84 supported products, stripe_api_verified=true), and /api/checkout/stripe/session across all six approved display_currency×shipping_country pairs (USD/US, CAD/CA, GBP/GB, EUR/DE, AUD/AU, JPY/JP), each returning a real cs_test_… Stripe Checkout URL. INR display_currency correctly rejected 400 with detail.code=INVALID_DISPLAY_CURRENCY. All six monetary-injection fields (fx_rate, presentment_amount, localized_unit_amount, localized_total, localized_shipping, conversion_amount) rejected 422 with extra_forbidden by Pydantic model_config extra='forbid'. Backward-compat: omitted display_currency still succeeds. Direct Mongo inspection confirms new OrderV2 documents persist presentment.display_currency_selected_at_session with canonical currency='USD' unchanged (verified CAD/JPY/AUD sample orders). Historical order PHI-20260901-4CBC5C is UNTOUCHED (currency=CAD, total_cents=2265000, payment_status=paid, presentment absent) and still deserializes correctly. Frontend UI on https://labete-gallery.preview.emergentagent.com — CurrencySelector renders in header next to ATELIER (data-testid=header-currency-selector, currency-selector-trigger, currency-selector-menu, currency-option-USD..JPY), CAD selection persists in localStorage (phi_pres_currency=CAD, phi_pres_currency_expires ~30d ahead) and survives page reload, cart drawer renders 'Approx. C$5,431 CAD' with disclaimer 'Final local amount confirmed at secure checkout.', /checkout renders localized 'Approx. C$… CAD' order-summary line item plus data-testid=checkout-adaptive-note ('Prices shown in CAD are approximate. Final local amount confirmed at secure checkout.'), GB shipping quote renders 'Approx. C$91 CAD · International Standard — Tier 1' (US$65 × ~1.40 CAD rate). Regression: 135/136 legacy backend tests pass; the sole failure — test_usd_only_migration::test_dynamic_ring_migrated_to_approved_usd[annie-rose-foundation-700000] (750000 vs 700000) — is the pre-existing live-gold-spot drift documented in the review request, not a Phase A–E regression.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_adaptive_pricing_live_integration.py",
+    "/app/backend/tests/test_fx_display.py",
+    "/app/backend/tests/test_i18n_routes.py",
+    "/app/backend/tests/test_stripe_presentment_extractor.py",
+    "/app/backend/tests/test_display_currency_trust_boundary.py",
+    "/app/test_reports/pytest/pytest_results.xml",
+    "/app/test_reports/pytest/pytest_live_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "checkout.py create_stripe_session correctly forwards adaptive_pricing={'enabled': True} with SDK/API-version fallback (drops adaptive_pricing or automatic_payment_methods on InvalidRequestError). Well-guarded.",
+    "fx_display.py has clean 6h fresh / 48h stale / None-fallback layering; JPY conversion correctly treats zero-decimal currency. Suggest wrapping httpx.get in a bounded retry (single retry on network read) to reduce false stale-serves on transient blips — nice-to-have, not blocking.",
+    "StripeSessionIn.display_currency validation duplicates SUPPORTED_DISPLAY_CURRENCIES check inline; could migrate to a Pydantic field_validator for cleaner error surface, but current 400 INVALID_DISPLAY_CURRENCY is semantically correct.",
+    "OrderV2Presentment is optional; historical orders without the block deserialize cleanly (confirmed via PHI-20260901-4CBC5C).",
+    "extra='forbid' on StripeSessionIn is the correct trust boundary — money-injection attempts return 422 before ever reaching Stripe. Good defensive posture."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_adaptive_pricing_live_integration.py (new — 25-test live integration suite)"
+  ],
+  "success_rate": {"backend": "100% on Phase A–E acceptance (33/33 unit + 25/25 live). Regression 135/136 (annie-rose foundation known drift).", "frontend": "100% on Phase A–E frontend acceptance criteria."},
+  "seed_data_creation": "Three TEST_… OrderV2 documents were created via real Stripe test-session calls (canonical USD, presentment.display_currency_selected_at_session ∈ {CAD, JPY, AUD}). All are in test mode; no real payments completed.",
+  "test_credentials": "N/A (public storefront flows tested; no auth required).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Live integration suite at /app/backend/tests/test_adaptive_pricing_live_integration.py hits REACT_APP_BACKEND_URL and creates real Stripe test Checkout Sessions — do not run against LIVE. Frontend selectors verified: header currency selector data-testid='header-currency-selector' (wrapper), 'currency-selector-trigger' (button, shows active code), 'currency-selector-menu', 'currency-option-{USD|CAD|GBP|EUR|AUD|JPY}'. LocalStorage keys: 'phi_pres_currency' + 'phi_pres_currency_expires' (epoch ms, ~30d ahead). Checkout page mounts /checkout only when cart has items — otherwise routes redirect to /cart. To add item to cart on scacco-matto PDP: click sm-karat-10k-desktop → sm-colour-yellow-desktop → sm-ring-size-desktop-button → any [role=option] → sm-add-to-cart-desktop, then open cart via [data-testid=cart-button]. Shipping quote testids: shipping-country-select, shipping-quote-display, checkout-shipping-amount. The adaptive disclosure is at data-testid=checkout-adaptive-note. Historical order PHI-20260901-4CBC5C MUST NEVER be mutated. Known pre-existing test failure: test_usd_only_migration::annie-rose-foundation-700000 (live gold-spot drift) — do not attempt to fix, it is orthogonal to Phase A–E."
+}

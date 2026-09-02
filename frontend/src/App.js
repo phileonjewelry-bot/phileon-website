@@ -14,6 +14,7 @@ import CartDrawer from "@/components/CartDrawer";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { MarketPricingProvider } from "@/context/MarketPricingContext";
+import { PresentmentProvider } from "@/context/PresentmentContext";
 
 // Phase 6 — non-critical, non-commerce lazy surfaces
 const JournalIndexPage = lazy(() => import("@/pages/JournalPage").then((m) => ({ default: m.JournalIndexPage })));
@@ -159,6 +160,7 @@ function App() {
   return (
     <div className="min-h-screen bg-phileon-black">
       <MarketPricingProvider>
+      <PresentmentProvider>
       <CartProvider>
         <WishlistProvider>
           <BrowserRouter>
@@ -434,6 +436,7 @@ function App() {
       </BrowserRouter>
       </WishlistProvider>
     </CartProvider>
+    </PresentmentProvider>
     </MarketPricingProvider>
     <Toaster 
       position="bottom-right" 

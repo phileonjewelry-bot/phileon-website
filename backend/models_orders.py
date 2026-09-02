@@ -42,6 +42,37 @@ class OrderV2Shipping(BaseModel):
     po_box_flag: Optional[bool] = None
 
 
+class OrderV2Presentment(BaseModel):
+    """Optional Stripe Adaptive Pricing reconciliation block.
+
+    Canonical (`OrderV2.currency`, `OrderV2.total_cents`, …) stays USD for
+    every new order. This block records what Stripe actually charged the
+    customer in their local currency when Adaptive Pricing applied. Every
+    field is optional so orders where Stripe fell back to USD, or where
+    Adaptive Pricing was not offered, still deserialize cleanly.
+    """
+    model_config = ConfigDict(extra="ignore")
+    # Whatever Stripe authoritatively reports for the customer-charged
+    # currency and amount. Never derived from client input.
+    stripe_presentment_currency: Optional[str] = None
+    stripe_presentment_amount_cents: Optional[int] = None
+    # Convenience mirrors — same values, prefixed to match the shipping
+    # naming style used elsewhere on `OrderV2`. Present when Stripe reports
+    # a non-USD Adaptive Pricing presentment.
+    presentment_currency: Optional[str] = None
+    presentment_total_cents: Optional[int] = None
+    # Authoritative Stripe-derived exchange rate (presentment_total_cents /
+    # canonical_total_cents). NEVER the storefront's display-only FX rate.
+    fx_rate: Optional[float] = None
+    fx_rate_source: Optional[str] = None  # e.g. "stripe.adaptive_pricing"
+    # UX preference reported by the browser at session-create for audit
+    # only. It does NOT drive Stripe or the trusted amount.
+    display_currency_selected_at_session: Optional[str] = None
+    # Which Stripe field actually carried the presentment payload for this
+    # order. Documented per environment so support can trace shape drift.
+    extraction_source: Optional[str] = None
+
+
 class OrderV2(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -73,6 +104,15 @@ class OrderV2(BaseModel):
     customer_notification_sent: Optional[bool] = None
     internal_review_notification_sent: Optional[bool] = None
     shipping: Optional[OrderV2Shipping] = None
+    # Stripe Adaptive Pricing reconciliation — optional; historical orders
+    # have no `presentment` block. New canonical USD orders may or may not
+    # carry Adaptive Pricing depending on Stripe eligibility.
+    presentment: Optional[OrderV2Presentment] = None
+    # Optional presentment-integrity gate (mirrors `shipping_integrity_status`
+    # architecture). Only set to "pending_review" when a genuine like-for-
+    # like reconciliation defect is detected — Adaptive Pricing FX drift is
+    # NEVER a defect.
+    presentment_integrity_status: Optional[str] = None
     webhook_event_ids: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

@@ -1,6 +1,7 @@
 """Phase 1 — Stripe webhook receiver. Signature-verified, deduped, idempotent."""
 import logging, os
 from datetime import datetime, timezone
+from typing import Optional
 from fastapi import APIRouter, HTTPException, Request
 
 from services.shipping_zones import (
@@ -46,6 +47,108 @@ def _extract_shipping_amount_cents(session: dict) -> int:
         return int(amt or 0)
     except (TypeError, ValueError):
         return 0
+
+
+def _extract_stripe_presentment(session: dict, payment_intent: Optional[dict] = None) -> dict:
+    """Defensive Adaptive Pricing / presentment extractor.
+
+    Stripe API responses can carry the customer-charged (presentment)
+    currency + amount in several places depending on Adaptive Pricing
+    eligibility and API version. This reader is intentionally tolerant
+    and returns whatever authoritative Stripe fields are actually
+    populated. It NEVER derives values from client input or from the
+    storefront FX snapshot.
+
+    Return shape:
+        {
+          "presentment_currency": Optional[str],       # upper-case ISO
+          "presentment_amount_cents": Optional[int],
+          "extraction_source": Optional[str],          # audit trail
+        }
+
+    A non-None `presentment_currency` DIFFERENT from `session.currency`
+    signals that Stripe actually charged in a local currency. When they
+    match (or presentment is absent), the customer paid in USD.
+    """
+    if not isinstance(session, dict):
+        session = {}
+
+    presentment_currency: Optional[str] = None
+    presentment_amount: Optional[int] = None
+    source: Optional[str] = None
+
+    # 1) Modern Adaptive Pricing surfaces `presentment_details` on the
+    # Checkout Session and on the PaymentIntent. Prefer session first.
+    for parent, tag in ((session, "session.presentment_details"),
+                         (payment_intent or {}, "payment_intent.presentment_details")):
+        pd = parent.get("presentment_details") if isinstance(parent, dict) else None
+        if isinstance(pd, dict):
+            cur = pd.get("presentment_currency") or pd.get("currency")
+            amt = pd.get("presentment_amount") or pd.get("amount")
+            if cur:
+                presentment_currency = str(cur).upper()
+                if amt is not None:
+                    try:
+                        presentment_amount = int(amt)
+                    except (TypeError, ValueError):
+                        pass
+                source = tag
+                break
+
+    # 2) Legacy `currency_conversion` (Adaptive Pricing preview era). Kept
+    # only as a last-resort read for older orders. Never primary.
+    if presentment_currency is None:
+        cc = session.get("currency_conversion")
+        if isinstance(cc, dict):
+            cur = cc.get("customer_currency") or cc.get("currency")
+            amt = cc.get("amount_total") or cc.get("amount")
+            if cur:
+                presentment_currency = str(cur).upper()
+                if amt is not None:
+                    try:
+                        presentment_amount = int(amt)
+                    except (TypeError, ValueError):
+                        pass
+                source = "session.currency_conversion"
+
+    return {
+        "presentment_currency": presentment_currency,
+        "presentment_amount_cents": presentment_amount,
+        "extraction_source": source,
+    }
+
+
+def _build_presentment_block(session: dict, payment_intent: Optional[dict],
+                              canonical_total_cents: int, canonical_currency: str) -> Optional[dict]:
+    """Build the `OrderV2.presentment` update block from Stripe truth.
+    Returns `None` when Stripe reports no non-USD presentment (customer
+    was charged in USD). Never invents values.
+    """
+    p = _extract_stripe_presentment(session, payment_intent)
+    cur = p.get("presentment_currency")
+    amt = p.get("presentment_amount_cents")
+    if not cur:
+        return None
+    # If Stripe explicitly presented in the canonical currency, treat as
+    # "no adaptive presentment" — nothing new to persist.
+    if cur == (canonical_currency or "").upper() and (amt is None or amt == int(canonical_total_cents)):
+        return None
+    block: dict = {
+        "stripe_presentment_currency": cur,
+        "stripe_presentment_amount_cents": amt,
+        "presentment_currency": cur,
+        "presentment_total_cents": amt,
+        "fx_rate_source": "stripe.adaptive_pricing",
+        "extraction_source": p.get("extraction_source"),
+    }
+    # Authoritative FX rate = presentment/base. Only compute when both
+    # sides are non-zero to avoid divide-by-zero.
+    try:
+        if amt is not None and int(canonical_total_cents) > 0:
+            block["fx_rate"] = round(float(amt) / float(canonical_total_cents), 6)
+    except Exception:
+        pass
+    return block
 
 
 def _build_shipping_reconciliation(session: dict, order: dict) -> dict:
@@ -188,6 +291,23 @@ async def stripe_webhook(request: Request):
             logger.warning(f"stripe session retrieve failed for {obj.get('id')}: {type(e).__name__}")
             sess_full = obj  # fall back to the raw event object
         recon = _build_shipping_reconciliation(dict(sess_full or {}), order)
+        # Extract Stripe Adaptive Pricing presentment (defensive, tolerant
+        # of API-version differences). May be None when Stripe charged in
+        # canonical USD. Never derives from client input.
+        pi_full = None
+        try:
+            pi_id = obj.get("payment_intent")
+            if pi_id:
+                pi_full = stripe.PaymentIntent.retrieve(pi_id, expand=["presentment_details"])
+                pi_full = dict(pi_full or {})
+        except Exception as e:
+            logger.warning(f"stripe payment_intent retrieve failed for {order.get('order_number')}: {type(e).__name__}")
+            pi_full = None
+        presentment_block = _build_presentment_block(
+            dict(sess_full or {}), pi_full,
+            canonical_total_cents=int(order.get("subtotal_cents") or 0) + recon["shipping_cents"] + int(order.get("tax_cents") or 0),
+            canonical_currency=order.get("currency") or "USD",
+        )
         if paid:
             # Atomic first-paid transition. Only the first webhook that flips
             # payment_status→paid AND paid_notification_sent→True passes the
@@ -234,6 +354,13 @@ async def stripe_webhook(request: Request):
             # Merge reconciled shipping block into the persisted OrderV2.shipping.
             for k, v in (recon.get("shipping") or {}).items():
                 update["$set"][f"shipping.{k}"] = v
+            # Merge presentment block into `OrderV2.presentment` when Stripe
+            # actually reported a non-USD Adaptive Pricing charge. Adaptive
+            # Pricing FX difference is NEVER an integrity failure.
+            if presentment_block:
+                for k, v in presentment_block.items():
+                    if v is not None:
+                        update["$set"][f"presentment.{k}"] = v
             if not integrity_ok:
                 logger.warning(
                     f"SHIPPING_AMOUNT_MISMATCH order={order.get('order_number')} "

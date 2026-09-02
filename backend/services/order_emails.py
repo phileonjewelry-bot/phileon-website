@@ -35,7 +35,41 @@ logger = logging.getLogger(__name__)
 
 def _fmt_money(cents: int, currency: str) -> str:
     code = (currency or "USD").upper()
-    return f"${(int(cents) / 100):,.2f} {code}"
+    if code == "JPY":
+        # JPY has no minor units — cents are already yen×100 in our schema.
+        return f"¥{int(int(cents) / 100):,} {code}"
+    symbol = {
+        "USD": "$",
+        "CAD": "C$",
+        "GBP": "£",
+        "EUR": "€",
+        "AUD": "A$",
+    }.get(code, "$")
+    return f"{symbol}{(int(cents) / 100):,.2f} {code}"
+
+
+def _resolve_paid_display(order: Dict) -> Dict[str, object]:
+    """Return the authoritative pair (currency, total_cents) to render on
+    the customer paid email.
+
+    Priority:
+      1. Stripe Adaptive Pricing presentment (Stripe truth — never the
+         storefront's display FX rate) when available.
+      2. Canonical order currency + total (USD for every new order).
+    """
+    presentment = order.get("presentment") or {}
+    if isinstance(presentment, dict):
+        cur = (presentment.get("presentment_currency")
+               or presentment.get("stripe_presentment_currency"))
+        amt = (presentment.get("presentment_total_cents")
+               or presentment.get("stripe_presentment_amount_cents"))
+        if cur and amt is not None:
+            return {"currency": str(cur).upper(), "total_cents": int(amt),
+                    "is_presentment": True}
+    return {"currency": (order.get("currency") or "USD").upper(),
+            "total_cents": int(order.get("total_cents") or 0),
+            "is_presentment": False}
+
 
 
 def _shipping_line(currency: str) -> str:
@@ -113,12 +147,25 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
 
     Uses only:  order_number, items[{product_name, variant, quantity,
     unit_amount_cents}], total_cents, currency (order-level).
+
+    When Stripe Adaptive Pricing charged the customer in a non-USD local
+    currency, the prominent TOTAL renders Stripe's authoritative
+    presentment amount (never the storefront's display FX approximation).
+    Line items continue to render in the canonical order currency (USD).
     """
     order_no = order.get("order_number") or ""
-    currency = order.get("currency") or "USD"
-    total = _fmt_money(order.get("total_cents") or 0, currency)
+    canonical_currency = order.get("currency") or "USD"
+    paid = _resolve_paid_display(order)
+    total = _fmt_money(paid["total_cents"], paid["currency"])
     subject = f"PHILEON — Order {order_no} Confirmed"
-    shipping_line = _shipping_line(currency)
+    shipping_line = _shipping_line(canonical_currency)
+    canonical_reference = ""
+    if paid["is_presentment"]:
+        canonical_reference = (
+            f"<p style='font-size:11px;color:#7d7565;line-height:1.5;margin-top:8px;text-align:right;'>"
+            f"Canonical reference: {_fmt_money(order.get('total_cents') or 0, canonical_currency)}"
+            f"</p>"
+        )
     html = (
         f"{_CUSTOMER_HEAD_STYLE}"
         f"<div style='background:#0a0a0c;color:#e8e0cf;font-family:Georgia,serif;padding:48px 24px;'>"
@@ -130,21 +177,26 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
         f"    </h1>"
         f"    <p style='font-family:\"Playfair Display\",Georgia,serif;font-style:italic;color:#a89f89;margin:0 0 32px;'>Your PHILEON piece is now in motion.</p>"
         f"    <p style='font-size:14px;color:#e8e0cf;margin:0 0 8px;'>Order reference: <strong>{order_no}</strong></p>"
-        f"    <table style='width:100%;border-collapse:collapse;margin-top:24px;'>{_items_html(order.get('items') or [], currency)}</table>"
+        f"    <table style='width:100%;border-collapse:collapse;margin-top:24px;'>{_items_html(order.get('items') or [], canonical_currency)}</table>"
         f"    <div style='display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid #33322a;margin-top:8px;'>"
-        f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;color:#a89f89'>TOTAL</span>"
+        f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;color:#a89f89'>TOTAL PAID</span>"
         f"      <span class='phi-total-value' style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
         f"    </div>"
+        f"    {canonical_reference}"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>{shipping_line}</p>"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;'>Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch.</p>"
         f"  </div>"
         f"</div>"
     )
+    text_canonical = ""
+    if paid["is_presentment"]:
+        text_canonical = f"Canonical reference: {_fmt_money(order.get('total_cents') or 0, canonical_currency)}\n\n"
     text = (
         f"PHILEON — Order Confirmed.\n\n"
         f"Order reference: {order_no}\n\n"
-        f"{_items_text(order.get('items') or [], currency)}\n\n"
-        f"Total: {total}\n\n"
+        f"{_items_text(order.get('items') or [], canonical_currency)}\n\n"
+        f"Total paid: {total}\n"
+        f"{text_canonical}"
         f"{shipping_line}\n\n"
         f"Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch."
     )
@@ -153,18 +205,35 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
 
 def build_internal_paid_notification(order: Dict) -> Dict[str, str]:
     order_no = order.get("order_number") or ""
-    currency = order.get("currency") or "USD"
-    total = _fmt_money(order.get("total_cents") or 0, currency)
-    items_text = _items_text(order.get("items") or [], currency)
+    canonical_currency = order.get("currency") or "USD"
+    canonical_total = _fmt_money(order.get("total_cents") or 0, canonical_currency)
+    paid = _resolve_paid_display(order)
+    items_text = _items_text(order.get("items") or [], canonical_currency)
+    presentment_line_html = ""
+    presentment_line_text = ""
+    if paid["is_presentment"]:
+        customer_paid = _fmt_money(paid["total_cents"], paid["currency"])
+        presentment_line_html = f"<p><strong>Customer paid:</strong> {customer_paid}</p>"
+        presentment_line_text = f"Customer paid: {customer_paid}\n"
+    shipping = order.get("shipping") or {}
+    zone_key = shipping.get("zone_key") or "(unresolved)"
+    country = shipping.get("country") or "(unknown)"
     subject = f"[PHILEON] Paid order — {order_no}"
     html = (
         f"<div style='font-family:Georgia,serif;'>"
         f"<p><strong>Order:</strong> {order_no}</p>"
-        f"<p><strong>Total:</strong> {total}</p>"
+        f"{presentment_line_html}"
+        f"<p><strong>Canonical PHILEON order:</strong> {canonical_total}</p>"
+        f"<p><strong>Ship-to:</strong> {country} · zone {zone_key}</p>"
         f"<pre style='font-family:ui-monospace,monospace;white-space:pre-wrap'>{items_text}</pre>"
         f"</div>"
     )
-    text = f"Order: {order_no}\nTotal: {total}\n\n{items_text}\n"
+    text = (
+        f"Order: {order_no}\n"
+        f"{presentment_line_text}"
+        f"Canonical PHILEON order: {canonical_total}\n"
+        f"Ship-to: {country} · zone {zone_key}\n\n{items_text}\n"
+    )
     return {"subject": subject, "html": html, "text": text}
 
 
