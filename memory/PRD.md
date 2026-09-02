@@ -16,6 +16,29 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
+- **[DOC Sep 2] PHILEON TAX READINESS — DEFERRED, DOCUMENTED ONLY.**
+  - **Owner status recorded**: PHILEON is NOT registered for GST/HST, US sales tax, VAT, or any other sales-tax obligation. Tax collection is DEFERRED. No implementation performed.
+  - **Current authoritative posture (unchanged)**: `automatic_tax=false` on every Stripe Session · `tax_cents=0` on every new order · Stripe LIVE remains OFF · trusted catalog 84 · sitewide USD · Shipping Phase 1 rates locked (CA $0 · US $35 · T1 $65 · T2 $95) · `PHI-20260901-4CBC5C` untouched. Live-verified: last 5 Stripe TEST sessions all `automatic_tax.enabled=false`, `total_details.amount_tax=0`; all 3,767 `orders_v2` documents `tax_cents=0`.
+  - **Future default tax engine (documented, NOT activated)**: Stripe Tax with `automatic_tax={"enabled": True}` on `checkout.Session.create` once a registration exists. Origin address set to PHILEON's Canadian place of business. Jurisdictions added as Stripe Tax Registrations in the Stripe Dashboard per owner directive.
+  - **Future default product tax code (CORRECTED)**: **`txcd_30060007` — "Jewelry"** (Stripe preset). Applied as the default `product_data.tax_code` on every trusted line item at the moment Stripe Tax is activated. Per-product overrides only where a specific product genuinely requires a different classification. No per-product `tax_code` metadata is being added to the 84 trusted slugs today — the account-level default carries them all.
+  - **Future shipping-tax posture**: shipping-tax treatment is intentionally left as a separate future Stripe Tax configuration decision. Do not assume shipping is universally taxable. When Stripe Tax is activated, use Stripe's supported shipping-tax configuration so jurisdiction-specific shipping treatment is calculated by Stripe — not by PHILEON.
+  - **Future price behavior**: `tax_behavior: "exclusive"` — PHILEON storefront prices remain the merchandise value; tax is calculated and added on top by Stripe.
+  - **Server-authoritative boundary already in place** (nothing to build now): `compute_totals(..., tax_cents=0)` is tax-aware · `StripeSessionIn` has `extra="forbid"` so client cannot inject `tax_cents` / `tax_rate` / `tax_behavior` / `automatic_tax` / `customer_tax_exempt` / `tax_id` (HTTP 422) · `OrderV2.tax_cents: int = 0` persisted · `webhooks_stripe.py` recomputes `total_cents = subtotal + shipping + tax` on reconciliation.
+  - **Registration gate — required owner/accountant data before any activation**:
+    1. GST/HST registration status (registered vs unregistered vs voluntary sub-threshold)
+    2. Effective registration date (CRA-issued)
+    3. Applicable provincial registrations (QST · PST · RST)
+    4. Any US state registrations (nexus-driven; per state)
+    5. Any VAT/GST registrations outside Canada (UK VAT · EU VAT · IOSS · AU GST · NZ GST · JP JCT · SG GST — market-volume-driven)
+    6. Written owner directive listing the FIRST jurisdiction(s) to activate with effective date
+    7. Legal review of Canadian tax-invoice display requirements (GST/HST number + business name on receipts ≥ $30 CAD)
+    8. Legal review of tax-reversal / refund receipt requirements
+  - **Rollout gates when activation is approved** (still non-implemented today):
+    - Stripe Tax enabled in TEST first · registrations added · origin address set · default product tax code `txcd_30060007` set
+    - Backend: new `services/tax_config.py` with `STRIPE_TAX_ENABLED=False → True` sentinel + `SUPPLIER_STATUS` hard fail-fast · `create_stripe_session` passes `automatic_tax={"enabled": True}` + `tax_id_collection={"enabled": True}` + per-item `tax_code`/`tax_behavior` · `invoice_creation` toggled per legal review · webhook expands `total_details.breakdown.taxes` and persists a new nested `OrderV2Tax` (`total_tax_cents`, `stripe_tax_calculation_id`, `tax_lines[]`, `tax_id_collected`, `automatic_tax_status`) · new `tax_integrity_status="pending_review"` mirrors the shipping-integrity architecture · customer email renders a Tax line only when `order.tax_cents > 0` · full TEST refund/tax-reversal regression suite green before switching to LIVE.
+  - **What is NOT being built preemptively**: no PHILEON-maintained tax-rate table · no `GST_HST_NUMBER` env var · no per-product `tax_code` mass rollout across the 84 slugs · no trust-page copy edits (current copy "Applicable taxes may be added at checkout" describes future state accurately and remains harmless because no tax is being charged) · no touch to historical orders.
+
+
 - **[DONE Sep 2] SHIPPING INTEGRITY NOTIFICATION FINAL CORRECTION — OWNER-LOCKED.**
   - **New customer builder** `build_customer_payment_received_email(order)` — subject `"PHILEON — Payment Received · Order {n} Review"`, PHILEON editorial masthead `PAYMENT · RECEIVED.`, body communicates payment received + brief shipping-details review + no additional payment requested + fulfillment will proceed after review clears. **Never says** `ORDER CONFIRMED`; **never leaks** internal terminology (`SHIPPING_AMOUNT_MISMATCH`, `integrity failure`, `DO NOT SHIP`, `webhook`, `mismatch`) — enforced by regression test `test_pending_review_customer_email_does_not_leak_internal_terminology`.
   - **Notification-state model split** on `OrderV2` (all optional, backward-compatible):
