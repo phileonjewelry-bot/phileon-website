@@ -168,18 +168,88 @@ def build_internal_paid_notification(order: Dict) -> Dict[str, str]:
     return {"subject": subject, "html": html, "text": text}
 
 
+def build_internal_integrity_review_notification(order: Dict) -> Dict[str, str]:
+    """Internal-only alert for a Stripe-paid order that failed the shipping
+    trust boundary. Payment is real; fulfillment must NOT proceed until a
+    human reviews the mismatch.
+    """
+    order_no = order.get("order_number") or ""
+    currency = order.get("currency") or "USD"
+    total = _fmt_money(order.get("total_cents") or 0, currency)
+    stripe_shipping = _fmt_money(order.get("shipping_cents") or 0, currency)
+    shipping_meta = order.get("shipping") or {}
+    zone_key = shipping_meta.get("zone_key") or "(unresolved)"
+    country = shipping_meta.get("country") or "(unknown)"
+    service_label = shipping_meta.get("service_label") or "(unknown)"
+    items_text = _items_text(order.get("items") or [], currency)
+    subject = f"[PHILEON · REVIEW] Shipping-integrity hold — {order_no}"
+    html = (
+        f"<div style='font-family:Georgia,serif;background:#fff8ec;padding:24px;border:1px solid #c8a24a;'>"
+        f"<p style='color:#8a5a00;font-weight:bold;'>SHIPPING-INTEGRITY HOLD — DO NOT SHIP.</p>"
+        f"<p>Stripe payment succeeded for <strong>{order_no}</strong>, but the shipping "
+        f"amount Stripe collected did not match the trusted PHILEON zone rate. "
+        f"Fulfillment is paused pending review.</p>"
+        f"<p><strong>Order:</strong> {order_no}<br>"
+        f"<strong>Total charged:</strong> {total}<br>"
+        f"<strong>Stripe-collected shipping:</strong> {stripe_shipping}<br>"
+        f"<strong>Resolved zone / country / service:</strong> {zone_key} / {country} / {service_label}</p>"
+        f"<pre style='font-family:ui-monospace,monospace;white-space:pre-wrap'>{items_text}</pre>"
+        f"<p>Payment is real. Review the shipping selection in Stripe and reconcile before "
+        f"releasing fulfillment.</p>"
+        f"</div>"
+    )
+    text = (
+        f"PHILEON — SHIPPING-INTEGRITY HOLD — DO NOT SHIP.\n\n"
+        f"Stripe payment succeeded for {order_no}, but the shipping amount Stripe "
+        f"collected did not match the trusted PHILEON zone rate. Fulfillment is "
+        f"paused pending review.\n\n"
+        f"Order: {order_no}\n"
+        f"Total charged: {total}\n"
+        f"Stripe-collected shipping: {stripe_shipping}\n"
+        f"Resolved zone / country / service: {zone_key} / {country} / {service_label}\n\n"
+        f"{items_text}\n\n"
+        f"Payment is real. Review the shipping selection in Stripe and reconcile "
+        f"before releasing fulfillment."
+    )
+    return {"subject": subject, "html": html, "text": text}
+
+
 async def send_paid_order_emails(order: Dict) -> Dict[str, Optional[Dict]]:
     """Send the customer paid-order email and (if configured) an internal
     notification. Returns a small status dict for optional persistence.
     Never raises — email is a notification, not the source of truth.
+
+    Shipping-integrity separation (Phase 1):
+      - When `shipping_integrity_status == "pending_review"`, the customer's
+        normal "ORDER CONFIRMED." email is SUPPRESSED (fulfillment is on
+        hold), and the internal notification is REPLACED with a
+        shipping-integrity review alert. Payment truth is preserved — the
+        order remains `payment_status = "paid"`.
+      - For every other integrity state (including `None` and `"ok"`),
+        the previous dual-email behavior is preserved unchanged.
     """
     result: Dict[str, Optional[Dict]] = {"customer": None, "internal": None}
+    integrity = (order.get("shipping_integrity_status") or "").strip()
+    internal_to = (os.environ.get("PHILEON_ORDER_NOTIFICATION_EMAIL")
+                   or os.environ.get("PHILEON_CONCIERGE_NOTIFICATION_EMAIL") or "").strip()
+
+    if integrity == "pending_review":
+        # Do NOT send the customer's ORDER CONFIRMED email while the order
+        # is on an integrity hold — it would falsely imply fulfillment is
+        # proceeding normally.
+        result["customer"] = {"skipped": "shipping_integrity_review"}
+        if internal_to:
+            payload = build_internal_integrity_review_notification(order)
+            result["internal"] = await send_email(internal_to, payload["subject"], payload["html"], payload["text"])
+        else:
+            result["internal"] = {"skipped": "no_internal_recipient_configured"}
+        return result
+
+    # Normal (integrity OK or not set) — preserve existing behavior exactly.
     to = (order.get("customer_email") or "").strip()
     if to:
         payload = build_customer_paid_email(order)
         result["customer"] = await send_email(to, payload["subject"], payload["html"], payload["text"])
-    internal_to = (os.environ.get("PHILEON_ORDER_NOTIFICATION_EMAIL")
-                   or os.environ.get("PHILEON_CONCIERGE_NOTIFICATION_EMAIL") or "").strip()
     if internal_to:
         payload = build_internal_paid_notification(order)
         result["internal"] = await send_email(internal_to, payload["subject"], payload["html"], payload["text"])
