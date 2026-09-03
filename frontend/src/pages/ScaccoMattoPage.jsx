@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import RingSizeSelector, { ringSizeLabel, ringSizeSkuToken } from "@/components/RingSizeSelector";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * SCACCO MATTO — PHILEON Fine Jewelry → Rings (Unisex).
@@ -43,10 +44,10 @@ const PRICE_MAP = {
   "10K|white":  4100,
   "14K|white":  4500,
 };
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
 const SIZE_OPTIONS = ["4","4.5","5","5.5","6","6.5","7","7.5","8","8.5","9","9.5","10","10.5","11","11.5","12","custom"];
 
 export default function ScaccoMattoPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [karat, setKarat] = useState("10K");
   const [colour, setColour] = useState("yellow");
   const [size, setSize] = useState("");

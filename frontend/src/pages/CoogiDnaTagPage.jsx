@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "@/hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * COOGI DNA TAG — PHILEON × COOGI · Tribute Series · Pendant
@@ -118,6 +119,7 @@ const ENGRAVING_PLACEHOLDERS = [
 ];
 
 export default function CoogiDnaTagPage() {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const [isMounted, setIsMounted] = useState(false);
   const { isAdding, handleAddToCart } = useAddToCart();
   const tierPricesLive = useLiveTierPrices("coogiDnaTag");
@@ -140,7 +142,7 @@ export default function CoogiDnaTagPage() {
   const engravingUsd = engravingEnabled ? ENGRAVING_PRICE_USD : 0;
   const displayPrice = baseUsd + engravingUsd;
   const formattedPrice = displayPrice
-    ? `$${displayPrice.toLocaleString("en-US")} USD`
+    ? _localizedUsd(displayPrice)
     : "—";
 
   // Trimmed, uppercased inscription text — A–Z, 0–9, space, . , ' - / ° "

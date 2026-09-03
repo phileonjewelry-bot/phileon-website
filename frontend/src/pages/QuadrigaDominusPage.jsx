@@ -116,7 +116,8 @@ const AVAILABLE_SIZES = [
 
 const METAL_OPTIONS = ["10K", "14K"];
 
-function formatUsd(n) {
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
+function _formatUsdCanonical(n) {
   return `$${Number(n).toLocaleString("en-US")}`;
 }
 
@@ -148,6 +149,8 @@ function ColorwaySwatch({ id }) {
 // MAIN PAGE COMPONENT
 // --------------------------------------------------------------------------
 export default function QuadrigaDominusPage() {
+  const formatUsd = useLocalizedUsdFormatter();
+  const _isApprox = (formatUsd(0) || "").startsWith("Approx");
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
 
   // Persistent ref to the hero video so we can enforce muted-autoplay
@@ -429,9 +432,6 @@ export default function QuadrigaDominusPage() {
                 data-testid="quadriga-current-price"
               >
                 {formatUsd(activePrice)}
-                <span className="text-sm lg:text-base tracking-[0.2em] text-[#8e8e8e] ml-3 align-middle">
-                  USD
-                </span>
               </div>
             ) : (
               <div

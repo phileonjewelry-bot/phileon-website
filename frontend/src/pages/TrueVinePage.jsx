@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "@/hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * THE TRUE VINE — PHILEON Sacred Objects · Pendant
@@ -111,9 +112,10 @@ const CRAFT_NOTES = [
   },
 ];
 
-const fmtUsd = (n) => `$${Number(n || 0).toLocaleString("en-US")} USD`;
+const _fmtUsdCanonical = (n) => `$${Number(n || 0).toLocaleString("en-US")} USD`;
 
 export default function TrueVinePage() {
+  const fmtUsd = useLocalizedUsdFormatter();
   const [isMounted, setIsMounted] = useState(false);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const tierPricesLive = useLiveTierPrices("theTrueVine");

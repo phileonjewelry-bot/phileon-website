@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useMarketPricing } from "@/context/MarketPricingContext";
+import { usePresentment } from "@/context/PresentmentContext";
 import {
   calculateMetalValueCad,
   calculateLiveDisplayPrice,
@@ -13,6 +14,16 @@ import { products } from "@/data/products";
 const SLUG_TO_KEY = Object.fromEntries(
   Object.entries(products).map(([key, p]) => [p.slug, key])
 );
+
+/** Localize a canonical USD dollar amount through the presentment context.
+ * Returns the `.formatted` string with an "Approx. " prefix when non-USD.
+ * When USD is active, delegates to the legacy `formatUsd` so exact matching
+ * output is preserved end-to-end.
+ */
+function localizeUsdDollars(usdDollars, presentment) {
+  if (!presentment || !presentment.isApproximate) return `${formatUsd(usdDollars)} USD`;
+  return `Approx. ${presentment.formatDollars(usdDollars)}`;
+}
 
 /**
  * Resolve a product. Accepts either an internal key ("theGrandDame") or a
@@ -56,6 +67,7 @@ function normaliseTier(tierArg) {
  */
 export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
   const { market } = useMarketPricing();
+  const presentment = usePresentment();
 
   return useMemo(() => {
     const { key, product } = resolveProduct(productIdOrSlug);
@@ -65,14 +77,14 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
     if (product && product.pricingType === "fixed" && metal && tier) {
       const fixed = product.metals?.[metal]?.tiers?.[tier]?.price;
       if (typeof fixed === "number") {
-        return { price: fixed, formatted: formatUsd(fixed), isLive: false };
+        return { price: fixed, formatted: localizeUsdDollars(fixed, presentment), isLive: false };
       }
     }
 
     // ─ Live-price flow (unchanged) ─
     const productConfig = key ? livePricingConfig[key] : null;
     if (!productConfig) {
-      return { price: fallbackPrice, formatted: formatUsd(fallbackPrice), isLive: false };
+      return { price: fallbackPrice, formatted: localizeUsdDollars(fallbackPrice, presentment), isLive: false };
     }
 
     // Try the composite key first ("rose_signature"), then the plain tier key
@@ -80,7 +92,7 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
       (rawTier && productConfig[rawTier]) ||
       (tier && productConfig[tier]);
     if (!tierConfig) {
-      return { price: fallbackPrice, formatted: formatUsd(fallbackPrice), isLive: false };
+      return { price: fallbackPrice, formatted: localizeUsdDollars(fallbackPrice, presentment), isLive: false };
     }
 
     const currentMetalValueCad = calculateMetalValueCad({
@@ -98,8 +110,8 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
     // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding
     const displayPrice = cadToUsdLuxury(cadPrice);
 
-    return { price: displayPrice, formatted: formatUsd(displayPrice), isLive: true };
-  }, [productIdOrSlug, tierArg, fallbackPrice, market]);
+    return { price: displayPrice, formatted: localizeUsdDollars(displayPrice, presentment), isLive: true };
+  }, [productIdOrSlug, tierArg, fallbackPrice, market, presentment]);
 }
 
 /**
@@ -112,14 +124,15 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
  */
 export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
   const { market } = useMarketPricing();
+  const presentment = usePresentment();
 
   return useMemo(() => {
     const productConfig = livePricingConfig[productKey];
     if (!productConfig) {
       return {
         price: fallbackBasePrice,
-        formatted: formatUsd(fallbackBasePrice),
-        fromFormatted: formatUsd(fallbackBasePrice),
+        formatted: localizeUsdDollars(fallbackBasePrice, presentment),
+        fromFormatted: localizeUsdDollars(fallbackBasePrice, presentment),
         isLive: false,
       };
     }
@@ -144,11 +157,11 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
 
     return {
       price: lowestPrice,
-      formatted: formatUsd(lowestPrice),
-      fromFormatted: formatUsd(lowestPrice),
+      formatted: localizeUsdDollars(lowestPrice, presentment),
+      fromFormatted: localizeUsdDollars(lowestPrice, presentment),
       isLive: true,
     };
-  }, [productKey, fallbackBasePrice, market]);
+  }, [productKey, fallbackBasePrice, market, presentment]);
 }
 
 /**
@@ -159,6 +172,7 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
  */
 export function useLiveTierPrices(productKey) {
   const { market } = useMarketPricing();
+  const presentment = usePresentment();
 
   return useMemo(() => {
     const productConfig = livePricingConfig[productKey];
@@ -178,8 +192,8 @@ export function useLiveTierPrices(productKey) {
       });
       // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding
       const livePrice = cadToUsdLuxury(livePriceCad);
-      result[tierKey] = { price: livePrice, formatted: formatUsd(livePrice) };
+      result[tierKey] = { price: livePrice, formatted: localizeUsdDollars(livePrice, presentment) };
     }
     return result;
-  }, [productKey, market]);
+  }, [productKey, market, presentment]);
 }

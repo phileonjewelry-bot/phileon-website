@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * VEYRON NOIR — PHILEON Tribute Series
@@ -54,11 +55,12 @@ const METAL_OPTIONS = [
   { id: "gold18k", label: "18K White Gold",  short: "18K",    tierKey: "gold18k", stones: "Natural Stones",    tier: "HEIRLOOM",   priceUsd: 7000 },
 ];
 
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 const RING_SIZES = ["8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13"];
 
 export default function VeyronNoirPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [scrollY, setScrollY] = useState(0);
   const [metalId, setMetalId] = useState("gold14k");
   const [ringSize, setRingSize] = useState("9.5");

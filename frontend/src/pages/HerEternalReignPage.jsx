@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { products } from "@/data/products";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 // H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring · USD
 // 8 uploaded studio/lifestyle plates. Ordered newest-first from the artifact
@@ -65,6 +66,7 @@ const GEM_IDENTITIES = [
 ];
 
 export default function HerEternalReignPage() {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const { addToCart } = useCart();
   const [size, setSize] = useState("7");
   const [tierKey, setTierKey] = useState("14k");
@@ -217,7 +219,7 @@ export default function HerEternalReignPage() {
                         <p className="text-[11px] tracking-[0.32em] uppercase">{t.name}{t.most && <span className="ml-3 text-[9px] tracking-[0.32em] text-[#c8a25f]">MOST CHOSEN</span>}</p>
                         <p className="text-[13px] text-[#efe6d5]/70 mt-1">{t.metal} · {t.stones}</p>
                       </div>
-                      <p className="text-[15px] text-[#f2e6c8] whitespace-nowrap">${(t.base + (figures - 17) * t.per).toLocaleString("en-US")} USD</p>
+                      <p className="text-[15px] text-[#f2e6c8] whitespace-nowrap">{_localizedUsd(t.base + (figures - 17) * t.per)}</p>
                     </div>
                   </button>
                 ))}
@@ -234,13 +236,13 @@ export default function HerEternalReignPage() {
                   <p>{tier.metal}</p>
                   <p className="text-[#efe6d5]/55 text-[12px] mt-1">{tier.stones}</p>
                 </div>
-                <p className="text-[26px] md:text-[30px] text-[#f2e6c8]" data-testid="her-price">${price.toLocaleString("en-US")} USD</p>
+                <p className="text-[26px] md:text-[30px] text-[#f2e6c8]" data-testid="her-price">{_localizedUsd(price)}</p>
               </div>
             </div>
 
             <button onClick={handleAdd} data-testid="her-add-to-cart"
               className="mt-6 w-full bg-[#c8a25f] text-[#0a0806] rounded-[2px] py-4 text-[11px] tracking-[0.32em] font-medium hover:bg-[#d4b070] transition-colors">
-              ADD TO CART · ${price.toLocaleString("en-US")} USD
+              ADD TO CART · {_localizedUsd(price)}
             </button>
             <p className="mt-3 text-[11px] tracking-[0.06em] text-[#efe6d5]/45">SKU {sku}</p>
           </div>

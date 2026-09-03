@@ -16,6 +16,16 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
+- **[DONE Sep 3] SITEWIDE PDP PRICE LOCALIZATION (P0 FINAL PASS) — 100% GREEN. OWNER-LOCKED.**
+  - Every trusted PDP hero + tier/variant + selector price surface now renders through the shared `usePresentment()` layer. Canonical USD backend catalog stays USD end-to-end (84 products); no trusted money math altered.
+  - **DRY hook wiring:** `hooks/useLivePrice.js` `useLivePrice` / `useLiveFromPrice` / `useLiveTierPrices` now return presentment-localized `.formatted` strings — every consumer (RingProductPage, EarringsProductPage, PendantProductPage, LiveFromPrice) auto-localizes. `hooks/useLocalizedUsdFormatter.js` provides a component-scoped `formatUsd(n)` for fixed-price PDPs.
+  - **PDPs audited:** 24 · **PDPs localized:** 24 · **Intentionally excluded:** RETRO BRED (vault-gated legacy CAD messaging; backend canonical remains USD $4,500/$8,000/$9,000) · Journal price references (per owner spec — separate future audit).
+  - **Smoke matrix (all pass):** USD `$X,XXX USD` canonical · CAD/GBP/EUR/AUD/JPY show `Approx. …` with correct symbol and zero-decimal JPY. Currency selector round-trip updates instantly with no SKU/quantity/variant/canonical-cents mutation. 30-day persistence verified.
+  - **First-visit currency ribbon** (`components/CurrencyRibbon.jsx`) — copy: **"Viewing estimated prices in {CURRENCY} · Final local amount confirmed at checkout"**. Dismissal persists ~30 days via `phi_currency_ribbon_dismissed_until`. No bank-statement or fee promise. Renders only when auto-detected non-USD + no manualCurrency + not dismissed. CDN country headers stripped by preview-env ingress; ribbon fires automatically behind CF/Vercel in production.
+  - **Test-agent verdicts:** iteration_17.json flagged 3 P0 bugs → iteration_18.json ALL GREEN after fix. `retest_needed=false`. Backend regression 914/915 (sole failure is documented pre-existing gold-spot drift `annie-rose-foundation`).
+  - **Invariants preserved:** catalog **84** · currency **USD** · Stripe **TEST-only** · tax disabled · shipping rates unchanged · RRE `$350/$1,100/$1,400/$1,800 USD` · RETRO BRED canonical `$4,500/$8,000/$9,000 USD` · **historical `PHI-20260901-4CBC5C` UNTOUCHED**.
+  - **Files new** (3): `frontend/src/hooks/useLocalizedUsdFormatter.js`, `frontend/src/components/PresentmentPrice.jsx`, `frontend/src/components/CurrencyRibbon.jsx`.
+
 - **[DONE Sep 2] PHILEON STRIPE ADAPTIVE PRICING + DISPLAY LOCALIZATION — PHASES A–E COMPLETE. OWNER-LOCKED.**
   - **Adaptive Pricing TEST=ON.** `stripe.checkout.Session.create` now forwards `adaptive_pricing={"enabled": True}` on every trusted session; verified against Stripe SDK 14.1.0 · API version `2025-12-15.clover`. Defensive SDK/API-version fallback drops the flag on `InvalidRequestError` so session creation still succeeds with the same trusted USD amount.
   - **Modern Stripe presentment field in this environment:** primary read = `payment_intent.presentment_details` / `session.presentment_details`; legacy fallback = `session.currency_conversion`. On session-create the field is `None` (populates only after customer completes payment on Stripe hosted checkout).

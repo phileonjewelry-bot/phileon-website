@@ -707,7 +707,7 @@ const HomePage = () => {
                     className="text-sm mt-2 tracking-[0.18em]"
                     style={{ color: '#2D63C8' }}
                   >
-                    <LiveFromPrice slug="neighborhood-nip" fallback={`${formatUsd(cadToUsdLuxury(19950))} USD`} />
+                    <LiveFromPrice slug="neighborhood-nip" fallback={formatUsd(cadToUsdLuxury(19950))} />
                   </p>
                 </div>
               </Link>

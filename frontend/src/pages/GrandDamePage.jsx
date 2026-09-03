@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { products } from "@/data/products";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "../hooks/useLocalizedUsdFormatter";
 
 export default function GrandDamePage() {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const product = products.theGrandDame;
   const heroVideoRef = useRef(null);
   const hasHeroVideo = !!product.hero?.videoSrc;
@@ -16,7 +18,7 @@ export default function GrandDamePage() {
   const metalObj = product.metals[metal];
   const tierObj = metalObj?.tiers?.[tier];
   const price = tierObj?.price || 0;
-  const formattedPrice = `$${price.toLocaleString("en-US")} USD`;
+  const formattedPrice = _localizedUsd(price);
 
   const onAddToCart = () => {
     handleAddToCart({
@@ -359,7 +361,7 @@ export default function GrandDamePage() {
                       {t.description}
                     </p>
                     <p className={`gd-cinzel text-[16px] mt-5 ${isSel ? "text-white" : "text-white/70"}`}>
-                      ${t.price.toLocaleString("en-US")} USD
+                      {_localizedUsd(t.price)}
                     </p>
                   </button>
                 );

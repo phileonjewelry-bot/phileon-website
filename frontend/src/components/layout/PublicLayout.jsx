@@ -7,6 +7,7 @@ import VaultUnlockSequence from '@/components/VaultUnlockSequence';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import PhileonPdpFooter from '@/components/PhileonPdpFooter';
 import CurrencySelector from '@/components/CurrencySelector';
+import CurrencyRibbon from '@/components/CurrencyRibbon';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import '@/styles/phileon-header.css';
@@ -317,6 +318,9 @@ const PublicLayout = () => {
       <div className="min-h-screen flex flex-col">
         {/* Live Metal Price Ticker - Fixed at very top */}
         <LiveMetalTicker />
+
+        {/* First-visit international currency ribbon (dismissible, ~30d memory) */}
+        <CurrencyRibbon />
         
         {/* Header */}
         <Header onVaultOpen={handleVaultTrigger} />

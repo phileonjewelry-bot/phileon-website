@@ -8,8 +8,10 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import { Button } from "../components/ui/button";
 import { products } from "../data/products";
 import { useLiveTierPrices } from "../hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "../hooks/useLocalizedUsdFormatter";
 
 export default function PTPCuffPage() {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const { isAdding, handleAddToCart: addWithAnimation, buttonText, buttonClass } = useAddToCart();
   const product = products.ptpCuff;
   const tierPricesLive = useLiveTierPrices("ptpCuff");
@@ -191,9 +193,8 @@ export default function PTPCuffPage() {
                             "text-lg font-light",
                             isSelected ? "text-[#C6A24A]" : "text-white/80"
                           ].join(" ")}>
-                            ${edition.price.toLocaleString()}
+                            {tierPricesLive[edition.pricingKey]?.formatted || _localizedUsd(edition.price)}
                           </p>
-                          <p className="text-white/40 text-[10px] tracking-wider">USD</p>
                         </div>
                       </div>
                     </button>
@@ -211,7 +212,7 @@ export default function PTPCuffPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-white/50 text-xs tracking-widest uppercase">Price</p>
-                    <p className="text-[#C6A24A] text-xl font-light mt-1">${selectedEdition.price.toLocaleString()} <span className="text-sm text-white/40">USD</span></p>
+                    <p className="text-[#C6A24A] text-xl font-light mt-1">{_localizedUsd(selectedEdition.price)}</p>
                   </div>
                 </div>
               </div>

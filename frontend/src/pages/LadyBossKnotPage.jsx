@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 const HERO_IMG = "/lady-boss-knot/hero.jpg";
 const HERO_ALT = "LADY BOSS KNOT — gold woven tie pendant on Cuban-link chain, worn over black tuxedo and fedora.";
@@ -14,9 +15,10 @@ const METAL_CHOICES = [
 ];
 const LABEL_FOR = { silver: "Sterling Silver", gold10k_yellow: "10K Yellow Gold", gold10k_white: "10K White Gold" };
 const SHORT_FOR = { silver: "SLV", gold10k_yellow: "10Y", gold10k_white: "10W" };
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 export default function LadyBossKnotPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [scrollY, setScrollY] = useState(0);
   const [metalChoice, setMetalChoice] = useState("gold10k_yellow");
   const [hasUserSelected, setHasUserSelected] = useState(false);

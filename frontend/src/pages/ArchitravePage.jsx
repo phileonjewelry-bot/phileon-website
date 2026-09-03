@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { cadToUsdLuxury } from "@/lib/livePricing";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * ARCHITRAVE — PHILEON Fine Jewelry
@@ -68,7 +69,7 @@ const EDITIONS = EDITIONS_INTERNAL.map((e) => ({
 }));
 const DEFAULT_EDITION_KEY = "14k-white-lab";
 
-const fmtUSD = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
+const _fmtUSDCanonical = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
 
 // Gallery order — image-only cells + one silent portrait film. No visible captions.
 // Alt text preserved for a11y.
@@ -82,6 +83,7 @@ const GALLERY = [
 ];
 
 export default function ArchitravePage() {
+  const fmtUSD = useLocalizedUsdFormatter();
   useLuxuryMotionObserver();
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [editionKey, setEditionKey] = useState(DEFAULT_EDITION_KEY);

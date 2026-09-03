@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "../hooks/useLocalizedUsdFormatter";
 
 /**
  * BATTENTI DELLA VILLA — PHILEON Fine Jewelry
@@ -169,9 +170,10 @@ const METAL_TIERS = [
   },
 ];
 
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 export default function BattentiDellaVillaPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [isMounted, setIsMounted] = useState(false);
   const [activeFrame, setActiveFrame] = useState(0);
   // Default to 18K — the piece as it was always intended.

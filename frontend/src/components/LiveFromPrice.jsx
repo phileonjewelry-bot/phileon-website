@@ -1,4 +1,5 @@
 import { useLiveFromPrice, useLivePrice } from "@/hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 import { products } from "@/data/products";
 
 // Maps product slug to livePricingConfig key
@@ -84,16 +85,17 @@ export function LiveFromPrice({ slug, fallback }) {
 
   const liveKey = SLUG_TO_KEY[slug] || null;
   const { fromFormatted, isLive } = useLiveFromPrice(liveKey, 0);
+  const _localizedUsd = useLocalizedUsdFormatter();
 
   if (isFixedMultiMetal) {
-    return <>{fixedFormatted} USD</>;
+    // Hooks already format with " USD" or "Approx. C$… CAD" — no double suffix.
+    return <>{fixedFormatted}</>;
   }
   if (fixedVariant) {
-    const formatted = `$${fixedVariant.price.toLocaleString("en-US")}`;
-    return <>{formatted} USD</>;
+    return <>{_localizedUsd(fixedVariant.price)}</>;
   }
   if (isLive) {
-    return <>{fromFormatted} USD</>;
+    return <>{fromFormatted}</>;
   }
   return <>{fallback}</>;
 }

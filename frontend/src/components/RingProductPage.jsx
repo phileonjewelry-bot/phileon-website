@@ -10,6 +10,8 @@ import ParabolaFamilyNav from "./ParabolaFamilyNav";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "../hooks/useLivePrice";
 import { slugToProductKey } from "../components/LiveFromPrice";
+import { usePresentment } from "../context/PresentmentContext";
+import { formatUsd } from "../lib/livePricing";
 import RingSizeSelector, {
   DEFAULT_RING_SIZE,
   ringSizeLabel,
@@ -17,11 +19,19 @@ import RingSizeSelector, {
   ringSizeSkuToken,
 } from "./RingSizeSelector";
 
+// Localize a canonical USD dollar amount through the presentment layer.
+// Used for fallback rendering when the live-tier hook has no formatted value.
+function _localize(usdDollars, presentment) {
+  if (!presentment || !presentment.isApproximate) return `${formatUsd(usdDollars)} USD`;
+  return `Approx. ${presentment.formatDollars(usdDollars)}`;
+}
+
 export default function RingProductPage({ product }) {
   const videoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const productKey = slugToProductKey(product.slug) || product.slug;
   const tierPricesLive = useLiveTierPrices(productKey);
+  const presentment = usePresentment();
 
   const [activeMedia, setActiveMedia] = useState(0);
   const [selectedTier, setSelectedTier] = useState(
@@ -283,7 +293,7 @@ export default function RingProductPage({ product }) {
           </p>
 
           <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
-            {tierPricesLive[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`}
+            {tierPricesLive[selectedTier]?.formatted || _localize(currentTier.price, presentment)}
           </div>
 
           <p className="text-sm text-[#b5b5b5] mb-8 leading-relaxed">
@@ -315,7 +325,7 @@ export default function RingProductPage({ product }) {
                         {tier.metal}
                       </div>
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
-                        {tierPricesLive[key]?.formatted || `$${tier.price.toLocaleString()}`}
+                        {tierPricesLive[key]?.formatted || _localize(tier.price, presentment)}
                       </div>
                     </div>
 
@@ -368,7 +378,7 @@ export default function RingProductPage({ product }) {
               className="mt-4 text-xs tracking-[0.14em] text-[#C6A25D]/70"
               data-testid="metal-selected-confirmation"
             >
-              Metal Selected: {currentTier.metal} · ${currentTier.price.toLocaleString()}
+              Metal Selected: {currentTier.metal} · {_localize(currentTier.price, presentment)}
             </p>
           </div>
 

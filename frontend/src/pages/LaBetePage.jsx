@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /* ═══════════════════════════════════════════════════════════════
    TRIBUTE: LA BÊTE — "The Beast"
@@ -13,6 +14,7 @@ import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 ═══════════════════════════════════════════════════════════════ */
 
 export default function LaBetePage() {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const product = products.labete;
   const [selectedTier, setSelectedTier] = useState("signature");
   const [selectedSize, setSelectedSize] = useState("");
@@ -543,7 +545,7 @@ export default function LaBetePage() {
                           )}
                         </div>
                         <p className={`text-[14px] ${isActive ? "text-white/70" : "text-white/30"}`}>
-                          {tierPricesLive[key]?.formatted || `$${product.pricing[key].toLocaleString()}`} USD
+                          {tierPricesLive[key]?.formatted || _localizedUsd(product.pricing[key])}
                         </p>
                       </div>
                     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 const HERO_IMG = "/uncle-jo/hero.jpg";
 const HERO_VIDEO = "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d4et2wch_hf_20260809_020523_4d0bfe80-5e93-4f5c-9789-31ce409fe646.mp4";
@@ -28,7 +29,7 @@ const SELECTION_OPTIONS = [
 
 const RING_SIZES = ["8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13"];
 
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 const SPECS_RING = [
   ["Collection", "Signature Mesh Collection"],
@@ -53,6 +54,7 @@ const GALLERY = [
 ];
 
 export default function UncleJoPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [scrollY, setScrollY] = useState(0);
   const [metalId, setMetalId] = useState("silver");
   const [selectionId, setSelectionId] = useState("ring");

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 const HERO_IMG_GOLD = "/boss-knot/hero.jpg";        // Marquee gold shot — default landing
 const HERO_IMG_SILVER = "/boss-knot/archive-10.png"; // Silver variant hero
@@ -34,7 +35,7 @@ const SHORT_FOR = {
   gold10k_white:  "10W",
 };
 
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 const SPECS = [
   ["Collection", "The Collective"],
@@ -82,6 +83,7 @@ const GOLD_GALLERY = [
 ];
 
 export default function BossKnotPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [scrollY, setScrollY] = useState(0);
   // Default selection = Yellow Gold (marquee).
   const [metalChoice, setMetalChoice] = useState("gold10k_yellow");

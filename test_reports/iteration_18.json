@@ -1,0 +1,23 @@
+{
+  "summary": "Retest of the 3 P0 fixes from iteration_17 — ALL GREEN. (1) BoundPage /products/bound: In USD mode 'From $10,000 USD' + hero '$13,000 USD' + all three tier tiles carry the ' USD' suffix; in CAD mode all price render 'Approx. C$X,XXX CAD' with NO 'CAD USD' double-suffix anywhere. (2) PTPCuffPage /products/ptp-cuff: All three tier tiles (Movement/Signature/Heirloom, note real pricingKeys are movement/signature/heirloom not foundation) switch cleanly USD<->CAD — USD mode shows '$1,050 USD / $2,500 USD / $4,000 USD' and CAD mode shows 'Approx. C$1,462 CAD / Approx. C$3,481 CAD / Approx. C$5,570 CAD' — screenshot attached. No standalone <p>USD</p> label leaking. (3) RingProductPage USD-suffix regression fixed: LA MARVA current-price='$18,000 USD' (Foundation $8,000 USD / Signature $18,000 USD / Heirloom $22,000 USD), ANNIE ROSE current-price='$10,400 USD', BAJAN JOE current-price='$795 USD'. Backend sanity: /api/checkout/health → 84 supported_products, mode=test, stripe_api_verified=true. Not re-running adaptive_pricing_live_integration per review instruction.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PTPCuffPage.jsx line 215 (Selected Edition Summary price) still uses _localizedUsd(selectedEdition.price) rather than tierPricesLive[selectedEdition.pricingKey]?.formatted. In practice useLocalizedUsdFormatter is presentment-aware so output is correct today, but for consistency with the tier tiles (line 196) it should consume .formatted directly — otherwise the summary can drift if the live-price hook diverges from the static formatter.",
+    "The dual-source-of-truth pattern (localizeUsdDollars in useLivePrice.js and _localize in RingProductPage.jsx are byte-identical duplicates) remains — recommend hoisting one shared helper into presentment context (formatDollars({withCode:true})) to prevent future regressions."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (health check + prior iteration 16 regression)", "frontend": "100% on the 3 previously-failing P0 flows (BoundPage, PTPCuffPage, RingProductPage-based LA MARVA / ANNIE ROSE / BAJAN JOE) in both USD and CAD modes"},
+  "seed_data_creation": "None. Only localStorage phi_pres_currency toggled between USD and CAD for verification.",
+  "test_credentials": "N/A (public storefront).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Iteration 17's 3 P0 fixes are all confirmed green in iteration 18. BoundPage no longer double-suffixes ' USD' after localized strings, PTPCuffPage tier tiles now consume tierPricesLive[key].formatted, and useLivePrice.localizeUsdDollars + RingProductPage._localize both append ' USD' in the non-approximate (USD) branch. Backend invariants unchanged: 84 products, mode=test, stripe_api_verified. Historical order PHI-20260901-4CBC5C not touched. Note for future: PTP-Cuff data-testids use edition-movement / edition-signature / edition-heirloom (not edition-foundation). Consider consolidating the duplicated localize helper into presentment.formatDollars for maintainability.",
+  "rca of the issue": "N/A — all 3 P0 issues are resolved this iteration."
+}

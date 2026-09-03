@@ -1,0 +1,54 @@
+{
+  "summary": "P0 sitewide PDP price localization audit complete. Backend regression 914/915 pass (sole failure test_usd_only_migration::annie-rose-foundation-700000 is the pre-existing gold-spot drift documented in the review). /api/checkout/health confirms 84 supported_products, mode=test, stripe_api_verified=true. Currency-selector CAD/GBP/EUR/AUD/JPY switching + 30-day localStorage persistence (phi_pres_currency, phi_pres_currency_expires ~30d ahead) verified. JPY renders zero-decimal 'Approx. \u00a5622,440 JPY' correctly on scacco-matto. Cart-drawer localization works (SCACCO MATTO shows 'Approx. C$5,431 CAD' in CAD mode) and canonical phileon_cart storage retains unit_amount_cents=390000 in USD. First-visit ribbon correctly suppressed when suggested=USD (default env) AND when a manualCurrency is set. PDP-per-PDP smoke covered 24 PDPs. HOWEVER three real display bugs were found that block P0 acceptance for the listed URLs.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "BoundPage (/products/bound)",
+        "issue": "Non-USD 'From' price renders with trailing literal ' USD' suffix, e.g. in CAD mode shows 'From Approx. C$13,925 CAD USD'. Root cause: /app/frontend/src/pages/BoundPage.jsx line 696 appends a hardcoded ' USD' after tierPrices.foundation?.formatted. When formatted='Approx. C$13,925 CAD' the concatenation produces a double-suffix.",
+        "selector": "text=/From Approx\\. C\\$.*CAD USD/",
+        "priority": "HIGH"
+      },
+      {
+        "component": "PTPCuffPage (/products/ptp-cuff)",
+        "issue": "Tier tile prices bypass presentment layer entirely. In CAD mode the primary/CTA price flips to 'Approx. C$3,481 CAD' but the three tier tiles still display '$1,050 USD', '$2,500 USD', '$4,000 USD'. Root cause: /app/frontend/src/pages/PTPCuffPage.jsx line 196-198 renders `${edition.price.toLocaleString()}` with a static <p>USD</p> label; useLiveTierPrices is called (line 17) but only .price is consumed, not .formatted.",
+        "selector": "[data-testid='ptp-cuff-tier-*'] text=/\\$[0-9,]+ USD/",
+        "priority": "HIGH"
+      },
+      {
+        "component": "useLivePrice.localizeUsdDollars + formatUsd (affects RingProductPage-based PDPs: la-marva, annie-rose, bajan-joe)",
+        "issue": "USD-mode display omits the required ' USD' suffix. Spec requires '$X,XXX USD' but LA MARVA hero shows '$18,000' (Foundation '$8,000', Signature '$18,000', Heirloom '$22,000'); ANNIE ROSE hero shows '$10,400'; BAJAN JOE shows '$795' - all without ' USD'. Root cause: /app/frontend/src/lib/livePricing.js#formatUsd() returns Intl currency-formatted string ('$18,000') without ' USD' suffix (its own comment states 'currency suffix \" USD\" appended at the call site'). /app/frontend/src/hooks/useLivePrice.js line 24 (localizeUsdDollars) returns formatUsd(usdDollars) directly in USD mode with no ' USD' concatenation, so all consumers of useLivePrice / useLiveFromPrice / useLiveTierPrices under RingProductPage inherit the missing suffix. Other PDPs that render their own USD label (scacco-matto '$3,900 USD', quadriga '$10,495 USD', boss-knot '$8,500 USD', ribbon-regale '$350 USD') are unaffected because they build the label independently.",
+        "selector": "RingProductPage current-price / tier tiles in USD mode",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/test_reports/pytest/iter17_regression.xml"
+  ],
+  "action_items": [
+    "Fix BoundPage.jsx line 696: strip hardcoded ' USD' when presentment.isApproximate, or rely on the already-localized formatted string.",
+    "Fix PTPCuffPage.jsx tier tiles (line ~196): render tierPricesLive[key]?.formatted instead of ${edition.price.toLocaleString()} and drop the standalone <p>USD</p> label when non-USD (or reuse the localized presentment string exactly like RingProductPage.jsx does at line 328).",
+    "Fix USD-suffix regression in RingProductPage-based PDPs. Either (a) update useLivePrice.localizeUsdDollars to return `${formatUsd(usdDollars)} USD` when !presentment.isApproximate, or (b) update lib/livePricing.js#formatUsd to append ' USD' unconditionally. Preferred: option (a) so approximate branch already carries currency code via presentment.formatDollars. After fix, LA MARVA / ANNIE ROSE / BAJAN JOE / other RingProductPage tiers must render '$X,XXX USD'.",
+    "After above fixes, re-run PDP smoke against the 24 PDPs listed in the review."
+  ],
+  "critical_code_review_comments": [
+    "The localizeUsdDollars helper in useLivePrice.js is inconsistent with the PresentmentContext.formatUsdCents contract (which appends ' USD'/'CAD'/etc.). Consolidating both paths through presentment.formatDollars(value, {withCode:true}) would eliminate this class of bug permanently.",
+    "PTPCuffPage does not consume the .formatted field returned by useLiveTierPrices even though the hook was updated to emit presentment-localized strings. Sweep needed to confirm no other product page ignores .formatted (grep tierPricesLive.*\\.price without matching .formatted usage).",
+    "BoundPage hardcodes a ' USD' suffix after an already-localized string. This pattern is fragile; consider a lint rule or codemod to forbid string-appending ' USD' after any presentment-derived value.",
+    "formatUsd in lib/livePricing.js has a comment saying suffix is added at call site, but at least one call site (localizeUsdDollars) never adds it. Either enforce suffix inside formatUsd or delete the helper in favour of presentment.formatDollars everywhere."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "99.9% (914/915, sole failure is documented pre-existing gold-spot drift)",
+    "frontend": "PDP smoke: 21/24 fully pass; 3 PDPs (bound, ptp-cuff, and RingProductPage-based la-marva/annie-rose/bajan-joe missing-USD-suffix) fail. Cart, checkout invariants, JPY zero-decimals, persistence, ribbon suppression all PASS."
+  },
+  "seed_data_creation": "None (only interacted with cart in localStorage, no new backend orders created this iteration).",
+  "test_credentials": "N/A (public storefront).",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The three P0 bugs are: (1) BoundPage.jsx:696 hardcoded ' USD' after localized string -> 'CAD USD' double suffix, (2) PTPCuffPage.jsx:196-198 tier tiles bypass presentment (uses raw edition.price + static USD label), (3) formatUsd()/localizeUsdDollars omit ' USD' suffix in USD mode for all RingProductPage-based PDPs (LA MARVA hero+tiers, ANNIE ROSE, BAJAN JOE). Backend/trust boundary is fully intact - do NOT re-run adaptive_pricing_live_integration (already validated in iteration 16). Historical order PHI-20260901-4CBC5C remains untouched. localStorage keys observed: phi_pres_currency=JPY, phi_pres_currency_expires=1790989551361 (~30d), phileon_cart with canonical unit_amount_cents=390000 for SCACCO MATTO. Ribbon element data-testid='currency-ribbon-root' correctly NOT rendered in default USD-suggested env - matches spec.",
+  "rca of the issue": "See ui_bugs.issue fields - each contains exact file/line + root cause. In brief: (a) BoundPage naively concatenates ' USD' after presentment output; (b) PTPCuffPage did not migrate tier-tile rendering to consume useLiveTierPrices().formatted when the hook was upgraded; (c) formatUsd was designed to emit '$X,XXX' with a call-site-appended ' USD', but the presentment-integration wrapper localizeUsdDollars forgot to append it in the USD (non-approximate) branch."
+}

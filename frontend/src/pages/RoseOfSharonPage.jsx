@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 const HERO_IMG = "/rose-of-sharon/hero.png";
 const HERO_ALT = "ROSE OF SHARON — three-dimensional floral cross pendant in 14K rose gold with raised central rose cluster and openwork vine structure.";
@@ -21,7 +22,7 @@ const METAL_OPTIONS = [
   { id: "gold10k", label: "10K Rose Gold", short: "10K" },
   { id: "gold14k", label: "14K Rose Gold", short: "14K" },
 ];
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 
 const SPECS = [
   ["Collection", "The Collective"],
@@ -62,6 +63,7 @@ const GALLERY = [
 ];
 
 export default function RoseOfSharonPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const [scrollY, setScrollY] = useState(0);
   const [sizeId, setSizeId] = useState("grand");
   const [metalId, setMetalId] = useState("gold14k");

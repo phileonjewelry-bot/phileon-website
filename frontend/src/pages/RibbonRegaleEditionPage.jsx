@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 import ProductSeo from "@/components/ProductSeo";
 import { RIBBON_REGALE_EDITION_SEO } from "@/lib/seoProducts";
 
@@ -95,7 +96,7 @@ const GALLERY = [
   { type: "image", src: PAIR_WHITE,        alt: "RIBBON REGALE ÉDITION — the pair on a white background" },
 ];
 
-function formatUsd(n) {
+function _formatUsdCanonical(n) {
   return `$${Number(n).toLocaleString("en-US")} ${CURRENCY_CODE}`;
 }
 
@@ -136,6 +137,7 @@ function GalleryMedia({ item }) {
 }
 
 export default function RibbonRegaleEditionPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   useLuxuryMotionObserver();
   const [idx, setIdx] = useState(0);
   const [selectedMetalId, setSelectedMetalId] = useState(DEFAULT_METAL_ID);

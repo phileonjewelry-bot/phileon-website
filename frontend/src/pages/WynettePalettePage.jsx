@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * WYNETTE'S PALETTE — PHILEON Fine Jewelry
@@ -108,10 +109,11 @@ const METAL_OPTIONS = [
   { id: "gold10k", label: "10K White Gold",    tierKey: "gold10k", priceUsd: 6000 },
   { id: "gold14k", label: "14K White Gold",    tierKey: "gold14k", priceUsd: 8000 },
 ];
-const formatUsd = (n) => `$${n.toLocaleString("en-US")} USD`;
+const _formatUsdCanonical = (n) => `$${n.toLocaleString("en-US")} USD`;
 const RING_SIZES = ["4", "4.5", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"];
 
 export default function WynettePalettePage() {
+  const formatUsd = useLocalizedUsdFormatter();
   const heroRef = useRef(null);
   const [scrollY, setScrollY] = useState(0);
   const [loaded, setLoaded] = useState(false);

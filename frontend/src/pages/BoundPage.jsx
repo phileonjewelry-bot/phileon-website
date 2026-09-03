@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { products } from "@/data/products";
 import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /* ═══════════════════════════════════════════════════════════════
    BOUND — THE BUSTIER BANGLE
@@ -10,6 +11,7 @@ import { useLivePrice, useLiveTierPrices } from "@/hooks/useLivePrice";
 ═══════════════════════════════════════════════════════════════ */
 
 const BoundPage = () => {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const [activeImage, setActiveImage] = useState(0);
   const [selectedTier, setSelectedTier] = useState("signature");
   const [isZoomed, setIsZoomed] = useState(false);
@@ -379,7 +381,7 @@ const BoundPage = () => {
                 </div>
 
                 <div className="text-[#C6A25D] text-4xl mt-8 tracking-wide font-light">
-                  {tierPrices[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`} <span className="text-lg text-white/30">USD</span>
+                  {tierPrices[selectedTier]?.formatted || _localizedUsd(currentTier.price)}
                 </div>
 
                 <p className="text-white/50 text-sm mt-2">
@@ -408,7 +410,7 @@ const BoundPage = () => {
                             <p className="text-white/30 text-xs mt-1">{tier.metal}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[#C6A25D] text-xl">{tierPrices[key]?.formatted || `$${tier.price.toLocaleString()}`}</p>
+                            <p className="text-[#C6A25D] text-xl">{tierPrices[key]?.formatted || _localizedUsd(tier.price)}</p>
                             {tier.badge && (
                               <span className="text-[9px] tracking-[0.2em] text-[#C6A25D]/60 uppercase">
                                 {tier.badge}
@@ -691,7 +693,7 @@ const BoundPage = () => {
           </p>
 
           <div className="text-[#C6A25D] text-3xl mt-10 tracking-wide font-light">
-            From {tierPrices.foundation?.formatted || `$${tiers.foundation.price.toLocaleString()}`} USD
+            From {tierPrices.foundation?.formatted || _localizedUsd(tiers.foundation.price)}
           </div>
 
           <button

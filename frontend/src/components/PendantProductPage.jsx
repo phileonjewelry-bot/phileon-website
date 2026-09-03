@@ -7,9 +7,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAddToCart } from "../hooks/useAddToCart";
 import { useLiveTierPrices } from "../hooks/useLivePrice";
+import { useLocalizedUsdFormatter } from "../hooks/useLocalizedUsdFormatter";
 import { slugToProductKey } from "../components/LiveFromPrice";
 
 export default function PendantProductPage({ product }) {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const videoRef = useRef(null);
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const productKey = slugToProductKey(product.slug) || product.slug;
@@ -164,7 +166,7 @@ export default function PendantProductPage({ product }) {
           )}
 
           <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
-            {tierPricesLive[selectedTier]?.formatted || `$${currentTier.price.toLocaleString()}`}
+            {tierPricesLive[selectedTier]?.formatted || _localizedUsd(currentTier.price)}
           </div>
 
           <p className="text-sm text-white/70 mb-2">
@@ -199,7 +201,7 @@ export default function PendantProductPage({ product }) {
                         {tier.metal}
                       </div>
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
-                        {tierPricesLive[key]?.formatted || `$${tier.price.toLocaleString()}`}
+                        {tierPricesLive[key]?.formatted || _localizedUsd(tier.price)}
                       </div>
                     </div>
 

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "../hooks/useAddToCart";
+import { useLocalizedUsdFormatter } from "../hooks/useLocalizedUsdFormatter";
 import Lightbox from "../components/CinematicLightbox";
 
 /**
@@ -68,6 +69,7 @@ const INCLUDED = [
 ];
 
 export default function LaScarpaPage() {
+  const _localizedUsd = useLocalizedUsdFormatter();
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const [lightboxIdx, setLightboxIdx] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -168,7 +170,7 @@ export default function LaScarpaPage() {
     });
   };
 
-  const formattedPrice = `$${PRICE_USD.toLocaleString("en-US")} USD`;
+  const formattedPrice = _localizedUsd(PRICE_USD);
 
   return (
     <section

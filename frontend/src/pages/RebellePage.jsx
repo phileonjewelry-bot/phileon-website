@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAddToCart } from "@/hooks/useAddToCart";
 import { cadToUsdLuxury } from "@/lib/livePricing";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * REBELLE — PHILEON Fine Jewelry · Ladies First · Earrings
@@ -79,7 +80,7 @@ const EDITIONS = EDITIONS_INTERNAL.map((e) => ({
 }));
 const DEFAULT_EDITION_KEY = "silver-black-cz";
 
-const fmtUSD = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
+const _fmtUSDCanonical = (n) => `$${Number(n).toLocaleString("en-US")} USD`;
 
 // Gallery — 8 stills (5 new editorial + product on gray + 3 original product studies).
 // Sequence intermixes editorial and product for a natural rhythm:
@@ -98,6 +99,7 @@ const GALLERY = [
 ];
 
 export default function RebellePage() {
+  const fmtUSD = useLocalizedUsdFormatter();
   useLuxuryMotionObserver();
   const { isAdding, handleAddToCart } = useAddToCart();
   const [editionKey, setEditionKey] = useState(DEFAULT_EDITION_KEY);

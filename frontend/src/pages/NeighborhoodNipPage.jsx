@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { LuxuryMotionStyles, useLuxuryMotionObserver } from "@/components/LuxuryMotion";
 import RingSizeSelector, { ringSizeLabel, ringSizeSkuToken } from "@/components/RingSizeSelector";
 import { useAddToCart } from "@/hooks/useAddToCart";
-import { cadToUsdLuxury, formatUsd } from "@/lib/livePricing";
+import { cadToUsdLuxury, formatUsd as _formatUsdCanonical } from "@/lib/livePricing";
+import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
 
 /**
  * NEIGHBORHOOD NIP — PHILEON Tribute Series (purchasable)
@@ -78,6 +79,7 @@ const GALLERY = [
 ];
 
 export default function NeighborhoodNipPage() {
+  const formatUsd = useLocalizedUsdFormatter();
   useLuxuryMotionObserver();
   const [selectedSize, setSelectedSize] = useState(null);
   const [patchType, setPatchType] = useState("original"); // "original" | "custom"
@@ -90,8 +92,8 @@ export default function NeighborhoodNipPage() {
   const basePriceUsd = useMemo(() => cadToUsdLuxury(BASE_PRICE_CAD), []);
   const customFeeUsd = useMemo(() => cadToUsdLuxury(CUSTOM_FEE_CAD), []);
   const currentPriceUsd = patchType === "custom" ? basePriceUsd + customFeeUsd : basePriceUsd;
-  const priceUsdLabel = `${formatUsd(currentPriceUsd)} USD`;
-  const customFeeLabel = `${formatUsd(customFeeUsd)} USD`;
+  const priceUsdLabel = formatUsd(currentPriceUsd);
+  const customFeeLabel = formatUsd(customFeeUsd);
 
   const { w: whiteCount, b: blackCount } = countStones(customGrid);
   const totalCells = whiteCount + blackCount;
