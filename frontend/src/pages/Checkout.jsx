@@ -135,6 +135,29 @@ export default function Checkout() {
     return () => { cancelled = true; };
   }, []);
 
+  // UX-only prefill of the shipping-country selector from the same geo signal
+  // the storefront already uses to suggest display currency. Fires ONCE, only
+  // when:
+  //   - the shopper has not already picked a country (`!shippingCountry`)
+  //   - the allowlist has loaded
+  //   - the suggested country is on the approved allowlist
+  // Manual selection ALWAYS wins — subsequent `setShippingCountry(...)` calls
+  // are the source of truth and NEVER get overwritten by this effect.
+  // Never inferred from the display currency. Never used for money math.
+  const [prefillAttempted, setPrefillAttempted] = useState(false);
+  useEffect(() => {
+    if (prefillAttempted) return;
+    if (shippingCountry) return;
+    if (!allowedCountries.length) return;
+    if (!presentment?.initialised) return;
+    const geo = presentment.suggestedCountry;
+    if (geo && allowedCountries.includes(geo)) {
+      setShippingCountry(geo);
+    }
+    setPrefillAttempted(true);
+  }, [allowedCountries, presentment?.initialised, presentment?.suggestedCountry,
+      shippingCountry, prefillAttempted]);
+
   // Refresh the trusted shipping quote whenever the shopper picks a country.
   useEffect(() => {
     if (!shippingCountry) { setShippingQuote(null); setShippingQuoteError(""); return; }

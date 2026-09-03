@@ -16,6 +16,11 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
+- **[DONE Sep 3] SHIPPING-COUNTRY PREFILL + STRIPE LIVE READINESS AUDIT — LOCKED. LIVE remains OFF.**
+  - Shipping-country prefill (UX only): reused existing `/api/i18n/currency-preview` geo signal → prefill `Checkout.jsx` country selector when the geo country is on the 37-entry allowlist. Manual selection always wins. Never inferred from display currency. Money authority untouched.
+  - Prefill smoke matrix: CA/US/GB/MX/BR prefilled correctly · KP (unsupported) leaves selector empty · manual override CA→US resolves US $35 canonical · currency stays CAD while shipping toggles US/CA/GB/MX (full independence). Regression 120/120 pass.
+  - **Stripe LIVE Readiness Audit — READ-ONLY.** Full report at `/app/memory/STRIPE_LIVE_READINESS.md`. Zero engineering blockers. Remaining gates are owner Dashboard / DNS / prod-config actions only: (1) Stripe LIVE `sk_live_` + `whsec_` LIVE keys, (2) Adaptive Pricing LIVE toggle in Dashboard, (3) `CHECKOUT_SUCCESS_URL` / `CHECKOUT_CANCEL_URL` / `REACT_APP_BACKEND_URL` prod values, (4) Resend PHILEON-owned sender-domain SPF+DKIM + `PHILEON_FROM_EMAIL`. Safest first LIVE piece recommended: **SCACCO MATTO — 10K Yellow Gold — Size 7 ($3,900 USD)**; smaller alt: **RRE Gold-Plated ($350 USD)**. Full rollback plan documented.
+
 - **[DONE Sep 3] SITEWIDE PDP PRICE LOCALIZATION (P0 FINAL PASS) — 100% GREEN. OWNER-LOCKED.**
   - Every trusted PDP hero + tier/variant + selector price surface now renders through the shared `usePresentment()` layer. Canonical USD backend catalog stays USD end-to-end (84 products); no trusted money math altered.
   - **DRY hook wiring:** `hooks/useLivePrice.js` `useLivePrice` / `useLiveFromPrice` / `useLiveTierPrices` now return presentment-localized `.formatted` strings — every consumer (RingProductPage, EarringsProductPage, PendantProductPage, LiveFromPrice) auto-localizes. `hooks/useLocalizedUsdFormatter.js` provides a component-scoped `formatUsd(n)` for fixed-price PDPs.

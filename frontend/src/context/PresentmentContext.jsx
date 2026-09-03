@@ -83,6 +83,7 @@ export function PresentmentProvider({ children }) {
   const [rateFetchedAt, setRateFetchedAt] = useState(null);
   const [manualCurrency, setManualCurrency] = useState(() => readPersistedCurrency());
   const [suggestedCurrency, setSuggestedCurrency] = useState("USD");
+  const [suggestedCountry, setSuggestedCountry] = useState(null);
   const [initialised, setInitialised] = useState(false);
 
   const activeCurrency = (manualCurrency || suggestedCurrency || "USD").toUpperCase();
@@ -108,6 +109,9 @@ export function PresentmentProvider({ children }) {
       }
       if (p && p.suggested_currency) {
         setSuggestedCurrency(p.suggested_currency.toUpperCase());
+      }
+      if (p && p.detected_country) {
+        setSuggestedCountry(String(p.detected_country).toUpperCase());
       }
       setInitialised(true);
     });
@@ -175,6 +179,7 @@ export function PresentmentProvider({ children }) {
     rateStale,
     rateFetchedAt,
     suggestedCurrency,
+    suggestedCountry,
     manualCurrency,
     currency: activeCurrency,
     setCurrency,
@@ -186,7 +191,7 @@ export function PresentmentProvider({ children }) {
     approxPrefix: isApproximate ? "Approx. " : "",
     symbol: CURRENCY_SYMBOL[activeCurrency] || "$",
   }), [initialised, supported, rates, rateSource, rateStale, rateFetchedAt,
-       suggestedCurrency, manualCurrency, activeCurrency, setCurrency,
+       suggestedCurrency, suggestedCountry, manualCurrency, activeCurrency, setCurrency,
        resetCurrency, isApproximate, convertUsdCents, formatUsdCents, formatDollars]);
 
   return <CTX.Provider value={value}>{children}</CTX.Provider>;
@@ -204,6 +209,7 @@ export function usePresentment() {
       rateStale: false,
       rateFetchedAt: null,
       suggestedCurrency: "USD",
+      suggestedCountry: null,
       manualCurrency: null,
       currency: "USD",
       setCurrency: () => {},
