@@ -49,6 +49,36 @@ def _extract_shipping_amount_cents(session: dict) -> int:
         return 0
 
 
+def _extract_payment_method_type(payment_intent: Optional[dict]) -> Optional[str]:
+    """Return the Stripe-authoritative payment method type used for this
+    payment (e.g. `card`, `klarna`, `affirm`, `apple_pay`, `google_pay`,
+    `link`). Reads `charges.data[0].payment_method_details.type` first
+    (populated after payment succeeds), then falls back to
+    `payment_method_types[0]` (a hint from the session; less specific).
+
+    NEVER trusted for money math — audit/support only.
+    """
+    if not isinstance(payment_intent, dict):
+        return None
+    charges = payment_intent.get("charges")
+    charges_data = None
+    if isinstance(charges, dict):
+        charges_data = charges.get("data")
+    elif isinstance(charges, list):
+        charges_data = charges
+    if isinstance(charges_data, list) and charges_data:
+        pmd = (charges_data[0] or {}).get("payment_method_details") or {}
+        t = pmd.get("type")
+        if isinstance(t, str) and t:
+            return t
+    types = payment_intent.get("payment_method_types")
+    if isinstance(types, list) and types:
+        first = types[0]
+        if isinstance(first, str) and first:
+            return first
+    return None
+
+
 def _extract_stripe_presentment(session: dict, payment_intent: Optional[dict] = None) -> dict:
     """Defensive Adaptive Pricing / presentment extractor.
 
@@ -298,7 +328,10 @@ async def stripe_webhook(request: Request):
         try:
             pi_id = obj.get("payment_intent")
             if pi_id:
-                pi_full = stripe.PaymentIntent.retrieve(pi_id, expand=["presentment_details"])
+                pi_full = stripe.PaymentIntent.retrieve(
+                    pi_id,
+                    expand=["presentment_details", "charges.data.payment_method_details"],
+                )
                 pi_full = dict(pi_full or {})
         except Exception as e:
             logger.warning(f"stripe payment_intent retrieve failed for {order.get('order_number')}: {type(e).__name__}")
@@ -308,6 +341,7 @@ async def stripe_webhook(request: Request):
             canonical_total_cents=int(order.get("subtotal_cents") or 0) + recon["shipping_cents"] + int(order.get("tax_cents") or 0),
             canonical_currency=order.get("currency") or "USD",
         )
+        payment_method_type = _extract_payment_method_type(pi_full)
         if paid:
             # Atomic first-paid transition. Only the first webhook that flips
             # payment_status→paid AND paid_notification_sent→True passes the
@@ -361,6 +395,8 @@ async def stripe_webhook(request: Request):
                 for k, v in presentment_block.items():
                     if v is not None:
                         update["$set"][f"presentment.{k}"] = v
+            if payment_method_type:
+                update["$set"]["payment_method_type"] = payment_method_type
             if not integrity_ok:
                 logger.warning(
                     f"SHIPPING_AMOUNT_MISMATCH order={order.get('order_number')} "

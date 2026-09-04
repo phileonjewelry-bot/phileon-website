@@ -16,7 +16,38 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
-- **[DONE Sep 3] SHIPPING-COUNTRY PREFILL + STRIPE LIVE READINESS AUDIT — LOCKED. LIVE remains OFF.**
+- **[DONE Sep 4] KLARNA + AFFIRM (BNPL) — DYNAMIC PAYMENT METHODS + STRIPE MESSAGING ELEMENT. LIVE stays OFF.**
+  - **Phase 1 audit findings (read-only, no mutation):**
+    - Trusted V2 checkout `/api/checkout/stripe/session` already uses `automatic_payment_methods={"enabled": True, "allow_redirects": "always"}` (Stripe Dynamic Payment Methods) — the correct architecture. Klarna/Affirm/Link/Apple Pay/Google Pay auto-appear once the Stripe Dashboard enables them.
+    - Stripe SDK 14.1.0 · API version `2025-12-15.clover`.
+    - Legacy `/api/stripe/*` router (`routes/stripe_routes.py`, `services/stripe_service.py`) hard-codes `payment_method_types=["card","apple_pay","google_pay"]`. Frontend never calls it — it is dead code. Left untouched per "no unrelated refactors."
+    - Session currency source: canonical `USD` from `services.catalog.resolve_line_item` — never client-supplied.
+    - No trusted server-side USD→CAD money-authoritative FX exists. `services/fx_display.py` is DISPLAY-ONLY per this same PRD. `services/metal_spot.PHILEON_USD_TO_CAD = 1.0/0.75` is a hard-coded metal-spot mirror, not a money-safe rate.
+  - **Phase 2 DPM:** already active. No code change. Klarna + Affirm eligibility is Stripe-decided at Checkout given the USD amount, customer country, and Dashboard toggles.
+  - **Phase 3 CAD BNPL currency lane — HALTED.** No trusted USD→CAD FX exists. Per owner directive, DO NOT invent a rate, DO NOT reuse the 0.75 formula, DO NOT silently add a third-party FX. Blocker recorded — see below.
+  - **Phase 4 Stripe Payment Method Messaging Element:** new `frontend/src/components/PaymentMethodMessaging.jsx` (Stripe-managed, never fabricates copy, hides itself when ineligible). Dropped into: `RingProductPage` PDP (LA MARVA, ANNIE ROSE, BAJAN JOE, …), `CartDrawer`, `Cart` page. Reads canonical USD dollars; delegates eligibility + rendering to Stripe. Requires `REACT_APP_STRIPE_PUBLISHABLE_KEY` — component renders NOTHING until owner sets it (safe no-op).
+  - **Phase 5 webhook + order compat:** `OrderV2.payment_method_type: Optional[str]` added (backward compatible). New `_extract_payment_method_type()` reads `charges.data[0].payment_method_details.type` → falls back to `payment_method_types[0]`. Persisted on `checkout.session.completed` via `expand=["presentment_details","charges.data.payment_method_details"]`. Stripe remains payment source of truth; success-page redirect is not trusted; notification idempotency intact.
+  - **Phase 6 refunds:** existing `charge.refunded` handler is currency-/method-agnostic — Klarna/Affirm refund lifecycle flows through the same idempotent `payment_status → refunded / partially_refunded` transition. No code change required.
+  - **Phase 7 test mode only** — no LIVE BNPL, no real customer email, no real payment. Preview URL kept.
+  - **Phase 8 regression:** new `tests/test_bnpl_payment_methods.py` — 12 tests: DPM sanity, payment-method-type extractor across `card / klarna / affirm / apple_pay / google_pay / link`, both `charges.data` and legacy list-of-charges shapes, list-hint fallback, optional-field back-compat. **926 pass** on the full backend suite (sole pre-existing `annie-rose-foundation` gold-spot drift unchanged and documented).
+  - **Owner Dashboard actions still required for BNPL to appear in the storefront:**
+    1. **Stripe Dashboard → Settings → Payments → Payment methods (TEST first, LIVE later):** enable **Klarna** and **Affirm**. Stripe usually requires a short capability request for BNPL — approve when prompted.
+    2. **`frontend/.env`** — set `REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_…` (or `pk_live_…`). Until this is set, the PDP + Cart Messaging element renders nothing (intentional safe no-op).
+    3. Verify TEST BNPL flow in Stripe Dashboard test cards (Klarna test PAN + Affirm test flow).
+    4. **DO NOT** enable LIVE BNPL until the CAD FX blocker below is resolved OR the merchant explicitly accepts USD-only BNPL for the initial launch (US-eligible customers only; Canadian customers will not see Klarna/Affirm on a USD Session).
+  - **BLOCKER for Canadian Klarna/Affirm eligibility (Phase 3):**
+    - Klarna Canada requires the Checkout Session `currency` to be `cad` for CA-domestic financing.
+    - Affirm Canada requires the Session `currency=cad` — Affirm-Canada is a separate Canadian acquiring domain from Affirm-USA.
+    - Stripe Adaptive Pricing does **not** solve this — Adaptive Pricing displays presentment locally on the Stripe hosted checkout page but the Session `currency` remains USD, so BNPL Canadian eligibility check never fires.
+    - To create a CAD Session from a USD canonical catalog we would need a **trusted server-side USD→CAD FX rate at session-create**, with an authoritative source, timestamp, and audit trail on `OrderV2.presentment.fx_rate_source`.
+    - **Options for owner to choose from (do not implement without approval):**
+      * (A) Reuse `services/fx_display.py` (Frankfurter) BUT explicitly reclassify a small subset of the code as "trusted for BNPL session-create only" with locked snapshot + audit trail. Cheapest; owner approves the reclassification.
+      * (B) Add a paid FX provider with an SLA (e.g. openexchangerates.org, XE Enterprise, Stripe's own `stripe.ExchangeRate` if enabled on account) — best for compliance.
+      * (C) Use Stripe's built-in **Multi-Currency Prices** (Stripe stores CAD prices alongside USD in Product/Price objects) — owner mirrors each of the 84 canonical USD prices as CAD in the Dashboard on a manual cadence. No FX code needed; requires operational discipline.
+      * (D) **Defer** Canadian BNPL entirely: launch BNPL only for `country=US` on the USD Session (fewest changes, safe).
+    - **Recommendation:** Ship options (A) — display-FX reclassified as an authoritative source snapshotted at session-create — OR (D) — US-only BNPL — for the initial LIVE launch. (A) is the smallest change with the widest coverage.
+
+
   - Shipping-country prefill (UX only): reused existing `/api/i18n/currency-preview` geo signal → prefill `Checkout.jsx` country selector when the geo country is on the 37-entry allowlist. Manual selection always wins. Never inferred from display currency. Money authority untouched.
   - Prefill smoke matrix: CA/US/GB/MX/BR prefilled correctly · KP (unsupported) leaves selector empty · manual override CA→US resolves US $35 canonical · currency stays CAD while shipping toggles US/CA/GB/MX (full independence). Regression 120/120 pass.
   - **Stripe LIVE Readiness Audit — READ-ONLY.** Full report at `/app/memory/STRIPE_LIVE_READINESS.md`. Zero engineering blockers. Remaining gates are owner Dashboard / DNS / prod-config actions only: (1) Stripe LIVE `sk_live_` + `whsec_` LIVE keys, (2) Adaptive Pricing LIVE toggle in Dashboard, (3) `CHECKOUT_SUCCESS_URL` / `CHECKOUT_CANCEL_URL` / `REACT_APP_BACKEND_URL` prod values, (4) Resend PHILEON-owned sender-domain SPF+DKIM + `PHILEON_FROM_EMAIL`. Safest first LIVE piece recommended: **SCACCO MATTO — 10K Yellow Gold — Size 7 ($3,900 USD)**; smaller alt: **RRE Gold-Plated ($350 USD)**. Full rollback plan documented.

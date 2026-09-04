@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { useToast } from '../hooks/use-toast';
 import { usePresentment } from '../context/PresentmentContext';
+import PaymentMethodMessaging from '../components/PaymentMethodMessaging';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -156,6 +157,9 @@ const Cart = () => {
                     <p className="text-white/40 text-xs mt-2">
                       Your full shipping address will be entered securely at checkout.
                     </p>
+                    <div className="mt-3" data-testid="cart-financing-messaging">
+                      <PaymentMethodMessaging usdDollars={total} />
+                    </div>
                   </div>
                 </div>
                 <Button

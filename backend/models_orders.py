@@ -108,6 +108,11 @@ class OrderV2(BaseModel):
     # have no `presentment` block. New canonical USD orders may or may not
     # carry Adaptive Pricing depending on Stripe eligibility.
     presentment: Optional[OrderV2Presentment] = None
+    # Payment-method type reported by Stripe on the completed session
+    # (`card`, `klarna`, `affirm`, `apple_pay`, `google_pay`, `link`, …).
+    # Optional so historical orders continue to deserialize. NEVER trusted
+    # for money math — recorded for support/analytics and refund handling.
+    payment_method_type: Optional[str] = None
     # Optional presentment-integrity gate (mirrors `shipping_integrity_status`
     # architecture). Only set to "pending_review" when a genuine like-for-
     # like reconciliation defect is detected — Adaptive Pricing FX drift is

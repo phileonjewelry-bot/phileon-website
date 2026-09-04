@@ -12,6 +12,7 @@ import { useLiveTierPrices } from "../hooks/useLivePrice";
 import { slugToProductKey } from "../components/LiveFromPrice";
 import { usePresentment } from "../context/PresentmentContext";
 import { formatUsd } from "../lib/livePricing";
+import PaymentMethodMessaging from "./PaymentMethodMessaging";
 import RingSizeSelector, {
   DEFAULT_RING_SIZE,
   ringSizeLabel,
@@ -294,6 +295,14 @@ export default function RingProductPage({ product }) {
 
           <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
             {tierPricesLive[selectedTier]?.formatted || _localize(currentTier.price, presentment)}
+          </div>
+          {/* Stripe Payment Method Messaging — Klarna / Affirm eligibility
+              is decided by Stripe and hidden when not eligible. Canonical
+              USD amount is authoritative for messaging. */}
+          <div className="mb-3" data-testid="pdp-financing-messaging">
+            <PaymentMethodMessaging
+              usdDollars={tierPricesLive[selectedTier]?.price || currentTier.price}
+            />
           </div>
 
           <p className="text-sm text-[#b5b5b5] mb-8 leading-relaxed">

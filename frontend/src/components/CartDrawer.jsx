@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { usePresentment } from '@/context/PresentmentContext';
+import PaymentMethodMessaging from '@/components/PaymentMethodMessaging';
 import { Minus, Plus, X, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -164,6 +165,11 @@ const CartDrawer = () => {
                   Final local amount confirmed at secure checkout.
                 </p>
               )}
+              <div className="mt-2" data-testid="cart-drawer-financing-messaging">
+                <PaymentMethodMessaging
+                  usdDollars={items.reduce((s, i) => s + (i.unit_amount_cents * i.qty), 0) / 100}
+                />
+              </div>
               
               {/* Shipping Note */}
               <p className="text-gray-500 text-xs">
