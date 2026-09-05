@@ -1,0 +1,24 @@
+{
+  "summary": "PHILEON Behavioral Retention (Simulation Mode) — retest of iteration_21 fix. VERIFIED: (1) tests/test_retention_behavioral.py 32/32 PASS including new test_unsub_token_fuzz_roundtrip (200 rounds, random JWT_SECRET + random emails). (2) Broader regression: 974 passed, 1 pre-existing gold-spot drift failure only (tests/test_usd_only_migration.py::test_dynamic_ring_migrated_to_approved_usd[annie-rose-foundation-700000]) — matches iteration_21 baseline exactly, zero regression. (3) Live preview round-trip against https://labete-gallery.preview.emergentagent.com/api/unsubscribe: 20/20 succeeded (0 failures), each returning HTTP 200 with 'UNSUBSCRIBED' HTML and no 'UNABLE TO VERIFY LINK' page. The probabilistic ~12% failure rate is eliminated. Fix in services.retention_service (b64u(body) + '.' + b64u(sig) text-space delimiter codec) confirmed structurally sound: '.' cannot appear in urlsafe-b64 alphabet so rsplit is unambiguous. Simulation-mode invariants (PHILEON_BEHAVIORAL_LIVE=false, STRIPE_MODE=test) preserved.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_retention_behavioral.py",
+    "/app/test_reports/pytest/iter22_retention.xml",
+    "/app/test_reports/pytest/iter22_full.xml",
+    "/app/test_reports/retention_previews/live_unsub_iter22.py"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "make_unsub_token / verify_unsub_token now use a text-space '.' delimiter between two urlsafe-b64 halves. Since '.' is NOT in the urlsafe-b64 alphabet (A-Z, a-z, 0-9, -, _, =), rsplit('.', 1) is deterministic — bug class permanently closed. Fuzz test locks this invariant at 200 iterations.",
+    "Pre-existing failure tests/test_usd_only_migration.py::test_dynamic_ring_migrated_to_approved_usd[annie-rose-foundation-700000] is a gold-spot drift unrelated to the retention phase; carry-forward from prior iterations."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "32/32 test_retention_behavioral (100%); 974/975 broader suite (99.9%, 1 pre-existing gold-spot); 20/20 live preview unsubscribe round-trip (100%)", "frontend": "N/A — backend-only scope"},
+  "test_credentials": "Admin JWT via `python -c 'from server import create_token; print(create_token(\"admin\"))'` — not needed for this retest.",
+  "seed_data_creation": "None. Live round-trip used 20 random ephemeral emails against /api/unsubscribe; unsubscribes are recorded in the retention_unsubscribes collection (test artifacts, no PII of real users).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Behavioral retention codec fix verified deterministically (fuzz) and empirically (20 live GET /api/unsubscribe = 200 UNSUBSCRIBED). Only outstanding suite-wide failure is the gold-spot drift in test_usd_only_migration which is unrelated to behavioral phase and was carrying pre-fix. Simulation-mode invariants intact.",
+  "rca of the issue": "N/A — fix verified. Prior RCA in iteration_21 (binary '.' delimiter collided with 0x2e bytes inside 32-byte HMAC-SHA256 sig ~12% of the time) is resolved by joining post-b64 halves in text space where '.' cannot appear."
+}

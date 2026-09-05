@@ -2175,6 +2175,20 @@ async def create_concierge_inquiry(payload: dict):
 
 # Register api_router LAST so every `@api_router.*` decorator declared above
 # is picked up. See note near admin_router include.
+
+# Behavioral retention routes (Simulation Phase). Deferred imports so any
+# import error in the retention module cannot brick the whole app.
+try:
+    from routes.behavior import router as _behavior_router
+    from routes.behavior import unsub_router as _unsub_router
+    from routes.admin_retention import router as _admin_retention_router
+    api_router.include_router(_behavior_router)
+    api_router.include_router(_admin_retention_router)
+    api_router.include_router(_unsub_router)
+    logger.info("Behavioral retention routes registered (SIMULATION MODE)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Behavioral retention routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 
@@ -2188,6 +2202,15 @@ async def startup_db():
     await db.consultations.create_index("status")
     await db.tryon_analytics.create_index("timestamp")
     await _ensure_event_indexes()
+
+    # Behavioral retention (Simulation Phase). Never sends real customer
+    # emails while PHILEON_BEHAVIORAL_LIVE != "true".
+    try:
+        from services.retention_service import ensure_indexes as _ret_indexes
+        await _ret_indexes(db)
+    except Exception as e:
+        logger.warning(f"retention indexes init skipped: {type(e).__name__}: {e}")
+
     logger.info("Database indexes created")
 
     # Warm up Emergent Object Storage — non-fatal if unavailable so the API can still start.

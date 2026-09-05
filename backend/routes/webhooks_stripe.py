@@ -416,6 +416,19 @@ async def stripe_webhook(request: Request):
                     logger.warning(f"paid-order email send failed for {order['id']}: {type(email_err).__name__}")
                     email_result = {"customer": {"status": "failed", "error": type(email_err).__name__},
                                     "internal": {"status": "failed", "error": type(email_err).__name__}}
+                # Emit ORDER_PAID behavioral event so retention_pending
+                # rows for the purchased products (and any pending
+                # checkout-abandonment) are cancelled immediately. Never
+                # raises — behavioral retention is a NOTIFICATION lane,
+                # not the source of truth.
+                try:
+                    from services.retention_service import record_order_paid
+                    src = fresh or order
+                    slugs = [i.get("product_slug") for i in (src.get("items") or [])
+                             if i.get("product_slug")]
+                    await record_order_paid(db, src.get("customer_email") or "", slugs)
+                except Exception as be:  # pragma: no cover - defensive
+                    logger.warning(f"retention ORDER_PAID emit failed: {type(be).__name__}")
                 _cust = email_result.get("customer") or {}
                 _intl = email_result.get("internal") or {}
                 await db.orders_v2.update_one({"id": order["id"]}, {"$set": {
@@ -461,6 +474,17 @@ async def stripe_webhook(request: Request):
                     logger.warning(f"paid-order email send failed for {order['id']}: {type(email_err).__name__}")
                     email_result = {"customer": {"status": "failed", "error": type(email_err).__name__},
                                     "internal": {"status": "failed", "error": type(email_err).__name__}}
+                # Behavioral retention: cancel pending abandonment for the
+                # purchased products + any checkout-abandonment for this
+                # customer email. Never raises.
+                try:
+                    from services.retention_service import record_order_paid
+                    src = fresh or order
+                    slugs = [i.get("product_slug") for i in (src.get("items") or [])
+                             if i.get("product_slug")]
+                    await record_order_paid(db, src.get("customer_email") or "", slugs)
+                except Exception as be:  # pragma: no cover - defensive
+                    logger.warning(f"retention ORDER_PAID emit failed: {type(be).__name__}")
                 _cust = email_result.get("customer") or {}
                 _intl = email_result.get("internal") or {}
                 await db.orders_v2.update_one({"id": order["id"]}, {"$set": {
