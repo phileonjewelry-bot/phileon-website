@@ -16,7 +16,23 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
-- **[DONE Sep 4] KLARNA + AFFIRM (BNPL) — DYNAMIC PAYMENT METHODS + STRIPE MESSAGING ELEMENT. LIVE stays OFF.**
+- **[DONE Sep 5] CANADIAN BNPL CAD LANE — OPTION A. Trusted server-side FX. LIVE stays OFF.**
+  - **New service `services/fx_bnpl.py`** — dedicated MONEY-SAFE USD→CAD FX. Frankfurter provider (owner-approved). Fully isolated from `services/fx_display.py`. `Decimal`-based with `ROUND_HALF_UP` on integer minor units. In-memory cache: 6h fresh TTL / 72h weekend-holiday stale grace. Fail-closed beyond 72h. Rejects malformed, zero, negative, or out-of-band rates (`MIN_RATE=1.05`, `MAX_RATE=2.00`).
+  - **Snapshot recorded on `OrderV2.presentment`** — new fields: `presentment_subtotal_cents`, `presentment_shipping_cents`, `presentment_tax_cents`, `fx_retrieved_at`, `fx_reference_date`, `fx_is_stale`, `lane` (`"bnpl_cad"` | `"adaptive_pricing"`). Backward-compatible — historical orders deserialize.
+  - **New public endpoint `POST /api/checkout/bnpl-quote`** — returns full CAD snapshot. `extra="forbid"` blocks `fx_rate`, `presentment_total_cents`, etc. injections (422). Non-CA countries rejected 400 `BNPL_CAD_REQUIRES_CA`. FX unavailable returns 503 `BNPL_FX_UNAVAILABLE` — normal USD checkout stays operational.
+  - **`POST /api/checkout/stripe/session`** accepts optional `use_cad_bnpl_lane: bool`. When `true` AND `shipping_country=="CA"` AND FX snapshot available: line items rebuilt in CAD (deterministic integer allocator matches the exact FX-quoted CAD subtotal by residual-on-last-line), shipping option rate + currency overridden to CAD, canonical USD `OrderV2` fields preserved untouched, `presentment` block persists the trusted snapshot. Otherwise fail-closed to USD Session. Money-injection guard intact.
+  - **Frontend `Checkout.jsx`** — auto-fetches `/api/checkout/bnpl-quote` when `shippingCountry==="CA"`, shows a CAD BNPL toggle block: **"Pay in CAD with Klarna or Affirm — Charged in CAD · Approx. C$XXX CAD · canonical $XXX USD"** + fine print "Financing eligibility, approval, and installment amounts are decided by Stripe / Klarna / Affirm at checkout." On FX failure: single line "Financing options are temporarily unavailable — you can still complete checkout with card." — normal USD checkout stays available.
+  - **`PaymentMethodMessaging.jsx`** — new optional `cadDollars` + `country` props. Only uses the trusted CAD amount when both are set and country==="CA"; never derives CAD from a client rate.
+  - **Live smoke (TEST mode):** RRE Gold-Plated $350 USD → Stripe Session `currency=cad` `amount_total=48300 cents` ($483 CAD) at Frankfurter 1.38 (ref 2026-09-04). `OrderV2` canonical `currency=USD total_cents=35000` preserved; `OrderV2.presentment.lane="bnpl_cad"` recorded with full rate + timestamp + reference date. Non-CA + `use_cad_bnpl_lane=true` correctly ignored (USD path). Client rate/CAD injection → 422.
+  - **Tests added:** `tests/test_bnpl_cad_lane.py` — 18 pass (FX fresh/stale-72h/fail-closed/out-of-band/negative-input/quote-shape + endpoint quote/reject-non-CA/reject-injection + session persistence + non-CA ignore + trust boundary). Combined with `tests/test_bnpl_payment_methods.py`: **30 BNPL tests pass**. Full backend suite: **944 pass** (sole pre-existing gold-spot-drift regression documented and unchanged).
+  - **ENV required** — `REACT_APP_STRIPE_PUBLISHABLE_KEY` (TEST pk_test_…). Still MISSING — owner action to enable the pre-checkout Payment Method Messaging Element rendering on PDP + Cart. Backend BNPL lane works today without it.
+  - **Owner Stripe Dashboard TEST actions still required for messaging + real BNPL:**
+    1. Dashboard TEST → Payments → Payment methods → enable **Klarna** and **Affirm** (Stripe may require a short capability request for BNPL).
+    2. `frontend/.env` → `REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_…`.
+    3. Run a TEST Klarna and a TEST Affirm purchase using the standard CA-shipping flow to verify webhook writes `payment_method_type` and the customer email renders CAD.
+  - **LIVE remains OFF.** No real payment. No real customer email. No `STRIPE_MODE` change.
+
+
   - **Phase 1 audit findings (read-only, no mutation):**
     - Trusted V2 checkout `/api/checkout/stripe/session` already uses `automatic_payment_methods={"enabled": True, "allow_redirects": "always"}` (Stripe Dynamic Payment Methods) — the correct architecture. Klarna/Affirm/Link/Apple Pay/Google Pay auto-appear once the Stripe Dashboard enables them.
     - Stripe SDK 14.1.0 · API version `2025-12-15.clover`.

@@ -24,6 +24,10 @@ import { loadStripe } from "@stripe/stripe-js";
  *
  * Props:
  *   usdDollars       canonical USD dollar amount (integer or float, e.g. 17000)
+ *   cadDollars       optional TRUSTED CAD dollar amount from the server-side
+ *                    BNPL FX service. When present, messaging renders in CAD
+ *                    for CA country. NEVER derived client-side from a rate;
+ *                    NEVER trusts a browser-computed FX.
  *   country          ISO 3166-1 alpha-2 country (default "US")
  *   paymentMethods   default ["klarna", "affirm"]
  *   testId           optional data-testid on the wrapper
@@ -39,6 +43,7 @@ function getStripe() {
 
 export default function PaymentMethodMessaging({
   usdDollars,
+  cadDollars = null,
   country = "US",
   paymentMethods = ["klarna", "affirm"],
   testId = "payment-method-messaging",
@@ -46,10 +51,18 @@ export default function PaymentMethodMessaging({
   const containerRef = useRef(null);
   const [ready, setReady] = useState(false);
 
+  // Prefer trusted CAD only when both a CAD amount AND CA country are set.
+  const useCad = Number.isFinite(Number(cadDollars))
+                 && Number(cadDollars) > 0
+                 && (country || "").toUpperCase() === "CA";
+  const dollars = useCad ? Number(cadDollars) : Number(usdDollars);
+  const currency = useCad ? "cad" : "usd";
+  const effectiveCountry = useCad ? "CA" : country;
+
   useEffect(() => {
     if (!PUBLISHABLE_KEY) return;
     if (!containerRef.current) return;
-    if (!Number.isFinite(Number(usdDollars)) || Number(usdDollars) <= 0) return;
+    if (!Number.isFinite(dollars) || dollars <= 0) return;
 
     let cancelled = false;
     let elements = null;
@@ -59,18 +72,17 @@ export default function PaymentMethodMessaging({
       try {
         const stripe = await getStripe();
         if (!stripe || cancelled) return;
-        // Stripe Payment Method Messaging Element — canonical USD cents.
         elements = stripe.elements({
           mode: "payment",
-          amount: Math.round(Number(usdDollars) * 100),
-          currency: "usd",
+          amount: Math.round(dollars * 100),
+          currency,
           paymentMethodTypes: paymentMethods,
         });
         messagingElement = elements.create("paymentMethodMessaging", {
-          amount: Math.round(Number(usdDollars) * 100),
-          currency: "USD",
+          amount: Math.round(dollars * 100),
+          currency: currency.toUpperCase(),
           paymentMethodTypes: paymentMethods,
-          countryCode: country,
+          countryCode: effectiveCountry,
         });
         if (cancelled) return;
         messagingElement.mount(containerRef.current);
@@ -84,7 +96,7 @@ export default function PaymentMethodMessaging({
       cancelled = true;
       try { if (messagingElement) messagingElement.destroy(); } catch (_e) { /* ignore */ }
     };
-  }, [usdDollars, country, paymentMethods]);
+  }, [dollars, currency, effectiveCountry, paymentMethods]);
 
   // No key or no amount → render nothing (never leaks fabricated copy).
   if (!PUBLISHABLE_KEY) return null;

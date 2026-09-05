@@ -117,6 +117,12 @@ export default function Checkout() {
   const [priceMoved, setPriceMoved] = useState(null);
   const [liveUnavailable, setLiveUnavailable] = useState(false);
 
+  // ── Trusted CAD BNPL lane state. Server-side authority only.
+  const [bnplQuote, setBnplQuote] = useState(null);
+  const [useCadBnplLane, setUseCadBnplLane] = useState(false);
+  const [bnplQuoteError, setBnplQuoteError] = useState("");
+  const [bnplQuoteLoading, setBnplQuoteLoading] = useState(false);
+
   useEffect(() => {
     // Refresh live market pricing when the checkout page mounts so the
     // Order Summary reflects the freshest quote before the customer submits.
@@ -192,6 +198,48 @@ export default function Checkout() {
     if (redirectPending && (!cart || cart.length === 0)) navigate("/cart");
   }, [redirectPending, cart, navigate]);
 
+  // ── Trusted server-side BNPL CAD quote. Fires only when shipping is CA
+  //    AND the cart is non-empty. Fail-closed: if it errors, useCadBnplLane
+  //    stays false and the toggle disappears — normal USD flow continues.
+  useEffect(() => {
+    setBnplQuote(null);
+    setBnplQuoteError("");
+    if (!shippingCountry || shippingCountry !== "CA") {
+      setUseCadBnplLane(false);
+      return;
+    }
+    if (!cart || cart.length === 0) return;
+    let cancelled = false;
+    setBnplQuoteLoading(true);
+    fetch(`${API}/api/checkout/bnpl-quote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cart.map(toPayloadItem).map(({ displayed_unit_amount_cents, ...rest }) => rest),
+        shipping_country: shippingCountry,
+      }),
+    })
+      .then(async (r) => {
+        const d = await r.json().catch(() => ({}));
+        if (cancelled) return;
+        if (!r.ok) {
+          setBnplQuote(null);
+          setBnplQuoteError(d?.detail?.message || d?.detail?.code || "Financing unavailable.");
+          setUseCadBnplLane(false);
+        } else {
+          setBnplQuote(d);
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setBnplQuote(null);
+        setBnplQuoteError("Financing unavailable.");
+        setUseCadBnplLane(false);
+      })
+      .finally(() => { if (!cancelled) setBnplQuoteLoading(false); });
+    return () => { cancelled = true; };
+  }, [shippingCountry, cart]);
+
   const supported = useMemo(() => (cart || []).filter(isSupportedItem), [cart]);
   const unsupported = useMemo(() => (cart || []).filter((i) => !isSupportedItem(i)), [cart]);
   const hasUnsupported = unsupported.length > 0;
@@ -211,6 +259,7 @@ export default function Checkout() {
         price_move_acknowledged,
         shipping_country: shippingCountry,
         display_currency: presentment.currency || null,
+        use_cad_bnpl_lane: !!useCadBnplLane,
       }),
     });
     const data = await resp.json().catch(() => ({}));
@@ -419,6 +468,42 @@ export default function Checkout() {
               </p>
             )}
           </div>
+
+          {/* Trusted CAD BNPL lane — Klarna / Affirm Canada eligibility */}
+          {shippingCountry === "CA" && bnplQuote && (
+            <div
+              className="mt-6 border border-[#C6A24A]/25 bg-black/40 p-4 rounded-[2px]"
+              data-testid="checkout-bnpl-cad-block"
+            >
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={useCadBnplLane}
+                  onChange={(e) => setUseCadBnplLane(e.target.checked)}
+                  className="mt-1 accent-[#C6A24A]"
+                  data-testid="checkout-bnpl-cad-toggle"
+                />
+                <div>
+                  <p className="text-[#C6A24A] text-[12px] tracking-[0.22em] uppercase">
+                    Pay in CAD with Klarna or Affirm
+                  </p>
+                  <p className="text-white/60 text-[12px] mt-1" data-testid="checkout-bnpl-cad-amount">
+                    Charged in CAD · Approx.
+                    {" "}C${(bnplQuote.presentment_total_cents / 100).toLocaleString("en-CA", {maximumFractionDigits:0})} CAD
+                    <span className="text-white/40"> · canonical ${(bnplQuote.canonical_total_cents/100).toLocaleString("en-US")} USD</span>
+                  </p>
+                  <p className="text-white/35 text-[10px] leading-relaxed mt-1">
+                    Financing eligibility, approval, and installment amounts are decided by Stripe / Klarna / Affirm at checkout.
+                  </p>
+                </div>
+              </label>
+            </div>
+          )}
+          {shippingCountry === "CA" && !bnplQuote && !bnplQuoteLoading && bnplQuoteError && (
+            <p className="text-white/40 text-[10px] mt-3" data-testid="checkout-bnpl-cad-unavailable">
+              Financing options are temporarily unavailable — you can still complete checkout with card.
+            </p>
+          )}
         </form>
       </div>
 

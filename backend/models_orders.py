@@ -43,13 +43,14 @@ class OrderV2Shipping(BaseModel):
 
 
 class OrderV2Presentment(BaseModel):
-    """Optional Stripe Adaptive Pricing reconciliation block.
+    """Optional Stripe Adaptive Pricing / trusted-BNPL reconciliation block.
 
     Canonical (`OrderV2.currency`, `OrderV2.total_cents`, …) stays USD for
-    every new order. This block records what Stripe actually charged the
-    customer in their local currency when Adaptive Pricing applied. Every
-    field is optional so orders where Stripe fell back to USD, or where
-    Adaptive Pricing was not offered, still deserialize cleanly.
+    every new order unless the customer explicitly took the trusted CAD
+    BNPL lane, in which case the canonical remains USD AND this block
+    records the trusted CAD presentment that Stripe actually charged.
+    Every field is optional so orders where no presentment applied still
+    deserialize cleanly.
     """
     model_config = ConfigDict(extra="ignore")
     # Whatever Stripe authoritatively reports for the customer-charged
@@ -58,19 +59,34 @@ class OrderV2Presentment(BaseModel):
     stripe_presentment_amount_cents: Optional[int] = None
     # Convenience mirrors — same values, prefixed to match the shipping
     # naming style used elsewhere on `OrderV2`. Present when Stripe reports
-    # a non-USD Adaptive Pricing presentment.
+    # a non-USD Adaptive Pricing presentment OR when the trusted CAD BNPL
+    # lane priced the order.
     presentment_currency: Optional[str] = None
     presentment_total_cents: Optional[int] = None
-    # Authoritative Stripe-derived exchange rate (presentment_total_cents /
-    # canonical_total_cents). NEVER the storefront's display-only FX rate.
+    # Component presentment amounts — populated by the trusted BNPL FX
+    # service at session-create. Absent for Adaptive Pricing orders (Stripe
+    # reports only the total).
+    presentment_subtotal_cents: Optional[int] = None
+    presentment_shipping_cents: Optional[int] = None
+    presentment_tax_cents: Optional[int] = None
+    # Authoritative Stripe-derived exchange rate for Adaptive Pricing OR
+    # the trusted server-side snapshot for the BNPL lane. NEVER the
+    # storefront's display-only FX.
     fx_rate: Optional[float] = None
-    fx_rate_source: Optional[str] = None  # e.g. "stripe.adaptive_pricing"
+    fx_rate_source: Optional[str] = None  # "stripe.adaptive_pricing" | "frankfurter"
+    fx_retrieved_at: Optional[float] = None  # epoch seconds
+    fx_reference_date: Optional[str] = None  # ISO date from provider
+    fx_is_stale: Optional[bool] = None
     # UX preference reported by the browser at session-create for audit
     # only. It does NOT drive Stripe or the trusted amount.
     display_currency_selected_at_session: Optional[str] = None
     # Which Stripe field actually carried the presentment payload for this
     # order. Documented per environment so support can trace shape drift.
     extraction_source: Optional[str] = None
+    # Which lane priced the order: "adaptive_pricing" (Stripe-decided
+    # local presentment) or "bnpl_cad" (trusted server-side USD→CAD before
+    # session-create).
+    lane: Optional[str] = None
 
 
 class OrderV2(BaseModel):

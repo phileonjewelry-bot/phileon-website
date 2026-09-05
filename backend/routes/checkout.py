@@ -4,7 +4,7 @@ live-metal PRICE_MOVED contract for the 7 dynamic rings."""
 import hashlib, hmac, json, logging, os, secrets
 from typing import List, Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Request, Header
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from services.catalog import (
     resolve_line_item, compute_totals, CatalogError, is_supported,
@@ -20,6 +20,7 @@ from services.shipping_zones import (
     CURRENCY as SHIPPING_CURRENCY,
 )
 from services import metal_spot
+from services import fx_bnpl
 from services.fx_display import SUPPORTED_DISPLAY_CURRENCIES
 from models_orders import OrderV2, OrderV2Item, OrderV2Shipping, OrderV2Presentment, hash_status_token
 
@@ -139,6 +140,13 @@ class StripeSessionIn(BaseModel):
     # Destination country — non-monetary, ISO-3166-1 alpha-2. Required.
     # Validated server-side against the approved shipping-zone allowlist.
     shipping_country: str = Field(min_length=2, max_length=2)
+    # Optional non-monetary flag: opt into the trusted CAD BNPL lane
+    # (Klarna/Affirm Canada eligibility). NEVER trusts a client-supplied
+    # rate or CAD amount — the backend derives them at session-create
+    # using `services.fx_bnpl`. Ignored (fail-closed) when
+    # `shipping_country != "CA"` or when no trusted FX snapshot is
+    # available.
+    use_cad_bnpl_lane: Optional[bool] = False
     # OPTIONAL non-monetary UX preference recording the display currency the
     # shopper had selected in the frontend when they submitted checkout.
     # ── STRICTLY DISPLAY-ONLY. It NEVER drives Stripe, shipping, tax, the
@@ -216,6 +224,56 @@ async def shipping_quote(body: ShippingQuoteIn):
         "insurance_required": zone.insurance_required,
         "supports_signature_confirmation": zone.supports_signature_confirmation,
     }
+
+
+class BnplQuoteIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    # Non-monetary product identifiers only — the server resolves the
+    # trusted USD subtotal + shipping. Client never sends a rate or a CAD
+    # amount.
+    items: List[CartItemIn] = Field(min_length=1)
+    shipping_country: str = Field(min_length=2, max_length=2)
+
+
+@router.post("/bnpl-quote")
+async def bnpl_quote(body: BnplQuoteIn):
+    """Return a trusted server-side CAD BNPL quote for the given cart +
+    shipping country. Rate is snapshotted from `services.fx_bnpl` (the
+    money-safe FX authority). NEVER accepts a client-supplied rate or
+    CAD amount. Only available for shipping_country=CA."""
+    country = body.shipping_country.upper()
+    if country != "CA":
+        raise HTTPException(status_code=400, detail={
+            "code": "BNPL_CAD_REQUIRES_CA",
+            "message": "The CAD BNPL lane is only available for Canadian shipping addresses.",
+        })
+    # Resolve canonical USD subtotal + trusted shipping the same way the
+    # session endpoint does. Fail-closed on any resolver error.
+    try:
+        resolved = [resolve_line_item(
+                        i.product_id, i.karat, i.metalColour, i.ringSize,
+                        i.quantity, variant=i.variant, colorway=i.colorway,
+                        tier=i.tier, wrist_size=i.wristSize,
+                    ) for i in body.items]
+    except CatalogError as e:
+        raise HTTPException(status_code=400, detail={"code": str(e), "message": "Cart contains an item that cannot be priced."})
+    try:
+        zone = resolve_zone_for_country(country)
+    except ShippingZoneError as e:
+        raise HTTPException(status_code=400, detail={"code": str(e) or "UNSUPPORTED_DESTINATION",
+                                                       "message": "We do not ship to this destination."})
+    subtotal_cents = sum(int(r["unit_amount_cents"]) * int(r["quantity"]) for r in resolved)
+    quote = fx_bnpl.build_bnpl_quote(
+        usd_subtotal_cents=subtotal_cents,
+        usd_shipping_cents=int(zone.rate_cents),
+        usd_tax_cents=0,
+    )
+    if quote is None:
+        raise HTTPException(status_code=503, detail={
+            "code": "BNPL_FX_UNAVAILABLE",
+            "message": "Financing is temporarily unavailable — please continue with card payment in USD.",
+        })
+    return quote
 
 
 @router.post("/stripe/session")
@@ -353,6 +411,20 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
                 "code": "INVALID_DISPLAY_CURRENCY",
                 "message": "Display currency is not supported.",
             })
+
+    # ── Trusted CAD BNPL lane (optional). Fail-closed when preconditions
+    # aren't met — normal USD flow continues below.
+    bnpl_lane_active = False
+    bnpl_quote = None
+    if body.use_cad_bnpl_lane and body.shipping_country.upper() == "CA":
+        bnpl_quote = fx_bnpl.build_bnpl_quote(
+            usd_subtotal_cents=totals["subtotal_cents"],
+            usd_shipping_cents=totals["shipping_cents"],
+            usd_tax_cents=totals["tax_cents"],
+        )
+        if bnpl_quote is not None:
+            bnpl_lane_active = True
+
     if existing:
         order = OrderV2(**existing)
     else:
@@ -368,10 +440,28 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             insurance_required=zone.insurance_required,
         )
         presentment_block = None
-        if display_currency_normalized:
-            presentment_block = OrderV2Presentment(
-                display_currency_selected_at_session=display_currency_normalized,
-            )
+        if display_currency_normalized or bnpl_quote is not None:
+            fields = {}
+            if display_currency_normalized:
+                fields["display_currency_selected_at_session"] = display_currency_normalized
+            if bnpl_quote is not None:
+                # BNPL lane will price in CAD when eligible. Persist the
+                # trusted server-side snapshot on OrderV2 so support can
+                # audit the rate/source used.
+                fields.update({
+                    "lane": "bnpl_cad",
+                    "presentment_currency": bnpl_quote["presentment_currency"],
+                    "presentment_subtotal_cents": bnpl_quote["presentment_subtotal_cents"],
+                    "presentment_shipping_cents": bnpl_quote["presentment_shipping_cents"],
+                    "presentment_tax_cents": bnpl_quote["presentment_tax_cents"],
+                    "presentment_total_cents": bnpl_quote["presentment_total_cents"],
+                    "fx_rate": bnpl_quote["fx_rate"],
+                    "fx_rate_source": bnpl_quote["fx_source"],
+                    "fx_retrieved_at": bnpl_quote["fx_retrieved_at"],
+                    "fx_reference_date": bnpl_quote["fx_reference_date"],
+                    "fx_is_stale": bnpl_quote["fx_is_stale"],
+                })
+            presentment_block = OrderV2Presentment(**fields)
         order = OrderV2(
             idempotency_key=idem,
             customer_email=body.customer_email,
@@ -400,6 +490,10 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
     success_url = _cfg("CHECKOUT_SUCCESS_URL", "https://labete-gallery.preview.emergentagent.com/checkout/success")
     cancel_url  = _cfg("CHECKOUT_CANCEL_URL",  "https://labete-gallery.preview.emergentagent.com/checkout/cancel")
 
+    # ── OPTIONAL: trusted CAD BNPL lane already resolved above. Line-item
+    # currency + shipping option currency will be overridden below when
+    # `bnpl_lane_active` is True.
+
     line_items = [{
         "price_data": {
             "currency": totals["currency"].lower(),
@@ -411,12 +505,68 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         "quantity": r["quantity"],
     } for r in resolved]
 
-    # ── Shipping — destination-driven trusted zone (Phase 1, D1..D11) ──
-    # `zone` was resolved server-side above from the client-supplied
-    # non-monetary country. Stripe receives EXACTLY ONE trusted shipping
-    # option and `allowed_countries` is locked to the same single country
-    # so Stripe-hosted Checkout cannot broaden the destination after entry.
+    # Trusted shipping — destination-driven zone. Always canonical USD.
     trusted_shipping_option = build_stripe_shipping_option(body.shipping_country)
+
+    # If the BNPL lane is active, override BOTH the Stripe line-item
+    # currency AND the shipping option currency with the trusted CAD
+    # snapshot amounts. Line-item allocation preserves canonical USD-cent
+    # proportions so the sum matches the FX-quoted CAD subtotal exactly.
+    if bnpl_lane_active and bnpl_quote is not None:
+        canonical_sub = int(bnpl_quote["canonical_subtotal_cents"])
+        cad_sub_target = int(bnpl_quote["presentment_subtotal_cents"])
+        # Deterministic allocator: convert each line's canonical value with
+        # the same snapshot, then apply the residual to the last line so
+        # the sum equals `cad_sub_target` exactly.
+        allocated = []
+        running = 0
+        for r in resolved:
+            line_canonical = int(r["unit_amount_cents"]) * int(r["quantity"])
+            line_cad_total = fx_bnpl.convert_usd_cents_to_cad_cents(
+                line_canonical,
+                snapshot={"rate": __import__("decimal").Decimal(bnpl_quote["fx_rate_decimal"]),
+                          "provider": bnpl_quote["fx_source"]},
+            ) or 0
+            running += line_cad_total
+            allocated.append(line_cad_total)
+        # Distribute the residual on the LAST line to hit the exact target.
+        residual = cad_sub_target - running
+        if allocated:
+            allocated[-1] += residual
+        line_items = []
+        for r, line_cad in zip(resolved, allocated):
+            qty = int(r["quantity"])
+            unit_cad = line_cad // qty
+            remainder = line_cad - unit_cad * qty
+            # Attach any remainder as a single 1-qty micro-item so unit
+            # prices stay integer and the sum matches exactly. In practice
+            # remainder is < qty (≤ a few cents CAD).
+            line_items.append({
+                "price_data": {
+                    "currency": "cad",
+                    "product_data": {
+                        "name": f"{r['product_name']} — {r['subtitle']}",
+                        "description": r["variant"],
+                        "metadata": (r.get("metadata") or {"sku": r["sku"], "internal_product_id": r["product_id"]}),
+                    },
+                    "unit_amount": unit_cad,
+                },
+                "quantity": qty,
+            })
+            if remainder != 0:
+                line_items.append({
+                    "price_data": {
+                        "currency": "cad",
+                        "product_data": {"name": f"{r['product_name']} — rounding adjustment"},
+                        "unit_amount": remainder,
+                    },
+                    "quantity": 1,
+                })
+        trusted_shipping_option = build_stripe_shipping_option(
+            body.shipping_country,
+            currency_override="cad",
+            rate_cents_override=int(bnpl_quote["presentment_shipping_cents"]),
+        )
 
     session_kwargs = dict(
         mode="payment",

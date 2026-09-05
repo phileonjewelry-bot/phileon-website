@@ -25,7 +25,7 @@ precious-metal shipment restrictions, and destination-jurisdiction
 restrictions. There is no embedded sanctions engine.
 """
 from dataclasses import dataclass
-from typing import Dict, FrozenSet, Tuple
+from typing import Dict, FrozenSet, Tuple, Optional
 
 CURRENCY: str = "USD"
 
@@ -135,14 +135,21 @@ def all_allowed_countries() -> FrozenSet[str]:
     return frozenset(out)
 
 
-def build_stripe_shipping_option(country_alpha2: str) -> dict:
+def build_stripe_shipping_option(country_alpha2: str,
+                                  currency_override: Optional[str] = None,
+                                  rate_cents_override: Optional[int] = None) -> dict:
     """Return EXACTLY ONE Stripe shipping option payload for the resolved
-    zone. Currency is fixed to "usd". No client field influences amount."""
+    zone. Currency defaults to `"usd"` and amount defaults to the trusted
+    zone rate. Both may be overridden ONLY for the trusted CAD BNPL lane
+    where the backend has already computed the CAD-quoted shipping amount
+    via `services.fx_bnpl`; the caller carries the authority."""
     zone = resolve_zone_for_country(country_alpha2)
+    cur = (currency_override or CURRENCY).lower()
+    amt = int(rate_cents_override) if rate_cents_override is not None else zone.rate_cents
     return {
         "shipping_rate_data": {
             "type": "fixed_amount",
-            "fixed_amount": {"amount": zone.rate_cents, "currency": CURRENCY.lower()},
+            "fixed_amount": {"amount": amt, "currency": cur},
             "display_name": zone.display_name,
             "delivery_estimate": {
                 "minimum": {"unit": "business_day", "value": zone.delivery_estimate_business_days[0]},
