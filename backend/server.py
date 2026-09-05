@@ -1170,6 +1170,8 @@ from routes.i18n import router as i18n_router
 app.include_router(checkout_v2_router, prefix="/api")
 app.include_router(webhooks_stripe_router, prefix="/api")
 app.include_router(i18n_router, prefix="/api")
+from routes.admin_orders import router as admin_orders_router
+app.include_router(admin_orders_router, prefix="/api")
 app.include_router(metals_router)
 
 from starlette.types import ASGIApp, Receive, Scope, Send

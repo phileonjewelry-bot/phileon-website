@@ -2,6 +2,7 @@
 Trusted server-side pricing, idempotency, protected order-status lookup,
 live-metal PRICE_MOVED contract for the 7 dynamic rings."""
 import hashlib, hmac, json, logging, os, secrets
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Request, Header
 from pydantic import BaseModel, ConfigDict, Field
@@ -634,21 +635,46 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
 @router.get("/order/{order_number}/status")
 async def order_status(order_number: str, token: str, session_id: Optional[str] = None):
     """Protected order status lookup. Requires the one-time status token
-    issued at session creation (compared against a stored hash)."""
+    issued at session creation (compared against a stored hash). Never
+    exposes Stripe IDs, webhook metadata, FX metadata, or internal DB IDs."""
     db = get_db()
     doc = await db.orders_v2.find_one({"order_number": order_number}, {"_id": 0})
     if not doc:
         raise HTTPException(status_code=404, detail={"code": "NOT_FOUND"})
     if hash_status_token(token) != doc.get("status_token_hash"):
         raise HTTPException(status_code=403, detail={"code": "INVALID_TOKEN"})
-    # Safe response — no addresses, no provider objects, no metadata
+    # Choose the customer-facing charged amount: presentment (BNPL CAD /
+    # Adaptive Pricing) if available, else canonical USD.
+    charged_currency = doc.get("currency") or "USD"
+    charged_amount_cents = int(doc.get("total_cents") or 0)
+    presentment = doc.get("presentment") or {}
+    if isinstance(presentment, dict):
+        p_cur = presentment.get("presentment_currency") or presentment.get("stripe_presentment_currency")
+        p_amt = presentment.get("presentment_total_cents") or presentment.get("stripe_presentment_amount_cents")
+        if p_cur and p_amt is not None:
+            charged_currency = str(p_cur).upper()
+            charged_amount_cents = int(p_amt)
+    shipping = doc.get("shipping") or {}
     return {
         "order_number": doc["order_number"],
         "payment_status": doc["payment_status"],
-        "fulfilment_status": doc["fulfilment_status"],
-        "currency": doc["currency"],
-        "total_cents": doc["total_cents"],
-        "items": [{"product_name": i["product_name"], "variant": i["variant"],
+        "fulfilment_status": doc.get("fulfilment_status"),
+        "fulfillment_status": doc.get("fulfillment_status"),
+        "fulfillment_type": doc.get("fulfillment_type"),
+        "dispatch_estimate": doc.get("dispatch_estimate") or "Production timing confirmed after order.",
+        "charged_currency": charged_currency,
+        "charged_amount_cents": charged_amount_cents,
+        "canonical_currency": doc.get("currency") or "USD",
+        "canonical_total_cents": int(doc.get("total_cents") or 0),
+        "shipping": {
+            "country": shipping.get("country"),
+            "service_label": shipping.get("service_label"),
+        },
+        "carrier": doc.get("carrier"),
+        "tracking_number": doc.get("tracking_number"),
+        "tracking_url": doc.get("tracking_url"),
+        "shipped_at": doc.get("shipped_at").isoformat() if isinstance(doc.get("shipped_at"), datetime) else doc.get("shipped_at"),
+        "items": [{"product_name": i["product_name"], "variant": i.get("variant"),
                    "quantity": i["quantity"], "unit_amount_cents": i["unit_amount_cents"]}
                   for i in doc["items"]],
     }

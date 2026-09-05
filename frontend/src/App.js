@@ -143,6 +143,7 @@ const WishlistPage = lazy(() => import("@/pages/WishlistPage"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
 const CheckoutSuccess = lazy(() => import("@/pages/CheckoutSuccess"));
 const CheckoutCancel = lazy(() => import("@/pages/CheckoutCancel"));
+const OrderStatusPage = lazy(() => import("@/pages/OrderStatusPage"));
 
 // Admin Pages (lazy — admin surface never loaded by public visitors)
 const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
@@ -241,6 +242,7 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
+            <Route path="/orders/:orderNumber/status" element={<OrderStatusPage />} />
             <Route path="/vault/drews-world" element={<VaultPage />} />
             <Route path="/vault/drew-face" element={<DrewFacePage />} />
             {/* H.E.R. — HER ETERNAL REIGN · Ladies Fine Jewelry ring */}

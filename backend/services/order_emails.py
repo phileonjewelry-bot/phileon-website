@@ -334,6 +334,125 @@ def build_customer_payment_received_email(order: Dict) -> Dict[str, str]:
     return {"subject": subject, "html": html, "text": text}
 
 
+def build_customer_shipment_email(order: Dict) -> Dict[str, str]:
+    """PHILEON customer email sent when an authenticated admin marks a
+    paid order shipped.
+
+    Body includes:
+      • PHILEON order number
+      • purchased item(s), material/variant, size where applicable
+      • carrier + tracking number + trusted tracking link (when the link
+        is a well-formed http(s) URL — otherwise omitted)
+      • order total in the trusted order currency
+      • concierge contact path
+
+    Deliberately excludes any Stripe identifier, webhook metadata,
+    database ID, FX metadata, or presentment reconciliation detail.
+    """
+    order_no = order.get("order_number") or ""
+    currency = order.get("currency") or "USD"
+    total = _fmt_money(order.get("total_cents") or 0, currency)
+    carrier = (order.get("carrier") or "").strip()
+    tracking_number = (order.get("tracking_number") or "").strip()
+    tracking_url = (order.get("tracking_url") or "").strip()
+    # Only surface an http(s) tracking URL. Anything else is dropped so no
+    # javascript:/data:/mailto: link can be smuggled into the email.
+    safe_tracking_href = ""
+    if tracking_url.startswith("http://") or tracking_url.startswith("https://"):
+        safe_tracking_href = tracking_url
+
+    subject = f"PHILEON — Order {order_no} Shipped"
+
+    # Tracking block — HTML + text renditions.
+    tracking_html_bits = []
+    tracking_text_bits = []
+    if carrier:
+        tracking_html_bits.append(
+            f"<p style='font-size:14px;color:#e8e0cf;margin:0 0 6px;'>"
+            f"<span style='font-family:\"Cinzel\",serif;letter-spacing:.36em;font-size:10.5px;color:#a89f89'>CARRIER</span>&nbsp;&nbsp;{carrier}</p>"
+        )
+        tracking_text_bits.append(f"Carrier: {carrier}")
+    if tracking_number:
+        tracking_html_bits.append(
+            f"<p style='font-size:14px;color:#e8e0cf;margin:0 0 6px;'>"
+            f"<span style='font-family:\"Cinzel\",serif;letter-spacing:.36em;font-size:10.5px;color:#a89f89'>TRACKING&nbsp;#</span>&nbsp;&nbsp;{tracking_number}</p>"
+        )
+        tracking_text_bits.append(f"Tracking #: {tracking_number}")
+    if safe_tracking_href:
+        tracking_html_bits.append(
+            f"<p style='margin:12px 0 0;'>"
+            f"<a href='{safe_tracking_href}' style='color:#c8a24a;font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;text-decoration:none;border-bottom:1px solid rgba(200,162,74,.4);padding-bottom:2px;'>TRACK YOUR SHIPMENT →</a>"
+            f"</p>"
+        )
+        tracking_text_bits.append(f"Track your shipment: {safe_tracking_href}")
+
+    tracking_html = "".join(tracking_html_bits) or (
+        "<p style='font-size:14px;color:#a89f89;margin:0 0 6px;font-style:italic;'>"
+        "Carrier details will follow shortly.</p>"
+    )
+    tracking_text = "\n".join(tracking_text_bits) or "Carrier details will follow shortly."
+
+    html = (
+        f"{_CUSTOMER_HEAD_STYLE}"
+        f"<div style='background:#0a0a0c;color:#e8e0cf;font-family:Georgia,serif;padding:48px 24px;'>"
+        f"  <div style='max-width:560px;margin:0 auto;'>"
+        f"    <p style='font-family:\"Cinzel\",serif;letter-spacing:.5em;font-size:11px;color:#c8a24a;margin:0 0 24px;'>PHILEON</p>"
+        f"    <h1 class='phi-h1' style='font-family:\"Cinzel\",serif;letter-spacing:.14em;font-size:22px;line-height:1.15;color:#f4ecd6;margin:0 0 12px;word-break:keep-all;overflow-wrap:normal;'>"
+        f"      <span style='display:block'>YOUR ORDER</span>"
+        f"      <span style='display:block'>HAS SHIPPED.</span>"
+        f"    </h1>"
+        f"    <p style='font-family:\"Playfair Display\",Georgia,serif;font-style:italic;color:#a89f89;margin:0 0 32px;'>Your PHILEON piece is on its way.</p>"
+        f"    <p style='font-size:14px;color:#e8e0cf;margin:0 0 8px;'>Order reference: <strong>{order_no}</strong></p>"
+        f"    <table style='width:100%;border-collapse:collapse;margin-top:24px;'>{_items_html(order.get('items') or [], currency)}</table>"
+        f"    <div style='display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid #33322a;margin-top:8px;'>"
+        f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;color:#a89f89'>TOTAL</span>"
+        f"      <span class='phi-total-value' style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
+        f"    </div>"
+        f"    <div style='margin-top:32px;padding-top:20px;border-top:1px solid #33322a;'>"
+        f"      {tracking_html}"
+        f"    </div>"
+        f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>"
+        f"      If you have any questions about your shipment, reply to this email or "
+        f"contact our concierge team at any time — we&apos;re here to help."
+        f"    </p>"
+        f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;font-style:italic;'>"
+        f"      Every PHILEON piece is prepared with intention."
+        f"    </p>"
+        f"  </div>"
+        f"</div>"
+    )
+    text = (
+        f"PHILEON — Your order has shipped.\n\n"
+        f"Order reference: {order_no}\n\n"
+        f"{_items_text(order.get('items') or [], currency)}\n\n"
+        f"Total: {total}\n\n"
+        f"{tracking_text}\n\n"
+        f"If you have any questions about your shipment, reply to this email or "
+        f"contact our concierge team at any time — we're here to help.\n\n"
+        f"Every PHILEON piece is prepared with intention."
+    )
+    return {"subject": subject, "html": html, "text": text}
+
+
+async def send_shipment_email(order: Dict) -> Dict[str, object]:
+    """Send the shipment-confirmation email to the customer exactly once.
+
+    Idempotency is the caller's responsibility: `admin_orders.mark_shipped`
+    performs an atomic transition (`shipping_notification_sent != True → True`)
+    and only invokes this helper when its own write flipped that flag.
+
+    Returns the underlying `send_email` status dict. Never raises.
+    """
+    to_customer = (order.get("customer_email") or "").strip()
+    if not to_customer:
+        return {"status": "skipped", "reason": "no_recipient"}
+    payload = build_customer_shipment_email(order)
+    try:
+        return await send_email(to_customer, payload["subject"], payload["html"], payload["text"])
+    except Exception as e:
+        return {"status": "failed", "error": f"{type(e).__name__}: {str(e)[:180]}"}
+
+
 async def send_paid_order_emails(order: Dict) -> Dict[str, Optional[Dict]]:
     """Notification router for a paid order. Returns a status dict the caller
     (webhook) uses to update `customer_notification_sent` and

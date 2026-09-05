@@ -89,7 +89,12 @@ export default function CheckoutSuccess() {
   })();
 
   // Currency for money formatting — comes from the trusted backend order.
-  const currency = order?.currency || "USD";
+  // Prefer the actual charged currency (BNPL CAD / Adaptive Pricing) when
+  // present; fall back to canonical USD.
+  const currency = order?.charged_currency || order?.currency || "USD";
+  const displayTotalCents = (typeof order?.charged_amount_cents === "number")
+    ? order.charged_amount_cents
+    : order?.total_cents;
   const hasMadeToOrder =
     Array.isArray(order?.items) &&
     order.items.some((i) => MADE_TO_ORDER_SLUGS.has(i.product_slug || i.internal_product_id));
@@ -226,13 +231,22 @@ export default function CheckoutSuccess() {
             <div className="ps-line ps-total">
               <span className="ps-total-label">Total</span>
               <span className="ps-total-amount" data-testid="checkout-total">
-                {formatMoney(order.total_cents, currency)}
+                {formatMoney(displayTotalCents, currency)}
               </span>
             </div>
           </div>
         ) : null}
 
         <div className="ps-actions">
+          {orderNumber && sessionStorage.getItem(`phi_order_${orderNumber}`) ? (
+            <Link
+              to={`/orders/${encodeURIComponent(orderNumber)}/status?token=${encodeURIComponent(sessionStorage.getItem(`phi_order_${orderNumber}`))}`}
+              className="ps-btn primary"
+              data-testid="checkout-view-order-status"
+            >
+              View Order Status
+            </Link>
+          ) : null}
           <Link to="/shop" className="ps-btn primary" data-testid="checkout-continue-exploring">
             Continue Exploring
           </Link>

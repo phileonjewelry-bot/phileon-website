@@ -16,6 +16,41 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
+- **[DONE Feb 05 2026] CUSTOMER EXPERIENCE LOGIC PHASE — P0 + P1 COMPLETE. OWNER-LOCKED.**
+  - **Owner-approved decisions honored:** deep-link-only order status route (no public order-number-only lookup), Ring Size Guide Option B (US + EU + UK sizing chart + inside-diameter method + factual temperature/time-of-day note + contact PHILEON recommendation) with ZERO resizing-policy language, existing JWT `verify_admin` is a legitimate admin/staff authorization mechanism → mark-shipped endpoint approved to expose.
+  - **New secure customer route** `/orders/:orderNumber/status?token=<one-time>` — new `frontend/src/pages/OrderStatusPage.jsx`. Token is passed via URL query ONLY, never rendered in page content, tab title (`document.title = "PHILEON — Order {orderNumber}"`), analytics events, or logs. Consumes existing token-protected `GET /api/checkout/order/{order_number}/status`. Renders order number, item(s) + material/variant + size, amount + currency, payment state, fulfillment state, shipping destination + service, carrier, tracking number, and a validated http(s) tracking link when shipped. Fallback lead-time copy is served by the backend when `dispatch_estimate` is unset: **"Production timing confirmed after order."** — no invented lead times. 403 → `order-status-unauthorized` state; 404 → `order-status-not-found`; network → `order-status-network-error`. No exposure of Stripe IDs / webhook event IDs / DB IDs / FX metadata / status_token_hash / presentment / idempotency_key. Verified by `test_order_status_does_not_leak_internal_fields`.
+  - **Backend status endpoint hardened** — `backend/routes/checkout.py::order_status` uses an explicit whitelist projection (never a blacklist). Default `dispatch_estimate` fallback wired at response construction: `doc.get("dispatch_estimate") or "Production timing confirmed after order."`.
+  - **Ring Size Guide (Option B)** — `frontend/src/components/SizeGuideModal.jsx::SizeGuideContent` now renders:
+    - Step 1 (paper-strip circumference method) + Step 2 (measure in mm).
+    - New "ALTERNATE METHOD · MEASURE AN EXISTING RING" section — measure inside diameter edge-to-edge in mm.
+    - **PHILEON Global Sizing Chart** — 4-column grid (US · EU · UK · Ø mm) for sizes US 5 – US 13.
+    - Factual note: "Finger size can vary with temperature and time of day — avoid measuring when your hands are unusually cold, warm, or immediately after exercise."
+    - Recommendation to contact PHILEON when unsure. ZERO resizing-policy language anywhere.
+    - The existing shared `<SizeGuideLink>` beside every `RingSizeSelector` (auto-rendered from `RingSizeSelector.jsx`, links to `/ring-size-guide`) is unchanged and now points at the enriched content. Every ring PDP inherits it automatically.
+  - **PHILEON-branded shipping confirmation email** — new `services/order_emails.py::build_customer_shipment_email` + `send_shipment_email`. Editorial masthead **"YOUR ORDER · HAS SHIPPED."**, PHILEON order number, item(s) + variant, order total in the trusted order currency, CARRIER, TRACKING #, and a **"TRACK YOUR SHIPMENT →"** anchor that only renders when `tracking_url` starts with `http://` or `https://` (guards against `javascript:` / `data:` / `mailto:` smuggling). Concierge-contact copy at the foot. Never exposes Stripe IDs, webhook metadata, FX / presentment metadata, or DB identifiers — verified by `test_shipment_email_excludes_internal_details` (banned tokens list: `cs_test_LEAK`, `pi_LEAK`, `internal-uuid-LEAK`, `frankfurter`, `evt_LEAK`, `STATUS_TOKEN_HASH_LEAK`, `fx_rate`, `webhook`).
+  - **Admin shipment endpoint** `POST /api/admin/orders/{order_number}/mark-shipped` — protected by the existing `verify_admin` JWT dependency (legitimate admin/staff auth, not customer auth). Body: `carrier`, `tracking_number`, optional `tracking_url` — `extra="forbid"` blocks arbitrary field injection (verified). Requires `payment_status in ("paid","authorized")` else 409 `NOT_PAID`. Atomic transition uses `find_one_and_update({shipping_notification_sent: {$ne: True}}, ...)` as the exactly-once gate; only the caller whose write flipped the flag invokes `send_shipment_email`. Duplicate calls return `{"ok": True, "email_sent": False}` — support-case tracking updates are permitted but **never** trigger a second email. Verified by `test_mark_shipped_first_call_sends_email_second_is_noop`.
+  - **CheckoutSuccess integration** — post-payment, when the browser holds `sessionStorage[phi_order_${orderNumber}]`, a **"VIEW ORDER STATUS"** primary CTA (`data-testid=checkout-view-order-status`) deep-links to `/orders/${orderNumber}/status?token=…`. Token is passed via URL query only; never rendered in visible content.
+  - **Regression coverage this pass** — new `backend/tests/test_customer_experience_phase.py`, 14 cases, all pass:
+    - `test_shipment_email_builder_includes_expected_fields`
+    - `test_shipment_email_excludes_internal_details`
+    - `test_shipment_email_strips_unsafe_tracking_url`
+    - `test_admin_mark_shipped_requires_auth`
+    - `test_admin_mark_shipped_rejects_bad_token`
+    - `test_admin_mark_shipped_endpoint_registered`
+    - `test_admin_mark_shipped_rejects_extra_fields`
+    - `test_mark_shipped_first_call_sends_email_second_is_noop`
+    - `test_mark_shipped_rejects_unpaid_order`
+    - `test_order_status_rejects_missing_token`
+    - `test_order_status_rejects_invalid_token`
+    - `test_order_status_default_dispatch_estimate`
+    - `test_order_status_surfaces_tracking_when_shipped`
+    - `test_order_status_does_not_leak_internal_fields`
+  - **Testing-agent verdict (iteration_19.json)** — Customer Experience Phase 100 % green. 957/959 backend pytest (99.8 %); 14/14 new customer-experience tests; live endpoint smoke 6/6; frontend flows 100 %. `retest_needed=false`. Only surfaced note is a testid-naming convention observation (per-product prefixed testids like `ovation-ringsize-guide-cta` vs flat `ring-size-guide-cta`) — no functional impact, no fix required.
+  - **Invariants preserved** — Trusted catalog **84** · canonical currency **USD** · `STRIPE_MODE=test` · LIVE **OFF** · MIXED_CURRENCY_CART guard active · shipping rates unchanged (CA $0 · US $35 · T1 $65 · T2 $95 USD cents) · signature threshold 50000 USD cents · **historical order `PHI-20260901-4CBC5C` UNTOUCHED** · no resizing promises anywhere · no invented lead times · notification idempotency (`paid_notification_sent` + `shipping_notification_sent`) intact.
+  - **Files new (2):** `frontend/src/pages/OrderStatusPage.jsx`, `backend/tests/test_customer_experience_phase.py`.
+  - **Files modified (5):** `frontend/src/App.js` (registers `/orders/:orderNumber/status`), `frontend/src/pages/CheckoutSuccess.jsx` (deep-link CTA), `frontend/src/components/SizeGuideModal.jsx` (US+EU+UK chart + inside-diameter method + temperature/time-of-day note), `backend/services/order_emails.py` (`build_customer_shipment_email` + `send_shipment_email`), `backend/routes/admin_orders.py` (email wiring on atomic paid→shipped transition).
+
+
 - **[DONE Sep 5] CANADIAN BNPL CAD LANE — OPTION A. Trusted server-side FX. LIVE stays OFF.**
   - **New service `services/fx_bnpl.py`** — dedicated MONEY-SAFE USD→CAD FX. Frankfurter provider (owner-approved). Fully isolated from `services/fx_display.py`. `Decimal`-based with `ROUND_HALF_UP` on integer minor units. In-memory cache: 6h fresh TTL / 72h weekend-holiday stale grace. Fail-closed beyond 72h. Rejects malformed, zero, negative, or out-of-band rates (`MIN_RATE=1.05`, `MAX_RATE=2.00`).
   - **Snapshot recorded on `OrderV2.presentment`** — new fields: `presentment_subtotal_cents`, `presentment_shipping_cents`, `presentment_tax_cents`, `fx_retrieved_at`, `fx_reference_date`, `fx_is_stale`, `lane` (`"bnpl_cad"` | `"adaptive_pricing"`). Backward-compatible — historical orders deserialize.

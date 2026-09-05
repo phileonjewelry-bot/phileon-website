@@ -129,6 +129,16 @@ class OrderV2(BaseModel):
     # Optional so historical orders continue to deserialize. NEVER trusted
     # for money math — recorded for support/analytics and refund handling.
     payment_method_type: Optional[str] = None
+    # Fulfillment (ready-to-ship / made-to-order / custom). Independent of
+    # `payment_status`. Historical orders deserialize cleanly (all optional).
+    fulfillment_status: Optional[str] = None  # processing|in_production|ready_to_ship|shipped|delivered|cancelled
+    fulfillment_type: Optional[str] = None    # READY_TO_SHIP|MADE_TO_ORDER|CUSTOM_INQUIRY
+    dispatch_estimate: Optional[str] = None   # neutral customer-facing string
+    carrier: Optional[str] = None             # free-text, PHILEON is carrier-agnostic
+    tracking_number: Optional[str] = None
+    tracking_url: Optional[str] = None
+    shipped_at: Optional[datetime] = None
+    shipping_notification_sent: bool = False
     # Optional presentment-integrity gate (mirrors `shipping_integrity_status`
     # architecture). Only set to "pending_review" when a genuine like-for-
     # like reconciliation defect is detected — Adaptive Pricing FX drift is

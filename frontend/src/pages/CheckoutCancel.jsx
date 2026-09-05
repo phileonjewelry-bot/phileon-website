@@ -43,14 +43,20 @@ export default function CheckoutCancel() {
       <div className="pc-wrap">
         <p className="pc-eyebrow">PHILEON · Checkout</p>
         <h1 className="pc-heading" data-testid="checkout-cancel-heading">CHECKOUT PAUSED.</h1>
-        <p className="pc-support">Your selection is still yours to revisit.</p>
+        <p className="pc-support" data-testid="checkout-cancel-order-not-placed">
+          Your order has not been placed.
+        </p>
         <p className="pc-note">
-          No charge was placed. Your cart is exactly as you left it, waiting
-          for you to return whenever the moment is right.
+          No charge was made. Your bag is preserved exactly as you left it,
+          waiting for you to return whenever the moment is right.
         </p>
         <div className="pc-actions">
-          <Link to="/cart" className="pc-btn primary" data-testid="checkout-return-to-cart">
-            Return to Cart
+          <Link to="/cart" className="pc-btn primary" data-testid="checkout-return-to-bag">
+            Return to Bag
+          </Link>
+          <Link to="/checkout" className="pc-btn primary" data-testid="checkout-continue-checkout"
+                style={{marginTop:8}}>
+            Continue Checkout
           </Link>
           <Link
             to="/shop?category=rings"

@@ -89,7 +89,25 @@ export function SizeGuideContent({ showLogo = true }) {
         </p>
       </div>
 
-      {/* COMMON PHILEON SIZES CHART */}
+      {/* METHOD B — MEASURE AN EXISTING RING */}
+      <div className="mb-12 text-center">
+        <p
+          className="text-[11px] tracking-[0.3em] mb-5"
+          style={{ color: 'rgba(60, 44, 31, 0.7)' }}
+        >
+          ALTERNATE METHOD · MEASURE AN EXISTING RING
+        </p>
+        <p
+          className="text-sm leading-relaxed max-w-[360px] mx-auto"
+          style={{ color: '#3c2c1f' }}
+        >
+          Take a ring that already fits the intended finger. Measure the
+          <em> inside diameter</em> in millimetres — edge to edge, across
+          the widest point. Compare that measurement against the chart below.
+        </p>
+      </div>
+
+      {/* PHILEON GLOBAL SIZING CHART — US · EU · UK · Inside Diameter */}
       <div
         className="pt-8 pb-2"
         style={{ borderTop: '1px solid rgba(60, 44, 31, 0.18)' }}
@@ -98,31 +116,48 @@ export function SizeGuideContent({ showLogo = true }) {
           className="text-center text-[11px] tracking-[0.3em] mb-6"
           style={{ color: 'rgba(60, 44, 31, 0.7)' }}
         >
-          COMMON PHILEON SIZES
+          PHILEON GLOBAL SIZING CHART
         </p>
-        <div className="max-w-[360px] mx-auto" data-testid="ring-size-chart">
+        <div className="max-w-[440px] mx-auto" data-testid="ring-size-chart">
           <div
-            className="grid grid-cols-2 text-xs tracking-[0.18em] uppercase pb-3 mb-2"
+            className="grid grid-cols-4 text-[10px] tracking-[0.18em] uppercase pb-3 mb-2"
             style={{ color: 'rgba(60, 44, 31, 0.6)', borderBottom: '1px solid rgba(60, 44, 31, 0.18)' }}
           >
-            <span>US Size</span>
-            <span className="text-right">Circumference (mm)</span>
+            <span>US</span>
+            <span className="text-center">EU</span>
+            <span className="text-center">UK</span>
+            <span className="text-right">Ø mm</span>
           </div>
           {[
-            ['5', '49.3'], ['6', '51.9'], ['7', '54.4'], ['8', '57.0'], ['9', '59.5'],
-            ['10', '62.1'], ['11', '64.6'], ['12', '67.2'], ['13', '69.7'],
-          ].map(([size, mm]) => (
+            ['5',  '49',   'J½', '15.7'],
+            ['6',  '51¾',  'L½', '16.5'],
+            ['7',  '54½',  'N½', '17.3'],
+            ['8',  '57',   'P½', '18.1'],
+            ['9',  '59½',  'R½', '18.9'],
+            ['10', '62¼',  'T½', '19.8'],
+            ['11', '64¾',  'V½', '20.6'],
+            ['12', '67½',  'X½', '21.4'],
+            ['13', '70',   'Z+1','22.2'],
+          ].map(([us, eu, uk, mm]) => (
             <div
-              key={size}
-              className="grid grid-cols-2 text-sm py-2"
+              key={us}
+              className="grid grid-cols-4 text-sm py-2"
               style={{ color: '#3c2c1f', borderBottom: '1px solid rgba(60, 44, 31, 0.08)' }}
-              data-testid={`ring-size-row-${size}`}
+              data-testid={`ring-size-row-${us}`}
             >
-              <span>{size}</span>
+              <span>{us}</span>
+              <span className="text-center" style={{ fontVariantNumeric: 'tabular-nums' }}>{eu}</span>
+              <span className="text-center">{uk}</span>
               <span className="text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>{mm}</span>
             </div>
           ))}
         </div>
+        <p
+          className="text-xs italic mt-4 text-center max-w-[420px] mx-auto"
+          style={{ color: 'rgba(60, 44, 31, 0.65)' }}
+        >
+          US sizing is PHILEON's primary reference. EU and UK equivalents are provided as a directional guide.
+        </p>
       </div>
 
       {/* BEFORE YOU ORDER */}
@@ -138,7 +173,7 @@ export function SizeGuideContent({ showLogo = true }) {
           style={{ color: '#3c2c1f' }}
         >
           <li>Measure at the end of the day when fingers are at their largest.</li>
-          <li>Avoid measuring immediately after exercise.</li>
+          <li>Finger size can vary with temperature and time of day — avoid measuring when your hands are unusually cold, warm, or immediately after exercise.</li>
           <li>Wider bands typically fit tighter than narrow bands.</li>
           <li>If you are between sizes, choose the larger size.</li>
           <li>Custom-sized pieces may not be eligible for return or exchange.</li>
@@ -157,7 +192,7 @@ export function SizeGuideContent({ showLogo = true }) {
           className="text-sm leading-relaxed max-w-[420px] mx-auto"
           style={{ color: '#3c2c1f' }}
         >
-          Email our team before ordering if you&apos;re unsure of your size.
+          If you&apos;re unsure of your size, email our team before ordering — we&apos;re here to help.
         </p>
         <p
           className="text-sm italic leading-relaxed max-w-[420px] mx-auto mt-4"

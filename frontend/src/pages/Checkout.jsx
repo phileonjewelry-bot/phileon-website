@@ -295,8 +295,16 @@ export default function Checkout() {
         return;
       }
       if (!resp.ok) {
-        const msg = data?.detail?.message || data?.detail?.code || `Checkout error (HTTP ${resp.status})`;
-        setError(msg);
+        // Polished fallback for unexpected 5xx / opaque failures. Never
+        // leak Stripe/backend jargon; preserve mapped errors already
+        // handled above (PRICE_MOVED / LIVE_PRICE_UNAVAILABLE).
+        const code = data?.detail?.code;
+        const msg = data?.detail?.message;
+        if (code && msg) {
+          setError(msg);
+        } else {
+          setError("Something interrupted checkout. Your bag has been saved. Try again or contact concierge@getyourphileon.com.");
+        }
         setSubmitting(false);
         return;
       }
@@ -305,7 +313,7 @@ export default function Checkout() {
       }
       window.location.href = data.checkout_url;
     } catch (err) {
-      setError("Network error — please try again.");
+      setError("Something interrupted checkout. Your bag has been saved. Try again or contact concierge@getyourphileon.com.");
       setSubmitting(false);
     }
   };
