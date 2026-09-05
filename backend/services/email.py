@@ -32,8 +32,15 @@ def _configured() -> bool:
     return bool((os.environ.get("RESEND_API_KEY") or "").strip())
 
 
-async def send_email(to: str, subject: str, html: str, text: str | None = None) -> dict:
+async def send_email(to: str, subject: str, html: str, text: str | None = None,
+                     from_email: str | None = None) -> dict:
     """Send a transactional email. Never raises.
+
+    `from_email` — if provided AND non-empty AND validates as an email
+    address, overrides the module-level FROM_EMAIL. This lets behavioral
+    marketing use a dedicated sender subdomain (reputation isolation)
+    WITHOUT touching the transactional sender for order/shipment mails.
+    Falls back to FROM_EMAIL when unset.
 
     Returns:
         {"status": "sent",    "id": "...",         "sentAt": iso}
@@ -45,7 +52,15 @@ async def send_email(to: str, subject: str, html: str, text: str | None = None) 
     if not _configured():
         return {"status": "skipped", "reason": "no_api_key"}
     resend.api_key = os.environ["RESEND_API_KEY"]
-    params = {"from": FROM_EMAIL, "to": [to], "subject": subject, "html": html}
+    _from = FROM_EMAIL
+    if from_email and isinstance(from_email, str):
+        v = from_email.strip()
+        # Very light validation. Any well-formed `local@host.tld` is accepted;
+        # invalid values fall back to FROM_EMAIL so a misconfigured behavioral
+        # sender can NEVER accidentally break transactional delivery.
+        if "@" in v and "." in v.split("@", 1)[1]:
+            _from = v
+    params = {"from": _from, "to": [to], "subject": subject, "html": html}
     if text:
         params["text"] = text
     try:

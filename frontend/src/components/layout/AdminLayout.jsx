@@ -12,13 +12,15 @@ import {
   LogOut,
   Menu,
   X,
-  Truck
+  Truck,
+  Bell
 } from 'lucide-react';
 
 const sidebarLinks = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
   { name: 'Concierge', path: '/admin/concierge', icon: MessageSquare },
   { name: 'Shipments', path: '/admin/shipments', icon: Truck },
+  { name: 'Retention', path: '/admin/retention', icon: Bell },
   { name: 'Collections', path: '/admin/collections', icon: FolderOpen },
   { name: 'Products', path: '/admin/products', icon: Gem },
   { name: 'Inquiries', path: '/admin/inquiries', icon: MessageSquare },

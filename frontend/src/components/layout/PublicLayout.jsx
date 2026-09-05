@@ -6,6 +6,7 @@ import PhileonMenu from '@/components/PhileonMenu';
 import VaultUnlockSequence from '@/components/VaultUnlockSequence';
 import IntentFlashProvider from '@/components/GoldPulseProvider';
 import PhileonPdpFooter from '@/components/PhileonPdpFooter';
+import NewsletterOptIn from '@/components/NewsletterOptIn';
 import CurrencySelector from '@/components/CurrencySelector';
 import CurrencyRibbon from '@/components/CurrencyRibbon';
 import { useCart } from '@/contexts/CartContext';
@@ -276,6 +277,11 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* PHILEON DISPATCH — Newsletter opt-in (explicit consent) */}
+        <div className="mt-16 pt-10 border-t border-phileon-charcoal/40">
+          <NewsletterOptIn />
         </div>
 
         {/* Bottom - Minimal */}

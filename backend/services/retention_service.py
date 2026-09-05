@@ -59,6 +59,15 @@ def get_config() -> Dict[str, object]:
         "daily_cap":  _int_env("PHILEON_BEHAVIORAL_DAILY_CAP",  1),
         "weekly_cap": _int_env("PHILEON_BEHAVIORAL_WEEKLY_CAP", 3),
         "anon_ttl_days": _int_env("PHILEON_BEHAVIORAL_ANON_TTL_DAYS", 30),
+        # First-launch global safety cap: MAX real behavioral sends allowed
+        # in any rolling 24 h window. Simulated sends never count against
+        # this cap (they only count against per-customer frequency caps).
+        # 0 disables the cap (only safe once launch is out of the woods).
+        "global_launch_cap_24h": _int_env("PHILEON_BEHAVIORAL_GLOBAL_LAUNCH_CAP", 10),
+        # Behavioral-only sender (separate reputation from transactional).
+        # If unset, LIVE mode is refused — protects transactional sender
+        # deliverability. Never falls back to PHILEON_FROM_EMAIL.
+        "behavioral_from_email": (os.environ.get("PHILEON_BEHAVIORAL_FROM_EMAIL") or "").strip(),
     }
 
 
@@ -415,20 +424,57 @@ async def _within_frequency_cap(db, email: str, now: datetime) -> bool:
 # ────────────────────────────────────────────────────────────────
 # TICK — evaluate pending queue, generate previews / send
 # ────────────────────────────────────────────────────────────────
+async def _global_launch_cap_hit(db, now: datetime) -> bool:
+    """True when the rolling-24h count of LIVE (mode='live') sends has
+    reached the configured launch cap. Simulated sends NEVER count here."""
+    cap = int(get_config()["global_launch_cap_24h"])
+    if cap <= 0:
+        return False
+    since = now - timedelta(hours=24)
+    n = await db.behavior_send_log.count_documents(
+        {"mode": "live", "created_at": {"$gte": since}},
+    )
+    return n >= cap
+
+
 async def tick(db, now: Optional[datetime] = None, product_lookup=None) -> Dict:
     """Return a report of what WOULD (or DID) send.
 
     `product_lookup(slug)` may be provided to enrich previews with the
     product image/price. When None, the preview omits image/price.
+
+    Simulation-to-LIVE frequency-cap invariant:
+      _within_frequency_cap counts BOTH `simulated` and `live` send-log
+      rows. So flipping PHILEON_BEHAVIORAL_LIVE=true never causes a
+      backlog flood — every simulated send already sits in the ledger
+      and continues to count against per-customer caps.
     """
     from services.retention_emails import build_email
     from services.email import send_email
 
     cfg = get_config()
-    live = bool(cfg["live"])
+    live_requested = bool(cfg["live"])
+    behavioral_from = (cfg["behavioral_from_email"] or "").strip()
+    # LIVE requires a dedicated behavioral sender. Otherwise: refuse and
+    # fall through to simulation — never mix behavioral sends with the
+    # transactional PHILEON_FROM_EMAIL sender reputation.
+    live_effective = live_requested and bool(behavioral_from)
     now = now or datetime.now(timezone.utc)
+    global_cap = int(cfg["global_launch_cap_24h"])
+    # Snapshot LIVE-mode sends already in the ledger (24h window).
+    _sends_baseline = 0
+    if live_effective and global_cap > 0:
+        _sends_baseline = await db.behavior_send_log.count_documents(
+            {"mode": "live", "created_at": {"$gte": now - timedelta(hours=24)}},
+        )
+    live_sent_this_tick = 0
+    global_cap_hit = live_effective and global_cap > 0 and _sends_baseline >= global_cap
     report = {
-        "mode": "live" if live else "simulated",
+        "mode": "live" if (live_effective and not global_cap_hit) else "simulated",
+        "live_requested": live_requested,
+        "live_effective": live_effective,
+        "behavioral_sender_configured": bool(behavioral_from),
+        "global_launch_cap_hit": global_cap_hit,
         "evaluated": 0,
         "sent": [],
         "skipped": [],
@@ -456,25 +502,44 @@ async def tick(db, now: Optional[datetime] = None, product_lookup=None) -> Dict:
             report["skipped"].append({"pending_id": row["id"], "reason": "not_marketing_eligible"})
             continue
 
-        # 2) Frequency cap.
+        # 2) Frequency cap (per-email).
         if not await _within_frequency_cap(db, email, now):
-            report["eligible_but_capped"].append({"pending_id": row["id"], "email_type": kind})
+            report["eligible_but_capped"].append(
+                {"pending_id": row["id"], "email_type": kind, "reason": "per_email_cap"}
+            )
             continue
 
-        # 3) Build preview.
+        # 3) Global launch cap — LIVE only.
+        this_call_live = live_effective and not global_cap_hit
+        if live_requested and not this_call_live:
+            report["eligible_but_capped"].append(
+                {"pending_id": row["id"], "email_type": kind,
+                 "reason": "global_launch_cap_hit" if global_cap_hit
+                           else "no_behavioral_sender"}
+            )
+            # Leave the pending row untouched — next tick re-evaluates.
+            continue
+
+        # 4) Build preview.
         product = product_lookup(slug) if callable(product_lookup) else None
         preview = build_email(kind, email=email, product_slug=slug, product=product)
 
-        # 4) Send OR simulate.
+        # 5) Send OR simulate.
         resend_id = None
-        if live:
-            result = await send_email(email, preview["subject"], preview["html"], preview["text"])
+        mode = "simulated"
+        if this_call_live:
+            result = await send_email(email, preview["subject"], preview["html"],
+                                       preview["text"], from_email=behavioral_from)
             resend_id = (result or {}).get("id")
             mode = "live" if (result or {}).get("status") == "sent" else "simulated"
-        else:
-            mode = "simulated"
+            if mode == "live":
+                live_sent_this_tick += 1
+                # Halt at the cap boundary.
+                if (global_cap > 0
+                        and (_sends_baseline + live_sent_this_tick) >= global_cap):
+                    global_cap_hit = True
 
-        # 5) Log + close pending.
+        # 6) Log + close pending.
         log = BehaviorSendLog(
             email=email, email_type=kind, product_slug=slug,
             pending_id=row["id"], mode=mode,
@@ -486,7 +551,7 @@ async def tick(db, now: Optional[datetime] = None, product_lookup=None) -> Dict:
             {"id": row["id"]},
             {"$set": {"status": "sent", "sent_at": now,
                       "sent_email_type": kind,
-                      "simulation_only": not live}},
+                      "simulation_only": (mode != "live")}},
         )
         report["sent"].append({
             "pending_id": row["id"],

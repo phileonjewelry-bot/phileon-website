@@ -1,0 +1,37 @@
+{
+  "summary": "PHILEON Behavioral Retention — Pre-Live Hardening (Simulation Mode) verified end-to-end. Backend: pytest tests/test_retention_behavioral.py 40/40 PASS (includes 8 new pre-live hardening tests: LIVE-refused-without-sender, LIVE-active-with-dedicated-sender, global launch cap halt, prior-simulated-count-against-per-customer cap, default env keeps LIVE off, email.send_email fallback for invalid from_email, config route auth boundary, config route returns switches). Broader regression tests/ (excluding true_vine/phileon_api/adaptive_pricing_live): 982 passed / 1 pre-existing gold-spot drift failure only (test_usd_only_migration::test_dynamic_ring_migrated_to_approved_usd[annie-rose-foundation-700000]) — matches iteration_22 baseline exactly, zero regression. Curl smokes vs live preview URL: GET /api/admin/retention/config unauth → 403; with admin JWT returns switches WITHOUT leaking PHILEON_BEHAVIORAL_FROM_EMAIL address (only boolean behavioral_sender_configured=false). POST /api/behavior/newsletter/subscribe: bad email → 400, valid → 200. Frontend: /admin/retention unauth redirects to /admin/login; with admin JWT injected into localStorage.phileon_admin_token the page renders admin-retention-page with retention-live-badge='SIMULATION' (safe/gold tone), retention-config-card shows cfg-live-requested='no', cfg-sender-configured='not configured', cfg-global-cap='0 / 10'. Filter select switches queue view. Run Tick button POSTs to /api/admin/retention/tick and retention-tick-report renders with 'mode: simulated'. Preview button opens retention-preview-modal with retention-preview-html and retention-preview-close works. Newsletter footer form (/) has UNCHECKED consent checkbox by default; submit button disabled until BOTH email filled AND checkbox checked; valid submit → HTTP 200 → newsletter-ok visible. Simulation-mode invariants preserved (STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE unset, PHILEON_BEHAVIORAL_FROM_EMAIL unset — LIVE correctly refused).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Homepage (footer newsletter)", "issues": ["Not a bug — footer NewsletterOptIn renders as designed with gold accent and unchecked-by-default consent row; wording is affirmative, no dark patterns."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_retention_behavioral.py",
+    "/app/test_reports/pytest/iter23_retention.xml",
+    "/app/test_reports/pytest/iter23_full.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "services/retention_service.get_config() and tick() correctly enforce the LIVE-requires-behavioral-sender invariant: even with PHILEON_BEHAVIORAL_LIVE=true, if PHILEON_BEHAVIORAL_FROM_EMAIL is unset, live_effective is False and mode='simulated' — verified by test_live_mode_refused_without_behavioral_sender. Pending rows are NOT consumed as 'sent' when LIVE is refused (they remain 'pending').",
+    "Global-launch-cap logic in tick() maintains _sends_baseline snapshot + live_sent_this_tick counter and flips global_cap_hit mid-loop, so a cap=1 correctly sends 1 LIVE then defers subsequent eligible rows with reason='global_launch_cap_hit' — verified by test_global_launch_cap_halts_further_live_sends.",
+    "services/email.send_email now accepts optional from_email; invalid values silently fall back to FROM_EMAIL (validated by regex-lite 'contains @ and .-in-host'). This protects the transactional sender reputation even if a caller passes a malformed behavioral sender. Verified by test_email_send_falls_back_to_transactional_sender_when_behavioral_missing.",
+    "admin_retention.retention_config never surfaces the raw PHILEON_BEHAVIORAL_FROM_EMAIL address — only a boolean behavioral_sender_configured. Confirmed via curl (no '@' sender char in payload) and test_admin_retention_config_route_returns_switches.",
+    "NewsletterOptIn.jsx: consent state initialized to false; submit button `disabled={busy || !email || !consent}` guarantees UI cannot submit without affirmative action. No pre-checked box anywhere. Client sends { email, session_id } (no consent flag over the wire — server-side truth on the trusted POST path).",
+    "AdminRetention.jsx: badge tone/label logic correctly handles four states (LIVE ARMED · LIVE REFUSED · LIVE HALTED · SIMULATION) with contrast-appropriate colors. Preview modal uses dangerouslySetInnerHTML but preview HTML is server-built by retention_emails.build_email which is proven safe by test_email_builder_rejects_unsafe_image_urls.",
+    "Pre-existing unrelated failure: test_usd_only_migration::test_dynamic_ring_migrated_to_approved_usd[annie-rose-foundation-700000] is a gold-spot drift carry-over from prior iterations; not touched by this phase."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "40/40 test_retention_behavioral (100%); 982/983 broader suite (99.9%, 1 pre-existing gold-spot drift)",
+    "frontend": "100% — newsletter opt-in form (5/5 checks: unchecked default, submit-disabled-until-both, valid-submit-200, ok-message) + admin retention panel (10/10 checks: unauth redirect, page renders, SIMULATION badge, config card fields, filter switch, run-tick, tick-report simulated, preview modal open, preview-html visible, preview-close)"
+  },
+  "test_credentials": "Admin JWT via `python -c 'from server import create_token; print(create_token(\"admin\"))'` — LocalStorage key: phileon_admin_token. Verified working against the live preview URL.",
+  "seed_data_creation": "During the frontend playwright run: 1 newsletter subscription (iter23-ui@example.com) via POST /api/behavior/newsletter/subscribe, 1 curl newsletter subscription (iter23-t@example.com), plus 2 simulation-mode retention emails triggered via /admin/retention Run Tick from pre-existing e2e-*@phileon.test fixtures. All flagged with mode='simulated' — no real emails sent (PHILEON_BEHAVIORAL_LIVE=false, PHILEON_BEHAVIORAL_FROM_EMAIL unset).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Behavioral retention pre-live hardening is complete and verified. LIVE remains OFF in the preview env by design (PHILEON_BEHAVIORAL_FROM_EMAIL is intentionally unset so LIVE is refused). Do NOT set PHILEON_BEHAVIORAL_LIVE=true in the preview .env. If asked to test LIVE path, use pytest with monkeypatched env only (see test_live_mode_active_with_dedicated_sender). The only outstanding suite-wide failure remains the gold-spot drift in test_usd_only_migration (unrelated). Transactional email paths (order_emails/shipment) were NOT touched — send_email `from_email` param is optional and defaults to FROM_EMAIL.",
+  "rca of the issue": "N/A — all listed pre-live hardening features implemented and verified as specified."
+}

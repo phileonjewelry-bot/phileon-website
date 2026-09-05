@@ -10,7 +10,7 @@ Endpoints:
 All endpoints require the existing `verify_admin` JWT.
 """
 from __future__ import annotations
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Dict
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -40,6 +40,44 @@ def _redact_pending(row: Dict) -> Dict:
         "cancelled_at": row.get("cancelled_at"),
         "cancelled_reason": row.get("cancelled_reason"),
         "simulation_only": row.get("simulation_only", True),
+    }
+
+
+@router.get("/config")
+async def retention_config(_admin=Depends(verify_admin)):
+    """Read-only view of the retention config for the admin panel.
+    Never exposes secrets — just the switches + counts the admin needs
+    to see whether LIVE is safe to activate."""
+    cfg = R.get_config()
+    now = datetime.now(timezone.utc)
+    since_24h = now.replace(microsecond=0)
+    from datetime import timedelta as _td
+    since_24h = now - _td(hours=24)
+    live_sends_24h = await db.behavior_send_log.count_documents(
+        {"mode": "live", "created_at": {"$gte": since_24h}},
+    )
+    return {
+        "live_requested": bool(cfg["live"]),
+        "behavioral_sender_configured": bool(cfg["behavioral_from_email"]),
+        # For safety we NEVER surface the actual sender address to the
+        # admin JSON — only whether it is configured. The value lives in
+        # env and can be inspected via the admin shell if truly needed.
+        "windows": {
+            "browse_min": cfg["window_browse_min"],
+            "wishlist_min": cfg["window_wishlist_min"],
+            "cart_min": cfg["window_cart_min"],
+            "checkout_min": cfg["window_checkout_min"],
+        },
+        "caps": {
+            "daily": cfg["daily_cap"],
+            "weekly": cfg["weekly_cap"],
+            "global_launch_24h": cfg["global_launch_cap_24h"],
+        },
+        "live_sends_last_24h": live_sends_24h,
+        "global_launch_cap_hit": (
+            int(cfg["global_launch_cap_24h"]) > 0
+            and live_sends_24h >= int(cfg["global_launch_cap_24h"])
+        ),
     }
 
 
