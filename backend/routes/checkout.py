@@ -473,6 +473,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             total_cents=totals["total_cents"],
             currency=totals["currency"],
             status_token_hash=hash_status_token(status_token),
+            email_status_token=status_token,
             shipping=shipping_block,
             presentment=presentment_block,
         )

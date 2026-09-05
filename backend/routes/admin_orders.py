@@ -39,6 +39,49 @@ def _get_db_and_verify():
 verify_admin, db = _get_db_and_verify()
 
 
+@router.get("/{order_number}")
+async def get_order(order_number: str, _admin=Depends(verify_admin)):
+    """Admin-only order summary for the shipment UI. Returns only the
+    non-secret fields the admin needs to see; never exposes plaintext
+    status tokens, JWTs, Stripe keys, DB `_id`, or webhook payloads."""
+    doc = await db.orders_v2.find_one({"order_number": order_number}, {"_id": 0})
+    if not doc:
+        raise HTTPException(status_code=404, detail={"code": "NOT_FOUND"})
+    shipping = doc.get("shipping") or {}
+    shipped_at = doc.get("shipped_at")
+    return {
+        "order_number": doc["order_number"],
+        "customer_email": doc.get("customer_email"),
+        "payment_status": doc.get("payment_status"),
+        "fulfillment_status": doc.get("fulfillment_status"),
+        "fulfilment_status": doc.get("fulfilment_status"),
+        "shipping_integrity_status": doc.get("shipping_integrity_status"),
+        "shipping_notification_sent": bool(doc.get("shipping_notification_sent")),
+        "shipping": {
+            "country": shipping.get("country"),
+            "service_label": shipping.get("service_label"),
+            "carrier_label": shipping.get("carrier_label"),
+            "recipient_name": shipping.get("recipient_name"),
+        },
+        "carrier": doc.get("carrier"),
+        "tracking_number": doc.get("tracking_number"),
+        "tracking_url": doc.get("tracking_url"),
+        "shipped_at": shipped_at.isoformat() if isinstance(shipped_at, datetime) else shipped_at,
+        "currency": doc.get("currency"),
+        "total_cents": int(doc.get("total_cents") or 0),
+        "items": [{
+            "product_name": i.get("product_name"),
+            "variant": i.get("variant"),
+            "quantity": int(i.get("quantity") or 1),
+            "unit_amount_cents": int(i.get("unit_amount_cents") or 0),
+            "ring_size": i.get("ring_size"),
+            "metal_colour": i.get("metal_colour"),
+            "karat": i.get("karat"),
+        } for i in (doc.get("items") or [])],
+        "created_at": doc.get("created_at").isoformat() if isinstance(doc.get("created_at"), datetime) else doc.get("created_at"),
+    }
+
+
 @router.post("/{order_number}/mark-shipped")
 async def mark_shipped(order_number: str, body: MarkShippedIn,
                        _admin=Depends(verify_admin)):

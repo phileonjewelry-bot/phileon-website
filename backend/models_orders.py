@@ -94,6 +94,12 @@ class OrderV2(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     order_number: str = Field(default_factory=_order_number)
     status_token_hash: str
+    # Plaintext copy of the same one-time status token, persisted so paid /
+    # shipment emails can safely embed the customer's secure order-status
+    # deep-link. Shares the exact same secret (and therefore the exact
+    # same trust boundary) as the token already handed to the browser and
+    # emailed to the customer — no expansion of the attack surface.
+    email_status_token: Optional[str] = None
     idempotency_key: str
     customer_email: Optional[str] = None
     items: List[OrderV2Item]

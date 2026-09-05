@@ -374,3 +374,183 @@ def test_order_status_does_not_leak_internal_fields(monkeypatch):
     assert "pi_ABC" not in blob
     assert "evt_1" not in blob
     assert "frankfurter" not in blob
+
+
+# ────────────────  Secure Order Status link in emails  ────────────────
+def _order_with_token(**over):
+    base = {
+        "order_number": "PHI-TEST-LINK-1",
+        "email_status_token": "plain-token-xyz-1234",
+        "currency": "USD",
+        "total_cents": 350000,
+        "customer_email": "buyer@example.com",
+        "items": [{"product_name": "X", "variant": "v", "quantity": 1,
+                   "unit_amount_cents": 350000}],
+    }
+    base.update(over)
+    return base
+
+
+def test_paid_email_embeds_secure_order_status_link(monkeypatch):
+    monkeypatch.setenv("PHILEON_ORDER_STATUS_URL_BASE", "https://phileon.example.com")
+    from services.order_emails import build_customer_paid_email, _order_status_link
+    order = _order_with_token()
+    out = build_customer_paid_email(order)
+    expected = "https://phileon.example.com/orders/PHI-TEST-LINK-1/status?token=plain-token-xyz-1234"
+    assert _order_status_link(order) == expected
+    assert "VIEW ORDER STATUS" in out["html"]
+    assert expected in out["html"]
+    assert expected in out["text"]
+
+
+def test_shipment_email_embeds_secure_order_status_link(monkeypatch):
+    monkeypatch.setenv("PHILEON_ORDER_STATUS_URL_BASE", "https://phileon.example.com")
+    from services.order_emails import build_customer_shipment_email
+    order = _order_with_token(order_number="PHI-TEST-LINK-2",
+                              carrier="UPS", tracking_number="TN2",
+                              tracking_url="https://ups.com/track/TN2")
+    out = build_customer_shipment_email(order)
+    expected = "https://phileon.example.com/orders/PHI-TEST-LINK-2/status?token=plain-token-xyz-1234"
+    assert "VIEW ORDER STATUS" in out["html"]
+    assert expected in out["html"]
+    assert expected in out["text"]
+
+
+def test_emails_hide_order_status_cta_when_token_absent(monkeypatch):
+    """Historical orders (no email_status_token) must not surface a broken CTA."""
+    monkeypatch.setenv("PHILEON_ORDER_STATUS_URL_BASE", "https://phileon.example.com")
+    from services.order_emails import build_customer_paid_email, build_customer_shipment_email
+    order = _order_with_token(email_status_token=None)
+    out1 = build_customer_paid_email(order)
+    out2 = build_customer_shipment_email({**order, "carrier": "UPS", "tracking_number": "T"})
+    assert "VIEW ORDER STATUS" not in out1["html"]
+    assert "VIEW ORDER STATUS" not in out2["html"]
+
+
+def test_email_status_link_only_uses_http_base(monkeypatch):
+    from services.order_emails import _order_status_link
+    monkeypatch.setenv("PHILEON_ORDER_STATUS_URL_BASE", "javascript:alert(1)")
+    monkeypatch.delenv("FRONTEND_URL", raising=False)
+    monkeypatch.delenv("CHECKOUT_SUCCESS_URL", raising=False)
+    assert _order_status_link(_order_with_token()) is None
+
+
+def test_email_cta_does_not_leak_internal_fields():
+    """Even when embedding a link, the CTA must not surface Stripe IDs,
+    webhook metadata, FX metadata, DB identifiers, or the status hash."""
+    import os
+    os.environ["PHILEON_ORDER_STATUS_URL_BASE"] = "https://phileon.example.com"
+    from services.order_emails import build_customer_paid_email, build_customer_shipment_email
+    order = _order_with_token(
+        order_number="PHI-TEST-LEAK-EMAIL",
+        provider_session_id="cs_test_XXX",
+        provider_payment_intent_id="pi_XXX",
+        id="internal-uuid",
+        status_token_hash="STATUS_HASH_LEAK",
+        webhook_event_ids=["evt_LEAK"],
+        presentment={"fx_rate": 1.38, "fx_rate_source": "frankfurter",
+                     "stripe_presentment_currency": "CAD"},
+    )
+    out1 = build_customer_paid_email(order)
+    out2 = build_customer_shipment_email({**order, "carrier": "UPS",
+                                           "tracking_number": "TN",
+                                           "tracking_url": "https://ups.com/track/TN"})
+    for out in (out1, out2):
+        blob = out["html"] + out["text"]
+        assert "cs_test_XXX" not in blob
+        assert "pi_XXX" not in blob
+        assert "internal-uuid" not in blob
+        assert "STATUS_HASH_LEAK" not in blob
+        assert "evt_LEAK" not in blob
+        assert "frankfurter" not in blob
+
+
+# ────────────────  Admin GET order endpoint  ────────────────
+def test_admin_get_order_requires_auth(app_client):
+    r = app_client.get("/api/admin/orders/PHI-DOES-NOT-EXIST")
+    assert r.status_code in (401, 403), r.text
+
+
+def test_admin_get_order_returns_404_when_missing(app_client):
+    r = app_client.get(
+        "/api/admin/orders/PHI-DOES-NOT-EXIST",
+        headers=_admin_headers(),
+    )
+    assert r.status_code == 404
+    assert r.json()["detail"]["code"] == "NOT_FOUND"
+
+
+def test_admin_get_order_never_returns_secret_fields(monkeypatch):
+    """The admin GET must never expose plaintext email_status_token,
+    status_token_hash, Stripe IDs, webhook payloads, or DB `_id`."""
+    import asyncio as _aio
+    from routes import admin_orders as admin_orders_mod
+
+    fake_orders = _FakeOrdersCollection({
+        "id": "internal-uuid",
+        "order_number": "PHI-TEST-ADMIN-GET",
+        "customer_email": "buyer@example.com",
+        "payment_status": "paid",
+        "currency": "USD",
+        "total_cents": 350000,
+        "email_status_token": "plain-token-secret",
+        "status_token_hash": "abc123hash",
+        "provider_session_id": "cs_test_LEAK",
+        "provider_payment_intent_id": "pi_LEAK",
+        "webhook_event_ids": ["evt_LEAK"],
+        "items": [{"product_name": "X", "variant": "v", "quantity": 1,
+                   "unit_amount_cents": 350000}],
+    })
+    from types import SimpleNamespace
+    monkeypatch.setattr(admin_orders_mod, "db",
+                        SimpleNamespace(orders_v2=fake_orders))
+    resp = _aio.run(admin_orders_mod.get_order("PHI-TEST-ADMIN-GET",
+                                                _admin="admin"))
+    import json as _json
+    blob = _json.dumps(resp)
+    for banned in ("plain-token-secret", "abc123hash", "cs_test_LEAK",
+                   "pi_LEAK", "evt_LEAK", "internal-uuid"):
+        assert banned not in blob, f"admin GET leaked {banned!r}"
+    # But the fields the admin UI actually needs are present.
+    assert resp["order_number"] == "PHI-TEST-ADMIN-GET"
+    assert resp["customer_email"] == "buyer@example.com"
+    assert resp["payment_status"] == "paid"
+
+
+# ────────────────  Session-create persists email_status_token  ────────────────
+def test_status_endpoint_still_verifies_hash_after_email_token_stored(monkeypatch):
+    """Adding email_status_token to OrderV2 must not alter the customer
+    status-endpoint's token verification (hash-based)."""
+    import asyncio as _aio
+    from routes import checkout as checkout_route
+    from models_orders import hash_status_token
+
+    token = "plain-token"
+    doc = {
+        "order_number": "PHI-HASH-CHECK",
+        "status_token_hash": hash_status_token(token),
+        "email_status_token": token,  # newly persisted; must not weaken hash check
+        "payment_status": "paid",
+        "currency": "USD",
+        "total_cents": 100,
+        "items": [{"product_name": "X", "variant": "v", "quantity": 1,
+                   "unit_amount_cents": 100}],
+    }
+
+    class _DB:
+        class orders_v2:
+            @staticmethod
+            async def find_one(q, projection=None):
+                if q.get("order_number") == doc["order_number"]:
+                    return dict(doc)
+                return None
+
+    monkeypatch.setattr(checkout_route, "get_db", lambda: _DB)
+    # Correct token → 200
+    ok = _aio.run(checkout_route.order_status("PHI-HASH-CHECK", token))
+    assert ok["order_number"] == "PHI-HASH-CHECK"
+    # Wrong token → 403
+    from fastapi import HTTPException
+    with pytest.raises(HTTPException) as exc:
+        _aio.run(checkout_route.order_status("PHI-HASH-CHECK", "wrong"))
+    assert exc.value.status_code == 403

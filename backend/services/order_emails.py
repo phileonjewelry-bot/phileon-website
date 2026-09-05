@@ -33,6 +33,44 @@ from services.email import send_email
 logger = logging.getLogger(__name__)
 
 
+def _order_status_link(order: Dict) -> Optional[str]:
+    """Return the secure customer Order Status deep-link for ``order`` or
+    ``None`` when the token has not been persisted (historical orders).
+
+    Trust rules:
+      * Uses the plaintext ``email_status_token`` persisted on the order
+        at session-create — the *same* secret already shared with the
+        customer's browser/session. No new secret is minted at email
+        time.
+      * Never embeds order internals (Stripe IDs, DB IDs, webhook / FX
+        metadata). Only order_number + token.
+      * Base URL comes from env (``PHILEON_ORDER_STATUS_URL_BASE`` →
+        ``FRONTEND_URL`` → ``CHECKOUT_SUCCESS_URL`` origin fallback).
+    """
+    order_no = (order.get("order_number") or "").strip()
+    token = (order.get("email_status_token") or "").strip()
+    if not order_no or not token:
+        return None
+    base = (os.environ.get("PHILEON_ORDER_STATUS_URL_BASE")
+            or os.environ.get("FRONTEND_URL") or "").strip()
+    if not base:
+        # Fall back to the origin of CHECKOUT_SUCCESS_URL — same origin the
+        # customer just visited on the Stripe redirect.
+        success = (os.environ.get("CHECKOUT_SUCCESS_URL") or "").strip()
+        if success.startswith("http://") or success.startswith("https://"):
+            try:
+                from urllib.parse import urlparse
+                p = urlparse(success)
+                base = f"{p.scheme}://{p.netloc}"
+            except Exception:
+                base = ""
+    if not (base.startswith("http://") or base.startswith("https://")):
+        return None
+    base = base.rstrip("/")
+    from urllib.parse import quote
+    return f"{base}/orders/{quote(order_no)}/status?token={quote(token)}"
+
+
 def _fmt_money(cents: int, currency: str) -> str:
     code = (currency or "USD").upper()
     if code == "JPY":
@@ -166,6 +204,21 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
             f"Canonical reference: {_fmt_money(order.get('total_cents') or 0, canonical_currency)}"
             f"</p>"
         )
+    status_link = _order_status_link(order)
+    status_cta_html = ""
+    status_cta_text = ""
+    if status_link:
+        status_cta_html = (
+            f"<div style='margin-top:36px;text-align:center;'>"
+            f"<a href='{status_link}' style='"
+            f"display:inline-block;padding:14px 34px;"
+            f"font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;"
+            f"color:#08070a;background:#c8a24a;text-decoration:none;'>"
+            f"VIEW ORDER STATUS"
+            f"</a>"
+            f"</div>"
+        )
+        status_cta_text = f"\nView your order status: {status_link}\n"
     html = (
         f"{_CUSTOMER_HEAD_STYLE}"
         f"<div style='background:#0a0a0c;color:#e8e0cf;font-family:Georgia,serif;padding:48px 24px;'>"
@@ -183,6 +236,7 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
         f"      <span class='phi-total-value' style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
         f"    </div>"
         f"    {canonical_reference}"
+        f"    {status_cta_html}"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>{shipping_line}</p>"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;'>Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch.</p>"
         f"  </div>"
@@ -197,6 +251,7 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
         f"{_items_text(order.get('items') or [], canonical_currency)}\n\n"
         f"Total paid: {total}\n"
         f"{text_canonical}"
+        f"{status_cta_text}"
         f"{shipping_line}\n\n"
         f"Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch."
     )
@@ -392,6 +447,22 @@ def build_customer_shipment_email(order: Dict) -> Dict[str, str]:
     )
     tracking_text = "\n".join(tracking_text_bits) or "Carrier details will follow shortly."
 
+    status_link = _order_status_link(order)
+    status_cta_html = ""
+    status_cta_text = ""
+    if status_link:
+        status_cta_html = (
+            f"<div style='margin-top:28px;text-align:center;'>"
+            f"<a href='{status_link}' style='"
+            f"display:inline-block;padding:14px 34px;"
+            f"font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;"
+            f"color:#08070a;background:#c8a24a;text-decoration:none;'>"
+            f"VIEW ORDER STATUS"
+            f"</a>"
+            f"</div>"
+        )
+        status_cta_text = f"\nView your order status: {status_link}\n"
+
     html = (
         f"{_CUSTOMER_HEAD_STYLE}"
         f"<div style='background:#0a0a0c;color:#e8e0cf;font-family:Georgia,serif;padding:48px 24px;'>"
@@ -411,6 +482,7 @@ def build_customer_shipment_email(order: Dict) -> Dict[str, str]:
         f"    <div style='margin-top:32px;padding-top:20px;border-top:1px solid #33322a;'>"
         f"      {tracking_html}"
         f"    </div>"
+        f"    {status_cta_html}"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>"
         f"      If you have any questions about your shipment, reply to this email or "
         f"contact our concierge team at any time — we&apos;re here to help."
@@ -426,7 +498,8 @@ def build_customer_shipment_email(order: Dict) -> Dict[str, str]:
         f"Order reference: {order_no}\n\n"
         f"{_items_text(order.get('items') or [], currency)}\n\n"
         f"Total: {total}\n\n"
-        f"{tracking_text}\n\n"
+        f"{tracking_text}\n"
+        f"{status_cta_text}\n"
         f"If you have any questions about your shipment, reply to this email or "
         f"contact our concierge team at any time — we're here to help.\n\n"
         f"Every PHILEON piece is prepared with intention."
