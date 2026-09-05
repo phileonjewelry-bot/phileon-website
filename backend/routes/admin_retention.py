@@ -2,18 +2,27 @@
 
 Endpoints:
     GET  /api/admin/retention/pending
-    POST /api/admin/retention/tick
+    POST /api/admin/retention/tick        (admin JWT OR retention-only cron secret)
     GET  /api/admin/retention/preview/{pending_id}
     GET  /api/admin/retention/send-log
     POST /api/admin/retention/consent   (owner tooling — grant/revoke)
 
-All endpoints require the existing `verify_admin` JWT.
+Auth model:
+    * Every retention endpoint EXCEPT `POST /tick` is gated by the
+      existing `verify_admin` JWT dependency.
+    * `POST /tick` accepts EITHER a valid admin JWT (manual admin-panel
+      run) OR the dedicated `X-PHILEON-RETENTION-CRON` header equal to
+      `PHILEON_RETENTION_CRON_SECRET` (server-to-server scheduler).
+      The cron header is scoped to this route only — it cannot
+      authenticate to any other admin API.
 """
 from __future__ import annotations
+import hmac
+import os
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List, Dict
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Header, Query, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from server import db, verify_admin
@@ -22,6 +31,51 @@ from services.retention_emails import build_email
 
 
 router = APIRouter(prefix="/admin/retention", tags=["admin-retention"])
+
+
+def _cron_secret_configured() -> Optional[str]:
+    s = (os.environ.get("PHILEON_RETENTION_CRON_SECRET") or "").strip()
+    return s or None
+
+
+async def verify_retention_tick_auth(
+    request: Request,
+    x_phileon_retention_cron: Optional[str] = Header(None, alias="X-PHILEON-RETENTION-CRON"),
+) -> str:
+    """Authorize the /admin/retention/tick route.
+
+    Accepts EITHER:
+      • a valid admin JWT via the standard `verify_admin` dependency, OR
+      • the dedicated `X-PHILEON-RETENTION-CRON` header equal to the
+        `PHILEON_RETENTION_CRON_SECRET` env variable, compared with
+        `hmac.compare_digest` (constant-time).
+
+    The cron header is scoped to THIS ROUTE only. It is intentionally
+    never wired into any other admin dependency — a leaked cron secret
+    cannot authenticate to /admin/orders, /admin/retention/pending,
+    /admin/retention/preview/{id}, /admin/retention/send-log,
+    /admin/retention/consent, /admin/retention/config, /admin/stats, or
+    any other admin surface.
+    """
+    # 1) Cron secret path — cheapest, evaluated first when header present.
+    if x_phileon_retention_cron is not None:
+        expected = _cron_secret_configured()
+        if not expected:
+            # Cron secret not configured — refuse rather than fall through.
+            raise HTTPException(status_code=403, detail={"code": "CRON_NOT_CONFIGURED"})
+        if not hmac.compare_digest(x_phileon_retention_cron.strip(), expected):
+            raise HTTPException(status_code=401, detail={"code": "INVALID_CRON_CREDENTIAL"})
+        return "retention-cron"
+
+    # 2) Admin JWT fallback for the manual admin-panel Run Tick button.
+    from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+    # We reuse `verify_admin` explicitly — do NOT invent a second JWT check.
+    creds: Optional[HTTPAuthorizationCredentials] = None
+    scheme = HTTPBearer(auto_error=False)
+    creds = await scheme(request)
+    if not creds:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return await verify_admin(credentials=creds)
 
 
 def _redact_pending(row: Dict) -> Dict:
@@ -121,7 +175,8 @@ async def _product_lookup_factory():
 
 
 @router.post("/tick")
-async def run_tick(body: TickIn = None, _admin=Depends(verify_admin)):
+async def run_tick(body: TickIn = None,
+                    _auth: str = Depends(verify_retention_tick_auth)):
     now = (body.now if (body and body.now) else datetime.now(timezone.utc))
     lookup = await _product_lookup_factory()
     return await R.tick(db, now=now, product_lookup=lookup)

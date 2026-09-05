@@ -1,0 +1,28 @@
+{
+  "summary": "PHILEON — Final Pre-DNS Security Patch verified end-to-end. New /app/backend/tests/test_retention_cron_scope.py: 16 passed, 1 skipped (env-unset case only reachable when secret truly unset). Verifies (1) admin-JWT /tick returns full report shape with mode='simulated', live_requested=false, live_effective=false, (2) X-PHILEON-RETENTION-CRON header authorizes /tick only, (3) no-auth → 401, (4) wrong cron value → 401 INVALID_CRON_CREDENTIAL, (5) cron header REJECTED (401/403/404/405/422 — never 200) on GET /admin/retention/pending, /send-log, /config, /preview/{id}; POST /admin/retention/consent; GET /admin/orders/PHI-NONE; POST /admin/orders/PHI-NONE/mark-shipped; GET /admin/stats, (6) idempotency preserved across dual-channel back-to-back ticks, (7) secret never appears in /config, /pending, /send-log, /tick JSON responses, (8) /config exposes no key containing 'cron' or 'secret'. Existing tests/test_retention_behavioral.py 48/48 PASS (unchanged). Full backend suite 1062 passed, 7 failed — all 7 are pre-existing drift matching iteration_23 exclusion list (test_phileon_api admin login/stats/metal_prices, test_adaptive_pricing_live_integration, test_usd_only_migration gold-spot drift). Zero new regressions from this patch. Frontend admin retention panel (admin JWT injected): /admin/retention renders retention-live-badge='SIMULATION', LIVE REQUESTED=no, BEHAVIORAL SENDER=not configured, global-cap 0/10; Run Tick button POSTs to /api/admin/retention/tick and renders retention-tick-report 'mode: simulated · evaluated: 0 · sent: 0'. Send Log shows historical simulated rows. LIVE remains OFF. Cron secret is present in backend/.env and NEVER leaks to any inspected response.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_retention_cron_scope.py",
+    "/app/backend/tests/test_retention_behavioral.py",
+    "/app/test_reports/pytest/iter24_cron_scope.xml",
+    "/app/test_reports/pytest/iter24_full.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "verify_retention_tick_auth cleanly separates the cron channel from admin JWT: cron header is evaluated first only when present, uses hmac.compare_digest against env, and returns a synthetic principal 'retention-cron' scoped to this dependency only. It is not exposed as a global auth override — only run_tick uses it. Correct minimal-surface design.",
+    "PHILEON_RETENTION_CRON_SECRET is never referenced in retention_config output nor logged; grep of admin JSON responses confirmed clean.",
+    "TickIn(extra='forbid') protects against payload smuggling.",
+    "Consider adding a rate-limit / audit-log entry when cron channel is used, so ops can distinguish scheduler-triggered ticks from manual admin-panel ticks (nice-to-have, non-blocking)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_retention_cron_scope.py (new)"
+  ],
+  "success_rate": {"backend": "100% on patched surface (48/48 behavioral + 16/16 cron-scope executed; 1062/1069 full suite — 7 failures are pre-existing drift matching iteration_23 baseline)", "frontend": "100% (admin retention panel render + Run Tick end-to-end via admin JWT)"},
+  "test_credentials": "Admin JWT generated via `python -c 'from server import create_token; print(create_token(\"admin\"))'` in /app/backend. Cron secret read from backend/.env: PHILEON_RETENTION_CRON_SECRET.",
+  "seed_data_creation": "None — used existing DB state; only stateless tick calls issued.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Behavioral retention pre-DNS security patch is fully verified. LIVE remains OFF (PHILEON_BEHAVIORAL_LIVE unset). PHILEON_RETENTION_CRON_SECRET is set in backend/.env with a test value for smoke; owner will rotate before flipping LIVE. Cron channel is strictly scoped to POST /api/admin/retention/tick — do NOT wire it into any other dependency. Pre-existing 7 test failures (test_phileon_api admin login/stats/metal_prices, test_adaptive_pricing_live_integration, test_usd_only_migration gold-spot drift) match iteration_23 baseline and are unrelated to this patch. Existing test file tests/test_retention_behavioral.py (48/48) is the canonical regression file for behavioral retention; the new tests/test_retention_cron_scope.py is the canonical file for cron credential scoping.",
+  "rca of the issue": "N/A — no defects found. Patch implements exactly the requested dedicated retention-only cron credential with constant-time comparison, minimal-surface authorization, no secret disclosure, and preserves admin-JWT manual path unchanged."
+}

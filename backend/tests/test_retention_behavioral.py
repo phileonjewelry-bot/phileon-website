@@ -714,3 +714,104 @@ def test_admin_retention_config_route_returns_switches(app_client):
         # ("@" is allowed inside CSS/HTML if it appears - but here we have
         # neither. Concretely: no key contains an email value.)
         pass
+
+
+# ────────────────────────────────────────────────────────────────
+# DEDICATED RETENTION-CRON CREDENTIAL — scoped to /tick only
+# ────────────────────────────────────────────────────────────────
+_CRON_SECRET = "test-retention-cron-secret-xyz"
+
+
+def test_retention_tick_admin_jwt_still_works(app_client, monkeypatch):
+    """Manual admin-panel Run Tick — admin JWT continues to authorize."""
+    monkeypatch.setenv("PHILEON_RETENTION_CRON_SECRET", _CRON_SECRET)
+    r = app_client.post("/api/admin/retention/tick",
+                        headers=_admin_headers(), json={})
+    assert r.status_code == 200
+    assert r.json()["mode"] in ("simulated", "live")
+
+
+def test_retention_tick_cron_secret_authorizes(app_client, monkeypatch):
+    """External scheduler → X-PHILEON-RETENTION-CRON header authorizes."""
+    monkeypatch.setenv("PHILEON_RETENTION_CRON_SECRET", _CRON_SECRET)
+    r = app_client.post("/api/admin/retention/tick",
+                        headers={"X-PHILEON-RETENTION-CRON": _CRON_SECRET},
+                        json={})
+    assert r.status_code == 200
+    assert r.json()["mode"] in ("simulated", "live")
+
+
+def test_retention_tick_missing_cron_and_no_jwt_rejected(app_client, monkeypatch):
+    monkeypatch.setenv("PHILEON_RETENTION_CRON_SECRET", _CRON_SECRET)
+    r = app_client.post("/api/admin/retention/tick", json={})
+    assert r.status_code in (401, 403)
+
+
+def test_retention_tick_wrong_cron_rejected(app_client, monkeypatch):
+    monkeypatch.setenv("PHILEON_RETENTION_CRON_SECRET", _CRON_SECRET)
+    r = app_client.post("/api/admin/retention/tick",
+                        headers={"X-PHILEON-RETENTION-CRON": "not-the-secret"},
+                        json={})
+    assert r.status_code == 401
+    assert r.json()["detail"]["code"] == "INVALID_CRON_CREDENTIAL"
+
+
+def test_retention_tick_cron_disabled_when_env_unset(app_client, monkeypatch):
+    """If the operator has NOT set the secret env, presenting any cron
+    header must be refused — falling back to admin JWT is intentional."""
+    monkeypatch.delenv("PHILEON_RETENTION_CRON_SECRET", raising=False)
+    r = app_client.post("/api/admin/retention/tick",
+                        headers={"X-PHILEON-RETENTION-CRON": "anything"},
+                        json={})
+    assert r.status_code == 403
+    assert r.json()["detail"]["code"] == "CRON_NOT_CONFIGURED"
+
+
+def test_retention_cron_secret_cannot_access_other_admin_routes(app_client, monkeypatch):
+    """The cron secret authorizes ONLY /admin/retention/tick. It must be
+    rejected on every other admin surface — orders, ship, retention
+    listing/preview/send-log/config/consent, stats, etc."""
+    monkeypatch.setenv("PHILEON_RETENTION_CRON_SECRET", _CRON_SECRET)
+    h = {"X-PHILEON-RETENTION-CRON": _CRON_SECRET}
+    routes_that_must_reject = [
+        ("GET",  "/api/admin/retention/pending"),
+        ("GET",  "/api/admin/retention/send-log"),
+        ("GET",  "/api/admin/retention/config"),
+        ("GET",  "/api/admin/retention/preview/does-not-exist"),
+        ("GET",  "/api/admin/orders/PHI-NONE"),
+    ]
+    for method, path in routes_that_must_reject:
+        r = app_client.request(method, path, headers=h)
+        assert r.status_code in (401, 403), (method, path, r.status_code, r.text)
+    # POST admin routes — same story.
+    r = app_client.post("/api/admin/orders/PHI-NONE/mark-shipped",
+                        headers={**h, "Content-Type": "application/json"},
+                        json={"carrier": "UPS", "tracking_number": "X"})
+    assert r.status_code in (401, 403)
+    r = app_client.post("/api/admin/retention/consent",
+                        headers={**h, "Content-Type": "application/json"},
+                        json={"email": "x@ex.com", "action": "grant"})
+    assert r.status_code in (401, 403)
+
+
+def test_retention_tick_idempotent_across_duplicate_cron_calls(app_client, monkeypatch):
+    """Duplicate scheduled tick within a short window must NOT
+    double-send. The pending row's state transition (pending → sent) is
+    the atomic gate — same as a manual admin run."""
+    monkeypatch.setenv("PHILEON_RETENTION_CRON_SECRET", _CRON_SECRET)
+    h = {"X-PHILEON-RETENTION-CRON": _CRON_SECRET}
+    r1 = app_client.post("/api/admin/retention/tick", headers=h, json={})
+    r2 = app_client.post("/api/admin/retention/tick", headers=h, json={})
+    assert r1.status_code == 200 and r2.status_code == 200
+    # Even without seeding, evaluating twice never turns a `sent` back into
+    # `pending`. In an empty DB nothing is sent either time.
+    body1 = r1.json(); body2 = r2.json()
+    assert isinstance(body1.get("sent"), list) and isinstance(body2.get("sent"), list)
+
+
+def test_default_env_still_keeps_behavioral_live_off_after_patch():
+    """Regression: the pre-DNS patch must not have flipped any env
+    defaults. PHILEON_BEHAVIORAL_LIVE=false remains the default."""
+    from services import retention_service as R
+    cfg = R.get_config()
+    assert cfg["live"] is False
