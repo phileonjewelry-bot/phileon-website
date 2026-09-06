@@ -25,24 +25,32 @@ _HEADLINES = {
     "wishlist": "READY FOR ANOTHER LOOK?",
     "cart":     "YOU LEFT SOMETHING BEHIND.",
     "checkout": "YOUR SELECTION IS STILL WAITING.",
+    "welcome":  "WELCOME TO THE ATELIER.",
+    "care":     "CARING FOR YOUR PHILEON.",
 }
 _SUBLINES = {
     "browse":   "You paused a moment with a PHILEON piece. It's here whenever you are.",
     "wishlist": "The piece you saved is quietly waiting — no rush, no reminder cascade.",
-    "cart":     "A PHILEON piece is still in your bag. Return when the moment is right.",
+    "cart":     "A PHILEON piece is still in your bag. View current pricing at checkout.",
     "checkout": "You began your order. We've kept your selection intact.",
+    "welcome":  "Fine jewelry, made slowly. A quiet introduction to how PHILEON works.",
+    "care":     "A brief note on caring for your PHILEON piece over the years to come.",
 }
 _SUBJECTS = {
     "browse":   "Still on your mind — PHILEON",
     "wishlist": "Ready for another look — PHILEON",
     "cart":     "You left something behind — PHILEON",
     "checkout": "Your selection is still waiting — PHILEON",
+    "welcome":  "Welcome to the atelier — PHILEON",
+    "care":     "Caring for your PHILEON piece",
 }
 _CTA_LABELS = {
     "browse":   "REVISIT THE PIECE",
     "wishlist": "REVISIT YOUR SAVED PIECE",
-    "cart":     "RETURN TO YOUR BAG",
+    "cart":     "VIEW CURRENT PRICE",
     "checkout": "COMPLETE YOUR ORDER",
+    "welcome":  "EXPLORE THE COLLECTIVE",
+    "care":     "CONTACT CONCIERGE",
 }
 
 
@@ -66,11 +74,17 @@ def _base_url() -> str:
 
 def _pdp_url(slug: str, kind: str) -> str:
     base = _base_url()
-    if not base or not slug:
+    if not base:
         return ""
-    # Retention-tagged trusted PDP URL. `retref` is a NON-SECRET analytics
-    # marker — carries only the campaign kind, no identity or session ID.
-    return f"{base.rstrip('/')}/product/{quote(slug)}?retref={quote(kind)}"
+    # Kind-specific destinations for non-product campaigns.
+    if kind == "welcome":
+        return f"{base.rstrip('/')}/shop?retref=welcome"
+    if kind == "care":
+        return f"{base.rstrip('/')}/contact?retref=care"
+    if not slug:
+        return ""
+    from urllib.parse import quote as _q
+    return f"{base.rstrip('/')}/product/{_q(slug)}?retref={_q(kind)}"
 
 
 def _unsub_url(email: str) -> str:

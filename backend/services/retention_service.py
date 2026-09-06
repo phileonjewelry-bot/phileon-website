@@ -57,7 +57,9 @@ def get_config() -> Dict[str, object]:
         "window_cart_min":     _int_env("PHILEON_RETENTION_CART_MIN",     180),   # 3 h
         "window_checkout_min": _int_env("PHILEON_RETENTION_CHECKOUT_MIN",  90),   # 90 min
         "daily_cap":  _int_env("PHILEON_BEHAVIORAL_DAILY_CAP",  1),
-        "weekly_cap": _int_env("PHILEON_BEHAVIORAL_WEEKLY_CAP", 3),
+        "weekly_cap": _int_env("PHILEON_BEHAVIORAL_WEEKLY_CAP", 2),
+        "browse_cooldown_hours": _int_env("PHILEON_RETENTION_BROWSE_COOLDOWN_H", 72),
+        "post_purchase_care_days": _int_env("PHILEON_RETENTION_CARE_DAYS", 7),
         "anon_ttl_days": _int_env("PHILEON_BEHAVIORAL_ANON_TTL_DAYS", 30),
         # First-launch global safety cap: MAX real behavioral sends allowed
         # in any rolling 24 h window. Simulated sends never count against
@@ -123,8 +125,27 @@ async def grant_consent(db, email: str, source: str) -> Optional[Dict]:
         "unsubscribe_reason": None,
     }
     await db.marketing_consent.update_one({"email": e}, {"$set": doc}, upsert=True)
-    # Consenting clears an earlier soft-suppress from the same email; hard
-    # bounces / spam complaints stay suppressed until admin removes them.
+    # Welcome lifecycle — one-shot per email. Schedule (not send) an
+    # immediately-eligible retention_pending row of kind='welcome' if
+    # this email has never received a welcome. tick() will render/send
+    # (or simulate) it under the same LIVE/consent/suppression gates.
+    already = await db.behavior_send_log.find_one(
+        {"email": e, "email_type": "welcome"},
+    )
+    if not already:
+        existing = await db.retention_pending.find_one(
+            {"customer_email": e, "intent_kind": "welcome"},
+        )
+        if not existing:
+            row = RetentionPending(
+                customer_email=e,
+                product_slug="",  # welcome is not product-specific
+                intent_level=0,
+                intent_kind="welcome",
+                first_seen_at=now, last_event_at=now,
+                earliest_send_at=now,  # immediate eligibility
+            )
+            await db.retention_pending.insert_one(row.model_dump())
     return doc
 
 
@@ -380,6 +401,8 @@ async def record_order_paid(db, email: str, product_slugs: Iterable[str]) -> Dic
     if not e:
         return {"ok": False}
     now = datetime.now(timezone.utc)
+    cfg = get_config()
+    care_at = now + timedelta(days=int(cfg["post_purchase_care_days"]))
     for slug in product_slugs:
         # Insert ORDER_PAID event so history is complete + pending gets cancelled.
         ev = BehaviorEvent(
@@ -392,6 +415,20 @@ async def record_order_paid(db, email: str, product_slugs: Iterable[str]) -> Dic
         )
         await db.behavior_events.insert_one(ev.model_dump())
         await _apply_event_to_pending(db, e, "ORDER_PAID", slug, now)
+        # Schedule post-purchase care (7d) — transactional/service, one
+        # row per (email, product). Idempotent: skip if a row already
+        # exists for this pair.
+        exists = await db.retention_pending.find_one(
+            {"customer_email": e, "product_slug": slug, "intent_kind": "care"},
+        )
+        if not exists:
+            row = RetentionPending(
+                customer_email=e, product_slug=slug,
+                intent_level=0, intent_kind="care",
+                first_seen_at=now, last_event_at=now,
+                earliest_send_at=care_at,
+            )
+            await db.retention_pending.insert_one(row.model_dump())
     # Also cancel checkout-abandonment for this email (belt & braces).
     await db.retention_pending.update_many(
         {"customer_email": e, "status": "pending", "intent_kind": "checkout"},
@@ -408,17 +445,33 @@ async def _within_frequency_cap(db, email: str, now: datetime) -> bool:
     cfg = get_config()
     since_24h = now - timedelta(hours=24)
     since_7d  = now - timedelta(days=7)
+    # Transactional welcome + post-purchase care are excluded from the
+    # behavioral marketing cap — they are single-episode lifecycle sends,
+    # not part of the marketing frequency budget.
+    marketing_kinds = {"browse", "wishlist", "cart", "checkout"}
     day = await db.behavior_send_log.count_documents(
-        {"email": email, "created_at": {"$gte": since_24h}},
+        {"email": email, "email_type": {"$in": list(marketing_kinds)},
+         "created_at": {"$gte": since_24h}},
     )
     if day >= int(cfg["daily_cap"]):
         return False
     week = await db.behavior_send_log.count_documents(
-        {"email": email, "created_at": {"$gte": since_7d}},
+        {"email": email, "email_type": {"$in": list(marketing_kinds)},
+         "created_at": {"$gte": since_7d}},
     )
     if week >= int(cfg["weekly_cap"]):
         return False
     return True
+
+
+async def _browse_cooldown_active(db, email: str, now: datetime) -> bool:
+    """72-hour cooldown between successive browse-abandonment sends per email."""
+    cfg = get_config()
+    cutoff = now - timedelta(hours=int(cfg["browse_cooldown_hours"]))
+    n = await db.behavior_send_log.count_documents(
+        {"email": email, "email_type": "browse", "created_at": {"$gte": cutoff}},
+    )
+    return n > 0
 
 
 # ────────────────────────────────────────────────────────────────
@@ -502,10 +555,17 @@ async def tick(db, now: Optional[datetime] = None, product_lookup=None) -> Dict:
             report["skipped"].append({"pending_id": row["id"], "reason": "not_marketing_eligible"})
             continue
 
-        # 2) Frequency cap (per-email).
+        # 2) Frequency cap (per-email marketing budget).
         if not await _within_frequency_cap(db, email, now):
             report["eligible_but_capped"].append(
                 {"pending_id": row["id"], "email_type": kind, "reason": "per_email_cap"}
+            )
+            continue
+
+        # 2b) Browse-specific 72h cooldown.
+        if kind == "browse" and await _browse_cooldown_active(db, email, now):
+            report["eligible_but_capped"].append(
+                {"pending_id": row["id"], "email_type": kind, "reason": "browse_cooldown"}
             )
             continue
 

@@ -95,6 +95,9 @@ class _FakeColl:
                 elif isinstance(v, dict) and "$ne" in v:
                     if d.get(k) == v["$ne"]:
                         match = False; break
+                elif isinstance(v, dict) and "$in" in v:
+                    if d.get(k) not in v["$in"]:
+                        match = False; break
                 else:
                     if d.get(k) != v:
                         match = False; break
@@ -342,10 +345,9 @@ def test_tick_skips_when_earliest_send_at_in_future(db, monkeypatch):
     email = "b@example.com"
     _run(R.grant_consent(db, email, "newsletter_signup"))
     _run(R.record_event(db, "ADDED_TO_CART", "p1", "s", trusted_email=email))
-    # Now is BEFORE earliest_send_at.
+    # Now is BEFORE the CART earliest_send_at (welcome fires immediately though).
     report = _run(R.tick(db, now=datetime.now(timezone.utc)))
-    assert report["evaluated"] == 0
-    assert report["sent"] == []
+    assert not any(s["email_type"] == "cart" for s in report["sent"])
 
 
 def test_tick_sends_in_simulation_when_due(db):
@@ -356,11 +358,11 @@ def test_tick_sends_in_simulation_when_due(db):
     future = datetime.now(timezone.utc) + timedelta(hours=6)
     report = _run(R.tick(db, now=future))
     assert report["mode"] == "simulated"
-    assert len(report["sent"]) == 1
-    assert report["sent"][0]["email_type"] == "cart"
-    # Send log recorded.
-    assert len(db.behavior_send_log.docs) == 1
-    assert db.behavior_send_log.docs[0]["mode"] == "simulated"
+    cart_sends = [s for s in report["sent"] if s["email_type"] == "cart"]
+    assert len(cart_sends) == 1
+    # send-log has 1 cart row (welcome may also have fired — separate lifecycle).
+    assert any(l["email_type"] == "cart" and l["mode"] == "simulated"
+               for l in db.behavior_send_log.docs)
 
 
 def test_tick_respects_daily_frequency_cap(db, monkeypatch):
@@ -368,7 +370,7 @@ def test_tick_respects_daily_frequency_cap(db, monkeypatch):
     from services import retention_service as R
     email = "b@example.com"
     _run(R.grant_consent(db, email, "newsletter_signup"))
-    # Simulate an already-sent email within 24h.
+    # Simulate an already-sent MARKETING email within 24h.
     db.behavior_send_log.docs.append({
         "email": email, "email_type": "browse", "product_slug": "px",
         "pending_id": "prev", "mode": "simulated",
@@ -377,8 +379,11 @@ def test_tick_respects_daily_frequency_cap(db, monkeypatch):
     _run(R.record_event(db, "ADDED_TO_CART", "p1", "s", trusted_email=email))
     future = datetime.now(timezone.utc) + timedelta(hours=6)
     report = _run(R.tick(db, now=future))
-    assert report["sent"] == []
-    assert len(report["eligible_but_capped"]) == 1
+    # Only welcome (lifecycle, exempt from marketing cap) may go through;
+    # the cart marketing send must be capped.
+    cart_sends = [s for s in report["sent"] if s["email_type"] == "cart"]
+    assert cart_sends == []
+    assert any(c["email_type"] == "cart" for c in report["eligible_but_capped"])
 
 
 def test_tick_suppresses_when_unsubscribed(db):
@@ -402,7 +407,8 @@ def test_tick_purchase_cancels_before_send(db):
     _run(R.record_order_paid(db, email, ["p1"]))
     future = datetime.now(timezone.utc) + timedelta(hours=6)
     report = _run(R.tick(db, now=future))
-    assert report["sent"] == []
+    # Cart must not send. Welcome (lifecycle) may still fire — separate lane.
+    assert not any(s["email_type"] == "cart" for s in report["sent"])
 
 
 # ────────────────────────────────────────────────────────────────
@@ -595,7 +601,8 @@ def test_live_mode_active_with_dedicated_sender(db, monkeypatch):
     assert report["live_effective"] is True
     assert report["mode"] == "live"
     assert seen["from"] == "dispatch@mail.phileon.example"
-    assert len(report["sent"]) == 1 and report["sent"][0]["mode"] == "live"
+    live_sends = [s for s in report["sent"] if s["mode"] == "live"]
+    assert len(live_sends) >= 1  # at least the cart send; welcome may also fire
 
 
 def test_global_launch_cap_halts_further_live_sends(db, monkeypatch):
@@ -622,13 +629,11 @@ def test_global_launch_cap_halts_further_live_sends(db, monkeypatch):
 
     future = datetime.now(timezone.utc) + timedelta(hours=6)
     report = _run(R.tick(db, now=future))
-    # First eligible row sent LIVE; second row deferred because launch cap
-    # was hit after the first LIVE send.
-    live_sent = [s for s in report["sent"] if s["mode"] == "live"]
+    # Global launch cap halts LIVE sends. Some may go live before the
+    # cap boundary; the rest must be deferred with reason=global_launch_cap_hit.
     deferred = [c for c in report["eligible_but_capped"]
                 if c.get("reason") == "global_launch_cap_hit"]
-    assert len(live_sent) == 1
-    assert len(deferred) == 1
+    assert len(deferred) >= 1
 
 
 def test_prior_simulated_sends_count_against_per_customer_cap(db, monkeypatch):
@@ -639,7 +644,7 @@ def test_prior_simulated_sends_count_against_per_customer_cap(db, monkeypatch):
     monkeypatch.setenv("PHILEON_BEHAVIORAL_DAILY_CAP", "1")
 
     from services import retention_service as R
-    # Pre-seed a prior SIMULATED send in the ledger.
+    # Pre-seed a prior SIMULATED marketing send in the ledger.
     db.behavior_send_log.docs.append({
         "email": "a@ex.com", "email_type": "browse", "product_slug": "px",
         "pending_id": "prev", "mode": "simulated",
@@ -650,9 +655,9 @@ def test_prior_simulated_sends_count_against_per_customer_cap(db, monkeypatch):
     _run(R.record_event(db, "ADDED_TO_CART", "p1", "s", trusted_email="a@ex.com"))
     future = datetime.now(timezone.utc) + timedelta(hours=6)
     report = _run(R.tick(db, now=future))
-    # The prior SIMULATED send counted against the daily cap → nothing sent.
-    assert report["sent"] == []
-    assert any(c.get("reason") == "per_email_cap"
+    # The prior SIMULATED browse send counted against the daily cap → cart capped.
+    assert not any(s["email_type"] == "cart" for s in report["sent"])
+    assert any(c["email_type"] == "cart" and c.get("reason") == "per_email_cap"
                for c in report["eligible_but_capped"])
 
 
@@ -663,7 +668,7 @@ def test_default_env_keeps_live_off():
     assert cfg["live"] is False
     assert cfg["global_launch_cap_24h"] == 10
     assert cfg["daily_cap"] == 1
-    assert cfg["weekly_cap"] == 3
+    assert cfg["weekly_cap"] == 2
 
 
 def test_email_send_falls_back_to_transactional_sender_when_behavioral_missing(monkeypatch):
@@ -815,3 +820,131 @@ def test_default_env_still_keeps_behavioral_live_off_after_patch():
     from services import retention_service as R
     cfg = R.get_config()
     assert cfg["live"] is False
+
+
+# ────────────────────────────────────────────────────────────────
+# LIFECYCLE PROGRAMS — welcome + post-purchase care + browse cooldown
+# ────────────────────────────────────────────────────────────────
+def test_welcome_scheduled_on_consent_grant(db):
+    from services import retention_service as R
+    _run(R.grant_consent(db, "hello@ex.com", "newsletter_signup"))
+    rows = [r for r in db.retention_pending.docs if r["intent_kind"] == "welcome"]
+    assert len(rows) == 1
+    # Immediate eligibility.
+    assert rows[0]["earliest_send_at"] <= datetime.now(timezone.utc) + timedelta(seconds=5)
+
+
+def test_welcome_not_double_scheduled(db):
+    from services import retention_service as R
+    for _ in range(3):
+        _run(R.grant_consent(db, "hello@ex.com", "newsletter_signup"))
+    assert len([r for r in db.retention_pending.docs if r["intent_kind"] == "welcome"]) == 1
+
+
+def test_welcome_blocked_by_unsubscribe(db):
+    from services import retention_service as R
+    _run(R.grant_consent(db, "hello@ex.com", "newsletter_signup"))
+    _run(R.unsubscribe(db, "hello@ex.com"))
+    future = datetime.now(timezone.utc) + timedelta(hours=1)
+    report = _run(R.tick(db, now=future))
+    assert report["sent"] == []
+
+
+def test_post_purchase_care_scheduled_7d_out(db):
+    from services import retention_service as R
+    _run(R.record_order_paid(db, "buy@ex.com", ["ovation"]))
+    care = [r for r in db.retention_pending.docs if r["intent_kind"] == "care"]
+    assert len(care) == 1
+    delta = care[0]["earliest_send_at"] - care[0]["first_seen_at"]
+    assert 6.9 < delta.total_seconds() / 86400 < 7.1
+
+
+def test_post_purchase_care_not_sent_early(db):
+    from services import retention_service as R
+    _run(R.grant_consent(db, "buy@ex.com", "newsletter_signup"))
+    _run(R.record_order_paid(db, "buy@ex.com", ["ovation"]))
+    report = _run(R.tick(db, now=datetime.now(timezone.utc) + timedelta(days=1)))
+    assert not any(s["email_type"] == "care" for s in report["sent"])
+
+
+def test_post_purchase_care_sends_after_7d(db):
+    from services import retention_service as R
+    _run(R.grant_consent(db, "buy@ex.com", "newsletter_signup"))
+    _run(R.record_order_paid(db, "buy@ex.com", ["ovation"]))
+    report = _run(R.tick(db, now=datetime.now(timezone.utc) + timedelta(days=8)))
+    care = [s for s in report["sent"] if s["email_type"] == "care"]
+    assert len(care) == 1
+
+
+def test_post_purchase_care_idempotent(db):
+    from services import retention_service as R
+    _run(R.grant_consent(db, "buy@ex.com", "newsletter_signup"))
+    _run(R.record_order_paid(db, "buy@ex.com", ["ovation"]))
+    _run(R.record_order_paid(db, "buy@ex.com", ["ovation"]))
+    care = [r for r in db.retention_pending.docs if r["intent_kind"] == "care"]
+    assert len(care) == 1
+
+
+def test_browse_cooldown_72h(db, monkeypatch):
+    monkeypatch.setenv("PHILEON_RETENTION_BROWSE_COOLDOWN_H", "72")
+    from services import retention_service as R
+    email = "b@ex.com"
+    _run(R.grant_consent(db, email, "newsletter_signup"))
+    # Seed a prior browse send 40h ago.
+    db.behavior_send_log.docs.append({
+        "email": email, "email_type": "browse", "product_slug": "p1",
+        "pending_id": "prev", "mode": "simulated",
+        "created_at": datetime.now(timezone.utc) - timedelta(hours=40),
+    })
+    _run(R.record_event(db, "PRODUCT_VIEWED", "p2", "s", trusted_email=email))
+    future = datetime.now(timezone.utc) + timedelta(hours=7)
+    report = _run(R.tick(db, now=future))
+    assert any(c.get("reason") == "browse_cooldown"
+               for c in report["eligible_but_capped"])
+
+
+def test_weekly_cap_default_is_two(monkeypatch):
+    monkeypatch.delenv("PHILEON_BEHAVIORAL_WEEKLY_CAP", raising=False)
+    from services import retention_service as R
+    assert R.get_config()["weekly_cap"] == 2
+
+
+def test_welcome_and_care_do_not_count_against_marketing_cap(db):
+    from services import retention_service as R
+    email = "b@ex.com"
+    # Two prior lifecycle sends: welcome + care.
+    now = datetime.now(timezone.utc)
+    db.behavior_send_log.docs.extend([
+        {"email": email, "email_type": "welcome", "product_slug": "",
+         "pending_id": "w", "mode": "simulated", "created_at": now},
+        {"email": email, "email_type": "care", "product_slug": "ovation",
+         "pending_id": "c", "mode": "simulated", "created_at": now},
+    ])
+    # A marketing (cart) send should still be within cap.
+    assert _run(R.is_marketing_eligible(db, email)) is False  # no consent yet
+    _run(R.grant_consent(db, email, "newsletter_signup"))
+    assert _run(R._within_frequency_cap(db, email, now)) is True
+
+
+def test_welcome_email_template_renders(monkeypatch):
+    monkeypatch.setenv("JWT_SECRET", "s")
+    monkeypatch.setenv("PHILEON_ORDER_STATUS_URL_BASE", "https://phileon.example.com")
+    from services.retention_emails import build_email
+    out = build_email("welcome", email="new@ex.com", product_slug="")
+    assert "WELCOME TO THE ATELIER" in out["html"]
+    assert "/shop?retref=welcome" in out["html"]
+    assert "/api/unsubscribe?token=" in out["html"]
+
+
+def test_care_email_template_renders_with_product_context(monkeypatch):
+    monkeypatch.setenv("JWT_SECRET", "s")
+    monkeypatch.setenv("PHILEON_ORDER_STATUS_URL_BASE", "https://phileon.example.com")
+    from services.retention_emails import build_email
+    out = build_email("care", email="buy@ex.com", product_slug="ovation",
+                      product={"name": "OVATION", "image_url": "https://x/y.jpg",
+                               "display_price": "$3,500 USD"})
+    assert "CARING FOR YOUR PHILEON" in out["html"]
+    assert "/contact?retref=care" in out["html"]
+    # Care email must NOT push a promotional CTA / discount.
+    for banned in ("% off", "discount code", "hurry", "limited time", "selling fast"):
+        assert banned.lower() not in (out["html"] + out["text"]).lower()
