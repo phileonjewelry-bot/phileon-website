@@ -143,6 +143,8 @@ const WishlistPage = lazy(() => import("@/pages/WishlistPage"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
 const CheckoutSuccess = lazy(() => import("@/pages/CheckoutSuccess"));
 const CheckoutCancel = lazy(() => import("@/pages/CheckoutCancel"));
+const CartPage = lazy(() => import("@/pages/Cart"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const OrderStatusPage = lazy(() => import("@/pages/OrderStatusPage"));
 
 // Admin Pages (lazy — admin surface never loaded by public visitors)
@@ -242,6 +244,7 @@ function App() {
             <Route path="/privacy" element={<TrustPage />} />
             <Route path="/terms" element={<TrustPage />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />
             <Route path="/checkout/cancel" element={<CheckoutCancel />} />
             <Route path="/orders/:orderNumber/status" element={<OrderStatusPage />} />
@@ -436,6 +439,9 @@ function App() {
             <Route path="faq" element={<AdminFAQ />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
+          {/* Catch-all — must be LAST. Any unknown URL renders the
+              PHILEON-styled NotFoundPage instead of a blank body. */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         </Suspense>
         <CartDrawer />

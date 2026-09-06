@@ -125,6 +125,26 @@ def _shipping_line(currency: str) -> str:
     return "Shipping will be calculated at checkout by UPS, FedEx or DHL. International duties, taxes and brokerage remain the customer's responsibility."
 
 
+def _size_label(item: Dict) -> str:
+    """Return a customer-facing size label for a line item, or '' when the
+    product has no size. Prefers explicit `size` (e.g., 'US 7'), then falls
+    back to `ring_size` when a ring is being sized. Never renders blank
+    placeholders."""
+    for key in ("size", "ring_size"):
+        raw = item.get(key)
+        if raw is None:
+            continue
+        s = str(raw).strip()
+        if not s:
+            continue
+        # If the caller already prefixed 'US ' / 'EU ' / 'UK ' keep as-is,
+        # otherwise assume US (PHILEON's primary reference) and label so.
+        if s[:3].upper() in ("US ", "EU ", "UK "):
+            return s
+        return f"US {s}"
+    return ""
+
+
 def _items_html(items: List[Dict], order_currency: str) -> str:
     rows = []
     for i in items or []:
@@ -132,11 +152,17 @@ def _items_html(items: List[Dict], order_currency: str) -> str:
         variant = i.get("variant") or ""
         qty = int(i.get("quantity") or 1)
         line_cents = int(i.get("unit_amount_cents") or 0) * qty
+        size_label = _size_label(i)
+        size_div = (
+            f"<div class='phi-li-size' style='font-size:13px;color:#a89f89;'>{size_label}</div>"
+            if size_label else ""
+        )
         rows.append(
             f"<tr>"
             f"<td class='phi-li-meta' style='padding:12px 0;border-bottom:1px dotted #33322a;font-family:Georgia,serif;color:#f4ecd6;'>"
             f"<div style='font-size:15px'>{name}</div>"
             f"<div class='phi-li-variant' style='font-size:13px;color:#a89f89;font-style:italic'>{variant}</div>"
+            f"{size_div}"
             f"<div style='font-size:12px;color:#7d7565'>Qty {qty}</div>"
             f"</td>"
             f"<td class='phi-li-price' style='padding:12px 0;border-bottom:1px dotted #33322a;text-align:right;"
@@ -155,7 +181,11 @@ def _items_text(items: List[Dict], order_currency: str) -> str:
         variant = i.get("variant") or ""
         qty = int(i.get("quantity") or 1)
         line_cents = int(i.get("unit_amount_cents") or 0) * qty
-        lines.append(f"  · {name} — {variant} × {qty}   {_fmt_money(line_cents, order_currency)}")
+        size_label = _size_label(i)
+        head = f"  · {name} — {variant}"
+        if size_label:
+            head += f" — {size_label}"
+        lines.append(f"{head} × {qty}   {_fmt_money(line_cents, order_currency)}")
     return "\n".join(lines)
 
 
@@ -197,13 +227,10 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
     total = _fmt_money(paid["total_cents"], paid["currency"])
     subject = f"PHILEON — Order {order_no} Confirmed"
     shipping_line = _shipping_line(canonical_currency)
-    canonical_reference = ""
-    if paid["is_presentment"]:
-        canonical_reference = (
-            f"<p style='font-size:11px;color:#7d7565;line-height:1.5;margin-top:8px;text-align:right;'>"
-            f"Canonical reference: {_fmt_money(order.get('total_cents') or 0, canonical_currency)}"
-            f"</p>"
-        )
+    # PHILEON TRUST BOUNDARY — customer sees ONLY the Stripe-presentment
+    # total they were actually charged. Canonical USD reconciliation is
+    # NEVER surfaced in the customer email. It remains available inside
+    # build_internal_paid_notification for operations/reconciliation.
     status_link = _order_status_link(order)
     status_cta_html = ""
     status_cta_text = ""
@@ -235,22 +262,17 @@ def build_customer_paid_email(order: Dict) -> Dict[str, str]:
         f"      <span style='font-family:\"Cinzel\",serif;letter-spacing:.4em;font-size:11px;color:#a89f89'>TOTAL PAID</span>"
         f"      <span class='phi-total-value' style='font-family:\"Cinzel\",serif;letter-spacing:.2em;font-size:14px;color:#c8a24a'>{total}</span>"
         f"    </div>"
-        f"    {canonical_reference}"
         f"    {status_cta_html}"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;margin-top:32px;'>{shipping_line}</p>"
         f"    <p style='font-size:13px;color:#a89f89;line-height:1.65;'>Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch.</p>"
         f"  </div>"
         f"</div>"
     )
-    text_canonical = ""
-    if paid["is_presentment"]:
-        text_canonical = f"Canonical reference: {_fmt_money(order.get('total_cents') or 0, canonical_currency)}\n\n"
     text = (
         f"PHILEON — Order Confirmed.\n\n"
         f"Order reference: {order_no}\n\n"
         f"{_items_text(order.get('items') or [], canonical_currency)}\n\n"
         f"Total paid: {total}\n"
-        f"{text_canonical}"
         f"{status_cta_text}"
         f"{shipping_line}\n\n"
         f"Every PHILEON piece is prepared with intention. You will receive fulfillment updates as your order moves through production and dispatch."

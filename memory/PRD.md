@@ -16,6 +16,43 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Custom IntersectionObserver lazy-loading + quadruple-redundant video loop (do not refactor)
 
 
+- **[DONE Sep 6, 2026 — Pre-Launch CX Repair Pass] P0 + P1 REPAIR COMPLETE.**
+  - **P0 · `/cart` route restored.** An existing `frontend/src/pages/Cart.jsx` component already implemented the full cart page (populated + empty states, localized display, canonical USD money authority preserved). Registered as `<Route path="/cart" element={<CartPage />} />` in `frontend/src/App.js`. The `Checkout.jsx` empty-cart guard `navigate('/cart')` now lands on the intentional "Your Cart is Empty · Shop Now" state (verified via live preview screenshot). "RETURN TO CART" links resolve. Cart state / CartDrawer / canonical USD architecture UNCHANGED.
+  - **P1 · Catch-all NotFoundPage.** New `frontend/src/pages/NotFoundPage.jsx` — PHILEON-editorial, 404 code, "Return to PHILEON" + "Continue Exploring" + "Contact Concierge" CTAs. Registered as `<Route path="*" element={<NotFoundPage />} />` LAST in the routing tree. Verified via live preview: `/rings /men /women /search /random-xyz-123` ALL render NotFoundPage (data-testid=`not-found-page`, code=404). Unknown URLs no longer produce a blank body. `/rings /men /women /search` are confirmed **NOT registered** as routes (App.js grep confirmed) — they are intentionally unknown, not retired customer routes; the audit's earlier presumption that they might be intended aliases was resolved as "intentionally unknown" and the correct behavior is 404.
+  - **P1 · Email line-item `size`.** New helper `_size_label(item)` in `backend/services/order_emails.py` renders `US 7` (or `EU 54½` / `UK N½` when caller-prefixed). Reads `item.size` primary + `item.ring_size` fallback. Products WITHOUT a size render no size line — never a blank placeholder. `_items_html` and `_items_text` now emit the size line under variant/material. All emails that reuse these helpers benefit: `build_customer_paid_email`, `build_customer_shipment_email`, `build_customer_payment_received_email`, `build_internal_paid_notification`, `build_internal_integrity_review_notification`.
+  - **P1 · Trust-boundary defect fixed.** `build_customer_paid_email` no longer emits `"Canonical reference: $X USD"` to the customer. The customer sees ONLY the Stripe-presentment total they were actually charged (`TOTAL PAID · C$4,830.00 CAD` for CAD orders, `$3,500.00 USD` for USD). Canonical USD reconciliation preserved inside `build_internal_paid_notification` (operations only). Grep confirmed zero customer-facing canonical/base-value/internal-FX language remains across ALL five customer email builders.
+  - **Email regression — 5/5 synthetic scenarios verified:**
+    - USD customer, ring `US 7` → paid email contains `LA MARVA`, `10K Yellow Gold`, `US 7`, `$3,500`, no canonical leak.
+    - CAD Adaptive Pricing customer, ring `US 7` → paid email shows presentment `$4,830` only, no canonical leak; internal alert retains `Canonical PHILEON order · $3,500`.
+    - No-size product → renders `CRESTA NERA · 18K Yellow Gold · Qty 1` without any blank or "US None" size line.
+    - Shipment email → carrier, tracking, `US 7`, no canonical leak.
+    - Payment-received / integrity-review → `US 7` renders, no canonical leak.
+  - **Catalog reconciliation (READ-ONLY, no data changed).**
+    - `PRICING_ENGINE_CATALOG` (`services/pricing_engine_catalog.py`): **47** dynamic-priced entries.
+    - `FIXED_PRODUCTS` (same file): **24** fixed-price entries.
+    - `+ cresta-nera + her-eternal-reign` (specially-resolved products): 2 more.
+    - `ALL_SLUGS` = **73** distinct product slugs (unique product IDs).
+    - `_SUPPORTED_SLUGS` in `tests/test_full_checkout_audit.py`: **84** checkout-supported product families. The 11 extra entries are variant families that resolve to the same slug via the checkout resolver: `annie-rose`, `bajan-joe`, `la-marva`, `ovation`, `parabola`, `parabola-heritage`, `quadriga-dominus`, `rhythm-mesh-ring`, `ribbon-regale-edition`, `scacco-matto`, `tola-ii`. Every product in `ALL_SLUGS (73)` has checkout coverage in `_SUPPORTED_SLUGS (84)` — no products are missing.
+    - **Recommended canonical metric going forward:** use TWO distinct names.
+      1. **`PRODUCT_SLUGS = 73`** — the count of distinct public product slugs (source: `ALL_SLUGS`).
+      2. **`CHECKOUT_SUPPORTED_FAMILIES = 84`** — the count of pricing/checkout entry points the resolver understands (source: `_SUPPORTED_SLUGS`).
+    - Stop calling both "the catalog count." No test or PRD assertion is currently wrong — `test_full_checkout_audit::_SUPPORTED_SLUGS == 84` and `test_adaptive_pricing_live_integration::supported_products == 84` both measure the checkout resolver surface correctly.
+  - **`PHILEON_ORDER_STATUS_URL_BASE` reclassified as PRE-LIVE CONFIG GATE** (was previously P2). Currently points at the preview URL. Must be swapped to the final production origin (recommended `https://www.getyourphileon.com`) BEFORE the first LIVE customer email. Added to LIVE-activation checklist. Not altered in this pass per instruction.
+  - **Route crawl after fix:** `/`, `/cart`, `/checkout`, `/checkout/success`, `/checkout/cancel`, `/shipping`, `/returns`, `/warranty`, `/jewelry-care`, `/materials`, `/privacy`, `/terms`, `/contact`, `/ring-size-guide`, representative PDPs, representative collections, search all render. Unknown routes render NotFoundPage. Zero blank-body routes remain. No React "No routes matched location" warnings for intended public routes.
+  - **Customer-journey regression** (desktop 1440×900 + mobile 390×844 verified in prior iteration_25 audit; no regressions introduced by this repair pass since only the /cart + NotFound + email builders were touched):
+    - A · Homepage → collection → PDP → variant → cart → checkout ✅
+    - B · Direct PDP → cart → checkout ✅
+    - C · Search → PDP → cart ✅
+    - D · International localized visitor → PDP → cart → country override → TEST Stripe Checkout ✅
+    - E · Mobile 390×844 full journey ✅
+    - F · Checkout with empty cart → `/cart` → intentional empty-cart UI ✅ **(new, previously blank body)**
+  - **Regression bar (this pass):** Full backend pytest suite excluding pre-existing-drift files → **1006 passed / 1 pre-existing gold-spot drift** (annie-rose-foundation, unchanged, unrelated). +1 skipped is the previously-documented cron env-unset case (canonical). No new failures. No test loosened. No assertion removed.
+  - **Locked invariants — all intact:** catalog 47+24+2 = 73 slugs / 84 checkout families · canonical currency USD · RRE $350/$1100/$1400/$1800 · RETRO BRED $4500/$8000/$9000 · shipping CA=0/US=3500/T1=6500/T2=9500 cents · signature 50000 cents · tax `automatic_tax=false` `tax_cents=0` · `STRIPE_MODE=test` · `PHILEON_BEHAVIORAL_LIVE=false` · Adaptive Pricing architecture unchanged · Resend domains verified · **`PHI-20260901-4CBC5C` untouched**.
+  - **Files new (1):** `frontend/src/pages/NotFoundPage.jsx`.
+  - **Files modified (3):** `frontend/src/App.js` (registered `/cart` + catch-all + imports), `backend/services/order_emails.py` (`_size_label`, `_items_html`, `_items_text` updated; canonical-reference block removed from `build_customer_paid_email` HTML + text).
+  - **P2 items untouched:** `GET /api/products` (empty response), metal-price console noise, menu nomenclature confirmation. Deferred as instructed. Editorial menu names (LADIES FIRST · GENTLEMAN'S CLUB · THE COLLECTIVE · THE INSPIRATION VAULT · CONTACT) presumed intentional PHILEON branding.
+
+
 - **[DONE Sep 5, 2026 — Pre-DNS Security Patch] BEHAVIORAL RETENTION FINAL PRE-DNS PATCH — COMPLETE. LIVE STAYS OFF.**
   - **Scoped scheduler credential (`X-PHILEON-RETENTION-CRON`).** New `verify_retention_tick_auth` dependency in `backend/routes/admin_retention.py` accepts EITHER a valid admin JWT (manual admin-panel Run Tick) OR the dedicated `X-PHILEON-RETENTION-CRON` header equal to `PHILEON_RETENTION_CRON_SECRET` (server-to-server scheduler). Compared with `hmac.compare_digest` (constant-time). Wired into ONLY `POST /api/admin/retention/tick` — every other admin retention endpoint (pending / preview / send-log / config / consent) plus admin orders (GET/mark-shipped) still require `verify_admin` and REJECT the cron header (401/403). Secret is stored in backend env only, NEVER rendered in a JSON response, NEVER logged, NEVER present in admin panel HTML. Rotatable — a new env value + backend restart is sufficient.
   - **Verified error codes:** cron env unset + cron header present → `403 CRON_NOT_CONFIGURED`; wrong cron value → `401 INVALID_CRON_CREDENTIAL`; missing both → `401`.
