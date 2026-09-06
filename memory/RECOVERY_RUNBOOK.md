@@ -232,7 +232,6 @@ If notification flags are LOST during restore:
    `true` for older orders — over-suppressing an email is safer than double-sending.
 
 ## 13. Behavioral scheduler recovery
-
 Behavioral email is SIMULATION-only today. This section applies the day it goes LIVE.
 
 1. If `behavior_send_log` is lost, DO NOT run `/api/admin/retention/tick` until either
@@ -379,7 +378,6 @@ Halting new customer checkouts while preserving Stripe payment truth.
 - Do NOT ship any behavioral email during an emergency stop.
 
 ## 21. Reopening checkout after an incident
-
 Only after § 19 validation passes:
 
 1. Un-pause the Stripe webhook endpoint (if paused).
@@ -393,7 +391,6 @@ Only after § 19 validation passes:
 7. Announce recovery.
 
 ## 22. Stripe-authoritative reconciliation (the master routine)
-
 Use this any time Mongo and Stripe may disagree.
 
 1. Pull the last N days of Stripe events (`Dashboard → Events`).
@@ -409,8 +406,33 @@ Use this any time Mongo and Stripe may disagree.
 
 ---
 
-## APPENDIX A — do-not-do list
+## 23. Fulfillment hold (Layer 2)
 
+**When:** Owner needs to stop fulfillment on a paid order without touching
+payment truth. Examples: address concern, customization clarification,
+insurance issue, customer requested delay, fraud review.
+
+Steps:
+1. Open **Admin → Fulfillment** (`/admin/fulfillment`).
+2. Select the order.
+3. Enter a hold reason (≥ 3 chars) and click **Place on Hold**.
+4. Order moves to `fulfillment_status = "on_hold"`. `payment_status` is
+   untouched. An audit row is written with the reason.
+5. To release: click **Release Hold**. This requires ALL integrity gates
+   green (`shipping_integrity_status = ok`,
+   `presentment_integrity_status ∈ {ok, null}`,
+   `payment_status ∈ {paid, authorized}`). If any gate is red the API
+   returns `409 NOT_ELIGIBLE` and the manual release is refused —
+   resolve the underlying data issue first (see § 22).
+
+**Manual hold is NEVER a substitute for an integrity hold.** The two are
+separate: integrity holds are set by the Stripe webhook only and cannot
+be cleared from the admin panel.
+
+---
+
+
+## APPENDIX A — do-not-do list
 - Do NOT `db.orders_v2.drop()` for any reason.
 - Do NOT `db.webhook_events.drop()` for any reason.
 - Do NOT `db.email_suppression.drop()` for any reason.

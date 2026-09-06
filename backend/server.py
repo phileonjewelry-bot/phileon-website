@@ -2211,6 +2211,13 @@ async def startup_db():
     except Exception as e:
         logger.warning(f"retention indexes init skipped: {type(e).__name__}: {e}")
 
+    # Fulfillment audit log indexes (Layer 2).
+    try:
+        from services.fulfillment import ensure_indexes as _ful_indexes
+        await _ful_indexes(db)
+    except Exception as e:
+        logger.warning(f"fulfillment indexes init skipped: {type(e).__name__}: {e}")
+
     logger.info("Database indexes created")
 
     # Warm up Emergent Object Storage — non-fatal if unavailable so the API can still start.

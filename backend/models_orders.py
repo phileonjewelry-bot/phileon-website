@@ -139,6 +139,11 @@ class OrderV2(BaseModel):
     # `payment_status`. Historical orders deserialize cleanly (all optional).
     fulfillment_status: Optional[str] = None  # processing|in_production|ready_to_ship|shipped|delivered|cancelled
     fulfillment_type: Optional[str] = None    # READY_TO_SHIP|MADE_TO_ORDER|CUSTOM_INQUIRY
+    # Manual fulfillment hold reason — populated by admin `/hold` endpoint
+    # (Layer 2). Independent of `payment_status` and the integrity
+    # holds. Cleared on `/release-hold` or on any operational transition
+    # that leaves the `on_hold` state.
+    fulfillment_hold_reason: Optional[str] = None
     dispatch_estimate: Optional[str] = None   # neutral customer-facing string
     carrier: Optional[str] = None             # free-text, PHILEON is carrier-agnostic
     tracking_number: Optional[str] = None

@@ -430,3 +430,186 @@ the full 26-row matrix.
 - Tax OFF.
 - `STRIPE_MODE=test` — until Gate 6 (LIVE activation) is explicitly authorized.
 - `PHILEON_BEHAVIORAL_LIVE=false` — until behavioral LIVE is explicitly authorized.
+
+---
+
+## APPENDIX C — Fulfillment Operations (Layer 2)
+
+Companion tables to the shipping / order sections above. Every rule here
+is enforced server-side in `backend/routes/admin_orders.py` and the
+`services/fulfillment.py` state machine — the admin panel is a
+convenience surface, not a source of truth.
+
+### C.1 — Canonical fulfillment state machine
+
+The **operational** state lives on `orders_v2.fulfillment_status` (US
+spelling, optional). It sits ON TOP of Stripe-truth `payment_status` and
+the webhook-set `fulfilment_status` (BR spelling — untouched by admin).
+
+```
+                    ┌─────────────────┐
+                    │ pending_review  │  ← Stripe webhook sets this OR
+                    └────────┬────────┘     integrity holds keep it here
+                             │
+                     admin: /approve
+                             ↓
+              ┌───────────────────────────┐
+              │ approved_for_fulfillment  │
+              └───────────┬───────────────┘
+                          │
+                  admin: /prepare
+                          ↓
+                ┌─────────────────┐
+                │  in_preparation │
+                └────────┬────────┘
+                          │
+                  admin: /ready-to-ship
+                          ↓
+                ┌─────────────────┐
+                │  ready_to_ship  │
+                └────────┬────────┘
+                          │
+                  admin: /mark-shipped   (integrity-gated)
+                          ↓
+                ┌─────────────────┐
+                │     shipped     │ ── admin: /correct-shipment (no email)
+                └────────┬────────┘
+                          │
+                       (future — Layer 3)
+                          ↓
+                ┌─────────────────┐
+                │    delivered    │  (terminal)
+                └─────────────────┘
+
+    ┌──────────┐  admin: /hold {reason}    ┌────────────┐
+    │  any     │ ────────────────────────► │  on_hold   │
+    │  active  │ ◄──────────────────────── │            │
+    └──────────┘  admin: /release-hold    └────────────┘
+                    (blocked if any integrity gate red)
+```
+
+### C.2 — Server-authoritative eligibility
+
+`services.fulfillment.evaluate_eligibility()` is checked by every
+state-advancing endpoint. An order is **eligible** iff **ALL** of:
+
+- `payment_status ∈ {"paid", "authorized"}`
+- `shipping_integrity_status ∈ {"", "ok"}`
+- `presentment_integrity_status ∈ {"", "ok", None}`
+- `payment_status` is not `failed / cancelled / refunded / partially_refunded / disputed`
+- `fulfillment_status` is not `"on_hold"` and not `"cancelled"`
+- `shipping.country` present AND (`shipping.service_label` OR `shipping.zone_key`) present
+
+Missing any → **409 NOT_ELIGIBLE** with `reasons[]` and `requires{}` for
+the admin panel to surface. **Owners cannot bypass an integrity hold
+from the admin panel** — the two `*_integrity_status` fields are set by
+the Stripe webhook only, and are resolved at the data source.
+
+### C.3 — Admin fulfillment endpoints
+
+| Endpoint | Purpose | Guards |
+|---|---|---|
+| `GET /api/admin/orders?status=…&q=…` | Fulfillment queue (needs_review / in_preparation / ready_to_ship / shipped / on_hold / cancelled / all) | JWT admin |
+| `GET /api/admin/orders/{on}` | Order detail + eligibility verdict | JWT admin |
+| `GET /api/admin/orders/{on}/audit` | Audit trail (newest first) | JWT admin |
+| `POST /api/admin/orders/{on}/approve` | `→ approved_for_fulfillment` | eligibility + transition |
+| `POST /api/admin/orders/{on}/prepare` | `approved → in_preparation` | eligibility + transition |
+| `POST /api/admin/orders/{on}/ready-to-ship` | `in_preparation → ready_to_ship` | eligibility + transition |
+| `POST /api/admin/orders/{on}/mark-shipped` | `→ shipped`, records carrier/tracking, sends email once | eligibility + payment paid + tracking sanitised |
+| `POST /api/admin/orders/{on}/hold` | Manual `→ on_hold` with reason | payment paid + not shipped |
+| `POST /api/admin/orders/{on}/release-hold` | `on_hold → pending_review` | eligibility (integrity green) |
+| `POST /api/admin/orders/{on}/correct-shipment` | Owner correction post-ship, records prior + new values in audit | must be `shipped`, **never** re-sends email |
+
+Every endpoint that mutates state writes an append-only row to the
+`fulfillment_audit` collection with: order_number, action, previous
+value, new value, actor, reason, timestamp, and a safety-filtered
+`extra` block. **Money fields, Stripe IDs, tokens, and webhook event
+IDs are stripped before audit insert.**
+
+### C.4 — Double-shipment protection
+
+`mark-shipped` uses `find_one_and_update({..., "shipping_notification_sent": {"$ne": True}}, ...)`.
+Only the caller whose write flipped the flag sends the shipping
+confirmation email. A duplicate call:
+
+- returns `{ok: true, email_sent: false}`
+- still updates the (idempotent) tracking metadata for support-case
+  corrections
+- writes an audit row with `action="mark_shipped_noop"`
+
+### C.5 — Tracking URL helper
+
+`services.fulfillment.build_tracking_url(carrier, tracking_number,
+explicit_url=None)`:
+
+1. If `explicit_url` starts with `http://` or `https://` → return it
+   verbatim.
+2. Else, canonical URL for known carriers: UPS, FedEx, DHL, Canada Post,
+   USPS.
+3. Else → `None` (UI shows the tracking number without a link).
+
+`javascript:`, `data:`, `mailto:` explicit URLs are silently dropped —
+`_size_label` / `_items_html` in `services/order_emails.py` provide the
+same defense-in-depth on the email side.
+
+### C.6 — Signature + insurance semantics
+
+- `shipping.signature_required` — set at Session-create using the
+  canonical USD subtotal against `SIGNATURE_REQUIRED_ABOVE_USD_CENTS =
+  50 000`. Never recomputed from presentment currency.
+- `shipping.insurance_required` — the fulfillment **requirement** (zone
+  policy). NOT proof that insurance was purchased or that coverage is
+  in force. The admin UI labels it as `REQUIRED · confirm at label
+  purchase`. If proof-of-coverage tracking becomes necessary later, add
+  an `insurance_confirmed_at` field — do NOT overload the existing flag.
+
+### C.7 — Refund / cancellation interlock
+
+- `payment_status ∈ {failed, cancelled, refunded, partially_refunded,
+  disputed}` immediately fails eligibility.
+- The webhook-side `charge.refunded` handler flips `payment_status →
+  refunded / partially_refunded`. The next admin action then blocks
+  automatically.
+- **Do NOT** build a returns/RMA workflow in Layer 2 — that is Layer 3.
+
+### C.8 — Daily fulfillment checklist (owner)
+
+Read once per day, ideally at the start of the fulfillment window.
+
+1. Open **Admin → Fulfillment** (`/admin/fulfillment`).
+2. **Review new paid orders** — Needs Review tab.
+3. **Check integrity holds** — orders with Shipping · Hold or
+   Presentment · Hold pills. Resolve the underlying data issue in
+   `orders_v2` / Stripe before any release.
+4. **Confirm product / variant / size** against the order card.
+5. **Confirm signature / insurance** requirement on the detail panel.
+6. **Approve for Fulfillment** — advances to `approved_for_fulfillment`.
+7. **Prepare** the jewelry at the bench. Click *In Preparation*.
+8. **Pack**. Click *Ready to Ship*.
+9. **Purchase / prepare shipment manually** — owner buys the label
+   outside the system (no live carrier API in Layer 2).
+10. **Enter carrier / tracking** on the Shipments page. The tracking
+    URL is auto-built for UPS / FedEx / DHL / Canada Post / USPS.
+11. **Mark Shipped**. Confirm the customer notification banner.
+12. **Review held orders** — On Hold tab. Release only after root cause
+    resolved.
+13. **Close completed work** — Shipped tab reflects today's dispatch.
+
+Every step above writes an audit row on the affected order. No step
+requires the owner to touch money math, Stripe IDs, or webhook state.
+
+### C.9 — What Layer 2 explicitly does NOT do
+
+- No UPS / FedEx / DHL API integrations.
+- No automatic label purchasing.
+- No live carrier-rate shopping.
+- No carrier delivery webhooks.
+- No delivery-confirmation email.
+- No return / RMA portal.
+- No fraud scoring engine.
+- No inventory allocation.
+- No warehouse management.
+- No VIP clienteling.
+
+Those belong to Layer 3+ and MUST NOT be silently introduced through
+Layer 2 changes.
