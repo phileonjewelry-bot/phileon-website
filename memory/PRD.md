@@ -3,6 +3,41 @@
 ## Original Problem Statement
 High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editorial UI (LA BÊTE visual language). Ongoing: content/UI expansion of Fine Jewelry, Inspiration Vault, and now Bracelets, with cinematic vertical galleries, autoplay-muted-loop hero video, and product-page detail pages per SKU.
 
+- **[DONE Feb 17, 2026 — Layer 4 FINAL SIGN-OFF PASS] LAYER 4 GREEN — READY FOR OWNER LOCK.**
+  - **Terminal-dispute reconciliation added.** Webhook `charge.dispute.closed`
+    now restores `payment_status="paid"` on WON / `warning_closed` /
+    `charge_dismissed` and sets `payment_status="refunded"` on LOST.
+    Order-level `fraud_review_status` remains: WON → `review_required`
+    (owner MUST clear before fulfillment resumes); LOST → `blocked`.
+    Enables test I and test M without weakening any interlock.
+  - **LOST-dispute permanent block enforced.** Generic
+    `POST /api/admin/orders/{on}/clear-fraud-hold` and
+    `POST /api/admin/disputes/{case_id}/release-fraud-hold` both now
+    return `409 LOST_DISPUTE_BLOCK` when the underlying dispute is
+    LOST. Recovery from a lost chargeback requires a separately
+    authorized owner path — no generic clear defeats it.
+  - **Canonical `has_active_dispute()` helper** added to
+    `services.disputes_service`. ACTIVE = `needs_response`,
+    `under_review`, `warning_needs_response`, `warning_under_review`.
+    TERMINAL = `won`, `lost`, `warning_closed`, `charge_dismissed`,
+    `charge_refunded`. Used by the RMA `/approve-refund` interlock.
+    Terminal historical cases are never treated as active.
+  - **Test matrix**: 8 new/updated tests for the completion pass.
+    107 focused Layer 2/3/4 tests pass. 1229 full-suite tests pass
+    (2 owner-accepted pre-existing drifts unchanged).
+  - **Locked invariants — ALL INTACT**: PRODUCT_SLUGS=73,
+    CHECKOUT_SUPPORTED_FAMILIES=84, canonical USD, tax OFF,
+    STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE unset (false),
+    RRE 350/1100/1400/1800, RETRO BRED 4500/8000/9000,
+    shipping CA=0/US=3500/T1=6500/T2=9500 cents, signature 50000,
+    PHI-20260901-4CBC5C untouched.
+  - **Files touched**: `backend/services/disputes_service.py`,
+    `backend/routes/webhooks_stripe.py`,
+    `backend/routes/admin_orders.py`,
+    `backend/routes/admin_disputes.py`, `backend/routes/returns.py`,
+    `backend/tests/test_layer4_completion.py`,
+    `memory/OPERATIONS.md`, `memory/CHANGELOG.md`.
+
 ## Product Registry (implemented)
 - **Fine Jewelry Rings**: Rhythm Mesh, OVATION Ribbed Ring, BAJAN JOE Signet Ring, **QUADRIGA DOMINUS (NEW)**, RHYTHM MESH, LA BÊTE, CYPHER, BOUND, APEX, HOMAGE, TRIBUTE: LA BÊTE, BLESSED, COOGI I, TOLA II, Galatians 6:14, TRACE, IL MORSO DEL RE
 - **Fine Jewelry Bracelets/Bangles**: **CRESTA NERA (NEW)** (10K/14K Yellow Gold · Black Diamonds · hinged)

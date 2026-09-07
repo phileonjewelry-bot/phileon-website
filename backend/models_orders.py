@@ -144,6 +144,12 @@ class OrderV2(BaseModel):
     # holds. Cleared on `/release-hold` or on any operational transition
     # that leaves the `on_hold` state.
     fulfillment_hold_reason: Optional[str] = None
+    # Layer 4 completion — order-level fraud review, independent of Stripe
+    # dispute existence. Values: clear | review_required | under_review |
+    # cleared | blocked. NEVER modifies payment_status.
+    fraud_review_status: Optional[str] = None
+    fraud_review_reason: Optional[str] = None
+    fraud_review_updated_at: Optional[datetime] = None
     dispatch_estimate: Optional[str] = None   # neutral customer-facing string
     carrier: Optional[str] = None             # free-text, PHILEON is carrier-agnostic
     tracking_number: Optional[str] = None

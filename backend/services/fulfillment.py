@@ -108,6 +108,7 @@ def evaluate_eligibility(order: Dict[str, Any]) -> FulfillmentEligibility:
         "not_cancelled":         False,
         "not_on_hold":           False,
         "shipping_present":      False,
+        "fraud_review_cleared":  False,
     }
 
     ps = (order.get("payment_status") or "").lower()
@@ -147,6 +148,15 @@ def evaluate_eligibility(order: Dict[str, Any]) -> FulfillmentEligibility:
         requires["shipping_present"] = True
     else:
         reasons.append("shipping_missing")
+
+    # Layer 4 completion — order-level fraud review is a hard fulfillment
+    # gate independent of Stripe payment status and dispute existence.
+    # `clear` (or absent) and `cleared` are the only pass-through states.
+    fr = (order.get("fraud_review_status") or "").lower()
+    if fr in ("", "clear", "cleared"):
+        requires["fraud_review_cleared"] = True
+    else:
+        reasons.append(f"fraud_review_{fr}")
 
     eligible = all(requires.values()) and not reasons
     return FulfillmentEligibility(eligible=eligible, reasons=reasons,

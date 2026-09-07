@@ -877,16 +877,54 @@ cleared / blocked), `response_status` (not_started / collecting_evidence
 verifies signature, deduplicates via `webhook_event_ids`, mirrors the
 case idempotently, and NEVER erases fulfillment / shipping / RMA history.
 
-### E.4 — Interlocks
+### E.4 — Interlocks (Layer 4 completion — order-level fraud gate)
 
-- **Fulfillment** (Layer 2): `payment_status="disputed"` already fails
-  `evaluate_eligibility`. Verified.
-- **Refund** (Layer 3): `POST /api/admin/returns/{rma}/approve-refund`
-  refuses with `409 ACTIVE_DISPUTE_BLOCKS_REFUND` when the order's
-  `payment_status="disputed"` OR when an active `dispute_cases` row
-  exists (`status ∈ needs_response, under_review, warning_*`).
-- **Historical**: `PHI-20260901-4CBC5C` locked from fraud-hold with
-  `409 LOCKED_HISTORICAL_ORDER`.
+**Order-level `fraud_review_status` on `orders_v2`** — independent of
+Stripe dispute existence, independent of `payment_status`, independent
+of integrity holds. Values: `clear` / `review_required` /
+`under_review` / `cleared` / `blocked`. Only `clear` and `cleared`
+permit fulfillment. Enforced server-side in `evaluate_eligibility`.
+
+- **Fulfillment** (Layer 2): `evaluate_eligibility` refuses when
+  `fraud_review_status` is `review_required`, `under_review`, or
+  `blocked`. Applies to `/approve`, `/prepare`, `/ready-to-ship`,
+  `/mark-shipped` — every state-advancing admin endpoint.
+- **Pre-dispute hold**: `POST /api/admin/orders/{on}/fraud-hold
+  { reason }` sets `fraud_review_status="blocked"` without requiring a
+  Stripe dispute to exist. `POST /api/admin/orders/{on}/clear-fraud-hold`
+  clears it (other integrity gates still apply).
+- **Dispute auto-flip** (webhook-driven, Stripe-authoritative):
+  - `charge.dispute.created` → order flips to `fraud_review_status="review_required"` and `payment_status="disputed"`.
+  - `charge.dispute.closed` with `status=won / warning_closed / charge_dismissed`
+    → order flips to `fraud_review_status="review_required"`, and
+    `payment_status` is restored to `"paid"` (Stripe returned funds to
+    merchant). Owner MUST explicitly clear fraud review before
+    fulfillment resumes — no auto-resume.
+  - `charge.dispute.closed` with `status=lost` → order flips to
+    `fraud_review_status="blocked"` (permanent fulfillment block), and
+    `payment_status` is set to `"refunded"` (Stripe returned funds to
+    customer via chargeback). Generic `clear-fraud-hold` is REJECTED
+    with `409 LOST_DISPUTE_BLOCK` on both the order-level and
+    dispute-case-level endpoints — recovery requires a separately
+    authorized owner path.
+- **Active-vs-terminal helper**: `services.disputes_service.has_active_dispute(db, order_number)`
+  is the canonical helper. ACTIVE = `needs_response`, `under_review`,
+  `warning_needs_response`, `warning_under_review`. TERMINAL = `won`,
+  `lost`, `warning_closed`, `charge_dismissed`, `charge_refunded`.
+  Historical terminal cases are NEVER treated as active.
+- **Refund** (Layer 3): `/approve-refund` refuses with
+  `409 ACTIVE_DISPUTE_BLOCKS_REFUND` when `has_active_dispute()` is
+  true (or, defensively, when `payment_status` is still `"disputed"`
+  awaiting webhook reconciliation). A WON dispute followed by an
+  owner-cleared fraud review may proceed under ordinary Layer 3 rules.
+  A LOST dispute independently blocks via `already_fully_refunded`
+  because `payment_status` becomes `"refunded"`.
+- **Historical**: `PHI-20260901-4CBC5C` locked from
+  `/api/admin/orders/{on}/fraud-hold` with `409 LOCKED_HISTORICAL_ORDER`.
+
+**None of these mutations touches `payment_status` other than the
+Stripe-authoritative dispute reconciliations described above.** Stripe
+remains authoritative for payment truth.
 
 ### E.5 — Admin endpoints (JWT-gated, audit-logged)
 

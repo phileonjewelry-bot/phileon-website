@@ -590,22 +590,28 @@ async def approve_refund(rma_number: str, body: RefundIn = RefundIn(),
         raise HTTPException(status_code=409, detail={
             "code": "LOCKED_HISTORICAL_ORDER",
         })
-    # Layer 4 interlock: refund is blocked while an active Stripe dispute
-    # exists on this order. Owner must resolve the dispute path first —
-    # never refund and dispute independently.
+    # Layer 4 interlock: refund is blocked while an ACTIVE Stripe dispute
+    # exists on this order. Terminal historical disputes do NOT block
+    # ordinary Layer 3 refunds — a WON dispute + owner-cleared fraud
+    # review may proceed under normal Layer 3 rules. LOST disputes reset
+    # payment_status to "refunded" upstream, which independently blocks
+    # via already_fully_refunded semantics.
+    from services.disputes_service import has_active_dispute
+    if await has_active_dispute(db, case.get("order_number")):
+        active_dispute = await db.dispute_cases.find_one({
+            "order_number": case.get("order_number"),
+            "status": {"$in": ["needs_response", "under_review",
+                                "warning_needs_response", "warning_under_review"]},
+        }, {"_id": 0, "case_id": 1})
+        raise HTTPException(status_code=409, detail={
+            "code": "ACTIVE_DISPUTE_BLOCKS_REFUND",
+            "case_id": (active_dispute or {}).get("case_id"),
+        })
+    # Belt-and-suspenders: if payment_status is still "disputed" the
+    # webhook hasn't reconciled the terminal state yet; treat as active.
     if (order.get("payment_status") or "").lower() == "disputed":
         raise HTTPException(status_code=409, detail={
             "code": "ACTIVE_DISPUTE_BLOCKS_REFUND",
-        })
-    active_dispute = await db.dispute_cases.find_one({
-        "order_number": case.get("order_number"),
-        "status": {"$in": ["needs_response", "under_review",
-                            "warning_needs_response", "warning_under_review"]},
-    }, {"_id": 0})
-    if active_dispute:
-        raise HTTPException(status_code=409, detail={
-            "code": "ACTIVE_DISPUTE_BLOCKS_REFUND",
-            "case_id": active_dispute.get("case_id"),
         })
     item_idxs = [int(s["index"]) for s in (case.get("items_snapshot") or [])
                  if isinstance(s.get("index"), int) and s.get("eligible")]

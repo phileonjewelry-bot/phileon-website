@@ -1,7 +1,7 @@
 """Phase 1 — Stripe webhook receiver. Signature-verified, deduped, idempotent."""
 import logging, os
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Any, Dict, Optional
 from fastapi import APIRouter, HTTPException, Request
 
 from services.shipping_zones import (
@@ -556,7 +556,11 @@ async def stripe_webhook(request: Request):
     elif etype == "charge.dispute.created":
         if order:
             await db.orders_v2.update_one({"id": order["id"]},
-                {"$set": {"payment_status": "disputed", "updated_at": datetime.now(timezone.utc)},
+                {"$set": {"payment_status": "disputed",
+                          "fraud_review_status": "review_required",
+                          "fraud_review_reason": f"Stripe dispute {obj.get('reason','') or 'created'}",
+                          "fraud_review_updated_at": datetime.now(timezone.utc),
+                          "updated_at": datetime.now(timezone.utc)},
                  "$addToSet": {"webhook_event_ids": event["id"]}})
             # Layer 4 — mirror as a PHILEON dispute_cases record. Idempotent
             # via stripe_dispute_id unique index. Never overwrites Stripe truth.
@@ -612,6 +616,44 @@ async def stripe_webhook(request: Request):
                     if etype == "charge.dispute.closed" or new_status in ("won", "lost", "warning_closed", "charge_dismissed"):
                         upd["closed_at"] = datetime.now(timezone.utc)
                     await db.dispute_cases.update_one({"stripe_dispute_id": stripe_dispute_id}, {"$set": upd})
+                    # Layer 4 completion — order-level fraud state follows
+                    # Stripe result:
+                    #   won / warning_closed / charge_dismissed → owner
+                    #     must explicitly re-review before fulfillment
+                    #     resumes (fraud_review_status = review_required).
+                    #   lost → permanent fulfillment block (blocked).
+                    # Reconcile order-level state to Stripe truth on
+                    # terminal dispute outcomes:
+                    #   won / warning_closed / charge_dismissed →
+                    #     merchant keeps the funds. payment_status is
+                    #     restored to "paid"; fraud_review_status is set
+                    #     to "review_required" so owner must explicitly
+                    #     re-review before ordinary Layer 2 gates apply.
+                    #   lost →
+                    #     funds returned to customer via chargeback.
+                    #     payment_status becomes "refunded"; order-level
+                    #     fraud_review_status = "blocked" permanently.
+                    order_frs = None
+                    order_reason = None
+                    order_payment_status = None
+                    if new_status in ("won", "warning_closed", "charge_dismissed"):
+                        order_frs = "review_required"
+                        order_reason = f"Stripe dispute resolved: {new_status} — owner re-review required"
+                        order_payment_status = "paid"
+                    elif new_status == "lost":
+                        order_frs = "blocked"
+                        order_reason = "Stripe dispute lost — fulfillment permanently blocked"
+                        order_payment_status = "refunded"
+                    if order_frs and order:
+                        order_upd: Dict[str, Any] = {
+                            "fraud_review_status": order_frs,
+                            "fraud_review_reason": order_reason,
+                            "fraud_review_updated_at": datetime.now(timezone.utc),
+                            "updated_at": datetime.now(timezone.utc),
+                        }
+                        if order_payment_status:
+                            order_upd["payment_status"] = order_payment_status
+                        await db.orders_v2.update_one({"id": order["id"]}, {"$set": order_upd})
                     from services.disputes_service import write_audit as _dsp_audit
                     await _dsp_audit(db, case_id=(prev or {}).get("case_id") or "",
                         order_number=order.get("order_number") or "",

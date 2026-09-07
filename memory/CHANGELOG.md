@@ -4,6 +4,45 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ---
 
+## 2026-02 — Pre-Launch Operational Maturity
+
+### 2026-02-17 — Layer 4 FINAL SIGN-OFF PASS ✓
+Three verification-driven regressions resolved before Layer 4 lock:
+- Webhook (`charge.dispute.closed`) now reconciles `payment_status` on
+  terminal outcomes: WON / `warning_closed` / `charge_dismissed` restore
+  `payment_status="paid"` (funds returned to merchant); LOST sets
+  `payment_status="refunded"` (chargeback reversed funds). Order-level
+  `fraud_review_status` unchanged (`review_required` for WON,
+  `blocked` for LOST). This is what lets a WON + owner-cleared order
+  become fulfillment-eligible again under ordinary Layer 2 rules
+  (Test I, Test M).
+- `POST /api/admin/orders/{on}/clear-fraud-hold` now refuses with
+  `409 LOST_DISPUTE_BLOCK` when the order carries a
+  Stripe-authoritative LOST dispute. Same rejection added to
+  `POST /api/admin/disputes/{case_id}/release-fraud-hold` (Test K).
+- Added canonical `services.disputes_service.has_active_dispute(db, on)`
+  helper (Section 7). ACTIVE = `needs_response`, `under_review`,
+  `warning_needs_response`, `warning_under_review`. TERMINAL = `won`,
+  `lost`, `warning_closed`, `charge_dismissed`, `charge_refunded`.
+- RMA `/approve-refund` refactored to use `has_active_dispute()` as
+  the primary interlock; `payment_status="disputed"` retained as
+  defensive belt-and-suspenders check.
+- 8 new/updated Layer 4 completion tests. 107 focused Layer 2/3/4
+  tests pass. 1229 full-suite tests pass (2 owner-accepted historical
+  drifts unchanged).
+- Files: `backend/services/disputes_service.py`,
+  `backend/routes/webhooks_stripe.py`,
+  `backend/routes/admin_orders.py`,
+  `backend/routes/admin_disputes.py`,
+  `backend/routes/returns.py`,
+  `backend/tests/test_layer4_completion.py`,
+  `memory/OPERATIONS.md`.
+- Locked invariants intact: PRODUCT_SLUGS=73, CHECKOUT_SUPPORTED_FAMILIES=84,
+  USD canonical, tax OFF, STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE unset (false),
+  PHI-20260901-4CBC5C untouched.
+
+---
+
 ## 2026-02 — Inspiration Vault & Shop Consolidation
 
 ### 2026-02-17 — Shop Catalog Consolidation (P1 ✓)

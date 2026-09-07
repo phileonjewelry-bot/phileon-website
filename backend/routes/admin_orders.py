@@ -596,6 +596,71 @@ async def correct_shipment(order_number: str, body: CorrectShipmentIn,
     return _serialize_order_for_admin(fresh)
 
 
+@router.post("/{order_number}/fraud-hold")
+async def order_fraud_hold(order_number: str, body: HoldIn,
+                             _admin=Depends(verify_admin)):
+    """Owner places an order on fraud review WITHOUT requiring a Stripe
+    dispute to exist. Independent of payment_status and dispute status.
+    Fulfillment eligibility (Layer 2) refuses shipping while this is set.
+    """
+    doc = await _load(order_number)
+    if order_number == "PHI-20260901-4CBC5C":
+        raise HTTPException(status_code=409,
+                              detail={"code": "LOCKED_HISTORICAL_ORDER"})
+    prev = doc.get("fraud_review_status") or "clear"
+    now = datetime.now(timezone.utc)
+    await db.orders_v2.update_one({"order_number": order_number}, {"$set": {
+        "fraud_review_status": "blocked",
+        "fraud_review_reason": body.reason.strip(),
+        "fraud_review_updated_at": now,
+        "updated_at": now,
+    }})
+    await write_audit(db, order_number=order_number,
+                      action="fraud_hold", previous=prev, new="blocked",
+                      actor="admin", reason=body.reason)
+    fresh = await db.orders_v2.find_one({"order_number": order_number},
+                                         _projection_for_get())
+    return _serialize_order_for_admin(fresh)
+
+
+@router.post("/{order_number}/clear-fraud-hold")
+async def order_clear_fraud_hold(order_number: str,
+                                    body: TransitionIn = TransitionIn(),
+                                    _admin=Depends(verify_admin)):
+    """Owner clears an order-level fraud hold. Other integrity gates still
+    apply — clearing this does not automatically unlock fulfillment.
+
+    Refuses to clear when the order carries a Stripe-authoritative LOST
+    dispute; a lost chargeback is a permanent fulfillment block and the
+    generic clear-fraud-hold path may not defeat it. Recovery from a lost
+    dispute requires a separately authorized owner path.
+    """
+    doc = await _load(order_number)
+    lost_dispute = await db.dispute_cases.find_one(
+        {"order_number": order_number, "status": "lost"},
+        {"_id": 0, "case_id": 1},
+    )
+    if lost_dispute:
+        raise HTTPException(status_code=409, detail={
+            "code": "LOST_DISPUTE_BLOCK",
+            "case_id": lost_dispute.get("case_id"),
+        })
+    prev = doc.get("fraud_review_status") or "clear"
+    now = datetime.now(timezone.utc)
+    await db.orders_v2.update_one({"order_number": order_number}, {"$set": {
+        "fraud_review_status": "cleared",
+        "fraud_review_reason": None,
+        "fraud_review_updated_at": now,
+        "updated_at": now,
+    }})
+    await write_audit(db, order_number=order_number,
+                      action="clear_fraud_hold", previous=prev, new="cleared",
+                      actor="admin", reason=body.note)
+    fresh = await db.orders_v2.find_one({"order_number": order_number},
+                                         _projection_for_get())
+    return _serialize_order_for_admin(fresh)
+
+
 # ────────────────────────────────────────────────────────────────
 # LEGACY generic fulfillment metadata setter (kept for backward compat)
 # ────────────────────────────────────────────────────────────────

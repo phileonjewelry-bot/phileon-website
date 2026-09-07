@@ -191,6 +191,12 @@ async def release_fraud_hold(case_id: str,
     prev = case.get("fraud_review_status") or "blocked"
     if prev != "blocked":
         raise HTTPException(status_code=409, detail={"code": "NOT_BLOCKED"})
+    # LOST dispute is a permanent fulfillment block. Generic release
+    # cannot defeat a Stripe-authoritative loss.
+    if (case.get("status") or "").lower() == "lost":
+        raise HTTPException(status_code=409, detail={
+            "code": "LOST_DISPUTE_BLOCK",
+        })
     await db.dispute_cases.update_one({"case_id": case_id}, {"$set": {
         "fraud_review_status": "cleared",
         "manual_hold_reason": None,

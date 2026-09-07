@@ -16,6 +16,32 @@ STRIPE_STATUSES = (
     "charge_refunded", "charge_dismissed",
 )
 
+# Canonical classification of Stripe dispute statuses. ACTIVE means the
+# money is still in-flight from Stripe's perspective (merchant response
+# possible). TERMINAL means Stripe has resolved the case one way or the
+# other. A historical terminal case must not remain "active" forever.
+ACTIVE_STRIPE_STATUSES = frozenset({
+    "needs_response", "under_review",
+    "warning_needs_response", "warning_under_review",
+})
+TERMINAL_STRIPE_STATUSES = frozenset({
+    "won", "lost", "warning_closed", "charge_dismissed", "charge_refunded",
+})
+
+
+async def has_active_dispute(db, order_number: str) -> bool:
+    """Return True iff `order_number` has at least one Stripe-authoritative
+    dispute case in an ACTIVE status. Never treats a terminal historical
+    dispute as active. Safe to call for orders with no dispute history."""
+    if not order_number:
+        return False
+    doc = await db.dispute_cases.find_one(
+        {"order_number": order_number,
+         "status": {"$in": list(ACTIVE_STRIPE_STATUSES)}},
+        {"_id": 0, "case_id": 1},
+    )
+    return doc is not None
+
 # PHILEON operational response state (separate from Stripe status).
 RESPONSE_STATES = (
     "not_started", "collecting_evidence", "ready_for_owner_review",
