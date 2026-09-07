@@ -870,3 +870,135 @@ async def test_vault_one_of_one_concurrent_reservations(db):
     failures = [r for r in results if not r[0]]
     assert len(successes) == 1
     assert all(r[2] == "OUT_OF_STOCK" for r in failures)
+
+
+# ═════════════════════════════════════════════════════════════════════
+# Layer 5 STOCK-SAFETY CORRECTION
+# Startup must NEVER auto-create physical inventory. Missing records
+# fail closed to CURRENTLY UNAVAILABLE. One-of-one pieces never
+# resurrect across restarts, DB restores, or code deploys.
+# ═════════════════════════════════════════════════════════════════════
+
+def test_server_startup_does_not_invoke_vault_seed():
+    """The seed function must NOT be wired into normal server startup.
+    Source inspection guards against a future regression that would
+    re-attach it silently."""
+    src = open("/app/backend/server.py").read()
+    # The function name must exist as a comment reference explaining
+    # why it is NOT called (defensive documentation), but it must NOT
+    # appear inside an active call.
+    assert "initialize_vault_one_of_one()" not in src or "initialize_vault_one_of_one(db)" not in src, \
+        "server.py must not invoke initialize_vault_one_of_one at startup"
+    # Explicit hard-check: no `await initialize_vault_one_of_one(` line.
+    active_call_marker = "await initialize_vault_one_of_one("
+    assert active_call_marker not in src, \
+        "server.py has an active call to initialize_vault_one_of_one — remove it"
+
+
+@with_db
+async def test_missing_vault_record_falls_back_to_unavailable(db):
+    """Fail-closed safety: a Vault piece with no owner-confirmed
+    inventory record must resolve to CURRENTLY UNAVAILABLE — never
+    READY TO SHIP, never auto-created."""
+    from services.inventory_service import resolve_availability
+    # No seed run — start from an empty inventory collection.
+    assert await db.inventory.count_documents({}) == 0
+    for slug in ("iv-altar", "iv-nova", "iv-roseline"):
+        r = await resolve_availability(db, {"product_id": slug})
+        assert r["state"] == "unavailable", f"{slug} must fail closed"
+        assert r["available"] is False
+    # And nothing was auto-created by the resolver.
+    assert await db.inventory.count_documents({}) == 0
+
+
+@with_db
+async def test_sold_piece_survives_simulated_restart(db):
+    """A sold-out one-of-one Vault piece must remain SOLD OUT across a
+    simulated restart. The explicit seed utility must NOT resurrect
+    it even if the owner runs it again for maintenance."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 compute_inventory_key,
+                                                 resolve_availability,
+                                                 try_reserve, attach_session,
+                                                 commit_by_session)
+    # One-time explicit initialization (simulating the historical
+    # owner-authorized seed).
+    await initialize_vault_one_of_one(db)
+    # Sell iv-altar.
+    item = {"product_id": "iv-altar"}
+    ok, _, _ = await try_reserve(db, item=item, qty=1,
+                                        reservation_group_id="g-sold")
+    assert ok
+    await attach_session(db, reservation_group_id="g-sold",
+                            stripe_checkout_session_id="cs_x")
+    await commit_by_session(db, stripe_checkout_session_id="cs_x")
+    r_sold = await resolve_availability(db, item)
+    assert r_sold["state"] == "sold_out"
+    # Simulate a restart: NO startup seed runs (that's the whole point
+    # of this correction). Verify state persists.
+    r_after = await resolve_availability(db, item)
+    assert r_after["state"] == "sold_out"
+    # Even if the owner accidentally invokes the explicit seed again,
+    # it must skip the sold piece — never resurrect.
+    result = await initialize_vault_one_of_one(db)
+    assert "iv-altar" in result["skipped"]
+    r_final = await resolve_availability(db, item)
+    assert r_final["state"] == "sold_out", "sold one-of-one MUST NOT resurrect"
+    key = compute_inventory_key(item)
+    doc = await db.inventory.find_one({"inventory_key": key}, {"_id": 0})
+    assert doc["stock_on_hand"] == 0
+
+
+@with_db
+async def test_future_vault_piece_never_auto_stocked(db):
+    """A hypothetical FUTURE Vault slug added to the catalog must never
+    automatically receive stock_on_hand=1. It resolves as CURRENTLY
+    UNAVAILABLE until the owner explicitly creates the inventory
+    record via /admin/inventory."""
+    from services.inventory_service import (resolve_availability,
+                                                 is_inspiration_vault_slug,
+                                                 _inspiration_vault_slugs)
+    # Simulate a future addition — use monkey-patch style: temporarily
+    # extend the Vault slug set via a wrapper.
+    real = _inspiration_vault_slugs()
+    future_slug = "iv-future-hypothetical-piece"
+    import services.inventory_service as inv_mod
+    original = inv_mod._inspiration_vault_slugs
+    inv_mod._inspiration_vault_slugs = lambda: real | {future_slug}
+    try:
+        assert is_inspiration_vault_slug(future_slug) is True
+        r = await resolve_availability(db, {"product_id": future_slug})
+        assert r["state"] == "unavailable"
+        assert r["available"] is False
+        # No stock was fabricated by the read.
+        assert await db.inventory.count_documents(
+            {"product_slug": future_slug}) == 0
+    finally:
+        inv_mod._inspiration_vault_slugs = original
+
+
+@with_db
+async def test_deleted_record_never_auto_recreated(db):
+    """Test 7: simulate a Vault record being absent (e.g. after a
+    partial DB corruption or an operator mistake) and confirm no
+    automatic replacement is created. Public state fails closed to
+    CURRENTLY UNAVAILABLE. Owner reconciliation is the only path
+    back to READY TO SHIP."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 compute_inventory_key,
+                                                 resolve_availability,
+                                                 try_reserve)
+    await initialize_vault_one_of_one(db)
+    key = compute_inventory_key({"product_id": "iv-monaco"})
+    # Delete the record — simulates corruption / operator mistake.
+    await db.inventory.delete_one({"inventory_key": key})
+    # Multiple availability queries must NOT auto-recreate the record.
+    for _ in range(3):
+        r = await resolve_availability(db, {"product_id": "iv-monaco"})
+        assert r["state"] == "unavailable"
+    assert await db.inventory.count_documents(
+        {"product_slug": "iv-monaco"}) == 0
+    # A reservation attempt must also refuse.
+    ok, _, kind = await try_reserve(db, item={"product_id": "iv-monaco"},
+                                          qty=1, reservation_group_id="gm")
+    assert ok is False and kind == "unavailable"

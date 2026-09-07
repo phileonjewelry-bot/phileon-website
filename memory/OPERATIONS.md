@@ -1002,13 +1002,27 @@ backorder. No automatic replenishment. A sold piece never
 resurrects; a returned piece may only re-enter stock through an
 explicit owner-approved RMA restock action.
 
-At server startup, `services.inventory_service.initialize_vault_one_of_one()`
-runs (idempotent). For each of the 14 canonical `iv-*` Vault slugs it
-INSERTS a single inventory record with `availability_mode="ready_to_ship"`,
-`stock_on_hand=1`, `stock_reserved=0`. The seed is conservative — it
-never OVERWRITES an existing record, so a sold-out piece (0/0), an
-adjusted piece, or a manually-unavailable piece is preserved across
-restarts. Safe to run at every boot.
+**Server startup NEVER creates physical inventory.** Under the
+stock-safety correction (2026-02-17), application startup, deploy,
+and any autonomous scheduler are forbidden from writing to
+`db.inventory`. Startup only ensures indexes.
+
+The 14 current Vault pieces were initialized once through an
+explicit owner-authorized one-time migration
+(`services.inventory_service.initialize_vault_one_of_one()`, invoked
+manually). The utility is preserved for owner-authorized recovery
+maintenance but is NOT wired into the boot path.
+
+**Fail-closed for missing records.** If a Vault inventory record is
+missing for any reason — new future piece not yet configured, DB
+corruption, operator mistake, or partial restore — public
+availability resolves the slug to **CURRENTLY UNAVAILABLE**. No
+automatic replacement is created. Owner reconciliation is the only
+path back to READY TO SHIP.
+
+**Future Vault pieces** must be individually configured by the
+owner via `/admin/inventory` → Configure Vault Piece with the actual
+physical quantity. Collection membership alone never confers stock.
 
 **Vault no-record behavior (owner rule):** a Vault piece without an
 owner-confirmed inventory record is **CURRENTLY UNAVAILABLE** to

@@ -6,6 +6,39 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 5 STOCK-SAFETY CORRECTION: no implicit startup seed ✓
+Enforced: normal server startup / deploy / DB restore NEVER creates
+physical inventory.
+- Removed automatic invocation of `initialize_vault_one_of_one()`
+  from `server.py` startup path. Startup now only ensures indexes.
+  A defensive comment in the startup block documents why the seed
+  is NOT invoked.
+- `initialize_vault_one_of_one()` kept as an explicit
+  owner-authorized recovery/maintenance utility with a strong
+  ⚠️ docstring warning against implicit invocation.
+- The 14 already-initialized Vault records remain untouched; all
+  still resolve `state=ready_to_ship` publicly.
+- Missing / deleted / never-created Vault records fail closed to
+  `state=unavailable` (CURRENTLY UNAVAILABLE) — a hypothetical
+  future Vault slug added to the pricing catalog will NOT receive
+  auto-stock.
+- 5 new safety tests: source-level guard against re-attaching the
+  seed to startup; missing-record fail-closed; sold-piece survives
+  simulated restart (and second explicit seed attempt); future
+  Vault slug never auto-stocked; deleted-record never
+  auto-recreated by resolver/reservation reads.
+- 44 Layer 5 tests all pass. 1277 full-suite tests pass (1
+  pre-existing Annie Rose drift only).
+- Files: `backend/server.py`,
+  `backend/services/inventory_service.py`,
+  `backend/tests/test_layer5_inventory.py`,
+  `memory/OPERATIONS.md`, `memory/RECOVERY_RUNBOOK.md`,
+  `memory/PRD.md`, `memory/CHANGELOG.md`.
+- Locked invariants intact: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test,
+  PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from
+  `refunded`, PHI-20260901-4CBC5C untouched.
+
 ### 2026-02-17 — Layer 5 FINAL OWNER-STOCK INITIALIZATION: one-of-one Vault ✓
 Owner-authoritative physical inventory seeded.
 - Every current Inspiration Vault piece is one-of-one physical stock:

@@ -2248,15 +2248,15 @@ async def startup_db():
     except Exception as e:
         logger.warning(f"inventory indexes init skipped: {type(e).__name__}: {e}")
 
-    # Inspiration Vault one-of-one seed (Layer 5 final owner-lock).
-    # Idempotent — only inserts when a canonical record is missing.
-    try:
-        from services.inventory_service import initialize_vault_one_of_one
-        vault_seed = await initialize_vault_one_of_one(db)
-        logger.info(f"Vault one-of-one seed: created={len(vault_seed['created'])} "
-                    f"skipped={len(vault_seed['skipped'])} total={vault_seed['total']}")
-    except Exception as e:
-        logger.warning(f"vault seed skipped: {type(e).__name__}: {e}")
+    # NOTE — Layer 5 stock-safety correction:
+    # Normal startup MUST NEVER create physical inventory. The
+    # Inspiration Vault is one-of-one; a missing record must never
+    # resurrect stock. The seed function
+    # `services.inventory_service.initialize_vault_one_of_one()` still
+    # exists as an explicit owner-authorized one-time maintenance
+    # utility, but it is NOT invoked here. Public availability falls
+    # back to CURRENTLY UNAVAILABLE for any Vault piece without an
+    # owner-confirmed inventory record (fail-closed).
 
     logger.info("Database indexes created")
 

@@ -706,17 +706,24 @@ async def ensure_indexes(db) -> None:
 
 
 async def initialize_vault_one_of_one(db) -> Dict[str, Any]:
-    """Owner-locked one-time seed: every canonical Inspiration Vault
-    piece begins with exactly ONE physical unit.
+    """EXPLICIT owner-authorized one-time inventory initialization.
 
-    Idempotent and CONSERVATIVE — only INSERTS a record when none
-    exists. If a Vault piece has ever been sold (`stock_on_hand=0`),
-    manually adjusted, marked unavailable, or otherwise touched by an
-    owner, this function leaves it entirely alone. Running at every
-    startup is safe: no piece is ever resurrected from sold state,
-    no owner-confirmed count is overwritten.
+    ⚠️ THIS IS NOT A STARTUP HOOK. It must NEVER be invoked implicitly
+    by normal server startup, application deploy, database restore,
+    or any autonomous scheduler. Under PHILEON's one-of-one Vault
+    rule, physical stock creation requires explicit owner action.
 
-    Returns a summary suitable for logging.
+    Kept as a callable utility for:
+      · The already-completed one-time initialization of the current
+        14 owner-confirmed Vault pieces (already applied).
+      · Owner-authorized maintenance / recovery workflows in which
+        the owner has explicitly confirmed that a specific missing
+        record needs to be re-created from an authoritative external
+        source (physical inventory audit).
+
+    Behavior remains conservative — only INSERTS when a canonical
+    record is missing. Sold pieces (`stock_on_hand=0`), adjusted,
+    and manually-unavailable records are preserved untouched.
     """
     now = datetime.now(timezone.utc)
     slugs = sorted(_inspiration_vault_slugs())

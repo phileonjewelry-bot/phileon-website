@@ -558,10 +558,35 @@ recovery action is required. If a stale HELD reservation appears
 without a `stripe_checkout_session_id`, it is safe to release via
 `inventory_service.release_group(reservation_group_id=...)`.
 
-### Suspected oversale
+### Inventory reconciliation / DB restore (Layer 5 stock-safety rule)
 
-STOP the affected configuration first:
-`POST /api/admin/inventory/{key}/mark-unavailable`. Then reconcile as
-above. Do NOT adjust `stock_on_hand` until every open reservation and
-Stripe Session is accounted for.
+**Never rerun a blanket "seed all Vault pieces at 1" initializer as
+part of recovery.** The startup path deliberately does not create
+inventory. Instead:
+
+1. Enumerate current `db.inventory` rows and compare against the
+   authoritative 14 canonical `iv-*` slugs.
+2. For every discrepancy, reconcile in this order:
+   a. `db.inventory_reservations` — recent HELD / COMMITTED /
+      RELEASED entries for the affected slug.
+   b. `db.orders_v2` — order records referencing the slug, with
+      `payment_status` and `inventory_snapshot`.
+   c. **Stripe** — authoritative payment / session state via
+      `stripe.checkout.Session.retrieve` and
+      `stripe.PaymentIntent.retrieve`.
+   d. `db.returns` — RMA state and any prior explicit restock audit
+      row.
+3. If a piece has been committed to zero and no RMA restock has
+   fired, its correct state is **SOLD OUT**. Do not fabricate
+   quantity to restore an old ready-to-ship view.
+4. If ownership of physical stock is uncertain, mark the affected
+   piece **CURRENTLY UNAVAILABLE** (via
+   `POST /api/admin/inventory/{key}/mark-unavailable`) until an
+   owner-authorized physical inventory audit resolves it.
+5. Only after the physical audit may the owner explicitly re-create
+   or adjust the record with a factual audit reason.
+
+**Fail closed, never fabricate stock.** A missing record resolves
+to CURRENTLY UNAVAILABLE — customers cannot buy a piece PHILEON
+does not confirm it holds.
 
