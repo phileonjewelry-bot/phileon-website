@@ -716,3 +716,157 @@ def test_vault_badge_mounted_in_app():
     src = open("/app/frontend/src/App.js").read()
     assert "VaultRouteBadge" in src
     assert "<VaultRouteBadge" in src
+
+
+# ═════════════════════════════════════════════════════════════════════
+# Layer 5 FINAL OWNER-STOCK INITIALIZATION — one-of-one Vault
+# ═════════════════════════════════════════════════════════════════════
+
+@with_db
+async def test_vault_seed_creates_14_pieces_at_qty_1(db):
+    """Seed initializes exactly 14 canonical iv-* records with
+    stock_on_hand=1, stock_reserved=0, ready_to_ship. No per-variant
+    or per-size sub-records."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 _inspiration_vault_slugs)
+    result = await initialize_vault_one_of_one(db)
+    assert result["total"] == 14
+    assert len(result["created"]) == 14
+    assert len(result["skipped"]) == 0
+    docs = [d async for d in db.inventory.find({}, {"_id": 0})]
+    assert len(docs) == 14
+    slugs = {d["product_slug"] for d in docs}
+    assert slugs == _inspiration_vault_slugs()
+    for d in docs:
+        assert d["availability_mode"] == "ready_to_ship"
+        assert d["stock_on_hand"] == 1
+        assert d["stock_reserved"] == 0
+        assert d["manual_unavailable"] is False
+
+
+@with_db
+async def test_vault_seed_is_idempotent_and_never_resurrects_sold(db):
+    """Running the seed twice creates 14, then 0. If a piece has been
+    committed to zero (sold), the second run must NOT resurrect it."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 compute_inventory_key,
+                                                 canonical_identity,
+                                                 try_reserve,
+                                                 attach_session,
+                                                 commit_by_session)
+    r1 = await initialize_vault_one_of_one(db)
+    assert len(r1["created"]) == 14
+    # Simulate a successful sale on one piece.
+    item = {"product_id": "iv-altar"}
+    ok, _, _ = await try_reserve(db, item=item, qty=1,
+                                        reservation_group_id="grp-sold")
+    assert ok
+    await attach_session(db, reservation_group_id="grp-sold",
+                            stripe_checkout_session_id="cs_sold")
+    n = await commit_by_session(db, stripe_checkout_session_id="cs_sold")
+    assert n == 1
+    # Verify sold state.
+    key = compute_inventory_key(item)
+    doc = await db.inventory.find_one({"inventory_key": key}, {"_id": 0})
+    assert doc["stock_on_hand"] == 0
+    assert doc["stock_reserved"] == 0
+    # Second seed run must skip everything — never resurrect the sold piece.
+    r2 = await initialize_vault_one_of_one(db)
+    assert len(r2["created"]) == 0
+    assert len(r2["skipped"]) == 14
+    doc2 = await db.inventory.find_one({"inventory_key": key}, {"_id": 0})
+    assert doc2["stock_on_hand"] == 0, "sold piece must NEVER be resurrected"
+
+
+@with_db
+async def test_vault_one_of_one_sale_flow(db):
+    """1 on hand → reserve → 1/1 → commit → 0/0 → state SOLD OUT."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 compute_inventory_key,
+                                                 resolve_availability,
+                                                 try_reserve, attach_session,
+                                                 commit_by_session)
+    await initialize_vault_one_of_one(db)
+    item = {"product_id": "iv-altar"}
+    r0 = await resolve_availability(db, item)
+    assert r0["state"] == "ready_to_ship" and r0["available"] is True
+    ok, rid, kind = await try_reserve(db, item=item, qty=1,
+                                            reservation_group_id="grp-A")
+    assert ok and kind == "ready_to_ship"
+    key = compute_inventory_key(item)
+    doc = await db.inventory.find_one({"inventory_key": key}, {"_id": 0})
+    assert doc["stock_on_hand"] == 1 and doc["stock_reserved"] == 1
+    await attach_session(db, reservation_group_id="grp-A",
+                            stripe_checkout_session_id="cs_x")
+    await commit_by_session(db, stripe_checkout_session_id="cs_x")
+    r1 = await resolve_availability(db, item)
+    assert r1["state"] == "sold_out"
+    assert r1["available"] is False
+
+
+@with_db
+async def test_vault_one_of_one_abandoned_checkout_flow(db):
+    """1 on hand → reserve → 1/1 → session expires → release → 1/0 →
+    state READY TO SHIP again. Not replenishment — same physical unit."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 compute_inventory_key,
+                                                 resolve_availability,
+                                                 try_reserve, attach_session,
+                                                 release_by_session)
+    await initialize_vault_one_of_one(db)
+    item = {"product_id": "iv-echelle"}
+    ok, _, _ = await try_reserve(db, item=item, qty=1,
+                                        reservation_group_id="grp-E")
+    assert ok
+    await attach_session(db, reservation_group_id="grp-E",
+                            stripe_checkout_session_id="cs_exp")
+    await release_by_session(db, stripe_checkout_session_id="cs_exp",
+                                  reason="checkout.session.expired")
+    r = await resolve_availability(db, item)
+    assert r["state"] == "ready_to_ship"
+    assert r["available"] is True
+
+
+@with_db
+async def test_vault_alias_shares_single_stock_pool(db):
+    """Public URL alias must resolve to the same inventory record as
+    the canonical iv-* slug — never create a second physical unit."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 compute_inventory_key,
+                                                 resolve_availability)
+    await initialize_vault_one_of_one(db)
+    canonical_item = {"product_id": "iv-ribbon-regale"}
+    alias_item_a  = {"product_id": "ribbon-regale"}
+    alias_item_b  = {"product_id": "gold-theory-ribbon"}
+    ka = compute_inventory_key(canonical_item)
+    kb = compute_inventory_key(alias_item_a)
+    kc = compute_inventory_key(alias_item_b)
+    assert ka == kb == kc
+    total_ribbon_records = await db.inventory.count_documents(
+        {"product_slug": "iv-ribbon-regale"})
+    assert total_ribbon_records == 1, "aliases must not create duplicate physical units"
+    r_alias = await resolve_availability(db, alias_item_b)
+    r_canon = await resolve_availability(db, canonical_item)
+    assert r_alias["inventory_key"] == r_canon["inventory_key"]
+    assert r_alias["state"] == r_canon["state"] == "ready_to_ship"
+
+
+@with_db
+async def test_vault_one_of_one_concurrent_reservations(db):
+    """One-of-one concurrency: 8 concurrent buyers, ONE succeeds, seven
+    OUT_OF_STOCK. Uses the same atomic $expr primitive as production."""
+    from services.inventory_service import (initialize_vault_one_of_one,
+                                                 try_reserve)
+    await initialize_vault_one_of_one(db)
+    item = {"product_id": "iv-nova"}
+    N = 8
+
+    async def _one(i):
+        return await try_reserve(db, item=item, qty=1,
+                                    reservation_group_id=f"nova-{i}")
+
+    results = await asyncio.gather(*[_one(i) for i in range(N)])
+    successes = [r for r in results if r[0]]
+    failures = [r for r in results if not r[0]]
+    assert len(successes) == 1
+    assert all(r[2] == "OUT_OF_STOCK" for r in failures)

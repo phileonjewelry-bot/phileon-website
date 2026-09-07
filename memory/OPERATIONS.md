@@ -995,6 +995,21 @@ events.
 `ready_to_ship` with finite physical inventory.** All other PHILEON
 merchandise is `made_to_order` by default.
 
+**Vault stock policy — one-of-one, when it's gone, it's gone.** Every
+current Inspiration Vault piece exists as exactly ONE physical unit.
+No per-size, per-metal, per-karat sub-records. No preorder. No
+backorder. No automatic replenishment. A sold piece never
+resurrects; a returned piece may only re-enter stock through an
+explicit owner-approved RMA restock action.
+
+At server startup, `services.inventory_service.initialize_vault_one_of_one()`
+runs (idempotent). For each of the 14 canonical `iv-*` Vault slugs it
+INSERTS a single inventory record with `availability_mode="ready_to_ship"`,
+`stock_on_hand=1`, `stock_reserved=0`. The seed is conservative — it
+never OVERWRITES an existing record, so a sold-out piece (0/0), an
+adjusted piece, or a manually-unavailable piece is preserved across
+restarts. Safe to run at every boot.
+
 **Vault no-record behavior (owner rule):** a Vault piece without an
 owner-confirmed inventory record is **CURRENTLY UNAVAILABLE** to
 customers — it is NEVER shown as `made_to_order`. This is enforced by

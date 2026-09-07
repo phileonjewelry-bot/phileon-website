@@ -703,3 +703,73 @@ async def ensure_indexes(db) -> None:
         partialFilterExpression={"action": "restock",
                                     "rma_number": {"$exists": True}},
     )
+
+
+async def initialize_vault_one_of_one(db) -> Dict[str, Any]:
+    """Owner-locked one-time seed: every canonical Inspiration Vault
+    piece begins with exactly ONE physical unit.
+
+    Idempotent and CONSERVATIVE — only INSERTS a record when none
+    exists. If a Vault piece has ever been sold (`stock_on_hand=0`),
+    manually adjusted, marked unavailable, or otherwise touched by an
+    owner, this function leaves it entirely alone. Running at every
+    startup is safe: no piece is ever resurrected from sold state,
+    no owner-confirmed count is overwritten.
+
+    Returns a summary suitable for logging.
+    """
+    now = datetime.now(timezone.utc)
+    slugs = sorted(_inspiration_vault_slugs())
+    created = []
+    skipped = []
+    for slug in slugs:
+        # Canonical single-piece identity — no per-size / per-metal /
+        # per-karat variants. One physical piece = one inventory_key.
+        # Vault pieces are one-of-one with NO variants; the canonical
+        # identity therefore uses `None` (null-sentinel) for every
+        # optional configuration field, matching the customer
+        # `POST /api/availability/resolve {slug}` payload exactly so
+        # a single inventory record serves both the seed and every
+        # public lookup.
+        item = {"product_id": slug}
+        key = compute_inventory_key(item)
+        canonical = canonical_identity(item)
+        existing = await db.inventory.find_one({"inventory_key": key},
+                                                    {"_id": 0, "inventory_key": 1})
+        if existing:
+            skipped.append(slug)
+            continue
+        doc = {
+            "inventory_key": key,
+            "product_slug": canonical["slug"],
+            "variant": canonical["variant"],
+            "karat": canonical["karat"],
+            "metal_colour": canonical["metal_colour"],
+            "ring_size": canonical["ring_size"],
+            "availability_mode": MODE_READY_TO_SHIP,
+            "stock_on_hand": 1,
+            "stock_reserved": 0,
+            "manual_unavailable": False,
+            "low_stock_threshold": None,
+            "owner_note": "One-of-one Vault seed — owner confirmed physical unit",
+            "created_at": now,
+            "updated_at": now,
+        }
+        # `insert_one` with the unique inventory_key index guarantees
+        # exactly one record per canonical slug even under a startup
+        # race between multiple workers.
+        try:
+            await db.inventory.insert_one(doc)
+            await _audit(db, inventory_key=key, action="vault_seed",
+                          actor="system", delta=1,
+                          stock_before=0, stock_after=1,
+                          reserved_before=0, reserved_after=0,
+                          reason="Layer 5 one-of-one Vault seed",
+                          canonical=canonical,
+                          mode=MODE_READY_TO_SHIP)
+            created.append(slug)
+        except Exception:
+            # Another worker beat us to it — treat as skipped.
+            skipped.append(slug)
+    return {"created": created, "skipped": skipped,
+            "total": len(slugs)}

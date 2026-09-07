@@ -6,6 +6,33 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 5 FINAL OWNER-STOCK INITIALIZATION: one-of-one Vault ✓
+Owner-authoritative physical inventory seeded.
+- Every current Inspiration Vault piece is one-of-one physical stock:
+  `stock_on_hand=1`, `stock_reserved=0`, `ready_to_ship`. No per-
+  size/metal/karat sub-records — one canonical `inventory_key` per
+  physical piece.
+- New `services.inventory_service.initialize_vault_one_of_one()` +
+  startup hook in `server.py`. Idempotent: only INSERTS when a
+  canonical record is missing. Never overwrites existing stock,
+  never resurrects a sold-out piece across restarts.
+- 14 records seeded in production DB (verified). All 14 public URLs
+  (canonical + aliases including `gold-theory-ribbon`→
+  `iv-ribbon-regale`) resolve `state=ready_to_ship, available=true`.
+- 6 new tests: seed correctness, seed idempotency + non-resurrection,
+  sale flow (1→1/1→0/0 SOLD OUT), abandoned checkout flow (release
+  restores READY TO SHIP), alias shares single stock pool,
+  one-of-one concurrency (8 racers → 1 winner, 7 OUT_OF_STOCK).
+  39 Layer 5 tests all pass. 1272 full-suite tests pass (1 pre-existing
+  Annie Rose drift only).
+- Locked invariants intact: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test,
+  PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from
+  `refunded`, PHI-20260901-4CBC5C untouched.
+- Files touched: `backend/services/inventory_service.py`,
+  `backend/server.py`, `backend/tests/test_layer5_inventory.py`,
+  `memory/OPERATIONS.md`, `memory/PRD.md`, `memory/CHANGELOG.md`.
+
 ### 2026-02-17 — Layer 5 FINAL COMPLETION PASS: Vault customer truth + PDP wiring ✓
 Three customer-facing gaps closed:
 - **Vault no-record → CURRENTLY UNAVAILABLE (never MADE TO ORDER).**
