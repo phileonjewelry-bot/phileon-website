@@ -631,8 +631,14 @@ async def stripe_webhook(request: Request):
                     #     re-review before ordinary Layer 2 gates apply.
                     #   lost →
                     #     funds returned to customer via chargeback.
-                    #     payment_status becomes "refunded"; order-level
-                    #     fraud_review_status = "blocked" permanently.
+                    #     A LOST CHARGEBACK IS NOT A MERCHANT REFUND —
+                    #     we set payment_status to the canonical
+                    #     "chargeback_lost" (NOT "refunded") to preserve
+                    #     the accounting/CX distinction. No refund
+                    #     email is emitted, no stripe_refund_id is
+                    #     fabricated. Order-level fraud_review_status
+                    #     becomes "blocked" (permanent fulfillment
+                    #     block).
                     order_frs = None
                     order_reason = None
                     order_payment_status = None
@@ -643,7 +649,7 @@ async def stripe_webhook(request: Request):
                     elif new_status == "lost":
                         order_frs = "blocked"
                         order_reason = "Stripe dispute lost — fulfillment permanently blocked"
-                        order_payment_status = "refunded"
+                        order_payment_status = "chargeback_lost"
                     if order_frs and order:
                         order_upd: Dict[str, Any] = {
                             "fraud_review_status": order_frs,

@@ -593,9 +593,15 @@ async def approve_refund(rma_number: str, body: RefundIn = RefundIn(),
     # Layer 4 interlock: refund is blocked while an ACTIVE Stripe dispute
     # exists on this order. Terminal historical disputes do NOT block
     # ordinary Layer 3 refunds — a WON dispute + owner-cleared fraud
-    # review may proceed under normal Layer 3 rules. LOST disputes reset
-    # payment_status to "refunded" upstream, which independently blocks
-    # via already_fully_refunded semantics.
+    # review may proceed under normal Layer 3 rules. A LOST dispute
+    # sets payment_status to the canonical "chargeback_lost" upstream
+    # (NOT "refunded") — it is a distinct terminal financial event
+    # that permanently blocks ordinary RMA refunds. No refund email
+    # or stripe_refund_id is ever fabricated from a chargeback loss.
+    if (order.get("payment_status") or "").lower() == "chargeback_lost":
+        raise HTTPException(status_code=409, detail={
+            "code": "CHARGEBACK_LOST_BLOCKS_REFUND",
+        })
     from services.disputes_service import has_active_dispute
     if await has_active_dispute(db, case.get("order_number")):
         active_dispute = await db.dispute_cases.find_one({

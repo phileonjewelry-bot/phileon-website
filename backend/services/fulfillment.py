@@ -84,7 +84,8 @@ class FulfillmentEligibility:
 
 
 _TERMINAL_BAD_PAYMENT_STATES = {"failed", "cancelled", "refunded",
-                                "partially_refunded", "disputed"}
+                                "partially_refunded", "disputed",
+                                "chargeback_lost"}
 
 
 def evaluate_eligibility(order: Dict[str, Any]) -> FulfillmentEligibility:

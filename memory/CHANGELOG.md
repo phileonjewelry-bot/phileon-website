@@ -6,6 +6,28 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 4 SEMANTIC CORRECTION ✓
+Chargeback-loss ≠ merchant refund. A LOST Stripe dispute no longer
+sets `payment_status = "refunded"`. New canonical state:
+`payment_status = "chargeback_lost"`.
+- `models_orders.py`: enum comment extended to include `chargeback_lost`.
+- `services/fulfillment.py`: `chargeback_lost` added to
+  `_TERMINAL_BAD_PAYMENT_STATES` — fulfillment is permanently blocked
+  with reason `payment_chargeback_lost`.
+- `services/returns_service.py`: return-eligibility now reports
+  distinct reason `chargeback_lost_blocks_refund` (never
+  `already_fully_refunded`).
+- `routes/returns.py::approve_refund`: explicit
+  `409 CHARGEBACK_LOST_BLOCKS_REFUND` guard.
+- `routes/webhooks_stripe.py::charge.dispute.closed=lost` sets
+  `payment_status="chargeback_lost"`. No `stripe_refund_id` is
+  fabricated. No refund-issued email is emitted.
+- 5 new tests (`test_layer4_completion.py`): eligibility block,
+  return eligibility distinct reason, approve-refund guard, webhook
+  branch invariant, customer payload projection isolation.
+- 112 focused L2/L3/L4 tests pass. 1234 full-suite tests pass
+  (2 owner-accepted pre-existing drifts unchanged).
+
 ### 2026-02-17 — Layer 4 FINAL SIGN-OFF PASS ✓
 Three verification-driven regressions resolved before Layer 4 lock:
 - Webhook (`charge.dispute.closed`) now reconciles `payment_status` on

@@ -902,23 +902,34 @@ permit fulfillment. Enforced server-side in `evaluate_eligibility`.
     fulfillment resumes — no auto-resume.
   - `charge.dispute.closed` with `status=lost` → order flips to
     `fraud_review_status="blocked"` (permanent fulfillment block), and
-    `payment_status` is set to `"refunded"` (Stripe returned funds to
-    customer via chargeback). Generic `clear-fraud-hold` is REJECTED
-    with `409 LOST_DISPUTE_BLOCK` on both the order-level and
-    dispute-case-level endpoints — recovery requires a separately
-    authorized owner path.
+    `payment_status` is set to the canonical **`chargeback_lost`**
+    (NOT `refunded`). A lost chargeback is a DISTINCT terminal
+    financial event; it is never represented as a merchant refund.
+    No `stripe_refund_id` is fabricated. No refund-issued email is
+    emitted. Recovery from a lost chargeback, if ever needed,
+    requires a separately authorized owner path.
+    Generic `clear-fraud-hold` is REJECTED with `409 LOST_DISPUTE_BLOCK`
+    on both the order-level and dispute-case-level endpoints.
 - **Active-vs-terminal helper**: `services.disputes_service.has_active_dispute(db, order_number)`
   is the canonical helper. ACTIVE = `needs_response`, `under_review`,
   `warning_needs_response`, `warning_under_review`. TERMINAL = `won`,
   `lost`, `warning_closed`, `charge_dismissed`, `charge_refunded`.
   Historical terminal cases are NEVER treated as active.
-- **Refund** (Layer 3): `/approve-refund` refuses with
-  `409 ACTIVE_DISPUTE_BLOCKS_REFUND` when `has_active_dispute()` is
-  true (or, defensively, when `payment_status` is still `"disputed"`
-  awaiting webhook reconciliation). A WON dispute followed by an
-  owner-cleared fraud review may proceed under ordinary Layer 3 rules.
-  A LOST dispute independently blocks via `already_fully_refunded`
-  because `payment_status` becomes `"refunded"`.
+- **Refund** (Layer 3): `/approve-refund` refuses with:
+  · `409 ACTIVE_DISPUTE_BLOCKS_REFUND` when `has_active_dispute()` is
+    true (or, defensively, when `payment_status` is still `"disputed"`
+    awaiting webhook reconciliation);
+  · `409 CHARGEBACK_LOST_BLOCKS_REFUND` when `payment_status` is
+    `"chargeback_lost"` (distinct code — never conflated with
+    `already_fully_refunded`).
+  A WON dispute followed by an owner-cleared fraud review may proceed
+  under ordinary Layer 3 rules.
+- **Payment status vocabulary** (`orders_v2.payment_status`):
+  `pending | requires_action | authorized | paid | failed | cancelled |
+  refunded | partially_refunded | disputed | chargeback_lost`.
+  `refunded` is reserved for the merchant refund path
+  (`charge.refunded` webhook only, populates `stripe_refund_id`).
+  `chargeback_lost` is reserved for terminal dispute loss.
 - **Historical**: `PHI-20260901-4CBC5C` locked from
   `/api/admin/orders/{on}/fraud-hold` with `409 LOCKED_HISTORICAL_ORDER`.
 

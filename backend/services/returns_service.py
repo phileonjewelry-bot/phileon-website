@@ -173,6 +173,12 @@ def evaluate_item_eligibility(order: Dict[str, Any], item: Dict[str, Any],
         reasons.append("payment_not_paid")
     if ps == "refunded":
         reasons.append("already_fully_refunded")
+    if ps == "chargeback_lost":
+        # A lost chargeback is NOT a merchant refund. It is a distinct
+        # terminal financial state that permanently blocks ordinary
+        # RMA refunds. Recovery, if ever needed, must go through a
+        # separately authorized owner path.
+        reasons.append("chargeback_lost_blocks_refund")
 
     if policy_class in _FINAL_SALE_CLASSES:
         reasons.append(f"final_sale:{policy_class}")

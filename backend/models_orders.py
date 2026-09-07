@@ -112,7 +112,7 @@ class OrderV2(BaseModel):
     provider_session_id: Optional[str] = None
     provider_session_url: Optional[str] = None
     provider_payment_intent_id: Optional[str] = None
-    payment_status: str = "pending"     # pending|requires_action|authorized|paid|failed|cancelled|refunded|partially_refunded|disputed
+    payment_status: str = "pending"     # pending|requires_action|authorized|paid|failed|cancelled|refunded|partially_refunded|disputed|chargeback_lost
     fulfilment_status: str = "awaiting_payment"
     # Shipping-integrity flag — decoupled from `payment_status`. Set to
     # `"pending_review"` when Stripe confirms payment succeeded but the
