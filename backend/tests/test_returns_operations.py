@@ -261,6 +261,7 @@ def _install_fake_db(monkeypatch, orders=None, returns=None):
         orders_v2=_FakeColl(orders or [], key="order_number"),
         returns=_FakeColl(returns or [], key="rma_number"),
         returns_audit=_FakeColl([], key="rma_number"),
+        dispute_cases=_FakeColl([], key="case_id"),   # Layer 4 interlock
     )
     monkeypatch.setattr(mod, "db", fake)
     return fake, mod

@@ -846,3 +846,86 @@ delivery outcome.
 - No LIVE refund execution — Stripe stays TEST, and the refund endpoint
   refuses with `409 LIVE_REFUND_DISABLED_IN_LAYER_3` if `STRIPE_MODE`
   ever becomes live before a dedicated hardened refund pass.
+
+---
+
+## APPENDIX E — Fraud / Dispute / Chargeback Readiness (Layer 4)
+
+### E.1 — Stripe is authoritative
+
+Stripe remains the single source of truth for: dispute existence,
+amount, currency, reason, status, evidence deadline, and win/loss.
+PHILEON maintains an operational **mirror** in `dispute_cases`. The
+mirror is idempotent (`stripe_dispute_id` unique index) and NEVER
+overwrites Stripe truth.
+
+### E.2 — Case model (`dispute_cases`)
+
+`case_id` (`DSP-YYYY-XXXXXX`), `order_number`, `stripe_dispute_id`,
+`stripe_charge_id`, `stripe_payment_intent_id`, `status`, `reason`,
+`amount_cents`, `currency`, `evidence_due_by`, `is_charge_refundable`,
+`fraud_review_status` (clear / review_required / under_review /
+cleared / blocked), `response_status` (not_started / collecting_evidence
+/ ready_for_owner_review / approved_for_submission / submitted / closed),
+`manual_hold_reason`, `last_webhook_event_id`, `created_at`, `updated_at`,
+`closed_at`.
+
+### E.3 — Webhook coverage
+
+`webhooks_stripe.py` now handles `charge.dispute.created`,
+`charge.dispute.updated`, `charge.dispute.closed`. Every event
+verifies signature, deduplicates via `webhook_event_ids`, mirrors the
+case idempotently, and NEVER erases fulfillment / shipping / RMA history.
+
+### E.4 — Interlocks
+
+- **Fulfillment** (Layer 2): `payment_status="disputed"` already fails
+  `evaluate_eligibility`. Verified.
+- **Refund** (Layer 3): `POST /api/admin/returns/{rma}/approve-refund`
+  refuses with `409 ACTIVE_DISPUTE_BLOCKS_REFUND` when the order's
+  `payment_status="disputed"` OR when an active `dispute_cases` row
+  exists (`status ∈ needs_response, under_review, warning_*`).
+- **Historical**: `PHI-20260901-4CBC5C` locked from fraud-hold with
+  `409 LOCKED_HISTORICAL_ORDER`.
+
+### E.5 — Admin endpoints (JWT-gated, audit-logged)
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/admin/disputes?status=…&q=…` | Queue (9 tabs: new / needs_response / evidence_ready / submitted / under_review / won / lost / closed / all). Urgency pill (`normal / attention / urgent / overdue`) computed from `evidence_due_by`. |
+| `GET /api/admin/disputes/{case_id}` | Detail + audit + **evidence packet** assembled from `orders_v2` + `returns` + `fulfillment_audit`. Missing evidence marked `NOT_AVAILABLE`. NEVER fabricates. Excludes secrets, unrelated orders, webhook payloads. |
+| `POST /api/admin/disputes/{case_id}/note` | Factual owner note (audit-only). |
+| `POST /api/admin/disputes/{case_id}/fraud-hold` | Sets `fraud_review_status="blocked"` with reason. Never changes payment truth. |
+| `POST /api/admin/disputes/{case_id}/release-fraud-hold` | Clears manual hold. Other integrity/dispute gates still apply. |
+| `POST /api/admin/disputes/{case_id}/response-status` | Owner operational state (state-machine gated). `"submitted"` refused with `409 LIVE_SUBMISSION_DISABLED_IN_LAYER_4` if `STRIPE_MODE=live`. |
+| `POST /api/admin/disputes/{case_id}/close` | Closes case. |
+
+### E.6 — Daily fraud/dispute checklist (owner)
+
+1. Open **Admin → Disputes**.
+2. Sort by urgency (overdue / urgent / attention first).
+3. Confirm fulfillment hold on unshipped orders.
+4. Review Stripe reason + status.
+5. Gather shipment + payment evidence (already assembled in the packet).
+6. Review RMA / refund history for the order.
+7. Prepare factual response through Stripe Dashboard (Layer 4 does NOT
+   submit evidence automatically).
+8. Owner approves response.
+9. Submit via Stripe Dashboard (or hardened submission path in a
+   future phase).
+10. Monitor Stripe result.
+11. Close case in PHILEON admin.
+12. Re-review any held fulfillment.
+
+### E.7 — What Layer 4 explicitly does NOT do
+
+- No automated customer blacklisting.
+- No ML fraud scoring.
+- No external fraud vendor.
+- No automatic dispute evidence submission.
+- No automatic refund-on-dispute.
+- No identity verification vendor.
+- No customer confrontation emails.
+- No carrier delivery webhook.
+- No LIVE dispute response submission (refused with
+  `409 LIVE_SUBMISSION_DISABLED_IN_LAYER_4`).

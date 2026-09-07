@@ -431,6 +431,44 @@ be cleared from the admin panel.
 
 ---
 
+## 24. Dispute / chargeback recovery (Layer 4)
+
+**When:** A `charge.dispute.created` webhook is missed, a duplicate arrives,
+the webhook secret rotates during a dispute, or the DB is restored with
+stale dispute state.
+
+**Golden rule:** Stripe is authoritative for dispute existence, amount,
+status, and result. Never trust stale local dispute state after a restore
+or outage — re-fetch from Stripe first.
+
+Steps:
+1. **Pause the Stripe webhook endpoint** (do NOT delete) if webhook secret
+   rotation is in progress.
+2. In Stripe Dashboard → Disputes, list current open disputes for the
+   affected window.
+3. Compare against `dispute_cases` in Mongo.
+4. For any Stripe dispute NOT in `dispute_cases` → **do NOT hand-craft the
+   row.** Instead, in Stripe Dashboard use "Resend to endpoint" to replay
+   `charge.dispute.created`. The idempotent webhook creates the mirror.
+5. For any `dispute_cases` row NOT in Stripe → this should be empty. If
+   not, the mirror is phantom; investigate before mutating.
+6. **Do NOT release a `fraud_review_status="blocked"` hold** on an
+   unshipped order without confirming Stripe status is `won` /
+   `warning_closed` / `charge_dismissed`.
+7. **Mistaken fulfillment during dispute:** if an order was shipped after
+   `payment_status="disputed"`, do NOT rewrite shipping history. Add a
+   factual owner note on the dispute case, retain the shipment evidence,
+   and prepare the response for Stripe Dashboard submission.
+8. Un-pause the webhook only after `dispute_cases` view matches Stripe.
+
+**Never** submit dispute evidence to Stripe via the API in Layer 4. The
+LIVE-submission path returns `409 LIVE_SUBMISSION_DISABLED_IN_LAYER_4`.
+Owner submits through the Stripe Dashboard until a hardened path is
+separately approved.
+
+---
+
+
 
 ## APPENDIX A — do-not-do list
 - Do NOT `db.orders_v2.drop()` for any reason.

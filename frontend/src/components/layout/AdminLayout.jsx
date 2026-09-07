@@ -15,6 +15,7 @@ import {
   Truck,
   Package,
   RefreshCcw,
+  ShieldAlert,
   Bell
 } from 'lucide-react';
 
@@ -24,6 +25,7 @@ const sidebarLinks = [
   { name: 'Fulfillment', path: '/admin/fulfillment', icon: Package },
   { name: 'Shipments', path: '/admin/shipments', icon: Truck },
   { name: 'Returns', path: '/admin/returns', icon: RefreshCcw },
+  { name: 'Disputes', path: '/admin/disputes', icon: ShieldAlert },
   { name: 'Retention', path: '/admin/retention', icon: Bell },
   { name: 'Collections', path: '/admin/collections', icon: FolderOpen },
   { name: 'Products', path: '/admin/products', icon: Gem },

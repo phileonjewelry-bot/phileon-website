@@ -558,6 +558,68 @@ async def stripe_webhook(request: Request):
             await db.orders_v2.update_one({"id": order["id"]},
                 {"$set": {"payment_status": "disputed", "updated_at": datetime.now(timezone.utc)},
                  "$addToSet": {"webhook_event_ids": event["id"]}})
+            # Layer 4 — mirror as a PHILEON dispute_cases record. Idempotent
+            # via stripe_dispute_id unique index. Never overwrites Stripe truth.
+            try:
+                from services.disputes_service import new_case_id, write_audit as _dsp_audit
+                stripe_dispute_id = obj.get("id") or f"dp_test_{event['id']}"
+                existing = await db.dispute_cases.find_one({"stripe_dispute_id": stripe_dispute_id}, {"_id": 0})
+                now = datetime.now(timezone.utc)
+                due_raw = obj.get("evidence_details", {}).get("due_by")
+                due_by = datetime.fromtimestamp(due_raw, tz=timezone.utc) if isinstance(due_raw, (int, float)) else None
+                if not existing:
+                    case = {
+                        "case_id": new_case_id(),
+                        "order_number": order.get("order_number"),
+                        "stripe_dispute_id": stripe_dispute_id,
+                        "stripe_charge_id": obj.get("charge"),
+                        "stripe_payment_intent_id": obj.get("payment_intent"),
+                        "status": obj.get("status") or "needs_response",
+                        "reason": obj.get("reason"),
+                        "amount_cents": int(obj.get("amount") or 0),
+                        "currency": (obj.get("currency") or "usd").upper(),
+                        "evidence_due_by": due_by,
+                        "is_charge_refundable": bool(obj.get("is_charge_refundable")),
+                        "fraud_review_status": "review_required",
+                        "response_status": "not_started",
+                        "last_webhook_event_id": event["id"],
+                        "created_at": now,
+                        "updated_at": now,
+                    }
+                    await db.dispute_cases.insert_one(case)
+                    await _dsp_audit(db, case_id=case["case_id"],
+                        order_number=order.get("order_number") or "",
+                        action="webhook_dispute_created",
+                        previous=None, new=case["status"],
+                        actor="stripe_webhook", note=None)
+            except Exception as _e:
+                logger.warning(f"dispute mirror skipped: {type(_e).__name__}")
+
+    elif etype in ("charge.dispute.updated", "charge.dispute.closed"):
+        if order:
+            try:
+                stripe_dispute_id = obj.get("id")
+                if stripe_dispute_id:
+                    prev = await db.dispute_cases.find_one({"stripe_dispute_id": stripe_dispute_id}, {"_id": 0})
+                    prev_status = (prev or {}).get("status")
+                    new_status = obj.get("status") or prev_status
+                    due_raw = obj.get("evidence_details", {}).get("due_by")
+                    due_by = datetime.fromtimestamp(due_raw, tz=timezone.utc) if isinstance(due_raw, (int, float)) else prev.get("evidence_due_by") if prev else None
+                    upd = {"status": new_status,
+                            "evidence_due_by": due_by,
+                            "last_webhook_event_id": event["id"],
+                            "updated_at": datetime.now(timezone.utc)}
+                    if etype == "charge.dispute.closed" or new_status in ("won", "lost", "warning_closed", "charge_dismissed"):
+                        upd["closed_at"] = datetime.now(timezone.utc)
+                    await db.dispute_cases.update_one({"stripe_dispute_id": stripe_dispute_id}, {"$set": upd})
+                    from services.disputes_service import write_audit as _dsp_audit
+                    await _dsp_audit(db, case_id=(prev or {}).get("case_id") or "",
+                        order_number=order.get("order_number") or "",
+                        action=f"webhook_dispute_{etype.split('.')[-1]}",
+                        previous=prev_status, new=new_status,
+                        actor="stripe_webhook", note=None)
+            except Exception as _e:
+                logger.warning(f"dispute mirror update skipped: {type(_e).__name__}")
 
     else:
         logger.info(f"Unhandled Stripe event type: {etype}")

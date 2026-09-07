@@ -1175,6 +1175,8 @@ app.include_router(admin_orders_router, prefix="/api")
 from routes.returns import customer_router as returns_customer_router, admin_router as returns_admin_router
 app.include_router(returns_customer_router, prefix="/api")
 app.include_router(returns_admin_router, prefix="/api")
+from routes.admin_disputes import router as admin_disputes_router
+app.include_router(admin_disputes_router, prefix="/api")
 app.include_router(metals_router)
 
 from starlette.types import ASGIApp, Receive, Scope, Send
@@ -2227,6 +2229,13 @@ async def startup_db():
         await _ret3_indexes(db)
     except Exception as e:
         logger.warning(f"returns indexes init skipped: {type(e).__name__}: {e}")
+
+    # Disputes / chargebacks indexes (Layer 4).
+    try:
+        from services.disputes_service import ensure_indexes as _dsp_indexes
+        await _dsp_indexes(db)
+    except Exception as e:
+        logger.warning(f"disputes indexes init skipped: {type(e).__name__}: {e}")
 
     logger.info("Database indexes created")
 
