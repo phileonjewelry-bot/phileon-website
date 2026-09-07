@@ -989,6 +989,33 @@ Server-authoritative inventory system. Prevents oversale of finite
 business model. NEVER auto-restocks on refund, chargeback, or dispute
 events.
 
+## PHILEON operating rule (owner-locked)
+
+**The Inspiration Vault is the ONLY PHILEON collection that may be
+`ready_to_ship` with finite physical inventory.** All other PHILEON
+merchandise is `made_to_order` by default.
+
+- Authoritative Vault membership source:
+  `services.pricing_engine_catalog.FIXED_PRODUCTS` — every slug that
+  begins with the `iv-` prefix is a Vault member (14 pieces at Layer 5
+  lock: `iv-altar`, `iv-caged-wings`, `iv-driven`, `iv-echelle`,
+  `iv-lucent`, `iv-monaco`, `iv-nightfang-set`, `iv-nova`, `iv-oriel`,
+  `iv-parabola-atelier`, `iv-parallax-drop-earrings`, `iv-ribbon-regale`,
+  `iv-roseline`, `iv-stampede-set`). Membership is **product-level** —
+  every variant of a Vault slug inherits Vault membership.
+- Server-side enforcement: `inventory_service.upsert_inventory` and the
+  `POST /api/admin/inventory/upsert` route reject
+  `availability_mode="ready_to_ship"` for non-Vault slugs with
+  `409 READY_TO_SHIP_RESTRICTED_TO_INSPIRATION_VAULT`. Frontend
+  restriction is UX only.
+- No stock quantities are ever fabricated. A Vault configuration
+  without owner-confirmed physical inventory does NOT get a default
+  `stock_on_hand=1`. It simply remains without a record → `made_to_order`
+  until an owner explicitly upserts it.
+- Admin API exposes the authoritative Vault slug list at
+  `GET /api/admin/inventory/vault-slugs` so the admin UI can offer the
+  READY TO SHIP action only where the server will accept it.
+
 ## Canonical availability modes
 
 | Mode | Meaning | Reservation? |

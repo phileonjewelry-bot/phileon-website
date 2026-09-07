@@ -71,10 +71,10 @@ def with_db(async_test):
 # ── Test items ─────────────────────────────────────────────────────
 
 BASE_ITEM = {
-    "product_id": "boss-knot",
-    "variant": "10K Yellow Gold",
-    "karat": "10K",
-    "metal_colour": "yellow",
+    "product_id": "iv-altar",  # Vault slug — the only mode that can be ready_to_ship
+    "variant": "default",
+    "karat": None,
+    "metal_colour": None,
     "ring_size": None,
 }
 
@@ -85,10 +85,10 @@ def test_inventory_key_deterministic():
     from services.inventory_service import compute_inventory_key
     k1 = compute_inventory_key(BASE_ITEM)
     k2 = compute_inventory_key({
-        "product_id": "boss-knot",
-        "variant": " 10K Yellow Gold ",  # whitespace + case tolerated
-        "karat": "10k",
-        "metal_colour": "Yellow",
+        "product_id": "iv-altar",
+        "variant": " Default ",  # whitespace + case tolerated
+        "karat": None,
+        "metal_colour": None,
         "ring_size": None,
     })
     assert k1 == k2, "canonical normalization must produce the same key"
@@ -97,8 +97,8 @@ def test_inventory_key_deterministic():
 
 def test_inventory_key_variant_differs():
     from services.inventory_service import compute_inventory_key
-    a = compute_inventory_key({**BASE_ITEM, "karat": "14K"})
-    b = compute_inventory_key({**BASE_ITEM, "karat": "10K"})
+    a = compute_inventory_key({**BASE_ITEM, "variant": "alt-variant-a"})
+    b = compute_inventory_key({**BASE_ITEM, "variant": "alt-variant-b"})
     assert a != b
 
 
@@ -273,8 +273,8 @@ async def test_O_variant_isolation(db):
                                                  upsert_inventory,
                                                  canonical_identity,
                                                  try_reserve)
-    a = {**BASE_ITEM, "karat": "10K"}
-    b = {**BASE_ITEM, "karat": "14K"}
+    a = {**BASE_ITEM, "variant": "variant-A"}
+    b = {**BASE_ITEM, "variant": "variant-B"}
     ka = compute_inventory_key(a)
     kb = compute_inventory_key(b)
     await upsert_inventory(db, inventory_key=ka,
@@ -433,3 +433,172 @@ def test_Z_fraud_hold_does_not_release_inventory():
         for banned in ("release_by_session", "commit_by_session",
                         "adjust_stock", "restock_from_rma"):
             assert banned not in src, f"{mod.__name__} contains {banned}"
+
+
+# ═════════════════════════════════════════════════════════════════════
+# Layer 5 COMPLETION PASS — Inspiration Vault restriction
+# ═════════════════════════════════════════════════════════════════════
+
+BASE_VAULT_ITEM = {
+    "product_id": "iv-altar",
+    "variant": "default",
+    "karat": None,
+    "metal_colour": None,
+    "ring_size": None,
+}
+
+
+def test_vault_membership_authoritative_source():
+    """Sections 1 + 2: authoritative Vault source is
+    `pricing_engine_catalog.FIXED_PRODUCTS` (slugs starting with `iv-`).
+    Membership is product-level."""
+    from services.inventory_service import (is_inspiration_vault_slug,
+                                                 _inspiration_vault_slugs)
+    slugs = _inspiration_vault_slugs()
+    assert len(slugs) >= 14
+    assert all(s.startswith("iv-") for s in slugs)
+    # Product-level: any variant of a Vault slug inherits membership.
+    assert is_inspiration_vault_slug("iv-altar") is True
+    assert is_inspiration_vault_slug("iv-caged-wings") is True
+    # Non-Vault slugs are refused.
+    assert is_inspiration_vault_slug("boss-knot") is False
+    assert is_inspiration_vault_slug("annie-rose-foundation") is False
+    assert is_inspiration_vault_slug(None) is False
+    assert is_inspiration_vault_slug("") is False
+
+
+# Test A — non-Vault + no record → made_to_order
+@with_db
+async def test_completion_A_non_vault_default_mto(db):
+    from services.inventory_service import resolve_availability
+    r = await resolve_availability(db, {"product_id": "boss-knot",
+                                              "variant": "default"})
+    assert r["state"] == "made_to_order"
+    assert r["available"] is True
+
+
+# Test B — non-Vault ready_to_ship upsert → 409
+@with_db
+async def test_completion_B_non_vault_ready_to_ship_rejected(db):
+    from services.inventory_service import (compute_inventory_key,
+                                                 upsert_inventory,
+                                                 canonical_identity)
+    item = {"product_id": "boss-knot", "variant": "default"}
+    key = compute_inventory_key(item)
+    canonical = canonical_identity(item)
+    with pytest.raises(ValueError) as exc:
+        await upsert_inventory(db, inventory_key=key, canonical=canonical,
+                                   mode="ready_to_ship", stock_on_hand=1)
+    assert "READY_TO_SHIP_RESTRICTED_TO_INSPIRATION_VAULT" in str(exc.value)
+
+
+# Test C — Vault + owner qty 1 → ready_to_ship
+@with_db
+async def test_completion_C_vault_ready_to_ship_ok(db):
+    from services.inventory_service import (compute_inventory_key,
+                                                 upsert_inventory,
+                                                 canonical_identity,
+                                                 resolve_availability)
+    key = compute_inventory_key(BASE_VAULT_ITEM)
+    await upsert_inventory(db, inventory_key=key,
+                              canonical=canonical_identity(BASE_VAULT_ITEM),
+                              mode="ready_to_ship", stock_on_hand=1)
+    r = await resolve_availability(db, BASE_VAULT_ITEM)
+    assert r["state"] == "ready_to_ship"
+    assert r["available"] is True
+
+
+# Test D — Vault ready_to_ship stock=0 → sold_out
+@with_db
+async def test_completion_D_vault_sold_out(db):
+    from services.inventory_service import (compute_inventory_key,
+                                                 upsert_inventory,
+                                                 canonical_identity,
+                                                 resolve_availability)
+    key = compute_inventory_key(BASE_VAULT_ITEM)
+    await upsert_inventory(db, inventory_key=key,
+                              canonical=canonical_identity(BASE_VAULT_ITEM),
+                              mode="ready_to_ship", stock_on_hand=0)
+    r = await resolve_availability(db, BASE_VAULT_ITEM)
+    assert r["state"] == "sold_out"
+    assert r["available"] is False
+
+
+# Test E — Vault quantity unknown → no fabricated stock
+def test_completion_E_no_fabricated_vault_stock():
+    """Layer 5 does not seed Vault products with stock_on_hand=1 by
+    default. Owner must explicitly enter physical quantity. Verified
+    via source inspection of the service — no default stock is
+    hard-coded anywhere."""
+    import inspect
+    from services import inventory_service
+    src = inspect.getsource(inventory_service)
+    # There must be no code path that upserts stock_on_hand=1 for a
+    # Vault slug automatically (the module never writes stock outside
+    # of owner-driven paths).
+    lower = src.lower()
+    for banned in ("default_stock", "seed_vault", "auto_stock",
+                    "fabricate_quantity"):
+        assert banned not in lower
+    # Restock is idempotent per (rma, item_ref) and only fires from RMA.
+    assert "restock_from_rma" in src
+    assert "rma_number" in src
+
+
+# Test G — non-Vault checkout writes no reservation
+@with_db
+async def test_completion_G_non_vault_no_reservation(db):
+    from services.inventory_service import try_reserve
+    ok, rid, kind = await try_reserve(db,
+                                            item={"product_id": "boss-knot",
+                                                   "variant": "default"},
+                                            qty=1,
+                                            reservation_group_id="g1")
+    assert ok is True
+    assert rid is None
+    assert kind == "made_to_order"
+    assert await db.inventory_reservations.count_documents({}) == 0
+
+
+# Test H — non-Vault absent inventory never sold out
+@with_db
+async def test_completion_H_non_vault_never_sold_out(db):
+    from services.inventory_service import resolve_availability
+    r = await resolve_availability(db, {"product_id": "la-madonna",
+                                              "variant": "10k-yellow"})
+    assert r["state"] == "made_to_order"
+    assert r["available"] is True
+
+
+# Test K — returned made-to-order does not auto-Vault
+def test_completion_K_returned_mto_not_auto_vaulted():
+    """RMA restock service refuses non-ready_to_ship targets. Since a
+    made-to-order slug can never legally reach ready_to_ship (Test B),
+    a returned MTO piece can never be silently promoted to Vault
+    inventory. Verified by inspecting the restock guard."""
+    import inspect
+    from services import inventory_service
+    src = inspect.getsource(inventory_service.restock_from_rma)
+    assert "MODE_READY_TO_SHIP" in src
+    assert "RESTOCK_ONLY_READY_TO_SHIP" in src
+
+
+# Test L — customer API isolation
+@with_db
+async def test_completion_L_customer_api_isolation(db):
+    """Public availability payload never exposes internal fields even
+    for a Vault ready_to_ship configuration with a note attached."""
+    from services.inventory_service import (compute_inventory_key,
+                                                 upsert_inventory,
+                                                 canonical_identity,
+                                                 resolve_availability)
+    key = compute_inventory_key(BASE_VAULT_ITEM)
+    await upsert_inventory(db, inventory_key=key,
+                              canonical=canonical_identity(BASE_VAULT_ITEM),
+                              mode="ready_to_ship", stock_on_hand=3,
+                              owner_note="internal note")
+    r = await resolve_availability(db, BASE_VAULT_ITEM)
+    for banned in ("stock_on_hand", "stock_reserved", "owner_note",
+                    "reservation_id", "stripe_checkout_session_id",
+                    "manual_unavailable", "audit"):
+        assert banned not in r

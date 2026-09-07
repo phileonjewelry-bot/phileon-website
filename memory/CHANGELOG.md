@@ -6,6 +6,47 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 5 COMPLETION PASS: Vault restriction + Admin UI ✓
+Owner rule enforced: **The Inspiration Vault is the ONLY PHILEON
+collection that may be `ready_to_ship`.**
+- `services/inventory_service.py`: added `is_inspiration_vault_slug()`
+  helper derived from `pricing_engine_catalog.FIXED_PRODUCTS` (`iv-*`
+  prefix, 14 slugs). `upsert_inventory` refuses
+  `mode=ready_to_ship` for non-Vault slugs with
+  `READY_TO_SHIP_RESTRICTED_TO_INSPIRATION_VAULT`.
+- `routes/admin_inventory.py`: surfaces the specific 409 code; adds
+  `GET /api/admin/inventory/vault-slugs` and `?vault_only=true`
+  filter; serializes `is_inspiration_vault` per row.
+- `routes/availability.py`: public payload includes
+  `is_inspiration_vault` metadata (already-public via URL / catalog).
+- Frontend admin UI: new `/admin/inventory` page (AdminInventory.jsx)
+  with All / Vault / Made to Order / Ready to Ship / Low Stock /
+  Sold Out / Unavailable tabs; owner can upsert Vault pieces, adjust
+  stock with mandatory reason, mark unavailable / re-enable, view
+  audit history. Sidebar link added.
+- Frontend customer UI: reusable `AvailabilityBadge` + `useAvailability`
+  hook consuming `POST /api/availability/resolve`. Renders only
+  MADE TO ORDER / READY TO SHIP / SOLD OUT / CURRENTLY UNAVAILABLE.
+  Never exposes counts or fake scarcity. Ready to drop into any PDP.
+- 10 new completion-pass tests (Vault membership authority, non-Vault
+  ready_to_ship rejection, Vault sold_out derivation, no fabricated
+  stock, customer API isolation, made-to-order return no-auto-Vault,
+  etc.). 27 Layer 5 tests all pass. 1261 full-suite tests pass (1
+  pre-existing owner-accepted Annie Rose drift).
+- Docs: `OPERATIONS.md` Layer 5 chapter now names the 14 Vault slugs
+  and documents the server-side restriction.
+- Files touched: `backend/services/inventory_service.py`,
+  `backend/routes/admin_inventory.py`, `backend/routes/availability.py`,
+  `backend/tests/test_layer5_inventory.py`,
+  `frontend/src/App.js`, `frontend/src/components/layout/AdminLayout.jsx`,
+  `frontend/src/pages/admin/AdminInventory.jsx`,
+  `frontend/src/components/AvailabilityBadge.jsx`,
+  `memory/OPERATIONS.md`, `memory/PRD.md`, `memory/CHANGELOG.md`.
+- Locked invariants intact: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test,
+  PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from
+  `refunded`, PHI-20260901-4CBC5C untouched.
+
 ### 2026-02-17 — Layer 5: Inventory & Availability Control ✓
 Server-authoritative inventory subsystem shipped.
 - New `services/inventory_service.py` with deterministic

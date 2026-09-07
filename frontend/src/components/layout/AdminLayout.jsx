@@ -14,6 +14,7 @@ import {
   X,
   Truck,
   Package,
+  Archive,
   RefreshCcw,
   ShieldAlert,
   Bell
@@ -26,6 +27,7 @@ const sidebarLinks = [
   { name: 'Shipments', path: '/admin/shipments', icon: Truck },
   { name: 'Returns', path: '/admin/returns', icon: RefreshCcw },
   { name: 'Disputes', path: '/admin/disputes', icon: ShieldAlert },
+  { name: 'Inventory', path: '/admin/inventory', icon: Archive },
   { name: 'Retention', path: '/admin/retention', icon: Bell },
   { name: 'Collections', path: '/admin/collections', icon: FolderOpen },
   { name: 'Products', path: '/admin/products', icon: Gem },

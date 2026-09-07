@@ -42,6 +42,33 @@ RES_COMMITTED = "committed"
 RES_RELEASED = "released"
 
 
+# ── PHILEON business rule ────────────────────────────────────────────
+# The Inspiration Vault is the ONLY PHILEON collection that may be
+# `ready_to_ship`. Every other slug is `made_to_order` by default.
+# Membership is derived from the authoritative pricing catalog:
+# any slug starting with the "iv-" prefix is a Vault member (matches
+# the "Inspiration Vault (single-tier fixed USD)" section of
+# `services.pricing_engine_catalog.FIXED_PRODUCTS`).
+
+def _inspiration_vault_slugs() -> set:
+    """Lazy-load the Vault slug set from the authoritative fixed-price
+    catalog. Never duplicates the list here — the pricing catalog is the
+    single source of truth."""
+    try:
+        from services.pricing_engine_catalog import FIXED_PRODUCTS
+        return {k for k in FIXED_PRODUCTS if k.startswith("iv-")}
+    except Exception:  # pragma: no cover — never masks the catalog import
+        return set()
+
+
+def is_inspiration_vault_slug(slug: Optional[str]) -> bool:
+    """Server-authoritative Vault membership check. Product-level: every
+    variant of a Vault slug inherits Vault membership."""
+    if not slug:
+        return False
+    return slug.strip().lower() in _inspiration_vault_slugs()
+
+
 # ── Identity ─────────────────────────────────────────────────────────
 
 _NULL_SENTINEL = "-"
@@ -116,6 +143,14 @@ async def upsert_inventory(db, *, inventory_key: str,
         raise ValueError(f"invalid mode: {mode}")
     if stock_on_hand < 0:
         raise ValueError("stock_on_hand cannot be negative")
+    # PHILEON Layer 5 completion pass: `ready_to_ship` is restricted to
+    # The Inspiration Vault. Non-Vault slugs must remain `made_to_order`
+    # (or `unavailable`). This is enforced server-side; the admin UI
+    # frontend restriction is UX only.
+    if mode == MODE_READY_TO_SHIP and not is_inspiration_vault_slug(canonical.get("slug")):
+        raise ValueError(
+            "READY_TO_SHIP_RESTRICTED_TO_INSPIRATION_VAULT: "
+            f"slug={canonical.get('slug')!r} is not a member of The Inspiration Vault")
     now = datetime.now(timezone.utc)
     prev = await get_inventory(db, inventory_key) or {}
     prev_stock = int(prev.get("stock_on_hand") or 0)

@@ -56,9 +56,11 @@ def _serialize(doc: Dict[str, Any]) -> Dict[str, Any]:
     if not doc:
         return {}
     available = int(doc.get("stock_on_hand", 0)) - int(doc.get("stock_reserved", 0))
+    slug = doc.get("product_slug")
     out = {
         "inventory_key": doc["inventory_key"],
-        "product_slug": doc.get("product_slug"),
+        "product_slug": slug,
+        "is_inspiration_vault": inv.is_inspiration_vault_slug(slug),
         "variant": doc.get("variant"),
         "karat": doc.get("karat"),
         "metal_colour": doc.get("metal_colour"),
@@ -85,6 +87,7 @@ def _serialize(doc: Dict[str, Any]) -> Dict[str, Any]:
 @router.get("")
 async def list_inventory(mode: Optional[str] = Query(None),
                           low_stock: bool = Query(False),
+                          vault_only: bool = Query(False),
                           _admin=Depends(verify_admin)):
     q: Dict[str, Any] = {}
     if mode == "sold_out":
@@ -95,6 +98,8 @@ async def list_inventory(mode: Optional[str] = Query(None),
                     {"manual_unavailable": True}]
     elif mode in inv.CANONICAL_MODES:
         q["availability_mode"] = mode
+    if vault_only:
+        q["product_slug"] = {"$in": sorted(inv._inspiration_vault_slugs())}
     cursor = db.inventory.find(q, {"_id": 0}).sort([("updated_at", -1)]).limit(500)
     items = [_serialize(d) async for d in cursor]
     if mode == "sold_out":
@@ -105,6 +110,15 @@ async def list_inventory(mode: Optional[str] = Query(None),
             return t is not None and i["available"] <= int(t)
         items = [i for i in items if _low(i)]
     return {"items": items, "count": len(items)}
+
+
+@router.get("/vault-slugs")
+async def vault_slugs(_admin=Depends(verify_admin)):
+    """Authoritative Inspiration Vault slug list, derived from the
+    fixed-price catalog. Used by the admin UI to show/hide the
+    READY TO SHIP option per product."""
+    slugs = sorted(inv._inspiration_vault_slugs())
+    return {"slugs": slugs, "count": len(slugs)}
 
 
 @router.post("/upsert")
@@ -154,8 +168,15 @@ async def upsert(body: UpsertIn, _admin=Depends(verify_admin)):
             owner_note=body.owner_note, actor="admin",
         )
     except ValueError as e:
+        msg = str(e)
+        if msg.startswith("READY_TO_SHIP_RESTRICTED_TO_INSPIRATION_VAULT"):
+            raise HTTPException(status_code=409, detail={
+                "code": "READY_TO_SHIP_RESTRICTED_TO_INSPIRATION_VAULT",
+                "slug": canonical.get("slug"),
+                "message": "READY TO SHIP is reserved for The Inspiration Vault.",
+            })
         raise HTTPException(status_code=409, detail={"code": "UPSERT_REJECTED",
-                                                        "message": str(e)})
+                                                        "message": msg})
     return _serialize(doc)
 
 

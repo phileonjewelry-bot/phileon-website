@@ -155,6 +155,7 @@ const AdminShipments = lazy(() => import("@/pages/admin/AdminShipments"));
 const AdminFulfillment = lazy(() => import("@/pages/admin/AdminFulfillment"));
 const AdminReturns = lazy(() => import("@/pages/admin/AdminReturns"));
 const AdminDisputes = lazy(() => import("@/pages/admin/AdminDisputes"));
+const AdminInventory = lazy(() => import("@/pages/admin/AdminInventory"));
 const AdminRetention = lazy(() => import("@/pages/admin/AdminRetention"));
 const AdminCollections = lazy(() => import("@/pages/admin/AdminCollections"));
 const AdminProducts = lazy(() => import("@/pages/admin/AdminProducts"));
@@ -436,6 +437,7 @@ function App() {
             <Route path="fulfillment" element={<AdminFulfillment />} />
             <Route path="returns" element={<AdminReturns />} />
             <Route path="disputes" element={<AdminDisputes />} />
+            <Route path="inventory" element={<AdminInventory />} />
             <Route path="retention" element={<AdminRetention />} />
             <Route path="collections" element={<AdminCollections />} />
             <Route path="products" element={<AdminProducts />} />

@@ -39,10 +39,13 @@ async def resolve(body: AvailabilityQuery):
         "metal_colour": body.metal_colour,
         "ring_size": body.ring_size,
     })
-    # Never expose internal counts.
+    # Never expose internal counts. Vault membership is public
+    # metadata (it's already visible in the URL / catalog); the
+    # customer boolean lets the PDP show restrained copy.
     return {
         "slug": body.slug,
         "state": payload["state"],
         "available": payload["available"],
         "mode": payload["mode"],
+        "is_inspiration_vault": inv.is_inspiration_vault_slug(body.slug),
     }
