@@ -39,13 +39,15 @@ async def resolve(body: AvailabilityQuery):
         "metal_colour": body.metal_colour,
         "ring_size": body.ring_size,
     })
-    # Never expose internal counts. Vault membership is public
-    # metadata (it's already visible in the URL / catalog); the
-    # customer boolean lets the PDP show restrained copy.
+    # Never expose internal counts. Vault membership + canonical slug
+    # are public (already visible via URL / catalog) and help the PDP
+    # render restrained copy — but stock_on_hand, stock_reserved,
+    # reservation_id, session_id, and owner notes are ALWAYS stripped.
     return {
         "slug": body.slug,
+        "canonical_slug": inv.resolve_canonical_slug(body.slug),
         "state": payload["state"],
         "available": payload["available"],
         "mode": payload["mode"],
-        "is_inspiration_vault": inv.is_inspiration_vault_slug(body.slug),
+        "is_inspiration_vault": payload["is_inspiration_vault"],
     }

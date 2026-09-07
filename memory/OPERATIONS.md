@@ -995,6 +995,37 @@ events.
 `ready_to_ship` with finite physical inventory.** All other PHILEON
 merchandise is `made_to_order` by default.
 
+**Vault no-record behavior (owner rule):** a Vault piece without an
+owner-confirmed inventory record is **CURRENTLY UNAVAILABLE** to
+customers — it is NEVER shown as `made_to_order`. This is enforced by
+`inventory_service.resolve_availability()` and `try_reserve()`.
+Customer PDPs render:
+
+| Backend state | Customer copy |
+|---|---|
+| Vault + no record | CURRENTLY UNAVAILABLE |
+| Vault + ready_to_ship + available>0 | READY TO SHIP |
+| Vault + ready_to_ship + available≤0 | SOLD OUT |
+| Vault + manual_unavailable / mode=unavailable | CURRENTLY UNAVAILABLE |
+| Non-Vault + no record | MADE TO ORDER |
+
+**Public URL slug → canonical inventory identity.** The frontend
+routes Vault PDPs at `/inspiration-vault/<alias>`; the server maps
+every alias to the authoritative `iv-*` identity in
+`services.inventory_service.VAULT_PUBLIC_ALIASES`. `canonical_identity()`
+runs every incoming slug through `resolve_canonical_slug()` before the
+inventory key is computed — an alias and its canonical always resolve
+to the same `inventory_key`, so a piece cannot accidentally get two
+stock pools.
+
+Registered aliases (all resolve to their `iv-<same-slug>` canonical
+identity, except `gold-theory-ribbon` which is an editorial legacy
+alias for `iv-ribbon-regale`):
+
+`altar, caged-wings, driven, echelle, lucent, monaco, nightfang-set,
+nova, oriel, parabola-atelier, parallax-drop-earrings, ribbon-regale,
+gold-theory-ribbon → iv-ribbon-regale, roseline, stampede-set`.
+
 - Authoritative Vault membership source:
   `services.pricing_engine_catalog.FIXED_PRODUCTS` — every slug that
   begins with the `iv-` prefix is a Vault member (14 pieces at Layer 5

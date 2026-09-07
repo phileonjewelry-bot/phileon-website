@@ -6,6 +6,48 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 5 FINAL COMPLETION PASS: Vault customer truth + PDP wiring ✓
+Three customer-facing gaps closed:
+- **Vault no-record → CURRENTLY UNAVAILABLE (never MADE TO ORDER).**
+  `_derive_customer_state()` now takes `is_vault` and refuses the
+  default "made_to_order" path for a Vault slug with no owner record;
+  `try_reserve()` refuses the same case with `kind="unavailable"`,
+  blocking checkout. Non-Vault behavior unchanged (`made_to_order`
+  default).
+- **Public URL slug → canonical `iv-*` mapping authority.** New
+  `services.inventory_service.VAULT_PUBLIC_ALIASES` + `resolve_canonical_slug()`.
+  `canonical_identity()` runs every incoming slug through the resolver
+  before computing `inventory_key`, so `altar`, `iv-altar`,
+  `ribbon-regale`, and `gold-theory-ribbon` all share their canonical
+  stock pool. No duplicate inventory records possible.
+- **AvailabilityBadge wired into every Vault PDP.** New
+  `components/VaultRouteBadge.jsx` — route-aware, mounted once at the
+  BrowserRouter root in `App.js`. Reads `pathname`, extracts the
+  Vault alias, calls `POST /api/availability/resolve` with the alias
+  (server resolves canonical), renders exactly one of READY TO SHIP /
+  SOLD OUT / CURRENTLY UNAVAILABLE (never MADE TO ORDER for a Vault
+  URL). All 14 canonical iv-* slugs mapped, plus `gold-theory-ribbon`
+  legacy alias. Editorial-only Vault URLs without inventory identity
+  are intentionally excluded.
+- 8 new completion-pass tests; the previously-broken `test_A_default`
+  was updated to reflect the new Vault semantics. 33 Layer 5 tests
+  all pass. `test_full_checkout_audit` iv-* fixtures updated to
+  expect the new `409 UNAVAILABLE`. 1266 full-suite tests pass (1
+  pre-existing Annie Rose drift only).
+- Files added: `frontend/src/components/VaultRouteBadge.jsx`.
+- Files modified: `backend/services/inventory_service.py`,
+  `backend/routes/availability.py`,
+  `backend/tests/test_layer5_inventory.py`,
+  `backend/tests/test_full_checkout_audit.py`,
+  `frontend/src/App.js`,
+  `frontend/src/components/AvailabilityBadge.jsx` (new
+  `VaultAvailabilityGate` helper),
+  `memory/OPERATIONS.md`, `memory/PRD.md`, `memory/CHANGELOG.md`.
+- Locked invariants intact: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test,
+  PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from
+  `refunded`, PHI-20260901-4CBC5C untouched.
+
 ### 2026-02-17 — Layer 5 COMPLETION PASS: Vault restriction + Admin UI ✓
 Owner rule enforced: **The Inspiration Vault is the ONLY PHILEON
 collection that may be `ready_to_ship`.**

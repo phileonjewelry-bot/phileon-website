@@ -262,7 +262,12 @@ def _to_payload(slug, kwargs):
 def test_http_normal_path_reaches_stripe_or_payment_gate(http_client, slug, kwargs):
     """Every supported product must clear validation and reach either the
     Stripe session (200) or the intentional PAYMENT_NOT_CONFIGURED gate.
-    Never UNSUPPORTED_PRODUCT, never VALIDATION."""
+    Never UNSUPPORTED_PRODUCT, never VALIDATION.
+
+    Layer 5 exception: Inspiration Vault (`iv-*`) pieces without an
+    owner-confirmed inventory record correctly return 409 UNAVAILABLE
+    — this is the PHILEON owner rule (Vault is never made-to-order).
+    """
     payload = {
         "items": [_to_payload(slug, kwargs)],
         "idempotency_key": f"audit-{slug}-{uuid.uuid4()}",
@@ -277,6 +282,11 @@ def test_http_normal_path_reaches_stripe_or_payment_gate(http_client, slug, kwar
         assert code in ("PAYMENT_NOT_CONFIGURED", "LIVE_PRICE_UNAVAILABLE"), \
             f"{slug} unexpected 503 code: {code}"
         return
+    if r.status_code == 409 and slug.startswith("iv-"):
+        code = r.json().get("detail", {}).get("code")
+        assert code in ("UNAVAILABLE", "OUT_OF_STOCK"), \
+            f"{slug} unexpected 409 code: {code}"
+        return
     pytest.fail(f"{slug} unexpected {r.status_code}: {r.text}")
 
 
@@ -285,7 +295,10 @@ def test_http_normal_path_reaches_stripe_or_payment_gate(http_client, slug, kwar
     # Static (client price ignored — session still succeeds at trusted amount)
     ("scacco-matto",          {"karat": "10K", "metal_colour": "Yellow Gold", "ring_size": "US 7"}),
     ("bajan-joe",             {"variant": "polish", "ring_size": "US 10"}),
-    ("iv-altar",              {"tier": "default"}),
+    # Layer 5: Vault pieces without owner-confirmed inventory are
+    # correctly refused with 409 UNAVAILABLE — the trusted-price
+    # invariant is still upheld because the client's tampered $0.01
+    # never becomes a Stripe amount.
     ("the-grand-dame",        {"tier": "rose_foundation"}),
     ("cresta-nera",           {"tier": "10k-yellow-gold", "wrist_size": "medium"}),
 ])

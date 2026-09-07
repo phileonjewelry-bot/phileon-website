@@ -9,6 +9,7 @@ import AdminLayout from "@/components/layout/AdminLayout";
 import RouteSeoInjector from "@/components/RouteSeoInjector";
 import SearchOverlay from "@/components/SearchOverlay";
 import CartDrawer from "@/components/CartDrawer";
+import VaultRouteBadge from "@/components/VaultRouteBadge";
 
 // Context Providers
 import { CartProvider } from "@/contexts/CartContext";
@@ -175,6 +176,7 @@ function App() {
           <BrowserRouter>
             <RouteSeoInjector />
             <SearchOverlay />
+            <VaultRouteBadge />
         <Suspense fallback={<div style={{minHeight: '100vh', background: '#0a0a0a'}} data-testid="route-fallback" />}>
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}

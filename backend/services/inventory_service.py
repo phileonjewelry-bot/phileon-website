@@ -63,10 +63,51 @@ def _inspiration_vault_slugs() -> set:
 
 def is_inspiration_vault_slug(slug: Optional[str]) -> bool:
     """Server-authoritative Vault membership check. Product-level: every
-    variant of a Vault slug inherits Vault membership."""
+    variant of a Vault slug inherits Vault membership. Accepts both the
+    canonical `iv-*` slug and any registered public URL alias."""
     if not slug:
         return False
-    return slug.strip().lower() in _inspiration_vault_slugs()
+    canonical = resolve_canonical_slug(slug)
+    return canonical in _inspiration_vault_slugs()
+
+
+# Public URL aliases that map to canonical `iv-*` inventory slugs.
+# The frontend URL structure `/inspiration-vault/<alias>` uses these
+# short forms; the server always resolves to the canonical identity
+# before any inventory lookup, reservation, commit, or restock. Never
+# create duplicate inventory records for a public alias.
+VAULT_PUBLIC_ALIASES: Dict[str, str] = {
+    # Direct 1:1 alias — public slug is the canonical slug minus the
+    # `iv-` prefix.
+    "altar": "iv-altar",
+    "caged-wings": "iv-caged-wings",
+    "driven": "iv-driven",
+    "echelle": "iv-echelle",
+    "lucent": "iv-lucent",
+    "monaco": "iv-monaco",
+    "nightfang-set": "iv-nightfang-set",
+    "nova": "iv-nova",
+    "oriel": "iv-oriel",
+    "parabola-atelier": "iv-parabola-atelier",
+    "parallax-drop-earrings": "iv-parallax-drop-earrings",
+    "ribbon-regale": "iv-ribbon-regale",
+    "roseline": "iv-roseline",
+    "stampede-set": "iv-stampede-set",
+    # Editorial legacy alias — same physical piece, different URL.
+    "gold-theory-ribbon": "iv-ribbon-regale",
+}
+
+
+def resolve_canonical_slug(slug: Optional[str]) -> Optional[str]:
+    """Normalize any customer-supplied Vault slug (public URL alias) to
+    its canonical `iv-*` inventory identity. Non-Vault slugs pass through
+    unchanged. Case-insensitive; whitespace-tolerant."""
+    if not slug:
+        return slug
+    s = slug.strip().lower()
+    if s in VAULT_PUBLIC_ALIASES:
+        return VAULT_PUBLIC_ALIASES[s]
+    return s
 
 
 # ── Identity ─────────────────────────────────────────────────────────
@@ -94,14 +135,18 @@ def canonical_identity(item: Dict[str, Any]) -> Dict[str, str]:
     tuple used everywhere for the inventory key.
 
     Never accepts display text. Only the trusted resolver fields:
-        · product_id      (slug)
+        · product_id      (slug — normalized through resolve_canonical_slug
+                            so public Vault URL aliases resolve to the
+                            authoritative `iv-*` identity)
         · variant
         · karat
         · metal_colour
         · ring_size
     """
+    raw_slug = item.get("product_id") or item.get("slug")
+    canonical_slug = resolve_canonical_slug(raw_slug) if raw_slug else None
     return {
-        "slug": _norm(item.get("product_id") or item.get("slug")),
+        "slug": _norm(canonical_slug),
         "variant": _norm(item.get("variant")),
         "karat": _norm(item.get("karat")),
         "metal_colour": _norm(item.get("metal_colour") or item.get("metalColour")),
@@ -263,12 +308,31 @@ async def set_manual_unavailable(db, *, inventory_key: str, value: bool,
 
 # ── Availability resolution (customer + checkout) ─────────────────────
 
-def _derive_customer_state(doc: Optional[Dict[str, Any]]) -> Dict[str, Any]:
-    """Public-safe availability payload. Never returns raw stock counts."""
+def _derive_customer_state(doc: Optional[Dict[str, Any]],
+                             *, is_vault: bool = False) -> Dict[str, Any]:
+    """Public-safe availability payload. Never returns raw stock counts.
+
+    PHILEON owner rule:
+      · NON-VAULT + no record → made_to_order (default)
+      · VAULT + no record → CURRENTLY UNAVAILABLE (owner has not entered
+                              a physical stock count yet; NEVER shown as
+                              made_to_order to a customer)
+      · VAULT + ready_to_ship + available>0 → ready_to_ship
+      · VAULT + ready_to_ship + available<=0 → sold_out
+      · VAULT + manual_unavailable OR unavailable → unavailable
+    """
     if not doc:
-        return {"mode": MODE_MADE_TO_ORDER, "available": True, "state": "made_to_order"}
+        if is_vault:
+            # A Vault piece with no owner-confirmed inventory record is
+            # CURRENTLY UNAVAILABLE for the customer. Owner action
+            # required. No stock is fabricated.
+            return {"mode": MODE_UNAVAILABLE, "available": False,
+                    "state": "unavailable"}
+        return {"mode": MODE_MADE_TO_ORDER, "available": True,
+                "state": "made_to_order"}
     if doc.get("manual_unavailable"):
-        return {"mode": doc["availability_mode"], "available": False, "state": "unavailable"}
+        return {"mode": doc["availability_mode"], "available": False,
+                "state": "unavailable"}
     mode = doc.get("availability_mode") or MODE_MADE_TO_ORDER
     if mode == MODE_UNAVAILABLE:
         return {"mode": mode, "available": False, "state": "unavailable"}
@@ -277,7 +341,7 @@ def _derive_customer_state(doc: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         if avail <= 0:
             return {"mode": mode, "available": False, "state": "sold_out"}
         return {"mode": mode, "available": True, "state": "ready_to_ship"}
-    # made_to_order
+    # made_to_order (non-Vault or explicitly configured)
     return {"mode": mode, "available": True, "state": "made_to_order"}
 
 
@@ -285,8 +349,11 @@ async def resolve_availability(db, item: Dict[str, Any]) -> Dict[str, Any]:
     """Public read-only availability for one configuration."""
     key = compute_inventory_key(item)
     doc = await get_inventory(db, key)
-    payload = _derive_customer_state(doc)
+    raw_slug = item.get("product_id") or item.get("slug")
+    is_vault = is_inspiration_vault_slug(raw_slug)
+    payload = _derive_customer_state(doc, is_vault=is_vault)
     payload["inventory_key"] = key
+    payload["is_inspiration_vault"] = is_vault
     return payload
 
 
@@ -312,8 +379,15 @@ async def try_reserve(db, *, item: Dict[str, Any], qty: int,
     if qty <= 0:
         return False, None, "INVALID_QTY"
     key = compute_inventory_key(item)
+    raw_slug = item.get("product_id") or item.get("slug")
+    is_vault = is_inspiration_vault_slug(raw_slug)
     doc = await get_inventory(db, key)
     if not doc:
+        if is_vault:
+            # PHILEON owner rule: a Vault piece with no owner-confirmed
+            # inventory record is CURRENTLY UNAVAILABLE. Do not silently
+            # let checkout through as made-to-order.
+            return False, None, "unavailable"
         return True, None, MODE_MADE_TO_ORDER
     if doc.get("manual_unavailable") or doc.get("availability_mode") == MODE_UNAVAILABLE:
         return False, None, "unavailable"

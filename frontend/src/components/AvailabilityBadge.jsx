@@ -62,6 +62,7 @@ export default function AvailabilityBadge(props) {
   const isSoldOut = availability.state === "sold_out";
   const isUnavail = availability.state === "unavailable";
   const isReady = availability.state === "ready_to_ship";
+  const isMto = availability.state === "made_to_order";
 
   const tone =
     isSoldOut || isUnavail
@@ -73,9 +74,37 @@ export default function AvailabilityBadge(props) {
   return (
     <div
       data-testid={`availability-badge-${availability.state}`}
+      data-slug={availability.slug || props.slug || ""}
+      data-vault={availability.is_inspiration_vault ? "true" : "false"}
       className={`inline-flex items-center gap-2 px-3 py-1 border text-[11px] tracking-[0.24em] uppercase ${tone}`}
     >
       {label}
+    </div>
+  );
+}
+
+
+/** Convenience for Vault PDPs — mounts the badge and disables the
+ * children (Add-to-Cart CTAs) when the piece is not purchasable. Wraps
+ * arbitrary content. Server-side reservation remains the authority. */
+export function VaultAvailabilityGate({ slug, variant, karat, metalColour,
+                                          ringSize, className = "",
+                                          children }) {
+  const { availability } = useAvailability({ slug, variant, karat,
+                                                 metalColour, ringSize });
+  const disabled = availability && !availability.available;
+  return (
+    <div
+      className={className}
+      data-testid={`vault-availability-gate-${slug}`}
+      data-availability-state={availability?.state || "loading"}
+      data-purchasable={disabled ? "false" : "true"}
+    >
+      <AvailabilityBadge slug={slug} variant={variant} karat={karat}
+                              metalColour={metalColour} ringSize={ringSize} />
+      {typeof children === "function"
+        ? children({ availability, disabled })
+        : children}
     </div>
   );
 }

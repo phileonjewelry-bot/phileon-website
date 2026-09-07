@@ -106,16 +106,17 @@ def test_inventory_key_variant_differs():
 
 @with_db
 async def test_A_made_to_order_default(db):
-    """Matrix A: no explicit record → made_to_order → checkout allowed,
-    no reservation."""
+    """Matrix A (updated by completion pass): a Vault slug without an
+    owner-confirmed record is CURRENTLY UNAVAILABLE (not made_to_order).
+    Non-Vault default is verified in test_completion_A_non_vault_default_mto."""
     from services.inventory_service import resolve_availability, try_reserve
     r = await resolve_availability(db, BASE_ITEM)
-    assert r["state"] == "made_to_order"
-    assert r["available"] is True
+    assert r["state"] == "unavailable"
+    assert r["available"] is False
     ok, rid, kind = await try_reserve(db, item=BASE_ITEM, qty=1,
                                          reservation_group_id="g1")
-    assert ok and rid is None and kind == "made_to_order"
-    # No reservation record created for made_to_order.
+    assert ok is False and rid is None and kind == "unavailable"
+    # No reservation record created for a refused Vault checkout.
     assert await db.inventory_reservations.count_documents({}) == 0
 
 
@@ -602,3 +603,116 @@ async def test_completion_L_customer_api_isolation(db):
                     "reservation_id", "stripe_checkout_session_id",
                     "manual_unavailable", "audit"):
         assert banned not in r
+
+
+# ═════════════════════════════════════════════════════════════════════
+# Layer 5 FINAL COMPLETION PASS
+# Vault no-record = CURRENTLY UNAVAILABLE
+# Public alias slug resolution
+# ═════════════════════════════════════════════════════════════════════
+
+def test_vault_public_alias_resolves_to_canonical():
+    """G/H: public URL slugs like `parallax-drop-earrings` and legacy
+    `gold-theory-ribbon` must resolve to the canonical iv-* identity."""
+    from services.inventory_service import (resolve_canonical_slug,
+                                                 is_inspiration_vault_slug,
+                                                 compute_inventory_key)
+    assert resolve_canonical_slug("parallax-drop-earrings") == "iv-parallax-drop-earrings"
+    assert resolve_canonical_slug("altar") == "iv-altar"
+    # Legacy editorial alias for iv-ribbon-regale.
+    assert resolve_canonical_slug("gold-theory-ribbon") == "iv-ribbon-regale"
+    assert resolve_canonical_slug("ribbon-regale") == "iv-ribbon-regale"
+    # Non-Vault slugs pass through unchanged.
+    assert resolve_canonical_slug("boss-knot") == "boss-knot"
+    # Membership check accepts either the canonical or the alias.
+    assert is_inspiration_vault_slug("parallax-drop-earrings") is True
+    assert is_inspiration_vault_slug("gold-theory-ribbon") is True
+    assert is_inspiration_vault_slug("iv-altar") is True
+    # Same physical piece must have the same inventory_key regardless
+    # of public alias vs canonical slug.
+    ka = compute_inventory_key({"product_id": "gold-theory-ribbon", "variant": "default"})
+    kb = compute_inventory_key({"product_id": "iv-ribbon-regale", "variant": "default"})
+    kc = compute_inventory_key({"product_id": "ribbon-regale", "variant": "default"})
+    assert ka == kb == kc, "aliases must not create separate stock pools"
+
+
+# Test B — Vault + no record → CURRENTLY UNAVAILABLE (not made_to_order)
+@with_db
+async def test_final_B_vault_no_record_unavailable(db):
+    """Owner rule: a Vault piece never displays MADE TO ORDER to a
+    customer. Without an owner-confirmed record it is CURRENTLY
+    UNAVAILABLE."""
+    from services.inventory_service import resolve_availability, try_reserve
+    # Every Vault piece (canonical + alias) resolves as unavailable
+    # when no explicit record exists.
+    for slug in ("iv-altar", "altar", "parallax-drop-earrings",
+                    "gold-theory-ribbon"):
+        r = await resolve_availability(db, {"product_id": slug,
+                                                  "variant": "default"})
+        assert r["state"] == "unavailable", f"{slug} should be unavailable"
+        assert r["available"] is False
+        assert r["is_inspiration_vault"] is True
+        # Reservation must also refuse — never let a Vault piece slip
+        # into checkout without an owner-confirmed record.
+        ok, rid, kind = await try_reserve(
+            db, item={"product_id": slug, "variant": "default"}, qty=1,
+            reservation_group_id="grp-x",
+        )
+        assert ok is False
+        assert rid is None
+        assert kind == "unavailable"
+
+
+# Test C — Vault + stock 1 → READY TO SHIP (via alias)
+@with_db
+async def test_final_C_vault_alias_ready_to_ship(db):
+    from services.inventory_service import (compute_inventory_key,
+                                                 upsert_inventory,
+                                                 canonical_identity,
+                                                 resolve_availability)
+    # Upsert using ALIAS slug — canonical identity must still be `iv-*`.
+    item = {"product_id": "altar", "variant": "default"}
+    key = compute_inventory_key(item)
+    canonical = canonical_identity(item)
+    assert canonical["slug"] == "iv-altar"
+    await upsert_inventory(db, inventory_key=key,
+                              canonical=canonical,
+                              mode="ready_to_ship", stock_on_hand=1)
+    # Availability API called with the canonical slug must see the
+    # same record — no duplicate stock pool.
+    r_alias = await resolve_availability(db, {"product_id": "altar",
+                                                    "variant": "default"})
+    r_canon = await resolve_availability(db, {"product_id": "iv-altar",
+                                                    "variant": "default"})
+    assert r_alias["state"] == "ready_to_ship"
+    assert r_canon["state"] == "ready_to_ship"
+    assert r_alias["inventory_key"] == r_canon["inventory_key"]
+
+
+# Test A — Non-Vault + no record still MADE TO ORDER
+@with_db
+async def test_final_A_non_vault_still_mto(db):
+    from services.inventory_service import resolve_availability
+    r = await resolve_availability(db, {"product_id": "boss-knot"})
+    assert r["state"] == "made_to_order"
+    assert r["available"] is True
+    assert r["is_inspiration_vault"] is False
+
+
+# Test frontend mapping covers all 14 Vault pieces
+def test_frontend_route_map_covers_14_vault_pieces():
+    """The route-aware badge component (VaultRouteBadge.jsx) must
+    map every one of the 14 canonical iv-* slugs. Verified by source
+    inspection so a future omission is caught at test time."""
+    src = open("/app/frontend/src/components/VaultRouteBadge.jsx").read()
+    from services.inventory_service import _inspiration_vault_slugs
+    vault = _inspiration_vault_slugs()
+    for slug in vault:
+        assert slug in src, f"VaultRouteBadge missing {slug}"
+
+
+# Test badge mount point exists in App.js
+def test_vault_badge_mounted_in_app():
+    src = open("/app/frontend/src/App.js").read()
+    assert "VaultRouteBadge" in src
+    assert "<VaultRouteBadge" in src
