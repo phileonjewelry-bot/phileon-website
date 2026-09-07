@@ -506,6 +506,41 @@ async def stripe_webhook(request: Request):
                 {"$set": {"payment_status": "refunded" if refunded_full else "partially_refunded",
                           "updated_at": datetime.now(timezone.utc)},
                  "$addToSet": {"webhook_event_ids": event["id"]}})
+            # Layer 3 — reconcile any RMA case attached to this order.
+            # Idempotent; never falsifies Stripe truth (Stripe → RMA, not
+            # the other direction). Never raises — the webhook must
+            # remain green even if the RMA lookup fails.
+            try:
+                rma_case = await db.returns.find_one({
+                    "order_number": order.get("order_number"),
+                    "status": {"$in": ["refund_approved", "refund_pending"]},
+                }, {"_id": 0})
+                if rma_case:
+                    await db.returns.update_one(
+                        {"rma_number": rma_case["rma_number"]},
+                        {"$set": {
+                            "status": "refunded",
+                            "stripe_refund_id": (obj.get("refunds") or {}).get("data", [{}])[0].get("id"),
+                            "stripe_refund_status": "succeeded" if refunded_full else "partial",
+                            "refund_confirmed_at": datetime.now(timezone.utc),
+                            "updated_at": datetime.now(timezone.utc),
+                        }},
+                    )
+                    try:
+                        from services.returns_service import write_audit as _rma_audit
+                        await _rma_audit(
+                            db,
+                            rma_number=rma_case["rma_number"],
+                            order_number=order.get("order_number") or "",
+                            action="webhook_refund_confirmed",
+                            previous=rma_case.get("status"), new="refunded",
+                            actor="stripe_webhook", reason=None,
+                            extra={"full": refunded_full},
+                        )
+                    except Exception:
+                        pass
+            except Exception as _e:
+                logger.warning(f"RMA webhook reconciliation skipped: {type(_e).__name__}")
 
     elif etype == "charge.dispute.created":
         if order:

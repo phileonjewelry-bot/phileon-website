@@ -14,6 +14,7 @@ import {
   X,
   Truck,
   Package,
+  RefreshCcw,
   Bell
 } from 'lucide-react';
 
@@ -22,6 +23,7 @@ const sidebarLinks = [
   { name: 'Concierge', path: '/admin/concierge', icon: MessageSquare },
   { name: 'Fulfillment', path: '/admin/fulfillment', icon: Package },
   { name: 'Shipments', path: '/admin/shipments', icon: Truck },
+  { name: 'Returns', path: '/admin/returns', icon: RefreshCcw },
   { name: 'Retention', path: '/admin/retention', icon: Bell },
   { name: 'Collections', path: '/admin/collections', icon: FolderOpen },
   { name: 'Products', path: '/admin/products', icon: Gem },

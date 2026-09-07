@@ -1172,6 +1172,9 @@ app.include_router(webhooks_stripe_router, prefix="/api")
 app.include_router(i18n_router, prefix="/api")
 from routes.admin_orders import router as admin_orders_router
 app.include_router(admin_orders_router, prefix="/api")
+from routes.returns import customer_router as returns_customer_router, admin_router as returns_admin_router
+app.include_router(returns_customer_router, prefix="/api")
+app.include_router(returns_admin_router, prefix="/api")
 app.include_router(metals_router)
 
 from starlette.types import ASGIApp, Receive, Scope, Send
@@ -2217,6 +2220,13 @@ async def startup_db():
         await _ful_indexes(db)
     except Exception as e:
         logger.warning(f"fulfillment indexes init skipped: {type(e).__name__}: {e}")
+
+    # Returns / RMA indexes (Layer 3).
+    try:
+        from services.returns_service import ensure_indexes as _ret3_indexes
+        await _ret3_indexes(db)
+    except Exception as e:
+        logger.warning(f"returns indexes init skipped: {type(e).__name__}: {e}")
 
     logger.info("Database indexes created")
 

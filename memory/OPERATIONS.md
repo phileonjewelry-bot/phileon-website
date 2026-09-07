@@ -613,3 +613,196 @@ requires the owner to touch money math, Stripe IDs, or webhook state.
 
 Those belong to Layer 3+ and MUST NOT be silently introduced through
 Layer 2 changes.
+
+---
+
+## APPENDIX D — Returns / RMA / Refund Operations (Layer 3)
+
+### D.1 — Locked return policy (owner-confirmed)
+
+| Class | Rule |
+|---|---|
+| Eligible gold (10K / 14K / 18K / 22K / 24K / vermeil / gold-plated) | 30-day return window from confirmed delivery |
+| Silver / Sterling Silver | **FINAL SALE** |
+| Custom / bespoke / made-to-order | **FINAL SALE** |
+| Engraved | **FINAL SALE** |
+| Resized | **FINAL SALE** |
+| Refund timing | 5–10 business days after inspection/approval |
+| Non-refundable | outbound shipping · duties · taxes · brokerage/customs |
+| Warranty | 12-month limited manufacturing warranty — SEPARATE from returns |
+
+**Do not reinterpret these policies without owner approval.**
+
+### D.2 — Canonical RMA state machine
+
+```
+             ┌─────────────┐
+             │  requested  │  ← customer submitted (via order-status token)
+             └──┬────────┬─┘
+    admin:      │        │  admin: /authorize  →  authorized
+    /deny       │        │
+                ↓        ↓
+             ┌───────┐  ┌────────────┐
+             │denied │  │under_review│  ← warranty or unknown class
+             └───────┘  └──┬────┬────┘
+                            │    └─── admin: /verify-delivery { delivered_at }
+                     admin: /authorize
+                            ↓
+                     ┌────────────┐
+                     │ authorized │ ── admin: /deny → denied
+                     └─────┬──────┘
+                           │  admin: /receive
+                           ↓
+                     ┌───────────┐
+                     │ received  │ ── admin: /inspect { pass|fail }
+                     └─────┬─────┘
+                           │
+              ┌────────────┴────────────┐
+              ↓                          ↓
+   ┌────────────────────┐   ┌────────────────────┐
+   │ inspection_passed  │   │ inspection_failed  │
+   └───────┬────────────┘   └───┬────────────────┘
+           │ admin: /refund      │ admin: /deny
+           ↓                     ↓
+   ┌───────────────────┐      ┌────────┐
+   │ refund_approved   │      │ denied │
+   └──────────┬────────┘      └────┬───┘
+              │                     │
+      Stripe charge.refunded        │
+              ↓                     ↓
+        ┌──────────┐          ┌────────┐
+        │ refunded │──close──▶│ closed │
+        └──────────┘          └────────┘
+```
+
+### D.3 — Server-authoritative eligibility
+
+`services.returns_service.evaluate_item_eligibility()` returns
+`(eligible, policy_class, reasons, owner_review_required,
+return_window_expires_at)`. Rules:
+
+1. `payment_status ∈ {paid, authorized}`, not `refunded`.
+2. Policy class not in final-sale set (silver / custom / engraved / resized).
+3. If policy class is `unknown` → `owner_review_required=true`,
+   **never auto-denied**.
+4. Delivery date (`delivered_at` or `shipped_at`) present. If missing →
+   `owner_review_required=true` with reason `delivery_date_unverified`.
+5. Now ≤ delivery + 30 days.
+
+### D.4 — Policy classification (from order-item snapshot)
+
+- `is_engraved` / `is_resized` / `is_custom` flags (if captured at order
+  create) → those respective classes.
+- Variant contains "custom / bespoke / atelier / made-to-order" → `custom`.
+- Variant contains "silver / sterling" without gold hints → `silver`.
+- Variant/karat/metal contains "gold / karat / 10K / 14K / 18K / 22K /
+  24K / vermeil" → `eligible_gold`.
+- Otherwise → `unknown` (routes to owner review).
+
+**Missing metadata to capture in a future order-schema pass:**
+- `is_engraved`, `is_resized`, `is_custom` at the line-item level.
+- `delivered_at` (currently derived from `shipped_at`).
+
+### D.5 — Customer flow (token-secured, no admin needed)
+
+- `POST /api/returns/request { order_number, token, item_indices[], reason, note? }`
+  — verifies the order's `status_token_hash`, creates one RMA case per
+  active order (409 `ACTIVE_RMA_EXISTS` blocks duplicates), and routes
+  warranty reasons (`arrived_damaged` / `suspected_defect`) to
+  `under_review` automatically.
+- `GET /api/returns/{rma}?order_number=…&token=…` — same token gate.
+  Customer view surfaces only status, RMA number, item snapshot, and a
+  human-readable message. **Never surfaces inspection notes, fraud
+  flags, Stripe IDs, or admin identity.**
+
+### D.6 — Admin endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/admin/returns?status=…&q=…` | Queue (new / under_review / authorized / received / inspection / refund / refunded / denied / closed / all) |
+| `GET /api/admin/returns/{rma}` | Case detail + audit trail |
+| `POST /api/admin/returns/{rma}/verify-delivery` | Owner records manually-verified delivery date; recomputes eligibility |
+| `POST /api/admin/returns/{rma}/authorize` | `requested/under_review → authorized`, records optional return instructions |
+| `POST /api/admin/returns/{rma}/deny { reason }` | Owner denies (from any pre-refund state) |
+| `POST /api/admin/returns/{rma}/receive` | `authorized/in_transit → received` |
+| `POST /api/admin/returns/{rma}/inspect { result:pass|fail, notes? }` | Records inspection outcome |
+| `POST /api/admin/returns/{rma}/refund` | `inspection_passed → refund_approved`, computes trusted refund cents; Stripe execution deferred |
+| `POST /api/admin/returns/{rma}/close` | Closes terminal or refunded case |
+
+All admin endpoints require JWT. Every state-mutating call writes one
+row to `returns_audit`. Money fields, Stripe IDs, tokens, and webhook
+event IDs are stripped from `extra` before audit insert.
+
+### D.7 — Refund calculation
+
+`calculate_refund_cents(order, item_indices)` uses the ORIGINAL order
+snapshot only. Never uses current catalog price, current FX, current
+metal spot, or client-submitted amount. Covers merchandise only —
+outbound shipping, tax, duties, brokerage are non-refundable per policy.
+
+### D.8 — Stripe reconciliation
+
+- `charge.refunded` webhook remains the single source of refund truth.
+  Existing handler flips `payment_status → refunded / partially_refunded`
+  idempotently via `webhook_event_ids`.
+- Layer 3 addition: if any RMA case attached to the same order is in
+  `refund_approved` or `refund_pending`, the webhook advances it to
+  `refunded` and records `stripe_refund_id` + `stripe_refund_status` +
+  `refund_confirmed_at`, plus a `webhook_refund_confirmed` audit row.
+- **Admin never sets `payment_status = refunded`.** Only Stripe does,
+  through the signed webhook.
+- Historical order `PHI-20260901-4CBC5C` is refused with `409
+  LOCKED_HISTORICAL_ORDER` if any admin attempts a refund against it.
+
+### D.9 — Double-refund protection
+
+- RMA state machine refuses `/refund` when `stripe_refund_id` is already
+  set (409 `REFUND_ALREADY_ISSUED`).
+- Webhook idempotency (`webhook_event_ids` compound index) prevents
+  duplicate application of the same `charge.refunded` event.
+- `email_sent` flags per case will gate future customer refund emails
+  (email dispatch deferred to a hardened path).
+
+### D.10 — Customer email templates (rendered only, not dispatched in Layer 3)
+
+- `RETURN REQUEST RECEIVED` — status `requested`.
+- `RETURN AUTHORIZED` — status `authorized`.
+- `ITEM RECEIVED` — status `received`.
+- `REFUND APPROVED` — status `refund_approved` (approval copy only).
+- `REFUND ISSUED` — status `refunded` (only after Stripe-authoritative
+  confirmation).
+- `RETURN NOT ELIGIBLE / DENIED` — status `denied`.
+
+Copy uses the locked 5–10 business-day refund window language. **No
+promise of exact bank posting time.**
+
+### D.11 — Daily return-management checklist (owner)
+
+1. Open **Admin → Returns** (`/admin/returns`).
+2. **New Requests** tab — review same-day submissions.
+3. Cases needing **verified delivery date** — enter the carrier-confirmed
+   date via the `Verify Delivery Date` control on the detail panel.
+4. **Authorize** eligible returns and paste the current PHILEON return
+   instructions (owner-configured).
+5. When packages arrive → mark **Item Received**.
+6. Perform inspection at the bench, record `PASS` or `FAIL` with notes.
+7. On `PASS` → **Approve Refund** (Layer 3 records the trusted amount;
+   Stripe execution is deferred).
+8. On `FAIL` → **Deny** with clear reason.
+9. Close cases once the `charge.refunded` webhook has confirmed
+   Stripe-side or the denial has been communicated.
+
+### D.12 — What Layer 3 explicitly does NOT do
+
+- No automated return-label purchasing.
+- No carrier return APIs.
+- No automatic inspection.
+- No automatic refund approval.
+- No warranty repair-management system.
+- No fraud scoring / chargeback evidence automation.
+- No inventory restocking automation.
+- No loyalty credits, store credit, or exchanges.
+- No real customer emails (templates render only in this phase).
+- No LIVE refund execution — Stripe stays TEST, and the refund endpoint
+  refuses with `409 LIVE_REFUND_DISABLED_IN_LAYER_3` if `STRIPE_MODE`
+  ever becomes live before a dedicated hardened refund pass.
