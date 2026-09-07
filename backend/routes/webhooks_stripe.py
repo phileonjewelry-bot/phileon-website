@@ -436,6 +436,18 @@ async def stripe_webhook(request: Request):
                     "internal_review_notification_sent": _intl.get("status") == "sent",
                     "updated_at": datetime.now(timezone.utc),
                 }})
+            # Layer 5: commit inventory reservations for this Session
+            # exactly once. Idempotent — a duplicate `session.completed`
+            # webhook is a no-op because the status flip HELD→COMMITTED
+            # is guarded server-side.
+            try:
+                from services.inventory_service import commit_by_session
+                await commit_by_session(
+                    db, stripe_checkout_session_id=obj.get("id"),
+                    reason="checkout.session.completed",
+                )
+            except Exception as ie:  # pragma: no cover — defensive
+                logger.warning(f"inventory commit skipped: {type(ie).__name__}: {ie}")
         else:
             # Async pending (e.g., Klarna/Afterpay/bank redirect) — leave pending
             await db.orders_v2.update_one({"id": order["id"]},
@@ -492,12 +504,48 @@ async def stripe_webhook(request: Request):
                     "internal_review_notification_sent": _intl.get("status") == "sent",
                     "updated_at": datetime.now(timezone.utc),
                 }})
+            # Layer 5: commit inventory reservations after authoritative
+            # async payment success. Idempotent.
+            try:
+                from services.inventory_service import commit_by_session
+                await commit_by_session(
+                    db, stripe_checkout_session_id=obj.get("id"),
+                    reason="checkout.session.async_payment_succeeded",
+                )
+            except Exception as ie:  # pragma: no cover — defensive
+                logger.warning(f"inventory commit skipped: {type(ie).__name__}: {ie}")
+
+    elif etype == "checkout.session.expired":
+        # Layer 5 authoritative reservation release. Idempotent — held
+        # reservations flip to `released`; committed reservations are
+        # untouched. Never touches stock_on_hand.
+        try:
+            from services.inventory_service import release_by_session
+            await release_by_session(
+                db, stripe_checkout_session_id=obj.get("id"),
+                reason="checkout.session.expired",
+            )
+        except Exception as ie:  # pragma: no cover — defensive
+            logger.warning(f"inventory release on expired skipped: {type(ie).__name__}: {ie}")
 
     elif etype == "checkout.session.async_payment_failed" or etype == "payment_intent.payment_failed":
         if order:
             await db.orders_v2.update_one({"id": order["id"]},
                 {"$set": {"payment_status": "failed", "updated_at": datetime.now(timezone.utc)},
                  "$addToSet": {"webhook_event_ids": event["id"]}})
+        # Layer 5: only `checkout.session.async_payment_failed` is a
+        # Stripe-authoritative FINAL failure for that Session. A
+        # `payment_intent.payment_failed` may still be retried within
+        # the same active Session — do NOT release inventory on it.
+        if etype == "checkout.session.async_payment_failed":
+            try:
+                from services.inventory_service import release_by_session
+                await release_by_session(
+                    db, stripe_checkout_session_id=obj.get("id"),
+                    reason="checkout.session.async_payment_failed",
+                )
+            except Exception as ie:  # pragma: no cover — defensive
+                logger.warning(f"inventory release on failed skipped: {type(ie).__name__}: {ie}")
 
     elif etype == "charge.refunded":
         if order:

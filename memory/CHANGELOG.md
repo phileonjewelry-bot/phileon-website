@@ -6,6 +6,47 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 5: Inventory & Availability Control ✓
+Server-authoritative inventory subsystem shipped.
+- New `services/inventory_service.py` with deterministic
+  `compute_inventory_key = sha256(canonical_identity)[:32]` over
+  normalized (slug, variant, karat, metal_colour, ring_size).
+- Atomic reservation via single-op Mongo `updateOne` guarded by
+  `$expr:{$gte:[{$subtract:["$stock_on_hand","$stock_reserved"]}, qty]}`.
+  Real concurrency test (8 concurrent reservers against stock=1)
+  proves exactly-one-winner semantics under real Mongo.
+- Reservation lifecycle `held → committed / released` wired to Stripe:
+  `session.completed`+paid / `async_payment_succeeded` → commit;
+  `async_payment_failed` / `session.expired` → release. New
+  `checkout.session.expired` webhook handler added (was missing).
+  `payment_intent.payment_failed` never auto-releases (Session may
+  retry). `charge.refunded` and `charge.dispute.*` never touch stock.
+- Admin API `/api/admin/inventory` (list/upsert/adjust/
+  mark-unavailable/re-enable/audit/reconcile-stale) — JWT gated,
+  audit-logged, idempotent.
+- RMA restock bridge `POST /api/admin/returns/{rma}/restock` —
+  the ONLY path that increases physical stock from a return. Refuses
+  `custom/engraved/resized_final_sale`; idempotent per
+  `(rma_number, item_ref)`.
+- Customer availability API `POST /api/availability/resolve` public.
+  Returns only `{slug, state, available, mode}` — never exposes
+  counts, notes, reservation IDs, or session IDs.
+- 17 new Layer 5 tests all pass; 1251 full-suite tests pass (1 owner-
+  accepted historical drift).
+- Docs: `OPERATIONS.md` Layer 5 chapter + owner daily checklist,
+  `RECOVERY_RUNBOOK.md` inventory recovery / DB restore / suspected
+  oversale.
+- Files added: `backend/services/inventory_service.py`,
+  `backend/routes/admin_inventory.py`, `backend/routes/availability.py`,
+  `backend/tests/test_layer5_inventory.py`.
+- Files modified: `backend/routes/checkout.py`,
+  `backend/routes/webhooks_stripe.py`, `backend/routes/returns.py`,
+  `backend/server.py`.
+- Locked invariants intact: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test,
+  PHILEON_BEHAVIORAL_LIVE=false, PHI-20260901-4CBC5C untouched,
+  shipping / signature / adaptive pricing unchanged.
+
 ### 2026-02-17 — Layer 4 SEMANTIC CORRECTION ✓
 Chargeback-loss ≠ merchant refund. A LOST Stripe dispute no longer
 sets `payment_status = "refunded"`. New canonical state:

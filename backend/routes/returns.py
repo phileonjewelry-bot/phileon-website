@@ -660,6 +660,60 @@ async def approve_refund(rma_number: str, body: RefundIn = RefundIn(),
     return _serialize_case_for_admin(await _load(rma_number))
 
 
+class RestockIn(BaseModel):
+    """Owner restock action after RMA inspection. One (rma, item_index)
+    pair may restock at most once — idempotent. Only ready_to_ship
+    configurations can be restocked. Custom, engraved, resized, or
+    otherwise non-resalable pieces MUST NOT be restocked."""
+    item_index: int
+    quantity: int = 1
+    note: Optional[str] = None
+
+
+@admin_router.post("/{rma_number}/restock")
+async def restock_item(rma_number: str, body: RestockIn,
+                          _admin=Depends(verify_admin)):
+    case = await _load(rma_number)
+    if case.get("status") not in ("inspection_passed", "refund_approved",
+                                     "refunded", "closed"):
+        raise HTTPException(status_code=409, detail={
+            "code": "RESTOCK_REQUIRES_INSPECTION_PASSED",
+        })
+    order = await db.orders_v2.find_one({"order_number": case.get("order_number")})
+    if not order:
+        raise HTTPException(status_code=404, detail={"code": "ORDER_NOT_FOUND"})
+    items = order.get("items") or []
+    if not (0 <= body.item_index < len(items)):
+        raise HTTPException(status_code=400, detail={"code": "INVALID_ITEM_INDEX"})
+    src = items[body.item_index]
+    # Guard against restocking obviously non-resalable classes.
+    verdict_class = None
+    for snap in (case.get("items_snapshot") or []):
+        if int(snap.get("index", -1)) == int(body.item_index):
+            verdict_class = snap.get("policy_class")
+            break
+    if verdict_class in ("custom_final_sale", "engraved_final_sale",
+                            "resized_final_sale"):
+        raise HTTPException(status_code=409, detail={
+            "code": "NON_RESALABLE_POLICY_CLASS",
+            "policy_class": verdict_class,
+        })
+    from services import inventory_service as _inv
+    key = _inv.compute_inventory_key(src)
+    try:
+        doc = await _inv.restock_from_rma(
+            db, inventory_key=key, qty=int(body.quantity),
+            rma_number=rma_number, item_ref=f"item_{body.item_index}",
+            actor="admin", note=body.note or "RMA restock (inspection passed)",
+        )
+    except ValueError as e:
+        code = str(e).split(":")[0] if ":" in str(e) else str(e)
+        raise HTTPException(status_code=409, detail={"code": code,
+                                                        "message": str(e)})
+    return {"ok": True, "inventory_key": key,
+            "stock_on_hand": int(doc.get("stock_on_hand", 0))}
+
+
 @admin_router.post("/{rma_number}/close")
 async def close_case(rma_number: str, body: NoteIn = NoteIn(),
                       _admin=Depends(verify_admin)):

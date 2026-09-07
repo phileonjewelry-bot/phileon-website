@@ -587,6 +587,42 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
         metadata={"internal_order_id": order.id, "public_order_number": order.order_number},
     )
 
+    # ── Layer 5: Inventory reservation (atomic, pre-Session).
+    # No explicit inventory record → made_to_order → no reservation.
+    # For any `ready_to_ship` configuration this atomically holds stock.
+    # On failure we cleanly release the group and refuse to create the
+    # Stripe Session. Every reservation is later attached to the Session
+    # ID and committed only on authoritative payment success.
+    from services import inventory_service as _inv
+    reservation_group_id = f"grp_{order.id}"
+    reservation_snapshots: list = []
+    reservation_failed = False
+    failed_slug: Optional[str] = None
+    for r in resolved:
+        ok, rid, kind = await _inv.try_reserve(
+            db, item=r, qty=int(r["quantity"]),
+            reservation_group_id=reservation_group_id,
+            order_number=order.order_number,
+        )
+        if not ok:
+            reservation_failed = True
+            failed_slug = r.get("product_id") or r.get("slug")
+            break
+        reservation_snapshots.append({
+            "product_id": r.get("product_id"),
+            "inventory_key": _inv.compute_inventory_key(r),
+            "availability_mode_at_purchase": kind,
+            "reservation_id": rid,
+        })
+    if reservation_failed:
+        await _inv.release_group(db, reservation_group_id=reservation_group_id,
+                                    reason="cart_partial_oos_rejected")
+        raise HTTPException(status_code=409, detail={
+            "code": "OUT_OF_STOCK" if kind == "OUT_OF_STOCK" else "UNAVAILABLE",
+            "product_id": failed_slug,
+            "message": "This piece is currently unavailable.",
+        })
+
     try:
         # `automatic_payment_methods` is only accepted on newer Stripe API
         # versions; when the installed SDK / configured API version rejects
@@ -619,14 +655,35 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
                 raise
     except stripe.error.StripeError as e:  # type: ignore
         logger.error(f"Stripe error: {type(e).__name__}")
+        # Release inventory reservations we just held.
+        await _inv.release_group(db, reservation_group_id=reservation_group_id,
+                                    reason="stripe_session_error")
         raise HTTPException(status_code=502, detail={"code": "STRIPE_ERROR", "message": "Payment provider error."})
     except TypeError:
         # Older SDK signature: fall back without keyword-only extras.
         session = stripe.checkout.Session.create(**session_kwargs)
 
+    # Session created — attach its ID to every held reservation and mirror
+    # Stripe's `expires_at` for the reconciliation view.
+    _session_expires = None
+    try:
+        _exp = getattr(session, "expires_at", None)
+        if _exp:
+            _session_expires = datetime.fromtimestamp(int(_exp), tz=timezone.utc)
+    except Exception:
+        _session_expires = None
+    await _inv.attach_session(
+        db, reservation_group_id=reservation_group_id,
+        stripe_checkout_session_id=session.id,
+        order_number=order.order_number,
+        stripe_expires_at=_session_expires,
+    )
+
     await db.orders_v2.update_one({"id": order.id}, {"$set": {
         "provider_session_id": session.id,
         "provider_session_url": session.url,
+        "inventory_reservation_group_id": reservation_group_id,
+        "inventory_snapshot": reservation_snapshots,
     }})
 
     return {"checkout_url": session.url, "order_number": order.order_number,

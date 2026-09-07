@@ -978,3 +978,180 @@ remains authoritative for payment truth.
 - No carrier delivery webhook.
 - No LIVE dispute response submission (refused with
   `409 LIVE_SUBMISSION_DISABLED_IN_LAYER_4`).
+
+
+---
+
+# Layer 5 — Inventory & Availability Control
+
+Server-authoritative inventory system. Prevents oversale of finite
+`ready_to_ship` physical pieces. Preserves PHILEON's `made_to_order`
+business model. NEVER auto-restocks on refund, chargeback, or dispute
+events.
+
+## Canonical availability modes
+
+| Mode | Meaning | Reservation? |
+|---|---|---|
+| `made_to_order` | Sellable without physical stock authority. Default when no inventory record exists. | No |
+| `ready_to_ship` | Physical finished inventory exists; finite quantity is enforced. | Yes (atomic) |
+| `unavailable` | Not currently purchasable. Explicit owner state. | No |
+| `sold_out` (DERIVED) | Customer-facing label for `ready_to_ship` with `available_quantity ≤ 0`. Never stored. | — |
+
+**Safe default**: any resolved configuration that has no explicit
+`db.inventory` record is treated as `made_to_order`. Owners must
+explicitly promote a configuration to `ready_to_ship` (with a physical
+stock count) — no configuration is ever silently flipped to `sold_out`.
+
+## Canonical inventory identity
+
+Every sellable configuration has a deterministic 32-hex-character
+inventory key derived from a normalized identity tuple:
+
+```
+slug + variant + karat + metal_colour + ring_size  (lowercased/trimmed;
+                                                     null → "-")
+inventory_key = sha256(canonical_identity)[:32]
+```
+
+Implemented in `services.inventory_service.compute_inventory_key`. The
+key is server-computed on every request; clients never supply an
+inventory key as authority.
+
+## Collections
+
+| Collection | Role |
+|---|---|
+| `inventory` | Current physical stock, availability mode, low-stock threshold. Unique index on `inventory_key`. |
+| `inventory_reservations` | Per-Session reservation records with lifecycle states `held / committed / released`. |
+| `inventory_audit` | Append-only history of every mutation. |
+
+## Atomic reservation
+
+Reservations are performed inside a single Mongo `updateOne` guarded by
+`$expr: {$gte: [{$subtract: ["$stock_on_hand", "$stock_reserved"]}, qty]}`.
+Two concurrent reservation attempts for the last physical unit produce
+exactly one success and one `OUT_OF_STOCK` — verified by a real
+concurrency test in
+`tests/test_layer5_inventory.py::test_C_and_38_concurrent_reservation`.
+
+## Checkout lifecycle
+
+1. `POST /api/checkout/session` resolves the cart.
+2. For each item, calls `inventory_service.try_reserve()`. `made_to_order`
+   items require no reservation. `ready_to_ship` items atomically reserve
+   or fail with `OUT_OF_STOCK`.
+3. Any reservation failure releases the whole group (idempotent) and
+   returns `409 {"code":"OUT_OF_STOCK","product_id":...}`. No Stripe
+   Session is created.
+4. On successful Stripe Session creation, all reservations in the group
+   are attached to `stripe_checkout_session_id` and Stripe's
+   `expires_at` is mirrored to `reservation.stripe_expires_at`.
+5. On Stripe API failure, `release_group()` is called.
+
+## Payment commit authority
+
+| Stripe event | Inventory effect |
+|---|---|
+| `checkout.session.completed` + `payment_status="paid"` | `commit_by_session()` — flip HELD→COMMITTED, atomic `$inc {stock_on_hand: -qty, stock_reserved: -qty}`. |
+| `checkout.session.completed` + `payment_status≠"paid"` (async pending) | No commit. Reservation remains HELD. |
+| `checkout.session.async_payment_succeeded` | `commit_by_session()`. |
+| `checkout.session.async_payment_failed` | `release_by_session()`. |
+| `checkout.session.expired` | `release_by_session()`. |
+| `payment_intent.payment_failed` | **No inventory change** — Session may still be active and retried. |
+| `charge.refunded` | **NO inventory change**. Refund ≠ restock. |
+| `charge.dispute.*` | **NO inventory change**. Fraud/dispute never rewrites stock. |
+
+Every commit / release is guarded server-side so duplicate webhooks are
+a no-op. `stock_reserved` can never go below zero; committed
+reservations are immune to subsequent release calls.
+
+## Admin API (`/api/admin/inventory`, verify_admin JWT required)
+
+| Endpoint | Behavior |
+|---|---|
+| `GET  /admin/inventory?mode=&low_stock=` | List with filters. |
+| `POST /admin/inventory/upsert` | Create/update: mode, initial stock, threshold, note. Refuses lowering `stock_on_hand` below `stock_reserved`. |
+| `POST /admin/inventory/{key}/adjust` | Delta stock change with mandatory reason. Refuses if `on_hand + delta < reserved`. |
+| `POST /admin/inventory/{key}/mark-unavailable` | Owner override — blocks Add-to-Cart / Checkout without deleting stock history. |
+| `POST /admin/inventory/{key}/re-enable` | Clear override — never fabricates a positive quantity. |
+| `GET  /admin/inventory/{key}/audit` | Append-only history for one key. |
+| `GET  /admin/inventory/reconcile/stale-reservations` | Read-only reconciliation feed. |
+
+## RMA restock (Layer 3 + Layer 5 bridge)
+
+`POST /api/admin/returns/{rma_number}/restock` is the ONLY path that
+increases `ready_to_ship` stock from a return. Preconditions:
+
+- RMA case status is `inspection_passed`, `refund_approved`, `refunded`,
+  or `closed`.
+- The item's policy class is NOT `custom_final_sale`,
+  `engraved_final_sale`, or `resized_final_sale`.
+- The target inventory record's `availability_mode == ready_to_ship`.
+- Idempotency: one `(rma_number, item_ref)` pair may restock at most
+  once. A duplicate request returns `409 ALREADY_RESTOCKED`.
+
+## Customer availability API
+
+`POST /api/availability/resolve` (public, no auth) returns only:
+
+```
+{ "slug", "state", "available", "mode" }
+```
+
+Never exposes `stock_on_hand`, `stock_reserved`, `owner_note`,
+`reservation_id`, `stripe_checkout_session_id`, `manual_unavailable`,
+`created_at`, or any admin metadata. Never uses fake scarcity language.
+
+## Recovery / reconciliation
+
+Before repairing inventory after any anomaly, reconcile in this order:
+
+1. `db.inventory_reservations` — enumerate HELD reservations for the
+   affected configuration.
+2. `db.orders_v2` — verify order → session → `payment_status` coverage.
+3. **Stripe** — the authoritative payment / session state. Use
+   `stripe.checkout.Session.retrieve(session_id)` to compare
+   `expires_at`, `status`, and `payment_status`.
+4. Fulfillment state — confirm the physical piece has NOT left PHILEON
+   before releasing/adjusting stock.
+5. RMA state (`db.returns`) — confirm no restock has already been
+   recorded for the same physical piece.
+6. Repair inventory only with an auditable
+   `POST /admin/inventory/{key}/adjust` and a factual reason. Never
+   silently rewrite quantity history.
+
+**A database restore MUST NOT be assumed to contain the newest
+reservation / payment state.** Re-fetch Stripe truth before opening
+affected checkout configurations.
+
+## Owner daily inventory checklist
+
+1. Review low-stock READY TO SHIP pieces (`?mode=ready_to_ship&low_stock=true`).
+2. Review SOLD OUT configurations (`?mode=sold_out`).
+3. Review manual UNAVAILABLE overrides (`?mode=unavailable`).
+4. Review abnormal/stale HELD reservations (`/admin/inventory/reconcile/stale-reservations`).
+5. Confirm newly received physical stock and adjust with reason.
+6. Review returned pieces awaiting resale/restock decision.
+7. Confirm no negative stock/reservation anomalies (audit log).
+8. Investigate inventory/order/Stripe mismatches BEFORE changing quantities.
+9. Reconcile any inventory incident before reopening the affected
+   configuration.
+
+## Do-NOT list (Layer 5 explicit)
+
+- No warehouse management, no barcodes, no supplier APIs.
+- No automatic reorder purchasing, no auto manufacturing planning.
+- No customer-facing exact stock counts, no fake urgency copy.
+- No preorder or backorder modes.
+- No refund → auto-restock. No chargeback → auto-stock change.
+- No fraud/dispute → inventory release.
+- No non-atomic read-then-write reservation.
+- No client-controlled availability or inventory-key trust.
+
+## Legacy note
+
+`routes/stripe_routes.py` and `routes/inventory.py` operate on the empty
+legacy `products.inventory_count` field and are NOT the Layer 5
+authority. Canonical Layer 5 inventory authority lives ONLY on the
+trusted `/api/checkout/*` and `/api/admin/inventory/*` architecture.

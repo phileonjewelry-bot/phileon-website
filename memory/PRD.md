@@ -3,7 +3,26 @@
 ## Original Problem Statement
 High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editorial UI (LA BÊTE visual language). Ongoing: content/UI expansion of Fine Jewelry, Inspiration Vault, and now Bracelets, with cinematic vertical galleries, autoplay-muted-loop hero video, and product-page detail pages per SKU.
 
-- **[DONE Feb 17, 2026 — Layer 4 FINAL SIGN-OFF PASS] LAYER 4 GREEN — READY FOR OWNER LOCK.**
+- **[DONE Feb 17, 2026 — Layer 5 Inventory & Availability Control]** Server-authoritative inventory subsystem shipped.
+  - **Canonical modes** `made_to_order`, `ready_to_ship`, `unavailable` (+ derived `sold_out`).
+    Default: no explicit record → `made_to_order`. No bulk seeding; no fabricated stock.
+  - **Deterministic identity** `inventory_key = sha256(canonical_identity)[:32]` over normalized (slug, variant, karat, metal_colour, ring_size). Client-supplied inventory keys are never trusted.
+  - **Atomic reservation** using single-op Mongo `updateOne` with
+    `$expr: {$gte: [{$subtract:["$stock_on_hand","$stock_reserved"]}, qty]}` — verified by a REAL concurrency test firing 8 concurrent `try_reserve()` calls against `stock_on_hand=1` and asserting exactly 1 success + 7 `OUT_OF_STOCK`.
+  - **Reservation lifecycle** `held → committed / released` mapped to Stripe events:
+    `session.completed + paid` → commit; `async_payment_succeeded` → commit;
+    `async_payment_failed` / `session.expired` → release. `payment_intent.payment_failed` never releases (session may retry). `charge.refunded` and `charge.dispute.*` NEVER touch inventory.
+  - **New `checkout.session.expired` webhook handler** added — was previously missing.
+  - **Admin API** `/api/admin/inventory` (list, upsert, adjust, mark-unavailable, re-enable, audit, reconcile/stale-reservations) — verify_admin JWT gated, audit-logged, idempotent.
+  - **RMA restock bridge** `POST /api/admin/returns/{rma}/restock` — the ONLY path that increases physical stock from a return. Refuses `custom/engraved/resized_final_sale` classes; idempotent per `(rma_number, item_ref)`.
+  - **Customer availability API** `POST /api/availability/resolve` (public). Returns only `{slug, state, available, mode}` — never exposes counts, notes, reservation IDs, session IDs.
+  - **17 new Layer 5 tests** (`test_layer5_inventory.py`), all pass. 1251 full-suite tests pass; only pre-existing owner-accepted Annie Rose gold-spot drift remains.
+  - **Docs**: `OPERATIONS.md` (Layer 5 chapter + owner daily checklist), `RECOVERY_RUNBOOK.md` (inventory recovery / DB restore / suspected oversale).
+  - **Locked invariants intact**: PRODUCT_SLUGS=73, CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE=false, PHI-20260901-4CBC5C untouched, shipping/signature/adaptive pricing unchanged.
+  - **Files added**: `backend/services/inventory_service.py`, `backend/routes/admin_inventory.py`, `backend/routes/availability.py`, `backend/tests/test_layer5_inventory.py`.
+  - **Files modified**: `backend/routes/checkout.py` (reserve/attach/release), `backend/routes/webhooks_stripe.py` (commit/release + new `session.expired` branch), `backend/routes/returns.py` (RMA restock), `backend/server.py` (router wiring + index init).
+
+- **[DONE Feb 17, 2026 — Layer 4 FINAL SIGN-OFF PASS]** LAYER 4 GREEN — READY FOR OWNER LOCK.
   - **Terminal-dispute reconciliation added.** Webhook `charge.dispute.closed`
     now restores `payment_status="paid"` on WON / `warning_closed` /
     `charge_dismissed` and sets `payment_status="refunded"` on LOST.

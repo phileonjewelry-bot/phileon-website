@@ -511,3 +511,57 @@ If any of these turns out to be unavailable, the fallback recovery source is Str
 (for payment truth) + Resend delivery logs (for email history) + `git log` (for code
 truth). The system is designed to be reconstructable from those three even if Mongo
 is a complete loss — but that is a last resort, not a plan.
+
+
+---
+
+## Layer 5 — Inventory recovery
+
+Inventory recovery **never** proceeds from local state alone. Stripe is
+authoritative for payment / session lifecycle; the database only
+authorities physical stock counts.
+
+### Missed / duplicate webhook (`checkout.session.expired`, `.async_payment_succeeded`, etc.)
+
+1. Reservation-service operations are idempotent by design — replaying
+   webhooks in any order will NOT double-decrement or double-release.
+2. If a reservation appears stuck HELD after Stripe reports the session
+   is `expired`, call
+   `GET /api/admin/inventory/reconcile/stale-reservations` for the
+   candidate list.
+3. Verify Stripe truth: `stripe.checkout.Session.retrieve(session_id)`.
+   Only after Stripe confirms `status ∈ {expired, complete}` may the
+   reservation be released with a factual audit reason.
+4. Never mass-release based on local clock alone.
+
+### DB restore
+
+If Mongo is restored from a snapshot:
+
+1. Do NOT open affected checkout configurations for sale until
+   reconciliation completes.
+2. For every recent Stripe Checkout Session (last 7 days),
+   `stripe.checkout.Session.list(created={"gte": snapshot_ts})` and
+   diff against `db.inventory_reservations`.
+3. For every `payment_intent.succeeded` after the snapshot,
+   re-run `commit_by_session()` (idempotent — safe to replay).
+4. For every `checkout.session.expired` after the snapshot,
+   re-run `release_by_session()`.
+5. Only then may a listing be re-opened via
+   `POST /admin/inventory/{key}/re-enable`.
+
+### Failed Stripe Session creation
+
+`POST /api/checkout/session` already calls
+`inventory_service.release_group()` on `stripe.error.StripeError`. No
+recovery action is required. If a stale HELD reservation appears
+without a `stripe_checkout_session_id`, it is safe to release via
+`inventory_service.release_group(reservation_group_id=...)`.
+
+### Suspected oversale
+
+STOP the affected configuration first:
+`POST /api/admin/inventory/{key}/mark-unavailable`. Then reconcile as
+above. Do NOT adjust `stock_on_hand` until every open reservation and
+Stripe Session is accounted for.
+
