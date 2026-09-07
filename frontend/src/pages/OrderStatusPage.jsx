@@ -69,6 +69,127 @@ function isValidHttpUrl(u) {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/*  ReturnCta — customer-facing return/warranty entry point.
+    Never renders admin data. Uses only the order + customer-safe
+    RMA state fetched with the same token as the OrderStatusPage.    */
+/* ------------------------------------------------------------------ */
+
+const _FINAL_SALE_HINT = /\b(silver|sterling|custom|bespoke|atelier)\b/i;
+
+function classifyForCtaHint(order) {
+  const items = Array.isArray(order?.items) ? order.items : [];
+  if (items.length === 0) return "unknown";
+  let anyFinal = false;
+  let anyGold = false;
+  for (const it of items) {
+    const s = `${it.product_name || ""} ${it.variant || ""} ${it.karat || ""} ${it.metal_colour || ""}`;
+    if (_FINAL_SALE_HINT.test(s)) anyFinal = true;
+    if (/\b(gold|karat|10K|14K|18K|22K|24K|vermeil)\b/i.test(s)) anyGold = true;
+  }
+  if (anyFinal && !anyGold) return "final_sale";
+  if (anyGold) return "eligible_gold";
+  return "unknown";
+}
+
+const REASON_OPTIONS = [
+  { value: "changed_mind",         label: "Changed my mind" },
+  { value: "size_fit",             label: "Size / fit" },
+  { value: "appearance_style",     label: "Appearance / style" },
+  { value: "arrived_damaged",      label: "Item arrived damaged" },
+  { value: "suspected_defect",     label: "Suspected manufacturing defect" },
+  { value: "wrong_item_received",  label: "Wrong item received" },
+  { value: "other",                label: "Other" },
+];
+
+function ReturnCta({ order, showForm, onOpen, reason, onReason,
+                      note, onNote, busy, error, onSubmit }) {
+  const payment = (order?.payment_status || "").toLowerCase();
+  if (!["paid", "authorized"].includes(payment)) return null;
+  const hint = classifyForCtaHint(order);
+
+  return (
+    <div data-testid="return-cta">
+      <p className="os-eyebrow" style={{ textAlign: "left", margin: 0 }}>
+        Return / Warranty Help
+      </p>
+      {hint === "final_sale" ? (
+        <p style={{ marginTop: 12, color: "rgba(232,224,207,.75)",
+                    fontFamily: "'Cormorant Garamond',serif",
+                    fontStyle: "italic", fontSize: 15.5 }}
+           data-testid="return-final-sale">
+          Some pieces on this order (silver, custom, engraved or resized) are
+          FINAL SALE. For a suspected defect or warranty claim, please
+          contact <a href="mailto:concierge@getyourphileon.com"
+                       style={{ color: "#c8a24a" }}>
+            concierge@getyourphileon.com
+          </a>.
+        </p>
+      ) : null}
+      {!showForm ? (
+        <button onClick={onOpen}
+                data-testid="return-open-form-btn"
+                style={{
+                  marginTop: 14, fontFamily: "'Cinzel',serif",
+                  fontSize: 11, letterSpacing: ".32em",
+                  textTransform: "uppercase", padding: "12px 22px",
+                  background: "transparent", color: "#c8a24a",
+                  border: "1px solid #c8a24a", cursor: "pointer",
+                  transition: "background 200ms, color 200ms",
+                }}>
+          {hint === "final_sale" ? "Warranty / Support Help" : "Request a Return"}
+        </button>
+      ) : (
+        <div style={{ marginTop: 14 }} data-testid="return-form">
+          <label style={{ display: "block", marginBottom: 6,
+                            fontFamily: "'Cinzel',serif", fontSize: 10.5,
+                            letterSpacing: ".32em", textTransform: "uppercase",
+                            color: "rgba(232,224,207,.55)" }}>Reason</label>
+          <select value={reason} onChange={(e) => onReason(e.target.value)}
+                  data-testid="return-reason-select"
+                  style={{ width: "100%", padding: "10px 12px",
+                            background: "#08070a", color: "#e8e0cf",
+                            border: "1px solid #33322a", fontFamily: "inherit",
+                            fontSize: 15 }}>
+            <option value="">Choose one…</option>
+            {REASON_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          <label style={{ display: "block", margin: "14px 0 6px",
+                            fontFamily: "'Cinzel',serif", fontSize: 10.5,
+                            letterSpacing: ".32em", textTransform: "uppercase",
+                            color: "rgba(232,224,207,.55)" }}>
+            Note (optional)
+          </label>
+          <textarea rows={4} value={note} onChange={(e) => onNote(e.target.value)}
+                    maxLength={1000}
+                    data-testid="return-note-input"
+                    style={{ width: "100%", padding: "10px 12px",
+                              background: "#08070a", color: "#e8e0cf",
+                              border: "1px solid #33322a",
+                              fontFamily: "inherit", fontSize: 15, resize: "vertical" }} />
+          {error ? (
+            <p style={{ margin: "10px 0 0", color: "#e0c9c9", fontSize: 13.5 }}
+               data-testid="return-form-error">{error}</p>
+          ) : null}
+          <button onClick={onSubmit} disabled={busy || !reason}
+                  data-testid="return-submit-btn"
+                  style={{ marginTop: 14, fontFamily: "'Cinzel',serif",
+                            fontSize: 11, letterSpacing: ".32em",
+                            textTransform: "uppercase", padding: "12px 22px",
+                            background: "#c8a24a", color: "#08070a",
+                            border: "1px solid #c8a24a",
+                            cursor: busy || !reason ? "not-allowed" : "pointer",
+                            opacity: busy || !reason ? 0.5 : 1 }}>
+            {busy ? "Submitting…" : "Submit Request"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function OrderStatusPage() {
   const { orderNumber } = useParams();
   const [params] = useSearchParams();
@@ -76,6 +197,13 @@ export default function OrderStatusPage() {
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null); // "unauthorized" | "not_found" | "network"
   const [loading, setLoading] = useState(true);
+  // Return / RMA state — token-secured lookup via /api/returns
+  const [rmaCase, setRmaCase] = useState(null);
+  const [showReturnForm, setShowReturnForm] = useState(false);
+  const [returnReason, setReturnReason] = useState("");
+  const [returnNote, setReturnNote] = useState("");
+  const [returnBusy, setReturnBusy] = useState(false);
+  const [returnError, setReturnError] = useState("");
 
   useEffect(() => {
     // Keep the token out of the browser tab title.
@@ -103,6 +231,16 @@ export default function OrderStatusPage() {
         if (cancelled) return;
         setOrder(data);
         setLoading(false);
+        // Silent RMA lookup — token already verified above; safe to reuse.
+        try {
+          const rr = await fetch(
+            `${API}/api/returns?order_number=${encodeURIComponent(orderNumber)}&token=${encodeURIComponent(token)}`
+          );
+          if (!cancelled && rr.ok) {
+            const rd = await rr.json();
+            setRmaCase(rd?.case || null);
+          }
+        } catch (_e) { /* non-fatal */ }
       } catch (_e) {
         if (cancelled) return;
         setError("network");
@@ -366,6 +504,112 @@ export default function OrderStatusPage() {
             )}
           </>
         )}
+
+        {/* Layer 3 — Return / Warranty block. Visible only for paid
+            orders. When an RMA exists it shows the customer-safe status;
+            otherwise it shows the appropriate CTA (or a "final sale"
+            message for silver/custom/engraved/resized).
+            The RMA case is fetched via token-secured GET /api/returns.
+            Submission uses the same token via POST /api/returns/request. */}
+        {order && !error ? (
+          <div className="os-block" data-testid="return-block">
+            {rmaCase ? (
+              <div data-testid="return-status-panel">
+                <p className="os-eyebrow" style={{ textAlign: "left", margin: 0 }}>
+                  Return / Warranty
+                </p>
+                <div className="os-row">
+                  <span className="os-label">RMA</span>
+                  <span className="os-value" data-testid="return-rma-number">
+                    {rmaCase.rma_number}
+                  </span>
+                </div>
+                <div className="os-row">
+                  <span className="os-label">Status</span>
+                  <span className="os-value" data-testid="return-status">
+                    {(rmaCase.status || "").replace(/_/g, " ").toUpperCase()}
+                  </span>
+                </div>
+                {rmaCase.customer_message ? (
+                  <p style={{
+                    marginTop: 12, padding: "12px 14px",
+                    background: "rgba(200,162,74,.06)",
+                    borderLeft: "2px solid #c8a24a",
+                    color: "rgba(232,224,207,.85)",
+                    fontFamily: "'Cormorant Garamond',serif",
+                    fontStyle: "italic", fontSize: 15,
+                  }} data-testid="return-customer-message">
+                    {rmaCase.customer_message}
+                  </p>
+                ) : null}
+                {rmaCase.return_instructions && rmaCase.status === "authorized" ? (
+                  <div style={{ marginTop: 12, padding: "12px 14px",
+                                 background: "#08070a",
+                                 border: "1px solid rgba(200,162,74,.18)",
+                                 color: "#e8e0cf", fontSize: 14.5,
+                                 whiteSpace: "pre-wrap" }}
+                       data-testid="return-instructions">
+                    <strong style={{ color: "#c8a24a",
+                                      fontFamily: "'Cinzel',serif",
+                                      fontSize: 11, letterSpacing: ".28em" }}>
+                      RETURN INSTRUCTIONS
+                    </strong>
+                    <br />{rmaCase.return_instructions}
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <ReturnCta
+                order={order}
+                showForm={showReturnForm}
+                onOpen={() => setShowReturnForm(true)}
+                reason={returnReason}
+                onReason={setReturnReason}
+                note={returnNote}
+                onNote={setReturnNote}
+                busy={returnBusy}
+                error={returnError}
+                onSubmit={async () => {
+                  if (!returnReason) {
+                    setReturnError("Please select a reason.");
+                    return;
+                  }
+                  setReturnBusy(true);
+                  setReturnError("");
+                  try {
+                    const r = await fetch(`${API}/api/returns/request`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        order_number: orderNumber,
+                        token,
+                        reason: returnReason,
+                        note: returnNote || undefined,
+                      }),
+                    });
+                    const data = await r.json().catch(() => ({}));
+                    if (!r.ok) {
+                      const code = data?.detail?.code || "ERROR";
+                      const msg = code === "ACTIVE_RMA_EXISTS"
+                        ? "A return case already exists for this order."
+                        : code === "INVALID_TOKEN"
+                          ? "This link is no longer valid."
+                          : "Unable to submit. Please email concierge@getyourphileon.com.";
+                      setReturnError(msg);
+                    } else {
+                      setRmaCase(data);
+                      setShowReturnForm(false);
+                    }
+                  } catch (_e) {
+                    setReturnError("Network error. Please try again.");
+                  } finally {
+                    setReturnBusy(false);
+                  }
+                }}
+              />
+            )}
+          </div>
+        ) : null}
 
         <div className="os-actions">
           <Link to="/contact" className="os-btn" data-testid="order-contact-btn">

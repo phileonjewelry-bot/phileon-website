@@ -39,9 +39,22 @@ PLAINTEXT_TOKEN = "e2e-plaintext-token-" + uuid.uuid4().hex[:10]
 TOKEN_HASH = hashlib.sha256(PLAINTEXT_TOKEN.encode()).hexdigest()
 
 
-def _seed_order(order_number, *, items=None, shipped_days_ago=10, payment="paid"):
+_UNSET = object()
+
+def _seed_order(order_number, *, items=None, shipped_days_ago=10, payment="paid",
+                 delivered_days_ago=_UNSET):
+    """Layer 3 uses `delivered_at` (or `owner_verified_delivery_at`) —
+    NEVER `shipped_at` — as the return-window authority. Test helper
+    defaults `delivered_days_ago` to the same value as
+    `shipped_days_ago` so existing 30-day-window fixtures still pass.
+    Pass `delivered_days_ago=None` explicitly to seed an order that has
+    shipped but has NO delivery confirmation.
+    """
     now = datetime.now(timezone.utc)
     shipped_at = None if shipped_days_ago is None else (now - timedelta(days=shipped_days_ago))
+    if delivered_days_ago is _UNSET:
+        delivered_days_ago = shipped_days_ago
+    delivered_at = None if delivered_days_ago is None else (now - timedelta(days=delivered_days_ago))
     doc = {
         "id": order_number,
         "order_number": order_number,
@@ -49,6 +62,7 @@ def _seed_order(order_number, *, items=None, shipped_days_ago=10, payment="paid"
         "customer_email": "e2e@example.com",
         "payment_status": payment,
         "shipped_at": shipped_at,
+        "delivered_at": delivered_at,
         "items": items or [{"product_name": "LA MARVA",
                              "variant": "14K Yellow Gold",
                              "ring_size": "US 7",
@@ -214,7 +228,7 @@ def test_custom_atelier_denied(cleanup_registry):
 def test_missing_shipped_at_owner_review(cleanup_registry):
     ordn = _new_order_number()
     cleanup_registry["orders"].append(ordn)
-    _seed_order(ordn, shipped_days_ago=None)
+    _seed_order(ordn, shipped_days_ago=None, delivered_days_ago=None)
     r = requests.post(f"{BASE_URL}/api/returns/request", json={
         "order_number": ordn, "token": PLAINTEXT_TOKEN, "reason": "changed_mind",
     })
@@ -222,6 +236,21 @@ def test_missing_shipped_at_owner_review(cleanup_registry):
     body = r.json()
     assert body["status"] == "under_review"
     cleanup_registry["rmas"].append(body["rma_number"])
+
+
+def test_shipped_but_not_delivered_still_owner_review(cleanup_registry):
+    """Layer 3 completion: shipped_at MUST NOT satisfy the return-window
+    authority. Even a shipped order with no delivered_at must route to
+    owner review."""
+    ordn = _new_order_number()
+    cleanup_registry["orders"].append(ordn)
+    _seed_order(ordn, shipped_days_ago=10, delivered_days_ago=None)
+    r = requests.post(f"{BASE_URL}/api/returns/request", json={
+        "order_number": ordn, "token": PLAINTEXT_TOKEN, "reason": "changed_mind",
+    })
+    assert r.status_code == 200, r.text
+    assert r.json()["status"] == "under_review"
+    cleanup_registry["rmas"].append(r.json()["rma_number"])
 
 
 def test_warranty_reason_routes_review(cleanup_registry):
@@ -262,7 +291,7 @@ def test_admin_lifecycle_full_happy_path(auth_headers, cleanup_registry):
                        json={"result": "pass"}, headers=auth_headers)
     assert r3.status_code == 200 and r3.json()["status"] == "inspection_passed"
 
-    r4 = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/refund", json={}, headers=auth_headers)
+    r4 = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/approve-refund", json={}, headers=auth_headers)
     assert r4.status_code == 200
     body = r4.json()
     assert body["status"] == "refund_approved"
@@ -299,7 +328,7 @@ def test_partial_refund_only_selected_items(auth_headers, cleanup_registry):
     cleanup_registry["rmas"].append(rma)
 
     for path, body in [("authorize", {}), ("receive", {}),
-                        ("inspect", {"result": "pass"}), ("refund", {})]:
+                        ("inspect", {"result": "pass"}), ("approve-refund", {})]:
         rr = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/{path}",
                            json=body, headers=auth_headers)
         assert rr.status_code == 200, f"{path}: {rr.text}"
@@ -323,7 +352,7 @@ def test_refund_locked_historical_order(auth_headers, cleanup_registry):
         "created_at": datetime.now(timezone.utc),
     }
     _sync.returns.insert_one(case)
-    r = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/refund",
+    r = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/approve-refund",
                      json={}, headers=auth_headers)
     assert r.status_code == 409
     assert r.json().get("detail", {}).get("code") == "LOCKED_HISTORICAL_ORDER"
@@ -338,7 +367,7 @@ def test_refund_wrong_state_returns_409(auth_headers, cleanup_registry):
     })
     rma = r.json()["rma_number"]
     cleanup_registry["rmas"].append(rma)
-    rr = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/refund",
+    rr = requests.post(f"{BASE_URL}/api/admin/returns/{rma}/approve-refund",
                        json={}, headers=auth_headers)
     assert rr.status_code == 409
     assert rr.json().get("detail", {}).get("code") == "INVALID_TRANSITION"

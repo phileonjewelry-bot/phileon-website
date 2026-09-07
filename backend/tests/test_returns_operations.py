@@ -50,7 +50,7 @@ def test_classify_unknown_when_insufficient_metadata():
 def _gold_order(**overrides):
     d = {
         "payment_status": "paid",
-        "shipped_at": datetime.now(timezone.utc) - timedelta(days=10),
+        "delivered_at": datetime.now(timezone.utc) - timedelta(days=10),
         "items": [{"product_name": "LA MARVA", "variant": "14K Yellow Gold",
                     "quantity": 1, "unit_amount_cents": 350000}],
     }
@@ -68,7 +68,7 @@ def test_eligibility_happy_path_within_window():
 
 def test_eligibility_outside_window():
     from services.returns_service import evaluate_item_eligibility
-    order = _gold_order(shipped_at=datetime.now(timezone.utc) - timedelta(days=31))
+    order = _gold_order(delivered_at=datetime.now(timezone.utc) - timedelta(days=31))
     v = evaluate_item_eligibility(order, order["items"][0])
     assert v.eligible is False
     assert "outside_return_window" in v.reasons
@@ -85,11 +85,34 @@ def test_eligibility_silver_final_sale():
 
 def test_eligibility_delivery_date_unverified_routes_owner_review():
     from services.returns_service import evaluate_item_eligibility
-    order = _gold_order(shipped_at=None)
+    order = _gold_order(delivered_at=None)
     v = evaluate_item_eligibility(order, order["items"][0])
     assert v.eligible is False
     assert v.owner_review_required is True
     assert "delivery_date_unverified" in v.reasons
+
+
+def test_eligibility_shipped_at_is_NOT_a_delivery_date_substitute():
+    """Layer 3 completion pass — PHILEON policy is 30 days from DELIVERY,
+    never from SHIPMENT. `shipped_at` must never start the return clock.
+    """
+    from services.returns_service import evaluate_item_eligibility
+    order = _gold_order(delivered_at=None,
+                         shipped_at=datetime.now(timezone.utc) - timedelta(days=10))
+    v = evaluate_item_eligibility(order, order["items"][0])
+    assert v.eligible is False, "shipped_at MUST NOT satisfy delivery date"
+    assert v.owner_review_required is True
+    assert "delivery_date_unverified" in v.reasons
+
+
+def test_eligibility_owner_verified_delivery_at_supersedes_missing_delivered_at():
+    from services.returns_service import evaluate_item_eligibility
+    order = _gold_order(delivered_at=None,
+                         shipped_at=datetime.now(timezone.utc) - timedelta(days=25),
+                         owner_verified_delivery_at=datetime.now(timezone.utc) - timedelta(days=10))
+    v = evaluate_item_eligibility(order, order["items"][0])
+    assert v.eligible is True
+    assert v.policy_class == "eligible_gold"
 
 
 def test_eligibility_unpaid_blocks():
@@ -253,7 +276,7 @@ def _paid_gold_order():
         "status_token_hash": hashlib.sha256(tok.encode()).hexdigest(),
         "customer_email": "buyer@example.com",
         "payment_status": "paid",
-        "shipped_at": datetime.now(timezone.utc) - timedelta(days=10),
+        "delivered_at": datetime.now(timezone.utc) - timedelta(days=10),
         "items": [{"product_name": "LA MARVA", "variant": "14K Yellow Gold",
                     "ring_size": "US 7", "quantity": 1, "unit_amount_cents": 350000}],
         "currency": "USD", "total_cents": 350000,
@@ -349,7 +372,7 @@ def test_admin_full_happy_path(monkeypatch):
     _run(mod.receive(rma, mod.ReceiveIn(condition_note="Box intact"),
                        _admin="admin"))
     _run(mod.inspect(rma, mod.InspectIn(result="pass"), _admin="admin"))
-    refunded = _run(mod.refund(rma, mod.RefundIn(), _admin="admin"))
+    refunded = _run(mod.approve_refund(rma, mod.RefundIn(), _admin="admin"))
     assert refunded["status"] == "refund_approved"
     assert refunded["refund_amount_base_cents"] == 350000
     assert refunded["refund_currency_base"] == "USD"
@@ -395,7 +418,7 @@ def test_refund_blocked_on_historical_order(monkeypatch):
             "items_snapshot": [{"index": 0, "eligible": True, "policy_class": "eligible_gold"}]}
     _install_fake_db(monkeypatch, orders=[order], returns=[case])
     with pytest.raises(HTTPException) as exc:
-        _run(mod.refund(case["rma_number"], mod.RefundIn(), _admin="admin"))
+        _run(mod.approve_refund(case["rma_number"], mod.RefundIn(), _admin="admin"))
     assert exc.value.status_code == 409
     assert exc.value.detail["code"] == "LOCKED_HISTORICAL_ORDER"
 
@@ -411,7 +434,7 @@ def test_refund_wrong_state_blocked(monkeypatch):
             "items_snapshot": [{"index": 0, "eligible": True, "policy_class": "eligible_gold"}]}
     _install_fake_db(monkeypatch, orders=[order], returns=[case])
     with pytest.raises(HTTPException) as exc:
-        _run(mod.refund(case["rma_number"], mod.RefundIn(), _admin="admin"))
+        _run(mod.approve_refund(case["rma_number"], mod.RefundIn(), _admin="admin"))
     assert exc.value.status_code == 409
     assert exc.value.detail["code"] == "INVALID_TRANSITION"
 
@@ -428,7 +451,7 @@ def test_double_refund_protection(monkeypatch):
             "items_snapshot": [{"index": 0, "eligible": True, "policy_class": "eligible_gold"}]}
     _install_fake_db(monkeypatch, orders=[order], returns=[case])
     with pytest.raises(HTTPException) as exc:
-        _run(mod.refund(case["rma_number"], mod.RefundIn(), _admin="admin"))
+        _run(mod.approve_refund(case["rma_number"], mod.RefundIn(), _admin="admin"))
     assert exc.value.status_code == 409
     assert exc.value.detail["code"] == "REFUND_ALREADY_ISSUED"
 
@@ -436,7 +459,7 @@ def test_double_refund_protection(monkeypatch):
 def test_verify_delivery_recomputes_eligibility(monkeypatch):
     from routes import returns as mod
     order, tok = _paid_gold_order()
-    order["shipped_at"] = None  # forces owner_review
+    order["delivered_at"] = None  # forces owner_review
     _install_fake_db(monkeypatch, orders=[order])
     c = _run(mod.customer_request_return(mod.ReturnRequestIn(
         order_number=order["order_number"], token=tok, reason="changed_mind")))

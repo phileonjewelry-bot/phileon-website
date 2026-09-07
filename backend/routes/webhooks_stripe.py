@@ -539,6 +539,17 @@ async def stripe_webhook(request: Request):
                         )
                     except Exception:
                         pass
+                    # REFUND ISSUED customer email — idempotent, only after
+                    # Stripe-authoritative confirmation. Never mutates
+                    # refund truth.
+                    try:
+                        from services.return_emails import dispatch_return_email
+                        fresh = await db.returns.find_one(
+                            {"rma_number": rma_case["rma_number"]}, {"_id": 0})
+                        if fresh:
+                            await dispatch_return_email(db, fresh, "refund_issued")
+                    except Exception:
+                        pass
             except Exception as _e:
                 logger.warning(f"RMA webhook reconciliation skipped: {type(_e).__name__}")
 

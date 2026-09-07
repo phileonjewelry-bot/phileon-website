@@ -186,9 +186,14 @@ def evaluate_item_eligibility(order: Dict[str, Any], item: Dict[str, Any],
             owner_review_required=True,
         )
 
-    # Delivered date — accept explicit `delivered_at`, else `shipped_at`.
-    # If neither is present: NEVER auto-deny; route to owner review.
-    delivered_at = order.get("delivered_at") or order.get("shipped_at")
+    # PHILEON policy is *30 days from DELIVERY*, never from shipment.
+    # Authority order:
+    #   1) `delivered_at`               — carrier-authoritative delivery evidence
+    #   2) `owner_verified_delivery_at` — owner-verified via /verify-delivery
+    #   3) otherwise                    — OWNER_REVIEW_REQUIRED, never
+    #                                      auto-denied. `shipped_at` is NOT
+    #                                      an acceptable delivery-date proxy.
+    delivered_at = order.get("delivered_at") or order.get("owner_verified_delivery_at")
     if not isinstance(delivered_at, datetime):
         try:
             if isinstance(delivered_at, str) and delivered_at:

@@ -269,6 +269,13 @@ async def customer_request_return(body: ReturnRequestIn):
                       actor="customer", reason=reason,
                       extra={"request_type": req_type,
                              "owner_review_required": any_owner_review})
+    # Customer receipt — request_received; denied case gets denial email.
+    try:
+        from services.return_emails import dispatch_return_email
+        stage = "denied" if initial_status == "denied" else "request_received"
+        await dispatch_return_email(db, case, stage)
+    except Exception:
+        pass
     return _serialize_case_for_customer(case)
 
 
@@ -284,6 +291,24 @@ async def customer_get_return(rma_number: str,
     if not case:
         raise HTTPException(status_code=404, detail={"code": "NOT_FOUND"})
     return _serialize_case_for_customer(case)
+
+
+@customer_router.get("")
+async def customer_active_rma(order_number: str = Query(...),
+                                token: str = Query(...)):
+    """Token-secured lookup for the most recent RMA on an order. Returns
+    200 with `{case: null}` when none exists — the OrderStatusPage uses
+    this to decide whether to show the Return CTA or a live RMA status.
+    """
+    await _verify_order_token(order_number, token)
+    cursor = db.returns.find(
+        {"order_number": order_number}, {"_id": 0},
+    ).sort("created_at", -1).limit(1)
+    case = None
+    async for d in cursor:
+        case = d
+        break
+    return {"case": _serialize_case_for_customer(case) if case else None}
 
 
 # ────────────────────────────────────────────────────────────────
@@ -443,7 +468,8 @@ async def verify_delivery(rma_number: str, body: VerifyDeliveryIn,
                                          {"_id": 0})
     if not order:
         raise HTTPException(status_code=404, detail={"code": "ORDER_NOT_FOUND"})
-    order["delivered_at"] = d
+    order["delivered_at"] = d  # local-only override for eligibility recalc
+    order["owner_verified_delivery_at"] = d
     # Recompute per-item eligibility using the owner-supplied date.
     items = order.get("items") or []
     snap = case.get("items_snapshot") or []
@@ -465,7 +491,7 @@ async def verify_delivery(rma_number: str, body: VerifyDeliveryIn,
                     break
     now = datetime.now(timezone.utc)
     await db.returns.update_one({"rma_number": rma_number}, {"$set": {
-        "delivered_at_owner_verified": d,
+        "owner_verified_delivery_at": d,
         "items_snapshot": snap,
         "return_window_expires_at": window_expires,
         "owner_review_required": any(s.get("owner_review_required") for s in snap),
@@ -475,7 +501,7 @@ async def verify_delivery(rma_number: str, body: VerifyDeliveryIn,
                       order_number=case.get("order_number") or "",
                       action="verify_delivery", previous=None, new=None,
                       actor="admin", reason=None,
-                      extra={"delivered_at": d.isoformat()})
+                      extra={"owner_verified_delivery_at": d.isoformat()})
     return _serialize_case_for_admin(await _load(rma_number))
 
 
@@ -485,29 +511,46 @@ async def authorize(rma_number: str, body: AuthorizeIn = AuthorizeIn(),
     extra: Dict[str, Any] = {"authorized_at": datetime.now(timezone.utc)}
     if body.return_instructions:
         extra["return_instructions"] = body.return_instructions.strip()
-    return await _transition(rma_number, "authorized", actor="admin",
-                              reason=body.note, extra_set=extra,
-                              allow_from=("requested", "under_review"))
+    result = await _transition(rma_number, "authorized", actor="admin",
+                                reason=body.note, extra_set=extra,
+                                allow_from=("requested", "under_review"))
+    await _dispatch_email(rma_number, "authorized")
+    return result
 
 
 @admin_router.post("/{rma_number}/deny")
 async def deny(rma_number: str, body: DenyIn,
                 _admin=Depends(verify_admin)):
-    return await _transition(rma_number, "denied", actor="admin",
-                              reason=body.reason,
-                              extra_set={"refund_decision": "denied"},
-                              allow_from=("requested", "under_review",
-                                          "authorized", "in_transit",
-                                          "inspection_failed"))
+    result = await _transition(rma_number, "denied", actor="admin",
+                                reason=body.reason,
+                                extra_set={"refund_decision": "denied"},
+                                allow_from=("requested", "under_review",
+                                            "authorized", "in_transit",
+                                            "inspection_failed"))
+    await _dispatch_email(rma_number, "denied")
+    return result
 
 
 @admin_router.post("/{rma_number}/receive")
 async def receive(rma_number: str, body: ReceiveIn = ReceiveIn(),
                    _admin=Depends(verify_admin)):
-    return await _transition(rma_number, "received", actor="admin",
-                              reason=body.condition_note,
-                              extra_set={"received_at": datetime.now(timezone.utc)},
-                              allow_from=("authorized", "in_transit"))
+    result = await _transition(rma_number, "received", actor="admin",
+                                reason=body.condition_note,
+                                extra_set={"received_at": datetime.now(timezone.utc)},
+                                allow_from=("authorized", "in_transit"))
+    await _dispatch_email(rma_number, "received")
+    return result
+
+
+async def _dispatch_email(rma_number: str, stage: str) -> None:
+    """Fire-and-forget best-effort dispatch. Never raises."""
+    try:
+        from services.return_emails import dispatch_return_email
+        case = await db.returns.find_one({"rma_number": rma_number}, {"_id": 0})
+        if case:
+            await dispatch_return_email(db, case, stage)
+    except Exception:
+        pass
 
 
 @admin_router.post("/{rma_number}/inspect")
@@ -521,13 +564,17 @@ async def inspect(rma_number: str, body: InspectIn,
                               allow_from=("received", "inspection_pending"))
 
 
-@admin_router.post("/{rma_number}/refund")
-async def refund(rma_number: str, body: RefundIn = RefundIn(),
-                  _admin=Depends(verify_admin)):
-    """Owner authorizes refund. Layer 3: computes trusted refund amount
-    from original order snapshot. Actual Stripe refund execution is
-    gated by `STRIPE_MODE` — LIVE refunds are refused in this phase.
-    The final `refunded` state is set by the `charge.refunded` webhook.
+@admin_router.post("/{rma_number}/approve-refund")
+async def approve_refund(rma_number: str, body: RefundIn = RefundIn(),
+                           _admin=Depends(verify_admin)):
+    """Owner APPROVES refund (approval only — no money is moved by this
+    endpoint). Layer 3: computes trusted refund amount from the original
+    order snapshot. Actual Stripe refund execution is deferred to a
+    hardened path (future). The final `refunded` state is set by the
+    `charge.refunded` webhook.
+
+    Renamed from the earlier `/refund` to make the semantic explicit —
+    the owner is approving a refund decision, not moving money.
     """
     case = await _load(rma_number)
     if case.get("status") not in ("inspection_passed", "refund_approved"):
@@ -554,7 +601,7 @@ async def refund(rma_number: str, body: RefundIn = RefundIn(),
             "stripe_refund_id": case.get("stripe_refund_id"),
         })
     # Layer 3 gate: no LIVE refund is executed. Owner sets the case to
-    # `refund_approved`; the actual Stripe call is deferred to a
+    # `refund_approved`; actual Stripe execution is deferred to a
     # dedicated hardened path (future).
     import os
     stripe_mode = (os.environ.get("STRIPE_MODE") or "test").lower()
@@ -580,6 +627,7 @@ async def refund(rma_number: str, body: RefundIn = RefundIn(),
                       actor="admin", reason=body.note,
                       extra={"refund_amount_base_cents": refund_cents,
                              "refund_currency_base": currency})
+    await _dispatch_email(rma_number, "refund_approved")
     return _serialize_case_for_admin(await _load(rma_number))
 
 

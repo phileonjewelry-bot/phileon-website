@@ -685,9 +685,17 @@ return_window_expires_at)`. Rules:
 2. Policy class not in final-sale set (silver / custom / engraved / resized).
 3. If policy class is `unknown` → `owner_review_required=true`,
    **never auto-denied**.
-4. Delivery date (`delivered_at` or `shipped_at`) present. If missing →
-   `owner_review_required=true` with reason `delivery_date_unverified`.
-5. Now ≤ delivery + 30 days.
+4. **Delivery-date authority (LAYER 3 COMPLETION — corrected policy):**
+   PHILEON policy is *30 days from DELIVERY*, never from SHIPMENT.
+   Authority order:
+   1. `orders_v2.delivered_at` — carrier-authoritative delivery evidence.
+   2. `orders_v2.owner_verified_delivery_at` — owner-recorded via
+      `POST /api/admin/returns/{rma}/verify-delivery`. Never modifies
+      `shipped_at`.
+   3. otherwise → `owner_review_required=true` with reason
+      `delivery_date_unverified`. **`shipped_at` is NOT an acceptable
+      delivery-date proxy** and can never start the 30-day clock.
+5. `now ≤ delivered_at + 30 days`.
 
 ### D.4 — Policy classification (from order-item snapshot)
 
@@ -721,17 +729,40 @@ return_window_expires_at)`. Rules:
 |---|---|
 | `GET /api/admin/returns?status=…&q=…` | Queue (new / under_review / authorized / received / inspection / refund / refunded / denied / closed / all) |
 | `GET /api/admin/returns/{rma}` | Case detail + audit trail |
-| `POST /api/admin/returns/{rma}/verify-delivery` | Owner records manually-verified delivery date; recomputes eligibility |
-| `POST /api/admin/returns/{rma}/authorize` | `requested/under_review → authorized`, records optional return instructions |
-| `POST /api/admin/returns/{rma}/deny { reason }` | Owner denies (from any pre-refund state) |
-| `POST /api/admin/returns/{rma}/receive` | `authorized/in_transit → received` |
-| `POST /api/admin/returns/{rma}/inspect { result:pass|fail, notes? }` | Records inspection outcome |
-| `POST /api/admin/returns/{rma}/refund` | `inspection_passed → refund_approved`, computes trusted refund cents; Stripe execution deferred |
+| `POST /api/admin/returns/{rma}/verify-delivery` | Owner records manually-verified delivery date on `owner_verified_delivery_at`; recomputes eligibility. NEVER modifies `shipped_at`. |
+| `POST /api/admin/returns/{rma}/authorize` | `requested/under_review → authorized`, records optional return instructions. Dispatches `RETURN AUTHORIZED` email idempotently. |
+| `POST /api/admin/returns/{rma}/deny { reason }` | Owner denies (from any pre-refund state). Dispatches `RETURN NOT ELIGIBLE` email idempotently. |
+| `POST /api/admin/returns/{rma}/receive` | `authorized/in_transit → received`. Dispatches `ITEM RECEIVED` email idempotently. |
+| `POST /api/admin/returns/{rma}/inspect { result:pass\|fail, notes? }` | Records inspection outcome. |
+| `POST /api/admin/returns/{rma}/approve-refund` | **APPROVAL ONLY.** `inspection_passed → refund_approved`, computes trusted refund cents from ORIGINAL order snapshot. NO money movement — Stripe LIVE refund execution is deferred. Dispatches `REFUND APPROVED` email (approval copy — never claims money moved). Renamed from earlier `/refund`. |
 | `POST /api/admin/returns/{rma}/close` | Closes terminal or refunded case |
 
 All admin endpoints require JWT. Every state-mutating call writes one
 row to `returns_audit`. Money fields, Stripe IDs, tokens, and webhook
 event IDs are stripped from `extra` before audit insert.
+
+### D.6.1 — Customer Return / Warranty CTA (LAYER 3 COMPLETION)
+
+`OrderStatusPage.jsx` now surfaces a token-secured Return / Warranty
+block for every paid order. Behavior:
+
+- If a return case exists → shows a customer-safe status pill (one of
+  the nine allowed labels: `RETURN REQUEST RECEIVED`, `UNDER REVIEW`,
+  `RETURN AUTHORIZED`, `ITEM RECEIVED`, `INSPECTION IN PROGRESS`,
+  `REFUND APPROVED`, `REFUND ISSUED`, `RETURN NOT ELIGIBLE`,
+  `CASE CLOSED`) plus the concierge message + owner-configured return
+  instructions when authorized. NEVER surfaces admin notes, Stripe IDs,
+  inspection commentary, or Mongo IDs.
+- If no case exists → renders `Request a Return` (or
+  `Warranty / Support Help` for pieces detected as silver/custom via
+  a UI-only classifier for hint copy only — the server remains
+  authoritative). Form collects reason (7 options) and optional note,
+  submits via `POST /api/returns/request` with the same status token.
+- Warranty reasons (`arrived_damaged`, `suspected_defect`) route to
+  `under_review` server-side regardless of policy class. Silver /
+  custom / engraved / resized cases created via the form are
+  auto-denied server-side with the correct final-sale reason and the
+  denied email is dispatched idempotently.
 
 ### D.7 — Refund calculation
 
@@ -763,18 +794,27 @@ outbound shipping, tax, duties, brokerage are non-refundable per policy.
 - `email_sent` flags per case will gate future customer refund emails
   (email dispatch deferred to a hardened path).
 
-### D.10 — Customer email templates (rendered only, not dispatched in Layer 3)
+### D.10 — Customer email templates (rendered + dispatched idempotently in Layer 3 completion)
 
-- `RETURN REQUEST RECEIVED` — status `requested`.
-- `RETURN AUTHORIZED` — status `authorized`.
-- `ITEM RECEIVED` — status `received`.
-- `REFUND APPROVED` — status `refund_approved` (approval copy only).
-- `REFUND ISSUED` — status `refunded` (only after Stripe-authoritative
-  confirmation).
-- `RETURN NOT ELIGIBLE / DENIED` — status `denied`.
+Six PHILEON concierge templates in `services/return_emails.py`, all
+dispatched via `services.email.send_email` from `PHILEON_FROM_EMAIL`
+(`concierge@getyourphileon.com`) through the existing transactional
+path (Resend). Each dispatch is idempotent via a per-case notification
+flag; Resend failure leaves the flag unset for retryable delivery:
+
+| Stage | Trigger | Idempotency flag |
+|---|---|---|
+| `RETURN REQUEST RECEIVED` | Customer intake success | `return_request_notification_sent` |
+| `RETURN AUTHORIZED` | Admin `/authorize` | `return_authorized_notification_sent` |
+| `ITEM RECEIVED` | Admin `/receive` | `return_received_notification_sent` |
+| `REFUND APPROVED` | Admin `/approve-refund` — **approval copy only, never claims money moved** | `refund_approved_notification_sent` |
+| `REFUND ISSUED` | Stripe `charge.refunded` webhook AFTER Stripe-authoritative confirmation | `refund_issued_notification_sent` |
+| `RETURN NOT ELIGIBLE / DENIED` | Admin `/deny` or auto-denial at intake for final-sale classes | `return_denied_notification_sent` |
 
 Copy uses the locked 5–10 business-day refund window language. **No
-promise of exact bank posting time.**
+promise of exact bank posting time.** Email failure NEVER falsifies
+RMA/refund truth — Stripe remains authoritative regardless of
+delivery outcome.
 
 ### D.11 — Daily return-management checklist (owner)
 

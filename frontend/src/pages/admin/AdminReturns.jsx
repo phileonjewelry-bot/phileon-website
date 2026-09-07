@@ -330,7 +330,7 @@ export default function AdminReturns() {
                   )}
                   {(st === "inspection_passed") && (
                     <button className="ar-btn primary" disabled={actionBusy}
-                            onClick={() => act("/refund", {})} data-testid="ar-approve-refund-btn">
+                            onClick={() => act("/approve-refund", {})} data-testid="ar-approve-refund-btn">
                       Approve Refund
                     </button>
                   )}

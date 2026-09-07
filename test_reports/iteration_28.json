@@ -1,0 +1,31 @@
+{
+  "summary": "PHILEON Layer 3 COMPLETION PASS validated end-to-end. All four completion items are green: (1) delivery-date policy — shipped_at is NOT a substitute; only delivered_at OR owner_verified_delivery_at satisfies the return-window authority, verified by both new unit tests and E2E; (2) six PHILEON concierge email templates render safely (subject+html+text) with RMA/order number, no internal-field leaks, correct approval-vs-issued semantic firewall, and idempotent dispatch; (3) refund endpoint rename — /refund is gone from routes/returns.py; /approve-refund is the sole approval endpoint and passes full lifecycle + partial + historical-lock + wrong-state E2E tests; (4) Frontend OrderStatusPage renders return-block, return-cta, return-open-form-btn for a gold order with a valid status token. Historical order PHI-20260901-4CBC5C UNTOUCHED (currency=CAD, total_cents=2265000, payment_status=paid). Full regression: 1054 passed, 1 skipped, 0 failures.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_return_emails.py",
+    "/app/backend/tests/test_returns_operations.py",
+    "/app/backend/tests/test_returns_operations_e2e.py",
+    "/app/test_reports/pytest/layer3_completion.xml",
+    "/app/test_reports/pytest/layer3_completion_regression.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "services/returns_service.evaluate_item_eligibility correctly gates on delivered_at OR owner_verified_delivery_at only — shipped_at is intentionally NOT a fallback, locked by test_eligibility_shipped_at_is_NOT_a_delivery_date_substitute + E2E test_shipped_but_not_delivered_still_owner_review.",
+    "services/return_emails.py — 6 templates + dispatch_return_email with per-case idempotency flags. Refund-approved template semantically firewalled (no 'issued'/'processed'/'credited'). Refund-issued template contains '5 to 10 business days'. No banned internal fields leak (stripe_refund_id/status_token_hash/webhook_event_ids/provider_session_id/inspection_notes/admin/ObjectId) — locked by test_no_internal_leaks_in_any_template.",
+    "routes/returns.py — /refund fully removed (grep count = 0). /approve-refund is the only endpoint; refund_amount_base_cents recomputed from ORIGINAL order snapshot. GET /api/returns customer active-RMA lookup returns customer-safe payload only.",
+    "webhooks_stripe.py charge.refunded reconciliation (reviewed code-only in iteration_27; behaviour still gated by Stripe signature — not replayed via live HTTP this pass). Idempotency guard by webhook event_id + case.stripe_refund_id is present.",
+    "Frontend OrderStatusPage.jsx correctly polls /api/returns for active-RMA state using the same one-time status_token, and renders return-block + return-cta + return-open-form-btn. Silver/custom final-sale hint (return-final-sale) is conditional on policy-class classifier — verified absent for the gold seed; would render for silver/custom (unit-tested server-side)."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "100% (1054/1054 executed, 1 pre-existing skip; 74/74 Layer-3 completion tests green)",
+    "frontend": "100% (return CTA + testids render on OrderStatusPage for gold order)"
+  },
+  "test_credentials": "Admin JWT minted via `cd /app/backend && python -c \"from server import create_token; print(create_token('admin'))\"`. Customer status token: plaintext PLAINTEXT_TOKEN with sha256 hash stored in orders_v2.status_token_hash (per-test uuid seeded, cleaned up).",
+  "seed_data_creation": "Per-test seed of PHI-TEST-<uuid8> orders_v2 with sha256(status_token) hash; deleted via cleanup_registry fixture across orders_v2/returns/returns_audit. UI smoke seed PHI-TEST-UI-1C2509 cleaned up post-verification. Historical PHI-20260901-4CBC5C untouched.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Layer 3 COMPLETION PASS fully green: 74/74 targeted (test_return_emails 11, test_returns_operations 33, test_returns_operations_e2e 30) + 1054/1054 regression (excluding the 3 owner-accepted files). Curl POSTs to the external preview URL from bash returned 000 (network glitch/CDN quirk) but requests.post from pytest to the same URL works — E2E tests are the source of truth. If Layer 4 needs a live Stripe charge.refunded HTTP replay, add a fixture that monkeypatches stripe.Webhook.construct_event and POSTs to /api/webhooks/stripe; the reconciliation + REFUND-ISSUED email dispatch idempotency is code-reviewed and covered by unit tests but not by an HTTP-level webhook replay this pass.",
+  "rca of the issue": "N/A — no bugs found."
+}
