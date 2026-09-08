@@ -219,3 +219,52 @@ def test_kpi_dictionary_intact():
               "CANONICAL_REVENUE", "PRESENTMENT_REVENUE",
               "SEARCH_SUBMITTED"):
         assert k in KPI_DEFINITIONS
+
+
+
+# ── Layer 8 §2 — analytics session identifier lifecycle ───────────
+
+def test_useanalytics_does_not_create_session_id_on_mount():
+    """A fresh visitor with no privacy choice, or a visitor who rejected
+    optional analytics, must NOT have `phileon_session_id` written to
+    sessionStorage merely by mounting the hook."""
+    from pathlib import Path
+    src = Path("/app/frontend/src/hooks/useAnalytics.js").read_text()
+    # 1. Mount useMemo must NOT call ensureSessionId anywhere.
+    mount_block = src.split("useAnalytics()", 1)[1]
+    mount_block = mount_block[: mount_block.index("useEffect(")]
+    assert "ensureSessionId()" not in mount_block, \
+        "useAnalytics MUST NOT create phileon_session_id on mount"
+    # 2. ensureSessionId must only appear AFTER analyticsAllowed() gate.
+    for fn in ("send", "recordSearch"):
+        block = src.split(f"const {fn} = useCallback", 1)[1]
+        block = block[: block.index("}, []);")]
+        assert "if (!analyticsAllowed()) return;" in block, \
+            f"{fn} must gate on analyticsAllowed()"
+        assert "ensureSessionId()" in block, \
+            f"{fn} must create the session id lazily after the gate"
+        gate_pos = block.index("if (!analyticsAllowed()) return;")
+        session_pos = block.index("ensureSessionId()")
+        assert gate_pos < session_pos, \
+            f"{fn}: analyticsAllowed gate must be BEFORE ensureSessionId"
+
+
+def test_useanalytics_purges_session_id_on_consent_withdrawal():
+    from pathlib import Path
+    src = Path("/app/frontend/src/hooks/useAnalytics.js").read_text()
+    assert "purgeAnalyticsStorage" in src
+    assert "sessionStorage.removeItem(SESSION_KEY)" in src
+    assert "sessionStorage.removeItem(RECENT_KEY)" in src
+    assert "phileon:privacy-choices" in src
+    assert "analytics === false" in src
+
+
+def test_cart_and_checkout_still_gate_on_consent():
+    from pathlib import Path
+    cart = Path("/app/frontend/src/contexts/CartContext.jsx").read_text()
+    checkout = Path("/app/frontend/src/pages/Checkout.jsx").read_text()
+    for src, name in ((cart, "CartContext"), (checkout, "Checkout")):
+        assert "phileon_privacy_consent_v1" in src, \
+            f"{name} must read the consent key"
+        assert "analytics === true" in src, \
+            f"{name} must gate on analytics === true"

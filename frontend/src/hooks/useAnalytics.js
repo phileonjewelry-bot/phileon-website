@@ -16,7 +16,7 @@
    Search:
      recordSearch(query, resultCount) → POST /api/search-events
 */
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 const API = process.env.REACT_APP_BACKEND_URL;
 const DEDUPE_MS = 30_000;
@@ -24,8 +24,10 @@ const RECENT_KEY = 'phi_analytics_recent_v1';
 const SESSION_KEY = 'phileon_session_id';
 const CONSENT_KEY = 'phileon_privacy_consent_v1';
 
-// Layer 8 — optional analytics is OFF until the user accepts. Marketing
-// consent remains a SEPARATE decision (see PrivacyChoices.jsx).
+// Layer 8 §2 — optional analytics is OFF until the user accepts. The
+// analytics session identifier MUST NOT exist for a fresh visitor or a
+// rejector; it is created lazily only when we are about to send an
+// event and consent is true. Withdrawing consent removes it.
 function analyticsAllowed() {
   try {
     const raw = localStorage.getItem(CONSENT_KEY);
@@ -35,6 +37,11 @@ function analyticsAllowed() {
   } catch (_e) {
     return false;
   }
+}
+
+function purgeAnalyticsStorage() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch (_e) { /* silent */ }
+  try { sessionStorage.removeItem(RECENT_KEY); } catch (_e) { /* silent */ }
 }
 
 function readRecent() {
@@ -100,21 +107,38 @@ async function post(url, body) {
 }
 
 export function useAnalytics() {
-  const sessionId = useMemo(() => ensureSessionId(), []);
+  // Layer 8 §2 — do NOT eagerly create the session id on mount. The
+  // hook consumer receives the current (possibly-absent) value; a real
+  // id is generated only if the user has accepted analytics AND we are
+  // about to send an event.
+  const sessionId = useMemo(() => {
+    try { return sessionStorage.getItem(SESSION_KEY) || null; }
+    catch (_e) { return null; }
+  }, []);
+
+  // On consent-withdrawal notifications, purge analytics-only storage.
+  useEffect(() => {
+    const handler = (e) => {
+      if (e?.detail?.analytics === false) purgeAnalyticsStorage();
+    };
+    window.addEventListener('phileon:privacy-choices', handler);
+    return () => window.removeEventListener('phileon:privacy-choices', handler);
+  }, []);
 
   const send = useCallback(async (eventType, productSlug, opts = {}) => {
     if (!productSlug) return;
-    // Layer 8 — respect user analytics consent (essential functions
-    // remain unaffected; this only gates optional behavioural events).
+    // Layer 8 §2 — respect user analytics consent AND lazily create the
+    // session id only after consent (never merely to wait for it).
     if (!analyticsAllowed()) return;
+    const sid = ensureSessionId();
     if (!opts.force && shouldDedupe(eventType, productSlug)) return;
     await post(`${API}/api/behavior/events`, {
       event_type: eventType,
       product_slug: String(productSlug),
-      session_id: sessionId,
+      session_id: sid,
       source: opts.source || null,
     });
-  }, [sessionId]);
+  }, []);
 
   const productViewed = useCallback(
     (slug, opts) => send('PRODUCT_VIEWED', slug, opts),
@@ -139,12 +163,13 @@ export function useAnalytics() {
   const recordSearch = useCallback(async (query, resultCount) => {
     if (!query || !String(query).trim()) return;
     if (!analyticsAllowed()) return;
+    const sid = ensureSessionId();
     await post(`${API}/api/search-events`, {
       query: String(query).slice(0, 200),
       result_count: Math.max(0, Number(resultCount) || 0),
-      session_id: sessionId,
+      session_id: sid,
     });
-  }, [sessionId]);
+  }, []);
 
   return {
     sessionId,
