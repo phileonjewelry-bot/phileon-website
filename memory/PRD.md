@@ -3,6 +3,25 @@
 ## Original Problem Statement
 High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editorial UI (LA BÊTE visual language). Ongoing: content/UI expansion of Fine Jewelry, Inspiration Vault, and now Bracelets, with cinematic vertical galleries, autoplay-muted-loop hero video, and product-page detail pages per SKU.
 
+- **[DONE Feb 17, 2026 — Layer 6: Concierge / Customer-Service Operations]** LAYER 6 GREEN — READY FOR OWNER REVIEW.
+  - **Case model**: new `concierge_cases` collection with `CON-YYYY-XXXXXX` identifiers (secrets-random, 27-char unambiguous alphabet, DB unique index). Fields include `source`, `category`, `subject`, `customer_message`, `customer_email(_normalized)`, `customer_name`, `customer_phone`, `order_number`, `status`, `priority`, `owner_summary`, `next_action`, `follow_up_at`, `waiting_on`, `admin_notes[]`, `contact_log[]`, `status_history[]`, `dedupe_hash`, timestamps.
+  - **State machine (server-enforced)**: `new → open → waiting_on_customer / waiting_on_phileon → resolved → closed`, with owner-controlled reopen (`resolved/closed → open` clears terminal timestamps). Illegal transitions rejected with `409 ILLEGAL_TRANSITION`.
+  - **Priority (owner-only)**: `normal · attention · urgent` — never surfaced to customer, never derived from order value.
+  - **Retry dedupe**: SHA-256 of `(normalized_email, subject, customer_message)` collapses identical retries within a 15-minute window. A genuinely different subject after the window creates a new case.
+  - **Identity authority**: no `customers` login collection. Email normalization is `strip + lowercase` only — Gmail dots and plus aliases are NEVER collapsed. Order-scoped access reuses existing `orders_v2.status_token_hash`.
+  - **Admin surface (13 endpoints, `verify_admin`)**: list with filters, detail + audit, create manual case, status/priority/next-action/follow-up/waiting-on/notes/contact-log mutations, Customer 360 aggregation (`/api/admin/concierge/customer-360?email=…`), unified order timeline (`/api/admin/concierge/orders/{order}/timeline`), and static message previews (`/api/admin/concierge/message-previews` — 6 concierge templates, PREVIEW/COPY ONLY, never sends).
+  - **Customer surface**: `POST /api/concierge/order-support` (order-linked intake, rate-limited 6/5min per token+order hash, retry-dedupe, category whitelist); `GET /api/concierge/order-support` (customer-safe list — masks priority, notes, next_action, follow_up_at, audit).
+  - **Contact-form bridge**: `POST /api/inquiries` continues to persist to legacy `inquiries` AND now mirrors into `concierge_cases` (`source=contact_form`, category mapped from `inquiry_type`). Bridge failures never break customer intake.
+  - **Customer 360** aggregates orders / cases / RMAs / disputes / consent by normalized email. **Never** surfaces `status_token_hash`, `email_status_token`, `provider_payment_intent_id`, `stripe_customer_id`, dispute evidence, or webhook payloads.
+  - **Unified timeline** folds `orders_v2` + `fulfillment_audit` + `returns` + `dispute_cases` + `concierge_cases` chronologically. De-duplicates by `(event, iso_timestamp)`. Fabricates nothing.
+  - **Deep-link boundaries**: concierge NEVER duplicates mutation authority. Shipment (Layer 2), refund (Layer 3), fraud (Layer 4), inventory (Layer 5) mutations remain their respective sources of truth — concierge deep-links only.
+  - **Frontend**: new `/admin/concierge-cases` page (tabs: NEW · OPEN · WAITING ON CUSTOMER · WAITING ON PHILEON · RESOLVED · CLOSED · ALL; priority + source filters; search; manual-case creator; detail panel with status/priority/next-action/follow-up/waiting-on/notes/contact-log/message-previews/customer-360/timeline/audit). Mobile-safe at 390×844 (zero horizontal overflow verified). Existing `/admin/concierge` product-intake inbox preserved untouched.
+  - **Frontend**: new `components/OrderSupportCta.jsx` wired into `OrderStatusPage.jsx` — order-linked intake below the return block, category dropdown + subject + message, customer-safe status pill on returning visits.
+  - **Tests**: 20 new Layer-6 tests all pass. 117-test focused Layer 3/4/5/6 regression pass. 1286 full-suite tests pass (17 pre-existing test_phileon_api.py external-URL failures + 1 owner-accepted Annie Rose drift + 1 pre-existing adaptive-pricing external-URL failure, all unchanged from baseline).
+  - **Locked invariants intact**: PRODUCT_SLUGS=73, CHECKOUT_SUPPORTED_FAMILIES=84, canonical USD, tax OFF, STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from `refunded`, Vault stock untouched, PHI-20260901-4CBC5C untouched. No real payment. No real refund. No real customer email. No deploy.
+  - **Files added**: `backend/services/concierge_cases_service.py`, `backend/routes/concierge_cases.py`, `backend/tests/test_layer6_concierge_cases.py`, `frontend/src/pages/admin/AdminConciergeCases.jsx`, `frontend/src/components/OrderSupportCta.jsx`.
+  - **Files modified**: `backend/server.py`, `frontend/src/App.js`, `frontend/src/pages/OrderStatusPage.jsx`, `frontend/src/components/layout/AdminLayout.jsx`, `memory/OPERATIONS.md`, `memory/CHANGELOG.md`, `memory/PRD.md`.
+
 - **[DONE Feb 17, 2026 — Layer 5 Inventory & Availability Control]** Server-authoritative inventory subsystem shipped.
   - **Canonical modes** `made_to_order`, `ready_to_ship`, `unavailable` (+ derived `sold_out`).
     Default: no explicit record → `made_to_order`. No bulk seeding; no fabricated stock.
@@ -1068,9 +1087,18 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Provide `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` → unblock E2E checkout for all 11 catalog products
 - Provide `METALS_API_KEY` → replace deterministic fallback in `metal_spot.py` with live provider quotes
 
+### P0 — Pre-Launch Operational Maturity (in progress)
+- Layer 6 ✅ complete (this pass — awaiting owner review)
+- Layer 7 — pending owner brief
+- Layer 8 — pending owner brief (final layer before Stripe LIVE gates)
+
 ### P1
 - Migrate remaining 60+ bespoke products into trusted catalog (needs merchant pricing CSV)
 - Analytics event when PRICE_MOVED is triggered (product, delta $, session id)
+- Security headers (CSP / X-Frame-Options / HSTS) at CDN edge
+- Admin JWT → HttpOnly cookies + CSRF migration (POST-LAUNCH only)
+- Stripe LIVE activation (Gate 6 — controlled live purchase; do NOT touch yet)
+- `PHILEON_BEHAVIORAL_LIVE=true` after owner sets up Resend DNS
 
 ### P2
 - Phase 2 Stripe Financing (Affirm / Klarna / Afterpay)

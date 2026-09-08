@@ -17,11 +17,13 @@ import {
   Archive,
   RefreshCcw,
   ShieldAlert,
-  Bell
+  Bell,
+  LifeBuoy
 } from 'lucide-react';
 
 const sidebarLinks = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { name: 'Concierge Cases', path: '/admin/concierge-cases', icon: LifeBuoy },
   { name: 'Concierge', path: '/admin/concierge', icon: MessageSquare },
   { name: 'Fulfillment', path: '/admin/fulfillment', icon: Package },
   { name: 'Shipments', path: '/admin/shipments', icon: Truck },

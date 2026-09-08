@@ -414,7 +414,48 @@ async def create_inquiry(inquiry: InquiryCreate):
     doc['created_at'] = doc['created_at'].isoformat()
     doc['updated_at'] = doc['updated_at'].isoformat()
     await db.inquiries.insert_one(doc)
-    
+
+    # Layer 6 bridge — mirror general contact form submissions into the
+    # unified concierge case queue so the owner has one operational
+    # surface. Failures never break the customer-facing intake.
+    try:
+        from services import concierge_cases_service as _cc
+        _INTAKE_CATEGORY_MAP = {
+            "general":       "other",
+            "product":       "product_question",
+            "product_inquiry": "product_question",
+            "custom":        "customization",
+            "custom_design": "customization",
+            "sizing":        "size_fit",
+            "shipping":      "shipping",
+            "return":        "return",
+            "warranty":      "warranty",
+            "payment":       "payment",
+            "order":         "order_status",
+        }
+        _cat = _INTAKE_CATEGORY_MAP.get(
+            (inquiry.inquiry_type or "").strip().lower(), "other")
+        _subject = (
+            f"Contact form: {inquiry.inquiry_type.replace('_', ' ').title()}"
+            if inquiry.inquiry_type else "Contact form inquiry"
+        )
+        await _cc.create_case(
+            db,
+            source="contact_form",
+            category=_cat,
+            subject=_subject,
+            customer_message=inquiry.message,
+            customer_email=inquiry.email,
+            customer_name=inquiry.name,
+            customer_phone=inquiry.phone,
+            priority="normal",
+            actor="customer",
+        )
+    except Exception as _bridge_exc:  # pragma: no cover - defensive
+        logger.warning(
+            f"concierge case bridge from /inquiries skipped: "
+            f"{type(_bridge_exc).__name__}: {_bridge_exc}")
+
     # Send email notification
     try:
         from email_utils import send_email
@@ -2209,6 +2250,19 @@ try:
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"Behavioral retention routes NOT registered: {type(_e).__name__}: {_e}")
 
+# Concierge / Customer-Service Operations (Layer 6). Deferred import so
+# any load error stays isolated from the rest of the app.
+try:
+    from routes.concierge_cases import (
+        admin_router as _cc_admin_router,
+        customer_router as _cc_customer_router,
+    )
+    api_router.include_router(_cc_admin_router)
+    api_router.include_router(_cc_customer_router)
+    logger.info("Concierge / Customer-Service routes registered (Layer 6)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Concierge routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 
@@ -2258,6 +2312,13 @@ async def startup_db():
         await _inv_indexes(db)
     except Exception as e:
         logger.warning(f"inventory indexes init skipped: {type(e).__name__}: {e}")
+
+    # Concierge cases indexes (Layer 6).
+    try:
+        from services.concierge_cases_service import ensure_indexes as _cc_indexes
+        await _cc_indexes(db)
+    except Exception as e:
+        logger.warning(f"concierge cases indexes init skipped: {type(e).__name__}: {e}")
 
     # NOTE — Layer 5 stock-safety correction:
     # Normal startup MUST NEVER create physical inventory. The

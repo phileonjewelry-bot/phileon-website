@@ -16,6 +16,7 @@
    ========================================================================== */
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
+import OrderSupportCta from "@/components/OrderSupportCta";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
@@ -612,6 +613,11 @@ export default function OrderStatusPage() {
         ) : null}
 
         <div className="os-actions">
+          {order && !error ? (
+            <div className="os-block" data-testid="order-support-block">
+              <OrderSupportCta orderNumber={orderNumber} token={token} />
+            </div>
+          ) : null}
           <Link to="/contact" className="os-btn" data-testid="order-contact-btn">
             Contact Concierge
           </Link>

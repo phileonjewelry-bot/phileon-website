@@ -1242,3 +1242,219 @@ affected checkout configurations.
 legacy `products.inventory_count` field and are NOT the Layer 5
 authority. Canonical Layer 5 inventory authority lives ONLY on the
 trusted `/api/checkout/*` and `/api/admin/inventory/*` architecture.
+
+---
+
+# Layer 6 — Concierge / Customer-Service Operations
+
+Lightweight coordination surface for the owner. **Not** a CRM, VIP
+score, loyalty engine, helpdesk replacement, marketing tool, or
+customer login/account system. Layer 6 answers five questions on one
+screen:
+
+1. Who is this customer?
+2. What did they order?
+3. What is happening with the order?
+4. What has PHILEON already done?
+5. What is the next owner action?
+
+Every deeper authority stays where it lives:
+
+- Shipment mutations → **Layer 2** (`/admin/fulfillment`, `/admin/shipments`)
+- Refund / RMA approvals → **Layer 3** (`/admin/returns`)
+- Fraud holds / dispute submission → **Layer 4** (`/admin/disputes`)
+- Inventory adjustments → **Layer 5** (`/admin/inventory`)
+
+Layer 6 deep-links only — it never duplicates a mutation control.
+
+## Customer identity authority
+
+- No `customers` login collection is created.
+- The normalized customer email lives on `orders_v2.customer.email`.
+- Layer 6 normalizes an email by `strip + lowercase` only.
+- **Gmail dots and plus aliases are NEVER collapsed.** Different
+  addresses are never automatically merged.
+- Order-scoped access uses the SAME `orders_v2.status_token_hash` that
+  already secures the Order Status page and the RMA intake.
+
+## Concierge case model (`concierge_cases`)
+
+| Field | Meaning |
+|---|---|
+| `case_id` | `CON-YYYY-XXXXXX` — 6-char secrets-random suffix on a 27-char unambiguous alphabet. Uniqueness enforced by DB unique index. |
+| `source` | `contact_form · order_support · return · warranty · shipping · payment · manual_owner_case` |
+| `category` | `order_status · shipping · return · warranty · product_question · size_fit · customization · payment · other` |
+| `subject`, `customer_message` | Customer-supplied. |
+| `customer_email`, `customer_email_normalized` | Raw + normalized copies. |
+| `customer_name`, `customer_phone` | Optional. |
+| `order_number` | Optional. |
+| `status` | State machine (see below). |
+| `priority` | Owner-only. `normal · attention · urgent`. |
+| `owner_summary`, `next_action`, `waiting_on` | Owner-only, factual. |
+| `follow_up_at` | Owner-only timestamp. |
+| `admin_notes[]` | Append-only, actor-attributed, timestamped. Never customer-facing. |
+| `contact_log[]` | Owner-recorded contact history (direction · channel · summary · actor · at). |
+| `status_history[]` | Every status transition. |
+| `dedupe_hash` | SHA-256 of `(normalized_email, subject, customer_message)` — retry-dedupe key. |
+| `created_at`, `updated_at`, `resolved_at`, `closed_at` | UTC. |
+
+## Case state machine (server-enforced)
+
+```
+new ─┬─► open ─┬─► waiting_on_customer ─┐
+     ├────────►│                        ├──► resolved ──► closed
+     └────────►└─► waiting_on_phileon ──┘         ▲          │
+                                                  │          │
+                                                  └──── reopen
+```
+
+Legal transitions map (server-enforced; illegal transitions rejected
+with `409 ILLEGAL_TRANSITION`):
+
+- `new`               → open · waiting_on_customer · waiting_on_phileon · resolved · closed
+- `open`              → waiting_on_customer · waiting_on_phileon · resolved · closed
+- `waiting_on_customer` → open · waiting_on_phileon · resolved · closed
+- `waiting_on_phileon`  → open · waiting_on_customer · resolved · closed
+- `resolved`          → open · closed
+- `closed`            → open (owner reopen)
+
+Reopen clears the terminal timestamps (`resolved_at`, `closed_at`).
+
+## Priority (owner-only)
+
+`normal · attention · urgent`. Priority is NEVER surfaced to the
+customer. Priority is NOT computed from order value.
+
+- **URGENT** — payment / security / shipment-at-risk.
+- **ATTENTION** — return-window pressure, time-sensitive shipping.
+- **NORMAL** — product, size, styling, general.
+
+## Retry dedupe
+
+Identical `(normalized_email, subject, customer_message)` submissions
+within a 15-minute window return the same existing `case_id` — a
+network retry never creates a duplicate case. A genuinely different
+subject or message after the window creates a new case.
+
+## Customer 360 (read-only aggregation)
+
+`GET /api/admin/concierge/customer-360?email=…` aggregates:
+
+- Orders (`orders_v2`) — safe projection with items, shipping,
+  presentment, fulfillment status, carrier, tracking, fraud status,
+  inventory snapshot. **Never** surfaces `status_token_hash`,
+  `email_status_token`, `provider_payment_intent_id`,
+  `stripe_customer_id`, webhook payloads, or secrets.
+- Active + past RMAs (indicator-only).
+- Disputes (indicator-only — deep-links to Layer 4).
+- Prior concierge cases.
+- Marketing consent posture (`consented · not_consented · unsubscribed / suppressed`).
+
+## Unified order timeline (read-only aggregation)
+
+`GET /api/admin/concierge/orders/{order_number}/timeline` folds
+existing authoritative rows into a chronological event stream:
+
+`ORDER_CREATED · PAYMENT_CONFIRMED · INTEGRITY_HOLD · FRAUD_HOLD ·
+FULFILLMENT_APPROVED · IN_PREPARATION · SHIPPED · TRACKING_CORRECTED ·
+RETURN_REQUESTED · RETURN_AUTHORIZED · ITEM_RECEIVED · REFUND_APPROVED ·
+REFUND_CONFIRMED · DISPUTE_CREATED · DISPUTE_WON · CHARGEBACK_LOST ·
+CONCIERGE_CONTACT · CONCIERGE_NOTE · CASE_STATUS_CHANGE`.
+
+Duplicate rows are collapsed by `(event, iso_timestamp)`. No event is
+ever fabricated. No secrets are surfaced.
+
+## Endpoints
+
+### Admin (all `verify_admin`)
+
+| Endpoint | Purpose |
+|---|---|
+| `GET  /api/admin/concierge/cases?status=&priority=&source=&category=&order_number=&email=&q=` | Queue with filters. |
+| `GET  /api/admin/concierge/cases/{case_id}` | Detail + last 200 audit rows. |
+| `POST /api/admin/concierge/cases` | `manual_owner_case`. |
+| `POST /api/admin/concierge/cases/{case_id}/status` | Enforced state machine. |
+| `POST /api/admin/concierge/cases/{case_id}/priority` | Owner-only. |
+| `POST /api/admin/concierge/cases/{case_id}/next-action` | Owner-only. |
+| `POST /api/admin/concierge/cases/{case_id}/follow-up` | Owner-only. |
+| `POST /api/admin/concierge/cases/{case_id}/waiting-on` | Owner-only. |
+| `POST /api/admin/concierge/cases/{case_id}/notes` | Append internal note. |
+| `POST /api/admin/concierge/cases/{case_id}/contact-log` | Append contact record. |
+| `GET  /api/admin/concierge/customer-360?email=…` | Customer 360 aggregation. |
+| `GET  /api/admin/concierge/orders/{order}/timeline` | Read-only timeline. |
+| `GET  /api/admin/concierge/message-previews` | Static canned replies (preview / copy only — never sends). |
+
+### Customer (token-secured — no auth beyond the order token)
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/concierge/order-support` | Order-linked support intake. Reuses `orders_v2.status_token_hash`; refuses on invalid token. Rate-limited (6 req / 5 min per token). Retry-dedupe collapses identical retries. |
+| `GET  /api/concierge/order-support?order_number=…&token=…` | Customer-safe list of open cases for the order. Masks priority, notes, next_action, follow_up_at, audit. |
+
+### Contact-form bridge
+
+`POST /api/inquiries` continues to persist to the legacy `inquiries`
+collection **and additionally** mirrors the submission into
+`concierge_cases` with `source="contact_form"` and a mapped category.
+Failures in the bridge never break the customer intake.
+
+## Customer-safe status vocabulary
+
+Concierge status only ever appears to customers as one of:
+
+`Request received · PHILEON is reviewing · Waiting for your response ·
+Resolved · Closed`.
+
+## Deep-link boundaries (never a second authority)
+
+The Concierge Cases admin page deep-links to Fulfillment, Shipments,
+Returns, Disputes, and Inventory — it does NOT expose duplicate
+shipment / refund / fraud / inventory mutations.
+
+## Cross-customer isolation
+
+- Order token A cannot access order B (status, RMA, or concierge).
+- Customer 360 keys strictly on the normalized email; unrelated emails
+  are never merged.
+- Internal notes never enter any customer API payload.
+- Dispute evidence never enters a concierge case payload.
+
+## Audit + case reopen
+
+- Every mutation writes an append-only row to `concierge_cases_audit`
+  (case_id · order_number · actor · action · previous · new · at · extra).
+- Owner may reopen resolved / closed cases; the terminal timestamps
+  are cleared and audit records the transition.
+
+## Owner daily concierge checklist
+
+1. Review **NEW** cases.
+2. Review **URGENT** and **ATTENTION** priority cases.
+3. Review **WAITING ON PHILEON** cases.
+4. Review overdue follow-ups (`follow_up_at ≤ now`).
+5. Open the linked order for context before responding.
+6. Check fulfillment / RMA / dispute state when relevant.
+7. Record factual contact notes and contact-log entries.
+8. Set / clear next-action as work progresses.
+9. Resolve completed cases.
+10. Close finished cases.
+11. Reopen only when genuinely needed.
+12. Never copy internal notes into customer messaging.
+
+## What Layer 6 explicitly does NOT do
+
+- No customer login / accounts.
+- No VIP / clienteling score.
+- No loyalty programme.
+- No LTV ranking.
+- No commissions.
+- No external helpdesk replacement.
+- No SMS / WhatsApp.
+- No AI auto-replies.
+- No automated support-email send.
+- No new analytics.
+- No delivery webhook.
+- No new marketing automation.
+- No HttpOnly admin auth migration.
+- No modification of Layer 2/3/4/5 authority.
+

@@ -6,6 +6,72 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 6: Concierge / Customer-Service Operations ✓
+Coordination surface for the owner — NOT a CRM / helpdesk / VIP tool.
+- New `services/concierge_cases_service.py` + `routes/concierge_cases.py`.
+- New `concierge_cases` collection with `CON-YYYY-XXXXXX` identifiers,
+  server-enforced 6-state case machine
+  (`new · open · waiting_on_customer · waiting_on_phileon · resolved · closed`),
+  owner-only priority (`normal · attention · urgent`),
+  `next_action`, `follow_up_at`, `waiting_on`, retry-dedupe (15 min),
+  append-only `admin_notes` + `contact_log`, append-only
+  `concierge_cases_audit`.
+- Admin surface (13 endpoints, all `verify_admin`): list, detail with
+  audit, create manual case, status/priority/next-action/follow-up/
+  waiting-on/notes/contact-log mutations, Customer 360 aggregation,
+  order timeline, static message previews (copy-only, never sends).
+- Customer surface: `POST /api/concierge/order-support` (order-linked
+  intake, rate-limited 6/5min per token, retry-dedupe, category
+  whitelist), `GET /api/concierge/order-support` (customer-safe list —
+  masks priority, notes, next_action, follow_up_at, audit).
+- Contact-form bridge: `POST /api/inquiries` now also mirrors the
+  submission into `concierge_cases` (source=`contact_form`,
+  category mapped from `inquiry_type`). Bridge failures never break
+  customer intake.
+- Customer 360 aggregates orders / cases / RMAs / disputes / consent
+  by normalized email — never collapses Gmail dots / plus aliases /
+  unrelated addresses. Never surfaces `status_token_hash`,
+  `email_status_token`, `provider_payment_intent_id`,
+  `stripe_customer_id`, dispute evidence, or webhook payloads.
+- Unified order timeline aggregates `orders_v2` + `fulfillment_audit`
+  + `returns` + `dispute_cases` + `concierge_cases` — de-duplicates
+  by `(event, iso_timestamp)`, sorts chronologically, fabricates
+  nothing.
+- Deep-link only: concierge NEVER duplicates a shipment / refund /
+  fraud / inventory mutation control. Layer 2/3/4/5 authority
+  untouched.
+- Frontend: new `/admin/concierge-cases` page with tabs
+  (NEW · OPEN · WAITING ON CUSTOMER · WAITING ON PHILEON ·
+  RESOLVED · CLOSED · ALL), priority + source filters, search,
+  manual-case creator, detail panel with status/priority/next-action/
+  follow-up/waiting-on/notes/contact-log/message-previews/customer-360/
+  timeline/audit. Mobile-safe (390×844 verified — zero overflow).
+  Sidebar link added (LifeBuoy icon). Existing `/admin/concierge`
+  (product intake inbox) preserved untouched.
+- Frontend: new `components/OrderSupportCta.jsx` wired into
+  `OrderStatusPage.jsx` — order-linked support intake below the
+  return block, category dropdown + subject + message, customer-safe
+  status pill on returning visits.
+- 20 new Layer-6 tests all pass; 117-test focused Layer 3/4/5/6
+  regression all green; 1286 full-suite tests pass (pre-existing 17
+  test_phileon_api.py external-URL + 1 owner-accepted Annie Rose
+  drift + 1 pre-existing adaptive-pricing external-URL, all unchanged
+  from baseline).
+- Files added: `backend/services/concierge_cases_service.py`,
+  `backend/routes/concierge_cases.py`,
+  `backend/tests/test_layer6_concierge_cases.py`,
+  `frontend/src/pages/admin/AdminConciergeCases.jsx`,
+  `frontend/src/components/OrderSupportCta.jsx`.
+- Files modified: `backend/server.py`,
+  `frontend/src/App.js`, `frontend/src/pages/OrderStatusPage.jsx`,
+  `frontend/src/components/layout/AdminLayout.jsx`,
+  `memory/OPERATIONS.md`, `memory/CHANGELOG.md`, `memory/PRD.md`.
+- Locked invariants intact: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, USD, tax OFF, STRIPE_MODE=test,
+  PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from
+  `refunded`, Vault stock untouched, PHI-20260901-4CBC5C untouched.
+- No real payment. No real refund. No real customer email. No deploy.
+
 ### 2026-02-17 — Layer 5 STOCK-SAFETY CORRECTION: no implicit startup seed ✓
 Enforced: normal server startup / deploy / DB restore NEVER creates
 physical inventory.
