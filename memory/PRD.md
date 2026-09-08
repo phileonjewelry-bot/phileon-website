@@ -3,6 +3,19 @@
 ## Original Problem Statement
 High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editorial UI (LA BÊTE visual language). Ongoing: content/UI expansion of Fine Jewelry, Inspiration Vault, and now Bracelets, with cinematic vertical galleries, autoplay-muted-loop hero video, and product-page detail pages per SKU.
 
+- **[DONE Feb 17, 2026 — Layer 8: Accessibility / Privacy / Compliance]** LAYER 8 ENGINEERING — GREEN. Legal / owner PRE-LIVE items REMAIN.
+  - **Accessibility engineering** — WCAG 2.2 AA target (NOT a certification claim). New `/accessibility` trust page. Global skip-link, `:focus-visible` outline, and `prefers-reduced-motion: reduce` global CSS added. Contact channel = existing PHILEON Concierge.
+  - **Privacy Choices consent surface** — new `PrivacyChoices.jsx` first-party banner. Essential (cart / wishlist / session / checkout / admin JWT) always on; optional analytics (Layer-7 events + search) OFF until explicit consent. Accept + Reject equally prominent. No dark patterns. Preference changeable later via footer helper.
+  - **Analytics gated on consent** — `useAnalytics`, `CartContext.fireAddedToCart`, `Checkout.submitCheckout` all check `phileon_privacy_consent_v1.analytics === true` before firing. Layer 7 pipeline & server-authoritative env stamp unchanged.
+  - **Marketing opt-in at Checkout** — explicit UNCHECKED checkbox. Purchase is NEVER conditional on the box. Marketing consent kept SEPARATE from analytics consent.
+  - **Privacy Policy expansions** — Cookies & On-Device Storage (essential vs optional); Marketing vs Analytics separation; EU / EEA / UK Data-Subject Rights (GDPR / UK-GDPR — access, rectification, erasure subject to lawful retention, restrict processing, object to processing / direct marketing, portability, withdraw consent, complaint to supervisory authority — Article 27 rep marked OWNER-REQUIRED PRE-LIVE); California Applicability-Under-Review (NO unconditional CCPA claim; does NOT sell or share); Retention windows (orders ≥6 years CRA baseline, behavior_events 30d, search_events 90d, concierge_cases ~3y operational — no destructive TTL added to authoritative commerce collections); Ring Try-On explicit deletion language; Legal Identity & Contact block marked OWNER-REQUIRED.
+  - **Try-on source photo deletion** — `object_storage.delete_object()` helper + try-on route deletes the raw upload immediately after processing. Non-image telemetry retained per privacy-minimised policy. No training / marketing / behavioural profiling / identity recognition.
+  - **Age** — children's-privacy language retained; no arbitrary age gate added.
+  - **Tests** — 22 new Layer-8 tests all pass. Full-suite: **1341 passed · 1 skipped · 19 pre-existing failures unchanged**. Zero new regressions.
+  - **OWNER / LEGAL PRE-LIVE items REMAIN**: (1) legal business name · (2) registered/postal address · (3) EU Article 27 + UK representative (blocker for EU/UK LIVE sales) · (4) CCPA/CPRA applicability review · (5) retention policy sign-off · (6) monitoring rota for Concierge / accessibility feedback.
+  - **Locked invariants intact**: PRODUCT_SLUGS=73, CHECKOUT_SUPPORTED_FAMILIES=84, canonical USD, tax OFF, STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from `refunded`, Vault stock untouched, `PHI-20260901-4CBC5C` untouched.
+  - **No real payment. No real refund. No real customer email. No deploy.**
+
 - **[DONE Feb 17, 2026 — Layer 7: Analytics Baseline]** LAYER 7 GREEN — READY FOR OWNER REVIEW.
   - **Environment authority**: every analytics / behavior / search event server-stamped from `PHILEON_ENV`. Fail-safe defaults to `preview`. `BehaviorEventCreate(extra="forbid")` rejects any client attempt to submit `env`. Admin can inspect production/preview/test via `?env=…`; default is current server env.
   - **New backend**: `services/analytics_service.py` (read-only aggregation, KPI dictionary, sanitize_search_query, current_env/sanitize_env, ensure_indexes) + `routes/admin_analytics.py` (6 admin + 2 support endpoints, all `verify_admin` where applicable).
@@ -1106,10 +1119,18 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Provide `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` → unblock E2E checkout for all 11 catalog products
 - Provide `METALS_API_KEY` → replace deterministic fallback in `metal_spot.py` with live provider quotes
 
-### P0 — Pre-Launch Operational Maturity (in progress)
+### P0 — Pre-Launch Operational Maturity (ENGINEERING COMPLETE)
 - Layer 6 ✅ complete
-- Layer 7 ✅ complete (this pass — awaiting owner review)
-- Layer 8 — pending owner brief (final layer, Privacy/Compliance)
+- Layer 7 ✅ complete
+- Layer 8 ✅ engineering complete — legal / owner PRE-LIVE items REMAIN
+
+### P0 — OWNER / LEGAL PRE-LIVE items (blocking public launch)
+- Legal business name for Privacy / Terms
+- Registered / postal business address for Privacy notice
+- EU Article 27 + UK representative appointment (blocker for EU/UK LIVE sales)
+- CCPA / CPRA statutory-applicability review
+- Retention policy sign-off before any destructive TTL on authoritative commerce records
+- Monitoring rota for Concierge / accessibility feedback
 
 ### P1
 - Migrate remaining 60+ bespoke products into trusted catalog (needs merchant pricing CSV)

@@ -106,6 +106,25 @@ def object_exists(path: str) -> bool:
     return resp.status_code == 200
 
 
+def delete_object(path: str) -> bool:
+    """Delete an object. Best-effort — returns True on 200/204/404.
+
+    Layer 8 uses this to promptly remove customer-uploaded Ring Try-On
+    source photographs immediately after processing.
+    """
+    key = init_storage()
+    try:
+        resp = requests.delete(
+            f"{STORAGE_URL}/objects/{path}",
+            headers={"X-Storage-Key": key},
+            timeout=15,
+        )
+        return resp.status_code in (200, 202, 204, 404)
+    except Exception:
+        return False
+
+
+
 def build_key(surface: str, filename: str) -> str:
     """Compose an app-prefixed object key. `surface` may include sub-paths.
 

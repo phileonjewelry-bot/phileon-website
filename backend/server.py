@@ -1406,8 +1406,20 @@ async def process_tryon_photo(
         # Mock try-on processing (in production, integrate with AI service).
         # For now, we write the original image bytes as the result placeholder.
         put_object(result_key, image_content, file.content_type or "image/jpeg")
-        
-        # Log analytics
+
+        # Layer 8 — Privacy: delete the customer-uploaded SOURCE image
+        # as soon as the try-on processing/session no longer requires it.
+        # The generated result_key remains (that is what the customer
+        # requested); the raw upload does not. Best-effort — failure
+        # must never break the customer response.
+        try:
+            from services.object_storage import delete_object as _delete_object
+            _delete_object(original_key)
+        except Exception as _e:  # pragma: no cover
+            logger.warning(
+                f"tryon source deletion skipped: {type(_e).__name__}: {_e}")
+
+        # Log analytics (non-image operational telemetry only)
         analytics_data = TryOnAnalytics(
             event_type="photo_upload",
             product_id=product_id,

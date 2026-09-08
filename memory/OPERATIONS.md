@@ -1617,3 +1617,143 @@ Analytics excludes `behavior_events` whose `session_id` starts with:
 - Whether preview/test analytics should ever be exposed alongside
   production in owner reports.
 
+
+---
+
+# Layer 8 — Accessibility / Privacy / Compliance
+
+Engineering + policy-readiness pass. NOT a substitute for legal counsel.
+Some launch items remain OWNER-REQUIRED before public production launch
+(see §PRE-LIVE ITEMS below).
+
+## Accessibility (engineering target)
+
+- **Target**: WCAG 2.2 AA. Engineering commitment, NOT a statutory
+  certification claim. No AODA-corporate-plan claim.
+- **/accessibility trust page**: factual statement + WCAG 2.2 AA
+  target + contact channel + known limitations + feedback process.
+- **Global skip-link** to `#phileon-main` (top of `App.js`).
+- **:focus-visible** outline (`#c8a24a`, 2px solid, 3px offset) via
+  `App.css` — never overrides mouse interactions.
+- **Reduced-motion** global rule in `App.css` — pares back non-
+  essential animations for `prefers-reduced-motion: reduce`.
+- **Contact** for accessibility issues: PHILEON Contact / Concierge
+  channel (existing).
+
+## Privacy — first-party consent surface (`PrivacyChoices.jsx`)
+
+Two independent decisions:
+
+| Category | Default | Storage keys |
+|---|---|---|
+| Essential (cart, wishlist, session, checkout, admin JWT) | ON — cannot be disabled | localStorage:`phileon_cart_v3`, `phileon_wishlist_v1`, `phileon_admin_token`; sessionStorage:`phileon_session_id`, `phi_order_*` |
+| Optional analytics (PDP view, add-to-cart, checkout-start, search) | **OFF** until explicit consent | localStorage:`phileon_privacy_consent_v1` |
+
+- **No dark patterns**. Accept + Reject are equally prominent.
+- **First visit** opens the surface; later change via the footer
+  Privacy Choices link (`openPrivacyChoices()` helper).
+- Consent is stored as `{analytics: bool, updated_at, version}`.
+- **Marketing-email consent is SEPARATE**: accepting analytics does
+  NOT subscribe to marketing. Purchase is NEVER conditional on
+  marketing consent.
+
+Gating touchpoints:
+
+- `hooks/useAnalytics.js::send()` returns early unless
+  `analyticsAllowed()` is true.
+- `hooks/useAnalytics.js::recordSearch()` gated the same way.
+- `contexts/CartContext.jsx::fireAddedToCart()` gated on the flag.
+- `pages/Checkout.jsx::submitCheckout()` fires CHECKOUT_STARTED
+  only when the flag is true.
+
+## Marketing consent (Checkout)
+
+- Explicit **UNCHECKED** opt-in on the Checkout form
+  (`data-testid=checkout-marketing-optin`).
+- Copy: "Send me PHILEON updates about new pieces, atelier notes and
+  private previews. Optional. You can unsubscribe at any time."
+- Purchase submits regardless of checkbox state.
+- When checked, checkout posts to the existing
+  `POST /api/behavior/newsletter/subscribe`; server records consent
+  evidence per Layer-1 retention.
+
+## Privacy Policy expansions (`trustPages.js`)
+
+- **Cookies & On-Device Storage** — clear essential vs optional
+  breakdown, no-third-party statement, Privacy Choices reference.
+- **Marketing vs. Analytics Consent** — explicit separation.
+- **EU / EEA / UK Data-Subject Rights** — access, rectification,
+  erasure (subject to lawful retention), restrict processing,
+  object to processing / direct marketing, portability, withdraw
+  consent, complaint to supervisory authority. Article 27
+  representative marked `OWNER-REQUIRED` (PRE-LIVE gate for EU/UK
+  sales).
+- **California — Applicability Under Review** — explicit
+  disclaimer: shipping alone does not establish CCPA/CPRA
+  applicability. Does NOT sell or share for cross-context
+  behavioural advertising. Requests via PHILEON Contact.
+- **Data Retention** — specific windows:
+  * Orders / tax-supporting records: **≥ 6 years** (CRA baseline,
+    longer where legally required). No destructive TTL.
+  * Returns / RMA / disputes / fulfillment / inventory audit:
+    long-term business-record scope; final disposition = owner /
+    legal / accounting review.
+  * `behavior_events` (anonymous): **30 days** (TTL enforced).
+  * `search_events`: **90 days** (TTL enforced).
+  * `concierge_cases`: operational ~3 years after `closed_at`;
+    no destructive TTL added — owner/legal must approve first.
+  * `marketing_consent`: kept while relevant to prove consent.
+  * `email_suppression`: minimum needed to honour opt-out
+    indefinitely.
+  * Ring Try-On source photos: **deleted promptly after processing**
+    (see below).
+- **Ring Try-On** — source photograph is used only to render the
+  requested preview and deleted promptly after processing (server-
+  side implemented — `services/object_storage.py::delete_object`).
+  Not used for training, marketing, behavioural profiling, or
+  identity recognition.
+- **Legal Identity & Contact** — placeholder + `OWNER-REQUIRED`
+  marker: legal business name + registered/postal address must be
+  published before public production launch.
+
+## Age
+
+Children's-privacy disclosure retained. **No arbitrary 13/16/18 age
+gate.** PHILEON is luxury jewelry commerce and does not need date-of-
+birth solely for a gate. Reassess only if products target minors.
+
+## Data-minimisation checklist (Layer 8 verifications)
+
+- No IP addresses persisted (Layer 7 lock retained).
+- No fingerprinting / heatmap / session replay.
+- No third-party analytics vendor installed.
+- `BehaviorEventCreate(extra="forbid")` rejects any client-supplied
+  `env` (Layer 7 env-authority lock retained).
+- Marketing consent gated by explicit opt-in only.
+- Suppression records preserved even when marketing history expires.
+
+## OWNER / LEGAL PRE-LIVE ITEMS (required before public launch)
+
+1. **Legal business name** (Privacy §Legal Identity & Contact).
+2. **Registered / postal business address** (same section).
+3. **EU Article 27 representative** and/or **UK representative**
+   appointment — required by GDPR / UK-GDPR for controllers outside
+   the EU/UK offering goods to those markets. Do NOT enable EU/UK
+   customer transactions in LIVE until this is confirmed.
+4. **CCPA / CPRA applicability review** — statutory threshold
+   assessment. If PHILEON meets the threshold, add California-
+   specific rights block.
+5. **Retention policy sign-off** — owner / legal / accounting must
+   sign off before any destructive TTL is added to authoritative
+   commerce records (`orders_v2`, `returns`, `dispute_cases`,
+   `concierge_cases`, `fulfillment_audit`, `inventory_audit`).
+6. **Concierge / privacy inbox monitoring** — confirm the Contact
+   channel is actively monitored for privacy requests before launch.
+7. **Accessibility feedback triage** — owner rota for
+   `concierge@getyourphileon.com` accessibility reports.
+
+## Layer 8 status
+
+Engineering pass **COMPLETE**. Legal / owner PRE-LIVE items listed
+above **REMAIN OPEN**.
+

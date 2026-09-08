@@ -97,16 +97,77 @@ export const TRUST_PAGES = {
         ],
       },
       {
+        title: 'EU / EEA / UK Data-Subject Rights',
+        blocks: [
+          { kind: 'p', text: 'Where the EU General Data Protection Regulation (GDPR) or the UK GDPR applies to the processing of your personal information, PHILEON supports the following data-subject rights, subject to lawful retention obligations and reasonable identity verification:' },
+          { kind: 'ul', items: [
+            'the right to access the personal information we hold about you',
+            'the right to correct inaccurate personal information (rectification)',
+            'the right to request deletion (erasure) of personal information, subject to lawful retention',
+            'the right to restrict processing in defined circumstances',
+            'the right to object to processing based on legitimate interests, and to object to direct marketing at any time',
+            'the right to data portability where the processing relies on consent or on a contract',
+            'the right to withdraw consent where processing relies on consent, without affecting prior lawful processing',
+            'the right to lodge a complaint with your national or supervisory data-protection authority',
+          ] },
+          { kind: 'note', text: 'Requesting deletion does not necessarily result in immediate erasure of every record. PHILEON must retain some information (for example, order, tax and warranty records) for the periods required by law.' },
+          { kind: 'owner', label: 'OWNER-REQUIRED — EU Article 27 representative and/or UK representative appointment is a legal PRE-LIVE decision for EU/UK sales. Contact details must be published here before customer transactions from the EU/UK go live.' },
+        ],
+      },
+      {
+        title: 'California Residents (Applicability Under Review)',
+        blocks: [
+          { kind: 'p', text: 'The California Consumer Privacy Act (CCPA / CPRA) applies to businesses that meet its statutory thresholds. Shipping to California customers does not, by itself, establish applicability.' },
+          { kind: 'p', text: 'PHILEON reviews California-privacy applicability separately. PHILEON does not sell or share personal information for cross-context behavioural advertising. If PHILEON is confirmed to meet the applicable statutory threshold, a California-specific rights section will be added to this Privacy Policy.' },
+          { kind: 'p', text: 'In the meantime, California residents may exercise privacy requests through the PHILEON Contact / Concierge channel.' },
+        ],
+      },
+      {
         title: 'Data Retention',
         blocks: [
-          { kind: 'p', text: 'PHILEON retains personal information only for as long as reasonably necessary for the purposes for which it was collected, including order fulfillment, customer service, fraud prevention, warranty support, accounting, and other legal obligations.' },
+          { kind: 'p', text: 'PHILEON retains personal information only for as long as reasonably necessary for the purposes for which it was collected. Specific retention practices include:' },
+          { kind: 'ul', items: [
+            'Order, invoice and tax-supporting business records — retained for at least the period required under applicable tax and business-record law (generally six years from the end of the relevant tax year in Canada, and longer where legally required).',
+            'Return, warranty, fulfillment and dispute records — retained as long-term business, legal and transaction-support records; final disposition is subject to owner, legal and accounting review.',
+            'Anonymous behavioural events — automatically expire after 30 days.',
+            'Search-query events — automatically expire after 90 days.',
+            'Concierge / customer-service cases — operational retention approximately three years after closure, subject to owner and legal review before automated deletion.',
+            'Marketing-consent evidence — retained while relevant to demonstrate the consent record.',
+            'Email-suppression / unsubscribe records — retained for the minimum period reasonably necessary to continue honouring the opt-out.',
+            'Customer-uploaded Ring Try-On source photographs — deleted promptly after the try-on session completes. See Ring Try-On below.',
+          ] },
+        ],
+      },
+      {
+        title: 'Ring Try-On',
+        blocks: [
+          { kind: 'p', text: 'Where you upload a photograph to preview a piece on your own hand (Ring Try-On), the source photograph is used only to render the preview you requested and is deleted promptly after the try-on session completes. PHILEON does not use uploaded photographs for training, marketing, behavioural profiling, or identity recognition.' },
+          { kind: 'p', text: 'Non-image operational telemetry (for example, that a try-on event occurred and its outcome) may be retained for privacy-minimised operational analytics.' },
         ],
       },
       {
         title: 'Cookies & On-Device Storage',
         blocks: [
-          { kind: 'p', text: 'PHILEON currently relies on essential browser storage rather than third-party marketing cookies. That storage supports functions such as your cart, your wishlist, and — if you have created an account — your login session.' },
-          { kind: 'p', text: 'PHILEON does not currently deploy third-party analytics vendors, advertising pixels or cross-site trackers. If that changes, this Privacy Policy will be updated and, where required, a consent mechanism will be provided.' },
+          { kind: 'p', text: 'PHILEON relies on first-party browser storage rather than third-party marketing cookies. Storage is separated into two categories:' },
+          { kind: 'ul', items: [
+            'Essential storage — required to operate the store and the requested feature. Examples: your shopping cart, your wishlist, and, if you have signed in, your session state. Essential storage cannot be turned off without breaking those functions.',
+            'Optional analytics / behavioural storage — first-party product-view / add-to-cart / checkout-start / search events used only for PHILEON’s owner-side analytics. This category is off by default and requires your consent through Privacy Choices.',
+          ] },
+          { kind: 'p', text: 'PHILEON does not currently deploy third-party analytics vendors, advertising pixels or cross-site trackers. If that changes, this Privacy Policy will be updated and consent will be requested where required.' },
+          { kind: 'p', text: 'You can review and change your Privacy Choices at any time from the site footer.' },
+        ],
+      },
+      {
+        title: 'Marketing vs. Analytics Consent',
+        blocks: [
+          { kind: 'p', text: 'Marketing-email consent and analytics-storage consent are separate. Accepting optional analytics does NOT subscribe you to marketing, and dismissing Privacy Choices does not remove you from a mailing list you never joined.' },
+        ],
+      },
+      {
+        title: 'Legal Identity & Contact',
+        blocks: [
+          { kind: 'p', text: 'For privacy questions, requests or complaints, please contact PHILEON through the Contact / Concierge channel.' },
+          { kind: 'owner', label: 'OWNER-REQUIRED — Publish PHILEON’s legal business name, registered / postal address, and (where separately provisioned) a dedicated privacy-contact mailbox before public production launch.' },
         ],
       },
       {
@@ -696,6 +757,52 @@ export const TRUST_PAGES = {
       },
     ],
   },
+  '/accessibility': {
+    slug: 'accessibility',
+    status: 'approved',
+    eyebrow: 'PHILEON · Accessibility',
+    h1: 'Accessibility',
+    title: 'Accessibility | PHILEON',
+    description:
+      'PHILEON’s engineering target is WCAG 2.2 AA. This is an engineering commitment, not a statutory certification. Contact PHILEON if you encounter a barrier.',
+    intro:
+      'PHILEON is committed to making its website usable for the widest reasonable audience, including customers using assistive technologies. Our engineering target is WCAG 2.2 AA.',
+    lastReviewed: '2026-02',
+    sections: [
+      {
+        title: 'Our Commitment',
+        blocks: [
+          { kind: 'p', text: 'We design and build PHILEON with keyboard access, visible focus, semantic structure, colour-contrast targets, resilient responsive layout, and reduced-motion respect in mind. Accessibility is treated as an ongoing engineering practice rather than a one-time audit.' },
+          { kind: 'p', text: 'We do not claim statutory certification or full conformance. Real-world assistive-technology setups vary, and no site is perfect for every user.' },
+        ],
+      },
+      {
+        title: 'Engineering Target',
+        blocks: [
+          { kind: 'p', text: 'PHILEON aims for the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. This includes: keyboard access to interactive elements, visible focus, sufficient colour contrast for text, form labels and error identification, meaningful alt text on informative images, focus management on modals and drawers, reduced-motion support, and responsive reflow at 400% zoom without loss of content.' },
+        ],
+      },
+      {
+        title: 'Assistance & Feedback',
+        blocks: [
+          { kind: 'p', text: 'If you encounter a barrier using PHILEON — for example, an element that is not reachable with the keyboard, a control that is difficult to identify with a screen reader, or content that is hard to read — please contact PHILEON through the Contact / Concierge channel. Include the page URL, the assistive technology or browser you are using, and a short description of what happened. We use these reports to prioritise fixes.' },
+        ],
+      },
+      {
+        title: 'Known Limitations',
+        blocks: [
+          { kind: 'p', text: 'Some editorial video and animation content is presented decoratively. Where content is decorative, we treat it as decorative in the accessibility tree. Where content is informative, we describe it in text or provide equivalent information nearby. We continue to improve alt-text coverage on the product catalogue.' },
+        ],
+      },
+      {
+        title: 'Alternative Contact',
+        blocks: [
+          { kind: 'p', text: 'If for any reason the on-site Contact / Concierge form is not accessible to you, please describe the issue by any reasonable channel available to you and PHILEON will follow up.' },
+        ],
+      },
+    ],
+  },
+
 };
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

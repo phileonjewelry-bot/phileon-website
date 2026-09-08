@@ -7,9 +7,15 @@ const CART_SESSION_KEY = 'phileon_session_id';
 
 // Layer 7 — fire the CLIENT-OBSERVED ADDED_TO_CART event through the
 // existing /api/behavior/events pipeline. Env is server-stamped.
+// Layer 8 — only fire when the user has accepted optional analytics.
+const CONSENT_KEY = 'phileon_privacy_consent_v1';
 const fireAddedToCart = (slug) => {
   if (!slug) return;
   try {
+    const raw = localStorage.getItem(CONSENT_KEY);
+    if (!raw) return;
+    const c = JSON.parse(raw);
+    if (!(c && c.analytics === true)) return;
     let sid = null;
     try { sid = sessionStorage.getItem(CART_SESSION_KEY); } catch (_e) { /* noop */ }
     if (!sid) {

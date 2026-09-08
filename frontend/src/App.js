@@ -10,6 +10,7 @@ import RouteSeoInjector from "@/components/RouteSeoInjector";
 import SearchOverlay from "@/components/SearchOverlay";
 import CartDrawer from "@/components/CartDrawer";
 import VaultRouteBadge from "@/components/VaultRouteBadge";
+import PrivacyChoices from "@/components/PrivacyChoices";
 
 // Context Providers
 import { CartProvider } from "@/contexts/CartContext";
@@ -176,9 +177,25 @@ function App() {
       <CartProvider>
         <WishlistProvider>
           <BrowserRouter>
+            <a href="#phileon-main"
+               className="phileon-skip-link"
+               data-testid="skip-to-main"
+               style={{
+                 position: 'absolute', left: '-9999px', top: 8,
+                 zIndex: 4000, padding: '10px 16px',
+                 background: '#08070a', color: '#c8a24a',
+                 border: '1px solid #c8a24a',
+                 fontFamily: "'Cinzel',serif", fontSize: 11,
+                 letterSpacing: '.28em', textTransform: 'uppercase',
+               }}
+               onFocus={(e) => { e.currentTarget.style.left = '8px'; }}
+               onBlur={(e) => { e.currentTarget.style.left = '-9999px'; }}>
+              Skip to main content
+            </a>
             <RouteSeoInjector />
             <SearchOverlay />
             <VaultRouteBadge />
+            <PrivacyChoices />
         <Suspense fallback={<div style={{minHeight: '100vh', background: '#0a0a0a'}} data-testid="route-fallback" />}>
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}
@@ -317,6 +334,7 @@ function App() {
             <Route path="/warranty" element={<TrustPage />} />
             <Route path="/jewelry-care" element={<TrustPage />} />
             <Route path="/materials" element={<TrustPage />} />
+            <Route path="/accessibility" element={<TrustPage />} />
             {/* Drew's Vault — private access via /secret-drop unlock. NOT
                 linked from public nav/homepage/shop. noindex/nofollow. */}
             <Route path="/drews-vault" element={<DrewsVaultPage />} />

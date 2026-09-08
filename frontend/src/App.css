@@ -32,3 +32,27 @@
         transform: rotate(360deg);
     }
 }
+
+
+/* ─── PHILEON Layer 8 accessibility engineering baseline ─────────── */
+
+/* Visible keyboard focus for every interactive element. Overrides the
+   default browser outline suppression without redesigning the visual
+   identity. Uses :focus-visible so mouse clicks stay unaltered. */
+:focus-visible {
+    outline: 2px solid #c8a24a;
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* Global reduced-motion respect — pares back non-essential animations
+   for users who prefer reduced motion. Individual components (VaultHero,
+   CinematicLightbox) continue to layer their own targeted rules. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

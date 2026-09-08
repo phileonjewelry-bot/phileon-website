@@ -22,6 +22,20 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const DEDUPE_MS = 30_000;
 const RECENT_KEY = 'phi_analytics_recent_v1';
 const SESSION_KEY = 'phileon_session_id';
+const CONSENT_KEY = 'phileon_privacy_consent_v1';
+
+// Layer 8 — optional analytics is OFF until the user accepts. Marketing
+// consent remains a SEPARATE decision (see PrivacyChoices.jsx).
+function analyticsAllowed() {
+  try {
+    const raw = localStorage.getItem(CONSENT_KEY);
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    return p && p.analytics === true;
+  } catch (_e) {
+    return false;
+  }
+}
 
 function readRecent() {
   try {
@@ -90,6 +104,9 @@ export function useAnalytics() {
 
   const send = useCallback(async (eventType, productSlug, opts = {}) => {
     if (!productSlug) return;
+    // Layer 8 — respect user analytics consent (essential functions
+    // remain unaffected; this only gates optional behavioural events).
+    if (!analyticsAllowed()) return;
     if (!opts.force && shouldDedupe(eventType, productSlug)) return;
     await post(`${API}/api/behavior/events`, {
       event_type: eventType,
@@ -121,6 +138,7 @@ export function useAnalytics() {
 
   const recordSearch = useCallback(async (query, resultCount) => {
     if (!query || !String(query).trim()) return;
+    if (!analyticsAllowed()) return;
     await post(`${API}/api/search-events`, {
       query: String(query).slice(0, 200),
       result_count: Math.max(0, Number(resultCount) || 0),

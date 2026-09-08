@@ -6,6 +6,37 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 8: Accessibility / Privacy / Compliance ✓ (Engineering GREEN — Legal PRE-LIVE items remain)
+Engineering + policy-readiness pass. NOT a substitute for legal counsel.
+- **Accessibility engineering** (WCAG 2.2 AA target — engineering commitment, NOT statutory certification):
+  * New `/accessibility` trust page (factual: target, contact, known limitations, feedback process).
+  * Global skip-link (`#phileon-main`) in `App.js`.
+  * Global `:focus-visible` outline in `App.css` (gold, 2px, 3px offset). Does not affect mouse interactions.
+  * Global `prefers-reduced-motion: reduce` media rule in `App.css`.
+- **Privacy Choices** first-party consent surface (`components/PrivacyChoices.jsx`):
+  * Essential (ON — cart, wishlist, session, checkout, admin JWT).
+  * Optional analytics (OFF until explicit consent).
+  * Accept + Reject equally prominent. No dark patterns. Preference changeable via footer helper `openPrivacyChoices()`.
+  * Marketing consent kept SEPARATE — accepting analytics does not subscribe to marketing.
+- **Analytics gating on consent** — `hooks/useAnalytics.js::send/recordSearch`, `contexts/CartContext.jsx::fireAddedToCart`, `pages/Checkout.jsx::submitCheckout` all check `phileon_privacy_consent_v1.analytics === true` before firing. Layer 7 pipeline & env-authority unchanged.
+- **Marketing opt-in at Checkout** — explicit UNCHECKED checkbox. Purchase is NEVER conditional on the box. When checked, existing newsletter-subscribe endpoint is called on order-create.
+- **Privacy Policy expansions** (`data/trustPages.js`):
+  * Cookies & On-Device Storage — essential vs optional breakdown.
+  * Marketing vs. Analytics Consent — explicit separation.
+  * EU / EEA / UK Data-Subject Rights — GDPR / UK-GDPR rights (access, rectification, erasure subject to lawful retention, restrict processing, object to processing / direct marketing, portability, withdraw consent, complaint to supervisory authority). Article 27 representative marked OWNER-REQUIRED PRE-LIVE.
+  * California — Applicability Under Review. No unconditional CCPA claim. Does NOT sell or share personal information.
+  * Data Retention — specific windows (orders ≥6 years CRA baseline, behavior_events 30d TTL, search_events 90d TTL, concierge_cases 3y operational after `closed_at` — no destructive TTL added to authoritative commerce collections without owner/legal approval).
+  * Ring Try-On — source photograph deleted promptly after processing. No training / marketing / behavioural profiling / identity recognition use.
+  * Legal Identity & Contact — placeholder + OWNER-REQUIRED marker.
+- **Try-on source photo deletion** — `services/object_storage.py` new `delete_object()` helper; try-on route now calls it after processing. Best-effort (never breaks customer response). Non-image `tryon_analytics` telemetry retained per privacy-minimised policy.
+- **Age** — children's-privacy language retained; no arbitrary age gate added.
+- **Tests** — 22 new Layer-8 tests all pass. Full-suite baseline: **1341 passed · 1 skipped · 19 pre-existing failures unchanged**. Zero new regressions.
+- **Files added**: `frontend/src/components/PrivacyChoices.jsx`, `backend/tests/test_layer8_privacy_accessibility.py`.
+- **Files modified**: `backend/server.py`, `backend/services/object_storage.py`, `frontend/src/App.js`, `frontend/src/App.css`, `frontend/src/contexts/CartContext.jsx`, `frontend/src/data/trustPages.js`, `frontend/src/hooks/useAnalytics.js`, `frontend/src/pages/Checkout.jsx`, `memory/OPERATIONS.md`, `memory/CHANGELOG.md`, `memory/PRD.md`.
+- **Locked invariants intact**: PRODUCT_SLUGS=73, CHECKOUT_SUPPORTED_FAMILIES=84, canonical USD, tax OFF, STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE=false, chargeback_lost distinct from refunded, Vault stock untouched, PHI-20260901-4CBC5C untouched.
+- **OWNER / LEGAL PRE-LIVE items REMAIN OPEN**: legal business name; registered/postal address; EU Article 27 + UK representative (blocker for EU/UK LIVE sales); CCPA/CPRA applicability review; retention policy sign-off; monitoring rota for Concierge / accessibility feedback.
+- **No real payment. No real refund. No real customer email. No deploy. Stripe TEST. Behavioral LIVE=false. Tax OFF.**
+
 ### 2026-02-17 — Layer 7: Analytics Baseline ✓
 Owner-only, privacy-conscious analytics baseline over the existing
 authoritative collections. First-party only — no 3rd-party vendor

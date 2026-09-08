@@ -101,6 +101,9 @@ export default function Checkout() {
   const presentment = usePresentment();
   const isApprox = presentment.isApproximate;
   const [email, setEmail] = useState("");
+  // Layer 8 — EXPLICIT unchecked marketing opt-in. Purchase is NEVER
+  // conditional on this being checked.
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [redirectPending, setRedirectPending] = useState(false);
@@ -281,8 +284,18 @@ export default function Checkout() {
     // Layer 7 — CLIENT-OBSERVED CHECKOUT_STARTED. Distinct from the
     // server-authoritative CHECKOUT_SESSION_CREATED emitted by the
     // backend when Stripe accepts the session.
+    // Layer 8 — respect the user's optional-analytics consent.
     try {
-      let sid = sessionStorage.getItem('phileon_session_id');
+      const _consent = (() => {
+        try {
+          const raw = localStorage.getItem('phileon_privacy_consent_v1');
+          if (!raw) return false;
+          const p = JSON.parse(raw);
+          return !!(p && p.analytics === true);
+        } catch (_e) { return false; }
+      })();
+      if (_consent) {
+        let sid = sessionStorage.getItem('phileon_session_id');
       if (!sid) {
         const rand = (typeof crypto !== 'undefined' && crypto.randomUUID)
           ? crypto.randomUUID()
@@ -302,6 +315,7 @@ export default function Checkout() {
         }),
         keepalive: true,
       }).catch(() => {});
+      }
     } catch (_e) {
       /* analytics never blocks checkout */
     }
@@ -338,6 +352,18 @@ export default function Checkout() {
       }
       if (data.status_token && data.order_number) {
         sessionStorage.setItem(`phi_order_${data.order_number}`, data.status_token);
+      }
+      // Layer 8 — record marketing consent only if explicitly checked.
+      // Never conditional on purchase; opt-out at any time via unsubscribe.
+      if (marketingOptIn) {
+        try {
+          fetch(`${API}/api/behavior/newsletter/subscribe`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+            keepalive: true,
+          }).catch(() => {});
+        } catch (_e) { /* silent */ }
       }
       window.location.href = data.checkout_url;
     } catch (err) {
@@ -471,6 +497,21 @@ export default function Checkout() {
             />
           </label>
           <p className="text-white/25 text-[11px] mt-2">Order confirmation and shipping updates go here.</p>
+
+          <label className="mt-4 flex items-start gap-3 cursor-pointer"
+                 data-testid="checkout-marketing-optin-row">
+            <input
+              type="checkbox"
+              checked={marketingOptIn}
+              onChange={(e) => setMarketingOptIn(e.target.checked)}
+              className="mt-1 accent-white/60"
+              data-testid="checkout-marketing-optin"
+            />
+            <span className="text-white/50 text-[13px] leading-relaxed">
+              Send me PHILEON updates about new pieces, atelier notes and
+              private previews. Optional. You can unsubscribe at any time.
+            </span>
+          </label>
 
           {error && (
             <div className="mt-4 border border-white/15 bg-black/40 rounded-md px-4 py-3 text-white/80 text-[13px]" role="alert" data-testid="checkout-error">
