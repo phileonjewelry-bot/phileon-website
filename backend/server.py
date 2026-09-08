@@ -47,7 +47,13 @@ JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
 # Create the main app
-app = FastAPI(title="Phileon Jewelry API")
+_is_production = (os.environ.get("PHILEON_ENV") or "").strip().lower() == "production"
+app = FastAPI(
+    title="Phileon Jewelry API",
+    docs_url=None if _is_production else "/docs",
+    redoc_url=None if _is_production else "/redoc",
+    openapi_url=None if _is_production else "/openapi.json",
+)
 
 # Create routers
 api_router = APIRouter(prefix="/api")
@@ -1275,17 +1281,21 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 
 def _resolve_cors_origins() -> list[str]:
+    """Explicit-list CORS. Fails closed in production — a missing
+    `CORS_ORIGINS` env var only falls back to `["*"]` when
+    `PHILEON_ENV != "production"`. `allow_credentials` is never
+    combined with a wildcard."""
     raw = (os.environ.get("CORS_ORIGINS") or "").strip()
-    if not raw or raw == "*":
-        # Pin CORS to the deployed frontend origin. If the frontend origin is
-        # not discoverable at import time we fall back to a permissive list
-        # in dev BUT never with `allow_credentials=True`.
-        return ["*"]
-    return [o.strip() for o in raw.split(",") if o.strip()]
+    if raw and raw != "*":
+        return [o.strip() for o in raw.split(",") if o.strip()]
+    if (os.environ.get("PHILEON_ENV") or "").strip().lower() == "production":
+        # Production must configure CORS_ORIGINS explicitly. Fail closed.
+        return []
+    return ["*"]
 
 
 _cors_origins = _resolve_cors_origins()
-_cors_credentials = _cors_origins != ["*"]
+_cors_credentials = bool(_cors_origins) and _cors_origins != ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -1432,7 +1442,7 @@ async def log_tryon_analytics(analytics: TryOnAnalytics):
 
 # ============ INVENTORY ALERTS ============
 @api_router.post("/inventory/check-alerts")
-async def check_inventory_alerts():
+async def check_inventory_alerts(_admin: str = Depends(verify_admin)):
     """Check for low stock products and send alerts"""
     try:
         # Find products with low stock that haven't been alerted
@@ -1901,7 +1911,8 @@ class InventoryUpdate(BaseModel):
     inventory_count: int
 
 @api_router.patch("/products/{product_id}/inventory")
-async def update_inventory(product_id: str, payload: InventoryUpdate):
+async def update_inventory(product_id: str, payload: InventoryUpdate,
+                              _admin: str = Depends(verify_admin)):
     """Update product inventory and trigger alerts if needed"""
     try:
         product = await db.products.find_one({"id": product_id})

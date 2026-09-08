@@ -22,6 +22,7 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 import hashlib
+import re
 
 from services.returns_service import (
     RMA_STATES, ALLOWED_TRANSITIONS, can_transition,
@@ -341,7 +342,7 @@ async def admin_list_returns(status: str = Query(default="new"),
     if states is not None:
         filt["status"] = {"$in": states}
     if q:
-        s = q.strip()
+        s = re.escape(q.strip())
         filt["$or"] = [
             {"rma_number": {"$regex": f"^{s}", "$options": "i"}},
             {"order_number": {"$regex": f"^{s}", "$options": "i"}},

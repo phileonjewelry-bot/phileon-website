@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends
 from typing import List
 import os
 from datetime import datetime
@@ -8,6 +8,10 @@ router = APIRouter(prefix="/inventory", tags=["inventory"])
 def get_db():
     from server import db
     return db
+
+def _verify_admin():
+    from server import verify_admin
+    return verify_admin
 
 async def check_low_stock_products():
     db = get_db()
@@ -42,7 +46,7 @@ async def check_low_stock_products():
     }
 
 @router.get("/check-stock")
-async def check_stock():
+async def check_stock(_admin=Depends(_verify_admin())):
     products_dict = await check_low_stock_products()
     
     return {
@@ -57,7 +61,8 @@ async def check_stock():
     }
 
 @router.post("/send-stock-alert")
-async def send_stock_alert(background_tasks: BackgroundTasks):
+async def send_stock_alert(background_tasks: BackgroundTasks,
+                              _admin=Depends(_verify_admin())):
     products_dict = await check_low_stock_products()
     
     total_items = len(products_dict['sold_out']) + len(products_dict['almost_sold_out']) + len(products_dict['low_stock'])

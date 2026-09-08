@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from models import RestockList, RestockListCreate
 from datetime import datetime
@@ -10,6 +10,12 @@ router = APIRouter(prefix="/restock", tags=["restock"])
 def get_db():
     from server import db
     return db
+
+def _verify_admin():
+    """Lazy-imported admin guard — imported inside the function so this
+    module remains importable outside a running FastAPI app."""
+    from server import verify_admin
+    return verify_admin
 
 @router.post("", response_model=RestockList)
 async def join_restock_list(restock_request: RestockListCreate):
@@ -59,7 +65,7 @@ async def join_restock_list(restock_request: RestockListCreate):
     return restock_entry
 
 @router.get("/product/{product_id}", response_model=List[RestockList])
-async def get_restock_list(product_id: str):
+async def get_restock_list(product_id: str, _admin=Depends(_verify_admin())):
     """Get restock list for a specific product (Admin only)"""
     db = get_db()
     
@@ -70,7 +76,7 @@ async def get_restock_list(product_id: str):
     return [RestockList(**entry) for entry in restock_entries]
 
 @router.post("/notify/{product_id}")
-async def notify_restock_list(product_id: str):
+async def notify_restock_list(product_id: str, _admin=Depends(_verify_admin())):
     """Notify all users on restock list that product is available (Admin only)"""
     db = get_db()
     
@@ -122,7 +128,7 @@ async def notify_restock_list(product_id: str):
     }
 
 @router.delete("/cleanup/{product_id}")
-async def cleanup_restock_list(product_id: str):
+async def cleanup_restock_list(product_id: str, _admin=Depends(_verify_admin())):
     """Clean up old restock entries for a product (Admin only)"""
     db = get_db()
     
