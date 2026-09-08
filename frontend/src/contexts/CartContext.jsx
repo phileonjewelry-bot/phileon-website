@@ -140,6 +140,22 @@ export const CartProvider = ({ children }) => {
     // Layer 7 — client-observed ADDED_TO_CART.
     fireAddedToCart(product.slug || product.productKey || product.id);
 
+    // Tier A — privacy-minimised aggregate counter (unconditional, no identity).
+    try {
+      const slug = product.slug || product.productKey || product.id;
+      if (slug) {
+        fetch(`${API}/api/telemetry/aggregate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event_type: 'ADD_TO_CART_COUNT',
+            product_slug: String(slug),
+          }),
+          keepalive: true,
+        }).catch(() => {});
+      }
+    } catch (_e) { /* silent */ }
+
     setIsOpen(true);
     return true;
   };

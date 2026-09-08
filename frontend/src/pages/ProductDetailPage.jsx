@@ -20,6 +20,7 @@ import { useWishlist } from '@/contexts/WishlistContext';
 import { Heart, Share2 } from 'lucide-react';
 import { shareProduct } from '@/lib/share';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { bumpPdpView, bumpProductLike } from '@/lib/aggregateTelemetry';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
@@ -64,6 +65,9 @@ const ProductDetailPage = () => {
   // will fire a new event.
   useEffect(() => {
     if (product?.slug) {
+      // Tier A — privacy-minimised aggregate counter (no identity).
+      bumpPdpView(product.slug);
+      // Tier B — consented session analytics (Layer 7 pipeline).
       productViewed(product.slug, { source: 'pdp' });
     }
   }, [product?.slug, productViewed]);
@@ -285,6 +289,9 @@ const ProductDetailPage = () => {
                     const wasLiked = has(product.id);
                     toggle(product.id);
                     if (!wasLiked) {
+                      // Tier A aggregate counter (no identity).
+                      bumpProductLike(product.slug);
+                      // Tier B consented event.
                       productLiked(product.slug, { source: 'pdp-wishlist' });
                     }
                   }}

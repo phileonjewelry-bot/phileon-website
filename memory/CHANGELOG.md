@@ -6,6 +6,21 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Aggregate Telemetry (Tier A privacy-minimised) ✓
+Narrow pre-live enhancement. Two-tier analytics separation:
+- **Tier A (aggregate, no consent)** — `services/aggregate_telemetry.py` + `routes/telemetry.py`. Public `POST /api/telemetry/aggregate` (Pydantic `extra="forbid"`, allow-listed event types only, server-stamped env from PHILEON_ENV, transient in-memory IP rate limit 240 req / 60s, no IP persisted). New `aggregate_telemetry_daily` collection with atomic `$inc` keyed on `(date, env, event_type, product_slug?, result_bucket?)`. Slugs validated against `FIXED_PRODUCT_SLUGS`; untrusted slugs coerced to `None`. Search NEVER stores raw query — only a coarse `none/few/many` result bucket. Zero writes to `behavior_events`, `retention_pending`, `behavior_send_log`, `marketing_consent`, or `email_suppression`.
+- **Tier B (consented, Layer-7)** — unchanged. Still gated by `phileon_privacy_consent_v1.analytics === true`.
+- **Frontend fires** — new `lib/aggregateTelemetry.js`; `ProductDetailPage.jsx` fires `bumpPdpView` on view + `bumpProductLike` on wishlist transition; `CartContext.jsx` fires `ADD_TO_CART_COUNT` unconditionally on successful add; `Checkout.jsx` fires `CHECKOUT_START_COUNT` on submit. Both tiers fire in parallel where applicable; only Tier B is consent-gated.
+- **Admin surface** — new `/admin/analytics/aggregate` endpoint + new "Aggregate Activity" tab in `AdminAnalytics.jsx` clearly labelled TOTAL AGGREGATE ACTIVITY (not unique visitors / not unique people / not a connected funnel). Owner dashboard keeps Tier A and Tier B side-by-side.
+- **Privacy Choices copy simplified** per §14. Equal-prominence Accept + Reject retained.
+- **Privacy Policy §"Privacy-Minimised Aggregate Counts"** added — factual disclosure: not tied to browser identifier · no fingerprinting · no IP retention · truthful "not universally exempt from consent."
+- **Tests** — 15 new tests in `test_aggregate_telemetry.py` covering A/C/D/G/H/I/J/K/L/M/N/O/P from §16 + rate-limit unit test + service isolation from retention. All pass.
+- **Full-suite** — 1360 passed · 1 skipped · 18 pre-existing external-URL/harness failures (one *fewer* than baseline). Zero new regressions.
+- **Files added**: `backend/services/aggregate_telemetry.py`, `backend/routes/telemetry.py`, `backend/tests/test_aggregate_telemetry.py`, `frontend/src/lib/aggregateTelemetry.js`.
+- **Files modified**: `backend/server.py`, `frontend/src/components/PrivacyChoices.jsx`, `frontend/src/contexts/CartContext.jsx`, `frontend/src/data/trustPages.js`, `frontend/src/pages/Checkout.jsx`, `frontend/src/pages/ProductDetailPage.jsx`, `frontend/src/pages/admin/AdminAnalytics.jsx`, `memory/CHANGELOG.md`, `memory/PRD.md`.
+- **Locked invariants intact**: PRODUCT_SLUGS=73, CHECKOUT_SUPPORTED_FAMILIES=84, canonical USD, tax OFF, STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE=false, `chargeback_lost` distinct from `refunded`, Vault stock untouched, PHI-20260901-4CBC5C untouched. Layer 7 consent semantics unchanged. Layer 8 consent-storage guarantees unchanged (Tier A never creates `phileon_session_id`).
+- **No real payment. No real refund. No real customer email. No deploy.**
+
 ### 2026-02-17 — Layer 8: Accessibility / Privacy / Compliance ✓ (Engineering GREEN — Legal PRE-LIVE items remain)
 Engineering + policy-readiness pass. NOT a substitute for legal counsel.
 - **Accessibility engineering** (WCAG 2.2 AA target — engineering commitment, NOT statutory certification):

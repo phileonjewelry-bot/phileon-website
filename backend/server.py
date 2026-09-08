@@ -2288,6 +2288,17 @@ try:
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"Analytics routes NOT registered: {type(_e).__name__}: {_e}")
 
+# Aggregate Telemetry (Tier A — privacy-minimized, no visitor identity).
+try:
+    from routes.telemetry import (
+        public_router as _tel_pub, admin_router as _tel_admin,
+    )
+    api_router.include_router(_tel_pub)
+    api_router.include_router(_tel_admin)
+    logger.info("Aggregate Telemetry routes registered (Tier A)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Aggregate telemetry routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 
@@ -2351,6 +2362,13 @@ async def startup_db():
         await _al_indexes(db)
     except Exception as e:
         logger.warning(f"analytics indexes init skipped: {type(e).__name__}: {e}")
+
+    # Aggregate telemetry indexes (Tier A).
+    try:
+        from services.aggregate_telemetry import ensure_indexes as _agg_indexes
+        await _agg_indexes(db)
+    except Exception as e:
+        logger.warning(f"aggregate telemetry indexes init skipped: {type(e).__name__}: {e}")
 
     # NOTE — Layer 5 stock-safety correction:
     # Normal startup MUST NEVER create physical inventory. The

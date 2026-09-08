@@ -158,6 +158,13 @@ export const TRUST_PAGES = {
         ],
       },
       {
+        title: 'Privacy-Minimised Aggregate Counts',
+        blocks: [
+          { kind: 'p', text: 'Separately from the optional consented analytics above, PHILEON records a small number of privacy-minimised aggregate counters (for example, the total number of times a product page was viewed on a given day). These counters are not tied to a browser identifier, are not used to create a customer profile, do not use fingerprinting, and do not retain IP addresses. Search-related counters do NOT retain the query text you typed — they store only a coarse "some results / no results" bucket.' },
+          { kind: 'p', text: 'PHILEON uses these aggregate counts to understand general site and product activity. This describes the actual technical practice; the legal characterisation of aggregate counters varies by jurisdiction and is not universally exempt from consent.' },
+        ],
+      },
+      {
         title: 'Marketing vs. Analytics Consent',
         blocks: [
           { kind: 'p', text: 'Marketing-email consent and analytics-storage consent are separate. Accepting optional analytics does NOT subscribe you to marketing, and dismissing Privacy Choices does not remove you from a mailing list you never joined.' },

@@ -281,6 +281,20 @@ export default function Checkout() {
     if (!shippingCountry) { setError("Please select your shipping destination."); return; }
     if (!shippingQuote) { setError("Please wait for the shipping quote to load."); return; }
 
+    // Tier A — privacy-minimised aggregate counter (unconditional, no identity).
+    try {
+      const firstSlug = (supported[0] && (supported[0].slug || supported[0].productKey)) || null;
+      fetch(`${API}/api/telemetry/aggregate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_type: 'CHECKOUT_START_COUNT',
+          product_slug: firstSlug ? String(firstSlug) : null,
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch (_e) { /* silent */ }
+
     // Layer 7 — CLIENT-OBSERVED CHECKOUT_STARTED. Distinct from the
     // server-authoritative CHECKOUT_SESSION_CREATED emitted by the
     // backend when Stripe accepts the session.

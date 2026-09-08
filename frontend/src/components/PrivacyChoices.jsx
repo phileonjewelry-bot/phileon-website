@@ -93,13 +93,14 @@ export default function PrivacyChoices() {
       </p>
       <p id="privacy-choices-desc"
          style={{ fontSize: 15, lineHeight: 1.5, marginTop: 10, marginBottom: 0 }}>
-        PHILEON uses essential first-party storage (your cart, wishlist and
-        session) to make the site work. We would also like to record
-        anonymous product-view, add-to-cart, checkout-start and search
-        events to help us improve the store. This is optional and off by
-        default. Marketing email is a separate opt-in and is not enabled
-        by this choice. You can change your Privacy Choices anytime from
-        the footer.
+        PHILEON uses first-party storage to keep your cart, wishlist and
+        site preferences working. With your permission, we would also
+        like to collect anonymous information about product views, cart
+        activity, checkout starts and searches so we can improve the
+        PHILEON experience. This is optional and off by default.
+        Marketing email is a separate choice and is never enabled by
+        accepting analytics. You can change your Privacy Choices at any
+        time.
       </p>
 
       {detailOpen && (

@@ -21,6 +21,7 @@ const PERIODS = [
 
 const SECTIONS = [
   { key: 'overview',    label: 'Overview' },
+  { key: 'aggregate',   label: 'Aggregate Activity' },
   { key: 'funnel',      label: 'Funnel' },
   { key: 'products',    label: 'Products' },
   { key: 'currencies',  label: 'Countries & Currencies' },
@@ -137,6 +138,7 @@ export default function AdminAnalytics() {
       {!loading && data && (
         <>
           {section === 'overview'   && <Overview data={data} kpiDefs={kpiDefs} />}
+          {section === 'aggregate'  && <AggregateSection data={data} />}
           {section === 'funnel'     && <Funnel data={data} kpiDefs={kpiDefs} />}
           {section === 'products'   && <ProductsSection data={data} />}
           {section === 'currencies' && <Currencies data={data} />}
@@ -156,6 +158,46 @@ function KpiCard({ title, value, hint, testId, defn }) {
       <p className="mt-1 font-serif text-2xl">{value}</p>
       {hint ? <p className="text-[11px] text-white/50 mt-1">{hint}</p> : null}
       {defn ? <p className="text-[10px] text-white/40 mt-2 italic leading-relaxed">{defn}</p> : null}
+    </div>
+  );
+}
+
+function AggregateSection({ data }) {
+  const t = data.totals || {};
+  return (
+    <div className="space-y-4" data-testid="al-aggregate">
+      <p className="text-xs uppercase tracking-[0.24em] text-phileon-gold">
+        Tier A · Total Aggregate Activity
+      </p>
+      <p className="text-[11px] text-white/50 italic">
+        Privacy-minimised counters. No visitor identity, no session id,
+        no IP retention. Counts are total actions — not unique visitors,
+        not unique sessions, not a connected funnel. Consented session
+        funnel remains under Funnel / Products / Search tabs.
+      </p>
+      <div className="grid gap-3 md:grid-cols-3">
+        <KpiCard title="PDP Views (total)" value={fmtNum(t.PDP_VIEW_COUNT)}          testId="al-agg-pdp" />
+        <KpiCard title="Product Likes (total)" value={fmtNum(t.PRODUCT_LIKE_COUNT)}   testId="al-agg-like" />
+        <KpiCard title="Add-to-Cart (total)" value={fmtNum(t.ADD_TO_CART_COUNT)}      testId="al-agg-add" />
+        <KpiCard title="Checkout Starts (total)" value={fmtNum(t.CHECKOUT_START_COUNT)} testId="al-agg-checkout" />
+        <KpiCard title="Searches (total)" value={fmtNum(t.SEARCH_COUNT)}              testId="al-agg-search" />
+        <KpiCard title="Zero-result Searches" value={fmtNum(t.ZERO_RESULT_SEARCH_COUNT)} testId="al-agg-zero" />
+      </div>
+      {(data.top_slugs || []).length > 0 && (
+        <div>
+          <p className="text-xs uppercase tracking-[0.24em] text-phileon-gold mb-2 mt-4">
+            Top PDP slugs (aggregate views)
+          </p>
+          <ul className="space-y-1 text-sm">
+            {(data.top_slugs || []).map((s, i) => (
+              <li key={i} className="flex justify-between border-b border-white/[0.04] py-1">
+                <span>{s.product_slug}</span>
+                <span>{fmtNum(s.count)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
