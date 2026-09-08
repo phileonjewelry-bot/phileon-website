@@ -3,6 +3,25 @@
 ## Original Problem Statement
 High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editorial UI (LA BÊTE visual language). Ongoing: content/UI expansion of Fine Jewelry, Inspiration Vault, and now Bracelets, with cinematic vertical galleries, autoplay-muted-loop hero video, and product-page detail pages per SKU.
 
+- **[DONE Feb 17, 2026 — Layer 7: Analytics Baseline]** LAYER 7 GREEN — READY FOR OWNER REVIEW.
+  - **Environment authority**: every analytics / behavior / search event server-stamped from `PHILEON_ENV`. Fail-safe defaults to `preview`. `BehaviorEventCreate(extra="forbid")` rejects any client attempt to submit `env`. Admin can inspect production/preview/test via `?env=…`; default is current server env.
+  - **New backend**: `services/analytics_service.py` (read-only aggregation, KPI dictionary, sanitize_search_query, current_env/sanitize_env, ensure_indexes) + `routes/admin_analytics.py` (6 admin + 2 support endpoints, all `verify_admin` where applicable).
+  - **Client wiring reuses the EXISTING pipeline** — 4 previously-unused browser events fire through `/api/behavior/events`: `PRODUCT_VIEWED` (30-sec same-(session,slug) dedupe), `PRODUCT_LIKED` (transition INTO liked only), `ADDED_TO_CART` (after successful add), `CHECKOUT_STARTED` (client-observed; distinct from server-authoritative `CHECKOUT_SESSION_CREATED` derived from orders_v2).
+  - **Public search intake**: `POST /api/search-events` rate-limited 60/min per session, query sanitized + capped 80 char, no IP persisted, 90-day TTL on the collection.
+  - **Frontend admin UI**: `/admin/analytics` with 7 sections (Overview · Funnel · Products · Countries & Currencies · Lifecycle · Operations · Search), period + env selector, KPI definitions inline. Mobile-verified at 390×844 (zero horizontal overflow). Sidebar link (BarChart3).
+  - **KPI dictionary** enforces one deterministic definition per metric. `chargeback_lost` reported SEPARATELY from `refunded`. `CHECKOUT_STARTED` (client) distinct from `CHECKOUT_SESSION_CREATED` (server). Revenue is NEVER inferred from client events. Presentment vs canonical currency dimensions remain distinct.
+  - **Retention side-effect contract**: firing the 4 previously-unused browser events does NOT bypass consent, suppression, frequency caps, or enable behavioral LIVE. `PHILEON_BEHAVIORAL_LIVE=false` remains the LIVE-send gate.
+  - **Bot/synthetic exclusion**: analytics excludes `behavior_events` whose `session_id` starts with `phase10-`, `phase-10.`, `layer-7-test`, `l7-`, `synthetic-`, `test-fixture-`, `regression-`. Never excludes real customer traffic on weak heuristics.
+  - **Tests**: 30 new Layer-7 tests covering the full §10 A–Z matrix + env authority + sanitization tests, all pass. Full-suite authoritative baseline: **1319 passed · 3 skipped · 19 pre-existing failures** — see §Test Baseline below.
+  - **No 3rd-party vendor. No fingerprinting. No real payment. No real refund. No real customer email. Stripe TEST. Tax OFF. Vault stock untouched. `PHI-20260901-4CBC5C` untouched.**
+
+### Authoritative Test Baseline (Feb 17, 2026 — post-Layer-7)
+- **Passed**: 1319 · **Skipped**: 3 · **Failed**: 19 (all pre-existing, none introduced by Layer 7):
+  - 17 × `tests/test_phileon_api.py::*` — external `BASE_URL` HTTP harness unreachable from sandbox pytest process (uses `requests.get(BASE_URL/...)`). Not a product bug. Passes when the URL is reachable.
+  - 1 × `tests/test_adaptive_pricing_live_integration.py::TestStripeSession::test_canonical_order_stays_usd_with_cad` — same external-URL harness.
+  - 1 × `tests/test_usd_only_migration.py::test_dynamic_ring_migrated_to_approved_usd[annie-rose-foundation-700000]` — **owner-explicitly-accepted Annie Rose gold-spot drift.**
+- All Layer 1–7 focused suites pass green in isolation.
+
 - **[DONE Feb 17, 2026 — Layer 6: Concierge / Customer-Service Operations]** LAYER 6 GREEN — READY FOR OWNER REVIEW.
   - **Case model**: new `concierge_cases` collection with `CON-YYYY-XXXXXX` identifiers (secrets-random, 27-char unambiguous alphabet, DB unique index). Fields include `source`, `category`, `subject`, `customer_message`, `customer_email(_normalized)`, `customer_name`, `customer_phone`, `order_number`, `status`, `priority`, `owner_summary`, `next_action`, `follow_up_at`, `waiting_on`, `admin_notes[]`, `contact_log[]`, `status_history[]`, `dedupe_hash`, timestamps.
   - **State machine (server-enforced)**: `new → open → waiting_on_customer / waiting_on_phileon → resolved → closed`, with owner-controlled reopen (`resolved/closed → open` clears terminal timestamps). Illegal transitions rejected with `409 ILLEGAL_TRANSITION`.
@@ -1088,9 +1107,9 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Provide `METALS_API_KEY` → replace deterministic fallback in `metal_spot.py` with live provider quotes
 
 ### P0 — Pre-Launch Operational Maturity (in progress)
-- Layer 6 ✅ complete (this pass — awaiting owner review)
-- Layer 7 — pending owner brief
-- Layer 8 — pending owner brief (final layer before Stripe LIVE gates)
+- Layer 6 ✅ complete
+- Layer 7 ✅ complete (this pass — awaiting owner review)
+- Layer 8 — pending owner brief (final layer, Privacy/Compliance)
 
 ### P1
 - Migrate remaining 60+ bespoke products into trusted catalog (needs merchant pricing CSV)

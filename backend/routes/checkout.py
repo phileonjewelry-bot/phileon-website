@@ -478,7 +478,11 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
             presentment=presentment_block,
         )
         try:
-            await db.orders_v2.insert_one(order.model_dump(mode="json"))
+            _doc = order.model_dump(mode="json")
+            # Layer 7 — server-authoritative environment stamp.
+            _env = (os.environ.get("PHILEON_ENV") or "").strip().lower()
+            _doc["env"] = _env if _env in ("production", "preview", "test") else "preview"
+            await db.orders_v2.insert_one(_doc)
         except Exception as e:
             # Race: another request beat us — reload
             existing = await db.orders_v2.find_one({"idempotency_key": idem})

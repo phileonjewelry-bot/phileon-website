@@ -2263,6 +2263,19 @@ try:
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"Concierge routes NOT registered: {type(_e).__name__}: {_e}")
 
+# Analytics Baseline (Layer 7). Read-only aggregation surface + public
+# search intake. Never trusts browser-supplied env.
+try:
+    from routes.admin_analytics import (
+        admin_router as _al_admin_router,
+        public_router as _al_public_router,
+    )
+    api_router.include_router(_al_admin_router)
+    api_router.include_router(_al_public_router)
+    logger.info("Analytics baseline routes registered (Layer 7)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Analytics routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 
@@ -2319,6 +2332,13 @@ async def startup_db():
         await _cc_indexes(db)
     except Exception as e:
         logger.warning(f"concierge cases indexes init skipped: {type(e).__name__}: {e}")
+
+    # Analytics indexes (Layer 7).
+    try:
+        from services.analytics_service import ensure_indexes as _al_indexes
+        await _al_indexes(db)
+    except Exception as e:
+        logger.warning(f"analytics indexes init skipped: {type(e).__name__}: {e}")
 
     # NOTE — Layer 5 stock-safety correction:
     # Normal startup MUST NEVER create physical inventory. The

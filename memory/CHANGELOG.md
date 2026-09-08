@@ -6,6 +6,84 @@ Detailed log of completed work. Newest first. See `/app/memory/PRD.md` for the g
 
 ## 2026-02 — Pre-Launch Operational Maturity
 
+### 2026-02-17 — Layer 7: Analytics Baseline ✓
+Owner-only, privacy-conscious analytics baseline over the existing
+authoritative collections. First-party only — no 3rd-party vendor
+installed, no fingerprinting, no session replay, no heatmaps.
+- **Environment authority**: every analytics/behavior/search event
+  is server-stamped from `PHILEON_ENV`. Fail-safe default is
+  `preview`. `BehaviorEventCreate(extra="forbid")` rejects any
+  client attempt to submit `env`. Admin can switch via
+  `?env=production|preview|test`.
+- **New backend**: `services/analytics_service.py` (read-only
+  aggregation + KPI dictionary + search sanitization + env
+  authority + synthetic-session exclusion) and
+  `routes/admin_analytics.py` (6 admin + 2 support endpoints).
+- **Admin surface (all `verify_admin`)**: overview · funnel ·
+  products · currencies · lifecycle · operations · search ·
+  kpi-definitions.
+- **Public surface**: `POST /api/search-events` (rate-limited
+  60/min per session, sanitized + capped 80-char query, no IP
+  persisted).
+- **Client wiring (existing pipeline reused)**: 4 previously-unused
+  browser events are now fired through the existing
+  `/api/behavior/events`:
+  * `PRODUCT_VIEWED` — ProductDetailPage on load (30-sec dedupe)
+  * `PRODUCT_LIKED` — wishlist toggle, transition INTO liked only
+  * `ADDED_TO_CART` — CartContext.addToCart after successful add
+  * `CHECKOUT_STARTED` — Checkout.submitCheckout, distinct from
+    server-authoritative `CHECKOUT_SESSION_CREATED` (from orders_v2)
+- **Frontend admin UI**: new `/admin/analytics` with 7 sections
+  (Overview · Funnel · Products · Countries & Currencies ·
+  Lifecycle · Operations · Search), period + env selector, KPI
+  definitions surfaced inline. Mobile-verified at 390×844 with
+  zero horizontal overflow. Sidebar link added (BarChart3).
+- **Storage**: new `search_events` collection (90-day TTL);
+  `env` stamp added to `orders_v2` (new inserts only — never
+  mutates historical rows including `PHI-20260901-4CBC5C`);
+  `env` stamp added to `behavior_events`.
+- **Indexes**: added six analytics-read indexes; TTL index on
+  `search_events`. Idempotent bootstrap in
+  `analytics_service.ensure_indexes`.
+- **Retention side-effect contract**: firing the four previously-
+  unused browser events does NOT bypass consent, suppression,
+  frequency caps, or enable behavioral LIVE. Marketing consent
+  requires the same explicit path as before.
+- **Chargeback ≠ Refund**: `chargeback_lost` reported separately
+  (Layer 4 semantic lock).
+- **Presentment vs Canonical**: presentment currency + amount are
+  read from `orders_v2.presentment` (Stripe-authoritative at time
+  of sale). Frankfurter is NEVER used to back-fill historical
+  values.
+- **Vault vs made-to-order**: Vault (`iv-*`) slugs flagged in
+  product reporting alongside inventory sold-out signal.
+- **Tests**: 30 new Layer-7 tests covering the full §10 A–Z matrix
+  plus env-authority + sanitization tests, all pass. Full-suite
+  authoritative baseline: **1319 passed · 3 skipped · 19
+  pre-existing failures** (all external-URL harness or owner-
+  accepted Annie Rose drift — none from Layer 7).
+- **Files added**: `backend/services/analytics_service.py`,
+  `backend/routes/admin_analytics.py`,
+  `backend/tests/test_layer7_analytics.py`,
+  `frontend/src/hooks/useAnalytics.js`,
+  `frontend/src/pages/admin/AdminAnalytics.jsx`.
+- **Files modified**: `backend/models_retention.py`,
+  `backend/services/retention_service.py`,
+  `backend/routes/checkout.py`, `backend/server.py`,
+  `frontend/src/App.js`,
+  `frontend/src/components/layout/AdminLayout.jsx`,
+  `frontend/src/contexts/CartContext.jsx`,
+  `frontend/src/pages/Checkout.jsx`,
+  `frontend/src/pages/ProductDetailPage.jsx`,
+  `memory/OPERATIONS.md`, `memory/CHANGELOG.md`, `memory/PRD.md`.
+- **Locked invariants intact**: PRODUCT_SLUGS=73,
+  CHECKOUT_SUPPORTED_FAMILIES=84, canonical USD, tax OFF,
+  STRIPE_MODE=test, PHILEON_BEHAVIORAL_LIVE=false,
+  `chargeback_lost` distinct from `refunded`, Vault stock
+  untouched, `PHI-20260901-4CBC5C` untouched.
+- **No 3rd-party vendor. No fingerprinting. No real payment.
+  No real refund. No real customer email. No deploy.**
+
 ### 2026-02-17 — Layer 6: Concierge / Customer-Service Operations ✓
 Coordination surface for the owner — NOT a CRM / helpdesk / VIP tool.
 - New `services/concierge_cases_service.py` + `routes/concierge_cases.py`.

@@ -1458,3 +1458,162 @@ shipment / refund / fraud / inventory mutations.
 - No HttpOnly admin auth migration.
 - No modification of Layer 2/3/4/5 authority.
 
+
+---
+
+# Layer 7 — Analytics Baseline
+
+Owner-only, privacy-conscious analytics baseline. First-party
+aggregation over the existing authoritative collections. **Not** a
+CRM, warehouse, BI platform, or ad-tech profile.
+
+## Environment authority
+
+- Every analytics/behavior/search event is stamped **server-side**
+  from `PHILEON_ENV`. Fail-safe default is `preview` (never
+  `production`) so an unconfigured server can never contaminate
+  production analytics.
+- `BehaviorEventCreate` (`extra="forbid"`) rejects any client attempt
+  to submit an `env` field.
+- Admin can inspect any env via `?env=production|preview|test`.
+- Default env for admin queries is the current server environment.
+
+## Canonical funnel
+
+```
+PRODUCT_VIEW  ─►  ADD_TO_CART  ─►  CHECKOUT_STARTED
+                                      │
+                                      ▼
+        SERVER  ◄──  CHECKOUT_SESSION_CREATED  ◄── orders_v2 insert
+        SERVER  ◄──  PAID_ORDER               ◄── orders_v2.payment_status
+```
+
+CLIENT-OBSERVED stages come from `behavior_events` via the existing
+`services.retention_service.record_event()` pipeline. SERVER-
+AUTHORITATIVE stages come from `orders_v2`. **Revenue is never
+inferred from client events.**
+
+## KPI dictionary (`/api/admin/analytics/kpi-definitions`)
+
+- **PRODUCT_VIEWED** — `behavior_events.event_type='PRODUCT_VIEWED'`,
+  30-sec same-(session, slug) client dedupe, server-stamped env.
+- **ADDED_TO_CART** — fires only on a successful cart-add.
+- **CHECKOUT_STARTED** — CLIENT-observed; distinct from
+  **CHECKOUT_SESSION_CREATED** (server-authoritative, counted from
+  `orders_v2` documents where `stripe_checkout_session_id` is set).
+- **PAID_ORDER** — `orders_v2.payment_status='paid'` counted by
+  `paid_at` (falls back to `updated_at`).
+- **CANONICAL_REVENUE** — sum of `orders_v2.total_cents` where paid,
+  canonical USD.
+- **PRESENTMENT_REVENUE** — sum of
+  `orders_v2.presentment.presentment_total_cents` grouped by
+  presentment_currency, derived from Stripe **at time of sale**.
+  Frankfurter is NEVER used to back-fill historical values.
+- **REFUND_CONFIRMED** — `returns.refund_confirmed_at`.
+- **CHARGEBACK_LOST** — `orders_v2.payment_status='chargeback_lost'`,
+  **distinct from `refunded`** (Layer 4 semantic lock).
+- **CONVERSION_RATE_SESSION** — paid orders ÷ **unique sessions** that
+  viewed a PDP. Session-level; never called "unique people".
+- **SEARCH_SUBMITTED / ZERO_RESULT_SEARCH** — `search_events` rows,
+  normalized query ≤ 80 characters, sanitized (control chars +
+  whitespace collapse + lowercase), 90-day TTL.
+
+## Storage / indexes
+
+| Collection | Purpose | Retention |
+|---|---|---|
+| `behavior_events` | Anonymous browser events (existing) | 30-day TTL anon |
+| `orders_v2` (+ `env` stamp) | Authoritative order truth | Long-term |
+| `search_events` (NEW) | SEARCH_SUBMITTED | **90-day TTL** |
+| `retention_pending`, `behavior_send_log`, `marketing_consent`, `email_suppression` | Lifecycle simulation (existing) | Long-term |
+
+Indexes created idempotently in `services/analytics_service.py::ensure_indexes`:
+
+- `behavior_events (env, event_type, created_at desc)`
+- `behavior_events (env, event_type, product_slug, created_at desc)`
+- `orders_v2 (env, payment_status, created_at desc)`
+- `orders_v2 (env, created_at desc)`
+- `search_events (env, created_at desc)`
+- `search_events (env, normalized_query, created_at desc)`
+- `search_events.created_at` TTL 90 days
+
+## Admin API (all `verify_admin`)
+
+- `GET /api/admin/analytics/overview?period=today|7d|30d|90d&env=…`
+- `GET /api/admin/analytics/funnel?period=…&env=…`
+- `GET /api/admin/analytics/products?period=…&env=…&limit=…`
+- `GET /api/admin/analytics/currencies?period=…&env=…`
+- `GET /api/admin/analytics/lifecycle?period=…&env=…`
+- `GET /api/admin/analytics/operations?period=…&env=…`
+- `GET /api/admin/analytics/search?period=…&env=…&limit=…`
+- `GET /api/admin/analytics/kpi-definitions`
+
+## Public
+
+- `POST /api/search-events` — first-party search intake, rate-limited
+  60/min per session, no IP persisted.
+- `POST /api/behavior/events` (existing) — early-funnel events. The
+  frontend now fires `PRODUCT_VIEWED · PRODUCT_LIKED · ADDED_TO_CART
+  · CHECKOUT_STARTED` through this pipe; server stamps `env`.
+
+## Client wiring
+
+- New hook `frontend/src/hooks/useAnalytics.js` — 30-second same-
+  (session, event, slug) client dedupe, `keepalive` fetch (never
+  blocks the customer flow).
+- `PRODUCT_VIEWED` fires from `ProductDetailPage.jsx` on load.
+- `PRODUCT_LIKED` fires only on the transition INTO liked
+  (wishlist toggle).
+- `ADDED_TO_CART` fires from `CartContext.addToCart` after a
+  successful add (currency-mixed adds are rejected earlier).
+- `CHECKOUT_STARTED` fires from `Checkout.submitCheckout` before the
+  Stripe session request.
+
+## Retention side-effect contract
+
+Wiring the four previously-unused browser events does NOT:
+
+- Bypass marketing consent.
+- Bypass suppression.
+- Bypass frequency caps.
+- Enable `PHILEON_BEHAVIORAL_LIVE`.
+- Generate any real email.
+
+Anonymous events never bind identity (§ `models_retention.py`).
+Retention pending rows require an identity-bound session — public
+events remain anonymous. `PHILEON_BEHAVIORAL_LIVE=false` remains the
+LIVE-send gate.
+
+## Bot / synthetic exclusion (§27)
+
+Analytics excludes `behavior_events` whose `session_id` starts with:
+`phase10-`, `phase-10.`, `layer-7-test`, `l7-`, `synthetic-`,
+`test-fixture-`, `regression-`.
+
+## Owner daily analytics checklist
+
+1. Open **Overview** at the current server environment.
+2. Read PDP Views · Adds · Checkout Started · Sessions · Paid ·
+   Revenue.
+3. Scan **Chargeback Lost** — treat separately from Refunds.
+4. Open **Funnel** — spot the biggest drop.
+5. Open **Products** — top paid slugs & Vault activity.
+6. Open **Countries & Currencies** — shipping country vs Stripe
+   presentment breakdown.
+7. Open **Lifecycle** — confirm mode is SIMULATED. Review pending
+   eligibility per kind.
+8. Open **Operations** — RMA · Disputes · Fulfillment · Concierge ·
+   Inventory (Vault sold-out).
+9. Open **Search** — zero-result queries hint at merchandising gaps.
+10. Never treat these numbers as accounting-grade. Stripe / order /
+    return truth remains authoritative.
+
+## Layer-8 handoff items
+
+- Formal legal determination of which analytics require customer
+  consent (deferred to Layer 8 Privacy/Compliance).
+- Owner-approved retention policy for `behavior_events` past 30-day
+  TTL (aggregate roll-up vs raw purge).
+- Whether preview/test analytics should ever be exposed alongside
+  production in owner reports.
+

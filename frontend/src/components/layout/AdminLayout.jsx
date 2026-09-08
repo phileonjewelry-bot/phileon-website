@@ -18,11 +18,13 @@ import {
   RefreshCcw,
   ShieldAlert,
   Bell,
-  LifeBuoy
+  LifeBuoy,
+  BarChart3
 } from 'lucide-react';
 
 const sidebarLinks = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
   { name: 'Concierge Cases', path: '/admin/concierge-cases', icon: LifeBuoy },
   { name: 'Concierge', path: '/admin/concierge', icon: MessageSquare },
   { name: 'Fulfillment', path: '/admin/fulfillment', icon: Package },

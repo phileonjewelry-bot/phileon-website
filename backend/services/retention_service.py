@@ -265,6 +265,14 @@ async def record_event(
     now = datetime.now(timezone.utc)
     email, identity_source = await _resolve_identity(db, session_id, trusted_email)
 
+    # Layer 7 — server-authoritative environment stamp. Never trust the
+    # browser. Fail-safe default is ``preview`` so an unconfigured server
+    # can never contaminate production analytics.
+    import os as _os
+    _env = (_os.environ.get("PHILEON_ENV") or "").strip().lower()
+    if _env not in ("production", "preview", "test"):
+        _env = "preview"
+
     ev = BehaviorEvent(
         event_type=event_type,
         product_slug=product_slug,
@@ -272,6 +280,7 @@ async def record_event(
         customer_email=email,
         identity_source=identity_source,
         source=source,
+        env=_env,
         created_at=now,
         anon_expires_at=(None if email
                          else now + timedelta(days=get_config()["anon_ttl_days"])),

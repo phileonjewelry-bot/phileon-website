@@ -278,6 +278,34 @@ export default function Checkout() {
     if (!shippingCountry) { setError("Please select your shipping destination."); return; }
     if (!shippingQuote) { setError("Please wait for the shipping quote to load."); return; }
 
+    // Layer 7 — CLIENT-OBSERVED CHECKOUT_STARTED. Distinct from the
+    // server-authoritative CHECKOUT_SESSION_CREATED emitted by the
+    // backend when Stripe accepts the session.
+    try {
+      let sid = sessionStorage.getItem('phileon_session_id');
+      if (!sid) {
+        const rand = (typeof crypto !== 'undefined' && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : Math.random().toString(36).slice(2) + Date.now().toString(36);
+        sid = `phi-${rand}`;
+        sessionStorage.setItem('phileon_session_id', sid);
+      }
+      const firstSlug = (supported[0] && (supported[0].slug || supported[0].productKey)) || 'cart';
+      fetch(`${API}/api/behavior/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_type: 'CHECKOUT_STARTED',
+          product_slug: String(firstSlug),
+          session_id: sid,
+          source: 'checkout-page',
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch (_e) {
+      /* analytics never blocks checkout */
+    }
+
     setSubmitting(true);
     try {
       const items = overrideItems || supported.map(toPayloadItem);

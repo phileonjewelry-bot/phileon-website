@@ -19,6 +19,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { Heart, Share2 } from 'lucide-react';
 import { shareProduct } from '@/lib/share';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 const ProductDetailPage = () => {
   const { slug } = useParams();
@@ -42,6 +43,7 @@ const ProductDetailPage = () => {
   // Context hooks
   const { addToCart } = useCart();
   const { has, toggle } = useWishlist();
+  const { productViewed, productLiked } = useAnalytics();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -56,6 +58,15 @@ const ProductDetailPage = () => {
     };
     fetchProduct();
   }, [slug]);
+
+  // Layer 7 — CLIENT-OBSERVED PRODUCT_VIEWED. 30-sec same-(session,slug)
+  // dedupe protects against React rerenders; a deliberate later revisit
+  // will fire a new event.
+  useEffect(() => {
+    if (product?.slug) {
+      productViewed(product.slug, { source: 'pdp' });
+    }
+  }, [product?.slug, productViewed]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -269,7 +280,14 @@ const ProductDetailPage = () => {
               {/* Wishlist + Share Actions */}
               <div className="flex items-center gap-2 ml-4">
                 <button
-                  onClick={() => toggle(product.id)}
+                  onClick={() => {
+                    // Layer 7 — fire PRODUCT_LIKED only on the transition INTO liked.
+                    const wasLiked = has(product.id);
+                    toggle(product.id);
+                    if (!wasLiked) {
+                      productLiked(product.slug, { source: 'pdp-wishlist' });
+                    }
+                  }}
                   className="p-2 text-phileon-gold hover:bg-phileon-gold/10 rounded-full transition-all duration-200"
                   title={has(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                 >

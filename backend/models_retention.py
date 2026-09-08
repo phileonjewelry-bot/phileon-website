@@ -67,7 +67,7 @@ class BehaviorEventCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")
     event_type: Literal[
         "PRODUCT_VIEWED", "PRODUCT_LIKED", "PRODUCT_UNLIKED",
-        "ADDED_TO_CART", "REMOVED_FROM_CART",
+        "ADDED_TO_CART", "REMOVED_FROM_CART", "CHECKOUT_STARTED",
     ]
     product_slug: str = Field(min_length=1, max_length=200)
     session_id: str = Field(min_length=8, max_length=128)
@@ -86,6 +86,9 @@ class BehaviorEvent(BaseModel):
     customer_email: Optional[str] = None
     identity_source: str = "anonymous"
     source: Optional[str] = None
+    # Server-stamped environment (§ Layer-7 env authority). NEVER trust
+    # the browser. Populated from ``PHILEON_ENV`` at record time.
+    env: str = "preview"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     # MongoDB TTL field. Only set for anonymous events (30-day expiry).
     # When identity is bound to the session, this field is $unset so the

@@ -2,6 +2,38 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 const CartContext = createContext();
+const API = process.env.REACT_APP_BACKEND_URL;
+const CART_SESSION_KEY = 'phileon_session_id';
+
+// Layer 7 — fire the CLIENT-OBSERVED ADDED_TO_CART event through the
+// existing /api/behavior/events pipeline. Env is server-stamped.
+const fireAddedToCart = (slug) => {
+  if (!slug) return;
+  try {
+    let sid = null;
+    try { sid = sessionStorage.getItem(CART_SESSION_KEY); } catch (_e) { /* noop */ }
+    if (!sid) {
+      const rand = (typeof crypto !== 'undefined' && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sid = `phi-${rand}`;
+      try { sessionStorage.setItem(CART_SESSION_KEY, sid); } catch (_e) { /* noop */ }
+    }
+    fetch(`${API}/api/behavior/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'ADDED_TO_CART',
+        product_slug: String(slug),
+        session_id: sid,
+        source: 'cart-add',
+      }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch (_e) {
+    /* analytics never blocks cart */
+  }
+};
 
 // Normalise a currency code for comparison; treat null/undefined/blank as USD
 // because the majority of the pre-existing catalog is priced in USD and never
@@ -98,8 +130,12 @@ export const CartProvider = ({ children }) => {
         return [...prevItems, newItem];
       }
     });
-    
+
+    // Layer 7 — client-observed ADDED_TO_CART.
+    fireAddedToCart(product.slug || product.productKey || product.id);
+
     setIsOpen(true);
+    return true;
   };
 
   const updateQuantity = (productId, variant, newQuantity) => {
