@@ -21,7 +21,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
-import re
 from datetime import datetime, timezone, timedelta
 from functools import lru_cache
 from typing import Any, Dict, Optional
@@ -115,57 +114,48 @@ _SIGNAL_WINDOW = timedelta(hours=24)
 # Cap the number of events surfaced to Jev — bounds payload size and cost.
 _MAX_EVENTS_IN_STATE = 40
 
-# Cap the number of characters in a normalized search token.
-_SEARCH_TOKEN_MAX = 40
-
 # ── OUTBOUND ALLOW-LIST — every top-level key in the Jev state payload
 # must appear here. Enforced by ``build_session_state`` AND by an
 # automated test that will fail if new keys are introduced without an
-# audit review. See ``tests/test_intent_shadow.py``. ──
+# audit review. See ``tests/test_intent_shadow.py``.
+#
+# NOTE: `recent_searches` and any form of the customer's original / raw /
+# normalized / scrubbed search phrase are DELIBERATELY ABSENT from this
+# allow-list. Free-form customer-entered text is NEVER sent to TypeSafe.
+# Instead we send a small integer `search_activity_count` and structured
+# `viewed_category_counts` derived from PHILEON's canonical
+# product-category taxonomy.
 OUTBOUND_STATE_ALLOWED_KEYS: frozenset = frozenset({
     "window_hours",
     "counts",
     "distinct_products",
     "repeat_view_ratio",
     "custom_inquiry_count",
-    "recent_searches",
+    "search_activity_count",     # integer only — no phrases
+    "viewed_category_counts",    # canonical PHILEON categories only
+    "vault_interest_count",      # canonical "vault" category signal
     "latest_event_age_seconds",
     "total_events",
 })
 
-# ── PII redaction patterns for normalized search queries. These are
-# DEFENSE-IN-DEPTH: the client-side search box may still allow anything,
-# and the analytics_service.sanitize_search_query strips control chars
-# only — an unlucky query could still contain an email or a phone.  ──
-_EMAIL_RE = re.compile(r"\b[\w.+\-]+@[\w\-]+\.[\w.\-]+\b")
-_PHONE_RE = re.compile(r"(?:\+?\d[\s\-().]*){7,}")
-_LONG_DIGIT_RUN_RE = re.compile(r"\b\d{6,}\b")
-_URL_RE = re.compile(r"https?://\S+")
 
-
-def _scrub_search_token(raw: str) -> Optional[str]:
-    """Return a PII-safe short intent-only search token, or ``None`` if
-    the query would carry unavoidable PII.
-
-    We do NOT ship raw search strings to Jev — only a redacted,
-    length-capped intent token. Redaction preserves shopping signal
-    (e.g. "signet ring") while stripping identifiers.
+def _canonical_category(slug: Optional[str]) -> str:
+    """Map a product_slug to its canonical PHILEON category. Vault
+    pieces (`iv-*` prefix or catalog category == "vault") are surfaced
+    as ``vault`` for the CUSTOM/one-of-one signal.
+    Returns ``"unknown"`` for slugs not in the catalog.
     """
-    if not raw:
-        return None
-    s = str(raw).strip().lower()
-    if not s:
-        return None
-    s = _URL_RE.sub("[url]", s)
-    s = _EMAIL_RE.sub("[email]", s)
-    s = _PHONE_RE.sub("[phone]", s)
-    s = _LONG_DIGIT_RUN_RE.sub("[num]", s)
-    s = re.sub(r"\s+", " ", s).strip()
-    # If after redaction the string is 100% placeholder markers, drop it.
-    only_markers = re.sub(r"\[(?:email|phone|num|url)\]", "", s).strip()
-    if not only_markers:
-        return None
-    return s[:_SEARCH_TOKEN_MAX]
+    if not slug:
+        return "unknown"
+    if slug.startswith("iv-"):
+        return "vault"
+    try:
+        from services.pricing_engine_catalog import PRICING_ENGINE_CATALOG
+        entry = PRICING_ENGINE_CATALOG.get(slug) or {}
+        cat = (entry.get("category") or "").strip().lower()
+        return cat if cat else "unknown"
+    except Exception:
+        return "unknown"
 
 
 async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]]:
@@ -232,24 +222,36 @@ async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]
         except Exception:
             latest_age_seconds = None
 
-    # Recent search tokens (top 5, PII-scrubbed, length-capped).
+    # Search activity — INTEGER COUNT ONLY. The customer's actual search
+    # phrase (raw / normalized / scrubbed) is NEVER forwarded to Jev.
     search_scope = {"session_id": session_id, "env": env,
                     "created_at": {"$gte": since}}
-    search_tokens: list = []
+    search_activity_count = 0
     try:
-        async for row in db.search_events.find(
-                search_scope, {"normalized_query": 1, "result_count": 1}) \
-                .sort("created_at", -1).limit(10):
-            tok = _scrub_search_token(row.get("normalized_query") or "")
-            if tok:
-                search_tokens.append({
-                    "token": tok,
-                    "result_count": int(row.get("result_count") or 0),
-                })
-            if len(search_tokens) >= 5:
-                break
+        search_activity_count = int(await db.search_events.count_documents(
+            search_scope) or 0)
     except Exception:
-        pass
+        search_activity_count = 0
+
+    # Category breadth — derived from PHILEON's canonical product-category
+    # taxonomy (bracelet / cuff / earring / pendant / ring / set / vault).
+    # Only counts VIEW/LIKE/CART events; unknown-slug items collapse to
+    # "unknown". No customer text of any kind.
+    viewed_category_counts: Dict[str, int] = {}
+    vault_interest_count = 0
+    cat_pipe = [
+        {"$match": {**scope,
+                    "event_type": {"$in": ["PRODUCT_VIEWED",
+                                           "PRODUCT_LIKED",
+                                           "ADDED_TO_CART"]}}},
+        {"$group": {"_id": "$product_slug", "n": {"$sum": 1}}},
+    ]
+    async for row in db.behavior_events.aggregate(cat_pipe):
+        cat = _canonical_category(row.get("_id"))
+        n = int(row.get("n") or 0)
+        viewed_category_counts[cat] = viewed_category_counts.get(cat, 0) + n
+        if cat == "vault":
+            vault_interest_count += n
 
     # Custom-piece interest — presence of an inquiries row for this
     # session_id within the same window (bounded scan). Server-derived
@@ -278,11 +280,13 @@ async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]
             "liked":    distinct.get("PRODUCT_LIKED", []),
             "carted":   distinct.get("ADDED_TO_CART", []),
         },
-        "repeat_view_ratio":    repeat_view_ratio,
-        "custom_inquiry_count": int(custom_interest or 0),
-        "recent_searches":      search_tokens,
+        "repeat_view_ratio":       repeat_view_ratio,
+        "custom_inquiry_count":    int(custom_interest or 0),
+        "search_activity_count":   int(search_activity_count),
+        "viewed_category_counts":  viewed_category_counts,
+        "vault_interest_count":    int(vault_interest_count),
         "latest_event_age_seconds": latest_age_seconds,
-        "total_events":         min(total, _MAX_EVENTS_IN_STATE),
+        "total_events":            min(total, _MAX_EVENTS_IN_STATE),
     }
     # Fail-closed defence: strip anything not on the allow-list.
     return {k: v for k, v in state.items() if k in OUTBOUND_STATE_ALLOWED_KEYS}
@@ -500,10 +504,20 @@ async def classify_session(
         return {"skipped": True, "reason": "unexpected_error"}
 
     # ── Parse typed decisions ────────────────────────────────
+    # purchase_intent is a TypeSafe Score — the RAW response is
+    # preserved verbatim (score / legend / probabilities / confidence).
+    # A separate `purchase_intent_band` is a DETERMINISTIC PHILEON
+    # derivation (argmax of probabilities → legend name). It never
+    # overwrites, replaces, or masquerades as the raw Jev Score.
     intent_ans = response.scores["purchase_intent"]
-    intent_level_idx = max(intent_ans.probabilities, key=intent_ans.probabilities.get)
-    intent_label = intent_ans.legend[intent_level_idx]
-    intent_probs = {str(k): float(v) for k, v in intent_ans.probabilities.items()}
+    intent_probs_int = {int(k): float(v)
+                        for k, v in intent_ans.probabilities.items()}
+    intent_legend_str = {str(k): str(v)
+                         for k, v in intent_ans.legend.items()}
+    intent_probs_str = {str(k): v for k, v in intent_probs_int.items()}
+    # Derived band — deterministic, PHILEON-side.
+    intent_argmax_idx = max(intent_probs_int, key=intent_probs_int.get)
+    intent_band = intent_ans.legend.get(intent_argmax_idx, "unknown")
 
     mode_ans = response.choices["shopping_mode"]
     mode_label = mode_ans.choice
@@ -519,17 +533,25 @@ async def classify_session(
         "trigger": trigger,
         "model": getattr(response, "model", "jev-latest"),
         "state_snapshot": state,
+        # RAW TypeSafe Score — preserved verbatim for evaluation.
         "purchase_intent": {
-            "label": intent_label,
-            "score": float(intent_ans.score),
-            "confidence": float(intent_ans.confidence),
-            "probabilities": intent_probs,
+            "score":         float(intent_ans.score),
+            "legend":        intent_legend_str,
+            "probabilities": intent_probs_str,
+            "confidence":    float(intent_ans.confidence),
         },
+        # DERIVED categorical band — PHILEON-side, deterministic,
+        # explicitly named. NEVER overwrites the raw Score. Kept for
+        # readable summarisation only. No production thresholds yet.
+        "purchase_intent_band": intent_band,
+        "purchase_intent_band_derivation": "argmax(probabilities) -> legend[k]",
+        # RAW TypeSafe Choice.
         "shopping_mode": {
-            "label": mode_label,
-            "confidence": float(mode_ans.confidence),
+            "label":         mode_label,
+            "confidence":    float(mode_ans.confidence),
             "probabilities": mode_probs,
         },
+        # RAW TypeSafe Noul — yes-probability only. No fabricated confidence.
         "followup_value": {
             "yes_probability": followup_yes,
         },
@@ -543,6 +565,7 @@ async def classify_session(
         "ok": True,
         "persisted_id": str(result.inserted_id),
         "purchase_intent": decision["purchase_intent"],
+        "purchase_intent_band": decision["purchase_intent_band"],
         "shopping_mode": decision["shopping_mode"],
         "followup_value": decision["followup_value"],
         "trigger": trigger,
@@ -623,7 +646,7 @@ async def summarize(
         return {row["_id"] or "unknown": int(row["n"])
                 async for row in db.intent_classifications_shadow.aggregate(pipe)}
 
-    by_intent = await _group("purchase_intent.label")
+    by_intent = await _group("purchase_intent_band")
     by_mode = await _group("shopping_mode.label")
 
     # Average confidence + followup-yes rate.
@@ -631,6 +654,7 @@ async def summarize(
         {"$match": scope},
         {"$group": {
             "_id": None,
+            "avg_intent_score": {"$avg": "$purchase_intent.score"},
             "avg_intent_conf": {"$avg": "$purchase_intent.confidence"},
             "avg_mode_conf": {"$avg": "$shopping_mode.confidence"},
             "avg_followup_yes": {"$avg": "$followup_value.yes_probability"},
@@ -644,14 +668,17 @@ async def summarize(
         "env": target_env,
         "window_days": int(days),
         "total_decisions": total,
-        "by_purchase_intent": by_intent,
+        "by_purchase_intent_band": by_intent,
         "by_shopping_mode": by_mode,
+        "avg_purchase_intent_score": round(float(avg.get("avg_intent_score") or 0), 3),
         "avg_purchase_intent_confidence": round(float(avg.get("avg_intent_conf") or 0), 3),
         "avg_shopping_mode_confidence": round(float(avg.get("avg_mode_conf") or 0), 3),
         "avg_followup_yes_probability": round(float(avg.get("avg_followup_yes") or 0), 3),
         "shadow_mode": True,
         "note": "Shadow-mode only. Decisions are not used for merchandising, "
-                "pricing, checkout, inventory, orders, or customer-facing emails.",
+                "pricing, checkout, inventory, orders, or customer-facing emails. "
+                "`purchase_intent` stores the RAW TypeSafe Score; "
+                "`purchase_intent_band` is a PHILEON-side derived readable band.",
     }
 
 

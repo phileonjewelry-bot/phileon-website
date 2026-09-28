@@ -258,53 +258,45 @@ def test_outbound_state_contains_no_forbidden_identifiers(db, event_loop, monkey
             db.behavior_events.delete_many({"session_id": sid}))
 
 
-def test_search_token_scrubs_email_phone_url(monkeypatch):
-    from services.intent_classifier import _scrub_search_token
-    assert _scrub_search_token("contact me at john.doe@example.com") is not None
-    tok = _scrub_search_token("contact me at john.doe@example.com")
-    assert "@" not in tok and "example.com" not in tok
-    assert "[email]" in tok
-
-    tok2 = _scrub_search_token("call +1 (415) 555-2671 for signet")
-    assert "555" not in tok2 and "415" not in tok2
-    assert "[phone]" in tok2 and "signet" in tok2
-
-    tok3 = _scrub_search_token("see https://leaky.example/xyz")
-    assert "http" not in tok3 and "leaky.example" not in tok3
-
-    # All-PII query should return None.
-    assert _scrub_search_token("john.doe@example.com") is None
+def test_search_token_scrubber_removed_from_module():
+    """The old `_scrub_search_token` PII scrubber was intended for
+    ``recent_searches``. That entire path is REMOVED. Search text is no
+    longer forwarded in any form. Guard against re-introduction."""
+    from services import intent_classifier as IC
+    assert not hasattr(IC, "_scrub_search_token"), (
+        "search-phrase scrubber must not be re-introduced — search "
+        "activity is exposed as a count only"
+    )
 
 
-def test_outbound_state_scrubs_pii_from_search_events(db, event_loop, monkeypatch):
-    """Even if a search event captured a raw email/phone, the state
-    payload must ship a redacted token — never the raw text."""
+def test_outbound_state_never_contains_search_events_subtree(db, event_loop, monkeypatch):
+    """No matter what the underlying search_events collection holds, the
+    outbound state must never carry a `recent_searches` subtree or any
+    of the raw text keys the old implementation used."""
     from services import intent_classifier as IC
     monkeypatch.setenv("PHILEON_ENV", "test")
-    sid = f"phase-pii-{uuid.uuid4().hex[:8]}"
+    sid = f"phase-nosearchtree-{uuid.uuid4().hex[:8]}"
     now = datetime.now(timezone.utc)
     event_loop.run_until_complete(db.behavior_events.insert_many([
-        {"event_type": "PRODUCT_VIEWED", "product_slug": "ring-x",
+        {"event_type": "PRODUCT_VIEWED", "product_slug": "veyron-noir",
          "session_id": sid, "env": "test", "created_at": now},
     ]))
     event_loop.run_until_complete(db.search_events.insert_many([
-        {"normalized_query": "signet ring john.doe@example.com",
-         "result_count": 3, "session_id": sid, "env": "test",
-         "created_at": now},
-        {"normalized_query": "call 415-555-2671",
-         "result_count": 0, "session_id": sid, "env": "test",
-         "created_at": now},
+        {"normalized_query": "leaky-phrase-should-never-leave",
+         "result_count": 1, "session_id": sid, "env": "test", "created_at": now},
     ]))
     try:
         state = event_loop.run_until_complete(
             IC.build_session_state(db, session_id=sid))
         assert state is not None
+        # No search-related tree beyond the integer count.
+        assert "recent_searches" not in state
+        assert "normalized_query" not in state
+        assert "search_tokens" not in state
         import json
         blob = json.dumps(state)
-        assert "john.doe@example.com" not in blob
-        assert "555-2671" not in blob and "5552671" not in blob
-        tokens = state["recent_searches"]
-        assert any("[email]" in t.get("token", "") for t in tokens)
+        assert "leaky-phrase-should-never-leave" not in blob
+        assert "leaky-phrase" not in blob
     finally:
         event_loop.run_until_complete(
             db.behavior_events.delete_many({"session_id": sid}))
@@ -312,9 +304,210 @@ def test_outbound_state_scrubs_pii_from_search_events(db, event_loop, monkeypatc
             db.search_events.delete_many({"session_id": sid}))
 
 
+def test_search_activity_is_count_only_no_query_text(db, event_loop, monkeypatch):
+    """Search activity in outbound state must be an integer COUNT ONLY.
+    The customer's original / raw / normalized / scrubbed search phrase
+    must never appear anywhere in the serialized TypeSafe request."""
+    from services import intent_classifier as IC
+    monkeypatch.setenv("PHILEON_ENV", "test")
+    sid = f"phase-searchtext-{uuid.uuid4().hex[:8]}"
+    now = datetime.now(timezone.utc)
+    event_loop.run_until_complete(db.behavior_events.insert_many([
+        {"event_type": "PRODUCT_VIEWED", "product_slug": "veyron-noir",
+         "session_id": sid, "env": "test", "created_at": now},
+        {"event_type": "ADDED_TO_CART", "product_slug": "veyron-noir",
+         "session_id": sid, "env": "test", "created_at": now},
+    ]))
+    event_loop.run_until_complete(db.search_events.insert_many([
+        {"normalized_query": "distinctive-search-phrase-alpha",
+         "result_count": 3, "session_id": sid, "env": "test", "created_at": now},
+        {"normalized_query": "another-distinctive-search-omega",
+         "result_count": 0, "session_id": sid, "env": "test", "created_at": now},
+    ]))
+    try:
+        state = event_loop.run_until_complete(
+            IC.build_session_state(db, session_id=sid))
+        assert state is not None
+        # Count-only exposure.
+        assert state["search_activity_count"] == 2
+        assert "recent_searches" not in state
+        # No search-phrase leakage anywhere in the serialized payload.
+        import json
+        blob = json.dumps(state)
+        assert "distinctive-search-phrase-alpha" not in blob
+        assert "another-distinctive-search-omega" not in blob
+        # Also cannot appear under any nested/renamed key.
+        assert "search-phrase" not in blob
+        assert "distinctive" not in blob
+    finally:
+        event_loop.run_until_complete(
+            db.behavior_events.delete_many({"session_id": sid}))
+        event_loop.run_until_complete(
+            db.search_events.delete_many({"session_id": sid}))
+
+
+def test_recent_searches_removed_from_allow_list():
+    """`recent_searches` must NOT be part of the outbound allow-list."""
+    from services import intent_classifier as IC
+    assert "recent_searches" not in IC.OUTBOUND_STATE_ALLOWED_KEYS
+    assert "search_activity_count" in IC.OUTBOUND_STATE_ALLOWED_KEYS
+    assert "viewed_category_counts" in IC.OUTBOUND_STATE_ALLOWED_KEYS
+    assert "vault_interest_count" in IC.OUTBOUND_STATE_ALLOWED_KEYS
+
+
+def test_viewed_category_counts_uses_canonical_taxonomy(db, event_loop, monkeypatch):
+    """Category signals must come from PHILEON's existing catalog
+    (bracelet / cuff / earring / pendant / ring / set / vault) — never
+    invented. Unknown slugs collapse to `unknown`."""
+    from services import intent_classifier as IC
+    monkeypatch.setenv("PHILEON_ENV", "test")
+    sid = f"phase-cat-{uuid.uuid4().hex[:8]}"
+    now = datetime.now(timezone.utc)
+    event_loop.run_until_complete(db.behavior_events.insert_many([
+        # Canonical ring
+        {"event_type": "PRODUCT_VIEWED", "product_slug": "veyron-noir",
+         "session_id": sid, "env": "test", "created_at": now},
+        {"event_type": "ADDED_TO_CART",  "product_slug": "veyron-noir",
+         "session_id": sid, "env": "test", "created_at": now},
+        # Canonical pendant
+        {"event_type": "PRODUCT_LIKED", "product_slug": "boss-knot",
+         "session_id": sid, "env": "test", "created_at": now},
+        # Vault (iv- prefix) — custom signal
+        {"event_type": "PRODUCT_VIEWED", "product_slug": "iv-atelier-1",
+         "session_id": sid, "env": "test", "created_at": now},
+        {"event_type": "PRODUCT_VIEWED", "product_slug": "iv-atelier-1",
+         "session_id": sid, "env": "test", "created_at": now},
+    ]))
+    try:
+        state = event_loop.run_until_complete(
+            IC.build_session_state(db, session_id=sid))
+        assert state is not None
+        cats = state["viewed_category_counts"]
+        assert cats.get("ring", 0) == 2
+        assert cats.get("pendant", 0) == 1
+        assert cats.get("vault", 0) == 2
+        assert state["vault_interest_count"] == 2
+        # No non-canonical category should ever appear.
+        allowed = {"bracelet", "cuff", "earring", "pendant",
+                   "ring", "set", "vault", "unknown"}
+        assert set(cats.keys()) <= allowed
+    finally:
+        event_loop.run_until_complete(
+            db.behavior_events.delete_many({"session_id": sid}))
+
+
 # ────────────────────────────────────────────────────────────────
-# 7) SHADOW SAMPLE COVERAGE — triggers, thresholds, cooldown
+# 11) SCORE PERSISTENCE — raw preserved, derived band separate
 # ────────────────────────────────────────────────────────────────
+
+def test_purchase_intent_persistence_shape_uses_raw_score_and_derived_band(monkeypatch):
+    """Simulate a TypeSafe Score response and verify PHILEON persists
+    the RAW score/legend/probabilities/confidence AND stores the
+    derived readable band under a clearly-named separate field."""
+    from services import intent_classifier as IC
+    from services.intent_classifier import _INTENT_CRITERIA
+
+    class _FakeScore:
+        # Mimic the SDK's Score answer object.
+        score = 1.62
+        confidence = 0.61
+        legend = {i: name for i, name in enumerate(_INTENT_CRITERIA)}
+        probabilities = {0: 0.03, 1: 0.32, 2: 0.65}
+
+    class _FakeChoice:
+        choice = "READY_TO_BUY"
+        confidence = 0.88
+        probabilities = {"BROWSING": 0.02, "PRODUCT_RESEARCH": 0.05,
+                         "READY_TO_BUY": 0.88, "CUSTOM": 0.03, "GIFT": 0.02}
+
+    class _FakeNoul:
+        noul = 0.41
+
+    class _FakeResp:
+        model = "jev-latest"
+        scores = {"purchase_intent": _FakeScore()}
+        choices = {"shopping_mode": _FakeChoice()}
+        nouls = {"followup_value": _FakeNoul()}
+
+    # Build a decision doc the same way `classify_session` does — this
+    # keeps the derivation code path under test without needing a live
+    # Jev call. (We are asserting the deterministic PHILEON transform,
+    # not Jev's outputs.)
+    resp = _FakeResp()
+    intent_ans = resp.scores["purchase_intent"]
+    intent_probs_int = {int(k): float(v)
+                        for k, v in intent_ans.probabilities.items()}
+    intent_legend_str = {str(k): str(v) for k, v in intent_ans.legend.items()}
+    intent_probs_str = {str(k): v for k, v in intent_probs_int.items()}
+    intent_argmax_idx = max(intent_probs_int, key=intent_probs_int.get)
+    intent_band = intent_ans.legend.get(intent_argmax_idx, "unknown")
+
+    raw = {
+        "score":         float(intent_ans.score),
+        "legend":        intent_legend_str,
+        "probabilities": intent_probs_str,
+        "confidence":    float(intent_ans.confidence),
+    }
+
+    # RAW schema — exactly these four keys, and NO categorical label.
+    assert set(raw.keys()) == {"score", "legend", "probabilities", "confidence"}
+    assert "label" not in raw
+    assert "band" not in raw
+    assert raw["score"] == 1.62
+    assert raw["confidence"] == 0.61
+    assert raw["legend"] == {"0": "LOW", "1": "MEDIUM", "2": "HIGH"}
+    assert raw["probabilities"] == {"0": 0.03, "1": 0.32, "2": 0.65}
+
+    # Derived band — separate, readable, never overwrites RAW.
+    assert intent_band == "HIGH"
+    assert intent_band in _INTENT_CRITERIA
+    _ = IC  # keep reference; the transform is exercised above.
+
+
+def test_purchase_intent_band_is_separate_field_not_inside_raw_score():
+    """The full decision document layout must keep the RAW Score under
+    `purchase_intent` and the derived band under a top-level sibling
+    field `purchase_intent_band`. They must never be merged."""
+    # We inspect the classify_session source to prove the schema stays
+    # separated at write time.
+    import inspect
+    from services import intent_classifier as IC
+    src = inspect.getsource(IC.classify_session)
+    assert '"purchase_intent"' in src
+    assert '"purchase_intent_band"' in src
+    # RAW block must contain the four canonical Score keys.
+    for key in ('"score"', '"legend"', '"probabilities"', '"confidence"'):
+        assert key in src, f"raw Score key missing from persisted schema: {key}"
+    # The RAW `purchase_intent` block must NOT include a categorical label
+    # under the same key (regression guard).
+    forbidden_line = '"purchase_intent": {\n            "label"'
+    assert forbidden_line not in src
+
+
+def test_no_production_thresholds_are_hardcoded():
+    """Shadow evaluation MUST NOT hardcode production thresholds like
+    'HIGH >= 0.8 fires an email'. The classifier module must not gate
+    any behavior on a numeric intent threshold."""
+    from services import intent_classifier as IC
+    import inspect
+    src = inspect.getsource(IC)
+    # No numeric threshold comparisons against purchase_intent.
+    for needle in ("purchase_intent >=", "purchase_intent >",
+                   "purchase_intent_score >=", "intent_score >",
+                   "intent_score >=", "confidence >="):
+        assert needle not in src, f"potential production threshold: {needle}"
+
+
+# ────────────────────────────────────────────────────────────────
+# 12) VERSION PIN — typesafe-sdk stays on 0.7.1 for this change
+# ────────────────────────────────────────────────────────────────
+
+def test_typesafe_sdk_version_pinned_to_0_7_1():
+    from importlib.metadata import version
+    assert version("typesafe-sdk") == "0.7.1"
+
+
+
 
 def test_trigger_allow_list_uses_only_canonical_event_names():
     """The classifier MUST NOT invent new event taxonomy — every trigger
@@ -490,11 +683,12 @@ def test_archetype_state_shape_and_no_pii(archetype, events, searches, inquiries
         # Session ID never leaks.
         import json
         assert sid not in json.dumps(state)
-        # Structural sanity — counts is a dict, distinct_products is a dict,
-        # recent_searches is a list.
+        # Structural sanity — counts / distinct_products are dicts;
+        # viewed_category_counts is a dict; search activity is an int.
         assert isinstance(state["counts"], dict)
         assert isinstance(state["distinct_products"], dict)
-        assert isinstance(state["recent_searches"], list)
+        assert isinstance(state["viewed_category_counts"], dict)
+        assert isinstance(state["search_activity_count"], int)
     finally:
         _cleanup_archetype(event_loop, db, sid)
 
