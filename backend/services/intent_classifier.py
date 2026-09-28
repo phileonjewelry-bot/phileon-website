@@ -6,21 +6,22 @@ Locked invariants preserved:
       or reveals classifications to the customer.
     * Fail-closed activation gate: if `TYPESAFE_API_KEY` is blank the
       shadow classifier is disabled. Owner sets the value to activate.
-    * Uses `EMERGENT_LLM_KEY` for the actual Jev proxy call (per the Jev
-      universal-key playbook). `TYPESAFE_API_KEY` is the owner activation
-      switch — not the wire secret.
+    * Uses `TYPESAFE_API_KEY` for direct TypeSafe authentication (SDK
+      sends ``Authorization: Bearer <TYPESAFE_API_KEY>`` to the TypeSafe
+      default base URL). No Emergent proxy substitution. `EMERGENT_LLM_KEY`
+      is NOT used by this module.
     * Input state is limited to CONSENT-SAFE aggregate signals
       (`behavior_events` for a session in the current server env).
+      Session ID is NEVER forwarded to Jev.
     * Persisted decisions live in `intent_classifications_shadow` for
       evaluation only. Never joined back to marketing or checkout code.
-    * Never persists PII beyond `customer_email` if the caller supplied
-      a server-trusted one (aligns with Layer 7 identity rules).
 """
 from __future__ import annotations
 
 import asyncio
 import logging
 import os
+import re
 from datetime import datetime, timezone, timedelta
 from functools import lru_cache
 from typing import Any, Dict, Optional
@@ -48,34 +49,44 @@ def is_enabled() -> bool:
 
 
 # ────────────────────────────────────────────────────────────────
-# JEV CLIENT — Universal key transport (per playbook)
+# TYPESAFE CLIENT — direct TypeSafe authentication
 # ────────────────────────────────────────────────────────────────
 
 @lru_cache(maxsize=1)
 def _get_jev_client():
-    """Reusable async Jev client. Cached per process."""
+    """Reusable async TypeSafe client. Cached per process.
+
+    Authentication contract (verified against typesafe-sdk >= 0.7.x
+    and TypeSafe official docs):
+        * SDK sends ``Authorization: Bearer <api_key>`` automatically.
+        * ``api_key`` is read from the ``TYPESAFE_API_KEY`` env var when
+          the constructor arg is omitted; we pass it explicitly for clarity.
+        * Base URL defaults to the TypeSafe direct endpoint. Only overridden
+          if the operator explicitly sets ``TYPESAFE_BASE_URL``.
+        * EMERGENT_LLM_KEY is NEVER substituted for TYPESAFE_API_KEY.
+    """
     from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy  # type: ignore
 
-    emergent_key = os.environ.get("EMERGENT_LLM_KEY")
-    if not emergent_key:
-        raise RuntimeError("EMERGENT_LLM_KEY missing — cannot reach Jev proxy.")
-    proxy = (
-        os.getenv("INTEGRATION_PROXY_URL")
-        or os.getenv("integration_proxy_url")
-        or "https://integrations.emergentagent.com"
-    ).rstrip("/")
-    return AsyncTypeSafeClient(
-        api_key=emergent_key,
-        base_url=f"{proxy}/llm/typesafe",
-        retry=RetryPolicy(max_retries=2, respect_retry_after=False),
-    )
+    api_key = (os.environ.get("TYPESAFE_API_KEY") or "").strip()
+    if not api_key:
+        raise RuntimeError(
+            "TYPESAFE_API_KEY is empty — the shadow classifier is not "
+            "activated. is_enabled() must gate this call.")
+
+    kwargs: Dict[str, Any] = {
+        "api_key": api_key,
+        "retry": RetryPolicy(max_retries=2, respect_retry_after=False),
+    }
+    override = (os.environ.get("TYPESAFE_BASE_URL") or "").strip()
+    if override:
+        kwargs["base_url"] = override.rstrip("/")
+
+    return AsyncTypeSafeClient(**kwargs)
 
 
 async def aclose() -> None:
-    """Close the cached Jev client on shutdown."""
+    """Close the cached TypeSafe client on shutdown."""
     try:
-        client = _get_jev_client.__wrapped__() if hasattr(_get_jev_client, "__wrapped__") else None
-        # lru_cache does not expose the cached value; construct once via cached call.
         client = _get_jev_client()
         await client.aclose()
     except Exception:  # pragma: no cover
@@ -104,19 +115,80 @@ _SIGNAL_WINDOW = timedelta(hours=24)
 # Cap the number of events surfaced to Jev — bounds payload size and cost.
 _MAX_EVENTS_IN_STATE = 40
 
+# Cap the number of characters in a normalized search token.
+_SEARCH_TOKEN_MAX = 40
+
+# ── OUTBOUND ALLOW-LIST — every top-level key in the Jev state payload
+# must appear here. Enforced by ``build_session_state`` AND by an
+# automated test that will fail if new keys are introduced without an
+# audit review. See ``tests/test_intent_shadow.py``. ──
+OUTBOUND_STATE_ALLOWED_KEYS: frozenset = frozenset({
+    "window_hours",
+    "counts",
+    "distinct_products",
+    "repeat_view_ratio",
+    "custom_inquiry_count",
+    "recent_searches",
+    "latest_event_age_seconds",
+    "total_events",
+})
+
+# ── PII redaction patterns for normalized search queries. These are
+# DEFENSE-IN-DEPTH: the client-side search box may still allow anything,
+# and the analytics_service.sanitize_search_query strips control chars
+# only — an unlucky query could still contain an email or a phone.  ──
+_EMAIL_RE = re.compile(r"\b[\w.+\-]+@[\w\-]+\.[\w.\-]+\b")
+_PHONE_RE = re.compile(r"(?:\+?\d[\s\-().]*){7,}")
+_LONG_DIGIT_RUN_RE = re.compile(r"\b\d{6,}\b")
+_URL_RE = re.compile(r"https?://\S+")
+
+
+def _scrub_search_token(raw: str) -> Optional[str]:
+    """Return a PII-safe short intent-only search token, or ``None`` if
+    the query would carry unavoidable PII.
+
+    We do NOT ship raw search strings to Jev — only a redacted,
+    length-capped intent token. Redaction preserves shopping signal
+    (e.g. "signet ring") while stripping identifiers.
+    """
+    if not raw:
+        return None
+    s = str(raw).strip().lower()
+    if not s:
+        return None
+    s = _URL_RE.sub("[url]", s)
+    s = _EMAIL_RE.sub("[email]", s)
+    s = _PHONE_RE.sub("[phone]", s)
+    s = _LONG_DIGIT_RUN_RE.sub("[num]", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    # If after redaction the string is 100% placeholder markers, drop it.
+    only_markers = re.sub(r"\[(?:email|phone|num|url)\]", "", s).strip()
+    if not only_markers:
+        return None
+    return s[:_SEARCH_TOKEN_MAX]
+
 
 async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]]:
     """Aggregate a session's consent-safe behavioral signals into a
     compact JSON state for Jev. Returns ``None`` when there is not
     enough signal (fewer than 1 event) — the caller should skip.
 
-    Never reads customer_email. Never reads IP. Never leaves the current
-    server environment.
+    Outbound contract:
+        * Session ID is NEVER included in the payload — only used to
+          scope the DB query.
+        * No customer_email, no name, no phone, no address, no IP, no
+          user-agent, no payment info, no Stripe / order / account IDs.
+        * Search tokens are PII-scrubbed and length-capped.
+        * Timestamps are surfaced as relative *ages*, not wall-clocks,
+          so the payload cannot leak precise session start times.
+        * Only keys in :data:`OUTBOUND_STATE_ALLOWED_KEYS` may appear
+          in the top-level state.
     """
     if not session_id:
         return None
     env = current_env()
-    since = datetime.now(timezone.utc) - _SIGNAL_WINDOW
+    now = datetime.now(timezone.utc)
+    since = now - _SIGNAL_WINDOW
     scope = {"session_id": session_id, "env": env,
              "created_at": {"$gte": since}}
 
@@ -150,28 +222,38 @@ async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]
     distinct_viewed = len(distinct.get("PRODUCT_VIEWED", []) or [])
     repeat_view_ratio = round((views / distinct_viewed), 2) if distinct_viewed else 0.0
 
-    # Latest event timestamp — recency signal.
+    # Latest event age — relative seconds, not wall-clock.
     latest = await db.behavior_events.find(scope, {"created_at": 1}) \
         .sort("created_at", -1).limit(1).to_list(1)
-    latest_at = latest[0]["created_at"].isoformat() if latest else None
+    latest_age_seconds = None
+    if latest:
+        try:
+            latest_age_seconds = int(max(0, (now - latest[0]["created_at"]).total_seconds()))
+        except Exception:
+            latest_age_seconds = None
 
-    # Recent search queries (top 5 within window) — normalized only.
+    # Recent search tokens (top 5, PII-scrubbed, length-capped).
     search_scope = {"session_id": session_id, "env": env,
                     "created_at": {"$gte": since}}
-    search_terms: list = []
+    search_tokens: list = []
     try:
         async for row in db.search_events.find(
                 search_scope, {"normalized_query": 1, "result_count": 1}) \
-                .sort("created_at", -1).limit(5):
-            search_terms.append({
-                "query": (row.get("normalized_query") or "")[:60],
-                "result_count": int(row.get("result_count") or 0),
-            })
+                .sort("created_at", -1).limit(10):
+            tok = _scrub_search_token(row.get("normalized_query") or "")
+            if tok:
+                search_tokens.append({
+                    "token": tok,
+                    "result_count": int(row.get("result_count") or 0),
+                })
+            if len(search_tokens) >= 5:
+                break
     except Exception:
         pass
 
-    # Custom-piece interest — presence of an inquiries or consultations
-    # row for this session_id within the same window (bounded scan).
+    # Custom-piece interest — presence of an inquiries row for this
+    # session_id within the same window (bounded scan). Server-derived
+    # count only; no inquiry content shipped.
     custom_interest = 0
     try:
         custom_interest = await db.inquiries.count_documents({
@@ -181,27 +263,29 @@ async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]
     except Exception:
         pass
 
-    return {
+    state: Dict[str, Any] = {
         "window_hours": int(_SIGNAL_WINDOW.total_seconds() // 3600),
         "counts": {
-            "product_viewed":   counts.get("PRODUCT_VIEWED", 0),
-            "product_liked":    counts.get("PRODUCT_LIKED", 0),
-            "product_unliked":  counts.get("PRODUCT_UNLIKED", 0),
-            "added_to_cart":    counts.get("ADDED_TO_CART", 0),
+            "product_viewed":    counts.get("PRODUCT_VIEWED", 0),
+            "product_liked":     counts.get("PRODUCT_LIKED", 0),
+            "product_unliked":   counts.get("PRODUCT_UNLIKED", 0),
+            "added_to_cart":     counts.get("ADDED_TO_CART", 0),
             "removed_from_cart": counts.get("REMOVED_FROM_CART", 0),
-            "checkout_started": counts.get("CHECKOUT_STARTED", 0),
+            "checkout_started":  counts.get("CHECKOUT_STARTED", 0),
         },
         "distinct_products": {
             "viewed":   distinct.get("PRODUCT_VIEWED", []),
             "liked":    distinct.get("PRODUCT_LIKED", []),
             "carted":   distinct.get("ADDED_TO_CART", []),
         },
-        "repeat_view_ratio": repeat_view_ratio,
+        "repeat_view_ratio":    repeat_view_ratio,
         "custom_inquiry_count": int(custom_interest or 0),
-        "recent_searches": search_terms,
-        "latest_event_at": latest_at,
-        "total_events": min(total, _MAX_EVENTS_IN_STATE),
+        "recent_searches":      search_tokens,
+        "latest_event_age_seconds": latest_age_seconds,
+        "total_events":         min(total, _MAX_EVENTS_IN_STATE),
     }
+    # Fail-closed defence: strip anything not on the allow-list.
+    return {k: v for k, v in state.items() if k in OUTBOUND_STATE_ALLOWED_KEYS}
 
 
 # ────────────────────────────────────────────────────────────────
@@ -211,12 +295,21 @@ async def build_session_state(db, *, session_id: str) -> Optional[Dict[str, Any]
 _INTENT_CRITERIA = ["LOW", "MEDIUM", "HIGH"]
 
 _MODE_CRITERIA = {
-    "BROWSING":         "Casually looking at products with no strong signals.",
-    "PRODUCT_RESEARCH": "Comparing multiple products, repeat views, deliberate exploration.",
-    "READY_TO_BUY":     "Cart activity or checkout started, focused on one or two products.",
-    "CUSTOM":           "Interested in a bespoke or custom piece (inquiry/consultation signals).",
-    "GIFT":             "Signals suggest gift-shopping: broad category browsing, wishlist-heavy, wide price range.",
+    "BROWSING":         "Casually looking at products with no strong signals — few views, no likes, no cart activity, no repeat visits to the same piece.",
+    "PRODUCT_RESEARCH": "Comparing multiple products deliberately — several distinct product views, repeat views of the same piece, active search queries.",
+    "READY_TO_BUY":     "Focused on one or two specific products with cart activity or checkout started, low breadth of exploration.",
+    "CUSTOM":           "Interested in a bespoke or custom piece — inquiry / consultation signals present, or repeat interest in one-of-one items.",
+    "GIFT":             "Signals suggest shopping for someone else — broad category browsing, wishlist-heavy, wide price range, low commitment to any single item.",
 }
+
+_INTENT_LEVEL_GUIDE = (
+    "LOW = one or two casual product views, no likes / no cart activity / "
+    "no repeat views / no search intent. "
+    "MEDIUM = deliberate research signal — several distinct product views "
+    "OR one or more likes OR at least one product added to cart. "
+    "HIGH = strong buying signal — active cart with retained items, "
+    "checkout started in the session, or repeated focus on a single piece."
+)
 
 
 def _build_questions():
@@ -226,33 +319,143 @@ def _build_questions():
             instructions=(
                 "Given the session's aggregate shopping signals, rate the "
                 "customer's overall likelihood to purchase from PHILEON "
-                "within the next few days."
+                "within the next few days. Use the following ordered "
+                "level definitions: " + _INTENT_LEVEL_GUIDE
             ),
             criteria=_INTENT_CRITERIA,
         ),
         "shopping_mode": Choice(
             instructions=(
-                "Which shopping mode best describes this session? Pick the "
-                "single mode that fits the signals best."
+                "Which single shopping mode best describes this session? "
+                "Pick the one that fits the signals best — do not blend."
             ),
             criteria=_MODE_CRITERIA,
         ),
         "followup_value": Noul(
             instructions=(
-                "Would a personalised concierge follow-up (a human touchpoint, "
-                "not a marketing blast) likely add value to this customer's "
-                "journey? Answer yes only if there is meaningful uncertainty "
-                "on the customer side that a human could resolve."
+                "Would a personalised concierge follow-up (a human "
+                "touchpoint, not a marketing blast) likely add value to "
+                "this customer's journey? Answer yes only if there is "
+                "meaningful uncertainty on the customer side that a human "
+                "could resolve."
             ),
         ),
     }
 
 
 # ────────────────────────────────────────────────────────────────
-# CLASSIFY + PERSIST
+# SAMPLING / DEBOUNCE — privacy-safe, funnel-representative coverage
 # ────────────────────────────────────────────────────────────────
 
-_CONFIDENCE_STORE_KEYS = ("purchase_intent", "shopping_mode", "followup_value")
+# Minimum wall-clock gap between two shadow classifications for the same
+# session. Prevents Jev spam on chatty sessions and prevents identical
+# state being re-classified on every event.
+_COOLDOWN_SECONDS = 5 * 60  # 5 minutes per session
+
+# A session must have at least this many total events before we spend a
+# Jev call on it — LOW-signal sessions add noise to shadow evaluation.
+_MIN_EVENTS_FOR_CLASSIFICATION = 2
+
+# Trigger allow-list. Uses ONLY canonical PHILEON behavior event names —
+# no new event taxonomy is introduced by the classifier.
+CLASSIFY_TRIGGERS: frozenset = frozenset({
+    "PRODUCT_LIKED",       # wishlist milestone
+    "ADDED_TO_CART",       # cart milestone
+    "CHECKOUT_STARTED",    # checkout milestone (existing)
+    "PRODUCT_VIEWED",      # sampled only for repeat viewers (§ below)
+})
+
+# When the trigger is PRODUCT_VIEWED, only sample when the session has
+# accumulated at least this many total views — filters out casual
+# one-off visits and biases coverage toward genuine research signal.
+_REPEAT_VIEW_SAMPLE_THRESHOLD = 4
+
+
+async def _cooldown_open(db, *, session_id: str, env: str) -> bool:
+    """Return True if the session is inside its cooldown window and a
+    new classification should be skipped. Atomic: uses a single
+    ``upsert`` with an ``$expr`` so concurrent triggers only sample once.
+    """
+    now = datetime.now(timezone.utc)
+    threshold = now - timedelta(seconds=_COOLDOWN_SECONDS)
+    key = {"_id": f"{env}:{session_id[:128]}"}
+    doc = await db.intent_classifier_cooldown.find_one_and_update(
+        key,
+        {"$set": {"env": env, "session_id": session_id[:128]},
+         "$max": {"last_sampled_at": now},
+         "$setOnInsert": {"created_at": now}},
+        upsert=True,
+        return_document=False,   # return the PREVIOUS doc (or None on insert)
+    )
+    if doc is None:
+        return False  # first sample for this session
+    prev = doc.get("last_sampled_at")
+    if prev is None:
+        return False
+    # Motor returns naive datetimes for stored dates. Normalise both
+    # sides to UTC-aware so the comparison never raises.
+    try:
+        if prev.tzinfo is None:
+            prev = prev.replace(tzinfo=timezone.utc)
+        return prev >= threshold
+    except Exception:
+        return False
+
+
+async def _rewind_cooldown(db, *, session_id: str, env: str,
+                           prev_at: Optional[datetime]) -> None:
+    """If a sample was accounted for but never actually issued, restore
+    the prior ``last_sampled_at`` so we do not skip the next real
+    trigger. Best-effort — swallow errors."""
+    try:
+        await db.intent_classifier_cooldown.update_one(
+            {"_id": f"{env}:{session_id[:128]}"},
+            {"$set": {"last_sampled_at": prev_at}}
+            if prev_at is not None
+            else {"$unset": {"last_sampled_at": ""}},
+        )
+    except Exception:
+        pass
+
+
+async def should_sample_for_trigger(
+    db, *, session_id: str, event_type: str,
+) -> Dict[str, Any]:
+    """Decide whether a behavior event should trigger a shadow
+    classification. Returns a small dict:
+        {"sample": bool, "reason": str, "trigger": str}
+
+    Never awaits Jev. Never affects customer response.
+    """
+    if not is_enabled():
+        return {"sample": False, "reason": "disabled", "trigger": event_type}
+    if event_type not in CLASSIFY_TRIGGERS:
+        return {"sample": False, "reason": "trigger_not_allowed",
+                "trigger": event_type}
+
+    env = current_env()
+
+    # PRODUCT_VIEWED: only sample when the session has enough view depth.
+    if event_type == "PRODUCT_VIEWED":
+        since = datetime.now(timezone.utc) - _SIGNAL_WINDOW
+        try:
+            view_count = await db.behavior_events.count_documents({
+                "session_id": session_id, "env": env,
+                "event_type": "PRODUCT_VIEWED",
+                "created_at": {"$gte": since},
+            })
+        except Exception:
+            return {"sample": False, "reason": "count_failed",
+                    "trigger": event_type}
+        if view_count < _REPEAT_VIEW_SAMPLE_THRESHOLD:
+            return {"sample": False, "reason": "below_view_threshold",
+                    "trigger": event_type}
+
+    # Cooldown check — atomic upsert.
+    if await _cooldown_open(db, session_id=session_id, env=env):
+        return {"sample": False, "reason": "cooldown",
+                "trigger": event_type}
+    return {"sample": True, "reason": "ok", "trigger": event_type}
 
 
 async def classify_session(
@@ -270,6 +473,8 @@ async def classify_session(
     state = await build_session_state(db, session_id=session_id)
     if not state:
         return {"skipped": True, "reason": "no_signal"}
+    if int(state.get("total_events") or 0) < _MIN_EVENTS_FOR_CLASSIFICATION:
+        return {"skipped": True, "reason": "below_min_events"}
 
     from typesafe_sdk import TypeSafeAPIError, TypeSafeError  # type: ignore
     client = _get_jev_client()
@@ -360,10 +565,18 @@ async def classify_session_safe(
 
 def schedule_background_classification(
     db, *, session_id: str, trigger: str,
+    event_type: Optional[str] = None,
 ) -> None:
     """Detach a shadow classification as a background asyncio task.
-    Only schedules if the classifier is enabled. Never awaited by the
-    caller — the customer response returns immediately.
+
+    Only schedules if:
+        1. The classifier is enabled (owner + flag).
+        2. ``event_type`` is on the trigger allow-list.
+        3. The session is out of its cooldown window AND meets any
+           trigger-specific thresholds (e.g. repeat-view depth).
+
+    Never awaited by the caller — the customer response returns
+    immediately. Silently no-ops on every failure path.
     """
     if not is_enabled():
         return
@@ -371,8 +584,21 @@ def schedule_background_classification(
         loop = asyncio.get_running_loop()
     except RuntimeError:  # pragma: no cover — not in async context
         return
-    loop.create_task(classify_session_safe(
-        db, session_id=session_id, trigger=trigger))
+
+    async def _guarded() -> None:
+        try:
+            if event_type is not None:
+                decision = await should_sample_for_trigger(
+                    db, session_id=session_id, event_type=event_type)
+                if not decision.get("sample"):
+                    return
+            await classify_session_safe(
+                db, session_id=session_id, trigger=trigger)
+        except Exception as exc:  # pragma: no cover — defensive
+            log.warning("intent_classifier scheduler failure: %s: %s",
+                        type(exc).__name__, exc)
+
+    loop.create_task(_guarded())
 
 
 # ────────────────────────────────────────────────────────────────
@@ -451,3 +677,9 @@ async def ensure_indexes(db) -> None:
     await _try(lambda: db.intent_classifications_shadow.create_index(
         "created_at", name="ics_ttl",
         expireAfterSeconds=60 * 60 * 24 * 90))
+
+    # Cooldown collection — one row per (env, session_id) with rolling
+    # ``last_sampled_at``. TTL keeps it self-pruning; no PII stored.
+    await _try(lambda: db.intent_classifier_cooldown.create_index(
+        "last_sampled_at", name="icc_ttl",
+        expireAfterSeconds=60 * 60 * 24))  # 24h retention

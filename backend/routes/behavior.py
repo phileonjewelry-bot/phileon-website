@@ -42,17 +42,22 @@ async def ingest_event(body: BehaviorEventCreate, request: Request):
     )
 
     # Shadow-mode intent classification — fire-and-forget. Owner-gated
-    # by TYPESAFE_API_KEY. NEVER blocks the customer response, NEVER
-    # affects retention/checkout/merchandising/inventory.
-    if body.event_type == "CHECKOUT_STARTED":
-        try:
-            from services.intent_classifier import schedule_background_classification
+    # by TYPESAFE_API_KEY. The scheduler itself enforces the trigger
+    # allow-list + a 5-minute per-session cooldown + a repeat-view
+    # threshold for PRODUCT_VIEWED. NEVER blocks the customer response,
+    # NEVER affects retention / checkout / merchandising / inventory.
+    try:
+        from services.intent_classifier import (
+            schedule_background_classification, CLASSIFY_TRIGGERS,
+        )
+        if body.event_type in CLASSIFY_TRIGGERS:
             schedule_background_classification(
                 db, session_id=body.session_id,
                 trigger=f"event:{body.event_type}",
+                event_type=body.event_type,
             )
-        except Exception:
-            pass  # never surface classifier errors to the browser
+    except Exception:
+        pass  # never surface classifier errors to the browser
 
     return {"accepted": True, "event_id": ev.id}
 
