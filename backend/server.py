@@ -2299,6 +2299,16 @@ try:
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"Aggregate telemetry routes NOT registered: {type(_e).__name__}: {_e}")
 
+# Intent Classifier — Jev / TypeSafe SHADOW MODE (owner-gated by
+# TYPESAFE_API_KEY + PHILEON_INTENT_CLASSIFIER_SHADOW). Zero customer-
+# facing side effects; decisions are stored for evaluation only.
+try:
+    from routes.intent_classifier import admin_router as _ic_admin_router
+    api_router.include_router(_ic_admin_router)
+    logger.info("Intent Classifier routes registered (SHADOW MODE)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Intent classifier routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 
@@ -2369,6 +2379,13 @@ async def startup_db():
         await _agg_indexes(db)
     except Exception as e:
         logger.warning(f"aggregate telemetry indexes init skipped: {type(e).__name__}: {e}")
+
+    # Intent classifier shadow-mode indexes (Jev / TypeSafe).
+    try:
+        from services.intent_classifier import ensure_indexes as _ic_indexes
+        await _ic_indexes(db)
+    except Exception as e:
+        logger.warning(f"intent classifier indexes init skipped: {type(e).__name__}: {e}")
 
     # NOTE — Layer 5 stock-safety correction:
     # Normal startup MUST NEVER create physical inventory. The

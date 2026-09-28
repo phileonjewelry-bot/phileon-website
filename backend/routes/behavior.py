@@ -40,6 +40,20 @@ async def ingest_event(body: BehaviorEventCreate, request: Request):
         trusted_email=None,          # public endpoint — no trusted email
         source=body.source,
     )
+
+    # Shadow-mode intent classification — fire-and-forget. Owner-gated
+    # by TYPESAFE_API_KEY. NEVER blocks the customer response, NEVER
+    # affects retention/checkout/merchandising/inventory.
+    if body.event_type == "CHECKOUT_STARTED":
+        try:
+            from services.intent_classifier import schedule_background_classification
+            schedule_background_classification(
+                db, session_id=body.session_id,
+                trigger=f"event:{body.event_type}",
+            )
+        except Exception:
+            pass  # never surface classifier errors to the browser
+
     return {"accepted": True, "event_id": ev.id}
 
 
