@@ -77,6 +77,19 @@ async def public_config():
     }
 
 
+@public_router.get("/policy/{topic}")
+async def public_policy(topic: str):
+    """Public read of the CANONICAL PHILEON policy record. The concierge
+    tool `get_phileon_policy` and this endpoint read from the SAME
+    :mod:`services.phileon_policies` source — the site surface and the
+    AI cannot drift apart."""
+    from services.phileon_policies import get_policy
+    try:
+        return {"policy": get_policy(topic)}
+    except KeyError:
+        raise HTTPException(status_code=404, detail={"code": "UNKNOWN_POLICY_TOPIC"})
+
+
 @public_router.post("/message")
 async def public_message(body: ConciergeMessageIn, request: Request):
     if not C.is_flag_on():
