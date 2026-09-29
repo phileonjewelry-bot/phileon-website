@@ -267,7 +267,7 @@ export default function CorinthiansPage() {
           </p>
 
           <p className="text-xs text-white/45 text-center">
-            Made to order • 3–4 weeks • Complimentary insured shipping within Canada
+            Made to order • 3–4 weeks • Complimentary insured shipping
           </p>
         </div>
       </section>

@@ -60,7 +60,7 @@ const SPECS = [
   { label: "FINISH",       value: "High polish mirror finish" },
   { label: "PRODUCTION",   value: "Made to order" },
   { label: "LEAD TIME",    value: "4–6 weeks" },
-  { label: "SHIPPING",     value: "Complimentary insured worldwide shipping" },
+  { label: "SHIPPING",     value: "Complimentary insured shipping" },
 ];
 
 const GALLERY = [
@@ -1018,7 +1018,7 @@ export default function BapePage() {
 
           <div className="bp-cta">
             <p className="bp-cta-price" data-testid="bape-active-price">{priceText}</p>
-            <p className="bp-cta-lead">Made to order · 4–6 weeks · Complimentary insured worldwide shipping</p>
+            <p className="bp-cta-lead">Made to order · 4–6 weeks · Complimentary insured shipping</p>
             <button
               type="button"
               onClick={onAddToCart}

@@ -465,7 +465,7 @@ const HomagePage = () => {
 
           <p className="text-xs text-neutral-500 mt-6 text-center">
             Made to order · Ships in 3–4 weeks<br />
-            Complimentary insured shipping within Canada.
+            Complimentary insured shipping.
           </p>
         </div>
       </section>

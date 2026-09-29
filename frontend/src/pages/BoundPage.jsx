@@ -458,7 +458,7 @@ const BoundPage = () => {
 
                 <div className="mt-6 space-y-1 text-center">
                   <p className="text-white/30 text-xs tracking-wide">Sold as a single piece</p>
-                  <p className="text-white/20 text-xs">Complimentary insured shipping within Canada</p>
+                  <p className="text-white/20 text-xs">Complimentary insured shipping</p>
                   <p className="text-white/15 text-[9px] mt-1">Price adjusts automatically with the live precious metals market.</p>
                 </div>
               </div>
@@ -709,7 +709,7 @@ const BoundPage = () => {
           </button>
 
           <p className="text-white/20 text-xs mt-8 tracking-wide">
-            Complimentary insured shipping within Canada
+            Complimentary insured shipping
           </p>
         </div>
       </section>

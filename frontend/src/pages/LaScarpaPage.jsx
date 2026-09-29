@@ -62,7 +62,7 @@ const SPECS = [
 ];
 
 const INCLUDED = [
-  "Complimentary insured worldwide shipping",
+  "Complimentary insured shipping",
   "Couture presentation packaging",
   "Certificate of authenticity",
   "Private client handling",
@@ -987,7 +987,7 @@ export default function LaScarpaPage() {
           LA SCARPA DELLA REGINA
         </h2>
         <p className="scarpa-acquire-price" data-testid="la-scarpa-price">{formattedPrice}</p>
-        <p className="scarpa-acquire-lead">Made to order · 4–6 weeks · Complimentary insured worldwide shipping</p>
+        <p className="scarpa-acquire-lead">Made to order · 4–6 weeks · Complimentary insured shipping</p>
         <button
           type="button"
           onClick={onAddToCart}

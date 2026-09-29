@@ -180,7 +180,7 @@ export default function RosariaPage() {
               {/* Shipping Info */}
               <div className="mt-6 text-center">
                 <p className="text-white/60 text-sm">
-                  Complimentary insured shipping within Canada.
+                  Complimentary insured shipping.
                 </p>
               </div>
             </ProductInfoSection>

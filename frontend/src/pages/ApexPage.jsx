@@ -403,7 +403,7 @@ const ApexPage = () => {
             </div>
 
             <p className="text-xs text-neutral-500 mt-6">
-              Complimentary insured shipping within Canada.
+              Complimentary insured shipping.
             </p>
           </div>
         </div>

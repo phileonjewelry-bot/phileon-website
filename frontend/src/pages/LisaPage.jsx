@@ -1151,7 +1151,7 @@ export default function LisaPage() {
             LISA — {selected.label.replace("LISA ", "")}
           </h2>
         <p className="lisa-acquire-price" data-testid="lisa-acquire-price">{formattedPrice}</p>
-        <p className="lisa-acquire-lead">Made to order · 6–8 weeks · Complimentary insured worldwide shipping</p>
+        <p className="lisa-acquire-lead">Made to order · 6–8 weeks · Complimentary insured shipping</p>
 
         <div className="lisa-acquire-size">
           <RingSizeSelector

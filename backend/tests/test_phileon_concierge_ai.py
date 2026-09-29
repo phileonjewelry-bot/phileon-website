@@ -660,3 +660,172 @@ def test_policy_endpoint_and_tool_share_source():
     c_src = inspect.getsource(C)
     assert "from services.phileon_policies import" in r_src
     assert "from services.phileon_policies import" in c_src
+
+
+def test_public_policy_endpoint_matches_tool_byte_for_byte():
+    """Prove the customer-visible policy endpoint and the AI concierge
+    policy tool return the SAME canonical policy record for every topic.
+    Site copy and AI cannot drift."""
+    from importlib import reload
+    from fastapi.testclient import TestClient
+    import server
+    reload(server)
+    from services.phileon_concierge import tool_get_phileon_policy
+    from services.phileon_policies import TOPICS
+    client = TestClient(server.app)
+    for topic in TOPICS:
+        api = client.get(f"/api/concierge/policy/{topic}")
+        assert api.status_code == 200, f"{topic}: {api.text}"
+        api_pol = api.json()["policy"]
+        tool_pol = tool_get_phileon_policy({"topic": topic})["policy"]
+        # Byte-for-byte parity on every field.
+        assert api_pol == tool_pol, f"drift on topic {topic}"
+
+
+# ────────────────────────────────────────────────────────────────
+# 10) REQUEST-CONTRACT: reasoning=low, no temperature/top_p/logprobs
+# ────────────────────────────────────────────────────────────────
+
+def test_outbound_request_uses_reasoning_low_and_no_sampling_params(event_loop, monkeypatch):
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message("Hello.")], "Hello."),
+    ])
+    event_loop.run_until_complete(C.run_turn(message="hi"))
+    assert client.calls, "no create() call recorded"
+    payload = client.calls[0]
+    # reasoning present and low
+    assert payload.get("reasoning") == {"effort": "low"}
+    # no sampling params
+    assert "temperature" not in payload
+    assert "top_p"       not in payload
+    assert "top_logprobs" not in payload
+    # model still pinned
+    assert payload.get("model") == C.current_model()
+    # storage disabled
+    assert payload.get("store") is False
+
+
+def test_source_does_not_reintroduce_temperature_top_p_top_logprobs():
+    import inspect
+    from services import phileon_concierge as C
+    src = inspect.getsource(C.run_turn)
+    assert "temperature=" not in src
+    assert "top_p=" not in src
+    assert "top_logprobs=" not in src
+
+
+# ────────────────────────────────────────────────────────────────
+# 11) EVIDENCE LEDGER — enabled-path guard
+# ────────────────────────────────────────────────────────────────
+
+def test_evidence_A_price_without_tool_call_is_blocked(event_loop, monkeypatch):
+    """Model asserts $500 without calling any product tool → blocked."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message(
+            "The La Marva is $500 — here's the checkout link.")],
+            "The La Marva is $500 — here's the checkout link."),
+    ])
+    got = event_loop.run_until_complete(C.run_turn(message="How much is La Marva?"))
+    assert got["status"] == "ok"
+    assert got["evidence"]["blocked_reason"] and got["evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+    assert "$500" not in got["reply"]
+    assert "verify" in got["reply"].lower()
+
+
+def test_evidence_B_altered_price_is_blocked(event_loop, monkeypatch):
+    """Model calls product tool returning $3,400, then answers $3,000 → blocked."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_function_call("get_phileon_product", {"slug": "test-slug-3400"}, "c1")]),
+        _FakeResponse([_fake_message(
+            "The BOSS KNOT is USD 3,000 — great value.")],
+            "The BOSS KNOT is USD 3,000 — great value."),
+    ])
+    # Patch the dispatcher for this test so the tool returns a controlled price.
+    from services import phileon_concierge as _C
+    original = _C.tool_get_phileon_product
+    def _fake_prod(args):
+        return {"product": {
+            "slug": args.get("slug"), "name": "BOSS KNOT", "category": "pendant",
+            "currency": "USD", "price_usd": 3400.0,
+            "price_availability": "authoritative",
+            "material": None, "stone": None, "description": None,
+            "image_url": None, "size_profile": None, "needs_size": False,
+            "allow_engraving": None, "availability_status": None,
+            "product_path": "/product/test-slug-3400",
+        }}
+    monkeypatch.setattr(_C, "tool_get_phileon_product", _fake_prod)
+    _C.TOOL_DISPATCH["get_phileon_product"] = _fake_prod
+    try:
+        got = event_loop.run_until_complete(C.run_turn(message="How much is the BOSS KNOT?"))
+        assert got["evidence"]["blocked_reason"] and got["evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+        assert "$3,000" not in got["reply"] and "3,000" not in got["reply"]
+        assert "verify" in got["reply"].lower()
+    finally:
+        _C.TOOL_DISPATCH["get_phileon_product"] = original
+
+
+def test_evidence_C_policy_claim_without_tool_is_blocked(event_loop, monkeypatch):
+    """Model asserts 'our return policy is 30 days' without policy tool → blocked."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message(
+            "Our return policy is that any piece can be returned within 30 days.")],
+            "Our return policy is that any piece can be returned within 30 days."),
+    ])
+    got = event_loop.run_until_complete(C.run_turn(message="What is your return policy?"))
+    assert got["evidence"]["blocked_reason"] == "UNSUPPORTED_POLICY_CLAIM:RETURNS"
+    assert "30 days" not in got["reply"]
+    assert "verify" in got["reply"].lower()
+
+
+def test_evidence_D_policy_claim_with_tool_is_allowed(event_loop, monkeypatch):
+    """Model calls RETURNS tool then summarizes accurately → allowed."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_function_call("get_phileon_policy", {"topic": "RETURNS"}, "c1")]),
+        _FakeResponse([_fake_message(
+            "Our return policy accepts ready-to-ship pieces in original condition. "
+            "Custom and made-to-order pieces are non-returnable. See /faq#returns.")],
+            "Our return policy accepts ready-to-ship pieces in original condition. "
+            "Custom and made-to-order pieces are non-returnable. See /faq#returns."),
+    ])
+    got = event_loop.run_until_complete(C.run_turn(message="Return policy?"))
+    assert got["evidence"]["blocked_reason"] is None
+    assert "return" in got["reply"].lower()
+
+
+def test_evidence_E_conversational_no_tool_needed(event_loop, monkeypatch):
+    """A greeting with no PHILEON factual claim → no tool required, permitted."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message("Hello — what are you looking for today?")],
+                      "Hello — what are you looking for today?"),
+    ])
+    got = event_loop.run_until_complete(C.run_turn(message="Hi there"))
+    assert got["evidence"]["blocked_reason"] is None
+    assert "hello" in got["reply"].lower()
+
+
+def test_evidence_F_price_usd_null_cannot_be_invented(event_loop, monkeypatch):
+    """Product tool returns price_usd=null → model saying $2,499 must be blocked."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_function_call("get_phileon_product", {"slug": "dynamic-ring"}, "c1")]),
+        _FakeResponse([_fake_message("The dynamic ring is $2,499.")],
+                      "The dynamic ring is $2,499."),
+    ])
+    from services import phileon_concierge as _C
+    original = _C.TOOL_DISPATCH["get_phileon_product"]
+    def _fake_prod(args):
+        return {"product": {
+            "slug": args.get("slug"), "name": "DYNAMIC RING", "category": "ring",
+            "currency": "USD", "price_usd": None,
+            "price_availability": "quote_on_product_page",
+            "material": None, "stone": None, "description": None,
+            "image_url": None, "size_profile": None, "needs_size": True,
+            "allow_engraving": None, "availability_status": None,
+            "product_path": "/product/dynamic-ring",
+        }}
+    _C.TOOL_DISPATCH["get_phileon_product"] = _fake_prod
+    try:
+        got = event_loop.run_until_complete(C.run_turn(message="How much is the dynamic ring?"))
+        assert got["evidence"]["blocked_reason"] and got["evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+        assert "$2,499" not in got["reply"] and "2,499" not in got["reply"]
+    finally:
+        _C.TOOL_DISPATCH["get_phileon_product"] = original

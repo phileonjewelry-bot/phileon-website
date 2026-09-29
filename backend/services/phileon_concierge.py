@@ -431,6 +431,158 @@ MAX_MESSAGE_CHARS = 1500
 MAX_HISTORY_TURNS = 8
 MAX_TOOL_LOOPS = 4
 
+# ── Evidence ledger + verifier ──
+# Per-turn, we track exactly which authoritative PHILEON records were
+# returned by tools. Before returning the final reply to the browser,
+# a server-side guard scans the reply for PHILEON factual claims that
+# lack matching evidence and rewrites those replies into a safe
+# fallback. This is defense-in-depth: instruction-only guarantees are
+# not sufficient authority for PHILEON facts.
+import re as _re
+
+
+class EvidenceLedger:
+    """Records the authoritative PHILEON records returned by tools during
+    a single concierge turn. Case- and format-insensitive lookups."""
+
+    _POLICY_TOPIC_HINT: Dict[str, Tuple[str, ...]] = {
+        "SHIPPING": ("ship", "shipping", "insured shipping", "delivery"),
+        "RETURNS":  ("return", "returns", "return policy",
+                     "refund", "restock"),
+        "WARRANTY": ("warranty", "guaranteed", "manufacturing defect"),
+        "CUSTOM":   ("custom jewelry", "custom-jewelry", "bespoke",
+                     "commission", "atelier"),
+        "PAYMENT":  ("payment", "payments", "credit card",
+                     "instalment", "installment"),
+    }
+
+    def __init__(self):
+        self.tools_called: List[Tuple[str, Dict[str, Any]]] = []
+        self.product_slugs: set = set()
+        self.product_names: set = set()
+        # (price_usd, currency) pairs actually returned this turn.
+        self.prices: List[Tuple[float, str]] = []
+        # topic -> canonical summary text
+        self.policies: Dict[str, str] = {}
+        self.custom_guidance: bool = False
+
+    # ── recorders ──
+    def record_search(self, args: Dict[str, Any], out: Dict[str, Any]):
+        self.tools_called.append(("search_phileon_catalog", args))
+        for r in (out.get("results") or []):
+            self._record_product(r)
+
+    def record_product(self, args: Dict[str, Any], out: Dict[str, Any]):
+        self.tools_called.append(("get_phileon_product", args))
+        p = out.get("product")
+        if p:
+            self._record_product(p)
+
+    def record_policy(self, args: Dict[str, Any], out: Dict[str, Any]):
+        self.tools_called.append(("get_phileon_policy", args))
+        pol = out.get("policy")
+        if pol and pol.get("topic"):
+            self.policies[str(pol["topic"]).upper()] = str(pol.get("summary") or "")
+
+    def record_custom(self, args: Dict[str, Any], out: Dict[str, Any]):
+        self.tools_called.append(("get_custom_jewelry_guidance", args))
+        self.custom_guidance = True
+
+    def _record_product(self, p: Dict[str, Any]):
+        slug = str(p.get("slug") or "").strip().lower()
+        if slug:
+            self.product_slugs.add(slug)
+        name = str(p.get("name") or "").strip().lower()
+        if name:
+            self.product_names.add(name)
+        price = p.get("price_usd")
+        currency = str(p.get("currency") or "").upper().strip()
+        if isinstance(price, (int, float)):
+            self.prices.append((float(price), currency or "USD"))
+
+    # ── verifier helpers ──
+    _PRICE_RE = _re.compile(
+        r"(?<![A-Za-z0-9])(?:USD|CAD|EUR|GBP|C?\$)\s*"
+        r"([0-9]{1,3}(?:[,\s][0-9]{3})+|[0-9]{2,})(?:\.\d{1,2})?",
+        _re.I,
+    )
+
+    def _has_price_evidence(self, price_usd: float) -> bool:
+        return any(abs(p - price_usd) < 0.01 for p, _ in self.prices)
+
+    def verify(self, reply: str) -> Tuple[bool, str]:
+        """Return (ok, reason). If ok=False, the reply must be replaced
+        with the safe fallback."""
+        r_low = reply.lower()
+
+        # 1) PRICE EVIDENCE — every $NNN in reply must match tool output.
+        for m in self._PRICE_RE.finditer(reply):
+            raw_num = m.group(1).replace(",", "").replace(" ", "")
+            try:
+                val = float(raw_num)
+            except ValueError:
+                continue
+            if val < 10:
+                # Ignore "$0" or tiny values; those aren't real product prices.
+                continue
+            if not self._has_price_evidence(val):
+                return False, f"UNSUPPORTED_PRICE:{val}"
+
+        # 2) POLICY EVIDENCE — PHILEON-specific policy assertions need
+        # a matching policy tool result. We use conservative first-person
+        # markers so we don't false-positive on generic prose.
+        _POLICY_ASSERTION = _re.compile(
+            r"\b(our|philein|phileon|the)\s+"
+            r"(shipping|return|returns|refund|warranty|payment|instalment|installment)"
+            r"\s+(policy|window|term|coverage|is|are|allows?|accepts?|covers?)",
+            _re.I,
+        )
+        for m in _POLICY_ASSERTION.finditer(reply):
+            word = m.group(2).lower()
+            topic = None
+            for t, hints in self._POLICY_TOPIC_HINT.items():
+                if any(word == h or word in h for h in hints):
+                    topic = t; break
+            if topic and topic not in self.policies:
+                return False, f"UNSUPPORTED_POLICY_CLAIM:{topic}"
+
+        # 3) CUSTOM-JEWELRY ASSERTION — feasibility / pricing / timeline
+        # promises about custom work need get_custom_jewelry_guidance
+        # evidence.
+        _CUSTOM_CLAIM = _re.compile(
+            r"\bcustom(?:-|\s+)jewel[l]?ry\b|\bbespoke\b|\bcommission\b",
+            _re.I,
+        )
+        _CUSTOM_PROMISE = _re.compile(
+            r"\b(we can|we'll|will|can be|takes?|delivers?|estimated?|"
+            r"typically|around|about)\b.*\b(week|month|day|price|cost|quote)\b",
+            _re.I,
+        )
+        if _CUSTOM_CLAIM.search(reply) and _CUSTOM_PROMISE.search(reply):
+            if not self.custom_guidance:
+                return False, "UNSUPPORTED_CUSTOM_CLAIM"
+
+        # 4) PRODUCT NAME CLAIM — if reply cites a specific product name
+        # (looks like a proper-noun product) without any product tool
+        # evidence in this turn, block.
+        if self.tools_called and not self.product_slugs and not self.product_names:
+            # No product tool called this turn — reply must not present a
+            # product recommendation. Cheap heuristic: mentions of
+            # "product path", explicit /product/ URLs, or a "recommend"
+            # verb with a proper-noun-looking token.
+            if "/product/" in r_low or "recommend" in r_low and \
+               _re.search(r"\b[A-Z][A-Za-z]+\s+[A-Z][A-Za-z]+\b", reply):
+                return False, "UNSUPPORTED_PRODUCT_CLAIM"
+
+        return True, "ok"
+
+
+UNSUPPORTED_FALLBACK = (
+    "I need to verify that against PHILEON's current information. "
+    "Please check the relevant product page or the PHILEON FAQ, or ask "
+    "me another question I can look up."
+)
+
 
 def _sanitize_history(prior: Optional[List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
     """Accept the browser-supplied prior turns. Only keep {role, content},
@@ -518,6 +670,7 @@ async def run_turn(
     )
 
     tool_calls_used = 0
+    ledger = EvidenceLedger()
     t0 = time.perf_counter()
     try:
         for _loop in range(MAX_TOOL_LOOPS):
@@ -528,7 +681,7 @@ async def run_turn(
                 tool_choice="auto",
                 store=False,
                 parallel_tool_calls=True,
-                temperature=0.4,
+                reasoning={"effort": "low"},
             )
             # Responses API surfaces function calls in `resp.output`.
             new_items: List[Dict[str, Any]] = []
@@ -550,6 +703,15 @@ async def run_turn(
                     else:
                         try:
                             tool_out = dispatcher(args)
+                            # Record ledger evidence for successful calls.
+                            if name == "search_phileon_catalog":
+                                ledger.record_search(args, tool_out)
+                            elif name == "get_phileon_product":
+                                ledger.record_product(args, tool_out)
+                            elif name == "get_phileon_policy":
+                                ledger.record_policy(args, tool_out)
+                            elif name == "get_custom_jewelry_guidance":
+                                ledger.record_custom(args, tool_out)
                         except Exception as exc:
                             log.warning("concierge tool %s error: %s: %s",
                                         name, type(exc).__name__, exc)
@@ -587,6 +749,14 @@ async def run_turn(
             if not reply_text:
                 reply_text = ("I'm here to help you find something at PHILEON. "
                               "Could you tell me a little more about what you're looking for?")
+            # ── EVIDENCE GUARD (defense-in-depth) ──
+            ok, reason = ledger.verify(reply_text)
+            evidence_block_reason: Optional[str] = None
+            if not ok:
+                evidence_block_reason = reason
+                reply_text = UNSUPPORTED_FALLBACK
+                log.warning("concierge evidence guard blocked reply: %s", reason)
+
             elapsed = (time.perf_counter() - t0) * 1000
             STATS.record(ok=True, latency_ms=elapsed, tool_calls=tool_calls_used)
             return {
@@ -595,6 +765,13 @@ async def run_turn(
                 "tool_calls_used": tool_calls_used,
                 "model": model,
                 "latency_ms": round(elapsed, 1),
+                "evidence": {
+                    "tools_called": [n for n, _ in ledger.tools_called],
+                    "policy_topics": sorted(ledger.policies.keys()),
+                    "product_slugs": sorted(ledger.product_slugs),
+                    "custom_guidance": ledger.custom_guidance,
+                    "blocked_reason": evidence_block_reason,
+                },
             }
 
         # Exceeded MAX_TOOL_LOOPS — degrade gracefully.
