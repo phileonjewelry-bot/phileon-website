@@ -102,7 +102,8 @@ async def public_message(body: ConciergeMessageIn, request: Request):
     history_payload = [t.model_dump() for t in (body.history or [])]
     result = await C.run_turn(message=body.message, history=history_payload)
     # We do NOT log the raw customer message. Only status / code / latency.
-    return result
+    # Strip internal evidence / tool metadata before returning to the browser.
+    return C.public_view(result)
 
 
 @admin_router.get("/status")

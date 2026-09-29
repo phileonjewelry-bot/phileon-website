@@ -385,7 +385,8 @@ def test_admin_status_reports_safe_fields_only(monkeypatch):
     for k in snap:
         assert k in {"enabled", "flag_on", "environment", "configured_model",
                      "api_key_present", "requests_today", "failures_today",
-                     "tool_calls_today", "avg_latency_ms"}
+                     "tool_calls_today", "evidence_blocks_today",
+                     "avg_latency_ms"}
     # Must never carry the actual API key value.
     assert isinstance(snap["api_key_present"], bool)
     assert "OPENAI_API_KEY" not in json.dumps(snap)
@@ -727,7 +728,7 @@ def test_evidence_A_price_without_tool_call_is_blocked(event_loop, monkeypatch):
     ])
     got = event_loop.run_until_complete(C.run_turn(message="How much is La Marva?"))
     assert got["status"] == "ok"
-    assert got["evidence"]["blocked_reason"] and got["evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+    assert got["_internal_evidence"]["blocked_reason"] and got["_internal_evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
     assert "$500" not in got["reply"]
     assert "verify" in got["reply"].lower()
 
@@ -757,7 +758,7 @@ def test_evidence_B_altered_price_is_blocked(event_loop, monkeypatch):
     _C.TOOL_DISPATCH["get_phileon_product"] = _fake_prod
     try:
         got = event_loop.run_until_complete(C.run_turn(message="How much is the BOSS KNOT?"))
-        assert got["evidence"]["blocked_reason"] and got["evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+        assert got["_internal_evidence"]["blocked_reason"] and got["_internal_evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
         assert "$3,000" not in got["reply"] and "3,000" not in got["reply"]
         assert "verify" in got["reply"].lower()
     finally:
@@ -772,7 +773,7 @@ def test_evidence_C_policy_claim_without_tool_is_blocked(event_loop, monkeypatch
             "Our return policy is that any piece can be returned within 30 days."),
     ])
     got = event_loop.run_until_complete(C.run_turn(message="What is your return policy?"))
-    assert got["evidence"]["blocked_reason"] == "UNSUPPORTED_POLICY_CLAIM:RETURNS"
+    assert got["_internal_evidence"]["blocked_reason"] == "UNSUPPORTED_POLICY_CLAIM:RETURNS"
     assert "30 days" not in got["reply"]
     assert "verify" in got["reply"].lower()
 
@@ -788,7 +789,7 @@ def test_evidence_D_policy_claim_with_tool_is_allowed(event_loop, monkeypatch):
             "Custom and made-to-order pieces are non-returnable. See /faq#returns."),
     ])
     got = event_loop.run_until_complete(C.run_turn(message="Return policy?"))
-    assert got["evidence"]["blocked_reason"] is None
+    assert got["_internal_evidence"]["blocked_reason"] is None
     assert "return" in got["reply"].lower()
 
 
@@ -799,7 +800,7 @@ def test_evidence_E_conversational_no_tool_needed(event_loop, monkeypatch):
                       "Hello — what are you looking for today?"),
     ])
     got = event_loop.run_until_complete(C.run_turn(message="Hi there"))
-    assert got["evidence"]["blocked_reason"] is None
+    assert got["_internal_evidence"]["blocked_reason"] is None
     assert "hello" in got["reply"].lower()
 
 
@@ -825,7 +826,163 @@ def test_evidence_F_price_usd_null_cannot_be_invented(event_loop, monkeypatch):
     _C.TOOL_DISPATCH["get_phileon_product"] = _fake_prod
     try:
         got = event_loop.run_until_complete(C.run_turn(message="How much is the dynamic ring?"))
-        assert got["evidence"]["blocked_reason"] and got["evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+        assert got["_internal_evidence"]["blocked_reason"] and got["_internal_evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
         assert "$2,499" not in got["reply"] and "2,499" not in got["reply"]
     finally:
         _C.TOOL_DISPATCH["get_phileon_product"] = original
+
+
+# ────────────────────────────────────────────────────────────────
+# 12) PUBLIC RESPONSE PROJECTION — no evidence / tool leakage
+# ────────────────────────────────────────────────────────────────
+
+_INTERNAL_KEY_LEAKS = (
+    "evidence", "_internal_evidence", "blocked_reason",
+    "tools_called", "tool_calls_used", "policy_topics",
+    "product_slugs", "custom_guidance", "model",
+    "code",  # error/disabled codes are internal
+)
+
+
+def _no_leak(payload: dict) -> None:
+    """Assert the payload carries no internal-only keys anywhere in the tree."""
+    import json as _json
+    blob = _json.dumps(payload)
+    for needle in _INTERNAL_KEY_LEAKS:
+        assert f'"{needle}"' not in blob, f'internal key {needle!r} leaked to public'
+
+
+def test_public_view_normal_response_has_no_evidence(event_loop, monkeypatch):
+    """A normal, allowed turn returned to the browser must contain
+    exactly {status, reply, latency_ms} — nothing else."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message("Hello — how can I help?")],
+                      "Hello — how can I help?"),
+    ])
+    internal = event_loop.run_until_complete(C.run_turn(message="hi"))
+    public = C.public_view(internal)
+    assert set(public.keys()) == {"status", "reply", "latency_ms"}
+    _no_leak(public)
+
+
+def test_public_view_blocked_response_hides_blocked_reason(event_loop, monkeypatch):
+    """When evidence guard blocks a reply, the public view must NOT
+    reveal the block reason or any of the tools called."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message("The La Marva is $500.")],
+                      "The La Marva is $500."),
+    ])
+    internal = event_loop.run_until_complete(C.run_turn(message="How much?"))
+    # Internal confirms the block.
+    assert internal["_internal_evidence"]["blocked_reason"] and \
+        internal["_internal_evidence"]["blocked_reason"].startswith("UNSUPPORTED_PRICE")
+    # Public strips it.
+    public = C.public_view(internal)
+    assert set(public.keys()) == {"status", "reply", "latency_ms"}
+    assert "verify" in public["reply"].lower()  # safe fallback text remains
+    _no_leak(public)
+
+
+def test_public_view_no_tool_names_leaked(event_loop, monkeypatch):
+    """Even after several tools ran, the public view must not name any
+    tool the model called."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([
+            _fake_function_call("get_phileon_policy", {"topic": "RETURNS"}, "c1"),
+            _fake_function_call("search_phileon_catalog", {
+                "category": "ring", "gender_or_recipient": None,
+                "material": None, "stone": None, "style_terms": [],
+                "max_price": None, "min_price": None,
+                "currency": None, "query_intent": None,
+            }, "c2"),
+        ]),
+        _FakeResponse([_fake_message(
+            "Our return policy accepts ready-to-ship pieces. "
+            "See /faq#returns.")],
+            "Our return policy accepts ready-to-ship pieces. "
+            "See /faq#returns."),
+    ])
+    internal = event_loop.run_until_complete(
+        C.run_turn(message="What is your return policy?"))
+    # Internal ledger recorded the tools.
+    assert set(internal["_internal_evidence"]["tools_called"]) == {
+        "get_phileon_policy", "search_phileon_catalog"}
+    # Public view must NOT.
+    public = C.public_view(internal)
+    _no_leak(public)
+    for tool_name in ("search_phileon_catalog", "get_phileon_product",
+                      "get_phileon_policy", "get_custom_jewelry_guidance"):
+        assert tool_name not in public["reply"], f"tool name {tool_name} leaked"
+
+
+def test_public_endpoint_over_http_returns_only_whitelisted_keys(monkeypatch):
+    """End-to-end HTTP contract: POST /api/concierge/message with the
+    concierge in a mocked-enabled state returns only the whitelisted
+    keys. Uses TestClient + reload to avoid cross-suite motor loop
+    contamination."""
+    from fastapi.testclient import TestClient
+    from importlib import reload
+    monkeypatch.setenv("PHILEON_CONCIERGE_ENABLED", "true")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-fake-endpoint")
+    import server
+    reload(server)
+    # Replace the OpenAI client factory used by the reloaded module.
+    from services import phileon_concierge as _C
+    class _StubResp:
+        output = [_fake_message("Hello — how can I help?")]
+        output_text = "Hello — how can I help?"
+        model = "gpt-5.6-terra-fake"
+    class _StubClient:
+        class _R:
+            def create(self, **kw): return _StubResp()
+        responses = _R()
+    _C._get_openai_client.cache_clear()
+    monkeypatch.setattr(_C, "_get_openai_client", lambda: _StubClient())
+
+    client = TestClient(server.app)
+    r = client.post("/api/concierge/message", json={"message": "hi"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert set(body.keys()) == {"status", "reply", "latency_ms"}
+    _no_leak(body)
+
+
+def test_internal_evidence_enforcement_still_blocks_unsupported_claims(event_loop, monkeypatch):
+    """Even after the public projection layer, the internal guard must
+    still block unsupported PHILEON claims — this test asserts the
+    fallback reply is what the customer receives."""
+    C, client = _enable_with_scripted(monkeypatch, [
+        _FakeResponse([_fake_message(
+            "Our return policy is 90 days on all pieces.")],
+            "Our return policy is 90 days on all pieces."),
+    ])
+    internal = event_loop.run_until_complete(
+        C.run_turn(message="What is your return policy?"))
+    assert internal["_internal_evidence"]["blocked_reason"] == \
+        "UNSUPPORTED_POLICY_CLAIM:RETURNS"
+    public = C.public_view(internal)
+    assert "90 days" not in public["reply"]
+    assert "verify" in public["reply"].lower()
+    _no_leak(public)
+
+
+def test_admin_status_snapshot_exposes_evidence_blocks_counter(monkeypatch):
+    """Admin observability may expose evidence_blocks_today (aggregate
+    counter). Ensure the field is in the snapshot shape."""
+    from services import phileon_concierge as C
+    snap = C.STATS.snapshot()
+    for k in ("requests_today", "failures_today", "tool_calls_today",
+              "evidence_blocks_today", "avg_latency_ms"):
+        assert k in snap, f"admin snapshot missing {k}"
+
+
+def test_admin_status_snapshot_has_no_customer_prompts_or_secrets():
+    """Admin snapshot must never contain the customer prompt, raw model
+    output, or the OPENAI_API_KEY."""
+    import json as _json
+    from services import phileon_concierge as C
+    snap = C.STATS.snapshot()
+    blob = _json.dumps(snap).lower()
+    for banned in ("prompt", "message", "reply", "output_text",
+                   "openai_api_key", "sk-", "authorization"):
+        assert banned not in blob, f"admin snapshot leaked {banned!r}"

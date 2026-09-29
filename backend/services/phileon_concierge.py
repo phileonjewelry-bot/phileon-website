@@ -610,12 +610,16 @@ class ConciergeCallStats:
         self.requests = 0
         self.failures = 0
         self.tool_calls = 0
+        self.evidence_blocks = 0
         self.total_latency_ms = 0.0
 
-    def record(self, *, ok: bool, latency_ms: float, tool_calls: int):
+    def record(self, *, ok: bool, latency_ms: float, tool_calls: int,
+               evidence_blocked: bool = False):
         self.requests += 1
         self.tool_calls += tool_calls
         self.total_latency_ms += latency_ms
+        if evidence_blocked:
+            self.evidence_blocks += 1
         if not ok:
             self.failures += 1
 
@@ -625,6 +629,7 @@ class ConciergeCallStats:
             "requests_today": self.requests,
             "failures_today": self.failures,
             "tool_calls_today": self.tool_calls,
+            "evidence_blocks_today": self.evidence_blocks,
             "avg_latency_ms": avg,
         }
 
@@ -758,14 +763,20 @@ async def run_turn(
                 log.warning("concierge evidence guard blocked reply: %s", reason)
 
             elapsed = (time.perf_counter() - t0) * 1000
-            STATS.record(ok=True, latency_ms=elapsed, tool_calls=tool_calls_used)
+            STATS.record(ok=True, latency_ms=elapsed,
+                         tool_calls=tool_calls_used,
+                         evidence_blocked=bool(evidence_block_reason))
             return {
                 "status": "ok",
                 "reply": reply_text[:4000],
                 "tool_calls_used": tool_calls_used,
                 "model": model,
                 "latency_ms": round(elapsed, 1),
-                "evidence": {
+                # ── INTERNAL DIAGNOSTICS ONLY. Never return to the browser.
+                # `_public_view()` strips this before serialisation on the
+                # public endpoint. Retained here so admin/debug callers
+                # inside the process can inspect. ──
+                "_internal_evidence": {
                     "tools_called": [n for n, _ in ledger.tools_called],
                     "policy_topics": sorted(ledger.policies.keys()),
                     "product_slugs": sorted(ledger.product_slugs),
@@ -803,3 +814,32 @@ async def run_turn(
         return {"status": "error", "code": "INTERNAL_ERROR",
                 "reply": ("The concierge is briefly unavailable. Please try again "
                           "in a moment, or continue browsing the collections.")}
+
+
+# ────────────────────────────────────────────────────────────────
+# PUBLIC RESPONSE PROJECTION
+# ────────────────────────────────────────────────────────────────
+
+# Whitelist of keys allowed in the response body of the public
+# `/api/concierge/message` endpoint. Anything else is stripped —
+# in particular, `_internal_evidence`, `tool_calls_used`, `model`,
+# and any future guardrail traces MUST NOT leak.
+_PUBLIC_ALLOWED_KEYS: frozenset = frozenset({"status", "reply", "latency_ms"})
+
+
+def public_view(turn_result: Dict[str, Any]) -> Dict[str, Any]:
+    """Project a run_turn() return value into the SAFE public shape.
+
+    NEVER exposes:
+        * ``_internal_evidence`` (tools called, policy topics, product
+          slugs, custom guidance, blocked_reason)
+        * ``tool_calls_used`` (implementation detail of the tool loop)
+        * ``model`` (may reveal owner's provider configuration)
+        * ``code`` on ``disabled`` / ``error`` paths (kept server-side)
+        * Anything else future refactors may add.
+
+    The returned dict is a fresh mapping; the original result is not
+    mutated (it may still be used by admin observability inside the
+    process).
+    """
+    return {k: v for k, v in turn_result.items() if k in _PUBLIC_ALLOWED_KEYS}
