@@ -2309,6 +2309,19 @@ try:
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"Intent classifier routes NOT registered: {type(_e).__name__}: {_e}")
 
+# PHILEON AI Concierge (v1, read-only, owner-gated by
+# PHILEON_CONCIERGE_ENABLED + OPENAI_API_KEY). No customer-facing side
+# effects: no checkout / pricing / inventory / orders / emails changes.
+try:
+    from routes.concierge_ai import (
+        public_router as _cai_pub, admin_router as _cai_admin,
+    )
+    api_router.include_router(_cai_pub)
+    api_router.include_router(_cai_admin)
+    logger.info("PHILEON AI Concierge routes registered (v1 read-only)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"AI concierge routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 

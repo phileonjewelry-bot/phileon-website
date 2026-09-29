@@ -11,6 +11,7 @@ import SearchOverlay from "@/components/SearchOverlay";
 import CartDrawer from "@/components/CartDrawer";
 import VaultRouteBadge from "@/components/VaultRouteBadge";
 import PrivacyChoices from "@/components/PrivacyChoices";
+import PhileonAiConcierge from "@/components/PhileonAiConcierge";
 
 // Context Providers
 import { CartProvider } from "@/contexts/CartContext";
@@ -196,6 +197,7 @@ function App() {
             <SearchOverlay />
             <VaultRouteBadge />
             <PrivacyChoices />
+            <PhileonAiConcierge />
         <Suspense fallback={<div style={{minHeight: '100vh', background: '#0a0a0a'}} data-testid="route-fallback" />}>
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}
