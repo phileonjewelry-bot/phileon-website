@@ -56,7 +56,7 @@ def test_enabled_when_both_present(monkeypatch):
 
 def test_all_tool_schemas_are_strict_with_no_additional_properties():
     from services.phileon_concierge import TOOL_SCHEMAS
-    assert len(TOOL_SCHEMAS) == 5
+    assert len(TOOL_SCHEMAS) == 6
     seen = set()
     for tool in TOOL_SCHEMAS:
         assert tool["type"] == "function"
@@ -67,7 +67,8 @@ def test_all_tool_schemas_are_strict_with_no_additional_properties():
         assert set(params["required"]) == set(params["properties"].keys()), \
             f"{tool['name']}: required must equal property set"
         seen.add(tool["name"])
-    assert seen == {"search_phileon_catalog", "get_phileon_product",
+    assert seen == {"search_phileon_catalog", "resolve_configured_price",
+                    "get_phileon_product",
                     "get_phileon_policy", "get_custom_jewelry_guidance",
                     "deliver_answer"}
 
@@ -264,12 +265,18 @@ def test_spec_4_search_never_returns_rolex_or_external_brands():
 
 
 def test_spec_5_ai_cannot_change_price():
-    """There is NO tool that mutates price — verify by absence."""
+    """There is NO tool that MUTATES price — verify by absence of
+    mutating verbs in tool names. Read-only lookups (e.g.
+    ``resolve_configured_price``) are permitted."""
     from services.phileon_concierge import TOOL_DISPATCH
+    MUTATING_VERBS = ("set_", "update_", "change_", "override_",
+                      "modify_", "write_", "apply_")
     for name in TOOL_DISPATCH:
-        assert "price" not in name.lower()
-        assert "checkout" not in name.lower()
-        assert "cart" not in name.lower()
+        low = name.lower()
+        for verb in MUTATING_VERBS:
+            assert verb not in low, name
+        assert "checkout" not in low
+        assert "cart" not in low
 
 
 def test_spec_6_no_web_search_tool_registered():
@@ -494,7 +501,8 @@ def test_adv_A_rolex_bypass_no_fabrication(event_loop, monkeypatch):
     assert client.calls[0]["tools"], "tools must be sent to OpenAI"
     registered = {t["name"] for t in client.calls[0]["tools"]}
     assert registered == {
-        "search_phileon_catalog", "get_phileon_product",
+        "search_phileon_catalog", "resolve_configured_price",
+        "get_phileon_product",
         "get_phileon_policy", "get_custom_jewelry_guidance",
         "deliver_answer",
     }
