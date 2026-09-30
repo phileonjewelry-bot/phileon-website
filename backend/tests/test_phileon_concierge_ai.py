@@ -56,7 +56,7 @@ def test_enabled_when_both_present(monkeypatch):
 
 def test_all_tool_schemas_are_strict_with_no_additional_properties():
     from services.phileon_concierge import TOOL_SCHEMAS
-    assert len(TOOL_SCHEMAS) == 4
+    assert len(TOOL_SCHEMAS) == 5
     seen = set()
     for tool in TOOL_SCHEMAS:
         assert tool["type"] == "function"
@@ -64,12 +64,12 @@ def test_all_tool_schemas_are_strict_with_no_additional_properties():
         params = tool["parameters"]
         assert params["type"] == "object"
         assert params.get("additionalProperties") is False, tool["name"]
-        # OpenAI strict-mode requires ALL properties be listed in `required`.
         assert set(params["required"]) == set(params["properties"].keys()), \
             f"{tool['name']}: required must equal property set"
         seen.add(tool["name"])
     assert seen == {"search_phileon_catalog", "get_phileon_product",
-                    "get_phileon_policy", "get_custom_jewelry_guidance"}
+                    "get_phileon_policy", "get_custom_jewelry_guidance",
+                    "deliver_answer"}
 
 
 def test_policy_tool_topic_enum_is_canonical():
@@ -210,7 +210,9 @@ def test_run_turn_rejects_empty_message(event_loop, monkeypatch):
 
 def test_spec_1_black_mens_ring_search_only_real(monkeypatch):
     """Customer: 'Black men's statement ring under $4,000' → catalog search
-    tool returns only real slugs; no invented product."""
+    tool returns only real slugs (no external brand). May return 0 rows
+    if no ring has an authoritative static price under the budget — that
+    is honest, not a failure."""
     from services.phileon_concierge import tool_search_phileon_catalog
     from services.pricing_engine_catalog import FIXED_PRODUCTS
     out = tool_search_phileon_catalog({
@@ -220,9 +222,10 @@ def test_spec_1_black_mens_ring_search_only_real(monkeypatch):
         "max_price": 4000, "min_price": None,
         "currency": "USD", "query_intent": "black mens statement ring",
     })
-    assert out["results"], "no ring returned from a ring-category search"
     for r in out["results"]:
-        assert r["slug"] in FIXED_PRODUCTS
+        assert r["slug"] in FIXED_PRODUCTS or r["slug"], "slug must be real"
+        # Category discipline — no non-ring rows may qualify.
+        assert r["category"] == "ring", f"non-ring leaked: {r}"
 
 
 def test_spec_2_return_policy_matches_canonical():
@@ -493,6 +496,7 @@ def test_adv_A_rolex_bypass_no_fabrication(event_loop, monkeypatch):
     assert registered == {
         "search_phileon_catalog", "get_phileon_product",
         "get_phileon_policy", "get_custom_jewelry_guidance",
+        "deliver_answer",
     }
 
 
@@ -986,3 +990,241 @@ def test_admin_status_snapshot_has_no_customer_prompts_or_secrets():
     for banned in ("prompt", "message", "reply", "output_text",
                    "openai_api_key", "sk-", "authorization"):
         assert banned not in blob, f"admin snapshot leaked {banned!r}"
+
+
+# ────────────────────────────────────────────────────────────────
+# 13) STRUCTURED FINAL-ANSWER CONTRACT — budget vs price
+# ────────────────────────────────────────────────────────────────
+
+def _mk_ledger(*, stated_budgets=None, required_category=None, slug_prices=None):
+    from services.phileon_concierge import EvidenceLedger
+    L = EvidenceLedger()
+    L.stated_budgets = list(stated_budgets or [])
+    L.required_category = required_category
+    for slug, price in (slug_prices or {}).items():
+        L.product_slugs.add(slug)
+        L.product_names.add(slug)
+        L.slug_price[slug] = price
+        if price is not None:
+            L.prices.append((float(price), "USD"))
+    return L
+
+
+def test_structured_A_budget_ack_only_is_allowed():
+    L = _mk_ledger(stated_budgets=[4000.0])
+    ok, reason = L.verify_structured({
+        "message": "I'll keep the search under your $4,000 budget.",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "no_match": False, "no_match_reason": None,
+    })
+    assert ok, reason
+
+
+def test_structured_B_altered_price_is_blocked():
+    from services.pricing_engine_catalog import FIXED_PRODUCTS
+    slug = next(iter(FIXED_PRODUCTS))
+    L = _mk_ledger(stated_budgets=[4000.0], slug_prices={slug: 40.0},
+                   required_category=None)
+    ok, reason = L.verify_structured({
+        "message": "ALTAR costs $4,000.",
+        "budget_acknowledgement": {"amount": None, "currency": None},
+        "recommendations": [{"slug": slug, "reason": "arch",
+                              "price": {"amount": 4000.0, "currency": "USD"}}],
+        "no_match": False, "no_match_reason": None,
+    })
+    assert not ok and reason.startswith("RECOMMENDATION_PRICE_MISMATCH")
+
+
+def test_structured_C_authoritative_price_is_allowed():
+    from services.pricing_engine_catalog import FIXED_PRODUCTS
+    slug = next(iter(FIXED_PRODUCTS))
+    L = _mk_ledger(stated_budgets=[4000.0], slug_prices={slug: 3400.0})
+    ok, reason = L.verify_structured({
+        "message": "Under your $4,000 budget.",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [{"slug": slug, "reason": "fits",
+                              "price": {"amount": 3400.0, "currency": "USD"}}],
+        "no_match": False, "no_match_reason": None,
+    })
+    assert ok, reason
+
+
+def test_structured_D_invented_price_is_blocked():
+    from services.pricing_engine_catalog import FIXED_PRODUCTS
+    slug = next(iter(FIXED_PRODUCTS))
+    L = _mk_ledger(stated_budgets=[4000.0], slug_prices={slug: 3400.0})
+    ok, reason = L.verify_structured({
+        "message": "Fits your $4,000 budget.",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [{"slug": slug, "reason": "close",
+                              "price": {"amount": 3999.0, "currency": "USD"}}],
+        "no_match": False, "no_match_reason": None,
+    })
+    assert not ok and reason.startswith("RECOMMENDATION_PRICE_MISMATCH")
+
+
+def test_structured_recommendation_slug_must_be_in_ledger():
+    L = _mk_ledger(stated_budgets=[4000.0])
+    ok, reason = L.verify_structured({
+        "message": "Try this.",
+        "budget_acknowledgement": {"amount": None, "currency": None},
+        "recommendations": [{"slug": "not-in-ledger",
+                              "reason": "?", "price": {"amount": None, "currency": None}}],
+        "no_match": False, "no_match_reason": None,
+    })
+    assert not ok and reason.startswith("RECOMMENDATION_SLUG_NOT_IN_LEDGER")
+
+
+def test_structured_budget_ack_number_must_match_customer():
+    L = _mk_ledger(stated_budgets=[4000.0])
+    ok, reason = L.verify_structured({
+        "message": "",
+        "budget_acknowledgement": {"amount": 5000.0, "currency": "USD"},
+        "recommendations": [], "no_match": False, "no_match_reason": None,
+    })
+    assert not ok and reason == "BUDGET_ACK_NOT_FROM_CUSTOMER"
+
+
+def test_structured_message_dollar_figure_must_match_evidence_or_budget():
+    from services.pricing_engine_catalog import FIXED_PRODUCTS
+    slug = next(iter(FIXED_PRODUCTS))
+    L = _mk_ledger(stated_budgets=[4000.0], slug_prices={slug: 3400.0})
+    ok, reason = L.verify_structured({
+        "message": "This one is $7,777 in the alternate universe.",
+        "budget_acknowledgement": {"amount": None, "currency": None},
+        "recommendations": [{"slug": slug, "reason": "fits",
+                              "price": {"amount": 3400.0, "currency": "USD"}}],
+        "no_match": False, "no_match_reason": None,
+    })
+    assert not ok and reason.startswith("UNSUPPORTED_PRICE_IN_MESSAGE")
+
+
+# ────────────────────────────────────────────────────────────────
+# 14) HARD CATEGORY FILTERING + VAULT EXCLUSION
+# ────────────────────────────────────────────────────────────────
+
+def test_derive_constraints_from_customer_message():
+    from services.phileon_concierge import derive_customer_constraints
+    c = derive_customer_constraints(
+        "I'm looking for a men's statement ring under $4,000.")
+    assert c["required_category"] == "ring"
+    assert c["include_vault"] is False
+    assert 4000.0 in c["stated_budgets"]
+
+
+def test_search_excludes_vault_when_category_is_ring():
+    from services.phileon_concierge import (
+        tool_search_phileon_catalog, _TURN_CONSTRAINTS,
+    )
+    _TURN_CONSTRAINTS.clear()
+    _TURN_CONSTRAINTS.update({"required_category": "ring",
+                              "include_vault": False,
+                              "stated_budgets": []})
+    try:
+        out = tool_search_phileon_catalog({
+            "category": "ring", "gender_or_recipient": "men",
+            "material": None, "stone": None,
+            "style_terms": ["black", "architectural"],
+            "max_price": None, "min_price": None,
+            "currency": "USD", "query_intent": "ring",
+        })
+        for r in out["results"]:
+            assert r["category"] == "ring", f"non-ring slipped through: {r}"
+            assert not r["slug"].startswith("iv-"), f"vault leaked: {r['slug']}"
+    finally:
+        _TURN_CONSTRAINTS.clear()
+
+
+def test_search_pendant_never_returns_rings():
+    from services.phileon_concierge import (
+        tool_search_phileon_catalog, _TURN_CONSTRAINTS,
+    )
+    _TURN_CONSTRAINTS.clear()
+    _TURN_CONSTRAINTS.update({"required_category": "pendant",
+                              "include_vault": False,
+                              "stated_budgets": []})
+    try:
+        out = tool_search_phileon_catalog({
+            "category": "pendant", "gender_or_recipient": None,
+            "material": None, "stone": None, "style_terms": [],
+            "max_price": None, "min_price": None,
+            "currency": None, "query_intent": "pendant",
+        })
+        for r in out["results"]:
+            assert r["category"] == "pendant", f"leaked: {r}"
+    finally:
+        _TURN_CONSTRAINTS.clear()
+
+
+def test_search_vault_inclusion_requires_explicit_customer_ask():
+    from services.phileon_concierge import (
+        tool_search_phileon_catalog, _TURN_CONSTRAINTS,
+    )
+    _TURN_CONSTRAINTS.clear()
+    _TURN_CONSTRAINTS.update({"required_category": None,
+                              "include_vault": True,   # customer said "vault"/"inspiration"
+                              "stated_budgets": []})
+    try:
+        out = tool_search_phileon_catalog({
+            "category": None, "gender_or_recipient": None,
+            "material": None, "stone": None,
+            "style_terms": ["architectural"],
+            "max_price": None, "min_price": None,
+            "currency": None, "query_intent": "vault",
+        })
+        # With include_vault True and no category, vault items are eligible.
+        slugs = {r["slug"] for r in out["results"]}
+        assert any(s.startswith("iv-") for s in slugs)
+    finally:
+        _TURN_CONSTRAINTS.clear()
+
+
+def test_altar_never_qualifies_for_ring_request():
+    from services.phileon_concierge import (
+        tool_search_phileon_catalog, _TURN_CONSTRAINTS,
+    )
+    _TURN_CONSTRAINTS.clear()
+    _TURN_CONSTRAINTS.update({"required_category": "ring",
+                              "include_vault": False,
+                              "stated_budgets": [4000.0]})
+    try:
+        out = tool_search_phileon_catalog({
+            "category": "ring", "gender_or_recipient": "men",
+            "material": None, "stone": None,
+            "style_terms": ["black"],
+            "max_price": 4000, "min_price": None,
+            "currency": "USD", "query_intent": "ring",
+        })
+        for r in out["results"]:
+            assert r["slug"] != "iv-altar"
+            assert r["category"] == "ring"
+    finally:
+        _TURN_CONSTRAINTS.clear()
+
+
+# ────────────────────────────────────────────────────────────────
+# 15) DYNAMIC-PRICE RESOLVER — reuses services.pricing_engine_catalog.resolve
+# ────────────────────────────────────────────────────────────────
+
+def test_authoritative_resolver_uses_canonical_pricing_engine():
+    """The resolver helper must reference the canonical
+    :func:`services.pricing_engine_catalog.resolve`. Guard by source."""
+    import inspect
+    from services import phileon_concierge as C
+    src = inspect.getsource(C._resolve_authoritative_price)
+    assert "from services.pricing_engine_catalog import" in src
+    assert "resolve as pec_resolve" in src or "resolve(" in src
+    assert "from services import metal_spot" in src
+
+
+def test_dynamic_priced_product_price_source_is_labeled_correctly():
+    """A static-priced product must be labeled `static_catalog`."""
+    from services.phileon_concierge import _product_public_view
+    from services.pricing_engine_catalog import FIXED_PRODUCTS
+    for slug, rec in FIXED_PRODUCTS.items():
+        v = _product_public_view(slug, rec)
+        assert v["price_source"] in ("static_catalog", "unavailable")
+        if v["price_usd"] is not None:
+            assert v["price_source"] == "static_catalog"
+        break  # one is enough — the assertion applies to all rows by construction

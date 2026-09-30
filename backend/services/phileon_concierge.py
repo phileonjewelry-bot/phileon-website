@@ -23,6 +23,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re as _re
 import time
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
@@ -62,34 +63,141 @@ def current_model() -> str:
 
 _CANONICAL_CATEGORIES = ["bracelet", "cuff", "earring", "pendant", "ring", "set", "vault"]
 
+# Server-derived customer-category parser. Reused across the tool
+# dispatcher for hard category enforcement.
+_CATEGORY_REGEX = _re.compile(
+    r"\b(bracelets?|cuffs?|earrings?|pendants?|rings?|sets?|"
+    r"necklaces?|chokers?|vault|inspiration)\b", _re.I,
+)
+_CATEGORY_MAP = {
+    "bracelet": "bracelet", "bracelets": "bracelet",
+    "cuff": "cuff", "cuffs": "cuff",
+    "earring": "earring", "earrings": "earring",
+    "pendant": "pendant", "pendants": "pendant",
+    "necklace": "pendant", "necklaces": "pendant", "choker": "pendant", "chokers": "pendant",
+    "ring": "ring", "rings": "ring",
+    "set": "set", "sets": "set",
+    "vault": "vault", "inspiration": "vault",
+}
+
+
+def derive_customer_constraints(message: str) -> Dict[str, Any]:
+    """Extract hard, server-authoritative constraints from the raw
+    customer message. Returns:
+        {"required_category": Optional[str], "include_vault": bool,
+         "stated_budgets": [float, ...]}
+    """
+    if not message:
+        return {"required_category": None, "include_vault": False, "stated_budgets": []}
+    req = None
+    include_vault = False
+    for m in _CATEGORY_REGEX.finditer(message):
+        cat = _CATEGORY_MAP.get(m.group(1).lower())
+        if not cat:
+            continue
+        if cat == "vault":
+            include_vault = True
+        elif req is None:
+            req = cat  # first specific category wins
+    # Stated numeric budgets — "$4000", "$4,000", "under 4000"
+    budgets = []
+    for m in _re.finditer(
+            r"(?:under|below|up to|max(?:imum)?|less than|about|around|budget of)?\s*"
+            r"[\$]?([0-9]{1,3}(?:[,\s][0-9]{3})+|[0-9]{2,})",
+            message, _re.I):
+        try:
+            val = float(m.group(1).replace(",", "").replace(" ", ""))
+        except ValueError:
+            continue
+        if 100 <= val <= 1_000_000:
+            budgets.append(val)
+    return {
+        "required_category": req,
+        "include_vault": include_vault,
+        "stated_budgets": budgets,
+    }
+
 
 def _all_products() -> Dict[str, Dict[str, Any]]:
-    from services.pricing_engine_catalog import FIXED_PRODUCTS
-    return FIXED_PRODUCTS
-
-
-def _product_price_view(rec: Dict[str, Any]) -> Dict[str, Any]:
-    """Return authoritative price fields from the PHILEON catalog when
-    available. Fail-closed to ``null`` when the product does not carry
-    a static customer-facing price (e.g. dynamic metal-spot rings).
-
-    The concierge NEVER computes a price. This helper only READS what
-    the pricing catalog already declares.
+    """Union of FIXED_PRODUCTS (static-priced) and PRICING_ENGINE_CATALOG
+    (dynamic-priced) — same slugs the site itself sells. Dynamic-priced
+    items are keyed by product_id and resolved via
+    :func:`_resolve_authoritative_price`.
     """
+    from services.pricing_engine_catalog import (
+        FIXED_PRODUCTS, PRICING_ENGINE_CATALOG,
+    )
+    merged: Dict[str, Dict[str, Any]] = {}
+    for slug, rec in FIXED_PRODUCTS.items():
+        merged[slug] = rec
+    for slug, rec in PRICING_ENGINE_CATALOG.items():
+        merged.setdefault(slug, rec)
+    return merged
+
+
+def _resolve_authoritative_price(slug: str, rec: Dict[str, Any]) -> Tuple[Optional[float], str]:
+    """Return (price_usd, price_source) using PHILEON's canonical
+    resolvers. ``price_source`` is one of:
+        "static_catalog"       — variants.default.price_usd (fixed products)
+        "live_phileon_pricing" — services.pricing_engine_catalog.resolve
+                                 (dynamic-priced pieces; USD read from
+                                 the resolved payload; NO arithmetic here)
+        "unavailable"          — no authoritative price obtainable.
+    NO model estimate. NO arithmetic approximation. NO invention.
+    """
+    # 1) Static catalog price.
     variants = rec.get("variants")
     if isinstance(variants, dict):
-        default = variants.get("default") or {}
-        if "price_usd" in default and isinstance(default["price_usd"], (int, float)):
-            return {
-                "price_usd": float(default["price_usd"]),
-                "currency": rec.get("currency") or "USD",
-                "price_availability": "authoritative",
-            }
-    # No static price in the catalog — do NOT infer or compute.
+        d = variants.get("default") or {}
+        p = d.get("price_usd")
+        if isinstance(p, (int, float)):
+            return float(p), "static_catalog"
+    # 2) Live resolver (reuses services.pricing_engine_catalog.resolve).
+    try:
+        from services.pricing_engine_catalog import (
+            resolve as pec_resolve, FIXED_PRODUCTS,
+        )
+        from services import metal_spot  # canonical trusted snapshot
+        # Dynamic-priced items live outside FIXED_PRODUCTS; we only call
+        # the resolver in that case (fixed items already handled above).
+        if slug in FIXED_PRODUCTS:
+            return None, "unavailable"
+        snap = metal_spot.get_spot()
+        # Live rings require a ring_size; we pass a canonical default so
+        # the resolver returns a representative concierge quote. This is
+        # server-side, no user input, no estimate.
+        for candidate_size in ("7", None):
+            try:
+                r = pec_resolve(slug, tier_key=None, ring_size=candidate_size,
+                                quantity=1, market_snapshot=snap)
+                usd = r.get("usd") or r.get("price_usd") or r.get("amount_usd")
+                if isinstance(usd, (int, float)):
+                    return float(usd), "live_phileon_pricing"
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return None, "unavailable"
+
+
+def _product_price_view(rec: Dict[str, Any], slug: str = "") -> Dict[str, Any]:
+    """Return authoritative price fields using PHILEON's canonical
+    resolvers via :func:`_resolve_authoritative_price`. Fail-closed to
+    ``null`` when no authoritative price is obtainable.
+    """
+    price, source = _resolve_authoritative_price(slug, rec)
+    if price is not None:
+        return {
+            "price_usd": float(price),
+            "currency": rec.get("currency") or "USD",
+            "price_availability": "authoritative",
+            "price_source": source,   # "static_catalog" | "live_phileon_pricing"
+        }
     return {
         "price_usd": None,
         "currency": rec.get("currency"),
         "price_availability": "quote_on_product_page",
+        "price_source": "unavailable",
     }
 
 
@@ -97,20 +205,12 @@ def _product_public_view(slug: str, rec: Dict[str, Any]) -> Dict[str, Any]:
     """Project a catalog record into the safe, VERIFIED-only shape the
     concierge tool returns. Never invents fields the catalog does not
     have; missing values are surfaced explicitly as ``null``.
-
-    Return schema (contract — see the audit report for the enumeration):
-        slug, name, category, currency, price_usd, price_availability,
-        material (from catalog ``metal_label`` when present, else null),
-        stone (null — PHILEON does not currently track structured stone
-        metadata in this catalog),
-        size_profile, needs_size, allow_engraving, description,
-        image_url, product_path, availability_status.
     """
     subtitle = rec.get("subtitle")
     variants = rec.get("variants") or {}
     default = variants.get("default") or {}
     metal_label = default.get("metal_label") if isinstance(default, dict) else None
-    price = _product_price_view(rec)
+    price = _product_price_view(rec, slug=slug)
     return {
         "slug": slug,
         "name": rec.get("product_name") or slug,
@@ -118,14 +218,15 @@ def _product_public_view(slug: str, rec: Dict[str, Any]) -> Dict[str, Any]:
         "currency": price["currency"],
         "price_usd": price["price_usd"],
         "price_availability": price["price_availability"],
+        "price_source": price["price_source"],
         "material": metal_label if metal_label else None,
-        "stone": None,  # not tracked structurally in catalog v1
+        "stone": None,
         "description": subtitle if subtitle else None,
-        "image_url": None,  # not tracked in catalog; product page is canonical
+        "image_url": None,
         "size_profile": rec.get("size_profile"),
         "needs_size": bool(rec.get("needs_size")),
         "allow_engraving": bool(rec.get("allow_engraving")) if "allow_engraving" in rec else None,
-        "availability_status": None,  # PHILEON tracks availability elsewhere; do not infer
+        "availability_status": None,
         "product_path": f"/product/{slug}",
     }
 
@@ -148,18 +249,17 @@ def _score_match(rec: Dict[str, Any], *, category: Optional[str],
     return score
 
 
-def _price_in_range(rec: Dict[str, Any], *,
+def _price_in_range(rec: Dict[str, Any], slug: str, *,
                     max_price: Optional[float],
                     min_price: Optional[float]) -> Optional[bool]:
     """Return True/False if catalog carries an authoritative price and
-    it satisfies the range. Return ``None`` when the catalog does not
-    expose a static price for this product (dynamic ring, etc.) — the
-    filter then treats it as INDETERMINATE and skips the record when a
-    budget is set (fail-closed: never claim a price a product might not
-    have)."""
+    it satisfies the range. Return ``None`` when no authoritative price
+    is obtainable — the filter then treats it as INDETERMINATE and
+    skips the record when a budget is set (fail-closed).
+    """
     if max_price is None and min_price is None:
         return True
-    pv = _product_price_view(rec)
+    pv = _product_price_view(rec, slug=slug)
     p = pv["price_usd"]
     if p is None:
         return None
@@ -168,6 +268,14 @@ def _price_in_range(rec: Dict[str, Any], *,
     if min_price is not None and p < float(min_price):
         return False
     return True
+
+
+# Per-turn server-derived hard constraints — populated by run_turn().
+_TURN_CONSTRAINTS: Dict[str, Any] = {}
+
+
+def _slug_is_vault(slug: str) -> bool:
+    return bool(slug) and slug.startswith("iv-")
 
 
 # ────────────────────────────────────────────────────────────────
@@ -273,6 +381,59 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
                          "budget", "requested_timeline"],
         },
     },
+    {
+        # Structured FINAL answer. The model MUST call this to end the
+        # turn. Server validates + renders the customer-visible reply.
+        "type": "function",
+        "name": "deliver_answer",
+        "description": (
+            "Emit the final structured concierge answer. This is how "
+            "you conclude the turn. Never state a price in `message` "
+            "that is not also present as a recommendation.price.amount, "
+            "or as the customer's own budget."),
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "message": {"type": "string"},
+                "budget_acknowledgement": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "amount":   {"type": ["number", "null"]},
+                        "currency": {"type": ["string", "null"]},
+                    },
+                    "required": ["amount", "currency"],
+                },
+                "recommendations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "slug":   {"type": "string"},
+                            "reason": {"type": "string"},
+                            "price": {
+                                "type": "object",
+                                "additionalProperties": False,
+                                "properties": {
+                                    "amount":   {"type": ["number", "null"]},
+                                    "currency": {"type": ["string", "null"]},
+                                },
+                                "required": ["amount", "currency"],
+                            },
+                        },
+                        "required": ["slug", "reason", "price"],
+                    },
+                },
+                "no_match":        {"type": "boolean"},
+                "no_match_reason": {"type": ["string", "null"]},
+            },
+            "required": ["message", "budget_acknowledgement",
+                         "recommendations", "no_match", "no_match_reason"],
+        },
+    },
 ]
 
 
@@ -285,20 +446,35 @@ _MAX_SEARCH_RESULTS = 6
 
 def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
     products = _all_products()
-    category = args.get("category")
+    model_category = (args.get("category") or "").strip().lower() or None
     style_terms = args.get("style_terms") or []
     max_price = args.get("max_price")
     min_price = args.get("min_price")
+
+    # HARD SERVER CONSTRAINTS — override model arguments where set.
+    required_category = _TURN_CONSTRAINTS.get("required_category")
+    include_vault = bool(_TURN_CONSTRAINTS.get("include_vault"))
+    effective_category = required_category or model_category
+
     scored: List[Tuple[int, str, Dict[str, Any]]] = []
     for slug, rec in products.items():
-        s = _score_match(rec, category=category, style_terms=style_terms,
+        rec_cat = (rec.get("category") or "").lower()
+        # VAULT EXCLUSION by default.
+        if not include_vault and (rec_cat == "vault" or _slug_is_vault(slug)):
+            continue
+        # HARD CATEGORY FILTER — customer's requested category wins.
+        if effective_category:
+            if rec_cat != effective_category:
+                continue
+            if rec_cat == "unknown":
+                continue
+
+        s = _score_match(rec, category=effective_category, style_terms=style_terms,
                          max_price=max_price, min_price=min_price)
-        cat_match = bool(category) and (rec.get("category") or "").lower() == (category or "").lower()
+        cat_match = bool(effective_category) and rec_cat == effective_category
         if s <= 0 and not cat_match:
             continue
-        # Server-side price gate — fail-closed when catalog price unknown
-        # and a budget was set.
-        pr = _price_in_range(rec, max_price=max_price, min_price=min_price)
+        pr = _price_in_range(rec, slug, max_price=max_price, min_price=min_price)
         if pr is False:
             continue
         if pr is None and (max_price is not None or min_price is not None):
@@ -310,11 +486,14 @@ def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "results": results,
         "result_count": len(results),
-        "price_source": "PHILEON_pricing_catalog",
-        "note": ("Prices returned here are authoritative catalog values. "
-                 "If a product has no static price (dynamic metal-spot "
-                 "pieces), it is omitted from budget-filtered searches. "
-                 "The product page remains the canonical checkout price."),
+        "price_source_note": "each result carries `price_source`: static_catalog / live_phileon_pricing / unavailable",
+        "server_constraints": {
+            "required_category": required_category,
+            "include_vault": include_vault,
+        },
+        "note": ("Prices come from PHILEON's canonical resolvers. Products "
+                 "with no authoritative price are omitted from budget "
+                 "searches. If zero results, honestly state no match."),
     }
 
 
@@ -407,7 +586,8 @@ Hard rules — you MUST NEVER:
 If a piece of information is not in a tool result, say the information is not available and offer the appropriate PHILEON page or the custom-inquiry path. Do not fabricate.
 
 Keep replies short and elegant. Prefer 3 concise recommendations over long lists. Always link customers to the product page for authoritative pricing.
-"""
+
+END-OF-TURN CONTRACT — call the `deliver_answer` function to conclude every turn. Its arguments carry your structured final answer: `message` (the natural-language wrap-up, MUST NOT include any dollar figure that is not either the customer's stated budget or a recommendation.price.amount), `budget_acknowledgement` (only if the customer stated a budget in this turn), `recommendations` (each with a slug that came from a catalog/product tool result and an authoritative price), `no_match` and `no_match_reason` when nothing qualifies. Do NOT emit a plain-text message without calling `deliver_answer`. The server renders the customer-visible text from your structured payload."""
 
 
 # ────────────────────────────────────────────────────────────────
@@ -438,7 +618,6 @@ MAX_TOOL_LOOPS = 4
 # lack matching evidence and rewrites those replies into a safe
 # fallback. This is defense-in-depth: instruction-only guarantees are
 # not sufficient authority for PHILEON facts.
-import re as _re
 
 
 class EvidenceLedger:
@@ -462,9 +641,15 @@ class EvidenceLedger:
         self.product_names: set = set()
         # (price_usd, currency) pairs actually returned this turn.
         self.prices: List[Tuple[float, str]] = []
+        # slug -> authoritative price_usd (for structured recommendation check)
+        self.slug_price: Dict[str, Optional[float]] = {}
         # topic -> canonical summary text
         self.policies: Dict[str, str] = {}
         self.custom_guidance: bool = False
+        # Server-derived hard constraints, populated by run_turn.
+        self.stated_budgets: List[float] = []
+        self.required_category: Optional[str] = None
+        self.include_vault: bool = False
 
     # ── recorders ──
     def record_search(self, args: Dict[str, Any], out: Dict[str, Any]):
@@ -499,6 +684,10 @@ class EvidenceLedger:
         currency = str(p.get("currency") or "").upper().strip()
         if isinstance(price, (int, float)):
             self.prices.append((float(price), currency or "USD"))
+            if slug:
+                self.slug_price[slug] = float(price)
+        elif slug:
+            self.slug_price[slug] = None
 
     # ── verifier helpers ──
     _PRICE_RE = _re.compile(
@@ -509,6 +698,92 @@ class EvidenceLedger:
 
     def _has_price_evidence(self, price_usd: float) -> bool:
         return any(abs(p - price_usd) < 0.01 for p, _ in self.prices)
+
+    def _is_customer_budget_number(self, value: float) -> bool:
+        """Numbers explicitly stated by the customer as a budget or
+        constraint in THIS turn are not PHILEON factual claims."""
+        return any(abs(value - b) < 0.01 for b in self.stated_budgets)
+
+    def verify_structured(self, answer: Dict[str, Any]) -> Tuple[bool, str]:
+        """Validate a structured deliver_answer payload against the
+        ledger. Applies:
+            * budget_acknowledgement.amount must be one of stated_budgets or null
+            * every recommendation.slug must be in the ledger
+            * recommendation.price.amount must equal ledger's slug_price
+              or be null (never a fabricated number)
+            * every recommendation slug's category must match the
+              required_category (if any) — server-side, non-negotiable
+            * `message` free-form must not contain any $ figure that is
+              not either a stated_budget or a recommendation price.
+        """
+        if not isinstance(answer, dict):
+            return False, "MALFORMED_STRUCTURED_ANSWER"
+
+        # 1) Budget acknowledgement
+        b = (answer.get("budget_acknowledgement") or {})
+        bamt = b.get("amount")
+        if bamt is not None:
+            if not isinstance(bamt, (int, float)) or not self._is_customer_budget_number(float(bamt)):
+                return False, "BUDGET_ACK_NOT_FROM_CUSTOMER"
+
+        # 2) Recommendations
+        recs = answer.get("recommendations") or []
+        if not isinstance(recs, list):
+            return False, "MALFORMED_RECOMMENDATIONS"
+        for i, r in enumerate(recs):
+            slug = str((r or {}).get("slug") or "").strip().lower()
+            if slug not in self.product_slugs:
+                return False, f"RECOMMENDATION_SLUG_NOT_IN_LEDGER:{slug or '?'}"
+            price = (r.get("price") or {}) if isinstance(r, dict) else {}
+            amt = price.get("amount")
+            authoritative = self.slug_price.get(slug)
+            if amt is None:
+                # OK — customer will be told to check the product page.
+                pass
+            elif not isinstance(amt, (int, float)):
+                return False, f"RECOMMENDATION_PRICE_INVALID:{slug}"
+            elif authoritative is None:
+                return False, f"RECOMMENDATION_PRICE_WITHOUT_AUTHORITY:{slug}"
+            elif abs(float(amt) - float(authoritative)) > 0.01:
+                return False, f"RECOMMENDATION_PRICE_MISMATCH:{slug}"
+            # Hard category enforcement — reject recommendations that
+            # do not match the customer's stated category (if any).
+            if self.required_category:
+                try:
+                    from services.pricing_engine_catalog import (
+                        FIXED_PRODUCTS, PRICING_ENGINE_CATALOG,
+                    )
+                    rec_cat = (
+                        (FIXED_PRODUCTS.get(slug) or PRICING_ENGINE_CATALOG.get(slug) or {})
+                        .get("category") or ""
+                    ).lower()
+                except Exception:
+                    rec_cat = ""
+                if rec_cat != self.required_category:
+                    return False, f"RECOMMENDATION_CATEGORY_MISMATCH:{slug}"
+
+        # 3) message free-form price scan — every $ figure must be
+        # either a customer budget or a recommendation price.
+        msg = str(answer.get("message") or "")
+        rec_prices = {float(r["price"]["amount"])
+                      for r in recs
+                      if isinstance(r, dict)
+                      and isinstance((r.get("price") or {}).get("amount"), (int, float))}
+        for m in self._PRICE_RE.finditer(msg):
+            raw = m.group(1).replace(",", "").replace(" ", "")
+            try:
+                val = float(raw)
+            except ValueError:
+                continue
+            if val < 10:
+                continue
+            if self._is_customer_budget_number(val):
+                continue
+            if any(abs(val - p) < 0.01 for p in rec_prices):
+                continue
+            return False, f"UNSUPPORTED_PRICE_IN_MESSAGE:{val}"
+
+        return True, "ok"
 
     def verify(self, reply: str) -> Tuple[bool, str]:
         """Return (ok, reason). If ok=False, the reply must be replaced
@@ -524,6 +799,9 @@ class EvidenceLedger:
                 continue
             if val < 10:
                 # Ignore "$0" or tiny values; those aren't real product prices.
+                continue
+            # Skip numbers the customer themselves supplied as a budget.
+            if self._is_customer_budget_number(val):
                 continue
             if not self._has_price_evidence(val):
                 return False, f"UNSUPPORTED_PRICE:{val}"
@@ -582,6 +860,50 @@ UNSUPPORTED_FALLBACK = (
     "Please check the relevant product page or the PHILEON FAQ, or ask "
     "me another question I can look up."
 )
+
+
+def _render_structured_answer(answer: Dict[str, Any], ledger) -> str:
+    """Render the customer-visible reply DETERMINISTICALLY from the
+    structured deliver_answer payload. Prices are inserted only from
+    the recommendation.price fields — never from `message` free text.
+    """
+    lines: List[str] = []
+    msg = str(answer.get("message") or "").strip()
+    if msg:
+        lines.append(msg)
+    recs = answer.get("recommendations") or []
+    if recs:
+        for r in recs:
+            if not isinstance(r, dict):
+                continue
+            slug = str(r.get("slug") or "").strip()
+            reason = str(r.get("reason") or "").strip()
+            price = (r.get("price") or {}) if isinstance(r, dict) else {}
+            amt = price.get("amount")
+            cur = str(price.get("currency") or "USD").upper()
+            # Prefer the ledger's authoritative price if available.
+            auth = ledger.slug_price.get(slug.lower()) if slug else None
+            display_amt = auth if isinstance(auth, (int, float)) else (
+                amt if isinstance(amt, (int, float)) else None)
+            head = f"• {slug}"
+            if reason:
+                head += f" — {reason}"
+            if display_amt is not None:
+                head += f" ({cur} {display_amt:,.2f})"
+            else:
+                head += " (price on the product page)"
+            head += f"  /product/{slug}"
+            lines.append(head)
+    if bool(answer.get("no_match")):
+        r = str(answer.get("no_match_reason") or "").strip()
+        lines.append(
+            r or "No PHILEON product currently matches every constraint — "
+            "would you like to relax one of them or explore custom?"
+        )
+    if not lines:
+        return ("I'm here to help you find something at PHILEON. "
+                "Could you tell me a little more about what you're looking for?")
+    return "\n\n".join(lines)
 
 
 def _sanitize_history(prior: Optional[List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
@@ -676,6 +998,16 @@ async def run_turn(
 
     tool_calls_used = 0
     ledger = EvidenceLedger()
+    # Populate per-turn server-derived constraints from the customer's
+    # own message. These CANNOT be relaxed by the model.
+    constraints = derive_customer_constraints(message)
+    ledger.stated_budgets = list(constraints["stated_budgets"])
+    ledger.required_category = constraints["required_category"]
+    ledger.include_vault = constraints["include_vault"]
+    _TURN_CONSTRAINTS.clear()
+    _TURN_CONSTRAINTS.update(constraints)
+    # Tool trace for supervised/admin debug — never returned publicly.
+    tool_trace: List[Dict[str, Any]] = []
     t0 = time.perf_counter()
     try:
         for _loop in range(MAX_TOOL_LOOPS):
@@ -691,6 +1023,7 @@ async def run_turn(
             # Responses API surfaces function calls in `resp.output`.
             new_items: List[Dict[str, Any]] = []
             tool_results: List[Dict[str, Any]] = []
+            structured_final: Optional[Dict[str, Any]] = None
             for item in getattr(resp, "output", []) or []:
                 itype = getattr(item, "type", None)
                 if itype == "function_call":
@@ -702,13 +1035,20 @@ async def run_turn(
                         args = json.loads(raw_args) if isinstance(raw_args, str) else (raw_args or {})
                     except Exception:
                         args = {}
+                    # deliver_answer is the FINAL structured answer — it
+                    # never executes a dispatcher; it terminates the loop.
+                    if name == "deliver_answer":
+                        structured_final = args if isinstance(args, dict) else {}
+                        tool_trace.append({"tool": "deliver_answer",
+                                           "args": structured_final,
+                                           "output": None})
+                        continue
                     dispatcher = TOOL_DISPATCH.get(name)
                     if not dispatcher:
                         tool_out = {"error": "UNKNOWN_TOOL", "name": name}
                     else:
                         try:
                             tool_out = dispatcher(args)
-                            # Record ledger evidence for successful calls.
                             if name == "search_phileon_catalog":
                                 ledger.record_search(args, tool_out)
                             elif name == "get_phileon_product":
@@ -721,8 +1061,8 @@ async def run_turn(
                             log.warning("concierge tool %s error: %s: %s",
                                         name, type(exc).__name__, exc)
                             tool_out = {"error": "TOOL_INTERNAL_ERROR"}
-                    # Keep the function_call itself in the next turn's input,
-                    # and add the matching function_call_output.
+                    tool_trace.append({"tool": name, "args": args,
+                                       "output": tool_out})
                     new_items.append({
                         "type": "function_call",
                         "call_id": call_id,
@@ -735,6 +1075,39 @@ async def run_turn(
                         "call_id": call_id,
                         "output": json.dumps(tool_out),
                     })
+
+            # If the model emitted a structured final, validate + render.
+            if structured_final is not None and not tool_results:
+                ok, reason = ledger.verify_structured(structured_final)
+                evidence_block_reason: Optional[str] = None
+                if not ok:
+                    evidence_block_reason = reason
+                    reply_text = UNSUPPORTED_FALLBACK
+                    log.warning("concierge evidence guard blocked structured reply: %s", reason)
+                else:
+                    reply_text = _render_structured_answer(structured_final, ledger)
+                elapsed = (time.perf_counter() - t0) * 1000
+                STATS.record(ok=True, latency_ms=elapsed,
+                             tool_calls=tool_calls_used,
+                             evidence_blocked=bool(evidence_block_reason))
+                return {
+                    "status": "ok",
+                    "reply": reply_text[:4000],
+                    "tool_calls_used": tool_calls_used,
+                    "model": model,
+                    "latency_ms": round(elapsed, 1),
+                    "_internal_evidence": {
+                        "tools_called": [n for n, _ in ledger.tools_called],
+                        "policy_topics": sorted(ledger.policies.keys()),
+                        "product_slugs": sorted(ledger.product_slugs),
+                        "custom_guidance": ledger.custom_guidance,
+                        "required_category": ledger.required_category,
+                        "include_vault": ledger.include_vault,
+                        "stated_budgets": list(ledger.stated_budgets),
+                        "blocked_reason": evidence_block_reason,
+                        "tool_trace": tool_trace,
+                    },
+                }
 
             if tool_results:
                 # Continue the reasoning loop with the tool outputs appended.
