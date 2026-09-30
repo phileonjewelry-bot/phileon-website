@@ -259,6 +259,10 @@ def test_I_needs_configuration_reply_leaks_no_internal_vocab():
     L = _fresh_ledger(active_budget=4000.0, active_category="ring",
                       candidate_slugs=["veyron-noir"])
     L.candidate_missing_inputs["veyron-noir"] = ["ring_size", "tier_key"]
+    L.candidate_option_labels["veyron-noir"] = {
+        "tier_key": ["Sterling Silver", "10K Gold", "14K Gold", "18K Gold"],
+        "ring_size": ["4", "5", "6", "7", "8", "9", "10", "11"],
+    }
     text = _render_structured_answer({
         "outcome": "NEEDS_CONFIGURATION",
         "message": "",
@@ -272,9 +276,8 @@ def test_I_needs_configuration_reply_leaks_no_internal_vocab():
     low = text.lower()
     for term in _BANNED_CUSTOMER_TERMS:
         assert term.lower() not in low, f"leaked: {term} in {text!r}"
-    # Positive check: customer sees natural jewelry vocabulary.
+    # One-question-at-a-time: ring size FIRST, not metal.
     assert "ring size" in low
-    assert "metal" in low
     assert "custom jewelry" in low
 
 
@@ -568,3 +571,314 @@ def test_needs_configuration_cannot_have_recommendations():
     })
     assert not ok
     assert reason == "NEEDS_CONFIG_HAS_RECOMMENDATIONS"
+
+
+# ═════════════════════════════════════════════════════════════════
+# UX PATCH — Configuration Recovery corrections
+# ═════════════════════════════════════════════════════════════════
+
+# ── H. tier_key with pure metal options → question may say "metal"
+def test_H_pure_metal_options_render_metal_question():
+    L = _fresh_ledger(active_budget=4000.0, active_category="ring",
+                      candidate_slugs=["veyron-noir"])
+    L.active_ring_size = "9"
+    L.is_first_config_turn = False
+    # Ring size already supplied (removed from missing). Only tier_key
+    # remains — all options are pure metal.
+    L.candidate_missing_inputs["veyron-noir"] = ["tier_key"]
+    L.candidate_option_labels["veyron-noir"] = {
+        "tier_key": ["Sterling Silver", "10K Gold", "14K Gold", "18K Gold"],
+    }
+    action = L.next_action()
+    assert action["kind"] == "metal", action
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": ["veyron-noir"],
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    low = text.lower()
+    assert "which metal" in low, text
+    assert "tier_key" not in low
+    # Intermediate turn: NO custom-jewelry invitation.
+    assert "custom jewelry" not in low
+
+
+# ── I. tier options containing Foundation/Signature/Home/Away → NOT "metal"
+def test_I_non_metal_tier_semantics_do_not_render_metal_question():
+    L = _fresh_ledger(active_budget=None, active_category="ring",
+                      candidate_slugs=["apex"])
+    L.active_ring_size = "9"
+    L.is_first_config_turn = False
+    L.candidate_missing_inputs["apex"] = ["tier_key"]
+    L.candidate_option_labels["apex"] = {
+        "tier_key": ["Core — 10K Gold", "Foundation — 10K Gold",
+                      "Signature — 14K Gold", "Heirloom — 18K Gold"],
+    }
+    action = L.next_action()
+    assert action["kind"] == "choose_product", action
+    # Only one surviving candidate → the question names it.
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": None, "currency": None},
+        "recommendations": [],
+        "candidate_slugs": ["apex"],
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    low = text.lower()
+    assert "which metal" not in low
+    assert "foundation" not in low
+    assert "signature" not in low
+
+
+# ── J. Candidate option sets incompatible across products → choose_product
+def test_J_incompatible_option_sets_force_choose_product():
+    L = _fresh_ledger(active_budget=4000.0, active_category="ring",
+                      candidate_slugs=["apex", "veyron-noir"])
+    L.active_ring_size = "9"
+    L.candidate_missing_inputs["apex"] = ["tier_key"]
+    L.candidate_missing_inputs["veyron-noir"] = ["tier_key"]
+    L.candidate_option_labels["apex"] = {
+        "tier_key": ["Core — 10K Gold", "Foundation — 10K Gold",
+                      "Signature — 14K Gold", "Heirloom — 18K Gold"],
+    }
+    L.candidate_option_labels["veyron-noir"] = {
+        "tier_key": ["Sterling Silver", "10K Gold", "14K Gold", "18K Gold"],
+    }
+    action = L.next_action()
+    assert action["kind"] == "choose_product"
+    assert set(n.upper() for n in action["candidates"]) & {"APEX", "VEYRON NOIR"}
+
+
+# ── K. No common missing-field intersection → choose_product
+def test_K_no_intersection_forces_choose_product():
+    L = _fresh_ledger(active_budget=None, active_category="ring",
+                      candidate_slugs=["bamburgh", "boss-knot"])
+    # bamburgh needs ring_size + tier_key; boss-knot needs only tier_key.
+    L.candidate_missing_inputs["bamburgh"] = ["ring_size", "tier_key"]
+    L.candidate_missing_inputs["boss-knot"] = ["tier_key"]
+    L.candidate_option_labels["bamburgh"] = {"tier_key": ["Foundation — 14K Gold"]}
+    L.candidate_option_labels["boss-knot"] = {"tier_key": ["Sterling Silver", "10K Gold"]}
+    # Intersection is {tier_key} but bamburgh's tier options have
+    # non-metal semantics — not safe to ask "which metal" generically.
+    action = L.next_action()
+    assert action["kind"] == "choose_product"
+
+
+# ── L. Follow-up "9.5" reconstructs candidate evidence from history
+def test_L_follow_up_extracts_ring_size_from_history():
+    # Turn 1 sets context; Turn 2 message is just "9.5".
+    c = active_customer_constraints(
+        ["I'm looking for a men's ring under $4,000."], "9.5",
+    )
+    assert c["active_category"] == "ring"
+    assert c["active_recipient"] == "men"
+    assert c["active_budget"] == 4000.0
+    assert c["active_ring_size"] == "9.5"
+
+
+def test_L_bare_size_only_still_extracted():
+    c = active_customer_constraints([], "9.5")
+    assert c["active_ring_size"] == "9.5"
+    # No other constraints leaked from a bare number.
+    assert c["active_recipient"] is None
+    assert c["active_category"] is None
+
+
+# ── M. resolve_configured_price rejects a slug not authorized this turn
+def test_M_unauthorized_slug_rejected():
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[4000.0])
+    _TURN_CONSTRAINTS["authorized_slugs"] = {"veyron-noir"}
+    try:
+        r = tool_resolve_configured_price({
+            "slug": "apex", "ring_size": "9",
+            "tier_key": "signature", "wrist_size": None,
+        })
+    finally:
+        _TURN_CONSTRAINTS.clear()
+    assert r.get("error") == "SLUG_NOT_AUTHORIZED_THIS_TURN"
+
+
+def test_M_authorized_slug_still_resolves():
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[4000.0])
+    _TURN_CONSTRAINTS["authorized_slugs"] = {"veyron-noir"}
+    try:
+        r = tool_resolve_configured_price({
+            "slug": "veyron-noir", "ring_size": "9",
+            "tier_key": "silver", "wrist_size": None,
+        })
+    finally:
+        _TURN_CONSTRAINTS.clear()
+    assert "error" not in r, r
+    assert r["price_usd"] == 1450.0
+
+
+# ── N. Explicit men's request excludes ladies + unknown recipient profiles
+def test_N_recipient_filter_excludes_ladies_and_unknown():
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[4000.0])
+    _TURN_CONSTRAINTS["active_recipient"] = "men"
+    try:
+        out = tool_search_phileon_catalog({
+            "category": "ring", "gender_or_recipient": "men",
+            "material": None, "stone": None,
+            "style_terms": ["statement", "dark", "black"],
+            "max_price": 4000, "min_price": None,
+            "currency": "USD", "query_intent": "men's ring",
+        })
+    finally:
+        _TURN_CONSTRAINTS.clear()
+    # wynette-palette is a ladies-profile ring → must be filtered out.
+    slugs = {c["slug"] for c in out["unresolved_candidates"]} | {
+        r["slug"] for r in out["results"]}
+    assert "wynette-palette" not in slugs, slugs
+    # gents + unisex candidates must survive.
+    assert any(s in slugs for s in ("apex", "bound", "morso",
+                                     "the-don-gorgon", "veyron-noir"))
+
+
+def test_N_recipient_persists_across_turns():
+    c = active_customer_constraints(
+        ["I want a men's ring under $4,000."], "9.5",
+    )
+    assert c["active_recipient"] == "men"
+    # Explicit correction wins.
+    c2 = active_customer_constraints(
+        ["I want a men's ring under $4,000.", "9.5"],
+        "Actually make it for her.",
+    )
+    assert c2["active_recipient"] == "women"
+
+
+# ── O. Custom-jewelry invitation NOT repeated on intermediate follow-up turns
+def test_O_no_custom_invite_on_intermediate_turn():
+    L = _fresh_ledger(active_budget=4000.0, active_category="ring",
+                      candidate_slugs=["veyron-noir"])
+    L.active_ring_size = "9"
+    L.is_first_config_turn = False
+    L.candidate_missing_inputs["veyron-noir"] = ["tier_key"]
+    L.candidate_option_labels["veyron-noir"] = {
+        "tier_key": ["Sterling Silver", "10K Gold", "14K Gold"],
+    }
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": ["veyron-noir"],
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    low = text.lower()
+    assert "custom jewelry" not in low
+    assert "/custom-jewelry" not in low
+
+
+def test_O_custom_invite_present_on_first_config_turn():
+    L = _fresh_ledger(active_budget=4000.0, active_category="ring",
+                      candidate_slugs=["veyron-noir"])
+    L.is_first_config_turn = True
+    L.candidate_missing_inputs["veyron-noir"] = ["ring_size", "tier_key"]
+    L.candidate_option_labels["veyron-noir"] = {
+        "tier_key": ["Sterling Silver", "10K Gold"],
+        "ring_size": ["4", "5", "6", "7", "8", "9"],
+    }
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": ["veyron-noir"],
+        "missing_inputs": ["ring_size", "tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    assert "PHILEON Custom Jewelry" in text or "custom jewelry" in text.lower()
+
+
+# ── Original scenario asks ONLY for ring size on turn 1 ─────────────
+def test_UX_A_original_scenario_asks_only_ring_size_first():
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[4000.0])
+    _TURN_CONSTRAINTS["active_recipient"] = "men"
+    L = _fresh_ledger(active_budget=4000.0, active_category="ring",
+                      stated_budgets=[4000.0])
+    L.active_recipient = "men"
+    L.is_first_config_turn = True
+    try:
+        out = tool_search_phileon_catalog({
+            "category": "ring", "gender_or_recipient": "men",
+            "material": None, "stone": "black",
+            "style_terms": ["statement", "dark", "non-traditional"],
+            "max_price": 4000, "min_price": None,
+            "currency": "USD",
+            "query_intent": "men's dark statement ring",
+        })
+    finally:
+        _TURN_CONSTRAINTS.clear()
+    L.record_search({}, out)
+    # wynette-palette is ladies — must not appear.
+    assert "wynette-palette" not in L.candidate_slugs
+    action = L.next_action()
+    # All surviving candidates require ring_size — pick that first.
+    assert action["kind"] == "ring_size", action
+
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": sorted(L.candidate_slugs),
+        "missing_inputs": ["ring_size"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    low = text.lower()
+    # Exactly ONE question mark for the follow-up (config question).
+    assert text.count("?") == 1, text
+    # Ring size mentioned; NO metal question on turn 1.
+    assert "ring size" in low
+    assert "which metal" not in low
+    # Budget echoed as customer's own number.
+    assert "$4,000" in text
+
+
+# ── Model message cannot inject duplicate config questions
+def test_UX_D_model_message_does_not_create_duplicate_questions():
+    L = _fresh_ledger(active_budget=4000.0, active_category="ring",
+                      candidate_slugs=["veyron-noir", "apex"])
+    L.is_first_config_turn = True
+    L.candidate_missing_inputs["veyron-noir"] = ["ring_size", "tier_key"]
+    L.candidate_missing_inputs["apex"] = ["ring_size", "tier_key"]
+    L.candidate_option_labels["veyron-noir"] = {
+        "ring_size": ["7", "8", "9", "10"],
+        "tier_key": ["Sterling Silver", "10K Gold"],
+    }
+    L.candidate_option_labels["apex"] = {
+        "ring_size": ["7", "8", "9", "10"],
+        "tier_key": ["Foundation — 10K Gold", "Signature — 14K Gold"],
+    }
+    # Model attempts to inject a metal question inside `message` — must
+    # be ignored by the deterministic renderer.
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "Please share your ring size and metal — silver, 10K, "
+                   "or 14K yellow gold? Also which finish?",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": ["veyron-noir", "apex"],
+        "missing_inputs": ["ring_size", "tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    # Server ignored the model's question and asked ONLY ring_size.
+    assert text.count("?") == 1, text
+    assert "which metal" not in text.lower()
+    assert "which finish" not in text.lower()
+    assert "10K yellow gold" not in text

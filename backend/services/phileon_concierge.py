@@ -80,13 +80,55 @@ _CATEGORY_MAP = {
     "vault": "vault", "inspiration": "vault",
 }
 
+# Explicit recipient tokens ONLY — no inference from product names.
+_RECIPIENT_MEN_RE = _re.compile(
+    r"\b(men|men'?s|mens|male|gentleman|for\s+him)\b", _re.I,
+)
+_RECIPIENT_WOMEN_RE = _re.compile(
+    r"\b(women|women'?s|womens|female|ladies|lady|for\s+her)\b", _re.I,
+)
+_RECIPIENT_UNISEX_RE = _re.compile(r"\bunisex\b", _re.I)
+
+# Ring sizes we accept from a customer follow-up. Matches "size 9.5",
+# "US 9.5", or a bare token that is clearly a size (whole/half number
+# from 4 to 15 inclusive).
+_SIZE_LABEL_RE = _re.compile(
+    r"\b(?:size|us|ring\s*size)\s*(1[0-5](?:\.5)?|[4-9](?:\.5)?)\b", _re.I,
+)
+_BARE_SIZE_RE = _re.compile(r"^\s*(1[0-5](?:\.5)?|[4-9](?:\.5)?)\s*\.?\s*$")
+
+
+def _extract_recipient(message: str) -> Optional[str]:
+    if not message:
+        return None
+    if _RECIPIENT_UNISEX_RE.search(message):
+        return "unisex"
+    if _RECIPIENT_MEN_RE.search(message):
+        return "men"
+    if _RECIPIENT_WOMEN_RE.search(message):
+        return "women"
+    return None
+
+
+def _extract_ring_size(message: str) -> Optional[str]:
+    if not message:
+        return None
+    m = _SIZE_LABEL_RE.search(message)
+    if m:
+        return m.group(1)
+    m = _BARE_SIZE_RE.match(message)
+    if m:
+        return m.group(1)
+    return None
+
 
 def _extract_from_single_message(message: str) -> Dict[str, Any]:
-    """Extract raw category, vault-hint and numeric budgets from ONE
-    customer message. No conversational recency logic — that lives in
-    :func:`active_customer_constraints`."""
+    """Extract raw category, vault-hint, numeric budgets, recipient,
+    and ring-size from ONE customer message. No conversational recency
+    logic — that lives in :func:`active_customer_constraints`."""
     if not message:
-        return {"required_category": None, "include_vault": False, "stated_budgets": []}
+        return {"required_category": None, "include_vault": False,
+                "stated_budgets": [], "recipient": None, "ring_size": None}
     req = None
     include_vault = False
     for m in _CATEGORY_REGEX.finditer(message):
@@ -112,6 +154,8 @@ def _extract_from_single_message(message: str) -> Dict[str, Any]:
         "required_category": req,
         "include_vault": include_vault,
         "stated_budgets": budgets,
+        "recipient": _extract_recipient(message),
+        "ring_size": _extract_ring_size(message),
     }
 
 
@@ -129,48 +173,29 @@ def active_customer_constraints(
     """Return the ACTIVE customer constraints — the latest explicit
     value expressed by the customer wins.
 
-    Recency semantics:
-        * ``active_category``  — the most recent user turn that named a
-          specific product category.
-        * ``active_budget``    — the most recent user turn that named a
-          numeric budget; only the LAST budget from that turn is used.
-          The old value is retained under ``historical`` for
-          debugging only; evidence validation must not use it.
-        * ``include_vault``    — set if the most recent user turn to
-          mention vault/inspiration did so (customer opt-in).
-
-    Fields:
-        {
-          "required_category":     Optional[str],    # active — for filters
-          "include_vault":         bool,
-          "stated_budgets":        List[float],      # THIS-TURN mentions
-                                                     # (kept for the
-                                                     # message-price scan)
-          "active_budget":         Optional[float],  # active — for Rule F
-          "active_category":       Optional[str],
-          "historical": {...}                        # informational
-        }
+    Adds recipient and ring-size persistence with the same recency
+    semantics as active_category / active_budget.
     """
     turns: List[str] = list(history_user_messages or []) + [current_message or ""]
-    # Walk chronologically so LATER values override EARLIER ones.
-    active_category: Optional[str] = None
-    active_budget:   Optional[float] = None
+    active_category:  Optional[str]   = None
+    active_budget:    Optional[float] = None
+    active_recipient: Optional[str]   = None
+    active_ring_size: Optional[str]   = None
     active_vault = False
     historical_categories: List[Optional[str]] = []
-    historical_budgets: List[Optional[float]] = []
+    historical_budgets:    List[Optional[float]] = []
     for turn in turns:
         one = _extract_from_single_message(turn)
         historical_categories.append(one["required_category"])
-        # Only OVERRIDE the active category if this turn explicitly
-        # named a specific category. Turns that mention no category
-        # do not clear an existing one.
         if one["required_category"] is not None:
             active_category = one["required_category"]
         if one["stated_budgets"]:
-            # Use the LAST numeric budget mentioned in this turn — the
-            # customer is most likely correcting themselves in-turn too.
             active_budget = float(one["stated_budgets"][-1])
             historical_budgets.append(active_budget)
+        if one.get("recipient") is not None:
+            active_recipient = one["recipient"]
+        if one.get("ring_size") is not None:
+            active_ring_size = one["ring_size"]
         # Vault opt-in only when THIS turn contains a vault/inspiration
         # token; do not persist across turns unless re-affirmed.
         active_vault = one["include_vault"]
@@ -183,11 +208,59 @@ def active_customer_constraints(
         "stated_budgets":     current_extract["stated_budgets"],
         "active_budget":      active_budget,       # ACTIVE — used by Rule F
         "active_category":    active_category,     # duplicate for clarity
+        "active_recipient":   active_recipient,    # men | women | unisex | None
+        "active_ring_size":   active_ring_size,    # latest explicit US size
         "historical": {
             "categories":     historical_categories,
             "budgets":        historical_budgets,
         },
     }
+
+
+def _size_profile_compatible(size_profile: Optional[str],
+                             active_recipient: Optional[str]) -> bool:
+    """Recipient filter — hardened:
+        * men   → allow gents + unisex; exclude ladies; unknown NOT verified.
+        * women → allow ladies + unisex; exclude gents; unknown NOT verified.
+        * unisex → allow anything (customer explicitly said unisex).
+        * None (unspecified) → no filter (allow anything).
+    """
+    if not active_recipient:
+        return True
+    if active_recipient == "unisex":
+        return True
+    if active_recipient == "men":
+        return size_profile in ("gents", "unisex")
+    if active_recipient == "women":
+        return size_profile in ("ladies", "unisex")
+    return True
+
+
+# Tokens that unambiguously mean a metal/finish choice at customer level.
+_METAL_TOKENS = ("gold", "silver", "platinum", "vermeil", "brass")
+# Tokens that indicate a product-specific configuration semantic that is
+# NOT plain metal (foundation, signature, heirloom, home/away, etc.).
+_NON_METAL_CONFIG_TOKENS = (
+    "foundation", "signature", "heirloom", "core",
+    "home", "away", "atelier", "pave", "pavé",
+)
+
+
+def _options_are_pure_metal(options: List[Dict[str, Any]]) -> bool:
+    """True when every option label reads as a plain metal selection
+    (e.g. "Sterling Silver", "10K Gold"). False if ANY option carries a
+    non-metal configuration semantic (Foundation, Signature, Heirloom,
+    Home, Away, …). Empty list → False."""
+    if not options:
+        return False
+    for opt in options:
+        label = str((opt or {}).get("label") or "").lower()
+        has_metal = any(t in label for t in _METAL_TOKENS)
+        has_non_metal = any(t in label for t in _NON_METAL_CONFIG_TOKENS)
+        if not has_metal or has_non_metal:
+            return False
+    return True
+
 
 
 def _all_products() -> Dict[str, Dict[str, Any]]:
@@ -878,13 +951,10 @@ def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
     # HARD SERVER CONSTRAINTS — override model arguments where set.
     required_category = _TURN_CONSTRAINTS.get("required_category")
     include_vault = bool(_TURN_CONSTRAINTS.get("include_vault"))
+    active_recipient = _TURN_CONSTRAINTS.get("active_recipient")
     effective_category = required_category or model_category
 
     scored: List[Tuple[int, str, Dict[str, Any]]] = []
-    # Secondary bucket: products that satisfied CATEGORY + STYLE but were
-    # dropped from `results` ONLY because their price is unresolved
-    # (`price_source == "unavailable"`). Vault + category filters still
-    # apply — no bypass.
     unresolved_scored: List[Tuple[int, str, Dict[str, Any]]] = []
     budget_set = (max_price is not None or min_price is not None)
     for slug, rec in products.items():
@@ -898,6 +968,10 @@ def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
                 continue
             if rec_cat == "unknown":
                 continue
+        # HARD RECIPIENT FILTER — server-derived, not model-supplied.
+        if active_recipient and not _size_profile_compatible(
+                rec.get("size_profile"), active_recipient):
+            continue
 
         s = _score_match(rec, category=effective_category, style_terms=style_terms,
                          max_price=max_price, min_price=min_price)
@@ -908,8 +982,6 @@ def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
         if pr is False:
             continue
         if pr is None and budget_set:
-            # Budget-scoped search: keep as a configuration-required
-            # candidate, but do NOT surface it as a strict match.
             unresolved_scored.append((s, slug, rec))
             continue
         scored.append((s, slug, rec))
@@ -919,6 +991,10 @@ def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
                for _, slug, rec in scored[:_MAX_SEARCH_RESULTS]]
     unresolved_candidates = [_candidate_view(slug, rec)
                              for _, slug, rec in unresolved_scored[:_MAX_SEARCH_RESULTS]]
+    # Authorize these slugs for THIS turn's resolve_configured_price calls.
+    authorized = {r["slug"] for r in results} | {c["slug"] for c in unresolved_candidates}
+    _TURN_CONSTRAINTS.setdefault("authorized_slugs", set())
+    _TURN_CONSTRAINTS["authorized_slugs"].update(authorized)
     return {
         "results": results,
         "result_count": len(results),
@@ -928,6 +1004,7 @@ def tool_search_phileon_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
         "server_constraints": {
             "required_category": required_category,
             "include_vault": include_vault,
+            "active_recipient": active_recipient,
         },
         "note": (
             "Products with resolved authoritative prices appear in "
@@ -946,27 +1023,37 @@ def tool_resolve_configured_price(args: Dict[str, Any]) -> Dict[str, Any]:
     """Server-authoritative price lookup with customer-supplied config.
     Delegates to :func:`_configured_price_resolve` and applies the same
     server-side vault + category filter as ``tool_search_phileon_catalog``.
+    Additionally: the slug MUST have been authorized in the CURRENT turn
+    (surfaced by a search call this turn).
     """
     slug = str(args.get("slug") or "").strip()
+    authorized = _TURN_CONSTRAINTS.get("authorized_slugs") or set()
+    if authorized and slug not in authorized:
+        return {"error": "SLUG_NOT_AUTHORIZED_THIS_TURN", "slug": slug}
     result = _configured_price_resolve(
         slug=slug,
         ring_size=args.get("ring_size"),
         tier_key=args.get("tier_key"),
         wrist_size=args.get("wrist_size"),
     )
-    # Enforce the same hard filters as search: a resolved slug whose
-    # category doesn't match the customer's ACTIVE category, or a vault
-    # slug when include_vault is False, must not surface as an
-    # authoritative recommendation.
+    # Enforce the same hard filters as search.
     if "error" not in result:
         required_category = _TURN_CONSTRAINTS.get("required_category")
         include_vault = bool(_TURN_CONSTRAINTS.get("include_vault"))
+        active_recipient = _TURN_CONSTRAINTS.get("active_recipient")
         cat = str(result.get("category") or "").lower()
         if not include_vault and (cat == "vault" or _slug_is_vault(slug)):
             return {"error": "VAULT_EXCLUDED", "slug": slug}
         if required_category and cat != required_category:
             return {"error": "CATEGORY_MISMATCH", "slug": slug,
                     "expected": required_category, "actual": cat}
+        # Recipient recheck.
+        rec = _all_products().get(slug) or {}
+        if active_recipient and not _size_profile_compatible(
+                rec.get("size_profile"), active_recipient):
+            return {"error": "RECIPIENT_MISMATCH", "slug": slug,
+                    "recipient": active_recipient,
+                    "size_profile": rec.get("size_profile")}
     return result
 
 
@@ -1131,11 +1218,18 @@ class EvidenceLedger:
         self.required_category: Optional[str] = None
         self.include_vault: bool = False
         # ACTIVE constraints (latest explicit value across history).
-        self.active_budget:   Optional[float] = None
-        self.active_category: Optional[str] = None
+        self.active_budget:    Optional[float] = None
+        self.active_category:  Optional[str] = None
+        self.active_recipient: Optional[str] = None
+        self.active_ring_size: Optional[str] = None
+        # Whether this turn is the FIRST configuration-recovery turn or
+        # an intermediate follow-up (used to suppress repeated invitations).
+        self.is_first_config_turn: bool = True
         # Slugs surfaced as unresolved (configuration-required) candidates.
         self.candidate_slugs: set = set()
         self.candidate_missing_inputs: Dict[str, List[str]] = {}
+        # Per-candidate customer-facing option surface, for next-action.
+        self.candidate_option_labels: Dict[str, Dict[str, List[str]]] = {}
         # Configured-price resolutions recorded this turn (slug -> dict).
         self.configured_resolutions: Dict[str, Dict[str, Any]] = {}
 
@@ -1150,24 +1244,50 @@ class EvidenceLedger:
             if not slug:
                 continue
             self.candidate_slugs.add(slug)
-            # Union missing inputs across candidates for follow-up.
             missing: List[str] = []
+            option_map: Dict[str, List[str]] = {}
             for field_spec in (c.get("required_configuration") or []):
                 fname = str(field_spec.get("field") or "").strip()
-                if fname:
-                    missing.append(fname)
+                if not fname:
+                    continue
+                missing.append(fname)
+                opts = field_spec.get("options") or []
+                # Options may be [{label, canonical_value}] or [str].
+                labels: List[str] = []
+                for opt in opts:
+                    if isinstance(opt, dict):
+                        lb = str(opt.get("label") or "").strip()
+                        if lb:
+                            labels.append(lb)
+                    else:
+                        labels.append(str(opt))
+                option_map[fname] = labels
             self.candidate_missing_inputs[slug] = missing
+            self.candidate_option_labels[slug] = option_map
 
     def record_configured_price(self, args: Dict[str, Any], out: Dict[str, Any]):
         """A successful `resolve_configured_price` result grants the slug
-        authoritative-price status for THIS turn only."""
+        authoritative-price status for THIS turn only. A MISSING_CONFIG
+        error keeps the slug alive as a candidate so the next question
+        can be recomputed."""
         self.tools_called.append(("resolve_configured_price", args))
-        if "error" in (out or {}):
+        if not out:
+            return
+        if out.get("error") == "MISSING_CONFIGURATION":
+            slug = str(out.get("slug") or "").strip().lower()
+            if slug:
+                self.candidate_slugs.add(slug)
+                self.candidate_missing_inputs[slug] = list(out.get("missing") or [])
+            return
+        if "error" in out:
             return
         self._record_product(out)
         slug = str(out.get("slug") or "").strip().lower()
         if slug:
             self.configured_resolutions[slug] = dict(out)
+            # Resolved slugs are no longer "needing configuration".
+            self.candidate_slugs.discard(slug)
+            self.candidate_missing_inputs.pop(slug, None)
 
     def record_product(self, args: Dict[str, Any], out: Dict[str, Any]):
         self.tools_called.append(("get_phileon_product", args))
@@ -1215,6 +1335,74 @@ class EvidenceLedger:
         """Numbers explicitly stated by the customer as a budget or
         constraint in THIS turn are not PHILEON factual claims."""
         return any(abs(value - b) < 0.01 for b in self.stated_budgets)
+
+    # ── server-derived next-action selector (one question at a time) ──
+    def next_action(self, product_catalog: Optional[Dict[str, Dict[str, Any]]] = None) -> Dict[str, Any]:
+        """Pick the ONE next thing to ask the customer.
+
+        Returns:
+            {"kind": "ring_size" | "metal" | "wrist_size" | "choose_product"
+                     | "none",
+             "candidates": [<display names>]     # for choose_product only
+             "surviving_slugs": [<slug>...]     # informational
+            }
+
+        Decision order (per corrected spec):
+            A. If a required field is shared by ALL surviving candidates,
+               and it is ring_size / wrist_size, ask that.
+            B. Else if tier_key is shared AND every surviving candidate's
+               tier options are pure metal, ask "which metal".
+            C. Otherwise → ask the customer to choose a product first
+               (up to 3 highest-ranked surviving candidates by ledger order).
+        """
+        surviving = list(self.candidate_slugs)
+        if not surviving:
+            return {"kind": "none", "candidates": [], "surviving_slugs": []}
+
+        # Compute intersection of missing fields.
+        sets: List[set] = []
+        for slug in surviving:
+            m = set(self.candidate_missing_inputs.get(slug) or [])
+            sets.append(m)
+        intersection = set.intersection(*sets) if sets else set()
+
+        # Rule A / B — try to pick a single next input.
+        if "ring_size" in intersection:
+            return {"kind": "ring_size", "candidates": [],
+                    "surviving_slugs": sorted(surviving)}
+        if "wrist_size" in intersection:
+            return {"kind": "wrist_size", "candidates": [],
+                    "surviving_slugs": sorted(surviving)}
+        if "tier_key" in intersection:
+            # Only render as "metal" when EVERY surviving candidate's
+            # tier options are pure metal.
+            all_pure = True
+            for slug in surviving:
+                labels = (self.candidate_option_labels.get(slug) or {}).get("tier_key") or []
+                if not labels:
+                    all_pure = False
+                    break
+                if not _options_are_pure_metal([{"label": lb} for lb in labels]):
+                    all_pure = False
+                    break
+            if all_pure:
+                return {"kind": "metal", "candidates": [],
+                        "surviving_slugs": sorted(surviving)}
+            # Non-metal semantics — fall through to choose_product.
+
+        # Rule C — no safe shared field. Ask which product to price first.
+        products = product_catalog or _all_products()
+        # Preserve stable ordering.
+        names: List[str] = []
+        for slug in sorted(surviving):
+            rec = products.get(slug) or {}
+            name = str(rec.get("product_name") or slug).strip()
+            if name and name not in names:
+                names.append(name)
+            if len(names) >= 3:
+                break
+        return {"kind": "choose_product", "candidates": names,
+                "surviving_slugs": sorted(surviving)}
 
     def _infer_outcome(self, answer: Dict[str, Any]) -> str:
         """Backward-compatible outcome inference for legacy payloads.
@@ -1445,47 +1633,117 @@ UNSUPPORTED_FALLBACK = (
 )
 
 
-# ── Server-rendered follow-up prompts (customer-facing vocabulary only) ──
-_FOLLOW_UP_PROMPTS = {
-    "ring_size_plus_metal":
-        "I can check the exact price for you—could you share your US ring size and preferred metal?",
-    "ring_size_only":
-        "I can check the exact price for you—what's your US ring size?",
-    "metal_only":
-        "I can check the exact price for you—which metal would you prefer?",
-    "variant_only":
-        "I can check the exact price for you—which finish would you prefer?",
-    "wrist_size_plus_metal":
-        "I can check the exact price for you—could you share your wrist size and preferred metal?",
+# ── Server-rendered follow-up copy (customer-facing vocabulary only) ──
+# One question per turn. Model free-form message is ignored for
+# NEEDS_CONFIGURATION so it cannot introduce duplicate questions or
+# unsupported option labels.
+_FOLLOW_UP_QUESTIONS = {
+    "ring_size":  "What US ring size are you shopping for?",
+    "metal":      "Which metal would you prefer?",
+    "wrist_size": "What wrist size do you wear?",
 }
-
 
 _CUSTOM_JEWELRY_INVITATION = (
     "If you'd rather create something specifically for you, I can also take "
     "you to PHILEON Custom Jewelry (/custom-jewelry)."
 )
 
+_CATEGORY_DISPLAY = {
+    "ring":     "ring",
+    "cuff":     "cuff",
+    "bracelet": "bracelet",
+    "earring":  "earring",
+    "pendant":  "pendant",
+    "set":      "set",
+    "vault":    "Inspiration Vault",
+}
 
-def _pick_follow_up_key(missing_inputs_union: set,
-                        candidate_categories: set) -> Optional[str]:
-    """Deterministic mapping from missing canonical inputs to a
-    customer-facing follow-up prompt key. Never invents fields."""
-    m = set(missing_inputs_union or set())
-    if not m:
-        return None
-    if m == {"ring_size", "tier_key"} or (
-            "ring_size" in m and "tier_key" in m):
-        return "ring_size_plus_metal"
-    if m == {"wrist_size", "tier_key"}:
-        return "wrist_size_plus_metal"
-    if m == {"ring_size"}:
-        return "ring_size_only"
-    if m == {"tier_key"}:
-        # Ring candidates without ring_size still need "metal" language.
-        return "metal_only"
-    if m == {"wrist_size"}:
-        return "wrist_size_plus_metal"
-    return None
+
+def _recipient_prefix(recipient: Optional[str]) -> str:
+    if recipient == "men":
+        return "men's "
+    if recipient == "women":
+        return "women's "
+    return ""
+
+
+def _budget_clause(active_budget: Optional[float]) -> str:
+    if active_budget is None:
+        return ""
+    if float(active_budget).is_integer():
+        return f" and check them against your ${int(active_budget):,} budget"
+    return f" and check them against your ${active_budget:,.2f} budget"
+
+
+def _render_needs_configuration(ledger, answer: Dict[str, Any]) -> str:
+    """Deterministic customer-facing render for NEEDS_CONFIGURATION.
+    Ignores ``answer["message"]`` — it may only leak duplicate or
+    unsupported wording. Uses:
+        * active_category
+        * active_recipient
+        * active_budget
+        * candidate count
+        * ledger.next_action() → one question OR choose_product
+    Custom-jewelry invitation appears ONLY on the first configuration
+    turn (``ledger.is_first_config_turn``); intermediate follow-ups stay
+    focused on the next question.
+    """
+    products = _all_products()
+    action = ledger.next_action(products)
+
+    category = ledger.active_category or "piece"
+    category_word = _CATEGORY_DISPLAY.get(category, category)
+    recipient_pref = _recipient_prefix(ledger.active_recipient)
+    budget_clause = _budget_clause(ledger.active_budget)
+    n = len(ledger.candidate_slugs) or (
+        len(answer.get("candidate_slugs") or []))
+
+    lines: List[str] = []
+
+    if action["kind"] == "choose_product":
+        names = action.get("candidates") or []
+        if not names:
+            # Should not happen, but guard.
+            lines.append(
+                f"I have several PHILEON {recipient_pref}{category_word} "
+                f"options that could suit."
+            )
+        else:
+            joined = ", ".join(names[:-1]) + (
+                f", or {names[-1]}" if len(names) > 1 else names[0]
+            ) if len(names) > 1 else names[0]
+            lines.append(
+                f"I have several PHILEON {recipient_pref}{category_word} "
+                f"options that could suit. Which would you like me to "
+                f"price first: {joined}?"
+            )
+    elif action["kind"] in _FOLLOW_UP_QUESTIONS:
+        question = _FOLLOW_UP_QUESTIONS[action["kind"]]
+        # Suppress the count prefix on intermediate follow-up turns so
+        # the reply stays focused on the single question.
+        if ledger.is_first_config_turn:
+            plural = "options" if (n or 2) != 1 else "option"
+            opener = (
+                f"I have several PHILEON {recipient_pref}{category_word} "
+                f"{plural} that could suit. Their exact prices depend on "
+                f"configuration."
+            )
+            lines.append(opener + " " + question
+                         + f" Once I have that, I can narrow the compatible "
+                           f"options{budget_clause}.")
+        else:
+            lines.append(question)
+    else:
+        # No candidates or no known next input — behave like NO_MATCH.
+        lines.append(
+            f"I don't have a PHILEON {recipient_pref}{category_word} "
+            f"I can verify right now."
+        )
+
+    if ledger.is_first_config_turn:
+        lines.append(_CUSTOM_JEWELRY_INVITATION)
+
+    return "\n\n".join(lines)
 
 
 def _render_structured_answer(answer: Dict[str, Any], ledger) -> str:
@@ -1495,49 +1753,24 @@ def _render_structured_answer(answer: Dict[str, Any], ledger) -> str:
 
     Branches on ``outcome``:
         MATCHES              — model message + recommendation lines.
-        NEEDS_CONFIGURATION  — one concise sentence + server-rendered
-                               follow-up. No product prices. No
-                               "under budget" phrasing.
-        NO_MATCH             — ONE sentence only (either the model's
-                               message or the no_match_reason, not both),
-                               followed by the custom-jewelry invitation.
+        NEEDS_CONFIGURATION  — fully server-rendered (ignores model
+                               message); one question at a time; custom
+                               invitation only on the first config turn.
+        NO_MATCH             — ONE sentence only (model message OR the
+                               no_match_reason, not both), followed by
+                               the custom-jewelry invitation.
     """
-    lines: List[str] = []
     outcome = ledger._infer_outcome(answer) if hasattr(ledger, "_infer_outcome") \
         else str(answer.get("outcome") or "").upper()
+
+    if outcome == "NEEDS_CONFIGURATION":
+        return _render_needs_configuration(ledger, answer)
+
+    lines: List[str] = []
     msg = str(answer.get("message") or "").strip()
     reason = str(answer.get("no_match_reason") or "").strip()
 
-    if outcome == "NEEDS_CONFIGURATION":
-        # Concise, customer-friendly single sentence + server follow-up.
-        # We deliberately do NOT echo any of the model's model-visible
-        # price/status language — the deterministic prompt owns that.
-        opener = msg if msg else (
-            "I have PHILEON pieces that could suit that direction, but "
-            "the exact price depends on a couple of details."
-        )
-        lines.append(opener)
-        # Server-rendered follow-up.
-        follow_key = answer.get("follow_up_prompt_key")
-        if not follow_key:
-            # Compute deterministically from missing_inputs.
-            miss = set(answer.get("missing_inputs") or [])
-            if not miss:
-                # Fall back to the ledger's per-candidate map.
-                for slug in (answer.get("candidate_slugs") or []):
-                    for f in ledger.candidate_missing_inputs.get(
-                            str(slug).strip().lower(), []):
-                        miss.add(f)
-            follow_key = _pick_follow_up_key(miss, set())
-        prompt = _FOLLOW_UP_PROMPTS.get(follow_key or "") if follow_key else None
-        if prompt:
-            lines.append(prompt)
-        lines.append(_CUSTOM_JEWELRY_INVITATION)
-        return "\n\n".join(lines)
-
     if outcome == "NO_MATCH":
-        # Render ONE sentence — prefer the model's message; fall back to
-        # reason. Never both (removes duplicated no-match copy).
         one_line = msg or reason or (
             "No PHILEON product currently matches every constraint you shared."
         )
@@ -1569,8 +1802,6 @@ def _render_structured_answer(answer: Dict[str, Any], ledger) -> str:
             head += " (price on the product page)"
         head += f"  /product/{slug}"
         lines.append(head)
-    # Legacy compatibility: if the caller used the old {no_match:True}
-    # shape (no explicit outcome), we still need to say something.
     if bool(answer.get("no_match")) and not recs and not lines:
         lines.append(reason or "No PHILEON product currently matches every constraint you shared.")
         lines.append(_CUSTOM_JEWELRY_INVITATION)
@@ -1682,8 +1913,17 @@ async def run_turn(
     ledger.include_vault = constraints["include_vault"]
     ledger.active_budget = constraints.get("active_budget")
     ledger.active_category = constraints.get("active_category")
+    ledger.active_recipient = constraints.get("active_recipient")
+    ledger.active_ring_size = constraints.get("active_ring_size")
+    # First-config-turn heuristic: if the customer has NOT yet supplied
+    # any configuration value in history (ring_size in history messages),
+    # this is the first NEEDS_CONFIGURATION turn.
+    prior_config_supplied = any(
+        _extract_ring_size(t) is not None for t in history_user_texts)
+    ledger.is_first_config_turn = not prior_config_supplied
     _TURN_CONSTRAINTS.clear()
     _TURN_CONSTRAINTS.update(constraints)
+    _TURN_CONSTRAINTS["authorized_slugs"] = set()
     # Tool trace for supervised/admin debug — never returned publicly.
     tool_trace: List[Dict[str, Any]] = []
     t0 = time.perf_counter()
@@ -1789,6 +2029,10 @@ async def run_turn(
                         "stated_budgets": list(ledger.stated_budgets),
                         "active_budget": ledger.active_budget,
                         "active_category": ledger.active_category,
+                        "active_recipient": ledger.active_recipient,
+                        "active_ring_size": ledger.active_ring_size,
+                        "is_first_config_turn": ledger.is_first_config_turn,
+                        "next_action": ledger.next_action(),
                         "blocked_reason": evidence_block_reason,
                         "tool_trace": tool_trace,
                     },
