@@ -521,6 +521,55 @@ def _candidate_view(slug: str, rec: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _effective_missing_configuration(
+    slug: str,
+    rec: Dict[str, Any],
+    active_ring_size: Optional[str] = None,
+    active_wrist_size: Optional[str] = None,
+) -> Tuple[List[str], bool]:
+    """Return ``(effective_missing_fields, incompatible)`` for a candidate.
+
+    Starts from the product's canonical required fields (see
+    :func:`_required_configuration_for_slug`) and REMOVES fields that the
+    customer has already explicitly and canonically-validly supplied via
+    the active-configuration values.
+
+    Never coerces or defaults. If an active value is supplied but is
+    NOT in the product's canonical option set for that field, the
+    candidate is size/config-incompatible and ``incompatible=True`` is
+    returned — callers must remove that candidate from the surviving set.
+    """
+    canonical = _required_configuration_for_slug(slug, rec)
+    canonical_fields = [f["field"] for f in canonical]
+    remaining = list(canonical_fields)
+
+    # Ring size consumption.
+    if active_ring_size is not None and "ring_size" in canonical_fields:
+        size_norm = str(active_ring_size).replace("US ", "").strip()
+        valid = _size_options_for(rec.get("size_profile"))
+        if size_norm in valid:
+            remaining.remove("ring_size")
+        else:
+            return [], True  # SIZE_INCOMPATIBLE — drop candidate
+
+    # Wrist size consumption (reserved for wrist-wear products).
+    if active_wrist_size is not None and "wrist_size" in canonical_fields:
+        # Wrist-size profile options are product-family specific; if the
+        # candidate doesn't expose any wrist_size options in its
+        # canonical config it cannot consume this input.
+        wrist_opts_field = next(
+            (f for f in canonical if f["field"] == "wrist_size"), None)
+        valid = [str(o) for o in (wrist_opts_field.get("options") or [])] \
+            if wrist_opts_field else []
+        wn = str(active_wrist_size).strip()
+        if wn in valid:
+            remaining.remove("wrist_size")
+        else:
+            return [], True  # WRIST_SIZE_INCOMPATIBLE
+
+    return remaining, False
+
+
 def _configured_price_resolve(
     slug: str,
     ring_size: Optional[str],
@@ -1239,20 +1288,43 @@ class EvidenceLedger:
         for r in (out.get("results") or []):
             self._record_product(r)
         # Track unresolved-price candidates from the secondary bucket.
+        # Consume active_ring_size / active_wrist_size when computing
+        # the EFFECTIVE missing configuration per candidate — the
+        # candidate's canonical requirements are the starting point,
+        # customer-supplied active values are subtracted.
+        products = _all_products()
+        active_size  = self.active_ring_size
+        active_wrist = None  # reserved for future wrist-size active
         for c in (out.get("unresolved_candidates") or []):
             slug = str(c.get("slug") or "").strip().lower()
             if not slug:
                 continue
+            rec = products.get(slug) or {}
+            remaining, incompatible = _effective_missing_configuration(
+                slug, rec,
+                active_ring_size=active_size,
+                active_wrist_size=active_wrist,
+            )
+            if incompatible:
+                # SIZE_INCOMPATIBLE / WRIST_SIZE_INCOMPATIBLE — never
+                # exposed to the customer as terminology; the candidate
+                # is silently dropped from the surviving set.
+                continue
+            if not remaining:
+                # Fully configured (no fields left) — belongs to the
+                # MATCHES flow via resolve_configured_price, not the
+                # NEEDS_CONFIGURATION candidate set.
+                continue
             self.candidate_slugs.add(slug)
-            missing: List[str] = []
+            self.candidate_missing_inputs[slug] = list(remaining)
+            # Preserve customer-facing option labels ONLY for still-
+            # missing fields.
             option_map: Dict[str, List[str]] = {}
             for field_spec in (c.get("required_configuration") or []):
                 fname = str(field_spec.get("field") or "").strip()
-                if not fname:
+                if fname not in remaining:
                     continue
-                missing.append(fname)
                 opts = field_spec.get("options") or []
-                # Options may be [{label, canonical_value}] or [str].
                 labels: List[str] = []
                 for opt in opts:
                     if isinstance(opt, dict):
@@ -1262,7 +1334,6 @@ class EvidenceLedger:
                     else:
                         labels.append(str(opt))
                 option_map[fname] = labels
-            self.candidate_missing_inputs[slug] = missing
             self.candidate_option_labels[slug] = option_map
 
     def record_configured_price(self, args: Dict[str, Any], out: Dict[str, Any]):
@@ -1915,12 +1986,16 @@ async def run_turn(
     ledger.active_category = constraints.get("active_category")
     ledger.active_recipient = constraints.get("active_recipient")
     ledger.active_ring_size = constraints.get("active_ring_size")
-    # First-config-turn heuristic: if the customer has NOT yet supplied
-    # any configuration value in history (ring_size in history messages),
-    # this is the first NEEDS_CONFIGURATION turn.
-    prior_config_supplied = any(
-        _extract_ring_size(t) is not None for t in history_user_texts)
-    ledger.is_first_config_turn = not prior_config_supplied
+    # First-config-turn heuristic (customer-facing UX ONLY — never used
+    # for pricing/authorization/evidence). Considers the customer's
+    # FULL conversation including the CURRENT message: if any turn has
+    # supplied a canonical configuration value, the concierge is
+    # already inside a config follow-up sequence and the Custom Jewelry
+    # invitation must not be repeated.
+    all_customer_turns = history_user_texts + [message or ""]
+    configuration_supplied = any(
+        _extract_ring_size(t) is not None for t in all_customer_turns)
+    ledger.is_first_config_turn = not configuration_supplied
     _TURN_CONSTRAINTS.clear()
     _TURN_CONSTRAINTS.update(constraints)
     _TURN_CONSTRAINTS["authorized_slugs"] = set()

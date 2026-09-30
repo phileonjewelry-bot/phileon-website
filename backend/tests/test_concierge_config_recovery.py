@@ -882,3 +882,227 @@ def test_UX_D_model_message_does_not_create_duplicate_questions():
     assert "which metal" not in text.lower()
     assert "which finish" not in text.lower()
     assert "10K yellow gold" not in text
+
+
+# ═════════════════════════════════════════════════════════════════
+# ACTIVE CONFIG CONSUMPTION PATCH — Tests A–J
+# ═════════════════════════════════════════════════════════════════
+from services.phileon_concierge import (
+    _effective_missing_configuration,
+    _required_configuration_for_slug,
+    run_turn as _run_turn,  # noqa: F401  (imported for signature only)
+)
+
+
+def _search_for(message: str, history: list = None,
+                budget: int = 4000, category: str = "ring",
+                recipient: str = "men"):
+    """Run the same tool_search_phileon_catalog the concierge would run
+    under a synthetic constraint set."""
+    from services.phileon_concierge import (
+        tool_search_phileon_catalog, active_customer_constraints,
+    )
+    c = active_customer_constraints(history or [], message)
+    _TURN_CONSTRAINTS.clear(); _TURN_CONSTRAINTS.update(c)
+    _TURN_CONSTRAINTS["authorized_slugs"] = set()
+    try:
+        out = tool_search_phileon_catalog({
+            "category": category, "gender_or_recipient": recipient,
+            "material": None, "stone": None,
+            "style_terms": ["statement"],
+            "max_price": budget, "min_price": None,
+            "currency": "USD", "query_intent": "test",
+        })
+    finally:
+        pass
+    return out, c
+
+
+# ── A. active_ring_size=9.5 supported → effective missing = tier only
+def test_ACP_A_valid_size_removes_ring_size_from_missing():
+    from services.pricing_engine_catalog import PRICING_ENGINE_CATALOG
+    rec = PRICING_ENGINE_CATALOG["veyron-noir"]
+    remaining, incompatible = _effective_missing_configuration(
+        "veyron-noir", rec, active_ring_size="9.5",
+    )
+    assert not incompatible
+    assert remaining == ["tier_key"]
+
+
+# ── B. active_ring_size unsupported → incompatible (candidate removed)
+def test_ACP_B_unsupported_size_makes_candidate_incompatible():
+    from services.pricing_engine_catalog import PRICING_ENGINE_CATALOG
+    # apex is size_profile=gents (7-15). Size 5 is not valid.
+    rec = PRICING_ENGINE_CATALOG["apex"]
+    remaining, incompatible = _effective_missing_configuration(
+        "apex", rec, active_ring_size="5",
+    )
+    assert incompatible is True
+    assert remaining == []
+
+
+# ── C. current message = "9.5" → is_first_config_turn = False
+def test_ACP_C_current_message_bare_size_is_config_turn():
+    c = active_customer_constraints(
+        ["I want a men's ring under $4,000."], "9.5",
+    )
+    assert c["active_ring_size"] == "9.5"
+    # Now build a ledger the same way run_turn does.
+    from services.phileon_concierge import _extract_ring_size
+    all_turns = ["I want a men's ring under $4,000.", "9.5"]
+    configuration_supplied = any(_extract_ring_size(t) is not None
+                                   for t in all_turns)
+    assert configuration_supplied is True
+
+
+# ── D. Turn 1 (original request) → is_first_config_turn = True
+def test_ACP_D_turn1_first_recovery_may_include_invitation():
+    from services.phileon_concierge import _extract_ring_size
+    all_turns = ["I'm looking for a men's statement ring. Something black or dark, "
+                 "not traditional, and I want to stay under $4,000."]
+    configuration_supplied = any(_extract_ring_size(t) is not None
+                                   for t in all_turns)
+    assert configuration_supplied is False
+
+
+# ── E. Turn 2 "9.5" render omits Custom Jewelry invitation
+def test_ACP_E_invitation_suppressed_on_size_supplied_turn():
+    # Simulate the full ledger state after turn-2 search+consumption.
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"
+    L.active_category = "ring"
+    L.active_budget = 4000.0
+    L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.stated_budgets = []
+    # Match run_turn semantics.
+    from services.phileon_concierge import _extract_ring_size
+    L.is_first_config_turn = not any(
+        _extract_ring_size(t) is not None
+        for t in ["I want a men's ring under $4,000.", "9.5"])
+    L.record_search({}, out)
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": sorted(L.candidate_slugs),
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    low = text.lower()
+    assert "custom jewelry" not in low, text
+    assert "/custom-jewelry" not in text, text
+
+
+# ── F. After valid 9.5 is consumed, next_action != ring_size
+def test_ACP_F_next_action_not_ring_size_after_size_consumed():
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.record_search({}, out)
+    # Nobody should still list ring_size as missing.
+    for slug, missing in L.candidate_missing_inputs.items():
+        assert "ring_size" not in missing, f"{slug}: {missing}"
+    action = L.next_action()
+    assert action["kind"] != "ring_size", action
+
+
+# ── G. Six-candidate scenario w/ mixed tier semantics → choose_product
+def test_ACP_G_mixed_tier_semantics_forces_choose_product():
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.record_search({}, out)
+    action = L.next_action()
+    assert action["kind"] == "choose_product", action
+    # Up to 3 customer-facing names.
+    assert 1 <= len(action["candidates"]) <= 3
+    # All names are non-empty strings, uppercase display forms.
+    for n in action["candidates"]:
+        assert isinstance(n, str) and n.strip(), n
+
+
+# ── H. Model wrongly says ring_size still missing → renderer ignores it
+def test_ACP_H_model_claims_ring_size_missing_but_server_does_not_ask():
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.is_first_config_turn = False
+    L.record_search({}, out)
+    # Model incorrectly (turn 2) claims ring_size is still needed.
+    misleading = {
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "Please share your US ring size.",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": sorted(L.candidate_slugs),
+        "missing_inputs": ["ring_size"],
+        "follow_up_prompt_key": "ring_size_only",
+        "no_match": False, "no_match_reason": None,
+    }
+    text = _render_structured_answer(misleading, L)
+    low = text.lower()
+    assert "ring size" not in low, text  # size never re-asked
+    # Instead the server renders choose_product (mixed tier semantics).
+    assert "which would you like me to price first" in low
+
+
+# ── I. Model correctly claims only tier remains → same server result
+def test_ACP_I_model_correct_and_server_agree_on_next_action():
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.is_first_config_turn = False
+    L.record_search({}, out)
+    action = L.next_action()
+    correct = {
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "Which product would you like to price first?",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [],
+        "candidate_slugs": sorted(L.candidate_slugs),
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": None,
+        "no_match": False, "no_match_reason": None,
+    }
+    text = _render_structured_answer(correct, L)
+    low = text.lower()
+    assert "which would you like me to price first" in low
+    # No stray metal question when tier semantics are mixed.
+    assert "which metal" not in low
+    # No ring size re-asked.
+    assert "what us ring size" not in low
+
+
+# ── J. Size alone does NOT trigger pricing — resolver waits for full config
+def test_ACP_J_size_alone_does_not_trigger_pricing():
+    # veyron-noir needs tier_key AND ring_size. Size alone → still MISSING.
+    r = _configured_price_resolve(
+        slug="veyron-noir", ring_size="9.5",
+        tier_key=None, wrist_size=None,
+    )
+    assert r.get("error") == "MISSING_CONFIGURATION"
+    assert "tier_key" in (r.get("missing") or [])
+    # apex also needs tier + size. Size alone → still MISSING.
+    r2 = _configured_price_resolve(
+        slug="apex", ring_size="9.5",
+        tier_key=None, wrist_size=None,
+    )
+    assert r2.get("error") == "MISSING_CONFIGURATION"
+    assert "tier_key" in (r2.get("missing") or [])
