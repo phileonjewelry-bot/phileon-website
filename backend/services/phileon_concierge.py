@@ -1276,6 +1276,12 @@ class EvidenceLedger:
         self.is_first_config_turn: bool = True
         # Slugs surfaced as unresolved (configuration-required) candidates.
         self.candidate_slugs: set = set()
+        # Presentation-order sequence of surviving candidates — first
+        # occurrence wins; preserves the ranking returned by
+        # tool_search_phileon_catalog. Membership check remains the
+        # authoritative security surface (candidate_slugs +
+        # _TURN_CONSTRAINTS["authorized_slugs"]).
+        self.candidate_order: List[str] = []
         self.candidate_missing_inputs: Dict[str, List[str]] = {}
         # Per-candidate customer-facing option surface, for next-action.
         self.candidate_option_labels: Dict[str, Dict[str, List[str]]] = {}
@@ -1316,6 +1322,8 @@ class EvidenceLedger:
                 # NEEDS_CONFIGURATION candidate set.
                 continue
             self.candidate_slugs.add(slug)
+            if slug not in self.candidate_order:
+                self.candidate_order.append(slug)
             self.candidate_missing_inputs[slug] = list(remaining)
             # Preserve customer-facing option labels ONLY for still-
             # missing fields.
@@ -1348,6 +1356,8 @@ class EvidenceLedger:
             slug = str(out.get("slug") or "").strip().lower()
             if slug:
                 self.candidate_slugs.add(slug)
+                if slug not in self.candidate_order:
+                    self.candidate_order.append(slug)
                 self.candidate_missing_inputs[slug] = list(out.get("missing") or [])
             return
         if "error" in out:
@@ -1359,6 +1369,8 @@ class EvidenceLedger:
             # Resolved slugs are no longer "needing configuration".
             self.candidate_slugs.discard(slug)
             self.candidate_missing_inputs.pop(slug, None)
+            if slug in self.candidate_order:
+                self.candidate_order.remove(slug)
 
     def record_product(self, args: Dict[str, Any], out: Dict[str, Any]):
         self.tools_called.append(("get_phileon_product", args))
@@ -1415,18 +1427,19 @@ class EvidenceLedger:
             {"kind": "ring_size" | "metal" | "wrist_size" | "choose_product"
                      | "none",
              "candidates": [<display names>]     # for choose_product only
-             "surviving_slugs": [<slug>...]     # informational
+             "surviving_slugs": [<slug>...]     # RANKED (candidate_order)
             }
 
-        Decision order (per corrected spec):
-            A. If a required field is shared by ALL surviving candidates,
-               and it is ring_size / wrist_size, ask that.
-            B. Else if tier_key is shared AND every surviving candidate's
-               tier options are pure metal, ask "which metal".
-            C. Otherwise → ask the customer to choose a product first
-               (up to 3 highest-ranked surviving candidates by ledger order).
+        Ranking source: ``candidate_order`` (populated in the exact order
+        the current-turn `tool_search_phileon_catalog` returned survivors,
+        with first-occurrence dedup). Alphabetical slug/name sorting is
+        NEVER applied to presentation output. ``candidate_slugs`` (the
+        authorization set) is used only as a membership check to drop
+        removed entries.
         """
-        surviving = list(self.candidate_slugs)
+        # Preserve ranking; filter to still-surviving members.
+        surviving = [s for s in self.candidate_order
+                     if s in self.candidate_slugs]
         if not surviving:
             return {"kind": "none", "candidates": [], "surviving_slugs": []}
 
@@ -1440,10 +1453,10 @@ class EvidenceLedger:
         # Rule A / B — try to pick a single next input.
         if "ring_size" in intersection:
             return {"kind": "ring_size", "candidates": [],
-                    "surviving_slugs": sorted(surviving)}
+                    "surviving_slugs": list(surviving)}
         if "wrist_size" in intersection:
             return {"kind": "wrist_size", "candidates": [],
-                    "surviving_slugs": sorted(surviving)}
+                    "surviving_slugs": list(surviving)}
         if "tier_key" in intersection:
             # Only render as "metal" when EVERY surviving candidate's
             # tier options are pure metal.
@@ -1458,14 +1471,15 @@ class EvidenceLedger:
                     break
             if all_pure:
                 return {"kind": "metal", "candidates": [],
-                        "surviving_slugs": sorted(surviving)}
+                        "surviving_slugs": list(surviving)}
             # Non-metal semantics — fall through to choose_product.
 
         # Rule C — no safe shared field. Ask which product to price first.
+        # Take the FIRST 3 surviving candidates from candidate_order —
+        # do NOT re-sort by name / slug.
         products = product_catalog or _all_products()
-        # Preserve stable ordering.
         names: List[str] = []
-        for slug in sorted(surviving):
+        for slug in surviving:
             rec = products.get(slug) or {}
             name = str(rec.get("product_name") or slug).strip()
             if name and name not in names:
@@ -1473,7 +1487,7 @@ class EvidenceLedger:
             if len(names) >= 3:
                 break
         return {"kind": "choose_product", "candidates": names,
-                "surviving_slugs": sorted(surviving)}
+                "surviving_slugs": list(surviving)}
 
     def _infer_outcome(self, answer: Dict[str, Any]) -> str:
         """Backward-compatible outcome inference for legacy payloads.
@@ -2096,6 +2110,7 @@ async def run_turn(
                         "policy_topics": sorted(ledger.policies.keys()),
                         "product_slugs": sorted(ledger.product_slugs),
                         "candidate_slugs": sorted(ledger.candidate_slugs),
+                        "candidate_order": list(ledger.candidate_order),
                         "candidate_missing_inputs": dict(ledger.candidate_missing_inputs),
                         "configured_resolutions": sorted(ledger.configured_resolutions.keys()),
                         "custom_guidance": ledger.custom_guidance,

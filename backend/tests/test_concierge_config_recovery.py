@@ -56,6 +56,8 @@ def _fresh_ledger(*, active_budget: Optional[float] = None,
     L.stated_budgets = list(stated_budgets or ([active_budget] if active_budget else []))
     for s in (candidate_slugs or []):
         L.candidate_slugs.add(s.lower())
+        if s.lower() not in L.candidate_order:
+            L.candidate_order.append(s.lower())
     return L
 
 
@@ -889,7 +891,6 @@ def test_UX_D_model_message_does_not_create_duplicate_questions():
 # ═════════════════════════════════════════════════════════════════
 from services.phileon_concierge import (
     _effective_missing_configuration,
-    _required_configuration_for_slug,
     run_turn as _run_turn,  # noqa: F401  (imported for signature only)
 )
 
@@ -1106,3 +1107,161 @@ def test_ACP_J_size_alone_does_not_trigger_pricing():
     )
     assert r2.get("error") == "MISSING_CONFIGURATION"
     assert "tier_key" in (r2.get("missing") or [])
+
+
+# ═════════════════════════════════════════════════════════════════
+# PRESERVE CANDIDATE RANKING PATCH — Tests A–E
+# ═════════════════════════════════════════════════════════════════
+
+# ── A. Search order is preserved through EvidenceLedger
+def test_PCR_A_search_order_preserved_in_ledger():
+    """The 6-ring men's/dark scenario returns candidates ranked by
+    internal score. That ranking must survive record_search into
+    ledger.candidate_order (first-occurrence dedup)."""
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.record_search({}, out)
+    # Extract the search's own order (already deduped in the tool).
+    search_order = [c["slug"] for c in out["unresolved_candidates"]]
+    assert L.candidate_order == search_order, \
+        f"ledger order {L.candidate_order} != search order {search_order}"
+
+
+# ── B. Filtering removes an incompatible candidate without reordering
+def test_PCR_B_incompatible_candidate_removed_but_order_preserved():
+    """Simulate a size that veyron-noir supports but the-don-gorgon
+    does not — no, actually both support 9.5. Instead use a size that
+    ladies-only wynette-palette supports but gents rings don't. Since
+    wynette-palette is already excluded by the recipient filter, use
+    a synthetic scenario: inject candidate_order manually, then use
+    _effective_missing_configuration to drop one."""
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "6"  # size 6 valid unisex only
+    L.required_category = "ring"
+    # Build a fake search output preserving order.
+    fake_out = {
+        "results": [],
+        "unresolved_candidates": [
+            {"slug": "apex", "required_configuration": [
+                {"field": "tier_key", "options": []},
+                {"field": "ring_size", "options": ["7","8","9","10"]}]},
+            {"slug": "veyron-noir", "required_configuration": [
+                {"field": "tier_key", "options": []},
+                {"field": "ring_size", "options": ["4","5","6","7","8","9","10"]}]},
+            {"slug": "bound", "required_configuration": [
+                {"field": "tier_key", "options": []},
+                {"field": "ring_size", "options": ["7","8","9","10"]}]},
+        ],
+    }
+    # We stub _all_products for record_search via the real function so
+    # we need the real records — call the real search instead.
+    out, _ = _search_for("6",
+                         history=["I want a men's ring under $4,000."])
+    L2 = EvidenceLedger()
+    L2.active_recipient = "men"; L2.active_category = "ring"
+    L2.active_budget = 4000.0;   L2.active_ring_size = "6"
+    L2.required_category = "ring"
+    L2.record_search({}, out)
+    # apex/bound/morso/the-don-gorgon/gent are gents (size 7+); veyron-noir is unisex (size 4+).
+    # Only veyron-noir survives; the others are SIZE_INCOMPATIBLE.
+    assert "veyron-noir" in L2.candidate_slugs
+    for gents in ("apex", "bound", "morso", "the-don-gorgon", "gent"):
+        assert gents not in L2.candidate_slugs, \
+            f"{gents} should have been dropped (SIZE_INCOMPATIBLE)"
+    # Order among survivors == their order in the search output.
+    search_order = [c["slug"] for c in out["unresolved_candidates"]
+                     if c["slug"] in L2.candidate_slugs]
+    assert L2.candidate_order == search_order
+
+
+# ── C. choose_product returns the first 3 surviving RANKED candidates
+def test_PCR_C_choose_product_takes_first_three_ranked():
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.record_search({}, out)
+    action = L.next_action()
+    assert action["kind"] == "choose_product", action
+    # Expected: the first 3 slugs in candidate_order → their product_name.
+    expected_slugs = L.candidate_order[:3]
+    from services.pricing_engine_catalog import (
+        FIXED_PRODUCTS, PRICING_ENGINE_CATALOG,
+    )
+    def _name(s):
+        r = FIXED_PRODUCTS.get(s) or PRICING_ENGINE_CATALOG.get(s) or {}
+        return r.get("product_name") or s
+    expected_names = [_name(s) for s in expected_slugs]
+    assert action["candidates"] == expected_names, \
+        f"got {action['candidates']} expected {expected_names}"
+
+
+# ── D. Alphabetical slug/name order does NOT override search rank
+def test_PCR_D_alphabetical_order_does_not_override_search_rank():
+    """Populate the ledger with a specific non-alphabetical order
+    (zeta, alpha, mu). Both alphabetically by slug ('alpha','mu','zeta')
+    and by product name would yield a different order — the ledger's
+    candidate_order must win."""
+    L = EvidenceLedger()
+    L.active_category = "ring"; L.required_category = "ring"
+    L.active_recipient = "men"; L.active_ring_size = "9"  # consume size
+    fake_out = {
+        "results": [],
+        "unresolved_candidates": [
+            {"slug": "veyron-noir", "required_configuration": [
+                {"field": "tier_key",
+                 "options": [{"label": "10K Gold", "canonical_value": "gold10k"},
+                              {"label": "14K Gold", "canonical_value": "gold14k"}]}]},
+            {"slug": "apex", "required_configuration": [
+                {"field": "tier_key",
+                 "options": [{"label": "Foundation — 10K Gold",
+                               "canonical_value": "foundation"}]}]},
+            {"slug": "morso", "required_configuration": [
+                {"field": "tier_key",
+                 "options": [{"label": "Foundation — 10K Gold",
+                               "canonical_value": "foundation"}]}]},
+        ],
+    }
+    L.record_search({}, fake_out)
+    assert L.candidate_order == ["veyron-noir", "apex", "morso"]
+    action = L.next_action()
+    assert action["kind"] == "choose_product", action
+    # First three names in the ledger's ranked order.
+    from services.pricing_engine_catalog import PRICING_ENGINE_CATALOG
+    expected = [
+        PRICING_ENGINE_CATALOG["veyron-noir"]["product_name"],
+        PRICING_ENGINE_CATALOG["apex"]["product_name"],
+        PRICING_ENGINE_CATALOG["morso"]["product_name"],
+    ]
+    assert action["candidates"] == expected, action["candidates"]
+    # Sanity: alphabetical sort would have been ["APEX", "IL MORSO DEL RE", "VEYRON NOIR"]
+    alphabetical = sorted(expected)
+    assert action["candidates"] != alphabetical
+
+
+# ── E. Unauthorized-slug pricing protection remains unchanged
+def test_PCR_E_authorization_remains_membership_based():
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[4000.0])
+    _TURN_CONSTRAINTS["authorized_slugs"] = {"veyron-noir", "apex"}
+    try:
+        # Authorized → passes to resolver (may still MISSING_CONFIG etc.).
+        r_ok = tool_resolve_configured_price({
+            "slug": "apex", "ring_size": "9", "tier_key": "foundation",
+            "wrist_size": None,
+        })
+        assert r_ok.get("error") != "SLUG_NOT_AUTHORIZED_THIS_TURN", r_ok
+        # Not authorized → blocked, regardless of candidate_order/rank state.
+        r_bad = tool_resolve_configured_price({
+            "slug": "bound", "ring_size": "9", "tier_key": "foundation",
+            "wrist_size": None,
+        })
+        assert r_bad.get("error") == "SLUG_NOT_AUTHORIZED_THIS_TURN", r_bad
+    finally:
+        _TURN_CONSTRAINTS.clear()
