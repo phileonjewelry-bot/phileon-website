@@ -72,6 +72,17 @@ export default function PhileonAiConcierge() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, onKeyDown]);
 
+  // External open bridge — mobile hamburger menu dispatches
+  // `phileon-concierge-open` to open this drawer without duplicating
+  // the launcher. No-op when the backend has disabled the feature.
+  useEffect(() => {
+    const onOpen = () => {
+      if (available) setOpen(true);
+    };
+    window.addEventListener("phileon-concierge-open", onOpen);
+    return () => window.removeEventListener("phileon-concierge-open", onOpen);
+  }, [available]);
+
   const send = useCallback(async (raw) => {
     const message = String(raw || "").trim().slice(0, MAX_MESSAGE_CHARS);
     if (!message || busy) return;

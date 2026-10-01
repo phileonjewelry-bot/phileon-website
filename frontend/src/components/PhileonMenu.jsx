@@ -210,6 +210,36 @@ const PhileonMenu = ({ isOpen, onClose }) => {
           Bamburgh Circle
         </Link>
 
+        {/* PHILEON Concierge — opens the sitewide AI concierge drawer.
+            Keeps Site Search (header icon) and Concierge separate: Search
+            is for fast lookup, Concierge is guided shopping. */}
+        <button
+          type="button"
+          onClick={() => {
+            handleLinkClick();
+            window.dispatchEvent(new CustomEvent('phileon-concierge-open'));
+          }}
+          data-testid="menu-concierge-link"
+          style={{
+            display: 'block',
+            width: '100%',
+            padding: '18px 0',
+            background: 'none',
+            border: 'none',
+            color: '#C6A24A',
+            fontSize: '18px',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+            fontFamily: "'Playfair Display', serif",
+            textAlign: 'left',
+            cursor: 'pointer',
+            borderTop: '1px solid rgba(164,116,51,0.18)',
+            marginTop: '8px',
+          }}
+        >
+          PHILEON Concierge
+        </button>
+
         {/* The Inspiration Vault — standalone (not nested under any category) */}
         <Link
           to="/vault"

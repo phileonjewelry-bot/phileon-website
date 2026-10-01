@@ -34,6 +34,15 @@ export default function SearchOverlay() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
+  // External open bridge — mobile inline header search icon (and any
+  // future surface) dispatches `phileon-search-open` instead of embedding
+  // its own trigger. Keeps a single source of truth for the overlay.
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener('phileon-search-open', onOpen);
+    return () => window.removeEventListener('phileon-search-open', onOpen);
+  }, []);
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -67,6 +76,7 @@ export default function SearchOverlay() {
         type="button"
         onClick={() => setOpen(true)}
         style={styles.trigger}
+        className="ph-search-fab"
         data-testid="site-search-trigger"
         aria-label="Open site search"
       >

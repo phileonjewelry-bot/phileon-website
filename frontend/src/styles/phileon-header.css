@@ -254,6 +254,23 @@
   .menu-icon span {
     height: 2.5px;
   }
+
+  /* Hide the floating circular search FAB on mobile — replaced by an
+     inline search icon in the header row. */
+  .ph-search-fab {
+    display: none !important;
+  }
+}
+
+/* Mobile-only visibility helper — used for icons that should ONLY
+   appear in the mobile header row (Instagram, inline Search). */
+.ph-mobile-only {
+  display: none;
+}
+@media (max-width: 768px) {
+  .ph-mobile-only {
+    display: inline-flex !important;
+  }
 }
 
 /* Ensure header doesn't interfere with page content */

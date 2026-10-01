@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Heart } from 'lucide-react';
+import { ShoppingBag, Heart, Search, Instagram } from 'lucide-react';
 import LiveMetalTicker from '@/components/LiveMetalTicker';
 import PhileonMenu from '@/components/PhileonMenu';
 import VaultUnlockSequence from '@/components/VaultUnlockSequence';
@@ -163,6 +163,30 @@ const Header = ({ onVaultOpen }) => {
               {getTotalItems() > 0 && (
                 <span className="ph-badge">{getTotalItems()}</span>
               )}
+            </button>
+
+            {/* Mobile-only inline icons — Instagram and Search sit next to
+                the hamburger on small screens. On desktop, Instagram
+                lives in the Footer and Search uses its global FAB. */}
+            <a
+              href="https://www.instagram.com/houseofphileon?igsh=ZHA2Y2c2dXVuazBp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ph-icon-btn ph-mobile-only"
+              aria-label="Follow PHILEON on Instagram"
+              data-testid="mobile-header-instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+
+            <button
+              type="button"
+              className="ph-icon-btn ph-mobile-only"
+              aria-label="Open site search"
+              onClick={() => window.dispatchEvent(new CustomEvent('phileon-search-open'))}
+              data-testid="mobile-header-search"
+            >
+              <Search className="w-5 h-5" />
             </button>
 
             <button 
