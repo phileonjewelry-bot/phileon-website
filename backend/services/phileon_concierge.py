@@ -521,6 +521,58 @@ def _candidate_view(slug: str, rec: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _extract_product_focus(message: str) -> List[str]:
+    """Return the ordered list of canonical PHILEON product slugs
+    explicitly named in ``message``. Case-insensitive whole-word match
+    against each product's canonical ``product_name`` (and against the
+    slug when its tokens are not all stop-shaped).
+
+    No fuzzy matching, no fabrication. Returns ``[]`` when nothing
+    canonically matches.
+    """
+    if not message:
+        return []
+    products = _all_products()
+    matches: List[Tuple[int, str]] = []
+    for slug, rec in products.items():
+        name = str(rec.get("product_name") or "").strip()
+        candidates: List[str] = []
+        if name:
+            candidates.append(name)
+        # Slug with dashes-as-spaces (e.g. "veyron-noir" → "veyron noir")
+        slug_as_words = slug.replace("-", " ").strip()
+        if slug_as_words and slug_as_words != (name or "").lower():
+            candidates.append(slug_as_words)
+        for term in candidates:
+            if len(term) < 3:
+                continue  # avoid 1-2 char accidental matches
+            pattern = r"\b" + _re.escape(term) + r"\b"
+            m = _re.search(pattern, message, _re.I)
+            if m:
+                matches.append((m.start(), slug))
+                break  # one match per slug is enough
+    # Order by first occurrence; dedup while preserving order.
+    matches.sort(key=lambda t: t[0])
+    seen: set = set()
+    ordered: List[str] = []
+    for _, slug in matches:
+        if slug not in seen:
+            seen.add(slug)
+            ordered.append(slug)
+    return ordered
+
+
+def _active_product_focus(all_user_turns: List[str]) -> List[str]:
+    """Latest customer turn that explicitly names canonical PHILEON
+    products wins (recency). Bare configuration follow-ups like "10K"
+    carry the prior focus."""
+    for turn in reversed(all_user_turns or []):
+        slugs = _extract_product_focus(turn)
+        if slugs:
+            return slugs
+    return []
+
+
 def _effective_missing_configuration(
     slug: str,
     rec: Dict[str, Any],
@@ -1271,6 +1323,10 @@ class EvidenceLedger:
         self.active_category:  Optional[str] = None
         self.active_recipient: Optional[str] = None
         self.active_ring_size: Optional[str] = None
+        # Current-turn explicit product focus (ordered canonical slugs
+        # the customer named in the current conversation). Narrows the
+        # presentation set only — NEVER grants authorization.
+        self.active_product_focus: List[str] = []
         # Whether this turn is the FIRST configuration-recovery turn or
         # an intermediate follow-up (used to suppress repeated invitations).
         self.is_first_config_turn: bool = True
@@ -1438,10 +1494,20 @@ class EvidenceLedger:
         removed entries.
         """
         # Preserve ranking; filter to still-surviving members.
-        surviving = [s for s in self.candidate_order
-                     if s in self.candidate_slugs]
-        if not surviving:
+        all_surviving = [s for s in self.candidate_order
+                          if s in self.candidate_slugs]
+        if not all_surviving:
             return {"kind": "none", "candidates": [], "surviving_slugs": []}
+        # ── Explicit product focus narrows the surviving set when at
+        # least one focused slug was authorized by the current turn.
+        focused_surviving: Optional[List[str]] = None
+        if self.active_product_focus:
+            focus_set = set(self.active_product_focus)
+            fs = [s for s in all_surviving if s in focus_set]
+            if fs:
+                focused_surviving = fs
+        surviving = focused_surviving if focused_surviving is not None \
+                     else all_surviving
 
         # Compute intersection of missing fields.
         sets: List[set] = []
@@ -1803,21 +1869,46 @@ def _render_needs_configuration(ledger, answer: Dict[str, Any]) -> str:
                 f"price first: {joined}?"
             )
     elif action["kind"] in _FOLLOW_UP_QUESTIONS:
-        question = _FOLLOW_UP_QUESTIONS[action["kind"]]
-        # Suppress the count prefix on intermediate follow-up turns so
-        # the reply stays focused on the single question.
-        if ledger.is_first_config_turn:
-            plural = "options" if (n or 2) != 1 else "option"
-            opener = (
-                f"I have several PHILEON {recipient_pref}{category_word} "
-                f"{plural} that could suit. Their exact prices depend on "
-                f"configuration."
-            )
-            lines.append(opener + " " + question
-                         + f" Once I have that, I can narrow the compatible "
-                           f"options{budget_clause}.")
+        # Focused-single-product rendering: name the product + confirm
+        # size when known + list the specific metal options.
+        surviving = action.get("surviving_slugs") or []
+        if (action["kind"] == "metal"
+                and len(surviving) == 1
+                and ledger.active_product_focus
+                and surviving[0] in ledger.active_product_focus):
+            slug = surviving[0]
+            rec = products.get(slug) or {}
+            name = str(rec.get("product_name") or slug).strip()
+            opts = (ledger.candidate_option_labels.get(slug) or {}).get("tier_key") or []
+            if len(opts) == 1:
+                opts_str = opts[0]
+            elif len(opts) > 1:
+                opts_str = ", ".join(opts[:-1]) + f", or {opts[-1]}"
+            else:
+                opts_str = ""
+            if ledger.active_ring_size:
+                prefix = (f"{name} is available in your US size "
+                          f"{ledger.active_ring_size}.")
+            else:
+                prefix = f"{name} is a strong fit."
+            if opts_str:
+                lines.append(f"{prefix} Which metal would you prefer: {opts_str}?")
+            else:
+                lines.append(f"{prefix} Which metal would you prefer?")
         else:
-            lines.append(question)
+            question = _FOLLOW_UP_QUESTIONS[action["kind"]]
+            if ledger.is_first_config_turn:
+                plural = "options" if (n or 2) != 1 else "option"
+                opener = (
+                    f"I have several PHILEON {recipient_pref}{category_word} "
+                    f"{plural} that could suit. Their exact prices depend on "
+                    f"configuration."
+                )
+                lines.append(opener + " " + question
+                             + f" Once I have that, I can narrow the compatible "
+                               f"options{budget_clause}.")
+            else:
+                lines.append(question)
     else:
         # No candidates or no known next input — behave like NO_MATCH.
         lines.append(
@@ -2000,6 +2091,11 @@ async def run_turn(
     ledger.active_category = constraints.get("active_category")
     ledger.active_recipient = constraints.get("active_recipient")
     ledger.active_ring_size = constraints.get("active_ring_size")
+    # Explicit current-turn product focus (recency: latest customer turn
+    # that explicitly named a canonical PHILEON product wins; bare
+    # follow-ups continue the prior focus until a new product is named).
+    all_customer_turns_pre = history_user_texts + [message or ""]
+    ledger.active_product_focus = _active_product_focus(all_customer_turns_pre)
     # First-config-turn heuristic (customer-facing UX ONLY — never used
     # for pricing/authorization/evidence). Considers the customer's
     # FULL conversation including the CURRENT message: if any turn has
@@ -2121,6 +2217,7 @@ async def run_turn(
                         "active_category": ledger.active_category,
                         "active_recipient": ledger.active_recipient,
                         "active_ring_size": ledger.active_ring_size,
+                        "active_product_focus": list(ledger.active_product_focus),
                         "is_first_config_turn": ledger.is_first_config_turn,
                         "next_action": ledger.next_action(),
                         "blocked_reason": evidence_block_reason,

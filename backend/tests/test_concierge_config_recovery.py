@@ -1265,3 +1265,239 @@ def test_PCR_E_authorization_remains_membership_based():
         assert r_bad.get("error") == "SLUG_NOT_AUTHORIZED_THIS_TURN", r_bad
     finally:
         _TURN_CONSTRAINTS.clear()
+
+
+# ═════════════════════════════════════════════════════════════════
+# EXPLICIT PRODUCT FOCUS PATCH — Tests A–L
+# ═════════════════════════════════════════════════════════════════
+from services.phileon_concierge import (
+    _extract_product_focus, _active_product_focus,
+)
+
+
+# ── A. Canonical focus extraction
+def test_EPF_A_what_about_veyron_noir_resolves_to_slug():
+    assert _extract_product_focus("What about Veyron Noir?") == ["veyron-noir"]
+    assert _extract_product_focus("Tell me about APEX") == ["apex"]
+    # Unknown product → no match.
+    assert _extract_product_focus("What about Zephyr?") == []
+    # Short slug collisions avoided — plain English words shouldn't match.
+    assert "gent" not in _extract_product_focus("What a gentleman wears")
+
+
+# ── B. Focus + current-turn authorization → focused set contains only slug
+def test_EPF_B_focused_set_single_veyron():
+    out, _ = _search_for("What about Veyron Noir?",
+                         history=["I want a men's ring under $4,000.", "9.5"])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.active_product_focus = _active_product_focus(
+        ["I want a men's ring under $4,000.", "9.5", "What about Veyron Noir?"])
+    L.record_search({}, out)
+    action = L.next_action()
+    assert action["surviving_slugs"] == ["veyron-noir"], action
+
+
+# ── C. Explicit product NOT authorized this turn → cannot enter focused set
+def test_EPF_C_unauthorized_focus_falls_back_to_full_set():
+    # Simulate a search that did NOT surface veyron-noir (e.g. different
+    # category). Manual ledger with authorized apex only.
+    L = EvidenceLedger()
+    L.active_category = "ring"; L.required_category = "ring"
+    L.active_ring_size = "9"
+    L.active_product_focus = ["veyron-noir"]  # customer asked but not authorized
+    L.record_search({}, {
+        "results": [],
+        "unresolved_candidates": [
+            {"slug": "apex", "required_configuration": [
+                {"field": "tier_key",
+                 "options": [{"label": "Foundation — 10K Gold",
+                              "canonical_value": "foundation"}]}]},
+        ],
+    })
+    # veyron-noir is NOT in candidate_slugs → focused set is empty →
+    # fall back to the full surviving set (just apex).
+    assert "veyron-noir" not in L.candidate_slugs
+    action = L.next_action()
+    assert action["surviving_slugs"] == ["apex"], action
+
+
+# ── D. Veyron + active size 9.5 → remaining input = tier only
+def test_EPF_D_veyron_with_size_only_needs_tier():
+    from services.pricing_engine_catalog import PRICING_ENGINE_CATALOG
+    rec = PRICING_ENGINE_CATALOG["veyron-noir"]
+    remaining, incompatible = _effective_missing_configuration(
+        "veyron-noir", rec, active_ring_size="9.5",
+    )
+    assert not incompatible
+    assert remaining == ["tier_key"]
+
+
+# ── E. Veyron pure-metal options → next_action = metal (not choose_product)
+def test_EPF_E_veyron_focus_next_action_metal():
+    out, _ = _search_for("What about Veyron Noir?",
+                         history=["I want a men's ring under $4,000.", "9.5"])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.active_product_focus = ["veyron-noir"]
+    L.record_search({}, out)
+    action = L.next_action()
+    assert action["kind"] == "metal", action
+    assert action["surviving_slugs"] == ["veyron-noir"]
+
+
+# ── F. Rendered response lists Veyron's exact canonical option labels
+def test_EPF_F_rendered_response_lists_canonical_options():
+    out, _ = _search_for("What about Veyron Noir?",
+                         history=["I want a men's ring under $4,000.", "9.5"])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.active_product_focus = ["veyron-noir"]
+    L.is_first_config_turn = False
+    L.record_search({}, out)
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION",
+        "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [], "candidate_slugs": ["veyron-noir"],
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": "metal_only",
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    for label in ("Sterling Silver", "10K Gold", "14K Gold", "18K Gold"):
+        assert label in text, f"missing {label} in {text!r}"
+    assert "VEYRON NOIR" in text
+    assert "US size 9.5" in text
+
+
+# ── G. Rendered response does NOT ask choose_product
+def test_EPF_G_no_choose_product_prompt():
+    out, _ = _search_for("What about Veyron Noir?",
+                         history=["I want a men's ring under $4,000.", "9.5"])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.active_product_focus = ["veyron-noir"]
+    L.is_first_config_turn = False
+    L.record_search({}, out)
+    text = _render_structured_answer({
+        "outcome": "NEEDS_CONFIGURATION", "message": "",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [], "candidate_slugs": ["veyron-noir"],
+        "missing_inputs": ["tier_key"], "follow_up_prompt_key": "metal_only",
+        "no_match": False, "no_match_reason": None,
+    }, L)
+    low = text.lower()
+    assert "which would you like me to price first" not in low, text
+    # Exactly one question.
+    assert text.count("?") == 1, text
+
+
+# ── H. Model candidate_slugs cannot establish product focus
+def test_EPF_H_model_slugs_do_not_force_focus():
+    out, _ = _search_for("9.5",
+                         history=["I want a men's ring under $4,000."])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    # Customer did NOT name a product; active_product_focus must be [].
+    L.active_product_focus = _active_product_focus(
+        ["I want a men's ring under $4,000.", "9.5"])
+    assert L.active_product_focus == []
+    L.is_first_config_turn = False
+    L.record_search({}, out)
+    # Model MAY claim narrow focus — server renderer ignores it.
+    misleading = {
+        "outcome": "NEEDS_CONFIGURATION", "message": "VEYRON NOIR specifically.",
+        "budget_acknowledgement": {"amount": 4000.0, "currency": "USD"},
+        "recommendations": [], "candidate_slugs": ["veyron-noir"],
+        "missing_inputs": ["tier_key"],
+        "follow_up_prompt_key": "metal_only",
+        "no_match": False, "no_match_reason": None,
+    }
+    text = _render_structured_answer(misleading, L)
+    # Server still presents the full ranked set (choose_product).
+    assert "which would you like me to price first" in text.lower(), text
+
+
+# ── I. "Compare Apex and Veyron Noir" → focus set contains exactly those
+def test_EPF_I_multi_product_focus():
+    focus = _extract_product_focus("Compare Apex and Veyron Noir.")
+    # Order follows first-occurrence in the message.
+    assert focus == ["apex", "veyron-noir"]
+    # Build ledger with both authorized.
+    out, _ = _search_for("Compare Apex and Veyron Noir.",
+                         history=["I want a men's ring under $4,000.", "9.5"])
+    L = EvidenceLedger()
+    L.active_recipient = "men"; L.active_category = "ring"
+    L.active_budget = 4000.0;   L.active_ring_size = "9.5"
+    L.required_category = "ring"
+    L.active_product_focus = focus
+    L.record_search({}, out)
+    action = L.next_action()
+    assert set(action["surviving_slugs"]) == {"apex", "veyron-noir"}, action
+
+
+# ── J. "What about Apex?" then "What about Veyron Noir?" — latest wins
+def test_EPF_J_latest_explicit_focus_wins():
+    focus = _active_product_focus([
+        "I want a men's ring under $4,000.",
+        "9.5",
+        "What about APEX?",
+        "What about Veyron Noir?",
+    ])
+    assert focus == ["veyron-noir"]
+
+
+# ── K. Follow-up "10K" preserves prior Veyron focus via recency
+def test_EPF_K_bare_config_answer_preserves_prior_focus():
+    focus = _active_product_focus([
+        "I want a men's ring under $4,000.",
+        "9.5",
+        "What about Veyron Noir?",
+        "10K",
+    ])
+    assert focus == ["veyron-noir"]
+    # Re-authorization is still required: build a search for turn 4
+    # and verify veyron-noir is re-surfaced.
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[])
+    _TURN_CONSTRAINTS["active_recipient"] = "men"
+    _TURN_CONSTRAINTS["active_ring_size"] = "9.5"
+    try:
+        out = tool_search_phileon_catalog({
+            "category": "ring", "gender_or_recipient": "men",
+            "material": None, "stone": "black",
+            "style_terms": ["statement", "dark", "Veyron Noir"],
+            "max_price": 4000, "min_price": None,
+            "currency": "USD", "query_intent": "veyron noir size 9.5 10K",
+        })
+    finally:
+        _TURN_CONSTRAINTS.clear()
+    # veyron-noir must be freshly in authorized_slugs (via unresolved_candidates).
+    slugs = {c["slug"] for c in out["unresolved_candidates"]}
+    assert "veyron-noir" in slugs
+
+
+# ── L. Price resolver NOT invoked before valid metal/configuration
+def test_EPF_L_resolver_not_called_before_valid_metal_choice():
+    # Even with focus + size, calling resolve_configured_price without
+    # tier_key must still return MISSING_CONFIGURATION.
+    _set_active(category="ring", active_budget=4000.0, stated_budgets=[])
+    _TURN_CONSTRAINTS["authorized_slugs"] = {"veyron-noir"}
+    try:
+        r = tool_resolve_configured_price({
+            "slug": "veyron-noir", "ring_size": "9.5",
+            "tier_key": None, "wrist_size": None,
+        })
+    finally:
+        _TURN_CONSTRAINTS.clear()
+    assert r.get("error") == "MISSING_CONFIGURATION"
+    assert "tier_key" in (r.get("missing") or [])
