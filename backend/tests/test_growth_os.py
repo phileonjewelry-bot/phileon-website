@@ -157,7 +157,7 @@ def test_settings_limits(app_client, monkeypatch):
 def test_manual_refresh_refused_without_serp(app_client, monkeypatch):
     monkeypatch.setenv("PHILEON_GROWTH_OS_ENABLED", "true")
     monkeypatch.setenv("SERPAPI_API_KEY", "")
-    r = app_client.post("/api/admin/growth-os/radar/refresh", headers=_admin_headers())
+    r = app_client.post("/api/admin/growth-os/radar/refresh", headers=_admin_headers(), json={"confirm": True})
     assert r.status_code == 409 and r.json()["detail"] == "SERPAPI_INTEGRATION_REQUIRED"
     r = app_client.get("/api/admin/growth-os/radar", headers=_admin_headers())
     assert r.json()["integration_required"] is True and r.json()["serpapi"]["status"] == "integration_required"
@@ -244,6 +244,7 @@ def radar_env(monkeypatch):
 
 def test_run_refresh_full_pipeline_dedupes_and_caches(radar_env):
     db, loop = radar_env
+    loop.run_until_complete(G.update_settings(db, {"serp_daily_limit": 40}))  # full-run scenario needs > default 6
     res = loop.run_until_complete(R.run_refresh(db, trigger="test", run_id="pipe-1"))
     assert res["status"] == "success", res
     c = res["counters"]
@@ -414,3 +415,74 @@ def test_public_ingestion_in_tests_never_touches_preview_db(app_client):
     disposable = c[os.environ["DB_NAME"]]
     assert disposable.behavior_events.count_documents({"product_slug": "p1"}) >= 1
     c.close()
+
+
+# ── Targeted research run (mocked SerpAPI — never live) ───────
+
+def _kw(loop, db, term):
+    return loop.run_until_complete(db.growth_keywords.find_one({"term": term}, {"_id": 0}))
+
+
+def test_estimate_single_keyword_canada_is_two_requests(radar_env):
+    db, loop = radar_env
+    kw = _kw(loop, db, "Bespoke engagement rings")
+    est = loop.run_until_complete(R.estimate_run(db, keyword_ids=[kw["id"]], markets=["CA"]))
+    assert est["estimated_requests"] == 2 and est["markets"] == ["CA"] and est["keyword_count"] == 1
+    assert est["breakdown"][0]["keywords"][0]["term"] == "Bespoke engagement rings"
+    assert est["breakdown"][0] == {**est["breakdown"][0], "timeseries_calls": 1, "related_calls": 1}
+    # Full run estimate for comparison: 19 keywords × 2 markets → 8 timeseries + 8 related.
+    full = loop.run_until_complete(R.estimate_run(db))
+    assert full["estimated_requests"] == 16
+
+
+def test_targeted_run_canada_only_consumes_two_and_leaves_others_enabled(radar_env):
+    db, loop = radar_env
+    kw = _kw(loop, db, "Bespoke engagement rings")
+    res = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="target-1", keyword_ids=[kw["id"]],
+                                                markets=["CA"], max_requests=2))
+    assert res["status"] == "success", res
+    assert res["counters"]["serp_calls"] == 2 and res["scope"]["markets"] == ["CA"]
+    snaps = loop.run_until_complete(db.growth_radar_snapshots.find({}, {"_id": 0}).to_list(50))
+    assert {s["market"] for s in snaps} == {"CA"} and {s["keyword_id"] for s in snaps} == {kw["id"]}
+    assert loop.run_until_complete(db.growth_radar_snapshots.count_documents({"market": "US"})) == 0
+    assert loop.run_until_complete(db.growth_keywords.count_documents({"enabled": True})) == 19
+    assert loop.run_until_complete(G.serp_usage(db))["daily_used"] == 2
+    # Re-estimate: everything cached → 0 requests.
+    assert loop.run_until_complete(R.estimate_run(db, keyword_ids=[kw["id"]], markets=["CA"]))["estimated_requests"] == 0
+    # Evidence from this run is external search interest, never customer enquiries.
+    ledger, _ = loop.run_until_complete(D.collect_evidence(db))
+    assert ledger and all(e["signal_type"] == "market_search_interest" for e in ledger)
+    assert all("NOT customer enquiries" in e["quality_reason"] for e in ledger)
+
+
+def test_max_requests_hard_cap_stops_run(radar_env):
+    db, loop = radar_env
+    res = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="cap-1", markets=["CA"], max_requests=3))
+    assert res["status"] == "partial" and res["reason"] == "max_requests_reached"
+    assert res["counters"]["serp_calls"] == 3
+    assert loop.run_until_complete(G.serp_usage(db))["daily_used"] == 3
+
+
+def test_default_budgets_are_six_daily_two_hundred_monthly():
+    assert G.DEFAULT_SETTINGS["serp_daily_limit"] == 6 and G.DEFAULT_SETTINGS["serp_monthly_limit"] == 200
+
+
+def test_http_refresh_requires_confirmation_and_respects_max(app_client, monkeypatch):
+    monkeypatch.setenv("PHILEON_GROWTH_OS_ENABLED", "true")
+    monkeypatch.setenv("SERPAPI_API_KEY", "dummy-for-gate-tests")
+
+    async def _never(*a, **k):
+        raise AssertionError("live SerpAPI must not be called in tests")
+    monkeypatch.setattr(R, "fetch_timeseries", _never)
+    monkeypatch.setattr(R, "fetch_related", _never)
+    h = _admin_headers()
+    kws = app_client.get("/api/admin/growth-os/keywords", headers=h).json()["keywords"]
+    kw = next(k for k in kws if k["term"] == "Bespoke engagement rings")
+    scope = {"keyword_ids": [kw["id"]], "markets": ["CA"], "max_requests": 2}
+    est = app_client.post("/api/admin/growth-os/radar/estimate", headers=h, json=scope)
+    assert est.status_code == 200 and est.json()["estimated_requests"] == 2
+    r = app_client.post("/api/admin/growth-os/radar/refresh", headers=h, json=scope)
+    assert r.status_code == 409 and r.json()["detail"] == "CONFIRMATION_REQUIRED"
+    r = app_client.post("/api/admin/growth-os/radar/refresh", headers=h, json={**scope, "max_requests": 1, "confirm": True})
+    assert r.status_code == 409 and r.json()["detail"].startswith("ESTIMATE_EXCEEDS_MAX:2>1")
+    assert app_client.get("/api/admin/growth-os/radar/runs/nope", headers=h).json()["status"] == "pending"

@@ -1,6 +1,7 @@
 /* Growth OS — Customer Radar tab (SerpAPI Google Trends · CA / US · keyword manager). */
 import { useEffect, useState } from 'react';
 import { Panel, Pill, Empty, Btn, fmtDate, useAsync, useGrowthApi } from './shared';
+import TargetedRun from './TargetedRun';
 
 const MARKETS = ['CA', 'US'];
 
@@ -108,15 +109,8 @@ export default function CustomerRadar() {
   const api = useGrowthApi();
   const [market, setMarket] = useState('ALL');
   const [state, load] = useAsync(() => api(`/radar${market !== 'ALL' ? `?market=${market}` : ''}`), [api, market]);
-  const [msg, setMsg] = useState(null);
   useEffect(() => { load(); }, [load]);
   const d = state.data || {};
-
-  const refresh = async () => {
-    setMsg(null);
-    try { const r = await api('/radar/refresh', { method: 'POST' }); setMsg(`Refresh accepted · run ${r.run_id}`); }
-    catch (e) { setMsg(e.message === 'SERPAPI_INTEGRATION_REQUIRED' ? 'SerpAPI key not configured — refresh refused.' : e.message); }
-  };
 
   return (
     <div className="space-y-5 min-w-0" data-testid="gos-radar">
@@ -128,15 +122,15 @@ export default function CustomerRadar() {
           </button>
         ))}
         <Pill value={d.serpapi?.status} testId="gos-radar-serp-status" />
-        <Btn tone="gold" onClick={refresh} disabled={d.integration_required} testId="gos-radar-refresh">Run research now</Btn>
       </div>
-      {msg && <p className="text-xs text-amber-300" data-testid="gos-radar-msg">{msg}</p>}
       {state.error && <p className="text-rose-300 text-sm" data-testid="gos-radar-error">{state.error}</p>}
 
       {d.integration_required && (
         <Empty title="Integration Required · SerpAPI" testId="gos-radar-integration-required"
                body="Google Trends research is architected and ready. Configure SERPAPI_API_KEY in the backend environment to activate. The keywords below will be researched for Canada and the US separately, within the query budget." />
       )}
+
+      <TargetedRun disabled={!!d.integration_required} onCompleted={load} />
 
       {!d.integration_required && (
         <>

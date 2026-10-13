@@ -197,14 +197,50 @@ async def radar(market: Optional[str] = Query(default=None), _: str = Depends(ve
             "discoveries": disc, "usage": await G.serp_usage(db)}
 
 
+class RunScope(BaseModel):
+    keyword_ids: Optional[List[str]] = None
+    markets: Optional[List[str]] = None
+    max_requests: Optional[int] = Field(default=None, ge=1, le=100)
+    confirm: bool = False
+
+
+@admin_router.post("/radar/estimate")
+async def radar_estimate(body: RunScope, _: str = Depends(verify_admin)):
+    """Dry run — never calls SerpAPI."""
+    _require_enabled()
+    return await R.estimate_run(db, keyword_ids=body.keyword_ids, markets=body.markets)
+
+
 @admin_router.post("/radar/refresh", status_code=202)
-async def manual_refresh(background: BackgroundTasks, _: str = Depends(verify_admin)):
+async def manual_refresh(body: RunScope, background: BackgroundTasks, _: str = Depends(verify_admin)):
+    """Quota-consuming. Requires explicit `confirm: true`; refused when the
+    estimate exceeds `max_requests` or the remaining server-side budget."""
     _require_enabled()
     if not G.serp_configured():
         raise HTTPException(status_code=409, detail="SERPAPI_INTEGRATION_REQUIRED")
+    if not body.confirm:
+        raise HTTPException(status_code=409, detail="CONFIRMATION_REQUIRED")
+    est = await R.estimate_run(db, keyword_ids=body.keyword_ids, markets=body.markets)
+    if est["estimated_requests"] == 0:
+        raise HTTPException(status_code=409, detail="NOTHING_TO_RESEARCH")
+    if body.max_requests is not None and est["estimated_requests"] > body.max_requests:
+        raise HTTPException(status_code=409, detail=f"ESTIMATE_EXCEEDS_MAX:{est['estimated_requests']}>{body.max_requests}")
+    if not est["within_budget"]:
+        raise HTTPException(status_code=409, detail="BUDGET_INSUFFICIENT")
     run_id = f"manual-{G._now().strftime('%Y%m%dT%H%M%S')}"
-    background.add_task(R.run_refresh, db, trigger="manual", run_id=run_id)
-    return {"accepted": True, "run_id": run_id}
+    background.add_task(R.run_refresh, db, trigger="manual", run_id=run_id, keyword_ids=body.keyword_ids,
+                        markets=body.markets, max_requests=body.max_requests)
+    return {"accepted": True, "run_id": run_id, "estimated_requests": est["estimated_requests"], "scope": {
+        "keyword_ids": body.keyword_ids, "markets": est["markets"], "max_requests": body.max_requests}}
+
+
+@admin_router.get("/radar/runs/{run_id}")
+async def radar_run(run_id: str, _: str = Depends(verify_admin)):
+    _require_enabled()
+    run = await db.growth_runs.find_one({"run_id": run_id}, {"_id": 0})
+    if not run:
+        return {"run_id": run_id, "status": "pending"}
+    return run
 
 
 @admin_router.post("/discoveries/{discovery_id}/status")

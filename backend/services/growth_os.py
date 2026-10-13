@@ -31,8 +31,8 @@ CRON_NAME = "growth-os-daily"
 
 SETTINGS_ID = "growth_os"
 DEFAULT_SETTINGS: Dict[str, Any] = {
-    "serp_daily_limit": 40,
-    "serp_monthly_limit": 300,
+    "serp_daily_limit": 6,
+    "serp_monthly_limit": 200,
     "related_queries_per_run": 4,
     "snapshot_ttl_hours": 20,
     "director_max_recommendations": 6,

@@ -168,8 +168,9 @@ async def collect_evidence(db, *, include_excluded: bool = False) -> Tuple[List[
              f"latest {s['latest_value']}, recent 4-wk vs prior 4-wk {s['trend_delta_pct']:+}%",
              {"source": "serpapi_google_trends", "collection": "growth_radar_snapshots", "period": "today 12-m",
               "env": "external", "event_count": s.get("points", 0), "fetched_at": s.get("fetched_at")},
-             "verified", "external market data (SerpAPI Google Trends)", market=s["market"],
-             keyword_id=s["keyword_id"], category=s.get("category"), events=s.get("points", 0))
+             "verified", "external Google search-interest signal (SerpAPI Google Trends) — NOT customer enquiries or buyers",
+             market=s["market"], keyword_id=s["keyword_id"], category=s.get("category"), events=s.get("points", 0),
+             signal_type="market_search_interest")
     disc = await db.growth_radar_discoveries.find({"status": {"$in": ["new", "watching"]}}, {"_id": 0}) \
         .sort("last_seen", -1).to_list(40)
     for d in disc[:12]:
@@ -177,8 +178,9 @@ async def collect_evidence(db, *, include_excluded: bool = False) -> Tuple[List[
              f"'{d['source_keyword']}', priority {d.get('priority')} ({d.get('priority_engine')})",
              {"source": "serpapi_google_trends", "collection": "growth_radar_discoveries", "period": "today 12-m",
               "env": "external", "event_count": d.get("seen_count", 1), "fetched_at": d.get("last_seen")},
-             "verified", "external market data (SerpAPI Google Trends)", market=d["market"],
-             discovery_id=d["id"], category=d.get("category"), events=d.get("seen_count", 1))
+             "verified", "external Google search-interest signal (SerpAPI Google Trends) — NOT customer enquiries or buyers",
+             market=d["market"], discovery_id=d["id"], category=d.get("category"), events=d.get("seen_count", 1),
+             signal_type="market_search_interest")
 
     slugs = _catalog_slugs()
     try:
@@ -363,7 +365,8 @@ _SYSTEM = (
     "page, a collection page and search tuning for the same theme) into ONE initiative with several actions. Fewer is "
     "better; return [] if the evidence does not support a distinct opportunity. Evidence graded 'unverified' may only "
     "support exploratory hypotheses in channels content/seo/social — never collection, concierge, bespoke or email. "
-    "Output ONLY a JSON array."
+    "Google Trends evidence (radar_trend / radar_discovery) measures public SEARCH INTEREST only — never describe it as "
+    "customers, enquiries, demand from buyers or leads; phrase it as market interest to explore. Output ONLY a JSON array."
 )
 
 

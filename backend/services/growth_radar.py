@@ -194,12 +194,22 @@ async def _upsert_discovery(db, item: Dict[str, Any], *, market: str, source_kw:
     return True
 
 
-async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_director: bool = True) -> Dict[str, Any]:
+async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_director: bool = True,
+                      keyword_ids: Optional[List[str]] = None, markets: Optional[List[str]] = None,
+                      max_requests: Optional[int] = None) -> Dict[str, Any]:
+    """Full or TARGETED refresh. `keyword_ids` / `markets` scope the run without
+    touching other keywords' enabled state; `max_requests` is a hard per-run cap
+    on billable SerpAPI calls (checked before every call)."""
     run_id = run_id or f"{trigger}-{uuid.uuid4().hex[:12]}"
     now = G._now().isoformat()
+    scope_markets = [m for m in (markets or list(G.MARKETS)) if m in G.MARKETS] or list(G.MARKETS)
     base = {"id": str(uuid.uuid4()), "run_id": run_id, "trigger": trigger, "started_at": now,
+            "scope": {"keyword_ids": keyword_ids, "markets": scope_markets, "max_requests": max_requests},
             "steps": [], "counters": {"serp_calls": 0, "cache_hits": 0, "snapshots": 0,
                                       "new_discoveries": 0, "recommendations": 0}}
+
+    def _cap_reached() -> bool:
+        return max_requests is not None and base["counters"]["serp_calls"] >= max_requests
 
     async def _finish(status: str, reason: str = "") -> Dict[str, Any]:
         base.update(status=status, reason=reason, finished_at=G._now().isoformat())
@@ -225,9 +235,12 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
             return await _finish("skipped", "integration_required")
 
         ttl = int(settings["snapshot_ttl_hours"])
-        keywords = await db.growth_keywords.find({"enabled": True}, {"_id": 0}).to_list(500)
+        kw_query: Dict[str, Any] = {"enabled": True}
+        if keyword_ids:
+            kw_query = {"id": {"$in": list(keyword_ids)}}
+        keywords = await db.growth_keywords.find(kw_query, {"_id": 0}).to_list(500)
         stop_reason = None
-        for market in G.MARKETS:
+        for market in scope_markets:
             pending = []
             for kw in keywords:
                 if market not in (kw.get("markets") or G.MARKETS):
@@ -238,6 +251,9 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
                 pending.append(kw)
             for i in range(0, len(pending), 5):
                 batch = pending[i:i + 5]
+                if _cap_reached():
+                    stop_reason = "max_requests_reached"
+                    break
                 stop_reason = await _budget_ok(db, settings)
                 if stop_reason:
                     break
@@ -267,8 +283,10 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
 
         if not stop_reason:
             per_run = int(settings["related_queries_per_run"])
-            for market in G.MARKETS:
-                top = await db.growth_radar_snapshots.find({"kind": "timeseries", "market": market}, {"_id": 0}) \
+            scoped_ids = {k["id"] for k in keywords}
+            for market in scope_markets:
+                top = await db.growth_radar_snapshots.find({"kind": "timeseries", "market": market,
+                                                            "keyword_id": {"$in": list(scoped_ids)}}, {"_id": 0}) \
                     .sort("avg_interest", -1).to_list(200)
                 seen, done = set(), 0
                 for snap in top:
@@ -281,6 +299,9 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
                         base["counters"]["cache_hits"] += 1
                         done += 1
                         continue
+                    if _cap_reached():
+                        stop_reason = "max_requests_reached"
+                        break
                     stop_reason = await _budget_ok(db, settings)
                     if stop_reason:
                         break
@@ -321,3 +342,30 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
         return await _finish("failed", f"{type(exc).__name__}")
     finally:
         await release_lock(db)
+
+
+async def estimate_run(db, *, keyword_ids: Optional[List[str]] = None, markets: Optional[List[str]] = None) -> Dict[str, Any]:
+    """Dry-run cost estimate (no SerpAPI calls). Mirrors run_refresh's cache + batching logic."""
+    settings = await G.get_settings(db)
+    ttl = int(settings["snapshot_ttl_hours"])
+    per_run = int(settings["related_queries_per_run"])
+    scope_markets = [m for m in (markets or list(G.MARKETS)) if m in G.MARKETS] or list(G.MARKETS)
+    kw_query: Dict[str, Any] = {"id": {"$in": list(keyword_ids)}} if keyword_ids else {"enabled": True}
+    keywords = await db.growth_keywords.find(kw_query, {"_id": 0}).to_list(500)
+    breakdown = []
+    total = 0
+    for market in scope_markets:
+        kws = [k for k in keywords if market in (k.get("markets") or G.MARKETS)]
+        pending_ts = [k for k in kws if not await _fresh_snapshot(db, k["id"], market, "timeseries", ttl)]
+        ts_calls = -(-len(pending_ts) // 5) if pending_ts else 0
+        pending_rel = [k for k in kws if not await _fresh_snapshot(db, k["id"], market, "related", ttl)]
+        rel_calls = min(per_run, len(pending_rel))
+        breakdown.append({"market": market, "keywords": [{"id": k["id"], "term": k["market_terms"].get(market, k["term"])} for k in kws],
+                          "timeseries_calls": ts_calls, "related_calls": rel_calls,
+                          "cached_timeseries": len(kws) - len(pending_ts), "cached_related": len(kws) - len(pending_rel)})
+        total += ts_calls + rel_calls
+    usage = await G.serp_usage(db, settings)
+    return {"estimated_requests": total, "breakdown": breakdown, "markets": scope_markets,
+            "keyword_count": len(keywords), "usage": usage,
+            "within_budget": total <= usage["daily_remaining"] and total <= usage["monthly_remaining"],
+            "serp_configured": G.serp_configured()}
