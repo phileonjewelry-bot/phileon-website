@@ -4,6 +4,10 @@ Uses REACT_APP_BACKEND_URL. Seeds orders_v2 directly via Motor, cleans up.
 Idempotent; PHI-TEST-* prefix only. Historical PHI-20260901-4CBC5C untouched.
 """
 from __future__ import annotations
+import os as _os, pytest as _pytest
+if _os.environ.get("PHILEON_ALLOW_LIVE_E2E") != "1":
+    _pytest.skip("live-server e2e harness writes orders into the persistent database; opt in with PHILEON_ALLOW_LIVE_E2E=1", allow_module_level=True)
+_os.environ["DB_NAME"] = _os.environ.get("PHILEON_PERSISTENT_DB_NAME", _os.environ.get("DB_NAME", ""))
 import hashlib
 import os
 import sys

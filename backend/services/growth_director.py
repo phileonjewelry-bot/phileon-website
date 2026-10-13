@@ -43,7 +43,12 @@ CHANNEL_GROUP = {"content": "site", "seo": "site", "collection": "site",
 PERIOD = "30d"
 SUFFICIENT_EVENTS = 30          # below this every recommendation is an exploratory hypothesis
 ESTABLISHED_EVENTS = 200
-_TEST_SESSION_RX = re.compile(r"^(sess-x+|phi-|test|pytest|qa-|seed)", re.I)
+MIN_VERIFIED_SESSIONS = 3
+MIN_VERIFIED_DAYS = 2
+# Genuine browser sessions are minted by frontend/src/hooks/useAnalytics.js as `phi-<uuid>`
+# (fallback `phi-<base36>`); anything else cannot be attributed to a real visitor.
+_GENUINE_SESSION_RX = re.compile(r"^phi-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|[a-z0-9]{12,})$", re.I)
+_TEST_SESSION_RX = re.compile(r"^(sess-x+$|phi-real-|phi-test|test|pytest|qa-|seed|fixture)", re.I)
 DRAFT_FORMATS = {
     "instagram_caption": "Instagram caption (≤120 words, editorial, no hashtags spam, max 3 tags)",
     "blog_outline": "Editorial journal/blog outline (title + 5 section headers + 1-line notes)",
@@ -93,24 +98,50 @@ def _catalog_slugs() -> set:
         return set()
 
 
-def grade_internal(env: str, *, sessions: List[str], event_count: int, slug_known: Optional[bool] = None) -> Tuple[str, str]:
-    """Return (quality, reason) for an internal-analytics evidence item."""
+def grade_internal(env: str, *, sessions: List[str], event_count: int, slug_known: Optional[bool] = None,
+                   days: int = 0) -> Tuple[str, str]:
+    """Return (quality, reason). `verified` demands PROVENANCE, not a label:
+    production env AND genuine browser-session ids AND enough distinct
+    sessions AND activity spread over several days. The env label alone
+    never establishes real customers."""
     if slug_known is False:
         return "test", "product slug is not in the PHILEON catalogue (synthetic fixture)"
-    real = [s for s in sessions if s and not _TEST_SESSION_RX.match(str(s))]
-    if sessions and not real:
+    sess = [str(s) for s in sessions if s]
+    fixture = [s for s in sess if _TEST_SESSION_RX.match(s)]
+    genuine = [s for s in sess if _GENUINE_SESSION_RX.match(s)]
+    if sess and len(fixture) == len(sess):
         return "test", "all events originate from test-fixture session ids"
+    if fixture:
+        return "test", f"{len(fixture)} of {len(sess)} sessions are test-fixture ids (contaminated sample)"
     if env != "production":
         return "unverified", f"{env} environment traffic is owner/agent/QA activity, not public customers"
+    if not genuine:
+        return "unverified", "no genuine browser session ids (phi-<uuid>) behind these events"
+    if len(genuine) < len(sess):
+        return "unverified", f"only {len(genuine)} of {len(sess)} sessions have genuine browser ids"
+    if len(genuine) < MIN_VERIFIED_SESSIONS:
+        return "unverified", f"fewer than {MIN_VERIFIED_SESSIONS} distinct genuine sessions"
+    if days < MIN_VERIFIED_DAYS:
+        return "unverified", f"activity confined to fewer than {MIN_VERIFIED_DAYS} distinct days"
     if event_count < 5:
         return "unverified", "too few events to attribute to genuine customer behaviour"
-    return "verified", "production traffic from non-test sessions"
+    return "verified", f"production traffic · {len(genuine)} genuine sessions · {days} days"
 
 
 def _strength(total_events: int, worst_quality: str) -> str:
     if worst_quality != "verified" or total_events < SUFFICIENT_EVENTS:
         return "exploratory"
     return "established" if total_events >= ESTABLISHED_EVENTS else "indicative"
+
+
+async def _distinct_days(coll, match: Dict[str, Any]) -> int:
+    pipeline = [{"$match": match}, {"$group": {"_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$created_at"}}}},
+                {"$count": "n"}]
+    try:
+        rows = await coll.aggregate(pipeline).to_list(1)
+        return int(rows[0]["n"]) if rows else 0
+    except Exception:  # pragma: no cover - non-date created_at
+        return 0
 
 
 # ─── Evidence ledger ──────────────────────────────────────────────
@@ -156,36 +187,40 @@ async def collect_evidence(db, *, include_excluded: bool = False) -> Tuple[List[
             if (p["views"] or 0) < 5 and not p["paid_orders"]:
                 continue
             slug = p["product_slug"]
-            sessions = await db.behavior_events.distinct("session_id", {"env": env, "product_slug": slug,
-                                                                          "created_at": {"$gte": since}})
+            match = {"env": env, "product_slug": slug, "created_at": {"$gte": since}}
+            sessions = await db.behavior_events.distinct("session_id", match)
+            days = await _distinct_days(db.behavior_events, match)
             n = sum(int(p.get(k) or 0) for k in ("views", "likes", "adds", "checkout_starts", "paid_orders"))
-            q, reason = grade_internal(env, sessions=sessions, event_count=n, slug_known=(slug in slugs) if slugs else None)
+            q, reason = grade_internal(env, sessions=sessions, event_count=n, days=days,
+                                       slug_known=(slug in slugs) if slugs else None)
             _add("internal_product", f"Site ({PERIOD}, {env}): '{slug}' views {p['views']}, likes {p['likes']}, "
                  f"adds {p['adds']}, checkout starts {p['checkout_starts']}, paid orders {p['paid_orders']}",
                  {"source": "site_behaviour_events", "collection": "behavior_events", "period": PERIOD, "env": env,
-                  "event_count": n, "distinct_sessions": len(sessions), "catalogue_match": slug in slugs,
-                  **period}, q, reason, product_slug=slug, events=n)
+                  "event_count": n, "distinct_sessions": len(sessions), "distinct_days": days,
+                  "catalogue_match": slug in slugs, **period}, q, reason, product_slug=slug, events=n)
         srch = await top_searches(db, env=env, period=PERIOD, limit=8)
         for q_ in srch.get("zero_result_searches", [])[:6]:
             if q_.get("count", 0) < 2:
                 continue
-            sessions = await db.search_events.distinct("session_id", {"env": env, "normalized_query": q_["query"],
-                                                                       "created_at": {"$gte": since}})
-            q, reason = grade_internal(env, sessions=sessions, event_count=q_["count"])
+            match = {"env": env, "normalized_query": q_["query"], "created_at": {"$gte": since}}
+            sessions = await db.search_events.distinct("session_id", match)
+            days = await _distinct_days(db.search_events, match)
+            q, reason = grade_internal(env, sessions=sessions, event_count=q_["count"], days=days)
             _add("internal_search_gap", f"Site search ({PERIOD}): '{q_['query']}' returned zero results {q_['count']} times",
                  {"source": "site_search_events", "collection": "search_events", "period": PERIOD, "env": env,
-                  "event_count": q_["count"], "distinct_sessions": len(sessions), **period}, q, reason,
+                  "event_count": q_["count"], "distinct_sessions": len(sessions), "distinct_days": days, **period}, q, reason,
                  query=q_["query"], events=q_["count"])
         for q_ in srch.get("top_searches", [])[:5]:
             if q_.get("count", 0) < 3:
                 continue
-            sessions = await db.search_events.distinct("session_id", {"env": env, "normalized_query": q_["query"],
-                                                                       "created_at": {"$gte": since}})
-            q, reason = grade_internal(env, sessions=sessions, event_count=q_["count"])
+            match = {"env": env, "normalized_query": q_["query"], "created_at": {"$gte": since}}
+            sessions = await db.search_events.distinct("session_id", match)
+            days = await _distinct_days(db.search_events, match)
+            q, reason = grade_internal(env, sessions=sessions, event_count=q_["count"], days=days)
             _add("internal_search", f"Site search ({PERIOD}): '{q_['query']}' searched {q_['count']} times "
                  f"(avg {q_['avg_results']} results)",
                  {"source": "site_search_events", "collection": "search_events", "period": PERIOD, "env": env,
-                  "event_count": q_["count"], "distinct_sessions": len(sessions), **period}, q, reason,
+                  "event_count": q_["count"], "distinct_sessions": len(sessions), "distinct_days": days, **period}, q, reason,
                  query=q_["query"], events=q_["count"])
     except Exception as exc:  # pragma: no cover
         log.warning("internal evidence unavailable: %s", exc)

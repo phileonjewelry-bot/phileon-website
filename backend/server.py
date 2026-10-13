@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import sys
 import logging
 from pathlib import Path
 from typing import List, Optional
@@ -38,8 +39,14 @@ load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
+_db_name = os.environ['DB_NAME']
+# Fail-closed: under pytest the app may only bind a disposable `_pytest_` database
+# (set by tests/conftest.py). Never let automated tests touch persistent analytics.
+if ("pytest" in sys.modules or os.environ.get("PYTEST_CURRENT_TEST")) and "_pytest_" not in _db_name:
+    raise RuntimeError("Refusing to bind the application to a persistent database under pytest; "
+                       "tests/conftest.py must set a disposable DB_NAME.")
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[_db_name]
 
 # JWT Configuration
 JWT_SECRET = os.environ['JWT_SECRET']

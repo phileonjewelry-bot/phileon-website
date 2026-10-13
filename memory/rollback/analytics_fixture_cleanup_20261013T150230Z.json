@@ -1,0 +1,302 @@
+{
+ "created_at": "2026-10-13T15:02:30.654586+00:00",
+ "database": "phileon_db",
+ "reason": "Growth OS E001 (p1) / E002 (ring) synthetic fixture cleanup \u2014 written by pytest via shared app_client bound to the persistent preview DB",
+ "restore": "insert each document back into its collection (convert _id via bson.ObjectId, created_at via datetime.fromisoformat)",
+ "collections": {
+  "behavior_events": {
+   "filter": {
+    "product_slug": "p1",
+    "session_id": "sess-xxxxxxxx",
+    "env": "preview"
+   },
+   "count": 7,
+   "documents": [
+    {
+     "_id": "6abc9a27d5c884acf2b7fbc8",
+     "id": "0b3aa8f7-7607-4029-8c9f-7e9d60901e59",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-09-30 05:12:07.675000",
+     "anon_expires_at": "2026-10-30 05:12:07.675000"
+    },
+    {
+     "_id": "6abcc09fcef1176728347aa7",
+     "id": "61b14227-0eb3-484e-acb2-741542a38afe",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-09-30 07:56:15.395000",
+     "anon_expires_at": "2026-10-30 07:56:15.395000"
+    },
+    {
+     "_id": "6abd3ef446b055ba966971ec",
+     "id": "d84884eb-65c5-4450-9a91-5fffe78b23d8",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-09-30 16:55:16.734000",
+     "anon_expires_at": "2026-10-30 16:55:16.734000"
+    },
+    {
+     "_id": "6abd76c5437adaeb4a03e476",
+     "id": "52555554-3e71-4c09-8af1-300653801196",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-09-30 20:53:25.988000",
+     "anon_expires_at": "2026-10-30 20:53:25.988000"
+    },
+    {
+     "_id": "6abe0a520e3f4cbecfd20277",
+     "id": "c78e775f-1347-4c05-86f0-768f2904d974",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-10-01 07:22:58.501000",
+     "anon_expires_at": "2026-10-31 07:22:58.501000"
+    },
+    {
+     "_id": "6ace0078418996393fb475a5",
+     "id": "4c68209a-0328-4ebd-a188-332582a320b7",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-10-13 09:57:12.923000",
+     "anon_expires_at": "2026-11-12 09:57:12.923000"
+    },
+    {
+     "_id": "6ace45885aca2e32eeb4ebfe",
+     "id": "ec001ab6-b357-4df5-9036-4c4b5bd7d738",
+     "event_type": "PRODUCT_VIEWED",
+     "product_slug": "p1",
+     "session_id": "sess-xxxxxxxx",
+     "customer_email": null,
+     "identity_source": "anonymous",
+     "source": null,
+     "env": "preview",
+     "created_at": "2026-10-13 14:51:52.003000",
+     "anon_expires_at": "2026-11-12 14:51:52.003000"
+    }
+   ]
+  },
+  "search_events": {
+   "filter": {
+    "normalized_query": "ring",
+    "session_id": "phi-real-search-1",
+    "env": "preview"
+   },
+   "count": 19,
+   "documents": [
+    {
+     "_id": "6ace45835aca2e32eeb4ebde",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-10-13 14:51:47.318000"
+    },
+    {
+     "_id": "6ace00fadfc6e6cc057bee20",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-10-13 09:59:22.477000"
+    },
+    {
+     "_id": "6ace0075418996393fb47585",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-10-13 09:57:09.662000"
+    },
+    {
+     "_id": "6abe0a4f0e3f4cbecfd20257",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-10-01 07:22:55.515000"
+    },
+    {
+     "_id": "6abd76c3437adaeb4a03e456",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-30 20:53:23.878000"
+    },
+    {
+     "_id": "6abd3ef246b055ba966971cc",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-30 16:55:14.535000"
+    },
+    {
+     "_id": "6abcc09dcef1176728347a87",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-30 07:56:13.359000"
+    },
+    {
+     "_id": "6abc9a25d5c884acf2b7fba8",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-30 05:12:05.720000"
+    },
+    {
+     "_id": "6abac56cc72274197d543d3a",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-28 19:52:12.726000"
+    },
+    {
+     "_id": "6aa073b228ee6b010370a001",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 20:44:34.191000"
+    },
+    {
+     "_id": "6a9ff6c857685e389853e8ae",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 11:51:36.922000"
+    },
+    {
+     "_id": "6a9ff67fc53088ec98a99232",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 11:50:23.412000"
+    },
+    {
+     "_id": "6a9fe899e39e95d4862699b8",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 10:51:05.910000"
+    },
+    {
+     "_id": "6a9f7bcd3aa7e3ae46537cba",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 03:06:53.469000"
+    },
+    {
+     "_id": "6a9f7b8d36fba50bf118fb08",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 03:05:49.705000"
+    },
+    {
+     "_id": "6a9f7b4eb9ec944779adf95e",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 03:04:46.717000"
+    },
+    {
+     "_id": "6a9f7b25dc66d2e4f28ba997",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 03:04:05.639000"
+    },
+    {
+     "_id": "6a9f7a1eeb0adfa1e558c1ef",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 02:59:42.938000"
+    },
+    {
+     "_id": "6a9f79f890551b6983489b87",
+     "normalized_query": "ring",
+     "result_count": 3,
+     "session_id": "phi-real-search-1",
+     "env": "preview",
+     "created_at": "2026-09-08 02:59:04.791000"
+    }
+   ]
+  },
+  "growth_runs": {
+   "filter": {
+    "run_id": {
+     "$regex": "^pytest-"
+    }
+   },
+   "count": 1,
+   "documents": [
+    {
+     "_id": "6acdfe5927fe2b1025ce4be1",
+     "run_id": "pytest-cron-skip-1",
+     "counters": {
+      "serp_calls": 0,
+      "cache_hits": 0,
+      "snapshots": 0,
+      "new_discoveries": 0,
+      "recommendations": 0
+     },
+     "id": "2e36678d-570d-4826-9611-668121ac50c9",
+     "started_at": "2026-10-13T09:48:09.430860+00:00",
+     "status": "skipped",
+     "steps": [
+      "radar: integration_required (SERPAPI_API_KEY missing)",
+      "director: deterministic \u00b7 0 new \u00b7 claude_not_configured"
+     ],
+     "trigger": "cron",
+     "finished_at": "2026-10-13T09:48:09.436989+00:00",
+     "reason": "integration_required"
+    }
+   ]
+  }
+ }
+}

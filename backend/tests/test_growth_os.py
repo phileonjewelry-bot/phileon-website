@@ -298,12 +298,23 @@ def test_serp_error_recorded_not_fabricated(radar_env, monkeypatch):
 
 # ── Director quality corrections: provenance · clustering · scoring ──
 
-def test_grade_internal_quality():
-    assert D.grade_internal("preview", sessions=["abc"], event_count=50, slug_known=False)[0] == "test"
-    assert D.grade_internal("preview", sessions=["sess-xxxxxxxx", "phi-real-search-1"], event_count=50)[0] == "test"
-    assert D.grade_internal("preview", sessions=["real-session-9f"], event_count=50)[0] == "unverified"
-    assert D.grade_internal("production", sessions=["real-session-9f"], event_count=3)[0] == "unverified"
-    assert D.grade_internal("production", sessions=["real-session-9f", "another"], event_count=40)[0] == "verified"
+def test_grade_internal_quality_requires_provenance_not_env_label():
+    real = [f"phi-{i:08d}-1111-2222-3333-444444444444" for i in range(4)]
+    assert D.grade_internal("preview", sessions=real, event_count=50, slug_known=False)[0] == "test"
+    assert D.grade_internal("production", sessions=["sess-xxxxxxxx", "phi-real-search-1"], event_count=50, days=5)[0] == "test"
+    # One fixture session contaminates the whole sample.
+    assert D.grade_internal("production", sessions=real + ["phi-real-search-1"], event_count=50, days=5)[0] == "test"
+    assert D.grade_internal("preview", sessions=real, event_count=50, days=5)[0] == "unverified"
+    # Production label alone is NOT enough: non-genuine ids, too few sessions or days stay unverified.
+    assert D.grade_internal("production", sessions=["anonymous"], event_count=50, days=5)[0] == "unverified"
+    assert D.grade_internal("production", sessions=real[:2], event_count=50, days=5)[0] == "unverified"
+    assert D.grade_internal("production", sessions=real, event_count=50, days=1)[0] == "unverified"
+    assert D.grade_internal("production", sessions=real, event_count=3, days=3)[0] == "unverified"
+    q, reason = D.grade_internal("production", sessions=real, event_count=40, days=3)
+    assert q == "verified" and "4 genuine sessions" in reason
+    # Real frontend session format (phi-<uuid>) is genuine, never a fixture.
+    assert D._GENUINE_SESSION_RX.match("phi-0f3a9c2e-5b1d-4e7f-8a9b-0c1d2e3f4a5b")
+    assert not D._TEST_SESSION_RX.match("phi-0f3a9c2e-5b1d-4e7f-8a9b-0c1d2e3f4a5b")
 
 
 def test_cluster_consolidates_equivalent_actions():
@@ -368,3 +379,38 @@ def test_evidence_report_excludes_test_fixture_data(radar_env):
     assert res["created"] == 0 and res["reason"] == "no_usable_evidence"
     loop.run_until_complete(db.behavior_events.delete_many({}))
     loop.run_until_complete(db.search_events.delete_many({}))
+
+
+# ── Test-database isolation (fail-closed) ─────────────────────
+
+def test_pytest_session_is_bound_to_disposable_database(app_client):
+    from server import db
+    assert "_pytest_" in db.name and db.name == os.environ["DB_NAME"]
+    assert db.name != os.environ["PHILEON_PERSISTENT_DB_NAME"]
+
+
+def test_server_refuses_persistent_database_under_pytest(monkeypatch):
+    import importlib, sys as _sys
+    monkeypatch.setenv("DB_NAME", "phileon_db")
+    src = open("/app/backend/server.py", encoding="utf-8").read()
+    guard = src[src.index("# MongoDB connection"):src.index("client = AsyncIOMotorClient(mongo_url)")]
+    ns = {"os": os, "sys": _sys}
+    with pytest.raises(RuntimeError, match="persistent database under pytest"):
+        exec(guard, ns)
+
+
+def test_public_ingestion_in_tests_never_touches_preview_db(app_client):
+    """The exact writes that caused the contamination now land in the disposable DB only."""
+    from pymongo import MongoClient
+    r = app_client.post("/api/behavior/events", json={"event_type": "PRODUCT_VIEWED", "product_slug": "p1",
+                                                      "session_id": "sess-xxxxxxxx"})
+    assert r.status_code == 202
+    r = app_client.post("/api/search-events", json={"query": "ring", "result_count": 3, "session_id": "phi-real-search-1"})
+    assert r.status_code == 200
+    c = MongoClient(os.environ["MONGO_URL"], serverSelectionTimeoutMS=2000)
+    persistent = c[os.environ["PHILEON_PERSISTENT_DB_NAME"]]
+    assert persistent.behavior_events.count_documents({"product_slug": "p1", "session_id": "sess-xxxxxxxx"}) == 0
+    assert persistent.search_events.count_documents({"session_id": "phi-real-search-1"}) == 0
+    disposable = c[os.environ["DB_NAME"]]
+    assert disposable.behavior_events.count_documents({"product_slug": "p1"}) >= 1
+    c.close()

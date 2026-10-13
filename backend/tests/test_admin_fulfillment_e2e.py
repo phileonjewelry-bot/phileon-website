@@ -6,6 +6,10 @@ we operate on freshly seeded synthetic docs via a direct Mongo write
 (no Stripe, no email, no label purchase).
 """
 from __future__ import annotations
+import os as _os, pytest as _pytest
+if _os.environ.get("PHILEON_ALLOW_LIVE_E2E") != "1":
+    _pytest.skip("live-server e2e harness writes orders into the persistent database; opt in with PHILEON_ALLOW_LIVE_E2E=1", allow_module_level=True)
+_os.environ["DB_NAME"] = _os.environ.get("PHILEON_PERSISTENT_DB_NAME", _os.environ.get("DB_NAME", ""))
 import os
 import pytest
 import requests
