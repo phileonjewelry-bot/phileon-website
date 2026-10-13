@@ -41,15 +41,15 @@ function KeywordRow({ kw, onToggle, onDelete, onSave }) {
     );
   }
   return (
-    <li className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2.5 border-b border-white/[0.06] ${kw.enabled ? '' : 'opacity-50'}`}
+    <li className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2.5 border-b border-white/[0.06] min-w-0 ${kw.enabled ? '' : 'opacity-50'}`}
         data-testid={`gos-kw-${kw.id}`}>
       <div className="min-w-0">
-        <p className="text-sm truncate">{kw.term}</p>
-        <p className="text-[11px] text-white/45 truncate">
+        <p className="text-sm break-words">{kw.term}</p>
+        <p className="text-[11px] text-white/45 break-words">
           CA “{kw.market_terms?.CA}” · US “{kw.market_terms?.US}” · {(kw.markets || []).join(', ')}
         </p>
       </div>
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex flex-wrap items-center gap-2 shrink-0">
         <Pill value={kw.enabled ? 'enabled' : 'disabled'} testId={`gos-kw-status-${kw.id}`} />
         <Btn testId={`gos-kw-toggle-${kw.id}`} onClick={() => onToggle(kw.id)}>{kw.enabled ? 'Disable' : 'Enable'}</Btn>
         <Btn testId={`gos-kw-editbtn-${kw.id}`} onClick={() => setEditing(true)}>Edit</Btn>
@@ -119,7 +119,7 @@ export default function CustomerRadar() {
   };
 
   return (
-    <div className="space-y-5" data-testid="gos-radar">
+    <div className="space-y-5 min-w-0" data-testid="gos-radar">
       <div className="flex flex-wrap items-center gap-2">
         {['ALL', ...MARKETS].map((m) => (
           <button key={m} onClick={() => setMarket(m)} data-testid={`gos-radar-market-${m}`}
@@ -127,7 +127,6 @@ export default function CustomerRadar() {
             {m === 'ALL' ? 'All markets' : m === 'CA' ? 'Canada' : 'United States'}
           </button>
         ))}
-        <span className="flex-1" />
         <Pill value={d.serpapi?.status} testId="gos-radar-serp-status" />
         <Btn tone="gold" onClick={refresh} disabled={d.integration_required} testId="gos-radar-refresh">Run research now</Btn>
       </div>
@@ -171,12 +170,12 @@ export default function CustomerRadar() {
               : (
                 <ul>
                   {d.discoveries.map((x) => (
-                    <li key={x.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2 border-b border-white/[0.06]" data-testid={`gos-disc-${x.id}`}>
-                      <div>
-                        <p className="text-sm">“{x.query}” <span className="text-white/40 text-[11px]">· {x.market} · {x.value} · from “{x.source_keyword}”</span></p>
+                    <li key={x.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2 border-b border-white/[0.06] min-w-0" data-testid={`gos-disc-${x.id}`}>
+                      <div className="min-w-0">
+                        <p className="text-sm break-words">“{x.query}” <span className="text-white/40 text-[11px]">· {x.market} · {x.value} · from “{x.source_keyword}”</span></p>
                         <p className="text-[11px] text-white/45">seen {x.seen_count}× · first {fmtDate(x.first_seen)} · priority by {x.priority_engine}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <Pill value={x.priority} /><Pill value={x.status} />
                         <select value={x.status} data-testid={`gos-disc-status-${x.id}`}
                                 onChange={(e) => api(`/discoveries/${x.id}/status`, { method: 'POST', body: JSON.stringify({ status: e.target.value }) }).then(load)}

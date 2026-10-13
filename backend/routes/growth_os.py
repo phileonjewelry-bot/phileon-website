@@ -230,6 +230,12 @@ async def recommendations(status: Optional[str] = Query(default=None), _: str = 
     return {"recommendations": rows, "health": (await G.health(db, probe_serp=False))["claude"]}
 
 
+@admin_router.get("/evidence")
+async def evidence(_: str = Depends(verify_admin)):
+    _require_enabled()
+    return await D.evidence_report(db)
+
+
 @admin_router.post("/director/generate")
 async def director_generate(_: str = Depends(verify_admin)):
     _require_enabled()

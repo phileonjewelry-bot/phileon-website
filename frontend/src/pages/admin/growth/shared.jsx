@@ -57,8 +57,8 @@ export function Pill({ value, label, testId }) {
 
 export function Panel({ title, children, testId, aside }) {
   return (
-    <section className="border border-white/10 p-4 md:p-5" data-testid={testId}>
-      <div className="flex items-start justify-between gap-3 mb-3">
+    <section className="border border-white/10 p-3 sm:p-4 md:p-5 min-w-0" data-testid={testId}>
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
         <p className="text-[10px] uppercase tracking-[0.28em] text-phileon-gold">{title}</p>
         {aside}
       </div>
@@ -75,7 +75,7 @@ export function Btn({ children, onClick, disabled, testId, tone = 'ghost', type 
   };
   return (
     <button type={type} onClick={onClick} disabled={disabled} data-testid={testId}
-            className={`border px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${tones[tone]}`}>
+            className={`border px-2.5 sm:px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] whitespace-nowrap transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${tones[tone]}`}>
       {children}
     </button>
   );

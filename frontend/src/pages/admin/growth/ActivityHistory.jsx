@@ -29,7 +29,7 @@ export default function ActivityHistory() {
               <div className="flex flex-wrap items-center gap-2">
                 <Pill value={RUN_PILL[r.status] || 'inactive'} label={r.status} />
                 <Pill value="configured" label={r.trigger} />
-                <span className="text-sm">{r.run_id}</span>
+                <span className="text-sm break-all">{r.run_id}</span>
                 <span className="text-[11px] text-white/45 ml-auto">{fmtDate(r.started_at)}</span>
               </div>
               {r.reason ? <p className="text-[11px] text-amber-300 mt-1">{String(r.reason).replace(/_/g, ' ')}</p> : null}

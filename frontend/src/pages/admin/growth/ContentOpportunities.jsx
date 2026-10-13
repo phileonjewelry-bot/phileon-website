@@ -6,18 +6,18 @@ function Draft({ d, onSave, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(d.body);
   return (
-    <li className="border border-white/10 p-4" data-testid={`gos-draft-${d.id}`}>
+    <li className="border border-white/10 p-3 sm:p-4 min-w-0" data-testid={`gos-draft-${d.id}`}>
       <div className="flex flex-wrap items-center gap-2 mb-2">
         <Pill value={d.status === 'draft' ? 'integration_required' : d.status} label={d.status} testId={`gos-draft-status-${d.id}`} />
         <Pill value="configured" label={d.format.replace(/_/g, ' ')} />
         <Pill value="disabled" label="not published" />
         <span className="text-[11px] text-white/40 ml-auto">{fmtDate(d.created_at)}</span>
       </div>
-      <p className="font-serif text-lg">{d.title}</p>
+      <p className="font-serif text-base sm:text-lg break-words">{d.title}</p>
       {editing
         ? <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={8} data-testid={`gos-draft-body-${d.id}`}
                     className="w-full mt-2 bg-black/40 border border-white/10 p-2 text-sm leading-relaxed" />
-        : <pre className="whitespace-pre-wrap font-sans text-sm text-white/75 mt-2 leading-relaxed" data-testid={`gos-draft-text-${d.id}`}>{d.body}</pre>}
+        : <pre className="whitespace-pre-wrap break-words font-sans text-sm text-white/75 mt-2 leading-relaxed" data-testid={`gos-draft-text-${d.id}`}>{d.body}</pre>}
       <div className="flex flex-wrap gap-2 mt-3">
         {editing
           ? <><Btn tone="gold" testId={`gos-draft-save-${d.id}`} onClick={async () => { await onSave(d.id, { body }); setEditing(false); }}>Save draft</Btn>
@@ -48,7 +48,7 @@ export default function ContentOpportunities({ draftSource, clearDraftSource }) 
 
   const d = state.data || {};
   const formats = d.formats || {};
-  const recList = recs.data?.recommendations || [];
+  const recList = (recs.data?.recommendations || []).filter((r) => !['merged', 'invalidated', 'dismissed'].includes(r.status));
 
   const generate = async () => {
     if (!form.recommendation_id) { setMsg('Choose a recommendation first.'); return; }

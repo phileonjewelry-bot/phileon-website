@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Toaster } from "sonner";
 
@@ -172,6 +172,13 @@ const AdminTestimonials = lazy(() => import("@/pages/admin/AdminTestimonials"));
 const AdminFAQ = lazy(() => import("@/pages/admin/AdminFAQ"));
 const AdminSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 
+// Customer-facing floating Concierge launcher: public routes only (hidden on /admin/*).
+function PublicOnlyConcierge() {
+  const { pathname } = useLocation();
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return null;
+  return <PhileonAiConcierge />;
+}
+
 function App() {
   return (
     <div className="min-h-screen bg-phileon-black">
@@ -199,7 +206,7 @@ function App() {
             <SearchOverlay />
             <VaultRouteBadge />
             <PrivacyChoices />
-            <PhileonAiConcierge />
+            <PublicOnlyConcierge />
         <Suspense fallback={<div style={{minHeight: '100vh', background: '#0a0a0a'}} data-testid="route-fallback" />}>
         <Routes>
           {/* Surprise Drop Pages (standalone, no layout) */}

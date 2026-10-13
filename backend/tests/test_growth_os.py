@@ -294,3 +294,77 @@ def test_serp_error_recorded_not_fabricated(radar_env, monkeypatch):
     assert res["status"] == "partial" and res["reason"] == "serp_auth"
     assert loop.run_until_complete(db.growth_radar_snapshots.count_documents({})) == 0
     assert loop.run_until_complete(G.serp_usage(db))["daily_used"] == 0  # failed calls are not billable
+
+
+# ── Director quality corrections: provenance · clustering · scoring ──
+
+def test_grade_internal_quality():
+    assert D.grade_internal("preview", sessions=["abc"], event_count=50, slug_known=False)[0] == "test"
+    assert D.grade_internal("preview", sessions=["sess-xxxxxxxx", "phi-real-search-1"], event_count=50)[0] == "test"
+    assert D.grade_internal("preview", sessions=["real-session-9f"], event_count=50)[0] == "unverified"
+    assert D.grade_internal("production", sessions=["real-session-9f"], event_count=3)[0] == "unverified"
+    assert D.grade_internal("production", sessions=["real-session-9f", "another"], event_count=40)[0] == "verified"
+
+
+def test_cluster_consolidates_equivalent_actions():
+    recs = [
+        {"title": "Create a ring landing page", "action": "Build a ring landing page", "channel": "collection", "market": "ALL", "evidence_ids": ["E002"]},
+        {"title": "Curate a ring collection page", "action": "Group rings into a collection page", "channel": "collection", "market": "ALL", "evidence_ids": ["E002"]},
+        {"title": "Tune ring search results", "action": "Improve ring search synonyms", "channel": "seo", "market": "ALL", "evidence_ids": ["E002"]},
+        {"title": "Concierge prompt for ring browsers", "action": "Offer concierge chat on ring searches", "channel": "concierge", "market": "ALL", "evidence_ids": ["E002"]},
+        {"title": "Bespoke ring consultation CTA", "action": "Invite ring searchers to a bespoke consultation", "channel": "bespoke", "market": "ALL", "evidence_ids": ["E002"]},
+        {"title": "Men's bracelet editorial for Canada", "action": "Write a men's bracelet journal piece", "channel": "content", "market": "CA", "evidence_ids": ["E007"]},
+    ]
+    out = D.cluster(recs)
+    assert len(out) == 3
+    ring_site = next(c for c in out if c["channel"] == "collection")
+    assert ring_site["merged_variants"] == 2 and len(ring_site["actions"]) == 3
+    relationship = next(c for c in out if c["channel"] in ("concierge", "bespoke"))
+    assert relationship["merged_variants"] == 1
+    assert next(c for c in out if c["market"] == "CA")["merged_variants"] == 0
+
+
+def test_score_is_deterministic_and_caps_exploratory():
+    index = {"E1": {"id": "E1", "quality": "unverified", "events": 6, "provenance": {"source": "site_search_events"}},
+             "E2": {"id": "E2", "quality": "verified", "events": 500, "provenance": {"source": "serpapi_google_trends"}}}
+    weak = D.score({"channel": "collection", "impact": "high", "effort": "low", "evidence_ids": ["E1"]}, index)
+    assert weak["exploratory"] is True and weak["evidence_strength"] == "exploratory" and weak["priority"] != "HIGH"
+    strong = D.score({"channel": "collection", "impact": "high", "effort": "low", "evidence_ids": ["E2"]}, index)
+    assert strong["exploratory"] is False and strong["evidence_strength"] == "established" and strong["priority"] == "HIGH"
+    assert strong["score"] > weak["score"] and strong["provenance"][0]["source"] == "serpapi_google_trends"
+    assert "confidence" not in strong
+
+
+def test_sanitize_blocks_revenue_channels_on_unverified_evidence():
+    index = {"E1": {"id": "E1", "quality": "unverified"}, "E2": {"id": "E2", "quality": "verified"}}
+    base = {"title": "x", "actions": ["do it"], "evidence_ids": ["E1"]}
+    assert D._sanitize({**base, "channel": "collection"}, index) is None
+    assert D._sanitize({**base, "channel": "concierge"}, index) is None
+    assert D._sanitize({**base, "channel": "content"}, index)["channel"] == "content"
+    assert D._sanitize({**base, "channel": "collection", "evidence_ids": ["E2"]}, index)["channel"] == "collection"
+    assert D._sanitize({"title": "no evidence", "channel": "content", "evidence_ids": ["E9"]}, index) is None
+
+
+def test_evidence_report_excludes_test_fixture_data(radar_env):
+    """Mocked internal analytics: an unknown slug + fixture sessions must be graded `test` and excluded."""
+    db, loop = radar_env
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc)
+    loop.run_until_complete(db.behavior_events.delete_many({}))
+    loop.run_until_complete(db.search_events.delete_many({}))
+    loop.run_until_complete(db.behavior_events.insert_many([
+        {"event_type": "PRODUCT_VIEWED", "product_slug": "p1", "session_id": "sess-xxxxxxxx", "env": "preview", "created_at": now}
+        for _ in range(6)]))
+    loop.run_until_complete(db.search_events.insert_many([
+        {"normalized_query": "ring", "result_count": 3, "session_id": "phi-real-search-1", "env": "preview", "created_at": now}
+        for _ in range(6)]))
+    report = loop.run_until_complete(D.evidence_report(db))
+    assert report["summary"]["test"] == 2 and report["summary"]["verified"] == 0
+    assert all(e["excluded"] for e in report["evidence"])
+    assert all("provenance" in e and e["provenance"]["event_count"] >= 6 for e in report["evidence"])
+    ledger, _ = loop.run_until_complete(D.collect_evidence(db))
+    assert ledger == []
+    res = loop.run_until_complete(D.generate_recommendations(db, run_id="ev-1"))
+    assert res["created"] == 0 and res["reason"] == "no_usable_evidence"
+    loop.run_until_complete(db.behavior_events.delete_many({}))
+    loop.run_until_complete(db.search_events.delete_many({}))

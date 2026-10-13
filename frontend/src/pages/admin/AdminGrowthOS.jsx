@@ -27,7 +27,7 @@ export default function AdminGrowthOS() {
   const ov = state.data;
 
   return (
-    <div className="p-4 lg:p-8 text-phileon-ivory" data-testid="admin-growth-os">
+    <div className="p-3 sm:p-4 lg:p-8 text-phileon-ivory min-w-0 overflow-x-hidden" data-testid="admin-growth-os">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-6">
         <div>
           <p className="text-xs tracking-[0.32em] uppercase text-phileon-gold">PHILEON · Growth OS · Phase 1</p>
