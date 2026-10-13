@@ -24,6 +24,52 @@ import httpx
 
 log = logging.getLogger("phileon.growth_os")
 
+_SECRET_QS_RX = re.compile(r"(api_key|apikey|key|token|secret)=([^&\s\"']+)", re.I)
+
+
+def redact(text: str) -> str:
+    """Strip credential-bearing query params from any diagnostic string."""
+    out = _SECRET_QS_RX.sub(lambda m: f"{m.group(1)}=[REDACTED]", str(text))
+    for name in ("SERPAPI_API_KEY", "EMERGENT_LLM_KEY", "TYPESAFE_API_KEY", "WEBHOOK_CRON_SECRET", "OPENAI_API_KEY"):
+        val = (os.environ.get(name) or "").strip()
+        if len(val) >= 16 and val in out:
+            out = out.replace(val, f"[{name}:REDACTED]")
+    return out
+
+
+class _RedactSecretsFilter(logging.Filter):
+    """Applied to the root logger: no log record (message or traceback) may carry a credential."""
+    def filter(self, record: logging.LogRecord) -> bool:
+        try:
+            msg = record.getMessage()
+            if msg != redact(msg):
+                record.msg, record.args = redact(msg), ()
+            if record.exc_info:
+                import traceback
+                record.exc_text = redact("".join(traceback.format_exception(*record.exc_info)))
+                record.exc_info = None
+            elif record.exc_text:
+                record.exc_text = redact(record.exc_text)
+        except Exception:  # pragma: no cover
+            pass
+        return True
+
+
+def install_log_redaction() -> None:
+    root = logging.getLogger()
+    if not any(isinstance(f, _RedactSecretsFilter) for f in root.filters):
+        root.addFilter(_RedactSecretsFilter())
+    for h in root.handlers:
+        if not any(isinstance(f, _RedactSecretsFilter) for f in h.filters):
+            h.addFilter(_RedactSecretsFilter())
+    # httpx/httpcore INFO lines echo full request URLs (incl. query-string credentials).
+    for name in ("httpx", "httpcore"):
+        logging.getLogger(name).setLevel(logging.WARNING)
+        logging.getLogger(name).addFilter(_RedactSecretsFilter())
+
+
+install_log_redaction()
+
 TORONTO = ZoneInfo("America/Toronto")
 REFRESH_HOUR_LOCAL = 7
 MARKETS = ("CA", "US")
@@ -171,27 +217,68 @@ async def schedule_status(db) -> Dict[str, Any]:
 
 # ─── SerpAPI budget ledger ────────────────────────────────────────
 
+async def reserve_api_call(db, *, provider: str, kind: str, market: str = "", terms: int = 0) -> str:
+    """Conservative quota reservation BEFORE the request is sent: counts as
+    billable until the outcome proves otherwise (cached/rejected_local)."""
+    now = _now()
+    doc = {"id": str(uuid.uuid4()), "provider": provider, "kind": kind, "market": market, "terms": terms,
+           "attempted": True, "cached": False, "ok": None, "billable": True, "outcome": "attempted",
+           "http_status": None, "error_kind": None, "provider_message": None,
+           "day": now.strftime("%Y-%m-%d"), "month": now.strftime("%Y-%m"), "at": now.isoformat()}
+    await db.growth_api_ledger.insert_one(doc)
+    return doc["id"]
+
+
+async def finalize_api_call(db, ledger_id: str, *, outcome: str, ok: bool, http_status: Optional[int] = None,
+                            error_kind: Optional[str] = None, provider_message: Optional[str] = None,
+                            billable: Optional[bool] = None) -> None:
+    """outcome ∈ success | empty_result | provider_error | http_error | transport_error.
+    Everything that reached (or may have reached) the provider stays billable."""
+    patch = {"outcome": outcome, "ok": ok, "http_status": http_status, "error_kind": error_kind,
+             "provider_message": redact(provider_message)[:160] if provider_message else None,
+             "finished_at": _now().isoformat()}
+    if billable is not None:
+        patch["billable"] = billable
+    await db.growth_api_ledger.update_one({"id": ledger_id}, {"$set": patch})
+
+
 async def record_api_call(db, *, provider: str, kind: str, market: str = "", terms: int = 0,
-                          cached: bool = False, ok: bool = True) -> None:
+                          cached: bool = False, ok: bool = True, outcome: Optional[str] = None) -> None:
+    """Non-attempted bookkeeping rows (cache hits, locally rejected requests) — never billable."""
     now = _now()
     await db.growth_api_ledger.insert_one({
-        "id": str(uuid.uuid4()), "provider": provider, "kind": kind, "market": market,
-        "terms": terms, "cached": cached, "ok": ok, "billable": (not cached) and ok,
-        "day": now.strftime("%Y-%m-%d"), "month": now.strftime("%Y-%m"), "at": now.isoformat(),
-    })
+        "id": str(uuid.uuid4()), "provider": provider, "kind": kind, "market": market, "terms": terms,
+        "attempted": False, "cached": cached, "ok": ok, "billable": False,
+        "outcome": outcome or ("cached" if cached else "rejected_local"),
+        "day": now.strftime("%Y-%m-%d"), "month": now.strftime("%Y-%m"), "at": now.isoformat()})
 
 
 async def serp_usage(db, settings: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Internal ledger usage reconciled against the provider's own monthly counter.
+    The effective monthly figure is the MAX of both (conservative)."""
     settings = settings or await get_settings(db)
     now = _now()
     day, month = now.strftime("%Y-%m-%d"), now.strftime("%Y-%m")
-    used_day = await db.growth_api_ledger.count_documents({"provider": "serpapi", "billable": True, "day": day})
-    used_month = await db.growth_api_ledger.count_documents({"provider": "serpapi", "billable": True, "month": month})
+    base = {"provider": "serpapi", "billable": True}
+    used_day = await db.growth_api_ledger.count_documents({**base, "day": day})
+    used_month = await db.growth_api_ledger.count_documents({**base, "month": month})
+    breakdown = {}
+    async for r in db.growth_api_ledger.aggregate([{"$match": {"provider": "serpapi", "month": month}},
+                                                    {"$group": {"_id": "$outcome", "n": {"$sum": 1}}}]):
+        breakdown[r["_id"] or "unknown"] = r["n"]
+    provider_month = None
+    acct = (_serp_account_cache.get("data") or {}).get("account") or {}
+    if isinstance(acct.get("this_month_usage"), int):
+        provider_month = acct["this_month_usage"]
+    effective_month = max(used_month, provider_month or 0)
     return {
         "daily_used": used_day, "daily_limit": settings["serp_daily_limit"],
         "daily_remaining": max(0, settings["serp_daily_limit"] - used_day),
-        "monthly_used": used_month, "monthly_limit": settings["serp_monthly_limit"],
-        "monthly_remaining": max(0, settings["serp_monthly_limit"] - used_month),
+        "monthly_used": effective_month, "monthly_limit": settings["serp_monthly_limit"],
+        "monthly_remaining": max(0, settings["serp_monthly_limit"] - effective_month),
+        "internal_monthly_used": used_month, "provider_monthly_used": provider_month,
+        "reconciled": provider_month is None or provider_month <= used_month,
+        "outcomes_this_month": breakdown,
     }
 
 

@@ -17,7 +17,8 @@ export default function ActivityHistory() {
         <Panel title="Next scheduled run" testId="gos-act-next"><p data-testid="gos-act-next-value">{fmtDate(s.next_run?.utc)}</p>
           <p className="text-[11px] text-white/45 mt-1">{s.next_run_will_execute ? 'Armed' : 'Will be skipped (scheduler off or SerpAPI missing)'}</p></Panel>
         <Panel title="Last successful run" testId="gos-act-last"><p>{fmtDate(s.last_successful_run?.finished_at)}</p></Panel>
-        <Panel title="SerpAPI usage" testId="gos-act-usage"><p>{d.usage?.daily_used ?? 0}/{d.usage?.daily_limit ?? 0} today · {d.usage?.monthly_used ?? 0}/{d.usage?.monthly_limit ?? 0} month</p></Panel>
+        <Panel title="SerpAPI usage" testId="gos-act-usage"><p>{d.usage?.daily_used ?? 0}/{d.usage?.daily_limit ?? 0} today · {d.usage?.monthly_used ?? 0}/{d.usage?.monthly_limit ?? 0} month</p>
+          <p className="text-[11px] text-white/45 mt-1" data-testid="gos-act-reconcile">internal {d.usage?.internal_monthly_used ?? 0} · provider {d.usage?.provider_monthly_used ?? '—'} · {d.usage?.reconciled ? 'reconciled' : 'provider reports MORE than internal ledger — effective usage uses the provider figure'}</p></Panel>
       </div>
 
       <Panel title="Runs" testId="gos-act-runs">
@@ -53,14 +54,17 @@ export default function ActivityHistory() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="text-[10px] uppercase tracking-[0.2em] text-white/50">
-                  <tr><th className="text-left py-1">When</th><th>Kind</th><th>Market</th><th>Terms</th><th>Billable</th><th>OK</th></tr>
+                  <tr><th className="text-left py-1">When</th><th>Kind</th><th>Market</th><th>Outcome</th><th>HTTP</th><th>Billable</th><th className="text-left">Provider message</th></tr>
                 </thead>
                 <tbody>
                   {d.ledger.map((l) => (
-                    <tr key={l.id} className="border-t border-white/[0.06]">
+                    <tr key={l.id} className="border-t border-white/[0.06]" data-testid={`gos-ledger-${l.id}`}>
                       <td className="py-1 text-[12px]">{fmtDate(l.at)}</td><td className="text-center">{l.kind}</td>
-                      <td className="text-center">{l.market || '—'}</td><td className="text-center">{l.terms}</td>
-                      <td className="text-center">{l.billable ? 'yes' : 'no'}</td><td className="text-center">{l.ok ? 'yes' : 'no'}</td>
+                      <td className="text-center">{l.market || '—'}</td>
+                      <td className="text-center"><Pill value={{ success: 'operational', empty_result: 'configured', cached: 'inactive', rejected_local: 'inactive', attempted: 'configured' }[l.outcome] || 'error'} label={(l.outcome || (l.ok ? 'success' : 'error')).replace(/_/g, ' ')} /></td>
+                      <td className="text-center text-[12px]">{l.http_status ?? '—'}</td>
+                      <td className="text-center">{l.billable ? 'yes' : 'no'}</td>
+                      <td className="text-[11px] text-white/55 break-words max-w-xs">{l.error_kind ? `${l.error_kind}: ` : ''}{l.provider_message || ''}</td>
                     </tr>
                   ))}
                 </tbody>

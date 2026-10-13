@@ -128,10 +128,11 @@ export default function TargetedRun({ disabled, onCompleted }) {
           {run.counters && (
             <p className="mt-2" data-testid="gos-targeted-actual">
               Actual SerpAPI requests consumed: <span className="font-serif text-lg text-phileon-gold">{run.counters.serp_calls}</span>
-              <span className="text-white/50"> · snapshots {run.counters.snapshots} · new discoveries {run.counters.new_discoveries} · cache hits {run.counters.cache_hits}</span>
+              <span className="text-white/50"> · snapshots {run.counters.snapshots} · new discoveries {run.counters.new_discoveries} · empty provider results {run.counters.empty_results ?? 0} · cache hits {run.counters.cache_hits}</span>
             </p>
           )}
           {run.reason && <p className="text-xs text-amber-300 mt-1">{String(run.reason).replace(/_/g, ' ')}</p>}
+          {(run.steps || []).length > 0 && <ul className="mt-1 text-[11px] text-white/50">{run.steps.map((st, i) => <li key={i} className="break-words">· {st}</li>)}</ul>}
           {run.status === 'running' && <p className="text-xs text-white/50 mt-1">Running… this panel updates automatically.</p>}
         </div>
       )}

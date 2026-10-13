@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import re
 import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Optional
@@ -29,9 +30,15 @@ LOCK_TTL_MIN = 30
 
 
 class SerpError(Exception):
-    def __init__(self, kind: str, detail: str = ""):
+    """kind ∈ integration_required | timeout | network | auth | quota | http | api.
+    `detail` is already redacted; `http_status` may be None for transport errors."""
+    def __init__(self, kind: str, detail: str = "", http_status: Optional[int] = None):
         super().__init__(kind)
-        self.kind, self.detail = kind, detail
+        self.kind, self.detail, self.http_status = kind, G.redact(detail)[:160], http_status
+
+
+# Genuine "no data" replies from Google Trends via SerpAPI — a completed search with an empty result.
+_EMPTY_RESULT_RX = re.compile(r"hasn't returned any results|has not returned any results|no results|no related queries", re.I)
 
 
 async def _serp(params: Dict[str, Any]) -> Dict[str, Any]:
@@ -47,14 +54,21 @@ async def _serp(params: Dict[str, Any]) -> Dict[str, Any]:
     except httpx.HTTPError as exc:
         raise SerpError("network", type(exc).__name__)
     if r.status_code in (401, 403):
-        raise SerpError("auth")
+        raise SerpError("auth", "", r.status_code)
     if r.status_code == 429:
-        raise SerpError("quota")
+        raise SerpError("quota", "", r.status_code)
     if r.status_code >= 400:
-        raise SerpError("http", str(r.status_code))
-    body = r.json()
+        raise SerpError("http", "", r.status_code)
+    try:
+        body = r.json()
+    except ValueError:
+        raise SerpError("api", "non-JSON provider response", r.status_code)
     if body.get("error"):
-        raise SerpError("api", str(body["error"])[:160])
+        msg = str(body["error"])
+        if _EMPTY_RESULT_RX.search(msg):
+            return {"_empty": True, "_provider_message": G.redact(msg)[:160], "_http_status": r.status_code}
+        raise SerpError("api", msg, r.status_code)
+    body["_http_status"] = r.status_code
     return body
 
 
@@ -142,6 +156,14 @@ async def score_priority(db, d: Dict[str, Any]) -> Dict[str, Any]:
     return {"priority": deterministic_priority(d), "priority_engine": "deterministic"}
 
 
+def _outcome(exc: "SerpError") -> str:
+    if exc.kind in ("timeout", "network"):
+        return "transport_error"      # may or may not have reached the provider → stays billable (conservative)
+    if exc.kind in ("auth", "quota", "http"):
+        return "http_error"           # reached the provider → billable (conservative)
+    return "provider_error"           # HTTP 200 with an error body → reached the provider → billable
+
+
 # ─── Lock ─────────────────────────────────────────────────────────
 
 async def acquire_lock(db) -> bool:
@@ -205,7 +227,7 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
     scope_markets = [m for m in (markets or list(G.MARKETS)) if m in G.MARKETS] or list(G.MARKETS)
     base = {"id": str(uuid.uuid4()), "run_id": run_id, "trigger": trigger, "started_at": now,
             "scope": {"keyword_ids": keyword_ids, "markets": scope_markets, "max_requests": max_requests},
-            "steps": [], "counters": {"serp_calls": 0, "cache_hits": 0, "snapshots": 0,
+            "steps": [], "counters": {"serp_calls": 0, "cache_hits": 0, "snapshots": 0, "empty_results": 0,
                                       "new_discoveries": 0, "recommendations": 0}}
 
     def _cap_reached() -> bool:
@@ -247,6 +269,7 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
                     continue
                 if await _fresh_snapshot(db, kw["id"], market, "timeseries", ttl):
                     base["counters"]["cache_hits"] += 1
+                    await G.record_api_call(db, provider="serpapi", kind="TIMESERIES", market=market, terms=1, cached=True)
                     continue
                 pending.append(kw)
             for i in range(0, len(pending), 5):
@@ -258,20 +281,28 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
                 if stop_reason:
                     break
                 terms = [kw["market_terms"].get(market, kw["term"]) for kw in batch]
+                lid = await G.reserve_api_call(db, provider="serpapi", kind="TIMESERIES", market=market, terms=len(terms))
+                base["counters"]["serp_calls"] += 1
                 try:
                     body = await fetch_timeseries(terms, market)
-                    await G.record_api_call(db, provider="serpapi", kind="TIMESERIES", market=market, terms=len(terms))
-                    base["counters"]["serp_calls"] += 1
                 except SerpError as exc:
-                    await G.record_api_call(db, provider="serpapi", kind="TIMESERIES", market=market, terms=len(terms), ok=False)
-                    base["steps"].append(f"radar {market}: serp error {exc.kind}")
+                    await G.finalize_api_call(db, lid, outcome=_outcome(exc), ok=False, http_status=exc.http_status,
+                                              error_kind=exc.kind, provider_message=exc.detail)
+                    base["steps"].append(f"radar {market} TIMESERIES: {exc.kind}"
+                                         f"{f' HTTP {exc.http_status}' if exc.http_status else ''}{f' · {exc.detail}' if exc.detail else ''}")
                     stop_reason = f"serp_{exc.kind}"
                     break
-                parsed = summarize_timeseries(body)
+                if body.get("_empty"):
+                    await G.finalize_api_call(db, lid, outcome="empty_result", ok=True, http_status=body.get("_http_status"),
+                                              provider_message=body.get("_provider_message"))
+                    base["counters"]["empty_results"] = base["counters"].get("empty_results", 0) + 1
+                    parsed = {}
+                else:
+                    await G.finalize_api_call(db, lid, outcome="success", ok=True, http_status=body.get("_http_status"))
+                    parsed = summarize_timeseries(body)
                 for idx, kw in enumerate(batch):
-                    s = parsed.get(idx)
-                    if not s:
-                        continue
+                    s = parsed.get(idx) or {"timeline": [], "avg_interest": 0, "latest_value": 0, "trend_delta_pct": 0.0,
+                                            "points": 0, "empty": True, "provider_note": body.get("_provider_message")}
                     await db.growth_radar_snapshots.insert_one({
                         "id": str(uuid.uuid4()), "kind": "timeseries", "keyword_id": kw["id"], "term": kw["term"],
                         "query_term": terms[idx], "category": kw.get("category"), "market": market,
@@ -297,6 +328,7 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
                     seen.add(snap["keyword_id"])
                     if await _fresh_snapshot(db, snap["keyword_id"], market, "related", ttl):
                         base["counters"]["cache_hits"] += 1
+                        await G.record_api_call(db, provider="serpapi", kind="RELATED_QUERIES", market=market, terms=1, cached=True)
                         done += 1
                         continue
                     if _cap_reached():
@@ -308,15 +340,28 @@ async def run_refresh(db, *, trigger: str, run_id: Optional[str] = None, with_di
                     kw = next((k for k in keywords if k["id"] == snap["keyword_id"]), None)
                     if not kw:
                         continue
+                    if snap.get("empty"):
+                        done += 1
+                        continue  # no interest data → related queries cannot exist; don't spend a request
+                    lid = await G.reserve_api_call(db, provider="serpapi", kind="RELATED_QUERIES", market=market, terms=1)
+                    base["counters"]["serp_calls"] += 1
                     try:
                         body = await fetch_related(snap["query_term"], market)
-                        await G.record_api_call(db, provider="serpapi", kind="RELATED_QUERIES", market=market, terms=1)
-                        base["counters"]["serp_calls"] += 1
                     except SerpError as exc:
-                        await G.record_api_call(db, provider="serpapi", kind="RELATED_QUERIES", market=market, terms=1, ok=False)
+                        await G.finalize_api_call(db, lid, outcome=_outcome(exc), ok=False, http_status=exc.http_status,
+                                                  error_kind=exc.kind, provider_message=exc.detail)
+                        base["steps"].append(f"radar {market} RELATED_QUERIES: {exc.kind}"
+                                             f"{f' HTTP {exc.http_status}' if exc.http_status else ''}{f' · {exc.detail}' if exc.detail else ''}")
                         stop_reason = f"serp_{exc.kind}"
                         break
-                    rel = parse_related(body)
+                    if body.get("_empty"):
+                        await G.finalize_api_call(db, lid, outcome="empty_result", ok=True, http_status=body.get("_http_status"),
+                                                  provider_message=body.get("_provider_message"))
+                        base["counters"]["empty_results"] = base["counters"].get("empty_results", 0) + 1
+                        rel = {"rising": [], "top": [], "empty": True, "provider_note": body.get("_provider_message")}
+                    else:
+                        await G.finalize_api_call(db, lid, outcome="success", ok=True, http_status=body.get("_http_status"))
+                        rel = parse_related(body)
                     await db.growth_radar_snapshots.insert_one({
                         "id": str(uuid.uuid4()), "kind": "related", "keyword_id": kw["id"], "term": kw["term"],
                         "query_term": snap["query_term"], "category": kw.get("category"), "market": market,
@@ -358,7 +403,10 @@ async def estimate_run(db, *, keyword_ids: Optional[List[str]] = None, markets: 
         kws = [k for k in keywords if market in (k.get("markets") or G.MARKETS)]
         pending_ts = [k for k in kws if not await _fresh_snapshot(db, k["id"], market, "timeseries", ttl)]
         ts_calls = -(-len(pending_ts) // 5) if pending_ts else 0
-        pending_rel = [k for k in kws if not await _fresh_snapshot(db, k["id"], market, "related", ttl)]
+        since = (G._now() - timedelta(hours=ttl)).isoformat()
+        empty_ts = {k["id"] for k in kws if await db.growth_radar_snapshots.find_one(
+            {"keyword_id": k["id"], "market": market, "kind": "timeseries", "empty": True, "fetched_at": {"$gte": since}}, {"_id": 1})}
+        pending_rel = [k for k in kws if k["id"] not in empty_ts and not await _fresh_snapshot(db, k["id"], market, "related", ttl)]
         rel_calls = min(per_run, len(pending_rel))
         breakdown.append({"market": market, "keywords": [{"id": k["id"], "term": k["market_terms"].get(market, k["term"])} for k in kws],
                           "timeseries_calls": ts_calls, "related_calls": rel_calls,

@@ -43,6 +43,9 @@ CHANNEL_GROUP = {"content": "site", "seo": "site", "collection": "site",
 PERIOD = "30d"
 SUFFICIENT_EVENTS = 30          # below this every recommendation is an exploratory hypothesis
 ESTABLISHED_EVENTS = 200
+SPARSE_MIN_POINTS = 8          # Google Trends sparse-data thresholds (normalised index, not volume)
+SPARSE_MIN_NONZERO_WEEKS = 4
+SPARSE_MIN_AVG = 5
 MIN_VERIFIED_SESSIONS = 3
 MIN_VERIFIED_DAYS = 2
 # Genuine browser sessions are minted by frontend/src/hooks/useAnalytics.js as `phi-<uuid>`
@@ -164,13 +167,21 @@ async def collect_evidence(db, *, include_excluded: bool = False) -> Tuple[List[
         latest.setdefault((s["keyword_id"], s["market"]), s)
     ranked = sorted(latest.values(), key=lambda s: (abs(s.get("trend_delta_pct") or 0), s.get("avg_interest") or 0), reverse=True)
     for s in ranked[:12]:
-        _add("radar_trend", f"Google Trends {s['market']}: '{s['query_term']}' avg interest {s['avg_interest']}/100, "
-             f"latest {s['latest_value']}, recent 4-wk vs prior 4-wk {s['trend_delta_pct']:+}%",
+        if s.get("empty"):
+            continue  # provider returned no data — no evidence, nothing to cite
+        nonzero = sum(1 for p in (s.get("timeline") or []) if p[1])
+        sparse = (s.get("points") or 0) < SPARSE_MIN_POINTS or nonzero < SPARSE_MIN_NONZERO_WEEKS or (s.get("avg_interest") or 0) < SPARSE_MIN_AVG
+        quality = "unverified" if sparse else "verified"
+        reason = (f"sparse Google Trends data — normalised interest index (0–100, NOT search volume): {nonzero} non-zero weeks of "
+                  f"{s.get('points', 0)}, avg {s['avg_interest']}; insufficient for commercial conclusions; NOT customer enquiries or buyers" if sparse else
+                  "external Google search-interest signal (normalised index, NOT search volume) — NOT customer enquiries or buyers")
+        _add("radar_trend", f"Google Trends {s['market']}: '{s['query_term']}' normalised interest avg {s['avg_interest']}/100, "
+             f"latest {s['latest_value']}, recent 4-wk vs prior 4-wk {s['trend_delta_pct']:+}%, {nonzero}/{s.get('points', 0)} weeks with data",
              {"source": "serpapi_google_trends", "collection": "growth_radar_snapshots", "period": "today 12-m",
-              "env": "external", "event_count": s.get("points", 0), "fetched_at": s.get("fetched_at")},
-             "verified", "external Google search-interest signal (SerpAPI Google Trends) — NOT customer enquiries or buyers",
-             market=s["market"], keyword_id=s["keyword_id"], category=s.get("category"), events=s.get("points", 0),
-             signal_type="market_search_interest")
+              "env": "external", "event_count": s.get("points", 0), "nonzero_weeks": nonzero, "sparse": sparse,
+              "fetched_at": s.get("fetched_at")},
+             quality, reason, market=s["market"], keyword_id=s["keyword_id"], category=s.get("category"),
+             events=nonzero, signal_type="market_search_interest")
     disc = await db.growth_radar_discoveries.find({"status": {"$in": ["new", "watching"]}}, {"_id": 0}) \
         .sort("last_seen", -1).to_list(40)
     for d in disc[:12]:

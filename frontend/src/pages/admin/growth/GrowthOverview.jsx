@@ -101,7 +101,8 @@ export default function GrowthOverview({ overview, reload }) {
               </label>
             </div>
           </div>
-          <p className="text-[11px] text-white/40 mt-3">Cached snapshots (&lt; {overview.settings?.snapshot_ttl_hours}h) are never re-queried. TIMESERIES batches 5 terms per call.</p>
+          <p className="text-[11px] text-white/45 mt-3" data-testid="gos-budget-reconcile">Provider this month: {u.provider_monthly_used ?? '—'} · internal ledger: {u.internal_monthly_used ?? 0} · {u.reconciled ? 'reconciled' : 'using provider figure (higher)'}. Every request that reaches SerpAPI counts, including provider errors.</p>
+          <p className="text-[11px] text-white/40 mt-1">Cached snapshots (&lt; {overview.settings?.snapshot_ttl_hours}h) are never re-queried. TIMESERIES batches 5 terms per call.</p>
         </Panel>
       </div>
 

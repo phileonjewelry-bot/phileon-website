@@ -205,13 +205,13 @@ async def _fake_timeseries(terms, geo, date="today 12-m"):
     return {"interest_over_time": {"timeline_data": [
         {"timestamp": str(1700000000 + i * 604800),
          "values": [{"query_index": idx, "extracted_value": (10 if i < 4 else 40) + idx} for idx in range(len(terms))]}
-        for i in range(8)]}}
+        for i in range(8)]}, "_http_status": 200}
 
 
 async def _fake_related(term, geo, date="today 12-m"):
     return {"related_queries": {"rising": [{"query": f"{term} near me", "value": "Breakout", "extracted_value": None},
                                            {"query": f"best {term}", "value": "+120%", "extracted_value": 120}],
-                                "top": [{"query": term, "value": "100", "extracted_value": 100}]}}
+                                "top": [{"query": term, "value": "100", "extracted_value": 100}]}, "_http_status": 200}
 
 
 @pytest.fixture
@@ -294,7 +294,8 @@ def test_serp_error_recorded_not_fabricated(radar_env, monkeypatch):
     res = loop.run_until_complete(R.run_refresh(db, trigger="test", run_id="err-1"))
     assert res["status"] == "partial" and res["reason"] == "serp_auth"
     assert loop.run_until_complete(db.growth_radar_snapshots.count_documents({})) == 0
-    assert loop.run_until_complete(G.serp_usage(db))["daily_used"] == 0  # failed calls are not billable
+    # Conservative billing: the request reached the provider (HTTP 401) so it stays reserved as billable.
+    assert loop.run_until_complete(G.serp_usage(db))["daily_used"] == 1
 
 
 # ── Director quality corrections: provenance · clustering · scoring ──
@@ -486,3 +487,112 @@ def test_http_refresh_requires_confirmation_and_respects_max(app_client, monkeyp
     r = app_client.post("/api/admin/growth-os/radar/refresh", headers=h, json={**scope, "max_requests": 1, "confirm": True})
     assert r.status_code == 409 and r.json()["detail"].startswith("ESTIMATE_EXCEEDS_MAX:2>1")
     assert app_client.get("/api/admin/growth-os/radar/runs/nope", headers=h).json()["status"] == "pending"
+
+
+# ── Security + billing + empty-result + sparse-data corrections (mocked, no live calls) ──
+
+def test_log_redaction_filter_strips_credentials(caplog, monkeypatch):
+    import logging
+    monkeypatch.setenv("SERPAPI_API_KEY", "zz-secret-serp-key-0123456789abcdef")
+    G.install_log_redaction()
+    with caplog.at_level(logging.WARNING):
+        logging.getLogger("httpx").warning("GET https://serpapi.com/search?q=x&api_key=zz-secret-serp-key-0123456789abcdef ok")
+        try:
+            raise RuntimeError("boom api_key=zz-secret-serp-key-0123456789abcdef")
+        except RuntimeError:
+            logging.getLogger("phileon.t").exception("failed")
+    text = caplog.text
+    assert "zz-secret-serp-key-0123456789abcdef" not in text and "REDACTED" in text
+    assert not logging.getLogger("httpx").isEnabledFor(logging.INFO)
+    assert G.redact("x?api_key=abc123&geo=CA") == "x?api_key=[REDACTED]&geo=CA"
+    assert R.SerpError("api", "bad api_key=abc123def").detail == "bad api_key=[REDACTED]"
+
+
+def test_empty_related_queries_is_completed_research_and_cached(radar_env, monkeypatch):
+    db, loop = radar_env
+
+    async def _empty(term, geo, date="today 12-m"):
+        return {"_empty": True, "_provider_message": "Google Trends hasn't returned any results for this query.", "_http_status": 200}
+    monkeypatch.setattr(R, "fetch_related", _empty)
+    kw = _kw(loop, db, "Bespoke engagement rings")
+    res = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="empty-1", keyword_ids=[kw["id"]], markets=["CA"], max_requests=2))
+    assert res["status"] == "success" and not res.get("reason"), res
+    assert res["counters"]["serp_calls"] == 2 and res["counters"]["empty_results"] == 1 and res["counters"]["new_discoveries"] == 0
+    rel = loop.run_until_complete(db.growth_radar_snapshots.find_one({"kind": "related"}, {"_id": 0}))
+    assert rel["empty"] is True and rel["rising"] == [] and "hasn't returned" in rel["provider_note"]
+    ledger = loop.run_until_complete(db.growth_api_ledger.find({"attempted": True}, {"_id": 0}).to_list(10))
+    assert sorted(l["outcome"] for l in ledger) == ["empty_result", "success"]
+    assert all(l["billable"] and l["http_status"] == 200 for l in ledger)
+    # Cached: a second targeted run spends nothing and re-estimate is 0.
+    res2 = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="empty-2", keyword_ids=[kw["id"]], markets=["CA"]))
+    assert res2["counters"]["serp_calls"] == 0 and res2["counters"]["cache_hits"] == 2
+    assert loop.run_until_complete(R.estimate_run(db, keyword_ids=[kw["id"]], markets=["CA"]))["estimated_requests"] == 0
+
+
+def test_provider_error_is_billable_and_diagnosed_not_empty(radar_env, monkeypatch):
+    db, loop = radar_env
+
+    async def _err(term, geo, date="today 12-m"):
+        raise R.SerpError("api", "Some unexpected provider error api_key=leak123", 200)
+    monkeypatch.setattr(R, "fetch_related", _err)
+    kw = _kw(loop, db, "Bespoke engagement rings")
+    res = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="err-2", keyword_ids=[kw["id"]], markets=["CA"]))
+    assert res["status"] == "partial" and res["reason"] == "serp_api"
+    assert any("RELATED_QUERIES: api HTTP 200" in st and "leak123" not in st for st in res["steps"])
+    row = loop.run_until_complete(db.growth_api_ledger.find_one({"kind": "RELATED_QUERIES"}, {"_id": 0}))
+    assert row["outcome"] == "provider_error" and row["billable"] is True and row["ok"] is False
+    assert row["http_status"] == 200 and row["error_kind"] == "api" and "REDACTED" in row["provider_message"]
+    assert loop.run_until_complete(G.serp_usage(db))["daily_used"] == 2  # both reached the provider
+
+
+def test_auth_and_transport_errors_are_not_treated_as_empty(radar_env, monkeypatch):
+    db, loop = radar_env
+    kw = _kw(loop, db, "Bespoke engagement rings")
+
+    async def _auth(terms, geo, date="today 12-m"):
+        raise R.SerpError("auth", "", 401)
+    monkeypatch.setattr(R, "fetch_timeseries", _auth)
+    res = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="auth-1", keyword_ids=[kw["id"]], markets=["CA"]))
+    assert res["status"] == "partial" and res["reason"] == "serp_auth"
+    assert loop.run_until_complete(db.growth_radar_snapshots.count_documents({})) == 0
+    row = loop.run_until_complete(db.growth_api_ledger.find_one({"kind": "TIMESERIES"}, {"_id": 0}))
+    assert row["outcome"] == "http_error" and row["http_status"] == 401 and row["billable"] is True
+
+    async def _net(terms, geo, date="today 12-m"):
+        raise R.SerpError("timeout")
+    monkeypatch.setattr(R, "fetch_timeseries", _net)
+    loop.run_until_complete(db.growth_api_ledger.delete_many({}))
+    res = loop.run_until_complete(R.run_refresh(db, trigger="manual", run_id="net-1", keyword_ids=[kw["id"]], markets=["CA"]))
+    assert res["reason"] == "serp_timeout"
+    row = loop.run_until_complete(db.growth_api_ledger.find_one({"kind": "TIMESERIES"}, {"_id": 0}))
+    assert row["outcome"] == "transport_error" and row["billable"] is True  # conservative reservation kept
+
+
+def test_usage_reconciles_against_provider_counter(radar_env, monkeypatch):
+    db, loop = radar_env
+    monkeypatch.setitem(G._serp_account_cache, "data", {"status": "operational", "account": {"this_month_usage": 9}})
+    u = loop.run_until_complete(G.serp_usage(db))
+    assert u["internal_monthly_used"] == 0 and u["provider_monthly_used"] == 9
+    assert u["monthly_used"] == 9 and u["monthly_remaining"] == 200 - 9 and u["reconciled"] is False
+    monkeypatch.setitem(G._serp_account_cache, "data", None)
+
+
+def test_sparse_trends_snapshot_is_unverified_and_cannot_drive_revenue(radar_env):
+    db, loop = radar_env
+    kw = _kw(loop, db, "Bespoke engagement rings")
+    now = G._now().isoformat()
+    tl = [[1700000000 + i * 604800, 100 if i == 2 else 0] for i in range(53)]
+    loop.run_until_complete(db.growth_radar_snapshots.insert_one({
+        "id": "s1", "kind": "timeseries", "keyword_id": kw["id"], "term": kw["term"], "query_term": kw["term"], "market": "CA",
+        "fetched_at": now, "timeline": tl, "avg_interest": 1.9, "latest_value": 0, "trend_delta_pct": 0.0, "points": 53}))
+    loop.run_until_complete(db.growth_radar_snapshots.insert_one({
+        "id": "s2", "kind": "timeseries", "keyword_id": "other", "term": "x", "query_term": "x", "market": "CA",
+        "fetched_at": now, "timeline": [], "avg_interest": 0, "latest_value": 0, "trend_delta_pct": 0.0, "points": 0, "empty": True}))
+    ledger, index = loop.run_until_complete(D.collect_evidence(db))
+    assert len(ledger) == 1  # empty snapshot contributes nothing
+    e = ledger[0]
+    assert e["quality"] == "unverified" and e["provenance"]["sparse"] is True and e["provenance"]["nonzero_weeks"] == 1
+    assert "NOT search volume" in e["quality_reason"] and "normalised" in e["text"]
+    assert D._sanitize({"title": "Sell rings", "channel": "collection", "actions": ["x"], "evidence_ids": [e["id"]]}, index) is None
+    sc = D.score({"channel": "content", "impact": "high", "effort": "low", "evidence_ids": [e["id"]]}, index)
+    assert sc["exploratory"] is True and sc["priority"] != "HIGH"
