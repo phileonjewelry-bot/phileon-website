@@ -41,3 +41,17 @@ credential required.
 With these unset, the email helper short-circuits and returns
 `{"status": "skipped", "reason": "no_api_key"}`. Concierge intake still
 succeeds — email is notification, not the source of truth.
+
+## Growth OS (Phase 1) — admin surface
+
+- UI: `/admin/growth-os` (requires the admin JWT above in
+  `localStorage.phileon_admin_token`).
+- Backend: `/api/admin/growth-os/*` (verify_admin). Cron intake:
+  `POST /api/growth-os/cron/daily-refresh` with
+  `Authorization: Bearer $WEBHOOK_CRON_SECRET` (value lives ONLY in
+  `/app/backend/.env`; never in frontend, logs or crons.yml).
+- Preview-only test token: a short-lived admin JWT can be minted with
+  `JWT_SECRET` from `/app/backend/.env` (`{"sub":"admin","exp":...}`, HS256)
+  — the same approach `tests/test_layer7_analytics.py::_admin_token` uses.
+- Flags: `PHILEON_GROWTH_OS_ENABLED=true` (preview), `GROWTH_OS_CRON_ENABLED=false`,
+  `SERPAPI_API_KEY=` (blank → Radar shows "Integration Required").

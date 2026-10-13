@@ -19,12 +19,14 @@ import {
   ShieldAlert,
   Bell,
   LifeBuoy,
-  BarChart3
+  BarChart3,
+  Radar
 } from 'lucide-react';
 
 const sidebarLinks = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
   { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
+  { name: 'Growth OS', path: '/admin/growth-os', icon: Radar },
   { name: 'Concierge Cases', path: '/admin/concierge-cases', icon: LifeBuoy },
   { name: 'Concierge', path: '/admin/concierge', icon: MessageSquare },
   { name: 'Fulfillment', path: '/admin/fulfillment', icon: Package },

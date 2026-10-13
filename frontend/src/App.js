@@ -156,6 +156,7 @@ const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 const AdminConcierge = lazy(() => import("@/pages/admin/AdminConcierge"));
 const AdminConciergeCases = lazy(() => import("@/pages/admin/AdminConciergeCases"));
 const AdminAnalytics = lazy(() => import("@/pages/admin/AdminAnalytics"));
+const AdminGrowthOS = lazy(() => import("@/pages/admin/AdminGrowthOS"));
 const AdminShipments = lazy(() => import("@/pages/admin/AdminShipments"));
 const AdminFulfillment = lazy(() => import("@/pages/admin/AdminFulfillment"));
 const AdminReturns = lazy(() => import("@/pages/admin/AdminReturns"));
@@ -459,6 +460,7 @@ function App() {
             <Route path="concierge" element={<AdminConcierge />} />
             <Route path="concierge-cases" element={<AdminConciergeCases />} />
             <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="growth-os" element={<AdminGrowthOS />} />
             <Route path="shipments" element={<AdminShipments />} />
             <Route path="fulfillment" element={<AdminFulfillment />} />
             <Route path="returns" element={<AdminReturns />} />

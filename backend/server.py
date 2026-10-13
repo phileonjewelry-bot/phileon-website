@@ -2322,11 +2322,27 @@ try:
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"AI concierge routes NOT registered: {type(_e).__name__}: {_e}")
 
+# PHILEON Growth OS (Phase 1) — admin-only growth intelligence. Gated by
+# PHILEON_GROWTH_OS_ENABLED; scheduled refresh separately gated by
+# GROWTH_OS_CRON_ENABLED. Never touches public site / checkout / pricing.
+try:
+    from routes.growth_os import admin_router as _gos_admin, cron_router as _gos_cron
+    api_router.include_router(_gos_admin)
+    api_router.include_router(_gos_cron)
+    logger.info("Growth OS routes registered (Phase 1)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Growth OS routes NOT registered: {type(_e).__name__}: {_e}")
+
 app.include_router(api_router)
 
 
 @app.on_event("startup")
 async def startup_db():
+    try:
+        from services.growth_os import ensure_indexes as _gos_idx
+        await _gos_idx(db)
+    except Exception as _e:  # pragma: no cover
+        logger.warning(f"Growth OS indexes skipped: {_e}")
     # Create indexes for better performance
     await db.collections.create_index("slug", unique=True)
     await db.products.create_index("slug", unique=True)

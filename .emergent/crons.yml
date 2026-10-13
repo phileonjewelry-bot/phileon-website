@@ -1,0 +1,9 @@
+crons:
+  - name: growth-os-daily
+    description: "Growth OS daily Customer Radar + Director refresh at 7:00am America/Toronto (DST-aware)"
+    cron: "0 7 * * *"
+    timezone: "America/Toronto"
+    # Cron endpoints must ack 2xx immediately; enqueue/background the actual work.
+    endpoint: "{{BASE_URL}}/api/growth-os/cron/daily-refresh"
+    method: POST
+    enabled: true
