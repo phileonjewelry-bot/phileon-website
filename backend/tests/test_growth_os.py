@@ -217,6 +217,8 @@ async def _fake_related(term, geo, date="today 12-m"):
 @pytest.fixture
 def radar_env(monkeypatch):
     from motor.motor_asyncio import AsyncIOMotorClient
+    from dotenv import load_dotenv
+    load_dotenv('/app/backend/.env')
     monkeypatch.setenv("PHILEON_GROWTH_OS_ENABLED", "true")
     monkeypatch.setenv("SERPAPI_API_KEY", "dummy-key-for-mocked-tests")
     monkeypatch.setenv("EMERGENT_LLM_KEY", "")

@@ -152,6 +152,7 @@ const OrderStatusPage = lazy(() => import("@/pages/OrderStatusPage"));
 
 // Admin Pages (lazy — admin surface never loaded by public visitors)
 const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
+const AdminSetupPage = lazy(() => import("@/pages/admin/AdminSetupPage"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 const AdminConcierge = lazy(() => import("@/pages/admin/AdminConcierge"));
 const AdminConciergeCases = lazy(() => import("@/pages/admin/AdminConciergeCases"));
@@ -455,6 +456,7 @@ function App() {
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/admin/setup" element={<AdminSetupPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="concierge" element={<AdminConcierge />} />

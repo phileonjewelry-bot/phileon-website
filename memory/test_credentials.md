@@ -55,3 +55,16 @@ succeeds — email is notification, not the source of truth.
   — the same approach `tests/test_layer7_analytics.py::_admin_token` uses.
 - Flags: `PHILEON_GROWTH_OS_ENABLED=true` (preview), `GROWTH_OS_CRON_ENABLED=false`,
   `SERPAPI_API_KEY=` (blank → Radar shows "Integration Required").
+
+## Admin first-time setup (PREVIEW ONLY) — Oct 13, 2026
+
+- Page: `/admin/setup` · API: `GET /api/admin/setup/status`, `POST /api/admin/setup/complete`.
+- Gate (all required): env != production · `ADMIN_SETUP_TOKEN` (>=32 chars) · `ADMIN_SETUP_EXPIRES_AT`
+  in the future (10-min window) · zero docs in `db.admins` · no completion marker.
+- Arm/disarm (never prints the token): `python /app/backend/scripts/admin_setup_window.py arm|disarm|status`
+  then `sudo supervisorctl restart backend`. Owner reads the token from `/app/backend/.env`
+  via the platform Code (VS Code) viewer — NOT via chat.
+- Login precedence: once an owner admin exists in `db.admins`, the legacy env credential
+  (`ADMIN_USERNAME` / `ADMIN_PASSWORD_HASH`) is no longer accepted in that environment.
+  Production (zero DB admins) keeps the env path unchanged.
+- Passwords/tokens are intentionally NOT recorded here.

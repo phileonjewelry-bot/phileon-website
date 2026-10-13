@@ -883,20 +883,10 @@ async def admin_login(login: AdminLogin, request: Request):
     # Throttle BEFORE bcrypt so brute force is cut off cheaply.
     _rl_check("admin-login", request, identity=login.username, max_attempts=5, window_secs=15 * 60)
 
-    env_username = os.environ.get("ADMIN_USERNAME", "").strip()
-    env_hash = os.environ.get("ADMIN_PASSWORD_HASH", "").strip()
-
-    if env_username and env_hash:
-        if login.username == env_username and bcrypt.checkpw(login.password.encode(), env_hash.encode()):
-            _rl_clear("admin-login", request, identity=login.username)
-            return Token(access_token=create_token(login.username))
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    # Fallback path (should not run in production — env creds required)
-    admin = await db.admins.find_one({"username": login.username})
-    if not admin:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    if not bcrypt.checkpw(login.password.encode(), admin['password_hash'].encode()):
+    # Owner-created DB admin (first-time setup) takes precedence; with zero DB
+    # admins the env credential path below is the unchanged production behaviour.
+    from services.admin_setup import authenticate_admin as _auth_admin
+    if not await _auth_admin(db, username=login.username, password=login.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     _rl_clear("admin-login", request, identity=login.username)
     return Token(access_token=create_token(login.username))
@@ -2332,6 +2322,14 @@ try:
     logger.info("Growth OS routes registered (Phase 1)")
 except Exception as _e:  # pragma: no cover - defensive
     logger.error(f"Growth OS routes NOT registered: {type(_e).__name__}: {_e}")
+
+# First-time admin setup (PREVIEW ONLY, owner-token gated, self-closing).
+try:
+    from routes.admin_setup import router as _admin_setup_router
+    api_router.include_router(_admin_setup_router)
+    logger.info("Admin first-time setup routes registered (preview-only gate)")
+except Exception as _e:  # pragma: no cover - defensive
+    logger.error(f"Admin setup routes NOT registered: {type(_e).__name__}: {_e}")
 
 app.include_router(api_router)
 
