@@ -411,7 +411,8 @@ def attach_products(rec: Dict[str, Any], index: Dict[str, Dict[str, Any]], catal
         p = eligible.get(slug)
         if p and slug not in by_slug:
             cited.append({"slug": slug, "name": p["name"], "categories": p["categories"], "public_url": p["public_url"],
-                          "availability": p["availability"]["state"], "match_reason": "cited by Growth Director (verified eligible)"})
+                          "availability": p["availability"]["state"], "readiness": p["readiness"],
+                          "readiness_reasons": p["readiness_reasons"], "match_reason": "cited by Growth Director (verified eligible)"})
     rec["products"] = (cited + matches)[:5]
     return rec
 

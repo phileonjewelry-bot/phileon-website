@@ -728,8 +728,8 @@ def test_match_products_is_grounded_and_never_forced(radar_env):
     named = CA.match_products(products, text="Veyron Noir signet interest in the US")
     assert named[0]["slug"] == "veyron-noir" and "named in research" in named[0]["match_reason"]
     assert all(not x["slug"].startswith("iv-") for x in CA.match_products(products, text="Altar architectural cross cuff"))
-    assert CA.content_brief(products, ["la-marva", "iv-altar", "ghost", "drew-face"]) and \
-        [p["slug"] for p in CA.content_brief(products, ["la-marva", "iv-altar", "ghost", "drew-face"])] == ["la-marva"]
+    # La Marva is discoverable-only (unresolved Signature silver-vs-14K contradiction) → never in the draft brief
+    assert [p["slug"] for p in CA.content_brief(products, ["lady-bamburgh", "la-marva", "iv-altar", "ghost", "drew-face"])] == ["lady-bamburgh"]
 
 
 def test_director_attach_products_keeps_only_eligible_cited_slugs(radar_env):
@@ -749,17 +749,20 @@ def test_generate_draft_passes_only_verified_pieces_to_claude(radar_env, monkeyp
     db, loop = radar_env
     loop.run_until_complete(db.growth_content_drafts.delete_many({}))
     loop.run_until_complete(db.growth_recommendations.insert_one(_rec(id="ring-rec", products=[
-        {"slug": "la-marva", "name": "La Marva"}, {"slug": "iv-altar", "name": "ALTAR"}, {"slug": "ghost", "name": "Ghost"}])))
+        {"slug": "her-eternal-reign", "name": "H.E.R."}, {"slug": "la-marva", "name": "La Marva"},
+        {"slug": "annie-rose", "name": "Annie Rose"}, {"slug": "iv-altar", "name": "ALTAR"}, {"slug": "ghost", "name": "Ghost"}])))
     monkeypatch.setattr(G, "claude_configured", lambda: True)
     prompts = []
 
     async def _fake(system, prompt, *, session, max_tokens=4000):
         prompts.append(prompt)
-        return "La Marva holds its line. (MOCKED)"
+        return "No queen stands alone. (MOCKED)"
     monkeypatch.setattr(D, "_claude", _fake)
     d = loop.run_until_complete(D.generate_draft(db, recommendation_id="ring-rec", discovery_id=None, fmt="product_story"))
-    assert [p["slug"] for p in d["products_referenced"]] == ["la-marva"]
-    assert "La Marva" in prompts[0] and "ALTAR" not in prompts[0] and "Ghost" not in prompts[0]
+    assert [p["slug"] for p in d["products_referenced"]] == ["her-eternal-reign"]
+    assert "HER ETERNAL REIGN" in prompts[0] and "/products/her-eternal-reign" in prompts[0] and "crowned female figures" in prompts[0]
+    for banned in ("La Marva", "Annie Rose", "ALTAR", "Ghost", "Signature Edition", "Silver + precision"):
+        assert banned not in prompts[0]  # discoverable-only / vault / unknown pieces never reach the writer
     assert "price" not in prompts[0].lower().replace("pricing", "")  # no price facts handed to the writer
     d2 = loop.run_until_complete(D.generate_draft(db, recommendation_id="ring-rec", discovery_id=None, fmt="product_story", product_slugs=[]))
     assert d2["products_referenced"] == [] and "do NOT name" in prompts[1] and d2["version"] == 2
@@ -773,3 +776,22 @@ def test_catalogue_route_is_admin_only_and_price_free(app_client, monkeypatch):
     r = app_client.get("/api/admin/growth-os/catalogue", headers=_admin_headers())
     assert r.status_code == 200 and r.json()["summary"]["checkout_supported_parents"] == 84
     assert "price_usd" not in r.text and "unit_amount" not in r.text
+
+
+def test_strict_readiness_her_full_la_marva_blocked(radar_env):
+    db, loop = radar_env
+    cat = _cat(loop, db)
+    by = {p["slug"]: p for p in cat["products"]}
+    her = by["her-eternal-reign"]
+    assert her["readiness"] == "full" and her["name"] == "H.E.R." and her["subtitle"] == "HER ETERNAL REIGN"
+    assert her["categories"] == ["rings"] and her["public_url"] == "/products/her-eternal-reign"
+    assert her["sku_metals"] == ["10K Yellow Gold", "14K Yellow Gold", "18K Yellow Gold"] and her["story"] and her["description"]
+    assert her["images"] and her["availability"]["state"] == "made_to_order" and her["edition_conflicts"] == []
+    lm = by["la-marva"]
+    assert lm["readiness"] == "discoverable_only" and lm["readiness_reasons"] == ["unresolved_edition_contradiction"]
+    issues = {(c["key"], c["issue"]) for c in lm["edition_conflicts"]}
+    assert ("signature", "metal contradiction") in issues and ("heirloom14k", "edition key has no checkout SKU") in issues
+    assert by["annie-rose"]["readiness_reasons"] == ["no_verified_prose"] and by["lady-jay"]["readiness"] == "discoverable_only"
+    assert cat["summary"]["content_ready"] + cat["summary"]["discoverable_only"] == cat["summary"]["marketing_eligible"]
+    m = CA.match_products(cat["products"], text="H.E.R. Her Eternal Reign — sculptural ring, identity beyond convention")
+    assert m[0]["slug"] == "her-eternal-reign" and m[0]["readiness"] == "full" and "named in research" in m[0]["match_reason"]

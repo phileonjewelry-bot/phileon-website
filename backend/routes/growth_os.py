@@ -318,7 +318,11 @@ async def catalogue(_: str = Depends(verify_admin)):
 async def content_drafts(_: str = Depends(verify_admin)):
     _require_enabled()
     rows = await db.growth_content_drafts.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
-    return {"drafts": rows, "formats": D.DRAFT_FORMATS, "sources": await D.eligible_sources(db), "publish_locked": True}
+    pieces = [{**{k: p[k] for k in ("slug", "name", "categories", "public_url", "readiness", "readiness_reasons")},
+               "availability": p["availability"]["state"]}
+              for p in (await CAT.build_catalogue(db))["products"] if p["marketing_eligible"]]
+    return {"drafts": rows, "formats": D.DRAFT_FORMATS, "sources": await D.eligible_sources(db), "pieces": pieces,
+            "publish_locked": True}
 
 
 @admin_router.post("/content-drafts/generate", status_code=201)

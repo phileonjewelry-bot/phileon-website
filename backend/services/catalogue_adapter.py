@@ -157,6 +157,31 @@ async def _vault_availability(db, slug: str) -> Dict[str, Any]:
     return {**(live or states[0]), "verified": True}
 
 
+_METAL_TOKENS = {"silver": "silver", "sterling": "silver", "925": "silver", "vermeil": "vermeil", "plated": "plated",
+                 "10k": "10k", "14k": "14k", "18k": "18k", "10kwg": "10k", "10krg": "10k"}
+
+
+def _metal_set(text: Optional[str]) -> set:
+    return {_METAL_TOKENS[t] for t in re.findall(r"[a-z0-9]+", (text or "").lower()) if t in _METAL_TOKENS}
+
+
+def edition_conflicts(editions: List[Dict[str, Any]], skus: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Storefront edition vs checkout SKU with the same key but a contradictory metal → reported, never resolved here."""
+    out = []
+    sku_by_key = {s["key"]: s for s in skus if s.get("key")}
+    for e in editions:
+        sku = sku_by_key.get(e.get("key") or "")
+        if not sku:
+            if e.get("key"):
+                out.append({"edition": e.get("name"), "key": e["key"], "issue": "edition key has no checkout SKU"})
+            continue
+        a, b = _metal_set(e.get("material")), _metal_set(sku.get("metal"))
+        if a and b and not (a & b):
+            out.append({"edition": e.get("name"), "key": e["key"], "storefront_material": e.get("material"),
+                        "checkout_metal": sku.get("metal"), "issue": "metal contradiction"})
+    return out
+
+
 # ─── Build ────────────────────────────────────────────────────────
 
 async def build_catalogue(db=None) -> Dict[str, Any]:
@@ -200,6 +225,13 @@ async def build_catalogue(db=None) -> Dict[str, Any]:
                                   ("images", (sf or {}).get("images")), ("metals", (sf or {}).get("metals") or pr.get("skus")),
                                   ("public_url", public_url), ("category", categories)) if not v]
         storefront_variants = (sf or {}).get("variants") or []
+        conflicts = edition_conflicts(storefront_variants, pr.get("skus", []))
+        has_prose = bool((sf or {}).get("description") or (sf or {}).get("story"))
+        if reasons:
+            readiness, readiness_reasons = "ineligible", list(reasons)
+        else:
+            readiness_reasons = ([] if has_prose else ["no_verified_prose"]) + (["unresolved_edition_contradiction"] if any(c["issue"] == "metal contradiction" for c in conflicts) else [])
+            readiness = "full" if not readiness_reasons else "discoverable_only"
         products.append({
             "slug": slug, "name": name, "subtitle": (sf or {}).get("subtitle") or pr.get("subtitle"),
             "storefront_slug": (sf or {}).get("slug"), "categories": categories, "audience": (sf or {}).get("audience", []),
@@ -212,7 +244,8 @@ async def build_catalogue(db=None) -> Dict[str, Any]:
             "checkout_supported": True,
             "pricing_source": pr.get("source"), "pricing_authority": "pricing_engine (prices not exposed here; customer-facing USD)",
             "marketing_eligible": not reasons, "ineligibility_reasons": reasons, "missing_fields": missing,
-            "content_ready": not reasons and bool((sf or {}).get("description") or (sf or {}).get("story") or (sf or {}).get("material_line")),
+            "edition_conflicts": conflicts, "readiness": readiness, "readiness_reasons": readiness_reasons,
+            "content_ready": readiness == "full",
         })
     supported_keys = {p["storefront_slug"] for p in products if p["storefront_slug"]} | set(C._SUPPORTED_SLUGS)
     storefront_only = sorted({r["slug"] for r in snap.get("records", []) if r["slug"] not in supported_keys and r["slug"] != "inspiration-vault"})
@@ -225,11 +258,14 @@ async def build_catalogue(db=None) -> Dict[str, Any]:
         "vault_pieces": sum(1 for p in products if p["is_inspiration_vault"]),
         "marketing_eligible": sum(1 for p in products if p["marketing_eligible"]),
         "content_ready": sum(1 for p in products if p["content_ready"]),
+        "discoverable_only": sum(1 for p in products if p["readiness"] == "discoverable_only"),
+        "edition_contradictions": sum(1 for p in products if any(c["issue"] == "metal contradiction" for c in p["edition_conflicts"])),
         "incomplete_records": sum(1 for p in products if p["missing_fields"]),
     }
     return {"generated_at": snap.get("generated_at"), "drift": snapshot_drift(), "summary": summary, "products": products,
             "mismatches": {"storefront_only_not_purchasable": storefront_only, "pricing_only_no_storefront_record": pricing_only,
                            "category_conflicts_storefront_wins": category_conflicts,
+                           "edition_conflicts": [{"slug": p["slug"], **c} for p in products for c in p["edition_conflicts"]],
                            "slug_differs_between_storefront_and_pricing": [
                                {"pricing_slug": p["slug"], "storefront_slug": p["storefront_slug"]}
                                for p in products if p["storefront_slug"] and p["storefront_slug"] != p["slug"]]}}
@@ -251,7 +287,8 @@ def match_products(products: List[Dict[str, Any]], *, text: str, include_vault: 
             continue
         reasons, score = [], 0
         name_toks = _tokens(p["name"] or "") - {"the", "tribute"}
-        if name_toks and name_toks <= toks:
+        slug_toks = _tokens(p["slug"].replace("-", " "))
+        if (name_toks and name_toks <= toks) or (slug_toks and slug_toks <= toks):
             reasons.append(f"named in research: {p['name']}")
             score += 10
         cat_hit = wanted & set(p["categories"])
@@ -276,7 +313,8 @@ def match_products(products: List[Dict[str, Any]], *, text: str, include_vault: 
         if theme and not (_tokens(" ".join([p.get("description") or "", p.get("story") or ""] + p.get("tags", []))) & theme):
             reasons.append("no PHILEON piece is tagged for this theme — confirm fit manually")
         out.append({"slug": p["slug"], "name": p["name"], "categories": p["categories"], "public_url": p["public_url"],
-                    "availability": p["availability"]["state"], "match_reason": "; ".join(reasons), "_score": score})
+                    "availability": p["availability"]["state"], "readiness": p["readiness"],
+                    "readiness_reasons": p["readiness_reasons"], "match_reason": "; ".join(reasons), "_score": score})
     out.sort(key=lambda m: (-m["_score"], m["slug"]))
     return [{k: v for k, v in m.items() if k != "_score"} for m in out[:limit]]
 
@@ -287,11 +325,11 @@ def content_brief(products: List[Dict[str, Any]], slugs: List[str]) -> List[Dict
     out = []
     for s in slugs:
         p = idx.get(s)
-        if not p or not p["content_ready"]:
-            continue
+        if not p or p["readiness"] != "full":
+            continue  # discoverable-only pieces never receive product-specific copy
         out.append({k: v for k, v in {
             "slug": p["slug"], "name": p["name"], "subtitle": p["subtitle"], "categories": p["categories"], "description": p["description"],
             "story": p["story"], "material_line": p["material_line"], "metals": p["metals"] or p["sku_metals"], "stones": p["stones"],
             "editions": [{"name": e.get("name"), "material": e.get("material"), "specs": e.get("specs")} for e in p["editions"]][:6],
-            "availability": p["availability"]["state"], "public_url": p["public_url"]}.items() if v})
+            "images": p["images"][:4], "availability": p["availability"]["state"], "public_url": p["public_url"]}.items() if v})
     return out

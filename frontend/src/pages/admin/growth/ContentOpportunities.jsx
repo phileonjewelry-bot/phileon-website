@@ -61,11 +61,12 @@ export default function ContentOpportunities({ draftRecId = '' }) {
   const [state, load] = useAsync(() => api('/content-drafts'), [api]);
   const [form, setForm] = useState({ recommendation_id: draftRecId, format: 'instagram_caption', notes: '' });
   const [excluded, setExcluded] = useState([]);
+  const [added, setAdded] = useState([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState(null);
   useEffect(() => { load(); }, [load]);
   useEffect(() => { if (draftRecId) setForm((f) => ({ ...f, recommendation_id: draftRecId })); }, [draftRecId]);
-  useEffect(() => { setExcluded([]); }, [form.recommendation_id]);
+  useEffect(() => { setExcluded([]); setAdded([]); }, [form.recommendation_id]);
 
   const d = state.data || {};
   const formats = d.formats || {};
@@ -73,8 +74,12 @@ export default function ContentOpportunities({ draftRecId = '' }) {
   const sources = d.sources || [];
   const linkedMissing = Boolean(draftRecId && d.sources && !sources.some((s) => s.id === draftRecId));
   const selected = sources.find((s) => s.id === form.recommendation_id);
-  const pieces = selected?.products || [];
-  const chosenSlugs = pieces.map((p) => p.slug).filter((s) => !excluded.includes(s));
+  const catalogue = d.pieces || [];
+  const matched = selected?.products || [];
+  const pieces = [...matched, ...catalogue.filter((p) => added.includes(p.slug) && !matched.some((m) => m.slug === p.slug))
+    .map((p) => ({ ...p, match_reason: 'selected by owner' }))];
+  const addable = catalogue.filter((p) => p.readiness === 'full' && !pieces.some((m) => m.slug === p.slug));
+  const chosenSlugs = pieces.filter((p) => p.readiness === 'full' && !excluded.includes(p.slug)).map((p) => p.slug);
 
   const generate = async () => {
     if (!form.recommendation_id) { setMsg('Choose an initiative first.'); return; }
@@ -129,16 +134,33 @@ export default function ContentOpportunities({ draftRecId = '' }) {
             {pieces.length === 0
               ? <p className="text-[11px] text-white/40 mt-1">None matched this initiative — the draft will name no product.</p>
               : <ul className="mt-1 space-y-1">
-                  {pieces.map((p) => (
-                    <li key={p.slug}>
-                      <label className="flex items-start gap-2 text-[12px] text-white/70 break-words">
-                        <input type="checkbox" className="mt-0.5 accent-[#c9a961]" checked={!excluded.includes(p.slug)} data-testid={`gos-content-piece-${p.slug}`}
-                               onChange={(e) => setExcluded((x) => e.target.checked ? x.filter((s) => s !== p.slug) : [...x, p.slug])} />
-                        <span><span className="text-phileon-ivory">{p.name}</span> · {(p.categories || []).join('/')} · {String(p.availability || '').replace(/_/g, ' ')}</span>
-                      </label>
-                    </li>
-                  ))}
+                  {pieces.map((p) => {
+                    const full = p.readiness === 'full';
+                    return (
+                      <li key={p.slug}>
+                        <label className={`flex items-start gap-2 text-[12px] break-words ${full ? 'text-white/70' : 'text-white/40'}`}>
+                          <input type="checkbox" className="mt-0.5 accent-[#c9a961]" disabled={!full} checked={full && !excluded.includes(p.slug)} data-testid={`gos-content-piece-${p.slug}`}
+                                 onChange={(e) => setExcluded((x) => e.target.checked ? x.filter((s) => s !== p.slug) : [...x, p.slug])} />
+                          <span>
+                            <span className="text-phileon-ivory">{p.name}</span> · {(p.categories || []).join('/')} · {String(p.availability || '').replace(/_/g, ' ')}
+                            {!full && <span className="text-amber-300/80"> · discoverable only — {(p.readiness_reasons || ['no verified prose']).join(', ').replace(/_/g, ' ')}; no product-specific copy</span>}
+                            {p.public_url && <span className="text-white/35"> · {p.public_url}</span>}
+                          </span>
+                        </label>
+                      </li>
+                    );
+                  })}
                 </ul>}
+            {addable.length > 0 && (
+              <label className="flex flex-col gap-1 mt-2 min-w-0">
+                <span className="text-[10px] uppercase tracking-[0.22em] text-white/40">Add a verified piece (full readiness only)</span>
+                <select value="" onChange={(e) => e.target.value && setAdded((x) => [...x, e.target.value])}
+                        className="w-full bg-black/40 border border-white/10 p-2 text-sm text-phileon-ivory" data-testid="gos-content-add-piece">
+                  <option value="">— choose a piece —</option>
+                  {addable.map((p) => <option key={p.slug} value={p.slug}>{p.name} · {(p.categories || []).join('/')}</option>)}
+                </select>
+              </label>
+            )}
           </div>
         )}
         <p className="text-[11px] text-white/40 mt-1">{formats[form.format]}</p>

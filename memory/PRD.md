@@ -1271,3 +1271,10 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   (20 conflicts reported). Tests: 57 passed (Claude mocked). Pricing/checkout/inventory/storefront files untouched.
 - Known gaps: no PHILEON piece is tagged bridal/engagement (matches flagged "confirm fit manually"); 3 pricing-only slugs
   without storefront record/URL (drew-face, retro-bred, true-vine); 6 storefront placeholders not purchasable.
+- Oct 14 (cont.) — STRICT READINESS: `readiness` = full | discoverable_only | ineligible. Full requires prose + no edition metal
+  contradiction. 28 full / 31 discoverable-only / 59 eligible. `edition_conflicts` detector added (La Marva: Signature silver vs
+  14K checkout; heirloom14k/heirloom18k keys have no checkout SKU; ptp-cuff 'movement' key no SKU). Content Studio: non-full
+  pieces disabled (facts only), owner can add any full-readiness piece (`gos-content-add-piece`). Owner selected H.E.R.
+  (`her-eternal-reign`) for first product campaign "The PHILEON Ring Edit — Identity Beyond Convention" (NOT engagement/bridal).
+  La Marva reserved; blocked until catalog.py tiers vs products.js editions reconciled (report delivered, no code change).
+  Tests 51 passed (mocked). Real draft NOT generated — awaiting owner go.
