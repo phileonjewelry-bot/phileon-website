@@ -1282,3 +1282,8 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   products_referenced=[her-eternal-reign]. Grounding check passed (no engagement/bridal/gem names/specs). Two gaps vs brief:
   exact line "Not jewelry. Identity." not present verbatim (used "Identity Beyond Convention"); route /products/her-eternal-reign
   not included in copy. Owner reviewing. No further generations authorized.
+- Oct 14, 2026 14:25 UTC — Owner-authorized LIVE Claude draft #3: H.E.R. product_story v2, id cc0171dc-…, DRAFT ONLY. Grounded
+  (no banned terms). Again missing verbatim "Not jewelry. Identity." and the /products/her-eternal-reign invitation. ROOT CAUSE:
+  `DRAFT_FORMATS['product_story']` = "≤150 words" + `_DRAFT_SYSTEM` "use only the brief supplied / plain text only" — the writer
+  treats brand line + route as out-of-brief and trims the close. Proposed fix (NOT applied, owner approval needed): allow the
+  verified public route + brand line in _DRAFT_SYSTEM and raise product_story to ≤220 words.
