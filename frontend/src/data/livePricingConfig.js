@@ -18,7 +18,7 @@ const livePricingConfig = {
 
   // LA MARVA
   laMarva: {
-    signature:   { lockedBasePriceCad: 3400,  metalType: "925",  weightGrams: 22,   lockedMetalReferenceCad: 25 },
+    signature:   { lockedBasePriceCad: 3400,  metalType: "925",  weightGrams: 22,   lockedMetalReferenceCad: 25, purchasable: false },
     foundation:  { lockedBasePriceCad: 8000,  metalType: "10K",  weightGrams: 18,   lockedMetalReferenceCad: 1125 },
     heirloom14k: { lockedBasePriceCad: 18000, metalType: "14K",  weightGrams: 20,   lockedMetalReferenceCad: 1750 },
     heirloom18k: { lockedBasePriceCad: 22000, metalType: "18K",  weightGrams: 22,   lockedMetalReferenceCad: 2475 },

@@ -32,6 +32,7 @@ export default function RingProductPage({ product }) {
   const { isAdding, handleAddToCart, buttonText } = useAddToCart();
   const productKey = slugToProductKey(product.slug) || product.slug;
   const tierPricesLive = useLiveTierPrices(productKey);
+  const liveFor = (key) => tierPricesLive[product.tiers[key]?.pricingKey || key];
   const presentment = usePresentment();
 
   const [activeMedia, setActiveMedia] = useState(0);
@@ -158,7 +159,7 @@ export default function RingProductPage({ product }) {
       id: `${product.id}-${selectedTier}-size-${sizeIdToken}`,
       name: `${product.name} — ${currentTier.metal} · ${sizeLabelText}`,
       image: heroImage,
-      price: tierPricesLive[selectedTier]?.price || currentTier.price,
+      price: liveFor(selectedTier)?.price || currentTier.price,
       currency: product.currency || null,
       productKey: productKey,
       tierKey: selectedTier,
@@ -294,14 +295,14 @@ export default function RingProductPage({ product }) {
           </p>
 
           <div className="text-[#C6A25D] text-4xl lg:text-5xl mb-3" data-testid="current-price">
-            {tierPricesLive[selectedTier]?.formatted || _localize(currentTier.price, presentment)}
+            {liveFor(selectedTier)?.formatted || _localize(currentTier.price, presentment)}
           </div>
           {/* Stripe Payment Method Messaging — Klarna / Affirm eligibility
               is decided by Stripe and hidden when not eligible. Canonical
               USD amount is authoritative for messaging. */}
           <div className="mb-3" data-testid="pdp-financing-messaging">
             <PaymentMethodMessaging
-              usdDollars={tierPricesLive[selectedTier]?.price || currentTier.price}
+              usdDollars={liveFor(selectedTier)?.price || currentTier.price}
             />
           </div>
 
@@ -334,7 +335,7 @@ export default function RingProductPage({ product }) {
                         {tier.metal}
                       </div>
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
-                        {tierPricesLive[key]?.formatted || _localize(tier.price, presentment)}
+                        {liveFor(key)?.formatted || _localize(tier.price, presentment)}
                       </div>
                     </div>
 
@@ -387,7 +388,7 @@ export default function RingProductPage({ product }) {
               className="mt-4 text-xs tracking-[0.14em] text-[#C6A25D]/70"
               data-testid="metal-selected-confirmation"
             >
-              Metal Selected: {currentTier.metal} · {_localize(currentTier.price, presentment)}
+              Metal Selected: {currentTier.metal} · {liveFor(selectedTier)?.formatted || _localize(currentTier.price, presentment)}
             </p>
           </div>
 

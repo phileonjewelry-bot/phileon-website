@@ -141,6 +141,7 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
     let lowestCad = Infinity;
     for (const tierKey of Object.keys(productConfig)) {
       const tc = productConfig[tierKey];
+      if (tc.purchasable === false) continue;
       const currentMetal = calculateMetalValueCad({
         weightGrams: tc.weightGrams,
         metalType: tc.metalType,

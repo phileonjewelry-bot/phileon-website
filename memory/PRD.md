@@ -1293,3 +1293,14 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Oct 14, 2026 15:14 UTC — H.E.R. v3 (d294b08e) editorially polished via existing PUT /content-drafts/{id} (no AI call):
   "offered in", yellow-gold presence line, removed "no two are the same"/"different signature of colour", CTA "Explore H.E.R."
   (route kept in products_referenced metadata), markdown title stripped. 166 words. Still draft, published=false. v1/v2 intact.
+
+## Oct 14, 2026 — La Marva USD display correction (preview only; checkout untouched)
+- Changes: livePricingConfig.laMarva.signature `purchasable:false` (silver edition kept, excluded from "From");
+  useLiveFromPrice skips `purchasable===false`; LaMarvaPage gains `slug` + per-tier `pricingKey` (signature→heirloom14k,
+  heirloom→heirloom18k); RingProductPage resolves live prices via `liveFor(key)` (pricingKey || key) in 5 display/cart spots.
+- Verified at market snapshot gold 175.36 CAD/g: PDP $6,000 / $13,500 / $17,000 USD == cart drawer == checkout summary ==
+  server resolve_line_item (Stripe-session path). Homepage ×2 cards $2,500 → $6,000 USD. No other product has the flag.
+- OPEN (needs approval): Shop grid (`ShopDropPage` renderGrid line ~705) renders static `price_range` strings for ALL cards
+  (La Marva still "From $2,500" there; `products.laMarva.basePrice=2500` is silver-derived). Fix = use LiveFromPrice like the
+  page's other sections, but affects every card. Also pre-existing: /cart page reads legacy localStorage 'cart' (live cart is
+  'phileon_cart') → shows empty; bnpl-quote endpoint lacks market snapshot for dynamic rings (400) — not touched.

@@ -8,6 +8,7 @@ const lamarvaPricing = products.laMarva.pricing;
 // La Marva Product Data (Ironclad Schema)
 const laMarvaProduct = {
   id: "la-marva",
+  slug: "la-marva",
   name: "La Marva",
   category: "ring",
   sizeProfile: "ladies",
@@ -20,6 +21,7 @@ const laMarvaProduct = {
       name: "Foundation",
       metal: "10K Yellow Gold",
       price: lamarvaPricing.foundation,
+      pricingKey: "foundation",
       badge: "",
       description: "10K gold with lab-grown princess-cut diamonds and genuine pink sapphire pavé."
     },
@@ -27,6 +29,7 @@ const laMarvaProduct = {
       name: "Signature",
       metal: "14K Yellow Gold",
       price: lamarvaPricing.heirloom14k,
+      pricingKey: "heirloom14k",
       badge: "MOST POPULAR",
       description: "14K gold with natural princess-cut diamonds and pink sapphire pavé. Collector-grade clarity."
     },
@@ -34,6 +37,7 @@ const laMarvaProduct = {
       name: "Heirloom",
       metal: "18K Yellow Gold",
       price: lamarvaPricing.heirloom18k,
+      pricingKey: "heirloom18k",
       badge: "COLLECTOR",
       description: "18K gold with natural diamonds. Maximum brilliance and lasting legacy."
     }
