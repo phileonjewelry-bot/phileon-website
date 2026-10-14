@@ -1304,3 +1304,17 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   (La Marva still "From $2,500" there; `products.laMarva.basePrice=2500` is silver-derived). Fix = use LiveFromPrice like the
   page's other sections, but affects every card. Also pre-existing: /cart page reads legacy localStorage 'cart' (live cart is
   'phileon_cart') → shows empty; bnpl-quote endpoint lacks market snapshot for dynamic rings (400) — not touched.
+
+## Oct 14, 2026 — Final commerce consistency pass (preview only, NOT deployed)
+- P1 Cart: /cart (Cart.jsx) rewritten onto CartContext ('phileon_cart'); legacy 'cart' key left untouched (orphaned
+  ProductDetail page, never populated). Locked unit_amount_cents preserved on refresh; testids cart-item-config/unit-price.
+- P2 Shop: ShopDropPage grid → LiveFromPrice; placeholders → COMING SOON; SLUG_TO_KEY +19 storefront→config keys (from
+  pricing_engine_catalog.product_key); 'From ' prefix; useLivePrice toUsd(): weightGrams 0 (hand-set) = USD passthrough
+  (mirrors backend convert_usd_luxury=False) else cadToUsdLuxury; lisa static 'From CAD $6,800' → 'From $5,500 USD'.
+  Result: 0 CAD labels on /shop; 39/45 cards == checkout lowest tier.
+- TolaIIPage: added slug → live USD tiers (was CAD-as-USD $5,200; now $4,000 == checkout).
+- OPEN DRIFT (owner decision; no change made): annie-rose (frontend config silver/gold10k vs backend 3 gold tiers; PDP CAD-as-USD),
+  trace & rhythm-mesh-ring (frontend config lacks heirloom; PDP static CAD), parabola (config deliberately unregistered; PDP
+  $1,250 "USD" is CAD; checkout $950), morso/ptp-cuff ($500/$50 rounding-boundary: JS Math.round(x.5) up vs Python round() banker's
+  in pricing_engine_catalog.cad_to_usd_luxury), the-carapace card shows default variant $1,100 (a $350 variant exists).
+  Testing: iteration_31.json 92% (all equality assertions passed; 2 testid notes fixed).

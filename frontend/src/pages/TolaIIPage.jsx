@@ -8,6 +8,7 @@ const tolaIIPricing = products.tolaII.pricing;
 // TOLA II Product Data (Ironclad Schema)
 const tolaIIProduct = {
   id: "tola-ii",
+  slug: "tola-ii",
   name: "TOLA II",
   category: "ring",
   sizeProfile: "gents",

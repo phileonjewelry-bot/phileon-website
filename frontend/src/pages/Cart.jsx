@@ -52,9 +52,10 @@ const Cart = () => {
                       )}
                       <div className="flex-1 min-w-0">
                         <h3 className="text-white font-semibold text-lg mb-2 break-words" data-testid={`cart-item-name-${item.product_id}`}>{item.name}</h3>
-                        {item.variant && <p className="text-gray-400 text-sm mb-1 break-words" data-testid={`cart-item-config-${item.product_id}`}>{item.variant}</p>}
-                        {!item.variant && item.materials?.length > 0 && <p className="text-gray-400 text-sm mb-1">{item.materials.join(' · ')}</p>}
-                        <p className="text-gray-500 text-xs mb-3">Price locked at {money(item.unit_amount_cents)} each</p>
+                        <p className="text-gray-400 text-sm mb-1 break-words" data-testid={`cart-item-config-${item.product_id}`}>
+                          {item.variant || item.materials?.join(' · ') || 'Standard configuration'}
+                        </p>
+                        <p className="text-gray-500 text-xs mb-3" data-testid={`cart-item-unit-price-${item.product_id}`}>Price locked at {money(item.unit_amount_cents)} each</p>
                         <p className="text-yellow-500 font-bold text-xl" data-testid={`cart-item-price-${item.product_id}`}>{money(item.unit_amount_cents * item.qty)}</p>
                       </div>
                       <div className="flex sm:flex-col items-center sm:items-end justify-between gap-3">
