@@ -1318,3 +1318,4 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   $1,250 "USD" is CAD; checkout $950), morso/ptp-cuff ($500/$50 rounding-boundary: JS Math.round(x.5) up vs Python round() banker's
   in pricing_engine_catalog.cad_to_usd_luxury), the-carapace card shows default variant $1,100 (a $350 variant exists).
   Testing: iteration_31.json 92% (all equality assertions passed; 2 testid notes fixed).
+- Oct 14: Owner confirmed iv-altar (ALTAR) = $40 USD approved selling price. Not a blocker. Vault one-of-one protections unchanged.
