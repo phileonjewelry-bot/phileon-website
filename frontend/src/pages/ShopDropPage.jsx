@@ -702,7 +702,7 @@ const ShopDropPage = () => {
                             </div>
                           )}
                           {product.price_range && !product.is_tribute && (
-                            <p className="shop-drop__card-price">{product.price_range}</p>
+                            <p className="shop-drop__card-price">{isPlaceholder ? 'COMING SOON' : <LiveFromPrice slug={product.slug} fallback={product.price_range} />}</p>
                           )}
                           {product.slug === 'the-true-vine' && (
                             <p

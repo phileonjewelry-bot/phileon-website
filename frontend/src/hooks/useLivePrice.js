@@ -20,6 +20,13 @@ const SLUG_TO_KEY = Object.fromEntries(
  * When USD is active, delegates to the legacy `formatUsd` so exact matching
  * output is preserved end-to-end.
  */
+// Mirrors backend pricing_engine_catalog: hand-set products (weightGrams 0) store the
+// USD amount directly in lockedBasePriceCad and are NOT converted; weighted products
+// are internal CAD → USD via luxury rounding.
+function toUsd(tierConfig, cadPrice) {
+  return (tierConfig.weightGrams || 0) === 0 ? Math.round(tierConfig.lockedBasePriceCad) : cadToUsdLuxury(cadPrice);
+}
+
 function localizeUsdDollars(usdDollars, presentment) {
   if (!presentment || !presentment.isApproximate) return `${formatUsd(usdDollars)} USD`;
   return `Approx. ${presentment.formatDollars(usdDollars)}`;
@@ -107,8 +114,8 @@ export function useLivePrice(productIdOrSlug, tierArg, fallbackPrice = 0) {
       currentMetalValueCad,
     });
 
-    // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding
-    const displayPrice = cadToUsdLuxury(cadPrice);
+    // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding (hand-set USD products pass through)
+    const displayPrice = toUsd(tierConfig, cadPrice);
 
     return { price: displayPrice, formatted: localizeUsdDollars(displayPrice, presentment), isLive: true };
   }, [productIdOrSlug, tierArg, fallbackPrice, market, presentment]);
@@ -137,8 +144,8 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
       };
     }
 
-    // Find the lowest priced tier (CAD), then apply USD luxury rounding
-    let lowestCad = Infinity;
+    // Find the lowest priced purchasable tier in USD (each tier converted by its own rule)
+    let lowestPrice = Infinity;
     for (const tierKey of Object.keys(productConfig)) {
       const tc = productConfig[tierKey];
       if (tc.purchasable === false) continue;
@@ -152,9 +159,9 @@ export function useLiveFromPrice(productKey, fallbackBasePrice = 0) {
         lockedMetalReferenceCad: tc.lockedMetalReferenceCad,
         currentMetalValueCad: currentMetal,
       });
-      if (livePrice < lowestCad) lowestCad = livePrice;
+      const usd = toUsd(tc, livePrice);
+      if (usd < lowestPrice) lowestPrice = usd;
     }
-    const lowestPrice = cadToUsdLuxury(lowestCad);
 
     return {
       price: lowestPrice,
@@ -191,8 +198,7 @@ export function useLiveTierPrices(productKey) {
         lockedMetalReferenceCad: tc.lockedMetalReferenceCad,
         currentMetalValueCad: currentMetal,
       });
-      // PHILEON USD pricing rule: convert internal CAD → USD with luxury rounding
-      const livePrice = cadToUsdLuxury(livePriceCad);
+      const livePrice = toUsd(tc, livePriceCad);
       result[tierKey] = { price: livePrice, formatted: localizeUsdDollars(livePrice, presentment) };
     }
     return result;

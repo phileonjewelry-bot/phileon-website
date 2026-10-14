@@ -30,6 +30,26 @@ const SLUG_TO_KEY = {
   "wynette-palette": "wynettePalette",
   "veyron-noir": "veyronNoir",
   "parabola": "parabola",
+  // Storefront slug → live config key, mirroring backend pricing_engine_catalog.product_key
+  "corinthians-15-14": "corinthians1514",
+  "fondo-curvo": "fondoCurvo",
+  "drape": "drape",
+  "le-cocktail-de-jessica": "cocktailJessica",
+  "prise-de-couronne": "priseDeCouronne",
+  "nervatura": "nervatura",
+  "the-don-gorgon": "theDonGorgon",
+  "lady-jay": "ladyJay",
+  "the-true-vine": "theTrueVine",
+  "porta-aurea": "portaAurea",
+  "coogi-dna-tag": "coogiDnaTag",
+  "battenti-della-villa": "battentiDellaVilla",
+  "gent": "gent",
+  "stackrats": "stackrats",
+  "rose-of-sharon": "roseOfSharon",
+  "boss-knot": "bossKnot",
+  "lady-boss-knot": "ladyBossKnot",
+  "uncle-jo": "uncleJo",
+  "katrina-cascata": "katrinaCascata",
 };
 
 export function slugToProductKey(slug) {
@@ -95,7 +115,7 @@ export function LiveFromPrice({ slug, fallback }) {
     return <>{_localizedUsd(fixedVariant.price)}</>;
   }
   if (isLive) {
-    return <>{fromFormatted}</>;
+    return <>From {fromFormatted}</>;
   }
   return <>{fallback}</>;
 }
