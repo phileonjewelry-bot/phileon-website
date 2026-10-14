@@ -173,9 +173,15 @@ LIVE_PRICING_CONFIG = {
         "foundation": {"lockedBasePriceCad": 3800, "metalType": "10K", "weightGrams": 14, "lockedMetalReferenceCad": 875},
         "signature":  {"lockedBasePriceCad": 5600, "metalType": "14K", "weightGrams": 15, "lockedMetalReferenceCad": 1313},
     },
+    # TRACE — earrings, owner-approved USD retail per pair (weightGrams 0 = hand-set USD, no conversion).
+    # Heirloom (solid 14K) keeps its historical row but is NOT purchasable until its price is approved.
     "trace": {
-        "foundation": {"lockedBasePriceCad": 900,  "metalType": "925",  "weightGrams": 10, "lockedMetalReferenceCad": 12},
-        "signature":  {"lockedBasePriceCad": 2200, "metalType": "10K",  "weightGrams": 8,  "lockedMetalReferenceCad": 500},
+        "signature":  {"lockedBasePriceCad": 450, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                       "metal_label": "925 Sterling Silver · Yellow-Gold Plated"},
+        "foundation": {"lockedBasePriceCad": 900, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                       "metal_label": "Solid 10K Yellow Gold"},
+        "heirloom":   {"lockedBasePriceCad": 3200, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                       "metal_label": "Solid 14K Yellow Gold", "available": False},
     },
     "bound": {
         "foundation": {"lockedBasePriceCad": 12800, "metalType": "10K", "weightGrams": 22, "lockedMetalReferenceCad": 1375},

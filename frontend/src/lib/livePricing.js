@@ -10,8 +10,17 @@ const DEFAULT_MARKET = {
   silverPerGramCad: 1.25,
 };
 
+// Mirrors Python's round(): ties-to-even, so display never diverges from the checkout quote.
+export function roundHalfEven(x) {
+  const f = Math.floor(x);
+  const diff = x - f;
+  if (diff > 0.5) return f + 1;
+  if (diff < 0.5) return f;
+  return f % 2 === 0 ? f : f + 1;
+}
+
 function roundLuxury(value) {
-  return Math.round(value / 50) * 50;
+  return roundHalfEven(value / 50) * 50;
 }
 
 export function getSpotPerGramCad(metalType, market = DEFAULT_MARKET) {
@@ -72,5 +81,5 @@ export function cadToUsdLuxury(cadValue) {
   }
   const raw = cadValue * PHILEON_FX;
   const step = raw < 2000 ? 50 : 500;
-  return Math.round(raw / step) * step;
+  return roundHalfEven(raw / step) * step;
 }

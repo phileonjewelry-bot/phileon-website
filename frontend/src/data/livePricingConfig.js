@@ -193,6 +193,7 @@ const livePricingConfig = {
   rhythmMeshRing: {
     foundation: { lockedBasePriceCad: 1450, metalType: "925",  weightGrams: 14, lockedMetalReferenceCad: 16 },
     signature:  { lockedBasePriceCad: 2800, metalType: "10K",  weightGrams: 12, lockedMetalReferenceCad: 750 },
+    heirloom:   { lockedBasePriceCad: 4200, metalType: "14K",  weightGrams: 12, lockedMetalReferenceCad: 1050 },
   },
 
   // TOLA II
@@ -209,9 +210,12 @@ const livePricingConfig = {
   },
 
   // TRACE
+  // TRACE — earrings, owner-approved USD retail per pair (weightGrams 0 = USD passthrough, no conversion).
+  // Heirloom keeps its historical row but is not purchasable until its price is approved.
   trace: {
-    foundation: { lockedBasePriceCad: 900,  metalType: "925",  weightGrams: 10, lockedMetalReferenceCad: 12 },
-    signature:  { lockedBasePriceCad: 2200, metalType: "10K",  weightGrams: 8,  lockedMetalReferenceCad: 500 },
+    signature:  { lockedBasePriceCad: 450,  metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    foundation: { lockedBasePriceCad: 900,  metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    heirloom:   { lockedBasePriceCad: 3200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0, purchasable: false },
   },
 
   // BOUND

@@ -275,9 +275,9 @@ PRICING_ENGINE_CATALOG: Dict[str, Dict] = {
     },
     "trace": {
         "product_key": "trace", "product_name": "TRACE",
-        "subtitle": "Signature Ring", "currency": "USD", "convert_usd_luxury": True,
-        "size_profile": "unisex", "needs_size": True, "sku_prefix": "TRC",
-        "category": "ring",
+        "subtitle": "Earrings", "currency": "USD", "convert_usd_luxury": False,
+        "size_profile": None, "needs_size": False, "sku_prefix": "TRC",
+        "category": "earrings",
     },
     "galatians-6-14": {
         "product_key": "galatians614", "product_name": "GALATIANS 6:14",
@@ -829,6 +829,10 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
             f"INVALID_TIER: '{tier_key}' is not a valid {cfg['product_name']} tier."
         )
     tier_config = product_config[resolved_tier]
+    if tier_config.get("available") is False:
+        raise PricingEngineResolverError(
+            f"TIER_UNAVAILABLE: '{tier_key}' of {cfg['product_name']} is not available for purchase yet."
+        )
     if not tier_config.get("lockedBasePriceCad"):
         # Pricing pending — merchant hasn't set a price yet.
         raise PricingEngineResolverError(

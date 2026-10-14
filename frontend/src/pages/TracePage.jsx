@@ -8,6 +8,7 @@ const tracePricing = products.trace.pricing;
 // TRACE Earrings Product Data
 const traceProduct = {
   id: "trace",
+  slug: "trace",
   name: "TRACE",
   category: "earrings",
   collectionLabel: "PHILEON",
@@ -18,26 +19,27 @@ const traceProduct = {
   defaultTier: "signature",
 
   tiers: {
-    foundation: {
-      name: "Foundation",
-      metal: "10K Gold Plated",
-      price: tracePricing.plated,
-      badge: "",
-      description: "Gold plated over base metal."
-    },
     signature: {
       name: "Signature",
-      metal: "10K Yellow Gold",
-      price: tracePricing.solid10k,
+      metal: "925 Sterling Silver · Yellow-Gold Plated",
+      price: tracePricing.signature,
       badge: "MOST POPULAR",
-      description: "Refined form."
+      description: "Solid sterling silver, yellow-gold plated. Priced per pair."
+    },
+    foundation: {
+      name: "Foundation",
+      metal: "Solid 10K Yellow Gold",
+      price: tracePricing.foundation,
+      badge: "",
+      description: "Solid 10K yellow gold, not plated. Priced per pair."
     },
     heirloom: {
       name: "Heirloom",
-      metal: "14K Yellow Gold",
-      price: tracePricing.solid14k,
-      badge: "COLLECTOR",
-      description: "Elevated density and finish."
+      metal: "Solid 14K Yellow Gold",
+      price: tracePricing.heirloom,
+      unavailable: true,
+      badge: "PRICE PENDING",
+      description: "Solid 14K yellow gold. Pricing awaiting owner approval — not yet available to order."
     }
   },
 

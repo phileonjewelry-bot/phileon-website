@@ -857,16 +857,17 @@ export const products = {
     audience: "ladies",
     shopMaterialLine: "Earrings · 10K Gold Plated - 14K Yellow Gold",
     tagline: "Lines of Movement.",
-    basePrice: 700,
+    basePrice: 450,
     
     // Pricing Configuration
     dynamicPricing: false,
     currency: "USD",
     
+    // Owner-approved USD retail per pair (Oct 2026). Historical: plated 900 / solid10k 2400 / solid14k 3200.
     pricing: {
-      plated: 900,       // 10K Gold Plated
-      solid10k: 2400,    // 10K Yellow Gold
-      solid14k: 3200     // 14K Yellow Gold
+      signature: 450,    // 925 sterling silver · yellow-gold plated
+      foundation: 900,   // Solid 10K yellow gold
+      heirloom: null     // Solid 14K yellow gold — price pending owner approval
     }
   },
 

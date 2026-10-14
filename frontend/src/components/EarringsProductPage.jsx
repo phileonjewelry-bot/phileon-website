@@ -186,8 +186,11 @@ export default function EarringsProductPage({ product }) {
               {Object.entries(product.tiers).map(([key, tier]) => (
                 <button
                   key={key}
-                  onClick={() => setSelectedTier(key)}
+                  onClick={() => !tier.unavailable && setSelectedTier(key)}
+                  disabled={!!tier.unavailable}
+                  aria-disabled={!!tier.unavailable}
                   className={`w-full text-left rounded-xl border p-4 lg:p-5 transition-all ${
+                    tier.unavailable ? "opacity-50 cursor-not-allowed border-[#2a2a2a] bg-black" :
                     selectedTier === key
                       ? "border-[#C6A25D] bg-[#C6A25D]/10"
                       : "border-[#2a2a2a] bg-black hover:border-[#4a4a4a]"
@@ -201,7 +204,7 @@ export default function EarringsProductPage({ product }) {
                         {tier.metal}
                       </div>
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
-                        {tierPricesLive[key]?.formatted || _localizedUsd(tier.price)}
+                        {tier.unavailable ? "Price pending" : (tierPricesLive[key]?.formatted || _localizedUsd(tier.price))}
                       </div>
                     </div>
 

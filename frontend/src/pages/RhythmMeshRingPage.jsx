@@ -9,6 +9,7 @@ const rhythmPricing = products.rhythmMeshRing.pricing;
 // Note: This is a unisex ring, using gents size profile as default
 const rhythmMeshProduct = {
   id: "rhythm-mesh-ring",
+  slug: "rhythm-mesh-ring",
   name: "Rhythm Mesh",
   bandWidthMm: 11, // wide-band — triggers wide-band fit notice in RingSizeSelector
   category: "ring",

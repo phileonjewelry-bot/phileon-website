@@ -90,7 +90,7 @@ export function LiveFromPrice({ slug, fallback }) {
     product.pricingType === "fixed" &&
     Array.isArray(product.variants) &&
     product.variants.length > 0
-      ? (product.variants.find((v) => v.default) || product.variants[0])
+      ? [...product.variants].filter((v) => v.price > 0 && v.available !== false).sort((a, b) => a.price - b.price)[0]
       : null;
 
   // Hook calls must be unconditional — give stable args either way.
@@ -112,7 +112,7 @@ export function LiveFromPrice({ slug, fallback }) {
     return <>{fixedFormatted}</>;
   }
   if (fixedVariant) {
-    return <>{_localizedUsd(fixedVariant.price)}</>;
+    return <>From {_localizedUsd(fixedVariant.price)}</>;
   }
   if (isLive) {
     return <>From {fromFormatted}</>;
