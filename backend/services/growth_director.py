@@ -530,6 +530,38 @@ _DRAFT_SYSTEM = (
 )
 
 
+ELIGIBLE_SOURCE_STATUSES = ("new", "accepted", "in_progress", "done")
+_SOURCE_FIELDS = ("id", "title", "priority", "status", "market", "channel", "evidence_quality", "evidence_strength",
+                  "merged_variants", "exploratory", "created_at")
+
+
+def source_ineligible_reason(rec: Dict[str, Any]) -> Optional[str]:
+    """Why a recommendation may NOT be drafted from (None = eligible)."""
+    if rec.get("status") == "merged" or rec.get("merged_into"):
+        return "source_superseded"
+    if rec.get("status") == "invalidated" or rec.get("evidence_quality") == "test":
+        return "source_synthetic_test_data"
+    if rec.get("status") not in ELIGIBLE_SOURCE_STATUSES:
+        return "source_not_active"
+    return None
+
+
+async def eligible_sources(db) -> List[Dict[str, Any]]:
+    """Active, canonical, non-synthetic recommendations — each initiative once (newest per fingerprint)."""
+    rows = await db.growth_recommendations.find({"status": {"$in": list(ELIGIBLE_SOURCE_STATUSES)}}, {"_id": 0}) \
+        .sort("created_at", -1).to_list(300)
+    out, seen = [], set()
+    for r in rows:
+        if source_ineligible_reason(r):
+            continue
+        key = r.get("fingerprint") or r["id"]
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({k: r.get(k) for k in _SOURCE_FIELDS})
+    return out
+
+
 async def generate_draft(db, *, recommendation_id: Optional[str], discovery_id: Optional[str],
                          fmt: str, notes: str = "") -> Dict[str, Any]:
     if fmt not in DRAFT_FORMATS:
@@ -539,6 +571,8 @@ async def generate_draft(db, *, recommendation_id: Optional[str], discovery_id: 
     brief: Dict[str, Any] = {}
     if recommendation_id:
         brief = await db.growth_recommendations.find_one({"id": recommendation_id}, {"_id": 0}) or {}
+        if brief and (reason := source_ineligible_reason(brief)):
+            raise ValueError(reason)
     elif discovery_id:
         brief = await db.growth_radar_discoveries.find_one({"id": discovery_id}, {"_id": 0}) or {}
     if not brief:
@@ -554,9 +588,14 @@ async def generate_draft(db, *, recommendation_id: Optional[str], discovery_id: 
         await G.mark_integration(db, "claude", ok=False, reason=str(exc)[:160])
         raise ClaudeError(type(exc).__name__)
     now = G._now().isoformat()
+    source_q = {"recommendation_id": recommendation_id} if recommendation_id else {"discovery_id": discovery_id}
+    version = await db.growth_content_drafts.count_documents({**source_q, "format": fmt}) + 1
     doc = {"id": str(uuid.uuid4()), "format": fmt, "status": "draft", "published": False, "publish_locked": True,
-           "recommendation_id": recommendation_id, "discovery_id": discovery_id,
+           "recommendation_id": recommendation_id, "discovery_id": discovery_id, "version": version,
            "title": brief.get("title") or brief.get("query") or "Untitled", "body": text.strip(), "notes": notes[:600],
+           "source_status": brief.get("status"), "source_market": brief.get("market"),
+           "evidence": brief.get("evidence") or [], "evidence_ids": brief.get("evidence_ids") or [],
+           "evidence_quality": brief.get("evidence_quality"),
            "engine": "claude-sonnet-5-5", "created_at": now, "updated_at": now}
     await db.growth_content_drafts.insert_one(doc)
     return {k: v for k, v in doc.items() if k != "_id"}

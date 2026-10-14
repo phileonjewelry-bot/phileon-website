@@ -1,7 +1,8 @@
 /* PHILEON Growth OS — Phase 1 admin surface.
    Five tabs: Growth Overview · Customer Radar · AI Growth Director · Content Opportunities · Activity History.
    Feature-flagged (PHILEON_GROWTH_OS_ENABLED). Admin-only. Draft-only output. */
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Empty, Pill, useAsync, useGrowthApi } from './growth/shared';
 import GrowthOverview from './growth/GrowthOverview';
 import CustomerRadar from './growth/CustomerRadar';
@@ -19,11 +20,12 @@ const TABS = [
 
 export default function AdminGrowthOS() {
   const api = useGrowthApi();
-  const [tab, setTab] = useState('overview');
-  const [draftSource, setDraftSource] = useState(null);
+  const [params, setParams] = useSearchParams();
+  const tab = TABS.some((t) => t.key === params.get('tab')) ? params.get('tab') : 'overview';
+  const draftRecId = params.get('rec') || '';
+  const setTab = (key) => setParams(key === 'overview' ? {} : { tab: key });
   const [state, load] = useAsync(() => api('/overview'), [api]);
   useEffect(() => { load(); }, [load]);
-  const clearDraftSource = useCallback(() => setDraftSource(null), []);
   const ov = state.data;
 
   return (
@@ -63,8 +65,8 @@ export default function AdminGrowthOS() {
           </div>
           {tab === 'overview' && <GrowthOverview overview={ov} reload={load} />}
           {tab === 'radar' && <CustomerRadar />}
-          {tab === 'director' && <GrowthDirector onDraftRequest={(r) => { setDraftSource(r); setTab('content'); }} />}
-          {tab === 'content' && <ContentOpportunities draftSource={draftSource} clearDraftSource={clearDraftSource} />}
+          {tab === 'director' && <GrowthDirector onDraftRequest={(r) => setParams({ tab: 'content', rec: r.id })} />}
+          {tab === 'content' && <ContentOpportunities draftRecId={draftRecId} />}
           {tab === 'activity' && <ActivityHistory />}
         </>
       )}

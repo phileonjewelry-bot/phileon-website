@@ -303,7 +303,7 @@ async def recommendation_status(rec_id: str, body: StatusUpdate, _: str = Depend
 async def content_drafts(_: str = Depends(verify_admin)):
     _require_enabled()
     rows = await db.growth_content_drafts.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
-    return {"drafts": rows, "formats": D.DRAFT_FORMATS, "publish_locked": True}
+    return {"drafts": rows, "formats": D.DRAFT_FORMATS, "sources": await D.eligible_sources(db), "publish_locked": True}
 
 
 @admin_router.post("/content-drafts/generate", status_code=201)

@@ -1238,3 +1238,17 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - `/app/frontend/src/components/RingProductPage.jsx`, `/app/frontend/src/components/RingSizeSelector.jsx`
 - `/app/frontend/src/components/PhileonCarousel.jsx`, `/app/frontend/src/pages/HomePage.jsx` (stripItems)
 - `/app/backend/routes/checkout.py` — Stripe (on hold)
+
+## Oct 14, 2026 — Content Studio 404 investigation + handoff fix (Growth OS)
+- Root cause of "Request failed (404)": NOT the application. `GET /api/admin/growth-os/content-drafts` exists and returns 200;
+  backend access logs contain zero 404s for that path. The 404 was served by the platform ingress while the preview backend was
+  being recreated (job fork / restart) or from a stale previous-preview tab. The UI then hid the real state: the `/recommendations`
+  fetch failed silently, "No drafts yet" showed despite an existing draft, formats (from the same failed call) were empty → blank
+  second dropdown, and the session-only `draftSource` pre-selection was lost.
+- Fixes: `?tab=content&rec=<id>` URL handoff (survives refresh, admin-auth gated); `/content-drafts` now returns `sources`
+  (eligible initiatives only: active status, not merged/invalidated/dismissed, not synthetic-only, one per fingerprint);
+  `generate_draft` validates eligibility before calling Claude and writes versioned drafts (`version`, evidence snapshot,
+  never overwrites); labelled dropdowns + static format fallback; clearer non-JSON error text; explicit `gos-content-error`.
+- Tests: 43/43 `tests/test_growth_os.py` (Claude mocked). UI flow verified Director → Draft content → pre-selected → refresh →
+  mocked generate → saved message, at 360/390/430/1920 with no horizontal overflow.
+- PENDING OWNER AUTHORIZATION: one real Claude Sonnet 5.5 draft generation (spends Emergent LLM credit). No SerpAPI calls made.

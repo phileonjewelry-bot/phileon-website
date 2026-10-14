@@ -596,3 +596,72 @@ def test_sparse_trends_snapshot_is_unverified_and_cannot_drive_revenue(radar_env
     assert D._sanitize({"title": "Sell rings", "channel": "collection", "actions": ["x"], "evidence_ids": [e["id"]]}, index) is None
     sc = D.score({"channel": "content", "impact": "high", "effort": "low", "evidence_ids": [e["id"]]}, index)
     assert sc["exploratory"] is True and sc["priority"] != "HIGH"
+
+
+# ── Content Studio (drafts are DRAFT ONLY · Claude is mocked) ───────────────
+
+def _rec(**over):
+    base = {"id": over.pop("id", "rec-" + os.urandom(4).hex()), "title": "Engagement ring edit for Canadian search interest",
+            "status": "new", "priority": "MEDIUM", "market": "CA", "channel": "editorial", "evidence_quality": "verified",
+            "evidence_strength": "indicative", "fingerprint": "fp-" + os.urandom(3).hex(), "created_at": G._now().isoformat(),
+            "evidence": [{"id": "E001", "text": "Google Trends CA 'engagement ring' 53 non-zero weeks", "quality": "verified"}],
+            "evidence_ids": ["E001"], "rationale": "Sustained Canadian interest.", "actions": ["Curate a ring edit."]}
+    base.update(over)
+    return base
+
+
+def test_eligible_sources_filters_and_dedupes(radar_env):
+    db, loop = radar_env
+    canonical = _rec(id="canon", fingerprint="fp-same", created_at="2026-10-13T10:00:00+00:00")
+    rows = [canonical,
+            _rec(id="dup-older", fingerprint="fp-same", created_at="2026-10-12T10:00:00+00:00"),
+            _rec(id="merged", status="merged", merged_into="canon"),
+            _rec(id="invalid", status="invalidated", evidence_quality="test"),
+            _rec(id="synthetic", status="new", evidence_quality="test"),
+            _rec(id="dismissed", status="dismissed"),
+            _rec(id="accepted", status="accepted")]
+    loop.run_until_complete(db.growth_recommendations.insert_many(rows))
+    ids = [s["id"] for s in loop.run_until_complete(D.eligible_sources(db))]
+    assert ids == ["canon", "accepted"] or sorted(ids) == ["accepted", "canon"]
+    assert "dup-older" not in ids and "merged" not in ids and "synthetic" not in ids
+
+
+def test_generate_draft_mocked_claude_versions_and_never_publishes(radar_env, monkeypatch):
+    db, loop = radar_env
+    loop.run_until_complete(db.growth_content_drafts.delete_many({}))
+    loop.run_until_complete(db.growth_recommendations.insert_many([_rec(id="canon"), _rec(id="merged", status="merged", merged_into="canon")]))
+    monkeypatch.setattr(G, "claude_configured", lambda: True)
+    calls = []
+
+    async def _fake_claude(system, prompt, *, session, max_tokens=4000):
+        calls.append((system, prompt))
+        return "A ring is the piece that stays. (MOCKED DRAFT)"
+    monkeypatch.setattr(D, "_claude", _fake_claude)
+
+    d1 = loop.run_until_complete(D.generate_draft(db, recommendation_id="canon", discovery_id=None, fmt="instagram_caption", notes="quiet"))
+    d2 = loop.run_until_complete(D.generate_draft(db, recommendation_id="canon", discovery_id=None, fmt="instagram_caption"))
+    assert (d1["version"], d2["version"]) == (1, 2) and d1["id"] != d2["id"]
+    assert d1["published"] is False and d1["publish_locked"] is True and d1["status"] == "draft"
+    assert d1["evidence_ids"] == ["E001"] and d1["evidence"][0]["id"] == "E001" and d1["recommendation_id"] == "canon"
+    assert "PHILEON" in calls[0][0] and "engagement ring" in calls[0][1].lower() and "quiet" in calls[0][1]
+    assert loop.run_until_complete(db.growth_content_drafts.count_documents({})) == 2  # v1 kept, never overwritten
+
+    with pytest.raises(ValueError, match="source_superseded"):
+        loop.run_until_complete(D.generate_draft(db, recommendation_id="merged", discovery_id=None, fmt="instagram_caption"))
+    with pytest.raises(ValueError, match="source_not_found"):
+        loop.run_until_complete(D.generate_draft(db, recommendation_id="ghost", discovery_id=None, fmt="instagram_caption"))
+    with pytest.raises(ValueError, match="unsupported_format"):
+        loop.run_until_complete(D.generate_draft(db, recommendation_id="canon", discovery_id=None, fmt="tweet"))
+    loop.run_until_complete(db.growth_content_drafts.delete_many({}))
+
+
+def test_content_drafts_route_exposes_sources_and_formats(app_client, monkeypatch):
+    monkeypatch.setenv("PHILEON_GROWTH_OS_ENABLED", "true")
+    r = app_client.get("/api/admin/growth-os/content-drafts", headers=_admin_headers())
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["publish_locked"] is True and set(body["formats"]) == set(D.DRAFT_FORMATS)
+    assert isinstance(body["sources"], list) and isinstance(body["drafts"], list)
+    r = app_client.post("/api/admin/growth-os/content-drafts/generate", headers=_admin_headers(),
+                        json={"recommendation_id": "ghost", "format": "instagram_caption"})
+    assert r.status_code in (422, 502) and r.json()["detail"] in ("SOURCE_NOT_FOUND", "CLAUDE_INTEGRATION_REQUIRED")

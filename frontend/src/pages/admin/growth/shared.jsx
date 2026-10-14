@@ -11,10 +11,12 @@ export function useGrowthApi() {
   return useCallback(async (path, opts = {}) => {
     const r = await fetch(`${API}/api/admin/growth-os${path}`, { ...opts, headers });
     if (r.status === 401 || r.status === 403) throw new Error('Unauthorized — please log in as admin.');
-    const body = await r.json().catch(() => ({}));
+    const body = await r.json().catch(() => null);
     if (!r.ok) {
-      const d = body.detail;
-      throw new Error(typeof d === 'string' ? d : `Request failed (${r.status})`);
+      const d = body?.detail;
+      if (typeof d === 'string') throw new Error(d);
+      if (body === null) throw new Error(`Growth OS API did not answer (${r.status}) — the backend did not serve this request. Reload once the service is back.`);
+      throw new Error(`Request failed (${r.status})`);
     }
     return body;
   }, [headers]);
