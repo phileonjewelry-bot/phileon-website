@@ -1287,3 +1287,6 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   `DRAFT_FORMATS['product_story']` = "≤150 words" + `_DRAFT_SYSTEM` "use only the brief supplied / plain text only" — the writer
   treats brand line + route as out-of-brief and trims the close. Proposed fix (NOT applied, owner approval needed): allow the
   verified public route + brand line in _DRAFT_SYSTEM and raise product_story to ≤220 words.
+- Oct 14, 2026 14:54 UTC — LIVE Claude draft #4: H.E.R. product_story v3, id d294b08e-…, 181 words, DRAFT ONLY. All brief
+  requirements met (verbatim brand line, route, "No queen stands alone", golds, stones phrase, no banned terms). Omits
+  "made to order" (allowed, not mandatory). Minor: title wrapped in markdown ** despite plain-text instruction. v1/v2 preserved.

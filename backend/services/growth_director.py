@@ -57,7 +57,7 @@ DRAFT_FORMATS = {
     "instagram_caption": "Instagram caption (≤120 words, editorial, no hashtags spam, max 3 tags)",
     "blog_outline": "Editorial journal/blog outline (title + 5 section headers + 1-line notes)",
     "email_concept": "Email concept (subject, preheader, 3 short paragraphs). No discounts, no urgency.",
-    "product_story": "Product story paragraph (≤150 words) in PHILEON's cinematic editorial voice",
+    "product_story": "Product story (150–220 words) in PHILEON's cinematic editorial voice, closing with the brand line and, when a verified public_url is supplied, an invitation to that page",
     "landing_copy": "Landing-page copy block (headline, sub-headline, 3 proof points, CTA label)",
 }
 
@@ -551,7 +551,10 @@ async def evidence_report(db) -> Dict[str, Any]:
 _DRAFT_SYSTEM = (
     "You write DRAFT marketing copy for PHILEON, a luxury fine-jewellery house in Toronto. Voice: cinematic, "
     "editorial, restrained, confident. Never mention prices, discounts, urgency, scarcity or unverifiable claims. "
-    "Never invent product names, materials, awards or statistics — use only the brief supplied. Output plain text only."
+    "Never invent product names, materials, awards or statistics — use only the brief supplied. The brand line "
+    "\"Not jewelry. Identity.\" is PHILEON's own and may always be used verbatim. When VERIFIED PIECES include a public_url, "
+    "you may close by inviting the reader to that exact path — never any other link. If OWNER NOTES mark an element as "
+    "mandatory, include it even if that means using the upper end of the word allowance. Output plain text only."
 )
 
 
