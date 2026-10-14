@@ -30,6 +30,7 @@ from datetime import timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
 from services import growth_os as G
+from services import catalogue_adapter as CAT
 from services.analytics_service import build_products, top_searches, current_env
 
 log = logging.getLogger("phileon.growth_director")
@@ -395,7 +396,24 @@ def _sanitize(r: Dict[str, Any], index: Dict[str, Dict[str, Any]]) -> Optional[D
             "market": r.get("market") if r.get("market") in ("CA", "US", "ALL") else "ALL",
             "impact": r.get("impact") if str(r.get("impact")).lower() in _IMPACT else "medium",
             "effort": r.get("effort") if str(r.get("effort")).lower() in _EFFORT else "medium",
-            "evidence_ids": ids}
+            "evidence_ids": ids, "product_slugs": [str(x) for x in (r.get("product_slugs") or []) if x][:8]}
+
+
+def attach_products(rec: Dict[str, Any], index: Dict[str, Dict[str, Any]], catalogue: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Grounded product matches: Claude-cited slugs are kept only if eligible; deterministic matches fill in. Never forced."""
+    text = " ".join([rec.get("title", ""), rec.get("rationale", "")] + list(rec.get("actions") or [])
+                    + [index[i]["text"] for i in rec.get("evidence_ids", []) if i in index])
+    matches = CAT.match_products(catalogue, text=text, limit=5)
+    by_slug = {m["slug"]: m for m in matches}
+    eligible = {p["slug"]: p for p in catalogue if p["marketing_eligible"]}
+    cited = []
+    for slug in rec.pop("product_slugs", []) or []:
+        p = eligible.get(slug)
+        if p and slug not in by_slug:
+            cited.append({"slug": slug, "name": p["name"], "categories": p["categories"], "public_url": p["public_url"],
+                          "availability": p["availability"]["state"], "match_reason": "cited by Growth Director (verified eligible)"})
+    rec["products"] = (cited + matches)[:5]
+    return rec
 
 
 async def _persist(db, recs: List[Dict[str, Any]], index, *, engine: str, run_id: str, trigger: str) -> int:
@@ -481,14 +499,20 @@ async def generate_recommendations(db, *, run_id: str, trigger: str = "auto") ->
 
     recs: List[Dict[str, Any]] = []
     engine, reason = "claude-sonnet-5-5", ""
+    catalogue = (await CAT.build_catalogue(db))["products"]
+    eligible = [p for p in catalogue if p["marketing_eligible"]]
     if G.claude_configured():
         prompt = (
             "EVIDENCE LEDGER (quality: verified|unverified):\n" +
             "\n".join(f"[{e['id']}] ({e['kind']} · {e['quality']} · n={e.get('events', 0)}) {e['text']}" for e in evidence) +
+            "\n\nVERIFIED PHILEON CATALOGUE (the ONLY pieces you may reference; Inspiration Vault one-of-ones are excluded):\n" +
+            "\n".join(f"- {p['slug']} · {p['name']} · {'/'.join(p['categories']) or 'uncategorised'} · {p['material_line'] or p['subtitle'] or ''}"
+                      for p in eligible) +
             f"\n\nReturn AT MOST {limit} initiatives (fewer is better) as a JSON array of objects with keys: "
             "title (≤80 chars), rationale (≤240 chars referencing the evidence), actions (array of 1-4 concrete steps, "
             f"each ≤200 chars), channel (one of {sorted(CHANNELS)}), market (CA|US|ALL), impact (low|medium|high), "
-            "effort (low|medium|high), evidence_ids (ids from the ledger). Do not output confidence percentages."
+            "effort (low|medium|high), evidence_ids (ids from the ledger), product_slugs (0-5 slugs from the verified "
+            "catalogue that genuinely fit — leave empty if none does; never invent). Do not output confidence percentages."
         )
         try:
             raw = await _claude(_SYSTEM, prompt, session=f"growth-director-{run_id}")
@@ -506,7 +530,7 @@ async def generate_recommendations(db, *, run_id: str, trigger: str = "auto") ->
         recs, engine, reason = deterministic_recommendations(evidence, limit), "deterministic", "claude_not_configured"
 
     recs = [s for s in (_sanitize(r, index) for r in recs) if s]
-    recs = cluster(recs)[:limit]
+    recs = [attach_products(r, index, catalogue) for r in cluster(recs)[:limit]]
     created = await _persist(db, recs, index, engine=engine, run_id=run_id, trigger=trigger)
     return {**base, "created": created, "engine": engine, "reason": reason, "evidence_count": len(evidence),
             "candidates": len(recs), "limit": limit}
@@ -531,7 +555,7 @@ _DRAFT_SYSTEM = (
 
 
 ELIGIBLE_SOURCE_STATUSES = ("new", "accepted", "in_progress", "done")
-_SOURCE_FIELDS = ("id", "title", "priority", "status", "market", "channel", "evidence_quality", "evidence_strength",
+_SOURCE_FIELDS = ("id", "title", "priority", "status", "market", "channel", "evidence_quality", "evidence_strength", "products",
                   "merged_variants", "exploratory", "created_at")
 
 
@@ -550,7 +574,7 @@ async def eligible_sources(db) -> List[Dict[str, Any]]:
     """Active, canonical, non-synthetic recommendations — each initiative once (newest per fingerprint)."""
     rows = await db.growth_recommendations.find({"status": {"$in": list(ELIGIBLE_SOURCE_STATUSES)}}, {"_id": 0}) \
         .sort("created_at", -1).to_list(300)
-    out, seen = [], set()
+    out, seen, catalogue = [], set(), None
     for r in rows:
         if source_ineligible_reason(r):
             continue
@@ -558,12 +582,15 @@ async def eligible_sources(db) -> List[Dict[str, Any]]:
         if key in seen:
             continue
         seen.add(key)
+        if "products" not in r:  # initiative predates the catalogue adapter — match read-only, never persisted
+            catalogue = catalogue if catalogue is not None else (await CAT.build_catalogue(db))["products"]
+            attach_products(r, {e["id"]: e for e in (r.get("evidence") or []) if e.get("id")}, catalogue)
         out.append({k: r.get(k) for k in _SOURCE_FIELDS})
     return out
 
 
 async def generate_draft(db, *, recommendation_id: Optional[str], discovery_id: Optional[str],
-                         fmt: str, notes: str = "") -> Dict[str, Any]:
+                         fmt: str, notes: str = "", product_slugs: Optional[List[str]] = None) -> Dict[str, Any]:
     if fmt not in DRAFT_FORMATS:
         raise ValueError("unsupported_format")
     if not G.claude_configured():
@@ -579,8 +606,14 @@ async def generate_draft(db, *, recommendation_id: Optional[str], discovery_id: 
         raise ValueError("source_not_found")
     source_text = json.dumps({k: brief.get(k) for k in ("title", "rationale", "action", "actions", "channel", "market",
                                                           "query", "source_keyword", "category", "evidence")}, default=str)
-    prompt = (f"FORMAT: {DRAFT_FORMATS[fmt]}\nBRIEF (JSON): {source_text}\nOWNER NOTES: {notes[:600] or 'none'}\n"
-              "Write the draft now.")
+    catalogue = (await CAT.build_catalogue(db))["products"]
+    wanted = list(product_slugs) if product_slugs is not None else [p["slug"] for p in (brief.get("products") or [])]
+    pieces = CAT.content_brief(catalogue, wanted)
+    pieces_text = (json.dumps(pieces, default=str, ensure_ascii=False) if pieces
+                   else "none — do NOT name, describe or allude to any specific PHILEON product.")
+    prompt = (f"FORMAT: {DRAFT_FORMATS[fmt]}\nBRIEF (JSON): {source_text}\n"
+              f"VERIFIED PIECES (reference ONLY these, ONLY with the facts given; never invent specs): {pieces_text}\n"
+              f"OWNER NOTES: {notes[:600] or 'none'}\nWrite the draft now.")
     try:
         text = await _claude(_DRAFT_SYSTEM, prompt, session=f"growth-draft-{uuid.uuid4().hex[:8]}", max_tokens=1500)
         await G.mark_integration(db, "claude", ok=True)
@@ -596,6 +629,7 @@ async def generate_draft(db, *, recommendation_id: Optional[str], discovery_id: 
            "source_status": brief.get("status"), "source_market": brief.get("market"),
            "evidence": brief.get("evidence") or [], "evidence_ids": brief.get("evidence_ids") or [],
            "evidence_quality": brief.get("evidence_quality"),
+           "products_referenced": [{"slug": p["slug"], "name": p["name"], "public_url": p.get("public_url")} for p in pieces],
            "engine": "claude-sonnet-5-5", "created_at": now, "updated_at": now}
     await db.growth_content_drafts.insert_one(doc)
     return {k: v for k, v in doc.items() if k != "_id"}

@@ -1256,3 +1256,18 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   v1, id b81be6c8-…, source e607a24c (verified CA Google Trends). Saved DRAFT ONLY (published=false). Existing Oct 13 draft
   preserved (confirmed genuine Claude output via LiteLLM completion log 09:40:24–27 matching created_at). Catalogue in preview
   has 0 products → no product names referenced. Awaiting owner review; no further generations authorized.
+
+## Oct 14, 2026 — Catalogue investigation + Growth OS read-only catalogue adapter
+- FINDING: PHILEON catalogue is code-defined (frontend/src/data/products.js 68 slugs/113 records; backend pricing_engine_catalog +
+  catalog.py = 84 checkout-supported parents / 228 SKU configs). Mongo `products`/`collections` are a legacy CRUD scaffold
+  (populate_db.py placeholder data) — Admin Dashboard/Products page reads them → 0. No data loss.
+- PRODUCTION CHECK: deployer debug could not resolve any v3 production deployment for this job → no production DB exists to
+  inspect (preview-only). Reported as a limitation; no workaround attempted.
+- BUILT: `services/catalogue_adapter.py` (read-only merge; NO prices exposed), `scripts/export_storefront_catalogue.mjs` →
+  `data/storefront_catalogue.json` (snapshot + sha drift check; re-run the script after editing products.js),
+  `GET /api/admin/growth-os/catalogue`. Director attaches grounded `products` matches (Claude may cite `product_slugs`,
+  validated against eligible set; vault `iv-*` excluded; never forced). Content Studio shows verified pieces with
+  checkboxes → `product_slugs`; draft stores `products_referenced`. Storefront category wins over pricing-engine category
+  (20 conflicts reported). Tests: 57 passed (Claude mocked). Pricing/checkout/inventory/storefront files untouched.
+- Known gaps: no PHILEON piece is tagged bridal/engagement (matches flagged "confirm fit manually"); 3 pricing-only slugs
+  without storefront record/URL (drew-face, retro-bred, true-vine); 6 storefront placeholders not purchasable.

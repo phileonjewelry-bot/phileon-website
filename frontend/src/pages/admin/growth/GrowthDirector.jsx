@@ -79,6 +79,19 @@ function Recommendation({ r, onStatus, onDraft }) {
       {r.variant_titles?.length > 0 && (
         <p className="text-[11px] text-white/40 mt-2 break-words">Consolidated: {r.variant_titles.join(' · ')}</p>
       )}
+      <div className="mt-2" data-testid={`gos-rec-products-${r.id}`}>
+        <p className="text-phileon-gold text-[10px] uppercase tracking-[0.22em]">Verified PHILEON pieces</p>
+        {(r.products || []).length === 0
+          ? <p className="text-[11px] text-white/40 mt-1">No catalogue piece matched this research — nothing is forced.</p>
+          : <ul className="text-[12px] text-white/70 mt-1 space-y-0.5">
+              {r.products.map((p) => (
+                <li key={p.slug} className="break-words" data-testid={`gos-rec-product-${r.id}-${p.slug}`}>
+                  <span className="text-phileon-ivory">{p.name}</span> · {(p.categories || []).join('/')} · {String(p.availability || '').replace(/_/g, ' ')}
+                  <span className="text-white/40"> — {p.match_reason}</span>
+                </li>
+              ))}
+            </ul>}
+      </div>
       <div className="flex flex-wrap items-center gap-2 mt-3">
         {!readOnly && (
           <select value={r.status} data-testid={`gos-rec-status-${r.id}`} onChange={(e) => onStatus(r.id, e.target.value)}

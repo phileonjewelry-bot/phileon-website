@@ -18,6 +18,7 @@ from pydantic import BaseModel, Field
 from services import growth_os as G
 from services import growth_radar as R
 from services import growth_director as D
+from services import catalogue_adapter as CAT
 
 log = logging.getLogger("phileon.growth_os.routes")
 
@@ -71,6 +72,7 @@ class DraftRequest(BaseModel):
     discovery_id: Optional[str] = None
     format: str
     notes: str = ""
+    product_slugs: Optional[List[str]] = Field(default=None, max_length=5)
 
 
 class DraftUpdate(BaseModel):
@@ -263,6 +265,11 @@ async def recommendations(status: Optional[str] = Query(default=None), _: str = 
     if status:
         q["status"] = status
     rows = await db.growth_recommendations.find(q, {"_id": 0}).sort("created_at", -1).to_list(200)
+    if any("products" not in r for r in rows):  # initiatives created before the catalogue adapter: match read-only, never persisted
+        catalogue = (await CAT.build_catalogue(db))["products"]
+        for r in rows:
+            if "products" not in r:
+                D.attach_products(r, {e["id"]: e for e in (r.get("evidence") or []) if e.get("id")}, catalogue)
     return {"recommendations": rows, "health": (await G.health(db, probe_serp=False))["claude"]}
 
 
@@ -297,6 +304,14 @@ async def recommendation_status(rec_id: str, body: StatusUpdate, _: str = Depend
     return {"id": rec_id, "status": body.status}
 
 
+# ─── Catalogue (read-only adapter; no prices, no writes) ─────────
+
+@admin_router.get("/catalogue")
+async def catalogue(_: str = Depends(verify_admin)):
+    _require_enabled()
+    return await CAT.build_catalogue(db)
+
+
 # ─── Content drafts ───────────────────────────────────────────────
 
 @admin_router.get("/content-drafts")
@@ -311,7 +326,7 @@ async def generate_draft(body: DraftRequest, _: str = Depends(verify_admin)):
     _require_enabled()
     try:
         return await D.generate_draft(db, recommendation_id=body.recommendation_id, discovery_id=body.discovery_id,
-                                      fmt=body.format, notes=body.notes)
+                                      fmt=body.format, notes=body.notes, product_slugs=body.product_slugs)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc).upper())
     except D.ClaudeError as exc:

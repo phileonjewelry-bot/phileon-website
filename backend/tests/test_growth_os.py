@@ -1,5 +1,6 @@
 """PHILEON Growth OS — Phase 1 tests (flags · schedule · cron auth · budget · parsing · dedupe · admin CRUD)."""
 import asyncio
+import json
 import os
 from datetime import datetime, timezone
 
@@ -665,3 +666,110 @@ def test_content_drafts_route_exposes_sources_and_formats(app_client, monkeypatc
     r = app_client.post("/api/admin/growth-os/content-drafts/generate", headers=_admin_headers(),
                         json={"recommendation_id": "ghost", "format": "instagram_caption"})
     assert r.status_code in (422, 502) and r.json()["detail"] in ("SOURCE_NOT_FOUND", "CLAUDE_INTEGRATION_REQUIRED")
+
+
+# ── Catalogue adapter (read-only; pricing engine stays the only price authority) ──────────
+
+from services import catalogue_adapter as CA  # noqa: E402
+
+
+def _cat(loop, db=None):
+    return loop.run_until_complete(CA.build_catalogue(db))
+
+
+def test_catalogue_snapshot_in_sync_with_storefront_source():
+    drift = CA.snapshot_drift()
+    assert drift["checked"] is True and drift["in_sync"] is True, "run: node backend/scripts/export_storefront_catalogue.mjs"
+
+
+def test_catalogue_maps_parents_skus_and_reports_mismatches(radar_env):
+    db, loop = radar_env
+    cat = _cat(loop, db)
+    s, by = cat["summary"], {p["slug"]: p for p in cat["products"]}
+    assert s["checkout_supported_parents"] == 84 and s["sku_configurations"] > 84  # parents ≠ SKUs
+    assert by["la-bete"]["storefront_slug"] == "labete" and by["la-bete"]["name"]  # linked via pricing product_key
+    assert by["galatians-6-14"]["storefront_slug"] == "galatians-614"
+    assert {"pricing_slug": "la-bete", "storefront_slug": "labete"} in cat["mismatches"]["slug_differs_between_storefront_and_pricing"]
+    assert "two-finger-ring" in cat["mismatches"]["storefront_only_not_purchasable"]
+    assert "drew-face" in cat["mismatches"]["pricing_only_no_storefront_record"]
+    assert by["la-marva"]["sku_count"] >= 3 and by["la-marva"]["editions"] and by["la-marva"]["public_url"] == "/products/la-marva"
+    assert by["apex"]["categories"] == ["earrings"]  # storefront category wins over pricing-engine default
+    # Never a second pricing authority: no price fields anywhere.
+    blob = json.dumps(cat["products"]).lower()
+    for forbidden in ("price_usd", "unit_amount", "lockedbaseprice", "price_cents", "\"price\""):
+        assert forbidden not in blob
+    # Missing data is reported, not invented.
+    assert "description" in by["drew-face"]["missing_fields"] and by["drew-face"]["description"] is None
+    assert by["drew-face"]["marketing_eligible"] is False and "no_verified_public_url" in by["drew-face"]["ineligibility_reasons"]
+
+
+def test_catalogue_vault_exclusion_and_availability(radar_env):
+    db, loop = radar_env
+    loop.run_until_complete(db.inventory.delete_many({}))
+    loop.run_until_complete(db.inventory.insert_one({"product_slug": "iv-altar", "availability_mode": "ready_to_ship",
+                                                     "stock_on_hand": 1, "stock_reserved": 0, "manual_unavailable": False}))
+    by = {p["slug"]: p for p in _cat(loop, db)["products"]}
+    assert by["iv-altar"]["is_inspiration_vault"] and by["iv-altar"]["availability"]["state"] == "ready_to_ship"
+    assert by["iv-altar"]["marketing_eligible"] is False and "vault_one_of_one" in by["iv-altar"]["ineligibility_reasons"]
+    assert by["iv-nova"]["availability"]["state"] == "unavailable"  # Vault with no owner-confirmed stock is never advertised
+    assert by["iv-orbit-lumiere"]["is_inspiration_vault"] is True  # iv-* in pricing catalogue → Vault, even if untracked
+    assert by["veyron-noir"]["availability"]["state"] == "made_to_order" and by["veyron-noir"]["marketing_eligible"]
+    assert by["gravite"]["marketing_eligible"] is False if "gravite" in by else "gravite" in _cat(loop, db)["mismatches"]["storefront_only_not_purchasable"]
+    loop.run_until_complete(db.inventory.delete_many({}))
+
+
+def test_match_products_is_grounded_and_never_forced(radar_env):
+    db, loop = radar_env
+    products = _cat(loop, db)["products"]
+    m = CA.match_products(products, text="Engagement ring edit for Canadian search interest · bridal pieces")
+    assert m and all("rings" in x["categories"] for x in m) and all(not x["slug"].startswith("iv-") for x in m)
+    assert all("confirm fit manually" in x["match_reason"] for x in m)  # no piece is tagged bridal → say so
+    assert CA.match_products(products, text="luxury watch straps for men") == []
+    named = CA.match_products(products, text="Veyron Noir signet interest in the US")
+    assert named[0]["slug"] == "veyron-noir" and "named in research" in named[0]["match_reason"]
+    assert all(not x["slug"].startswith("iv-") for x in CA.match_products(products, text="Altar architectural cross cuff"))
+    assert CA.content_brief(products, ["la-marva", "iv-altar", "ghost", "drew-face"]) and \
+        [p["slug"] for p in CA.content_brief(products, ["la-marva", "iv-altar", "ghost", "drew-face"])] == ["la-marva"]
+
+
+def test_director_attach_products_keeps_only_eligible_cited_slugs(radar_env):
+    db, loop = radar_env
+    products = _cat(loop, db)["products"]
+    rec = {"title": "Editorial guide to choosing a ring", "rationale": "Google Trends CA interest in engagement rings",
+           "actions": ["Curate a ring edit"], "evidence_ids": ["E001"], "product_slugs": ["veyron-noir", "iv-altar", "ghost", "drew-face"]}
+    out = D.attach_products(rec, {"E001": {"id": "E001", "text": "Google Trends CA: 'Engagement rings' interest"}}, products)
+    slugs = [p["slug"] for p in out["products"]]
+    assert "veyron-noir" in slugs and "iv-altar" not in slugs and "ghost" not in slugs and "drew-face" not in slugs
+    assert "product_slugs" not in out and len(slugs) <= 5
+    none = D.attach_products({"title": "Watch straps", "rationale": "", "actions": [], "evidence_ids": []}, {}, products)
+    assert none["products"] == []
+
+
+def test_generate_draft_passes_only_verified_pieces_to_claude(radar_env, monkeypatch):
+    db, loop = radar_env
+    loop.run_until_complete(db.growth_content_drafts.delete_many({}))
+    loop.run_until_complete(db.growth_recommendations.insert_one(_rec(id="ring-rec", products=[
+        {"slug": "la-marva", "name": "La Marva"}, {"slug": "iv-altar", "name": "ALTAR"}, {"slug": "ghost", "name": "Ghost"}])))
+    monkeypatch.setattr(G, "claude_configured", lambda: True)
+    prompts = []
+
+    async def _fake(system, prompt, *, session, max_tokens=4000):
+        prompts.append(prompt)
+        return "La Marva holds its line. (MOCKED)"
+    monkeypatch.setattr(D, "_claude", _fake)
+    d = loop.run_until_complete(D.generate_draft(db, recommendation_id="ring-rec", discovery_id=None, fmt="product_story"))
+    assert [p["slug"] for p in d["products_referenced"]] == ["la-marva"]
+    assert "La Marva" in prompts[0] and "ALTAR" not in prompts[0] and "Ghost" not in prompts[0]
+    assert "price" not in prompts[0].lower().replace("pricing", "")  # no price facts handed to the writer
+    d2 = loop.run_until_complete(D.generate_draft(db, recommendation_id="ring-rec", discovery_id=None, fmt="product_story", product_slugs=[]))
+    assert d2["products_referenced"] == [] and "do NOT name" in prompts[1] and d2["version"] == 2
+    assert d2["published"] is False and d2["publish_locked"] is True
+    loop.run_until_complete(db.growth_content_drafts.delete_many({}))
+
+
+def test_catalogue_route_is_admin_only_and_price_free(app_client, monkeypatch):
+    monkeypatch.setenv("PHILEON_GROWTH_OS_ENABLED", "true")
+    assert app_client.get("/api/admin/growth-os/catalogue").status_code in (401, 403)
+    r = app_client.get("/api/admin/growth-os/catalogue", headers=_admin_headers())
+    assert r.status_code == 200 and r.json()["summary"]["checkout_supported_parents"] == 84
+    assert "price_usd" not in r.text and "unit_amount" not in r.text

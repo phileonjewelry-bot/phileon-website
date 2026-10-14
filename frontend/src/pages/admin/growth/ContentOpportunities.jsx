@@ -21,6 +21,9 @@ function Draft({ d, onSave, onDelete }) {
                     className="w-full mt-2 bg-black/40 border border-white/10 p-2 text-sm leading-relaxed" />
         : <pre className="whitespace-pre-wrap break-words font-sans text-sm text-white/75 mt-2 leading-relaxed" data-testid={`gos-draft-text-${d.id}`}>{d.body}</pre>}
       {d.notes && <p className="text-[11px] text-white/40 mt-2 break-words">Owner notes: {d.notes}</p>}
+      <p className="text-[11px] text-white/40 mt-1 break-words" data-testid={`gos-draft-pieces-${d.id}`}>
+        Pieces referenced: {(d.products_referenced || []).length ? d.products_referenced.map((p) => p.name).join(' · ') : 'none (no product named)'}
+      </p>
       <div className="flex flex-wrap gap-2 mt-3">
         {editing
           ? <><Btn tone="gold" testId={`gos-draft-save-${d.id}`} onClick={async () => { await onSave(d.id, { body }); setEditing(false); }}>Save draft</Btn>
@@ -57,10 +60,12 @@ export default function ContentOpportunities({ draftRecId = '' }) {
   const api = useGrowthApi();
   const [state, load] = useAsync(() => api('/content-drafts'), [api]);
   const [form, setForm] = useState({ recommendation_id: draftRecId, format: 'instagram_caption', notes: '' });
+  const [excluded, setExcluded] = useState([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState(null);
   useEffect(() => { load(); }, [load]);
   useEffect(() => { if (draftRecId) setForm((f) => ({ ...f, recommendation_id: draftRecId })); }, [draftRecId]);
+  useEffect(() => { setExcluded([]); }, [form.recommendation_id]);
 
   const d = state.data || {};
   const formats = d.formats || {};
@@ -68,13 +73,15 @@ export default function ContentOpportunities({ draftRecId = '' }) {
   const sources = d.sources || [];
   const linkedMissing = Boolean(draftRecId && d.sources && !sources.some((s) => s.id === draftRecId));
   const selected = sources.find((s) => s.id === form.recommendation_id);
+  const pieces = selected?.products || [];
+  const chosenSlugs = pieces.map((p) => p.slug).filter((s) => !excluded.includes(s));
 
   const generate = async () => {
     if (!form.recommendation_id) { setMsg('Choose an initiative first.'); return; }
     if (!selected) { setMsg('The linked initiative is not eligible for drafting — choose another from the list.'); return; }
     setBusy(true); setMsg(null);
     try {
-      const r = await api('/content-drafts/generate', { method: 'POST', body: JSON.stringify(form) });
+      const r = await api('/content-drafts/generate', { method: 'POST', body: JSON.stringify({ ...form, product_slugs: chosenSlugs }) });
       setMsg(`Draft v${r.version} saved. It is NOT published.`); await load();
     } catch (e) {
       const m = e.message;
@@ -115,6 +122,24 @@ export default function ContentOpportunities({ draftRecId = '' }) {
             Selected: {selected.title} · {selected.status.replace('_', ' ')} · {selected.evidence_quality || 'quality n/a'} evidence
             {selected.merged_variants > 0 ? ` · ${selected.merged_variants} variant(s) consolidated` : ''}
           </p>
+        )}
+        {selected && (
+          <div className="mt-3" data-testid="gos-content-pieces">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-white/50">Verified pieces Claude may reference</p>
+            {pieces.length === 0
+              ? <p className="text-[11px] text-white/40 mt-1">None matched this initiative — the draft will name no product.</p>
+              : <ul className="mt-1 space-y-1">
+                  {pieces.map((p) => (
+                    <li key={p.slug}>
+                      <label className="flex items-start gap-2 text-[12px] text-white/70 break-words">
+                        <input type="checkbox" className="mt-0.5 accent-[#c9a961]" checked={!excluded.includes(p.slug)} data-testid={`gos-content-piece-${p.slug}`}
+                               onChange={(e) => setExcluded((x) => e.target.checked ? x.filter((s) => s !== p.slug) : [...x, p.slug])} />
+                        <span><span className="text-phileon-ivory">{p.name}</span> · {(p.categories || []).join('/')} · {String(p.availability || '').replace(/_/g, ' ')}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>}
+          </div>
         )}
         <p className="text-[11px] text-white/40 mt-1">{formats[form.format]}</p>
         <div className="mt-3 flex flex-wrap items-center gap-3">

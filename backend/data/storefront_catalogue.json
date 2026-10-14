@@ -1,0 +1,4566 @@
+{
+ "generated_at": "2026-10-14T05:12:32.283Z",
+ "source": {
+  "products_js_sha256": "61e299073ed2d3d1c8d92b0d1dad3e1bede462d89b4c39a3a45eccdf0516fbb2",
+  "app_js_sha256": "79e06eeb3c0be381704911212633e24e71f9be189ac66a6aefd1a179beea6f05"
+ },
+ "routes": [
+  "/",
+  "/about",
+  "/accessibility",
+  "/altar",
+  "/architrave",
+  "/atelier",
+  "/bajan-joe",
+  "/bamburgh-circle",
+  "/battenti-della-villa",
+  "/black-owned-canadian-jewelry",
+  "/black-owned-jewelry",
+  "/black-owned-jewelry-brand",
+  "/boss-knot",
+  "/caged-wings",
+  "/canadian-jewelry-brand",
+  "/canadian-jewelry-designer",
+  "/cart",
+  "/checkout",
+  "/checkout/cancel",
+  "/checkout/success",
+  "/collections",
+  "/collections/chains-coming-soon",
+  "/commission",
+  "/contact",
+  "/coogi-dna-tag",
+  "/craftsmanship",
+  "/cresta-nera",
+  "/custom",
+  "/custom-design",
+  "/custom-jewelry",
+  "/custom-jewelry-canada",
+  "/custom-jewelry-toronto",
+  "/deco-eventail",
+  "/drews-vault",
+  "/drews-vault/retro-bred",
+  "/driven",
+  "/drop",
+  "/earrings",
+  "/echelle",
+  "/faq",
+  "/fine-jewelry",
+  "/fine-jewelry/bajan-joe",
+  "/fine-jewelry/cresta-nera",
+  "/fine-jewelry/gravite",
+  "/fine-jewelry/her-eternal-reign",
+  "/fine-jewelry/quadriga-dominus",
+  "/fine-jewelry/ribbon-regale-edition",
+  "/fine-jewelry/rouge-siren",
+  "/fine-jewelry/scacco-matto",
+  "/fine-jewelry/two-finger-ring",
+  "/fine-jewelry/voluta",
+  "/first-discovery",
+  "/gent",
+  "/gents/rings/lisa-bold",
+  "/gold-jewelry",
+  "/gravite",
+  "/handmade-jewelry-canada",
+  "/her-eternal-reign",
+  "/homage/bape",
+  "/inspiration-vault",
+  "/inspiration-vault/altar",
+  "/inspiration-vault/caged-wings",
+  "/inspiration-vault/deco-eventail",
+  "/inspiration-vault/driven",
+  "/inspiration-vault/echelle",
+  "/inspiration-vault/first-discovery",
+  "/inspiration-vault/gold-theory-ribbon",
+  "/inspiration-vault/golden-hour-cuffs",
+  "/inspiration-vault/liaison",
+  "/inspiration-vault/lucent",
+  "/inspiration-vault/monaco",
+  "/inspiration-vault/nightfang-set",
+  "/inspiration-vault/noir-cadence",
+  "/inspiration-vault/noir-tide",
+  "/inspiration-vault/nova",
+  "/inspiration-vault/orbit-lumiere",
+  "/inspiration-vault/oriel",
+  "/inspiration-vault/parabola-atelier",
+  "/inspiration-vault/parallax-drop-earrings",
+  "/inspiration-vault/prima-wave",
+  "/inspiration-vault/prismatic-laurel",
+  "/inspiration-vault/ribbon-regale",
+  "/inspiration-vault/roseline",
+  "/inspiration-vault/stampede-set",
+  "/inspiration-vault/viridian-teardrops",
+  "/jewelry-care",
+  "/journal",
+  "/katrina-cascata",
+  "/la-madonna",
+  "/la-scarpa-della-regina",
+  "/lab-grown-diamond-jewelry",
+  "/ladies/rings/gravite",
+  "/ladies/rings/her-eternal-reign",
+  "/ladies/rings/lisa-small",
+  "/lady-boss-knot",
+  "/lady-jay",
+  "/liaison",
+  "/lisa",
+  "/lucent",
+  "/m-drop",
+  "/materials",
+  "/mens-jewelry",
+  "/mens-rings",
+  "/monaco",
+  "/neighborhood-nip",
+  "/nightfang-set",
+  "/noir-cadence",
+  "/noir-tide",
+  "/nova",
+  "/orbit-lumiere",
+  "/oriel",
+  "/ovation",
+  "/parabola",
+  "/parabola-atelier",
+  "/parabola-heritage",
+  "/parallax-drop-earrings",
+  "/pendants",
+  "/porta-aurea",
+  "/prima-wave",
+  "/prismatic-laurel",
+  "/privacy",
+  "/process",
+  "/products/alejandra-heels",
+  "/products/annie-rose",
+  "/products/apex",
+  "/products/architrave",
+  "/products/bajan-joe",
+  "/products/bamburgh",
+  "/products/battenti-della-villa",
+  "/products/blessed",
+  "/products/boss-knot",
+  "/products/bound",
+  "/products/coogi-dna-tag",
+  "/products/coogi-i",
+  "/products/corinthians-15-14",
+  "/products/cresta-nera",
+  "/products/cypher",
+  "/products/desir-corset",
+  "/products/drape",
+  "/products/fondo-curvo",
+  "/products/forme-cuff",
+  "/products/galatians-614",
+  "/products/gent",
+  "/products/gravite",
+  "/products/her-eternal-reign",
+  "/products/homage",
+  "/products/katrina-cascata",
+  "/products/la-marva",
+  "/products/labete",
+  "/products/lady-bamburgh",
+  "/products/lady-boss-knot",
+  "/products/le-cocktail-de-jessica",
+  "/products/midweek",
+  "/products/monika-couture",
+  "/products/morso",
+  "/products/nervatura",
+  "/products/ovation",
+  "/products/parabola",
+  "/products/parabola-heritage",
+  "/products/porta-aurea",
+  "/products/prise-de-couronne",
+  "/products/ptp-cuff",
+  "/products/quadriga-dominus",
+  "/products/rebelle",
+  "/products/rhythm-mesh-ring",
+  "/products/ribbon-regale-edition",
+  "/products/rosaria",
+  "/products/rose-of-sharon",
+  "/products/rouge-siren",
+  "/products/scacco-matto",
+  "/products/stackrats",
+  "/products/the-bamburgh",
+  "/products/the-carapace",
+  "/products/the-don-gorgon",
+  "/products/the-grand-dame",
+  "/products/the-true-vine",
+  "/products/tola-ii",
+  "/products/trace",
+  "/products/two-finger-ring",
+  "/products/uncle-jo",
+  "/products/veyron-noir",
+  "/products/voluta",
+  "/products/wynette-palette",
+  "/quadriga-dominus",
+  "/rebelle",
+  "/returns",
+  "/ribbon-regale-edition",
+  "/ring-size-guide",
+  "/ring-try-on",
+  "/rose-of-sharon",
+  "/roseline",
+  "/rouge-siren",
+  "/scacco-matto",
+  "/secret-drop",
+  "/secretdrop",
+  "/shipping",
+  "/shop",
+  "/shop-drop",
+  "/shop/blessed",
+  "/shop/coogi-i",
+  "/shop/labete",
+  "/size-guide",
+  "/stackrats",
+  "/stampede-set",
+  "/statement-rings",
+  "/terms",
+  "/testimonials",
+  "/the-true-vine",
+  "/tribute-series",
+  "/tribute-series/neighborhood-nip",
+  "/uncle-jo",
+  "/vault",
+  "/vault/drew-face",
+  "/vault/drews-world",
+  "/veyron-noir",
+  "/viridian-teardrops",
+  "/voluta",
+  "/warranty",
+  "/wishlist",
+  "/womens-rings",
+  "/wynette-palette"
+ ],
+ "records": [
+  {
+   "slug": "la-marva",
+   "storefront_key": "laMarva",
+   "origin": "products",
+   "name": "La Marva",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": "La Marva is more than a ring. It is a tribute to legacy and devotion, crafted where structure meets softness, and power meets elegance.",
+   "story": "Named in honor of Marva Wilson.",
+   "tribute": "Named in honor of Marva Wilson — a woman whose strength, grace, and quiet presence left a lasting imprint on all who knew her.",
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [
+    {
+     "name": "Foundation Edition",
+     "key": "foundation",
+     "material": "10K Gold + lab-grown stones",
+     "specs": [
+      "Lab-grown princess-cut center diamonds",
+      "Lab-grown emerald-cut side diamonds",
+      "Genuine pink sapphire pavé"
+     ],
+     "carat_weight": "Approx. 3.8 – 4.5 carats",
+     "diamond_quality": "VS clarity, F–G color",
+     "note": "Modern fine jewelry with ethical sourcing and premium brilliance.",
+     "consultation": false
+    },
+    {
+     "name": "Signature Edition",
+     "key": "signature",
+     "material": "Silver + precision-set stones",
+     "specs": [
+      "Precision-cut simulated center stones",
+      "Synthetic pink sapphire pavé"
+     ],
+     "carat_weight": "Approx. 2.8 – 3.2 carats (simulated)",
+     "diamond_quality": null,
+     "note": "Entry luxury with the full La Marva design aesthetic.",
+     "consultation": false
+    },
+    {
+     "name": "Heirloom Edition (14K)",
+     "key": "heirloom14k",
+     "material": "14K Gold + natural diamonds",
+     "specs": [
+      "Natural princess-cut center diamonds",
+      "Natural emerald-cut side diamonds",
+      "Pink sapphire and natural diamond pavé"
+     ],
+     "carat_weight": "Approx. 4.5 – 5.5 carats",
+     "diamond_quality": "VS clarity, E–F color",
+     "note": "Collector-grade luxury with exceptional color and brilliance.",
+     "consultation": true
+    },
+    {
+     "name": "Heirloom Edition (18K)",
+     "key": "heirloom18k",
+     "material": "18K Gold + natural diamonds",
+     "specs": [
+      "Natural princess-cut center diamonds",
+      "Natural emerald-cut side diamonds",
+      "Pink sapphire and natural diamond pavé"
+     ],
+     "carat_weight": "Approx. 4.5 – 5.5 carats",
+     "diamond_quality": "VS clarity, E–F color",
+     "note": "Collector-grade luxury with exceptional color and brilliance.",
+     "consultation": true
+    }
+   ],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "annie-rose",
+   "storefront_key": "annieRose",
+   "origin": "products",
+   "name": "Annie Rose",
+   "subtitle": "Soft in tone. Strong in spirit.",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": "Created in honor of my sister Andrea.",
+   "material_line": null,
+   "metals": [
+    "10K",
+    "14K",
+    "18K"
+   ],
+   "stones": [
+    "Lab",
+    "Natural"
+   ],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "monika-couture",
+   "storefront_key": "monikaCouture",
+   "origin": "products",
+   "name": "Monika Couture Earrings",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "katrina-cascata",
+   "storefront_key": "katrinaCascata",
+   "origin": "products",
+   "name": "Katrina Cascata",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/katrina-cascata/main.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "inspiration-vault",
+   "storefront_key": "inspirationVaultOrbitLumiere",
+   "origin": "products",
+   "name": "Orbit Lumière",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/orbit-lumiere/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "inspiration-vault",
+   "storefront_key": "inspirationVaultViridianTeardrops",
+   "origin": "products",
+   "name": "Viridian Teardrops",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/viridian-teardrops/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "inspiration-vault",
+   "storefront_key": "inspirationVaultPrismaticLaurel",
+   "origin": "products",
+   "name": "Prismatic Laurel",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/prismatic-laurel/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "inspiration-vault",
+   "storefront_key": "inspirationVaultNoirTide",
+   "origin": "products",
+   "name": "Noir Tide",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/noir-tide/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "inspiration-vault",
+   "storefront_key": "inspirationVaultFirstDiscovery",
+   "origin": "products",
+   "name": "Prima Wave",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/first-discovery/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "noir-cadence",
+   "storefront_key": "inspirationVaultNoirCadence",
+   "origin": "products",
+   "name": "Noir Cadence",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/noir-cadence/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "liaison",
+   "storefront_key": "inspirationVaultLiaison",
+   "origin": "products",
+   "name": "Liaison",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/liaison/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "alejandra-heels",
+   "storefront_key": "alejandraHeels",
+   "origin": "products",
+   "name": "Alejandra Heels",
+   "subtitle": "A playful couture design created to capture the spirit of fashion, movement, and confidence.",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": "Sculptural miniature heels cast in precious metal and finished with a pavé strap.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [
+    "Cubic",
+    "Lab Diamonds"
+   ],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "ptp-cuff",
+   "storefront_key": "ptpCuff",
+   "origin": "products",
+   "name": "PTP Cuff",
+   "subtitle": "PTP — Power To The People",
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": "The PTP Cuff transforms a universal symbol of unity into wearable sculpture. A procession of raised fists encircles the band — each one a tribute to collective strength and the power of people moving together.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [
+    {
+     "name": "Movement Edition",
+     "key": "movement",
+     "material": "Gold Vermeil",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": "Signature Edition",
+     "key": "signature",
+     "material": "10K Solid Gold",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": "Heirloom Edition",
+     "key": "heirloom",
+     "material": "14K Solid Gold",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    }
+   ],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rosaria",
+   "storefront_key": "rosaria",
+   "origin": "products",
+   "name": "Rosaria",
+   "subtitle": "The Rosaria Earrings",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": "Rosaria captures the beauty of a rose in full bloom, transformed into wearable sculpture. Each rose is sculpted in precious metal and arranged in a cascading composition that moves gracefully with the wearer. The design preserves the elegance of a flower in gold — a tribute to love, celebration, and permanence.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Earrings · 10K & 14K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "desir-corset",
+   "storefront_key": "desirCorset",
+   "origin": "products",
+   "name": "Désir Corset Pendant",
+   "subtitle": "Wearable Architecture",
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": "Inspired by the structure of couture corsetry, the Désir Corset Pendant transforms sculpted form into wearable architecture. Fine mesh panels create depth and texture within a polished rose gold frame, forming a tapered waist and sculpted cup structure that echo the lines of high fashion tailoring. Designed to sit naturally against the chest, the pendant features subtle curvature and balanced proportions that allow the piece to hang elegantly from a delicate chain. A statement piece that blends sculpture, fashion, and fine jewelry.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Pendant · 10K Rose Gold",
+   "metals": [
+    "Pendant Only",
+    "Pendant + 18\" Chain",
+    "Pendant + 20\" Chain"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "forme-cuff",
+   "storefront_key": "formeCuff",
+   "origin": "products",
+   "name": "Forme Cuff",
+   "subtitle": "Shaped by the curve. Held in form.",
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": "The Forme Cuff captures the elegance of the human form in motion — figures intertwined, dancing along the curve of the wrist. Each silhouette is precision-cut from solid gold, creating a play of light and shadow that shifts with every gesture.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "ovation",
+   "storefront_key": "ovationRibbedRing",
+   "origin": "products",
+   "name": "OVATION Ribbed Ring",
+   "subtitle": "One was never the point.",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "unisex"
+   ],
+   "collections": [],
+   "description": "Wide hollow ribbed ring designed to stand alone or stack.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Wide Ribbed Ring · Silver & 10K-18K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pl6at891_1000166845.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/whnl770o_1000166839.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rhythm-mesh-ring",
+   "storefront_key": "rhythmMeshRing",
+   "origin": "products",
+   "name": "Rhythm Mesh™ Ring",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "unisex"
+   ],
+   "collections": [],
+   "description": "Structured motion. Captured in metal.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Ring · Silver & 10K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "tola-ii",
+   "storefront_key": "tolaII",
+   "origin": "products",
+   "name": "TOLA II",
+   "subtitle": "Weight. Discipline. Presence.",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": "TOLA II is built on restraint and control. A structured gold form, anchored by a central chain and framed with precision-set black stones. Every surface is intentional. Every detail holds weight.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Ring · 10K-18K Yellow Gold",
+   "metals": [
+    "10K Yellow Gold",
+    "14K Yellow Gold",
+    "18K Yellow Gold"
+   ],
+   "stones": [],
+   "variants": [
+    {
+     "name": "Foundation",
+     "key": "foundation",
+     "material": "10K Yellow Gold",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": "Signature",
+     "key": "signature",
+     "material": "14K Yellow Gold",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": "Heirloom",
+     "key": "heirloom",
+     "material": "18K Yellow Gold",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    }
+   ],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "galatians-614",
+   "storefront_key": "galatians614",
+   "origin": "products",
+   "name": "GALATIANS 6:14",
+   "subtitle": "Faith, Worn With Intention.",
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Cross Pendant · 10K-18K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "trace",
+   "storefront_key": "trace",
+   "origin": "products",
+   "name": "TRACE",
+   "subtitle": "Lines of Movement.",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Earrings · 10K Gold Plated - 14K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "bound",
+   "storefront_key": "bound",
+   "origin": "products",
+   "name": "BOUND",
+   "subtitle": "The Bustier Bangle",
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "The Bustier Bangle · 10K-18K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "apex",
+   "storefront_key": "apex",
+   "origin": "products",
+   "name": "APEX",
+   "subtitle": "PHILEON — OBJECT SERIES",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Pyramid Earrings · Silver to 18K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/jphlogf7_1000144036.webp"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "homage",
+   "storefront_key": "homage",
+   "origin": "products",
+   "name": "HOMAGE",
+   "subtitle": "Earrings",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [
+    "ladies-earrings",
+    "collective"
+   ],
+   "description": null,
+   "story": "The art once carried,\nnow worn.\n\nNot for every moment.\n\nFor the right one.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [
+    "All Silver",
+    "All Silver / Rose Gold Plated",
+    "Silver / Rose Inlay (Plated)",
+    "Rose Gold Plated / Silver",
+    "All White",
+    "White / Rose Inlay",
+    "All Rose",
+    "Rose / White Inlay"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/wy1fs7ps_1000144448.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/95yhcg9y_1000144456.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/lm6ijegv_1000144473.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ot3ftrqu_1000144441.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/8y7chzue_1000144513.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/69bgz1ce_1000144511.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/otcxo0dl_1000144472.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/1qkzeecx_1000144466.png",
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/ghwo9yk7_1000144462.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "cypher",
+   "storefront_key": "cypher",
+   "origin": "products",
+   "name": "CYPHER",
+   "subtitle": "RING",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [
+    "rings",
+    "collective",
+    "gentlemens-club"
+   ],
+   "description": null,
+   "story": "White gold structure.\nEmerald cabochons.\nPrincess-cut diamond cluster.\nYellow sapphire field.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/fvt6nsns_1000144990.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/9kgcwx4j_1000145085.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/gsx17hv1_1000145084.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ug3fwnn7_1000144949.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/krjduain_1000144981.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/waq6e0d8_1000144984.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/tvh92fpy_1000144991.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/sle5xnfp_1000144951.webp",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wj7ctw8v_1000144950.webp"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "morso",
+   "storefront_key": "morso",
+   "origin": "products",
+   "name": "IL MORSO DEL RE",
+   "subtitle": "RING",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [
+    "rings",
+    "collective",
+    "gentlemens-club"
+   ],
+   "description": null,
+   "story": "Yellow gold structure.\nDiamond-encrusted teeth.\nDouble-row grillz motif.\nStatement without words.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/1to4q64f_1000145276.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/v0p4yi5r_1000145269.jpg",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/lq8adcpf_1000145384.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/es0bpegd_1000145385.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/o4669mvn_1000145279.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/bdcqijmx_1000145296.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/nunosao8_1000145306.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/5g9jnk9q_1000145367.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7v4c11rj_1000145274.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "labete",
+   "storefront_key": "labete",
+   "origin": "products",
+   "name": "TRIBUTE: LA BÊTE",
+   "subtitle": "RING",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [
+    "rings",
+    "collective",
+    "gentlemens-club"
+   ],
+   "description": null,
+   "story": "White gold structure.\nFull diamond pavé.\nHorseshoe grille motif.\nAutomotive precision.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png",
+    "https://customer-assets.emergentagent.com/job_f5f99e21-5104-439c-96b9-543eaba47da6/artifacts/z47ib7so_1000145636.jpg",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/mc3l4ayn_1000145539.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/h2x7mhvv_1000145601.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/vsia8rex_1000145544.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/038hslrd_1000145504.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/pi0196eb_1000145565.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/wvvb9qff_1000145550.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/7z0biff7_1000145603.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "blessed",
+   "storefront_key": "blessed",
+   "origin": "products",
+   "name": "BLESSED",
+   "subtitle": "DEUTERONOMY 28:3",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "collective",
+    "gentlemens-club",
+    "ladies"
+   ],
+   "description": null,
+   "story": "Before it became a ring, it was a promise.\n\nCast in gold with two distinct weaves —\na tight mesh band and a heavy rope braid that builds each letter from the metal up.\n\nEvery detail preserved.\nEvery strand accountable.\n\nThe same ring.\nThe same standard.\nEvery time.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/11mc2nl9_1000145880.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2xwsea8c_1000145892.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/fj8mqlmr_1000145897.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/opsqs7w5_1000145895.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b86n5xq7_1000145900.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rnpdum9t_1000145893.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/4j183z9v_1000145876.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/npft298a_1000145899.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5xr9wsl4_1000145894.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/uzkhjgjn_1000145898.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/3yi78vya_1000145890.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mzbxk33m_1000145877.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "coogi-i",
+   "storefront_key": "coogiI",
+   "origin": "products",
+   "name": "COOGI I",
+   "subtitle": "Pattern made power.",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "gentlemens-club",
+    "ladies",
+    "collective",
+    "tribute-series"
+   ],
+   "description": "A controlled eruption of color and structure. Inspired by COOGI's unapologetic identity, refined through PHILEON discipline. Every stone placed with intent. Every curve engineered. Chaos, resolved.",
+   "story": "COOGI I is not pattern for the sake of pattern.\n\nIt is structure disguised as chaos.\n\nEvery stone is placed with intention.\nEvery division creates order.\n\nWhat appears loud is calculated.\nWhat appears free is engineered.\n\nThis is expression — under control.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cvsbyxpn_1000146038.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z4vp2nhf_1000146046.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ffbp4ebg_1000146062.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/uej19zsp_1000146061.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/jac8uhki_1000146049.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7qxrfifl_1000146034.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/zybvbxgq_1000146047.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wfn0w8cl_1000146045.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2sgdq1bu_1000146036.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/rjndiqvb_1000146042.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/431eto6p_1000146189.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "bamburgh",
+   "storefront_key": "bamburgh",
+   "origin": "products",
+   "name": "THE BAMBURGH & LADY BAMBURGH",
+   "subtitle": "His & Hers",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "gentlemens-club",
+    "ladies",
+    "collective",
+    "signature-series"
+   ],
+   "description": null,
+   "story": "The Bamburgh is not jewelry. It is a monument. Built from discipline, pressure, and purpose — a reflection of legacy forged, not given.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/q1n5n1fg_1000146370.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/v23no28z_1000146363.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ccqo2yvg_1000146367.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f48bt147_1000146368.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1nx3wfi3_1000146365.webp",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/k6wi1bme_1000146364.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "lady-bamburgh",
+   "storefront_key": "ladyBamburgh",
+   "origin": "products",
+   "name": "LADY BAMBURGH",
+   "subtitle": "Command, in form.",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "ladies",
+    "collective",
+    "signature-series"
+   ],
+   "description": null,
+   "story": "Presence without announcement.\n\nRound brilliant centers framed in gold, balanced by the same black and white contrast as the Bamburgh.\n\nDifferent in form. Identical in weight.\n\nDesigned to be worn apart.\nMeant to be understood together.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ulu0v463_1000146371.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pe9iwhc7_1000147023.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cb4smiy2_ultra-realistic-3-4-angle-macro-product-_lSqxihLTSiW-Luh5r1owmw_8dIGE8gVR7GOSHzetGRX6Q_cover_hd.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/nstuifus_1000146995.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9wkvhexa_1000147014.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/2b4y3bxf_1000147020.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/na9exni8_1000146993.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/0z67imtp_introduce-subtle-micro-reflection-variat_YBjs3cIdSPydnzrUdv6LhQ_T1VVaQpJQw6FGCHCla3Xog_cover_hd.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xxka96h8_ultra-realistic-macro-refinement-pass-of_3gYXM17JQ0Gi-NSCit0jvQ_o4WeSSWAThuidtWPU5mKig_hd.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "fondo-curvo",
+   "storefront_key": "fondoCurvo",
+   "origin": "products",
+   "name": "FONDO CURVO",
+   "subtitle": "Earrings",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [
+    "ladies-earrings",
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Earrings · Silver / 10K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/l43g78jv_1000147430.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/w8g7e5nh_1000147364.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/gaucyj76_1000147307.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/biqvi79f_1000147448.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mokhgmfq_1000147444.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/05gfllx4_1000147257.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/vqnumpky_1000147438.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/1asv31lw_1000147323.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xsx4gpod_1000147445.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/erfkp6qf_1000147260.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dihq2qgl_1000147311.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "corinthians-15-14",
+   "storefront_key": "corinthians1514",
+   "origin": "products",
+   "name": "1 CORINTHIANS 15:14",
+   "subtitle": "Sacred Collection",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [
+    "ladies-rings",
+    "sacred-collection",
+    "collective"
+   ],
+   "description": null,
+   "story": "If Christ has not been raised,\nour preaching is useless\nand so is your faith.\n\n— 1 Corinthians 15:14\n\nA domed field of black pavé holds three crosses.\n\nTwo remain in white. The center rises in pink.\n\nIt is not balanced. It is intentional.\n\nThe center is not equal. It is everything.",
+   "tribute": null,
+   "material_line": "Sacred Collection · 10K / 14K / 18K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/iguoeyhd_1000147761.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hnsrnjtv_1000147838.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/hl1zphud_1000147799.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mg9a9we1_1000147795.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wv3ccfdc_1000147794.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kwyao8nf_1000147796.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/npl9kn7j_1000147793.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "drape",
+   "storefront_key": "drape",
+   "origin": "products",
+   "name": "DRAPE",
+   "subtitle": "Sculptural Pendant",
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "ladies-pendants",
+    "editorial",
+    "collective"
+   ],
+   "description": "DRAPE is a study in movement and tension — sculpted lines wrapped in rose gold, traced in pavé. A corset suspended on its hanger, designed to follow the body, not sit on it.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Sculptural Pendant · Silver / 10K / 14K / 18K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wbw4wgvu_1000147936.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xijy29y5_1000148062.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/tf3tuzp5_1000147940.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/12kne70r_1000147935.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/bp6a0gd9_1000147934.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kgiqf7lv_1000147941.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "le-cocktail-de-jessica",
+   "storefront_key": "cocktailJessica",
+   "origin": "products",
+   "name": "LE COCKTAIL DE JESSICA",
+   "subtitle": "Cocktail Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "ladies-rings",
+    "editorial",
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Cocktail Ring · 10K Tri-Colour Gold · Natural Stones",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/84gb9vxf_1000148149.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/b226smnl_1000148156.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/h0rmqpqm_1000148139.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/m3929xbd_1000148138.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8wfuz0yl_1000148154.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/www6zbc8_1000148150.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "prise-de-couronne",
+   "storefront_key": "priseDeCouronne",
+   "origin": "products",
+   "name": "PRISE DE COURONNE",
+   "subtitle": "Signature Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "gents-rings",
+    "signature",
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Signature Ring · Pavé Crown Band · Black Enamel",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xkmsgrlo_1000148292.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/01qfiair_1000148278.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ql06bws0_1000148294.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/d1dv4hty_1000148306.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7povm3wv_1000148305.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/zl21l19o_1000148314.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kmn0a2fj_1000148318.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "nervatura",
+   "storefront_key": "nervatura",
+   "origin": "products",
+   "name": "THE PHILEON NERVATURA",
+   "subtitle": "Architectural Drop Earrings",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "ladies-earrings",
+    "editorial",
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Architectural Drop Earrings · 10K / 14K / 18K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mllm098y_1000148444.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7mytqo56_1000148497.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kun0nd6x_1000148492.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/o98pvuwa_1000148503.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mng5l3vy_1000148443.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "the-don-gorgon",
+   "storefront_key": "theDonGorgon",
+   "origin": "products",
+   "name": "THE DON GORGON",
+   "subtitle": "Dual-State Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Dual-State Ring · Black / White Pavé · Ruby Rail",
+   "metals": [
+    "Silver (White Series)",
+    "Gold"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/don-gorgon/home/01_hero.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "the-grand-dame",
+   "storefront_key": "theGrandDame",
+   "origin": "products",
+   "name": "The Grand Dame Cuff",
+   "subtitle": "Sculptural Open Cuff",
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [
+    "ladies"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sculptural Open Cuff · Rose / Yellow Gold · Mesh Lattice",
+   "metals": [
+    "Rose Gold",
+    "Yellow Gold"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/grand-dame/01_hero.png",
+    "/grand-dame/02_front.png",
+    "/grand-dame/04_side_profile.png",
+    "/grand-dame/05_macro.png",
+    "/grand-dame/09_on_wrist_real.png",
+    "/grand-dame/03_topdown.png",
+    "/grand-dame/11_in_hand_real.png",
+    "/grand-dame/10_on_wrist_real.png",
+    "/grand-dame/06_on_surface.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "the-carapace",
+   "storefront_key": "theCarapace",
+   "origin": "products",
+   "name": "The Carapace",
+   "subtitle": "Sculptural Lattice Dome Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sculptural Lattice Dome · Vermeil · 10K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [
+    {
+     "name": null,
+     "key": "vermeil",
+     "material": "Vermeil",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": null,
+     "key": "vermeil-pave",
+     "material": "Vermeil Pavé",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": null,
+     "key": "10k",
+     "material": "10K Gold",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    },
+    {
+     "name": null,
+     "key": "10k-pave",
+     "material": "10K Pavé",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    }
+   ],
+   "images": [
+    "/carapace/13_hero_v2.png",
+    "/carapace/07_top_real.png",
+    "/carapace/14_side_real.png",
+    "/carapace/15_macro_real.png",
+    "/carapace/12_on_hand_v2.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "midweek",
+   "storefront_key": "midweek",
+   "origin": "products",
+   "name": "MIDWEEK",
+   "subtitle": "Sterling Silver Mesh Cuff",
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Woven Sterling Silver · Black Diamond Pavé",
+   "metals": [],
+   "stones": [],
+   "variants": [
+    {
+     "name": null,
+     "key": "silver-black-dia",
+     "material": "Sterling Silver + Black Diamonds",
+     "specs": [],
+     "carat_weight": null,
+     "diamond_quality": null,
+     "note": null,
+     "consultation": null
+    }
+   ],
+   "images": [
+    "/midweek/01_hero.png",
+    "/midweek/10_editorial_pool.png",
+    "/midweek/11_wrist_env.png",
+    "/midweek/12_wrist_whiskey.png",
+    "/midweek/05_macro.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": false,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "wynette-palette",
+   "storefront_key": "wynettePalette",
+   "origin": "products",
+   "name": "WYNETTE'S PALETTE",
+   "subtitle": "Collector Cocktail Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "collective",
+    "ladies"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/wynette/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "veyron-noir",
+   "storefront_key": "veyronNoir",
+   "origin": "products",
+   "name": "VEYRON NOIR",
+   "subtitle": "Tribute Series · 4 Metal Tiers",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "tribute",
+    "collective",
+    "gentlemens-club"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/veyron-noir/hero.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "uncle-jo",
+   "storefront_key": "uncleJo",
+   "origin": "products",
+   "name": "UNCLE JO",
+   "subtitle": "Signature Mesh Collection",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [
+    "rings",
+    "gentlemen",
+    "gentlemens-club",
+    "signature-mesh",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/uncle-jo/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rose-of-sharon",
+   "storefront_key": "roseOfSharon",
+   "origin": "products",
+   "name": "ROSE OF SHARON",
+   "subtitle": "Floral Cross Pendant · 10K & 14K Rose Gold",
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies-first",
+    "collective"
+   ],
+   "collections": [
+    "pendants",
+    "ladies",
+    "collective",
+    "ladies-first",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": "Rose of Sharon is a floral cross pendant handcrafted in 10K and 14K rose gold. Sculpted roses, climbing vines, and openwork architecture create a symbolic piece celebrating faith, beauty, remembrance, and devotion.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/rose-of-sharon/hero.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "boss-knot",
+   "storefront_key": "bossKnot",
+   "origin": "products",
+   "name": "BOSS KNOT",
+   "subtitle": "Executive Pendant · 18\" Chain Included",
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "pendants",
+    "gentlemen",
+    "gentlemens-club",
+    "collective",
+    "the-collective",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": "BOSS KNOT is an executive pendant — woven mesh architecture translating the necktie into precious metal. Sterling Silver, 10K Yellow Gold, or 10K White Gold. 18\" matching chain included. Made for arrival.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/boss-knot/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "lady-boss-knot",
+   "storefront_key": "ladyBossKnot",
+   "origin": "products",
+   "name": "LADY BOSS KNOT",
+   "subtitle": "Executive Statement Pendant",
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies-first",
+    "collective"
+   ],
+   "collections": [
+    "pendants",
+    "ladies",
+    "ladies-first",
+    "collective",
+    "the-collective",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": "LADY BOSS KNOT — sculptural necktie pendant with handwoven knot architecture, suspended from a statement Cuban-link chain. Sterling Silver, 10K Yellow Gold, or 10K White Gold. Reimagined through the lens of feminine power.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/lady-boss-knot/hero.jpg"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": true,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "parabola",
+   "storefront_key": "parabola",
+   "origin": "products",
+   "name": "PARABOLA",
+   "subtitle": "Concave Statement Ring · 22mm Face",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies-first",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "ladies",
+    "ladies-first",
+    "collective",
+    "the-collective",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": "PARABOLA is a concave statement ring — a 22mm deep dish set with pink sapphires, white diamonds, and champagne diamonds arranged in concentric pavé rows. Sterling Silver, 10K White Gold, or 10K Rose Gold. Ladies First.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/parabola/hero.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "parabola-heritage",
+   "storefront_key": "parabolaHeritage",
+   "origin": "products",
+   "name": "PARABOLA HERITAGE",
+   "subtitle": "Heritage Concave Statement Ring · 22mm Face",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [
+    "rings",
+    "gentlemens-club",
+    "collective",
+    "the-collective",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": "PARABOLA HERITAGE is the men's expression of the PARABOLA architecture — a 22mm concave dish statement ring with a ceremonial palette of rubies, yellow stones, emeralds, and black diamonds moving inward through the pavé fields. Sterling Silver, 10K White Gold, or 10K Yellow Gold. Gentleman's Club.",
+   "story": null,
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/parabola-heritage/img-01-profile.png"
+   ],
+   "href": null,
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "her-eternal-reign",
+   "storefront_key": "herEternalReign",
+   "origin": "products",
+   "name": "H.E.R.",
+   "subtitle": "HER ETERNAL REIGN",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [
+    "ladies-rings",
+    "ladies",
+    "rings",
+    "collective",
+    "the-collective",
+    "fine-jewelry",
+    "new-arrivals",
+    "featured"
+   ],
+   "description": "H.E.R. — HER ETERNAL REIGN. A sculptural PHILEON Fine Jewelry ring. A continuous procession of crowned female figures — each with her own crown, her own gemstone identity. 10K, 14K or 18K Yellow Gold with genuine or lab-grown stones. Ladies · Fine Jewelry.",
+   "story": "NO QUEEN STANDS ALONE.",
+   "tribute": null,
+   "material_line": null,
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/lsu6nn4a_1000170748.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dao8vvdy_1000170749.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/950e48ku_1000170747.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/f427zkme_1000170745.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/c2jzmr5n_1000170743.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/7jpzqgk7_1000170742.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/5qb3yyhd_1000170863.png"
+   ],
+   "href": "/her-eternal-reign",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": false,
+   "is_core": null,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "gravite",
+   "storefront_key": "gravite",
+   "origin": "catalogProducts",
+   "name": "GRAVITÉ",
+   "subtitle": "NATURAL PERIDOT · ROSE GOLD",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective",
+    "fine-jewelry"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "10K / 14K Rose Gold · Natural Peridot",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/8y43t0ml_1000171945.jpg"
+   ],
+   "href": "/products/gravite",
+   "purchasable": false,
+   "status": "placeholder",
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "two-finger-ring",
+   "storefront_key": "two-finger-ring",
+   "origin": "catalogProducts",
+   "name": "TWO-FINGER RING",
+   "subtitle": "WORKING CONCEPT",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "fine-jewelry"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "10K White Gold · In Development",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [],
+   "href": "/products/two-finger-ring",
+   "purchasable": false,
+   "status": "placeholder",
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": false,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rouge-siren",
+   "storefront_key": "rouge-siren",
+   "origin": "catalogProducts",
+   "name": "ROUGE SIREN",
+   "subtitle": "EARRING + ANKLET SET",
+   "category": [
+    "sets",
+    "earrings",
+    "pendants",
+    "anklets"
+   ],
+   "audience": [
+    "ladies",
+    "collective",
+    "fine-jewelry"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Solid 10K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/t4zwoen5_1000171127.png"
+   ],
+   "href": "/products/rouge-siren",
+   "purchasable": false,
+   "status": "placeholder",
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rose-of-sharon",
+   "storefront_key": "rose-of-sharon",
+   "origin": "catalogProducts",
+   "name": "ROSE OF SHARON",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Floral Cross Pendant · 10K & 14K Rose Gold",
+   "metals": [
+    "rose"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/rose-of-sharon/hero.png"
+   ],
+   "href": "/products/rose-of-sharon",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "boss-knot",
+   "storefront_key": "boss-knot",
+   "origin": "catalogProducts",
+   "name": "BOSS KNOT",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Executive Pendant · 18\" Chain Included",
+   "metals": [
+    "silver",
+    "yellow",
+    "white"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/boss-knot/hero.jpg"
+   ],
+   "href": "/products/boss-knot",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "lady-boss-knot",
+   "storefront_key": "lady-boss-knot",
+   "origin": "catalogProducts",
+   "name": "LADY BOSS KNOT",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Executive Statement Pendant · Cuban-Link Chain Included",
+   "metals": [
+    "silver",
+    "yellow",
+    "white"
+   ],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/lady-boss-knot/hero.jpg"
+   ],
+   "href": "/products/lady-boss-knot",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "uncle-jo",
+   "storefront_key": "uncle-jo",
+   "origin": "catalogProducts",
+   "name": "UNCLE JO",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Signature Mesh Collection",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/uncle-jo/hero.jpg"
+   ],
+   "href": "/products/uncle-jo",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "veyron-noir",
+   "storefront_key": "veyron-noir",
+   "origin": "catalogProducts",
+   "name": "VEYRON NOIR",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Tribute Series · 4 Metal Tiers",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/veyron-noir/hero.png"
+   ],
+   "href": "/products/veyron-noir",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "wynette-palette",
+   "storefront_key": "wynette-palette",
+   "origin": "catalogProducts",
+   "name": "WYNETTE'S PALETTE",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Collector Cocktail Ring",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/wynette/shop-card.png"
+   ],
+   "href": "/products/wynette-palette",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "la-marva",
+   "storefront_key": "la-marva",
+   "origin": "catalogProducts",
+   "name": "La Marva",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Signature Ring · Dynamic Pricing",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/m7k7yxis_1000138213.jpg"
+   ],
+   "href": "/products/la-marva",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "annie-rose",
+   "storefront_key": "annie-rose",
+   "origin": "catalogProducts",
+   "name": "Annie Rose",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Lab & Natural Diamonds · 10K-18K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/vg64rc4i_1000139387.jpg"
+   ],
+   "href": "/products/annie-rose",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "monika-couture",
+   "storefront_key": "monika-couture",
+   "origin": "catalogProducts",
+   "name": "Monika Couture Earrings",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Earrings · Silver & Gold Options",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_phileon-website/artifacts/xkfi3q1b_1000139956.jpg"
+   ],
+   "href": "/products/monika-couture",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "katrina-cascata",
+   "storefront_key": "katrina-cascata",
+   "origin": "catalogProducts",
+   "name": "Katrina Cascata",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Tribute Drop Earrings · Vermeil & 10K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/katrina-cascata/main.jpg"
+   ],
+   "href": "/katrina-cascata",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "alejandra-heels",
+   "storefront_key": "alejandra-heels",
+   "origin": "catalogProducts",
+   "name": "Alejandra Heels Earrings",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Earrings · Silver & Solid Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_luxury-rings-heels/artifacts/0y3jefc5_1000140400.jpg"
+   ],
+   "href": "/products/alejandra-heels",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "ptp-cuff",
+   "storefront_key": "ptp-cuff",
+   "origin": "catalogProducts",
+   "name": "PTP Cuff",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Cuff Bracelet · Vermeil to 14K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/n1f04383_1000140851.jpg"
+   ],
+   "href": "/products/ptp-cuff",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rosaria",
+   "storefront_key": "rosaria",
+   "origin": "catalogProducts",
+   "name": "Rosaria Earrings",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Earrings · 10K & 14K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_7b5a73db-350e-4cc1-ae7d-84976cd8fcfe/artifacts/d15gu165_VideoCapture_20260312-012448.jpg"
+   ],
+   "href": "/products/rosaria",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "desir-corset",
+   "storefront_key": "desir-corset",
+   "origin": "catalogProducts",
+   "name": "Désir Corset Pendant",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Pendant · 10K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_10f60fcd-389e-4787-8e2a-17abd2536e3c/artifacts/sxr71rsz_1000141578.jpg"
+   ],
+   "href": "/products/desir-corset",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "forme-cuff",
+   "storefront_key": "forme-cuff",
+   "origin": "catalogProducts",
+   "name": "Forme Cuff",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Cuff Bracelet · 10K Gold & Plated Silver",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_cce20d39-4135-43eb-82e5-c299fc05cf79/artifacts/k7kbqg47_1000142846.png"
+   ],
+   "href": "/products/forme-cuff",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "rhythm-mesh-ring",
+   "storefront_key": "rhythm-mesh-ring",
+   "origin": "catalogProducts",
+   "name": "Rhythm Mesh™ Ring",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "unisex"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Ring · Silver & 10K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg"
+   ],
+   "href": "/products/rhythm-mesh-ring",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "tola-ii",
+   "storefront_key": "tola-ii",
+   "origin": "catalogProducts",
+   "name": "TOLA II",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Ring · 10K-18K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png"
+   ],
+   "href": "/products/tola-ii",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "galatians-614",
+   "storefront_key": "galatians-614",
+   "origin": "catalogProducts",
+   "name": "GALATIANS 6:14",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Cross Pendant · 10K-18K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/tf1ne9cg_1000143695.jpg"
+   ],
+   "href": "/products/galatians-614",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "trace",
+   "storefront_key": "trace",
+   "origin": "catalogProducts",
+   "name": "TRACE",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Earrings · 10K Gold Plated - 14K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/7tyc41kp_1000143768.png"
+   ],
+   "href": "/products/trace",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "bound",
+   "storefront_key": "bound",
+   "origin": "catalogProducts",
+   "name": "BOUND",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "The Bustier Bangle · 10K-18K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png"
+   ],
+   "href": "/products/bound",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "apex",
+   "storefront_key": "apex",
+   "origin": "catalogProducts",
+   "name": "APEX",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Pyramid Earrings · Silver to 18K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_8f8138bc-86c3-4d15-a30c-36578e565f9d/artifacts/jphlogf7_1000144036.webp"
+   ],
+   "href": "/products/apex",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "homage",
+   "storefront_key": "homage",
+   "origin": "catalogProducts",
+   "name": "HOMAGE",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Fan Earrings · Silver to 18K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_03b460e6-a844-40cb-a5e9-37c38452303a/artifacts/mmqzzrsg_1000144453.png"
+   ],
+   "href": "/products/homage",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "cypher",
+   "storefront_key": "cypher",
+   "origin": "catalogProducts",
+   "name": "CYPHER",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Drama on your finger.",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/ug3fwnn7_1000144949.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/gsx17hv1_1000145084.png"
+   ],
+   "href": "/products/cypher",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "morso",
+   "storefront_key": "morso",
+   "origin": "catalogProducts",
+   "name": "IL MORSO DEL RE",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "The Bite of the King.",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/1to4q64f_1000145276.png",
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/lq8adcpf_1000145384.png"
+   ],
+   "href": "/products/morso",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "labete",
+   "storefront_key": "labete",
+   "origin": "catalogProducts",
+   "name": "TRIBUTE: LA BÊTE",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Born in the showroom.",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0245fcda-4bab-426a-9d07-34d2d68c629a/artifacts/6jm0dy9d_1000145555.png",
+    "https://customer-assets.emergentagent.com/job_f5f99e21-5104-439c-96b9-543eaba47da6/artifacts/z47ib7so_1000145636.jpg"
+   ],
+   "href": "/products/labete",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "blessed",
+   "storefront_key": "blessed",
+   "origin": "catalogProducts",
+   "name": "BLESSED",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Word Made Metal.",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kodh0p8l_1000145889.jpg",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/11mc2nl9_1000145880.png"
+   ],
+   "href": "/products/blessed",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "coogi-i",
+   "storefront_key": "coogi-i",
+   "origin": "catalogProducts",
+   "name": "COOGI I",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Chaos, disciplined.",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/cvsbyxpn_1000146038.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/z4vp2nhf_1000146046.png"
+   ],
+   "href": "/products/coogi-i",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "fondo-curvo",
+   "storefront_key": "fondo-curvo",
+   "origin": "catalogProducts",
+   "name": "Fondo Curvo",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Statement Earrings · Silver / 10K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xo3lwkk2_1000147308.png"
+   ],
+   "href": "/products/fondo-curvo",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "corinthians-15-14",
+   "storefront_key": "corinthians-15-14",
+   "origin": "catalogProducts",
+   "name": "1 Corinthians 15:14",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sacred Collection · 10K / 14K / 18K White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/e8d03p9o_1000147798.png"
+   ],
+   "href": "/products/corinthians-15-14",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "drape",
+   "storefront_key": "drape",
+   "origin": "catalogProducts",
+   "name": "DRAPE",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sculptural Pendant · Silver / 10K / 14K / 18K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/wbw4wgvu_1000147936.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/xijy29y5_1000148062.png"
+   ],
+   "href": "/products/drape",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "le-cocktail-de-jessica",
+   "storefront_key": "le-cocktail-de-jessica",
+   "origin": "catalogProducts",
+   "name": "Le Cocktail de Jessica",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Cocktail Ring · 10K Tri-Colour Gold · Natural Stones",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/9erkjubh_1000148134.png",
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/84gb9vxf_1000148149.png"
+   ],
+   "href": "/products/le-cocktail-de-jessica",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "prise-de-couronne",
+   "storefront_key": "prise-de-couronne",
+   "origin": "catalogProducts",
+   "name": "Prise de Couronne",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Signature Ring · Pavé Crown Band · Black Enamel",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/j97q3uqn_1000148293.png"
+   ],
+   "href": "/products/prise-de-couronne",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "nervatura",
+   "storefront_key": "nervatura",
+   "origin": "catalogProducts",
+   "name": "The Phileon Nervatura",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Architectural Drop Earrings · 10K / 14K / 18K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/acj6mi7n_1000148370.jpg"
+   ],
+   "href": "/products/nervatura",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "the-don-gorgon",
+   "storefront_key": "the-don-gorgon",
+   "origin": "catalogProducts",
+   "name": "The Don Gorgon",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Dual-State Ring · Black / White Pavé · Ruby Rail",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/don-gorgon/home/01_hero.png"
+   ],
+   "href": "/products/the-don-gorgon",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "the-grand-dame",
+   "storefront_key": "the-grand-dame",
+   "origin": "catalogProducts",
+   "name": "The Grand Dame Cuff",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sculptural Open Cuff · Rose / Yellow Gold · Mesh Lattice",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/grand-dame/01_hero.png"
+   ],
+   "href": "/products/the-grand-dame",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "the-carapace",
+   "storefront_key": "the-carapace",
+   "origin": "catalogProducts",
+   "name": "The Carapace",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sculptural Lattice Dome · Vermeil · 10K Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/carapace/13_hero_v2.png"
+   ],
+   "href": "/products/the-carapace",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "midweek",
+   "storefront_key": "midweek",
+   "origin": "catalogProducts",
+   "name": "MIDWEEK",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Woven Sterling Silver · Black Diamond Pavé",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/midweek/01_hero.png"
+   ],
+   "href": "/products/midweek",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "la-madonna",
+   "storefront_key": "la-madonna",
+   "origin": "catalogProducts",
+   "name": "LA MADONNA",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Architectural Gold Mesh · Corset Form",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/images/la-madonna-hand-category.png"
+   ],
+   "href": "/la-madonna",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "la-scarpa-della-regina",
+   "storefront_key": "la-scarpa-della-regina",
+   "origin": "catalogProducts",
+   "name": "LA SCARPA DELLA REGINA",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "ladies"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "18K Rose Gold · Hand-set Diamond Field · Signature Objects",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/la-scarpa/scarpa-portrait.jpg"
+   ],
+   "href": "/la-scarpa-della-regina",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "bape",
+   "storefront_key": "bape",
+   "origin": "catalogProducts",
+   "name": "BAPE™",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Tribute Series · Multi-stone Signet",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/homage/bape-ring.webp"
+   ],
+   "href": "/homage/bape",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": []
+  },
+  {
+   "slug": "lisa",
+   "storefront_key": "lisa",
+   "origin": "catalogProducts",
+   "name": "LISA",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Natural Emerald · 18K White Gold · Two Scale Expressions",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/lisa/lisa-bold-hero.jpg"
+   ],
+   "href": "/lisa",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Gents",
+    "Collective",
+    "Emerald",
+    "Dome Ring"
+   ]
+  },
+  {
+   "slug": "lady-jay",
+   "storefront_key": "lady-jay",
+   "origin": "catalogProducts",
+   "name": "LADY JAY",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Tribute Series · 2026 Season Only · White Gold · Blue Sapphire + White Diamond",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/lady-jay/lady-jay-hero.png"
+   ],
+   "href": "/lady-jay",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Tribute Series",
+    "Sapphire",
+    "Diamond",
+    "Feather Ring",
+    "Season Only"
+   ]
+  },
+  {
+   "slug": "the-true-vine",
+   "storefront_key": "the-true-vine",
+   "origin": "catalogProducts",
+   "name": "THE TRUE VINE",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Sacred Objects · Pendant · Open Mesh Arch · Raised Cross · Vine Relief",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/the-true-vine/the-true-vine-hero.jpg"
+   ],
+   "href": "/the-true-vine",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Collective",
+    "Pendant",
+    "Sacred Objects",
+    "Yellow Gold",
+    "Cross"
+   ]
+  },
+  {
+   "slug": "porta-aurea",
+   "storefront_key": "porta-aurea",
+   "origin": "catalogProducts",
+   "name": "PORTA AUREA",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Signet Objects · Yellow Gold · Emerald-Cut Ruby · Greek Key Bezel",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/porta-aurea/porta-aurea-hero.jpg"
+   ],
+   "href": "/porta-aurea",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Collective",
+    "Signet",
+    "Ring",
+    "Yellow Gold",
+    "Ruby"
+   ]
+  },
+  {
+   "slug": "coogi-dna-tag",
+   "storefront_key": "coogi-dna-tag",
+   "origin": "catalogProducts",
+   "name": "COOGI DNA TAG",
+   "subtitle": null,
+   "category": [
+    "pendants"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Tribute Series · Snow & Sand · 10K Gold · Multi-Stone · Diamond Pavé",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/coogi-dna/coogi-dna-hero.png"
+   ],
+   "href": "/coogi-dna-tag",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Collective",
+    "Pendant",
+    "Tribute Series",
+    "COOGI",
+    "Multi-Stone"
+   ]
+  },
+  {
+   "slug": "battenti-della-villa",
+   "storefront_key": "battenti-della-villa",
+   "origin": "catalogProducts",
+   "name": "BATTENTI DELLA VILLA",
+   "subtitle": null,
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Villa Door Knocker Earrings · Sterling Silver Vermeil → 18K Yellow Gold · Rope Twist · Omega Back",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/kzk3m7gb_1000156318.png"
+   ],
+   "href": "/battenti-della-villa",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Collective",
+    "Earrings",
+    "Silver",
+    "18K",
+    "Yellow Gold",
+    "Italia"
+   ]
+  },
+  {
+   "slug": "gent",
+   "storefront_key": "gent",
+   "origin": "catalogProducts",
+   "name": "GENT",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Architectural Signet Ring · Sterling Silver → 14K Yellow Gold · Woven Lattice · Monumental Typography",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/87u8o3vp_1000156494.jpg"
+   ],
+   "href": "/gent",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Collective",
+    "Signet",
+    "Ring",
+    "Architectural",
+    "House Signature",
+    "Yellow Gold",
+    "Silver",
+    "Vermeil"
+   ]
+  },
+  {
+   "slug": "stackrats",
+   "storefront_key": "stackrats",
+   "origin": "catalogProducts",
+   "name": "STACKRATS",
+   "subtitle": null,
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Micro-bead Mesh Bangles · Dinah · Valerie · Dominique · Wide 10mm or Thin 7mm",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets.emergentagent.com/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/dgp6tl9l_1000156925.jpg"
+   ],
+   "href": "/stackrats",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Collective",
+    "Bangle",
+    "Bracelet",
+    "Mesh",
+    "Rose Gold",
+    "White Gold",
+    "Yellow Gold",
+    "Stack"
+   ]
+  },
+  {
+   "slug": "parabola",
+   "storefront_key": "parabola",
+   "origin": "catalogProducts",
+   "name": "PARABOLA",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "ladies-first",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Rose Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/parabola/hero.png"
+   ],
+   "href": "/products/parabola",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Ladies First",
+    "Collective",
+    "Ring",
+    "Statement",
+    "Concave",
+    "Pink Sapphire",
+    "Diamond",
+    "Rose Gold",
+    "White Gold",
+    "Sterling"
+   ]
+  },
+  {
+   "slug": "parabola-heritage",
+   "storefront_key": "parabola-heritage",
+   "origin": "catalogProducts",
+   "name": "PARABOLA HERITAGE",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Heritage Concave Statement Ring · 22mm Face · Sterling Silver → 10K White Gold → 10K Yellow Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/parabola-heritage/img-01-profile.png"
+   ],
+   "href": "/products/parabola-heritage",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gentleman",
+    "Gentleman's Club",
+    "Collective",
+    "Ring",
+    "Statement",
+    "Concave",
+    "Heritage",
+    "Ruby",
+    "Emerald",
+    "Black Diamond",
+    "Yellow Gold",
+    "White Gold",
+    "Sterling"
+   ]
+  },
+  {
+   "slug": "scacco-matto",
+   "storefront_key": "scacco-matto",
+   "origin": "catalogProducts",
+   "name": "SCACCO MATTO",
+   "subtitle": "Geometric Gemstone Band",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "PHILEON Fine Jewelry · Rings · Lab-Grown Blue & Yellow Sapphires · 10K–14K Yellow or White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/fine-jewelry/scacco-matto/hero-three-quarter.png"
+   ],
+   "href": "/scacco-matto",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Unisex",
+    "Fine Jewelry",
+    "Ring",
+    "Sapphire",
+    "Yellow Gold",
+    "Blue Sapphire",
+    "Yellow Sapphire",
+    "Geometric"
+   ]
+  },
+  {
+   "slug": "architrave",
+   "storefront_key": "architrave",
+   "origin": "catalogProducts",
+   "name": "ARCHITRAVE",
+   "subtitle": "Openwork Drop Earrings",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "ladies-first"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Openwork Drop Earrings · Sterling Silver, 10K & 14K White Gold · 536 Stones Per Pair",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/architrave/still-clean-pair.jpg"
+   ],
+   "href": "/architrave",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Ladies First",
+    "Fine Jewelry",
+    "Earrings",
+    "Openwork",
+    "White Gold",
+    "Silver",
+    "Lab Diamonds",
+    "CZ"
+   ]
+  },
+  {
+   "slug": "ovation",
+   "storefront_key": "ovation",
+   "origin": "catalogProducts",
+   "name": "OVATION",
+   "subtitle": "Wide Ribbed Stackable Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "PHILEON Fine Jewelry · Rings · Wide Ribbed Band · Sterling Silver → 10K / 14K / 18K Yellow or White Gold",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/pl6at891_1000166845.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/whnl770o_1000166839.png"
+   ],
+   "href": "/ovation",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Unisex",
+    "Fine Jewelry",
+    "Ring",
+    "Ribbed",
+    "Stackable",
+    "Sterling Silver",
+    "Yellow Gold",
+    "White Gold"
+   ]
+  },
+  {
+   "slug": "bajan-joe",
+   "storefront_key": "bajan-joe",
+   "origin": "catalogProducts",
+   "name": "BAJAN JOE",
+   "subtitle": "Black Spinel Reptile Signet",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": "Sterling-silver reptile signet set with a princess-cut black spinel.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Sterling Silver · High Polish or Matte",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/p0nvtaur_1000168342.png",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/mb9ie3g5_1000168343.png"
+   ],
+   "href": "/bajan-joe",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Fine Jewelry",
+    "Ring",
+    "Signet",
+    "Sterling Silver",
+    "Black Spinel",
+    "Reptile"
+   ]
+  },
+  {
+   "slug": "quadriga-dominus",
+   "storefront_key": "quadriga-dominus",
+   "origin": "catalogProducts",
+   "name": "QUADRIGA DOMINUS",
+   "subtitle": "Genuine-Stone Statement Ring",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": "Gents statement ring in four genuine-stone colorways. 188 pavé stones plus a centre stone. Available in 10K or 14K.",
+   "story": null,
+   "tribute": null,
+   "material_line": "10K or 14K White Metal · 188 Pavé Stones + Centre Stone",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/quadriga/card-hero.jpg"
+   ],
+   "href": "/products/quadriga-dominus",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Fine Jewelry",
+    "Ring",
+    "Statement",
+    "Pavé",
+    "10K",
+    "14K",
+    "Genuine Stones"
+   ]
+  },
+  {
+   "slug": "ribbon-regale-edition",
+   "storefront_key": "ribbon-regale-edition",
+   "origin": "catalogProducts",
+   "name": "RIBBON REGALE ÉDITION",
+   "subtitle": "Sculptural Earrings — Solid Gold",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": "The solid-gold Fine Jewelry expression of the sculptural ribbon earrings. Crafted in solid yellow gold and available in 10K, 14K and 18K.",
+   "story": null,
+   "tribute": null,
+   "material_line": "Solid Yellow Gold · Available in 10K, 14K and 18K",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/inspiration-vault/gold-theory-ribbon/hero-pair-black.png",
+    "/inspiration-vault/gold-theory-ribbon/pair-white.jpg"
+   ],
+   "href": "/ribbon-regale-edition",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Fine Jewelry",
+    "Earrings",
+    "Sculptural",
+    "Solid Gold",
+    "10K",
+    "14K",
+    "18K",
+    "Yellow Gold"
+   ]
+  },
+  {
+   "slug": "cresta-nera",
+   "storefront_key": "cresta-nera",
+   "origin": "catalogProducts",
+   "name": "CRESTA NERA",
+   "subtitle": "Black Diamond Granulated Gold Bangle",
+   "category": [
+    "bracelets"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": "Yellow-gold hinged bangle with granulated points and black-diamond pavé triangles.",
+   "story": null,
+   "tribute": null,
+   "material_line": "10K or 14K Yellow Gold · Black Diamonds",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/otm0wfwp_1000169382.jpg",
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/el5elc8u_1000169400.jpg"
+   ],
+   "href": "/cresta-nera",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Fine Jewelry",
+    "Bracelet",
+    "Bangle",
+    "Yellow Gold",
+    "Black Diamond",
+    "Hinged"
+   ]
+  },
+  {
+   "slug": "rebelle",
+   "storefront_key": "rebelle",
+   "origin": "catalogProducts",
+   "name": "REBELLE",
+   "subtitle": "Black Pavé Helix Stiletto Earrings",
+   "category": [
+    "earrings"
+   ],
+   "audience": [
+    "ladies",
+    "ladies-first"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "Black Pavé Helix Stiletto Earrings · Sterling Silver, 10K & 14K White Gold · Black Enamel · 264 Stones Per Pair",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/rebelle/shop-card.jpg"
+   ],
+   "href": "/rebelle",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Ladies First",
+    "Fine Jewelry",
+    "Earrings",
+    "Statement",
+    "Stiletto",
+    "Double Helix",
+    "Black Enamel",
+    "White Gold",
+    "Silver",
+    "Lab Black Diamonds",
+    "Black CZ"
+   ]
+  },
+  {
+   "slug": "neighborhood-nip",
+   "storefront_key": "neighborhood-nip",
+   "origin": "catalogProducts",
+   "name": "NEIGHBORHOOD NIP",
+   "subtitle": null,
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "gentlemens-club",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": null,
+   "tribute": null,
+   "material_line": "14K White Gold · Princess-Cut Blue Sapphires · Black and White Diamonds",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "/tribute-series/neighborhood-nip/shop-card-front-v2.jpg"
+   ],
+   "href": "/tribute-series/neighborhood-nip",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Gents",
+    "Collective",
+    "Tribute Series",
+    "Ring",
+    "Signet",
+    "Sapphire",
+    "Diamond",
+    "White Gold",
+    "Made to Order"
+   ]
+  },
+  {
+   "slug": "her-eternal-reign",
+   "storefront_key": "her-eternal-reign",
+   "origin": "catalogProducts",
+   "name": "H.E.R.",
+   "subtitle": "HER ETERNAL REIGN",
+   "category": [
+    "rings"
+   ],
+   "audience": [
+    "ladies",
+    "collective"
+   ],
+   "collections": [],
+   "description": null,
+   "story": "NO QUEEN STANDS ALONE.",
+   "tribute": null,
+   "material_line": "10K / 14K / 18K Yellow Gold · Crown-Stone Procession",
+   "metals": [],
+   "stones": [],
+   "variants": [],
+   "images": [
+    "https://customer-assets-jt897jd0.emergentagent.net/job_0967ced5-e732-403d-b891-6f292f5aebbc/artifacts/ssxu0m5c_1000170739.png"
+   ],
+   "href": "/her-eternal-reign",
+   "purchasable": null,
+   "status": null,
+   "pricing_pending": null,
+   "dynamic_pricing": null,
+   "is_core": true,
+   "size_profile": null,
+   "tags": [
+    "Ladies",
+    "Fine Jewelry",
+    "Rings",
+    "Collective",
+    "Crown",
+    "Sculptural"
+   ]
+  }
+ ]
+}
