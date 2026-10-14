@@ -1290,3 +1290,6 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Oct 14, 2026 14:54 UTC — LIVE Claude draft #4: H.E.R. product_story v3, id d294b08e-…, 181 words, DRAFT ONLY. All brief
   requirements met (verbatim brand line, route, "No queen stands alone", golds, stones phrase, no banned terms). Omits
   "made to order" (allowed, not mandatory). Minor: title wrapped in markdown ** despite plain-text instruction. v1/v2 preserved.
+- Oct 14, 2026 15:14 UTC — H.E.R. v3 (d294b08e) editorially polished via existing PUT /content-drafts/{id} (no AI call):
+  "offered in", yellow-gold presence line, removed "no two are the same"/"different signature of colour", CTA "Explore H.E.R."
+  (route kept in products_referenced metadata), markdown title stripped. 166 words. Still draft, published=false. v1/v2 intact.
