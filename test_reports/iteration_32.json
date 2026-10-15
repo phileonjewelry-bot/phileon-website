@@ -1,0 +1,37 @@
+{
+  "summary": "Verified PARABOLA USD pricing fix end-to-end. Backend no longer double-converts CAD->USD; checkout session resolves to the trusted USD cents for all three tiers. PRICE_MOVED guard still fires when client sends stale lower cents. /api/validate-cart returns valid=true with difference 0 for all three tiers. Frontend PDP, cart (incl. reload price-lock), and checkout order summary all show the correct USD prices; no 'CAD' appears on PDP/cart/checkout. /shop PARABOLA card shows 'From $1,250 USD'. Homepage does NOT render a PARABOLA tile in the current layout (minor; see notes).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Homepage (/)", "issues": ["No PARABOLA tile found anywhere in the homepage body text after scrolling to bottom. The review request stated 'Homepage PARABOLA tile mentions FROM $1,250 USD' — the tile appears to be absent on the current home layout. Not a pricing regression, but main agent should confirm whether a PARABOLA tile is intended to be surfaced on /."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_parabola_pricing.py",
+    "/app/test_reports/pytest/parabola_results.xml"
+  ],
+  "action_items": [
+    "Optional: verify whether the homepage is expected to feature a PARABOLA tile. If yes, surface it with 'FROM $1,250 USD'.",
+    "No code changes required for the pricing fix — all backend + frontend assertions pass."
+  ],
+  "critical_code_review_comments": [
+    "backend/routes/checkout.py line_items are stored under the key 'items' (not 'line_items') in orders_v2 — any downstream analytics assuming 'line_items' will miss data. Consider renaming for consistency or standardising the field name.",
+    "POST /api/checkout/stripe/session response does not echo resolved line items (sku, unit_amount_cents, currency). Clients cannot verify the trusted amount without a separate GET; adding a non-trusted echo of {sku, unit_amount_cents, currency} would improve observability for QA/support tooling.",
+    "Frontend ring-size picker has no stable data-testid (e.g. 'ring-size-US 6'); size options are not reachable via get_by_text exact match. Add data-testid attributes on size buttons to make testing + accessibility more robust."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_parabola_pricing.py (new)"
+  ],
+  "success_rate": {"backend": "100% (5/5)", "frontend": "100% on tested flows (PDP tiers, cart, cart reload, checkout summary, /shop)"},
+  "test_credentials": "N/A — public storefront",
+  "seed_data_creation": "Created 3 test orders in orders_v2 (persistent DB) via /api/checkout/stripe/session with idempotency_key='test-<tier>-<hex>' and customer_email='qa@example.com'. No payment completed. No Stripe URLs were visited.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend tests live at /app/backend/tests/test_parabola_pricing.py and query the PERSISTENT phileon_db (via PHILEON_PERSISTENT_DB_NAME env from conftest) because the preview backend writes there, not into the pytest disposable DB. Reuse this pattern for any end-to-end order verification. Expected trusted cents: sterling=125000, whiteGold10k=780000, roseGold10k=780000, currency USD, SKUs PARABOLA-{STERLING|WHITEGOLD10K|ROSEGOLD10K}-SZ6. PRICE_MOVED guard still fires for stale displayed_unit_amount_cents on parabola/sterling.",
+  "rca of the issue": "N/A — fix is verified working. Previous double-conversion bug (resolved 95000/600000/600000 cents while UI showed 1250/7800/7800) was caused by backend applying cad_to_usd_luxury to a price already in USD. Fix landed in catalog.py via usd_hand_set=True flag on parabola tiers, and frontend livePricingConfig.js registers parabola with weightGrams=0 so PDP/Shop/cart match the backend trusted number. All 3 tiers now round-trip 1:1 through POST /api/checkout/stripe/session."
+}
