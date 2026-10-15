@@ -1,0 +1,87 @@
+{
+  "summary": "Iter 36 verified the Oct-2026 owner-approved USD matrix for OVATION (7 tiers), COOGI DNA TAG (engraving +$150), and LADY JAY seasonal retirement. Backend: 18/18 pytest asserts PASS (resolver + /api/checkout/stripe/session via app_client with disposable DB). Frontend: OVATION PDP tier cards all correct ($225/$850/$850/$1,100/$1,100/$1,400/$1,400), COOGI PDP $8,500 / $8,650, Lady Jay today enabled + Nov-2 retired via mocked Date. Merchant feed 200 OK, 23 items, all USD, ovation=225, coogi=8500, lady-jay=5000, trace=450. Found 2 CRITICAL frontend bugs: (1) COOGI DNA TAG cart items blocked at /checkout with 'Not available for online checkout yet' (same slug-missing pattern as Parabola Heritage in iter 35), (2) OVATION is missing entirely from /shop grid even though products.js defines it with price_range 'From $225 USD'.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CoogiDnaTagPage.jsx + Checkout.jsx", "issue": "After add-to-cart for COOGI DNA TAG, /checkout shows 'Not available for online checkout yet — please remove to continue.' and PAY WITH CARD stays disabled. Root cause: CoogiDnaTagPage.jsx onAddToCart (line ~179) does NOT set `slug` on the cart line. CartContext stores `slug: product.slug` (undefined) and `product_id: product.id` where id = `coogi-dna-tag-sand[-engraved]`. Checkout.jsx baseSlug = i.slug||i.product_id = 'coogi-dna-tag-sand-engraved', which is NOT in SUPPORTED_SLUGS (which contains the base 'coogi-dna-tag'). Fix: add `slug: 'coogi-dna-tag'` to the product object passed to handleAddToCart, OR add `baseSlug` normalisation in Checkout.jsx that strips tier/variant suffixes.", "selector": "[data-testid^='checkout-item-unsupported-']", "priority": "CRITICAL"},
+      {"component": "ShopDropPage.jsx (listing data pipeline)", "issue": "OVATION card is MISSING from /shop (looked under ALL, SIGNATURE, after full scroll — 50 shop-card-price-* testids rendered but none for ovation; body text does not contain 'OVATION'). products.js defines ovation with price_range 'From $225 USD', collection 'signature', isFeatured:true. Spec required /shop to show OVATION card From $225 USD. Likely a filter/visibility rule or seed collection is dropping it.", "selector": "[data-testid='shop-card-price-ovation']", "priority": "HIGH"},
+      {"component": "CoogiDnaTagPage.jsx variant toggle", "issue": "Minor: after adding SAND engraved, clicking data-testid='coogi-acquire-variant-snow' and clicking Add produced a second cart line still labeled 'Sand · 10K Rose Gold $8,500' instead of 'Snow · 10K White Gold'. Prices still display correctly on the PDP, so this may be a re-render edge case rather than a state bug. Needs owner-visible repro.", "selector": "[data-testid='coogi-acquire-variant-snow']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "COOGI DNA TAG → cart → /checkout → Pay", "issue": "Zero customers can complete a COOGI DNA TAG purchase online (both Snow $8,500 and Sand engraved $8,650 lines show the orange 'Not available' banner and Pay is disabled).", "affected_selectors": ["[data-testid='coogi-add-to-cart-btn']", "[data-testid^='checkout-item-unsupported-']", "button:has-text('PAY WITH CARD')"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter36_ovation_coogi_ladyjay.py",
+    "/app/test_reports/pytest/iter36_results.xml"
+  ],
+  "action_items": [
+    "CRITICAL: In /app/frontend/src/pages/CoogiDnaTagPage.jsx onAddToCart, add `slug: 'coogi-dna-tag'` to the product object (or set id to 'coogi-dna-tag' and store SKU/engraving separately). This mirrors the Parabola Heritage fix from iter 35. Verify at /checkout the 'Not available' banner is gone and PAY is enabled.",
+    "HIGH: Investigate why OVATION card is not rendered on /shop. products.js has it with isFeatured:true, collection:'signature', inventory_count:100. Likely a backend/products feed filter or an audience/visibility gate. /shop must show the 'OVATION From $225 USD' card per owner contract.",
+    "MEDIUM: Reproduce the variant-not-updating bug on CoogiDnaTagPage when switching Sand→Snow after engraving flow; add a stale-state test.",
+    "LOW: Consider centralising baseSlug normalisation server-side (GET /api/catalog/supported-slugs) so new PDPs can't silently regress checkout again."
+  ],
+  "critical_code_review_comments": [
+    "Same slug-missing pattern now observed on CoogiDnaTagPage.jsx and previously on ParabolaHeritagePage/RingProductPage. CartContext.jsx should defensively derive slug from a required field or warn in dev when slug is missing, so this class of bug is caught at add-to-cart instead of at checkout.",
+    "ShopDropPage.jsx should snapshot the list of expected slugs and warn in dev when a core product is filtered out. OVATION was intentionally added to products.js with isFeatured:true but still absent from /shop — a silent filter is hiding owner-approved SKUs.",
+    "LadyJayPage.jsx season gating via client Date is correct for display, but the server-side _enforce_season_window is the real guard (verified via pytest). Good defense-in-depth."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter36_ovation_coogi_ladyjay.py (new)"],
+  "success_rate": {
+    "backend": "100% (18/18)",
+    "frontend": "75% — OVATION tier prices, COOGI prices + engraving math, LADY JAY seasonal gating all correct. Blocked by (1) COOGI /checkout slug-not-supported bug (CRITICAL), (2) OVATION missing from /shop grid (HIGH)."
+  },
+  "observed_amounts": {
+    "ovation_pdp_tier_prices": {
+      "silver": "$225 USD",
+      "yellow10k": "$850 USD",
+      "white10k": "$850 USD",
+      "yellow14k": "$1,100 USD",
+      "white14k": "$1,100 USD",
+      "yellow18k": "$1,400 USD",
+      "white18k": "$1,400 USD"
+    },
+    "ovation_cart_silver_us8": "$225 USD (persists after reload). CAD count on /cart = 0.",
+    "ovation_checkout_silver_only": "Order summary $225 USD. (white18k Add-to-Cart timed out on 2nd attempt due to ringsize dropdown animation; silver alone verified end-to-end — core tier math identical.)",
+    "coogi_pdp_snow": "$8,500 USD · 10K White Gold",
+    "coogi_pdp_sand": "$8,500 USD · 10K Rose Gold",
+    "coogi_pdp_sand_engraved": "$8,650 USD",
+    "coogi_cart": "Sand engraved $8,650 (shows 'Engraved: TEST ENGRAVE') + second Snow add $8,500. Persists after reload. CAD count = 0.",
+    "coogi_checkout": "$8,650 + $8,500 shown as lines, BUT both marked 'Not available for online checkout yet — please remove to continue.' (CRITICAL bug).",
+    "ladyjay_today_oct15_2026": "countdown 'DAYS REMAINING = 18', season-note 'Retired at season's end. Returns with the 2027 Jays season.', commission-btn ENABLED text 'ADD TO CART', no 'No reissue' text, '2027' present.",
+    "ladyjay_mocked_nov2_2026": "data-testid lady-jay-countdown-closed = 'Retired Until Opening Day — Jays Season 2027'; data-testid lady-jay-season-note = 'Returning for the 2027 season.'; commission-btn DISABLED text 'RETIRED UNTIL OPENING DAY 2027'; no 'sold out' / 'discontinued' wording.",
+    "shop_mocked_nov2_ladyjay_card": "'Retired Until Opening Day — Jays Season 2027' (replaces price)",
+    "shop_real_date_cards": {
+      "coogi-dna-tag": "From $8,500 USD",
+      "trace": "From $450 USD",
+      "the-carapace": "From $350 USD",
+      "parabola": "From $1,250 USD",
+      "parabola-heritage": "From $1,250 USD",
+      "lady-jay": "From $5,000 USD",
+      "ovation": "MISSING from /shop"
+    },
+    "shop_cad_count": 0,
+    "shop_11334_present": false,
+    "merchant_feed": {
+      "status": 200,
+      "content_type": "application/xml",
+      "items": 23,
+      "cad_count": 0,
+      "ovation": "225 USD",
+      "coogi-dna-tag": "8500 USD",
+      "lady-jay": "5000 USD",
+      "trace": "450 USD",
+      "non_usd_format_prices": []
+    }
+  },
+  "test_credentials": "N/A — public storefront",
+  "seed_data_creation": "None — pytest uses disposable _pytest_ DB via app_client. Live preview DB untouched (verified by autouse network guard).",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "After main agent patches CoogiDnaTagPage.jsx (add `slug: 'coogi-dna-tag'`) and restores OVATION on /shop, retest ONLY: (a) /coogi-dna-tag → add Sand engraved + Snow → /checkout shows two valid lines with totals $8,650 + $8,500 = $17,150 and PAY WITH CARD is enabled; (b) /shop renders [data-testid='shop-card-price-ovation'] = 'From $225 USD'. All other OVATION tier prices, COOGI engraving math, LADY JAY seasonal gating (both today-enabled and mocked-Nov-2 retired paths), and merchant-feed.xml are already verified in this iteration and need no reverification. Pytest file /app/backend/tests/test_iter36_ovation_coogi_ladyjay.py is the regression harness for this contract (18/18 pass).",
+  "rca of the issue": "COOGI checkout block — RCA identical to iter 35's Parabola Heritage bug but on a different page. CoogiDnaTagPage.jsx:179 passes a product object WITHOUT a `slug` field. CartContext.jsx stores `slug: product.slug` → undefined and `product_id: product.id` where product.id = 'coogi-dna-tag-sand-engraved' (per CoogiDnaTagPage.jsx:181). Checkout.jsx:66-68 derives baseSlug = i.slug||i.product_id → 'coogi-dna-tag-sand-engraved'. SUPPORTED_SLUGS has only the base 'coogi-dna-tag' → isSupportedItem returns false → unsupported banner + disabled Pay. Reproduction: /coogi-dna-tag → tick engraving → Add to Cart → /checkout → orange banner. Fix: on line 180 add `slug: 'coogi-dna-tag',` alongside `productKey: 'coogiDnaTag'`.\n\nOVATION missing from /shop — RCA pending; data entry in /app/frontend/src/data/products.js:3414 looks correct (isFeatured:true, inventory_count:100, collection:'signature', audience includes gentlemens-club and ladies). Shop renders 50 cards but no ovation testid and no 'OVATION' body text. Likely culprits: duplicate id/slug collision (grep shows two 'ovation' slug entries at lines 671 and 3417 in products.js — dedupe may drop the second), or an audience/visibility filter in ShopDropPage. Investigate the dedupe/filter logic in ShopDropPage.jsx."
+}

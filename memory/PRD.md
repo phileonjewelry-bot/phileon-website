@@ -1421,3 +1421,21 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   after which the feed entry must be dropped. Selling prices unchanged.
 - Heritage slug fix scope check: all other RingProductPage consumers have id === slug (bajan-joe, tola-ii, rhythm-mesh-ring, ovation,
   annie-rose, la-marva, parabola) → identifiers/checkout behaviour unchanged.
+
+## Oct 15, 2026 — OVATION Option B · COOGI $8,500 + engraving · LADY JAY seasonal lifecycle (PREVIEW, not deployed)
+- OVATION: catalog.py `usd_hand_set: True`; usd_hand_set rings now use the exact lockedBasePriceCad (no $50 round_luxury — silver $225
+  exact). Frontend livePricingConfig.ovationRibbedRing (7 tiers, wg 0) + LiveFromPrice map + SHOP_COLLECTION_MAP 'ovation' (card was
+  missing from /shop). Before: server 150/650/650/800/800/1050/1050 → after 225/850/850/1100/1100/1400/1400 = storefront.
+- COOGI DNA TAG: pricing_engine.coogiDnaTag 11334→8500 (hand-set USD, metal_label), frontend config 8500. Engraving +$150 now charged
+  SERVER-SIDE: PRICING_ENGINE_CATALOG['coogi-dna-tag'].engraving_surcharge_cents=15000; resolve(engraving=) → SKU -ENGRAVED, variant
+  '· Engraved', metadata.engraving='laser'; CartItemIn.engraving; Checkout.jsx sends engraving: !!i.engravingEnabled; catalog.resolve_line_item
+  passes through. BUG FIXED: CoogiDnaTagPage never set cart `slug` → checkout flagged unsupported (nobody could buy). Added slug.
+- LADY JAY: pricing_engine_catalog season config (closes 2026-11-01T00:00 America/Toronto, reopens_at None, message
+  "Retired Until Opening Day — Jays Season 2027"); season_state()/_now_utc() clock seam; resolve raises SEASONALLY_RETIRED after cutoff;
+  no auto-reopen. Frontend: LadyJayPage approved headline/subline, CTA disabled after cutoff, "No reissue" wording removed;
+  frontend/src/data/seasonal.js; Shop card shows retired message instead of price. Merchant feed: LIVE_FEED_SLUGS lady-jay price from
+  resolver lowest tier (foundation) at generation time (no hardcoded snapshot; products.js price_range back to formatPrice(4800)),
+  dropped when retired. 2027 reopening = set season.reopens_at after owner authorization + inventory/price recheck.
+- Tests: test_trace_editions (+ovation, coogi engraving, lady-jay mocked clock, feed exclusion), iter36 agent tests (app_client);
+  feed-vs-server xfail removed (now passes). Suite 1593 passed / 93 skipped / 0 deterministic failures (1 intermittent Mongo drop).
+  No orders/reservations created (orders_v2 10,250, reservations 0).

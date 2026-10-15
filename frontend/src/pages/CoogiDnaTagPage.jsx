@@ -179,6 +179,7 @@ export default function CoogiDnaTagPage() {
     handleAddToCart(
       {
         id: `coogi-dna-tag-${current.id}${engravingEnabled ? "-engraved" : ""}`,
+        slug: "coogi-dna-tag",
         name: `COOGI DNA TAG — ${current.name} · ${current.metal}${engravingEnabled ? ` · Engraved "${engravingFinal}"` : ""}`,
         price: displayPrice,
         productKey: "coogiDnaTag",

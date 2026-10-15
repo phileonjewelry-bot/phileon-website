@@ -55,6 +55,7 @@ const SHOP_COLLECTION_MAP = {
   'lady-jay': 'editorial',
   'parabola': 'signature',
   'parabola-heritage': 'signature',
+  'ovation': 'signature',
 
   // COLLECTIVE — multi-audience pieces (his + hers + collective)
   'coogi-i': 'collective',
