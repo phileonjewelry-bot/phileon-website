@@ -1,0 +1,37 @@
+{
+  "summary": "Verified Jan-2026 pricing-alignment contract for PARABOLA HERITAGE and ANNIE ROSE end-to-end through the in-process app_client fixture (disposable DB) and the live preview frontend. All 11 new pytest assertions pass; all 16 pre-existing trace-editions assertions still pass. Frontend PDP, cart, cart-reload, and checkout show the exact same USD amounts as the server resolver — no CAD, no forbidden $6,400/$10,400/$12,200. One minor /shop gap: there is a PARABOLA tile showing 'From $1,250 USD' but no distinct PARABOLA HERITAGE tile is rendered on /shop.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "/shop", "issues": ["No distinct 'PARABOLA HERITAGE' tile is rendered on /shop — only the ladies 'PARABOLA' tile is present (also at 'From $1,250 USD'). Spec required a Heritage shop card. Not a pricing regression — pricing for both products round-trips at $1,250 USD."]},
+      {"screen": "Annie Rose PDP", "issues": ["Ring-size selector has no stable data-testid and the '6' button is not reachable via get_by_role('button', name='6') or 'US 6'. Default picked on Add-to-Cart is US 7 (ladies profile default). Tests therefore recorded cart lines with 'US 6' absent (showed 'US 6' only when size was clickable; here they ended up at 'US 7'). Pricing is size-invariant for Annie Rose so amounts are unaffected, but PDP size selection UX/testability needs attention."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_pricing_alignment_jan2026.py",
+    "/app/backend/tests/test_trace_editions.py",
+    "/app/test_reports/pytest/pricing_align_results.xml",
+    "/app/test_reports/pytest/pricing_results.xml"
+  ],
+  "action_items": [
+    "Decide whether PARABOLA HERITAGE should surface its own /shop tile (currently absent). If yes, add tile with 'From $1,250 USD'. If no (intentional consolidation), ignore.",
+    "Add stable data-testid attributes to the ring-size buttons on dynamic ring PDPs (e.g. data-testid=\"ring-size-US 6\"). Previous iteration flagged the same gap; still unresolved."
+  ],
+  "critical_code_review_comments": [
+    "POST /api/checkout/stripe/session still does not echo resolved line items (sku, unit_amount_cents, currency). Clients cannot verify the trusted amount without a separate GET; adding a non-trusted echo of {sku, unit_amount_cents, currency} would improve observability for QA/support tooling. (Repeat from iter_32.)",
+    "/api/validate-cart compares client USD prices against values that look CAD-scaled (e.g. foundation server_price=9550 vs PDP 7000). Users will always see 'Price mismatch' when passing accurate USD. The validate-cart response doesn't block checkout (the /api/checkout/stripe/session resolver is the authoritative price enforcer), but the mismatched units can mislead integrators. Consider normalising validate-cart to the same USD cents the checkout resolver returns."
+  ],
+  "updated_files": ["/app/backend/tests/test_pricing_alignment_jan2026.py (new)"],
+  "success_rate": {
+    "backend": "100% (11/11 new + 16/16 existing trace_editions)",
+    "frontend": "100% on tested flows (PH PDP/cart/reload/checkout; AR 3-tier PDP+msc+cart+reload+checkout; /shop pricing). Minor gap: /shop missing PARABOLA HERITAGE tile; AR cart used US 7 not US 6 (test-script couldn't reach size button). "
+  },
+  "test_credentials": "N/A — public storefront",
+  "seed_data_creation": "None. All HTTP goes through app_client disposable DB; the live preview backend was not written to for persistent orders. The autouse _block_live_backend_http guard in /app/backend/tests/conftest.py enforces this.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend price resolver values at current spot (gold 24k $177.82 CAD/g, silver $2.41 CAD/g): Parabola Heritage: sterling 125000, whiteGold10k 780000, yellowGold10k 780000. Annie Rose: foundation 700000 ($7,000), signature 1050000 ($10,500), heirloom 1450000 ($14,500 — one $500 step above the spec's ~$14,000 but inside the allowed drift). Annie Rose variant string = '<metal> · <stone> · US <size>'. Use the pattern in /app/backend/tests/test_pricing_alignment_jan2026.py (app_client + stripe/metal_spot monkeypatch) for any future dynamic-ring pricing changes; it never writes to the persistent DB and the autouse guard will skip any accidental live-host request.",
+  "rca of the issue": "No bugs found. Previous iter_32 verified Parabola; this iteration verified the sibling Parabola Heritage + Annie Rose live-metal tiering end-to-end. The Annie Rose fix (one stone type per tier — foundation/lab-grown, signature/natural, heirloom/natural) is correctly carried from backend _DYNAMIC_RING_TIERS → resolve_line_item → variant string → cart line metadata → checkout order summary. Silver tier removed everywhere (INVALID_TIER raised at resolver, livePricingConfig.js has purchasable:false). The old $6,400/$10,400/$12,200 copy no longer appears on PDP/cart/checkout."
+}

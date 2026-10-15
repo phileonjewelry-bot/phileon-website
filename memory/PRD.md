@@ -1348,3 +1348,21 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - NOT changed (owner decision needed): parabola-heritage has the identical CAD→USD double conversion (storefront $1,250/$7,800
   vs checkout $950/$6,000); annie-rose; TRACE heirloom price. Pre-existing: /api/checkout/bnpl-quote lacks market snapshot
   for dynamic rings (LIVE_PRICE_UNAVAILABLE). Testing agent left 3 unpaid test orders (qa@example.com) in preview orders_v2.
+
+## Oct 15, 2026 — PARABOLA HERITAGE + ANNIE ROSE alignment, test-order cleanup (PREVIEW, not deployed)
+- PARABOLA HERITAGE: `usd_hand_set: True` in catalog.py (sterling $1,250 / whiteGold10k $7,800 / yellowGold10k $7,800 USD;
+  was $950/$6,000/$6,000). Frontend livePricingConfig.parabolaHeritage registered; LiveFromPrice slug map; PDP copy CAD→USD;
+  Shop: 'parabola-heritage' added to SHOP_COLLECTION_MAP (signature) — card was previously not rendered on /shop.
+  NOTE: owner message said "10K Rose Gold" — catalogue/SKU is 10K YELLOW Gold (PARABOLAHERITAGE-YELLOWGOLD10K); kept as-is, flagged.
+- ANNIE ROSE: backend tiers gained `stone_label` (foundation=Lab-Grown, signature/heirloom=Natural); `_resolve_dynamic_ring`
+  now emits variant "<metal> · <stone> · US n", gemstones + metadata.stone (generic: only when stone_label present).
+  pricing_engine.annieRose mirrors catalog tiers (silver kept, available:False). Frontend config foundation/signature/heirloom
+  (silver purchasable:false); AnnieRosePage slug + stone per tier; RingProductPage shows tier.stone (testid tier-<k>-stone),
+  carries stone into cart name/materials/toast. Live USD at audit: $7,000 / $10,500 / $14,000 == server. No hardcoded USD.
+- Test-order cleanup: 27 (not 3) synthetic orders_v2 docs (qa@example.com, idempotency test-*/qa@example.com:*, all parabola,
+  pending/awaiting_payment, no payment_intent, no reservations, no address) — created by live-hitting pytest
+  test_parabola_pricing.py (deleted). Rollback dump: memory/cleanup/orders_v2_qa_test_orders_20261015.json. Deleted by exact _id.
+  Guard: conftest autouse `_block_live_backend_http` skips any `requests` call to the live preview host (tests must use app_client).
+- Tests: test_trace_editions.py (+heritage, +annie rose stone/silver/mirror), testing-agent test_pricing_alignment_jan2026.py
+  (app_client). iteration_33: backend 11/11, frontend all flows pass. Full suite: 1509 passed; 22 failures all pre-existing
+  (17 test_phileon_api requests/no BASE_URL, 3 test_usd_only_migration stale snapshot expectations incl. annie-rose, 2 order-flaky).
