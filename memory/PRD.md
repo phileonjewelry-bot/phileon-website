@@ -1379,3 +1379,17 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - PRICE_MOVED: not applicable to TRACE (hand-set, is_dynamic_priced False) — same as all hand-set products; server charges trusted.
 - Tests: test_trace_editions.py (4 editions + mirror), testing-agent test_trace_review.py (app_client). iteration_34: frontend 100%,
   backend pass after aligning 2 asserts to the hand-set contract. Full suite 1526 passed; 22 pre-existing failures unchanged.
+
+## Oct 15, 2026 — Heritage final approval + consolidated commerce regression (PREVIEW)
+- Owner approved PARABOLA HERITAGE exactly as displayed (Sterling $1,250 / White Gold SIGNATURE $7,800 / Yellow Gold HERITAGE $7,800,
+  default sterling, US 10, gents). No presentation changes made.
+- BUG FIXED (iteration_35 critical): RingProductPage wrote cart `slug: product.id` → "parabolaHeritage" (camelCase) so Checkout
+  flagged it unsupported and disabled Pay. Now `slug: product.slug || product.id` (all other ring pages have id === slug).
+  Verified: PH Yellow Gold US 10 → cart slug parabola-heritage → /checkout line $7,800, no unsupported banner.
+- Regression (iteration_35): PH tiers/badges/default, TRACE 4 tiers, Annie Rose / La Marva / Rhythm Mesh PDP == server to the dollar,
+  /shop 0 CAD, From-prices correct (TRACE 450, Carapace 350, Parabola/Heritage 1,250, AR ~7,000, LM ~6,000, RM ~1,100),
+  merchant feed 23 USD items incl. trace/parabola/parabola-heritage. Audit files: test_reports/shop_audit_iter35.txt, merchant_feed_audit_iter35.txt.
+- PRE-EXISTING, OWNER DECISION NEEDED (not changed): ovation silver PDP/feed $225 vs server $150 (CAD-vs-USD intent, same pattern as
+  Parabola); coogi-dna-tag server $11,334 (hand-set passthrough) vs feed/historical $8,500; lady-jay feed uses static 'From $14,500'
+  vs lowest tier $5,000. Encoded as xfail in tests/test_regression_jan2026_consolidated.py.
+- Full suite: 1556 passed; 21 pre-existing failures unchanged.

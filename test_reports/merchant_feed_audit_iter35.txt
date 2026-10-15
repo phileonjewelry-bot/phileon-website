@@ -1,0 +1,14 @@
+# mismatches
+('lady-jay', '14500 USD', 'server=500000c')
+('coogi-dna-tag', '8500 USD', 'server=1133400c')
+('ovation', '225 USD', 'server=15000c')
+# skipped
+('the-true-vine', 'not-supported')
+('scacco-matto', 'special-resolver')
+('architrave', 'not-supported')
+('bajan-joe', 'special-resolver')
+('quadriga-dominus', 'special-resolver')
+('ribbon-regale-edition', 'special-resolver')
+('cresta-nera', 'special-resolver')
+('rebelle', 'not-supported')
+('her-eternal-reign', 'special-resolver')

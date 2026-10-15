@@ -1,0 +1,69 @@
+{
+  "summary": "Consolidated Jan-2026 regression (Parabola Heritage, TRACE, Annie Rose, La Marva, Rhythm Mesh, Shop audit, merchant feed). 29/30 pytest assertions pass. Backend resolver + PDPs are fully aligned with the owner-approved USD matrix. Found 1 CRITICAL bug (PARABOLA HERITAGE cannot complete checkout — slug mismatch) and 3 feed-vs-resolver mismatches that look pre-existing. All other owner expectations met: PH tier cards + badges + default US10, no Rose Gold, no fourth tier; TRACE 4 tiers; live-metal rings PDP == server to the dollar; /shop shows 0 CAD, correct From-prices; merchant-feed.xml 200 OK, application/xml, 23 USD items, no CAD.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "resolve_line_item('ovation', tier='silver')", "issue": "Returns $150 USD (CAD 225 → 0.75 → rounded to $50 step) but merchant-feed.xml says 225 USD and OVATION PDP displays $225. Server-authoritative price ($150) therefore disagrees with every public surface for silver tier."},
+      {"endpoint": "resolve_line_item('coogi-dna-tag', tier='snow'|'sand')", "issue": "Returns unrounded $11,334 USD (both tiers). Merchant feed advertises 8500 USD. /shop card renders 'From $11,334' (non-luxury-stepped). Add convert_usd_luxury=True in PRICING_ENGINE_CATALOG['coogi-dna-tag'] OR fix the pricing_engine tier amounts."},
+      {"endpoint": "resolve_line_item('lady-jay', tier='foundation')", "issue": "Server lowest tier returns $5,000 USD but merchant feed says 14500 USD and shop card presumably shows a 'From' price derived from a higher tier. Feed should quote the lowest purchasable tier price."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Checkout.jsx + RingProductPage.jsx", "issue": "PARABOLA HERITAGE is marked 'Not available for online checkout yet — please remove to continue' on /checkout and the Pay button is disabled, even though services/catalog.resolve_line_item fully supports it. Root cause: RingProductPage.jsx line 167 writes `slug: product.id` → cart item's `slug` is `parabolaHeritage` (camelCase) instead of `parabola-heritage` (dash-case). Checkout.jsx `SUPPORTED_SLUGS` is keyed in dash-case, so isSupportedItem(cart_item) returns false. Repro: add Yellow Gold US 10 to cart → /checkout → see orange warning + disabled Pay. Fix: change RingProductPage.jsx:167 to `slug: product.slug || product.id` (all other dynamic ring pages set id === slug so no regression; ParabolaHeritagePage is the only ring where they diverge).", "selector": "[data-testid^='checkout-item-unsupported-']", "priority": "CRITICAL"},
+      {"component": "ShopDropPage card for coogi-dna-tag", "issue": "Card displays 'From $11,334' — a non-stepped USD value — breaking the luxury-rounded presentation used by every other dynamic card.", "selector": "shop card for coogi-dna-tag", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "PARABOLA HERITAGE checkout", "issue": "Cart→Checkout integration fails for PH only. Backend accepts the resolve, but frontend blocks the Pay click. Zero customer can purchase PARABOLA HERITAGE online right now.", "affected_selectors": ["[data-testid='tier-yellowGold10k']", "[data-testid^='checkout-item-unsupported-']", "button:has-text('PAY WITH CARD')"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_regression_jan2026_consolidated.py",
+    "/app/test_reports/pytest/iter35_results.xml",
+    "/app/test_reports/shop_audit_iter35.txt",
+    "/app/test_reports/merchant_feed_audit_iter35.txt"
+  ],
+  "action_items": [
+    "CRITICAL: Fix /app/frontend/src/components/RingProductPage.jsx line 167 — change `slug: product.id` to `slug: product.slug || product.id`. Verify PARABOLA HERITAGE Yellow Gold US 10 can be added, retains $7,800 USD across /cart reload, and the /checkout Pay button becomes enabled.",
+    "LOW: Add convert_usd_luxury=True (or hand-set USD) to coogi-dna-tag in PRICING_ENGINE_CATALOG so the card no longer shows 'From $11,334'. Decide whether $11,334 (server) or $8,500 (merchant feed) is the owner-approved price and sync both surfaces.",
+    "LOW: OVATION silver tier: server returns $150, PDP + feed show $225. Pick one and align (likely mark OVATION as usd_hand_set=True like PARABOLA/PARABOLA-HERITAGE so lockedBasePriceCad is interpreted as USD).",
+    "LOW: lady-jay merchant feed price (14500 USD) does not match lowest-purchasable tier (foundation=$5,000). Regenerate feed from the resolver's lowest-tier price."
+  ],
+  "critical_code_review_comments": [
+    "RingProductPage.jsx:167 — using `product.id` as the cart `slug` is unsafe when `product.id` is not kebab-case. ParabolaHeritagePage.jsx uses `id: 'parabolaHeritage'` (camelCase, matches products.<key>) while all other dynamic ring pages use kebab-case ids that happen to equal the slug. Prefer `product.slug || product.id`.",
+    "Checkout.jsx:68 — isSupportedItem relies on a frontend-maintained copy of _SUPPORTED_SLUGS. This duplication keeps drifting. Expose a GET /api/catalog/supported-slugs endpoint and fetch it once per session, or key by `productKey` (which the cart already stores) instead of slug.",
+    "services/pricing_engine_catalog.py — some products (coogi-dna-tag, likely others) resolve to non-rounded USD amounts. The frontend's luxury-step rounding is implicit; the backend should mirror it to keep server-authoritative prices stepped and avoid 'From $11,334'-style card prices.",
+    "scripts/generate_merchant_feed.py / public/merchant-feed.xml appears stale relative to the current resolver (ovation 225 vs 150, lady-jay 14500 vs 5000). The merchant feed should be regenerated whenever the resolver changes."
+  ],
+  "updated_files": ["/app/backend/tests/test_regression_jan2026_consolidated.py (new)"],
+  "success_rate": {
+    "backend": "97% (29/30 pytest asserts pass; 1 failure is a legitimate merchant-feed vs resolver mismatch on 3 pre-existing products)",
+    "frontend": "70% — All PDP tier/badge/price checks pass; PARABOLA HERITAGE checkout is BROKEN due to slug mismatch."
+  },
+  "observed_amounts": {
+    "parabola_heritage_pdp": "Sterling $1,250 (no badge) · White Gold $7,800 (SIGNATURE) · Yellow Gold $7,800 (HERITAGE) — exact match",
+    "parabola_heritage_cart_reload_checkout": "$7,800 USD displayed, but Pay button disabled (see CRITICAL bug)",
+    "trace_pdp_tiers": "$450/$900/$2,400/$3,200 — exact match",
+    "annie_rose_pdp": "foundation $7,000 · signature $10,500 · heirloom $14,000 — exact match",
+    "la_marva_pdp": "foundation $6,000 · signature $13,500 · heirloom $17,000 — exact match",
+    "rhythm_mesh_pdp": "foundation $1,100 · signature $2,000 · heirloom $3,500 — exact match",
+    "shop_cad_count": 0,
+    "shop_from_price_tokens": 44,
+    "merchant_feed_status": 200,
+    "merchant_feed_items": 23,
+    "merchant_feed_cad_count": 0
+  },
+  "shop_audit_table_sample": "See /app/test_reports/shop_audit_iter35.txt (full slug,lowest_cents,tier table).",
+  "merchant_feed_mismatches": [
+    {"sku": "lady-jay", "feed": "14500 USD", "server_lowest": "5000 USD (foundation)"},
+    {"sku": "coogi-dna-tag", "feed": "8500 USD", "server_lowest": "11334 USD (snow/sand)"},
+    {"sku": "ovation", "feed": "225 USD", "server_lowest": "150 USD (silver)"}
+  ],
+  "test_credentials": "N/A — public storefront",
+  "seed_data_creation": "None — all backend tests use the disposable _pytest_ DB via app_client fixture; the autouse _block_live_backend_http guard verified no persistent orders were created.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "After main agent fixes RingProductPage.jsx:167, retest ONLY the PARABOLA HERITAGE flow: PDP → add Yellow Gold US 10 → /cart ($7,800) → reload → /checkout → verify 'Not available' banner is gone AND Pay button is enabled. Backend resolver already returns 780000c for parabola-heritage/yellowGold10k. All other PDPs (PH tier cards, TRACE, Annie Rose, La Marva, Rhythm Mesh, Shop /shop, /merchant-feed.xml) have been verified in this run and need no reverification unless main agent also fixes the feed mismatches (coogi/ovation/lady-jay). The pytest file /app/backend/tests/test_regression_jan2026_consolidated.py is the canonical regression suite for this contract.",
+  "rca of the issue": "PARABOLA HERITAGE checkout block — RCA: RingProductPage.jsx constructs the cart line with `slug: product.id`. ParabolaHeritagePage sets `id: 'parabolaHeritage'` (camelCase) and `slug: 'parabola-heritage'` (dash-case). The cart line therefore stores `slug: 'parabolaHeritage'`. Checkout.jsx's SUPPORTED_SLUGS set contains `'parabola-heritage'` (dash-case) → isSupportedItem returns false → warning banner + disabled Pay. Reproduction: /products/parabola-heritage → select tier-yellowGold10k → Add to Cart → /checkout. Fix: `slug: product.slug || product.id` on RingProductPage.jsx line 167 (and EarringsProductPage.jsx line 66, defensively)."
+}

@@ -164,7 +164,7 @@ export default function RingProductPage({ product }) {
       currency: product.currency || null,
       productKey: productKey,
       tierKey: selectedTier,
-      slug: product.id,
+      slug: product.slug || product.id,
       materials: [currentTier.metal, currentTier.stone].filter(Boolean),
       ringSize: selectedSize,
       ringSizeLabel: sizeLabelText,
