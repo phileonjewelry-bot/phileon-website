@@ -5,7 +5,9 @@ import os
 import pytest
 import requests
 
-BASE_URL = os.environ.get("REACT_APP_BACKEND_URL").rstrip("/")
+# Live-API test: only meaningful when an explicit backend URL is provided to the harness.
+BASE_URL = (os.environ.get("REACT_APP_BACKEND_URL") or "").rstrip("/")
+pytestmark = pytest.mark.skipif(not BASE_URL, reason="REACT_APP_BACKEND_URL not set — live-API test skipped (use app_client tests)")
 VALIDATE_URL = f"{BASE_URL}/api/validate-cart"
 
 TRUE_VINE_PRICES = {

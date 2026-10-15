@@ -1393,3 +1393,14 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
   Parabola); coogi-dna-tag server $11,334 (hand-set passthrough) vs feed/historical $8,500; lady-jay feed uses static 'From $14,500'
   vs lowest tier $5,000. Encoded as xfail in tests/test_regression_jan2026_consolidated.py.
 - Full suite: 1556 passed; 21 pre-existing failures unchanged.
+
+## Oct 15, 2026 — TRACE material confirmation + regression classification (PREVIEW)
+- Owner confirmed TRACE 18K = Solid 18K Yellow Gold; all four materials/prices approved. MOST POPULAR badge removed from
+  Signature (no sales evidence). COLLECTOR tier label on 18K retained (house tier label, not a sales claim).
+- Growth OS read-only storefront snapshot regenerated (node scripts/export_storefront_catalogue.mjs) — was drifted after products.js edits.
+- test_usd_only_migration pinned to owner-audited snapshot (gold 177.73 / silver 2.41 CAD/g) → deterministic, approved amounts.
+- Live-API harness tests (test_phileon_api, test_true_vine) now skip cleanly when REACT_APP_BACKEND_URL is unset (previously
+  17 failures + 1 collection error that aborted whole-suite runs).
+- Suite: 1556–1558 passed, 0 deterministic failures. Remaining intermittent: pymongo AutoReconnect "connection closed" on
+  tests/test_layer5_inventory.py / test_layer7_analytics.py under full-suite load (different test each run; pass in isolation) — infra.
+- Release blockers (owner decisions): ovation silver USD-vs-CAD intent; coogi-dna-tag $8,500 vs $11,334; lady-jay feed static.

@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-10-14T23:34:12.406Z",
+ "generated_at": "2026-10-15T02:17:25.081Z",
  "source": {
-  "products_js_sha256": "c4915ea269711b8e9d5432f8840f9e6ff90a3c712f58c1a5502ebc326e9f2364",
+  "products_js_sha256": "be836a4816db46bdfb2e3c926b5b0693075f2f5ef78359b0dceeec475b24e6e8",
   "app_js_sha256": "79e06eeb3c0be381704911212633e24e71f9be189ac66a6aefd1a179beea6f05"
  },
  "routes": [
@@ -1005,7 +1005,7 @@
    "description": null,
    "story": null,
    "tribute": null,
-   "material_line": "Earrings · 10K Gold Plated - 14K Yellow Gold",
+   "material_line": "Earrings · Yellow-Gold Plated Sterling → Solid 10K · 14K · 18K Gold",
    "metals": [],
    "stones": [],
    "variants": [],
@@ -3003,7 +3003,7 @@
    "description": null,
    "story": null,
    "tribute": null,
-   "material_line": "Earrings · 10K Gold Plated - 14K Yellow Gold",
+   "material_line": "Earrings · Yellow-Gold Plated Sterling → Solid 10K · 14K · 18K Gold",
    "metals": [],
    "stones": [],
    "variants": [],

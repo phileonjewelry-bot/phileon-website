@@ -23,7 +23,7 @@ const traceProduct = {
       name: "Signature",
       metal: "925 Sterling Silver · Yellow-Gold Plated",
       price: tracePricing.signature,
-      badge: "MOST POPULAR",
+      badge: "",
       description: "Solid sterling silver, yellow-gold plated. Priced per pair."
     },
     foundation: {

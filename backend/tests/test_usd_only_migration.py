@@ -68,11 +68,16 @@ def test_all_trusted_products_settle_in_usd(slug):
     assert r["currency"] == "USD", f"{slug} must resolve to USD, got {r['currency']!r}"
 
 
-# ── Approved USD amounts (Feb 2026 CAD→USD normalization) ────────────────
+# ── Approved USD amounts at the owner-audited market snapshot (Oct 15 2026) ──
+# Live-metal rings move with gold; pin the snapshot so the suite is deterministic.
+# Owner-approved at this snapshot: La Marva 6,000/13,500/17,000 · Annie Rose 7,000/10,500/14,000 ·
+# Rhythm Mesh 1,100/2,000/3,500 · Tola II 4,000/6,000/8,500.
+AUDITED_SNAPSHOT = {"goldPerGram24kCad": 177.73, "silverPerGramCad": 2.41,
+                    "timestamp": 0, "source": "owner-audit-2026-10-15", "isStale": False}
 DYNAMIC_APPROVED = {
     # slug, tier: expected USD cents
-    ("la-marva", "foundation"):  600000,   ("la-marva", "signature"): 1400000, ("la-marva", "heirloom"): 1700000,
-    ("annie-rose", "foundation"): 700000,  ("annie-rose", "signature"): 1100000,("annie-rose","heirloom"): 1450000,
+    ("la-marva", "foundation"):  600000,   ("la-marva", "signature"): 1350000, ("la-marva", "heirloom"): 1700000,
+    ("annie-rose", "foundation"): 700000,  ("annie-rose", "signature"): 1050000,("annie-rose","heirloom"): 1400000,
     ("rhythm-mesh-ring","foundation"): 110000, ("rhythm-mesh-ring","signature"): 200000, ("rhythm-mesh-ring","heirloom"): 350000,
     ("tola-ii","foundation"): 400000, ("tola-ii","signature"): 600000, ("tola-ii","heirloom"): 850000,
     # PARABOLA — owner-confirmed USD retail figures (no CAD→USD conversion).
@@ -85,8 +90,7 @@ DYNAMIC_APPROVED = {
 
 @pytest.mark.parametrize("slug,tier,expected_cents", [(s,t,c) for (s,t),c in DYNAMIC_APPROVED.items()])
 def test_dynamic_ring_migrated_to_approved_usd(slug, tier, expected_cents):
-    snap = metal_spot.get_spot()
-    r = resolve_line_item(slug, None, None, "7", 1, tier=tier, market_snapshot=snap)
+    r = resolve_line_item(slug, None, None, "7", 1, tier=tier, market_snapshot=AUDITED_SNAPSHOT)
     assert r["currency"] == "USD"
     assert r["unit_amount_cents"] == expected_cents, (
         f"{slug}/{tier}: expected {expected_cents} USD cents, got {r['unit_amount_cents']}"

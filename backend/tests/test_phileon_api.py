@@ -7,6 +7,8 @@ import requests
 import os
 
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', '').rstrip('/')
+# Live-API test: only meaningful when an explicit backend URL is provided to the harness.
+pytestmark = pytest.mark.skipif(not BASE_URL, reason="REACT_APP_BACKEND_URL not set — live-API test skipped (use app_client tests)")
 
 class TestHealthAndRoot:
     """Health check and root endpoint tests"""
