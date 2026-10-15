@@ -219,7 +219,11 @@ _DYNAMIC_RING_TIERS: Dict[str, Dict] = {
         "subtitle": "Concave Dish Statement Ring",
         "size_profile": "ladies",
         "image": "/products/parabola/hero.jpg",
-        # Hand-set locked pricing — weightGrams=0 so live metal recalc is a no-op.
+        # Owner-approved USD retail (hand-set, reflects stone-setting labour):
+        # Sterling $1,250 · 10K White Gold $7,800 · 10K Rose Gold $7,800.
+        # `usd_hand_set` = figures are already USD; cad_to_usd_luxury is NOT applied.
+        # weightGrams=0 so no live-metal adjustment exists for this product.
+        "usd_hand_set": True,
         "tiers": {
             "sterling":     {"metal_label": "Sterling Silver", "metalType": "925", "weightGrams": 0, "lockedBasePriceCad": 1250, "lockedMetalReferenceCad": 0},
             "whiteGold10k": {"metal_label": "10K White Gold",  "metalType": "10K", "weightGrams": 0, "lockedBasePriceCad": 7800, "lockedMetalReferenceCad": 0},
@@ -332,8 +336,12 @@ def _resolve_dynamic_ring(product_id: str, tier_key: Optional[str],
     # to USD via the single authoritative helper (identical rounding rule
     # used by the frontend cadToUsdLuxury and by every other trusted USD
     # product with convert_usd_luxury=True). No per-product FX hacks.
-    from services.pricing_engine_catalog import cad_to_usd_luxury
-    unit_cents = int(cad_to_usd_luxury(unit_cents_cad / 100.0)) * 100
+    if cfg.get("usd_hand_set"):
+        # Owner-approved USD figures — single currency step, no re-conversion.
+        unit_cents = unit_cents_cad
+    else:
+        from services.pricing_engine_catalog import cad_to_usd_luxury
+        unit_cents = int(cad_to_usd_luxury(unit_cents_cad / 100.0)) * 100
 
     ring_size_label = f"US {size_norm}"
     slug_upper = product_id.upper().replace("-", "")

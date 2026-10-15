@@ -14,8 +14,8 @@ import { products } from "@/data/products";
  *
  * Pricing:
  *   • Sterling Silver : $1,250 USD
- *   • 10K White Gold  : $7,800 CAD
- *   • 10K Rose Gold   : $7,800 CAD (default)
+ *   • 10K White Gold  : $7,800 USD
+ *   • 10K Rose Gold   : $7,800 USD (default)
  *
  * Add-to-cart captures product, selected metal, selected size, exact price,
  * and a variant SKU via `RingProductPage`'s standard cart wiring.
@@ -127,7 +127,7 @@ const parabolaProduct = {
       price: parabolaPricing.whiteGold10k,
       badge: "SIGNATURE",
       description:
-        "10K White Gold with genuine pink sapphires, white diamonds, and champagne diamonds. $7,800 CAD.",
+        "10K White Gold with genuine pink sapphires, white diamonds, and champagne diamonds. $7,800 USD.",
       media: whiteMetalGallery,
     },
     roseGold10k: {
@@ -136,7 +136,7 @@ const parabolaProduct = {
       price: parabolaPricing.roseGold10k,
       badge: "COLLECTOR",
       description:
-        "10K Rose Gold with genuine pink sapphires, white diamonds, and champagne diamonds. $7,800 CAD.",
+        "10K Rose Gold with genuine pink sapphires, white diamonds, and champagne diamonds. $7,800 USD.",
       media: roseGoldGallery,
     },
   },

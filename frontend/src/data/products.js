@@ -2937,7 +2937,7 @@ This is expression — under control.`,
   // ==========================================
   // PARABOLA — Ladies First · Concave Statement Ring · The Collective
   // 22mm face · deep concave dish · ~178 stones · ring size 7 default.
-  // 3 SKUs: Sterling Silver $1,250 USD · 10K White Gold $7,800 CAD · 10K Rose Gold $7,800 CAD.
+  // 3 SKUs (owner-approved USD): Sterling Silver $1,250 USD · 10K White Gold $7,800 USD · 10K Rose Gold $7,800 USD.
   // Pricing keys: sterling, whiteGold10k, roseGold10k.
   // ==========================================
   parabola: {

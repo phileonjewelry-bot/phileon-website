@@ -111,7 +111,11 @@ def test_dynamic_pricing_at_reference_market(slug, tier, size, cents):
     the human-readable anchor). Post-migration the resolver returns USD via
     cad_to_usd_luxury, so we convert once here to build the expected."""
     from services.pricing_engine_catalog import cad_to_usd_luxury
-    expected_usd_cents = int(cad_to_usd_luxury(cents / 100.0)) * 100
+    from services.catalog import _DYNAMIC_RING_TIERS
+    if _DYNAMIC_RING_TIERS[slug].get("usd_hand_set"):
+        expected_usd_cents = cents  # owner-approved USD figures, no conversion
+    else:
+        expected_usd_cents = int(cad_to_usd_luxury(cents / 100.0)) * 100
     r = resolve_line_item(slug, None, None, size, 1, tier=tier, market_snapshot=FRESH_MARKET)
     assert r["currency"] == "USD"
     assert r["unit_amount_cents"] == expected_usd_cents

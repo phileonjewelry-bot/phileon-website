@@ -75,7 +75,8 @@ DYNAMIC_APPROVED = {
     ("annie-rose", "foundation"): 700000,  ("annie-rose", "signature"): 1100000,("annie-rose","heirloom"): 1450000,
     ("rhythm-mesh-ring","foundation"): 110000, ("rhythm-mesh-ring","signature"): 200000, ("rhythm-mesh-ring","heirloom"): 350000,
     ("tola-ii","foundation"): 400000, ("tola-ii","signature"): 600000, ("tola-ii","heirloom"): 850000,
-    ("parabola","sterling"): 95000, ("parabola","whiteGold10k"): 600000, ("parabola","roseGold10k"): 600000,
+    # PARABOLA — owner-confirmed USD retail figures (no CAD→USD conversion).
+    ("parabola","sterling"): 125000, ("parabola","whiteGold10k"): 780000, ("parabola","roseGold10k"): 780000,
     ("parabola-heritage","sterling"): 95000, ("parabola-heritage","whiteGold10k"): 600000, ("parabola-heritage","yellowGold10k"): 600000,
     ("ovation","silver"): 15000, ("ovation","yellow10k"): 65000, ("ovation","white10k"): 65000,
     ("ovation","yellow14k"): 80000, ("ovation","white14k"): 80000,
