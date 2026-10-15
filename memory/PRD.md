@@ -1404,3 +1404,20 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Suite: 1556–1558 passed, 0 deterministic failures. Remaining intermittent: pymongo AutoReconnect "connection closed" on
   tests/test_layer5_inventory.py / test_layer7_analytics.py under full-suite load (different test each run; pass in isolation) — infra.
 - Release blockers (owner decisions): ovation silver USD-vs-CAD intent; coogi-dna-tag $8,500 vs $11,334; lady-jay feed static.
+
+## Oct 15, 2026 — Final three discrepancies: decision-ready investigation (PREVIEW)
+- OVATION (slug ovation, _DYNAMIC_RING_TIERS, 7 tiers wg=0, SKU OVATION-<TIER>-SZn): figures 225/850/850/1100/1100/1400/1400 created
+  Jul 30 2026 with no currency; Aug 11 PDP declared currency "CAD"; Sep 1 USD-only migration flipped the flag to USD and the server
+  converts (→ 150/650/650/800/800/1050/1050) but storefront/feed amounts never updated → storefront shows CAD figures labelled USD.
+  NOT CHANGED. Options: (A) CAD intent → storefront shows converted (150…1050); (B) USD intent → usd_hand_set like Parabola.
+- COOGI DNA TAG (slug coogi-dna-tag, coogiDnaTag snow/sand, SKU CDT-SNOW / CDT-SAND): config documents "CAD base $11,334 →
+  cadToUsdLuxury produces $8,500 USD each" (May 26 2026; price_range '$8,500 USD' Jun 29). Aug 11 migration misclassified it as
+  hand-set USD (convert_usd_luxury False) → server charges $11,334 since. Oct 14 frontend passthrough rule exposed it on PDP/Shop.
+  Documented intent = $8,500 USD (both variants). NOT CHANGED. Smallest fix: lockedBasePriceCad 11334→8500 (hand-set USD) both sides,
+  or convert_usd_luxury True + frontend conversion flag. 0 paid orders affected.
+- LADY JAY: feed 'From $14,500' was the Collector 18K default tier (fallbackUsd), not the base; live collector is now $15,000.
+  Corrected per owner instruction to lowest verified purchasable configuration (Foundation · Sterling Silver, $5,000 at audited
+  snapshot); feed regenerated (lady-jay 5000 USD, in_stock). Live-priced → feed is a snapshot anchor; retires 2026-10-31 (RETIRE_DATE)
+  after which the feed entry must be dropped. Selling prices unchanged.
+- Heritage slug fix scope check: all other RingProductPage consumers have id === slug (bajan-joe, tola-ii, rhythm-mesh-ring, ovation,
+  annie-rose, la-marva, parabola) → identifiers/checkout behaviour unchanged.

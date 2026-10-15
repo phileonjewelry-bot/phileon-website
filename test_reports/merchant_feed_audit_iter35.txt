@@ -1,5 +1,4 @@
 # mismatches
-('lady-jay', '14500 USD', 'server=500000c')
 ('coogi-dna-tag', '8500 USD', 'server=1133400c')
 ('ovation', '225 USD', 'server=15000c')
 # skipped
