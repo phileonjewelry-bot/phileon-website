@@ -1366,3 +1366,16 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Tests: test_trace_editions.py (+heritage, +annie rose stone/silver/mirror), testing-agent test_pricing_alignment_jan2026.py
   (app_client). iteration_33: backend 11/11, frontend all flows pass. Full suite: 1509 passed; 22 failures all pre-existing
   (17 test_phileon_api requests/no BASE_URL, 3 test_usd_only_migration stale snapshot expectations incl. annie-rose, 2 order-flaky).
+
+## Oct 15, 2026 — TRACE four-tier approval (PREVIEW, not deployed)
+- Owner approved 4 purchasable TRACE editions, USD per pair, hand-set (no conversion/adjustment), no ring size:
+  signature $450 (925 · yellow-gold plated, TRC-SIGNATURE) · foundation $900 (solid 10K YG, TRC-FOUNDATION) ·
+  heirloom $2,400 (solid 14K YG, "Heirloom 14K", TRC-HEIRLOOM) · heirloom18k $3,200 (solid 18K YG, "Heirloom 18K", TRC-HEIRLOOM18K).
+- Backend pricing_engine.trace (4 rows, metal_label; `available:False` removed); pricing_engine_catalog.resolve now surfaces
+  metal_label into variant / metal_colour / metadata.metal (only when a tier declares one — TRACE only today).
+- Frontend livePricingConfig.trace mirrored; TracePage 4 tiers (unavailable flag gone); products.js pricing + shopMaterialLine +
+  static price_range 'From $450 USD' so merchant feed lists TRACE (feed regenerated: trace 450 USD).
+- Gold colour: catalogue verified yellow for plating/10K/14K; 18K has no prior catalogue record → labelled Yellow by family, FLAGGED.
+- PRICE_MOVED: not applicable to TRACE (hand-set, is_dynamic_priced False) — same as all hand-set products; server charges trusted.
+- Tests: test_trace_editions.py (4 editions + mirror), testing-agent test_trace_review.py (app_client). iteration_34: frontend 100%,
+  backend pass after aligning 2 asserts to the hand-set contract. Full suite 1526 passed; 22 pre-existing failures unchanged.

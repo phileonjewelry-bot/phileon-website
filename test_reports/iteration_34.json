@@ -1,0 +1,39 @@
+{
+  "summary": "Verified owner-approved 4 TRACE earring editions (signature/foundation/heirloom/heirloom18k) end-to-end. Backend catalog, checkout session (via in-process app_client), validate-cart, merchant-feed and full frontend journey (PDP → cart → reload → checkout → /shop) all pass. One backend gap: /api/checkout/stripe/session does NOT return 409 PRICE_MOVED for TRACE when displayed vs trusted mismatch (because is_dynamic_priced('trace') is False — weightGrams=0, hand-set USD). This is NOT a payment-security issue (server always charges the trusted amount) but deviates from the spec's displayed-cents guard expectation.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/checkout/stripe/session", "issue": "No PRICE_MOVED (409) when displayed_unit_amount_cents=310000 for tier=heirloom18k (trusted 320000), same for heirloom 230000 vs 240000. Root cause: PRICE_MOVED check is gated on is_dynamic_priced(product_id), which returns False for TRACE because its tiers all have weightGrams=0 (hand-set USD, no live-metal adjustment). Server still charges trusted price, so no fraud risk. If spec requires surfacing a UX-level price-movement banner for hand-set USD items too, extend detect_price_move invocation in routes/checkout.py to also run for non-dynamic items when displayed_unit_amount_cents is supplied."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_trace_review.py", "/app/backend/tests/test_trace_editions.py"],
+  "action_items": [
+    "(Optional) Decide whether PRICE_MOVED should also fire for TRACE (hand-set USD) when the displayed cents mismatch — currently it is silently corrected to trusted. If yes, drop the is_dynamic_priced(...) gate OR add 'always-check displayed vs trusted' branch in routes/checkout.py around lines 326-343.",
+    "No frontend action required."
+  ],
+  "critical_code_review_comments": [
+    "backend/routes/checkout.py: the PRICE_MOVED guard is restricted to is_dynamic_priced==True. For hand-set USD items (TRACE, Parabola, Parabola-Heritage) a tampered or stale client price is silently overridden by the trusted price. Consider logging a telemetry event (or returning 409) when there's a non-trivial delta regardless of dynamic-pricing, to keep UX honest.",
+    "services/catalog.detect_price_move: tolerance $50/1% is fine but there is no server-side log for the 'silently corrected' case; add structured warning for monitoring."
+  ],
+  "updated_files": ["/app/backend/tests/test_trace_review.py"],
+  "success_rate": {"backend": "92% (33 of 35 asserts pass; 2 failures are spec-vs-implementation gap, not regressions)", "frontend": "100%"},
+  "observed_amounts": {
+    "pdp_signature": "$450 USD (925 Sterling Silver · Yellow-Gold Plated)",
+    "pdp_foundation": "$900 USD (Solid 10K Yellow Gold)",
+    "pdp_heirloom": "$2,400 USD (Solid 14K Yellow Gold)",
+    "pdp_heirloom18k": "$3,200 USD (Solid 18K Yellow Gold)",
+    "cart_subtotal": "$6,950 USD (persisted across /cart reload)",
+    "checkout_order_summary_lines": "$450 / $900 / $2,400 / $3,200 USD (no size error, no PRICE_MOVED banner)",
+    "shop_card": "From $450 USD, mentions 18K",
+    "merchant_feed": "<g:id>trace</g:id> and <g:price>450 USD</g:price> present at /merchant-feed.xml"
+  },
+  "seed_data_creation": "None — tests use the in-process app_client fixture bound to a disposable _pytest_<hex> database that is dropped at session end.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "TRACE now has 4 purchasable editions. tier-signature/foundation/heirloom/heirloom18k testids are stable. Prices are hand-set USD (no live-metal adjustment, weightGrams=0, convert_usd_luxury=False). Because is_dynamic_priced('trace') is False, PRICE_MOVED is NOT emitted at the HTTP checkout endpoint even when displayed cents are wrong — server silently charges trusted price. Previous iterations covered Parabola / Heritage / Annie Rose, all still passing. Use `app_client` from conftest for any new HTTP tests; the autouse `_block_live_backend_http` guard will SKIP tests that attempt to POST to the live preview host."
+}
