@@ -136,3 +136,77 @@ def test_annie_rose_frontend_config_mirrors_backend():
         assert m, key
         assert (int(m.group(1)), m.group(2), int(m.group(3)), int(m.group(4))) == (
             t["lockedBasePriceCad"], t["metalType"], t["weightGrams"], t["lockedMetalReferenceCad"])
+
+
+# ── OVATION — owner-approved hand-set USD (Option B) ──
+OVATION_APPROVED_USD = {"silver": 22500, "yellow10k": 85000, "white10k": 85000, "yellow14k": 110000,
+                        "white14k": 110000, "yellow18k": 140000, "white18k": 140000}
+
+
+@pytest.mark.parametrize("tier,cents", list(OVATION_APPROVED_USD.items()))
+def test_ovation_seven_tiers_hand_set_usd(tier, cents):
+    from services.catalog import _DYNAMIC_RING_TIERS
+    assert _DYNAMIC_RING_TIERS["ovation"]["usd_hand_set"] is True
+    for snap in (SNAP, {"goldPerGram24kCad": 300.0, "silverPerGramCad": 5.0}):
+        r = C.resolve_line_item("ovation", None, None, "US 8", 1, tier=tier, market_snapshot=snap)
+        assert r["unit_amount_cents"] == cents and r["currency"] == "USD"
+        assert r["sku"] == f"OVATION-{tier.upper()}-SZ8"
+
+
+# ── COOGI DNA TAG — $8,500 each, engraving +$150 charged once ──
+@pytest.mark.parametrize("tier,metal", [("snow", "Solid 10K White Gold"), ("sand", "Solid 10K Rose Gold")])
+def test_coogi_dna_tag_8500_and_engraving_surcharge(tier, metal):
+    base = C.resolve_line_item("coogi-dna-tag", None, None, None, 1, tier=tier, market_snapshot=SNAP)
+    assert base["unit_amount_cents"] == 850000 and base["sku"] == f"CDT-{tier.upper()}"
+    assert base["metadata"]["metal"] == metal and base["metadata"]["engraving"] == ""
+    eng = C.resolve_line_item("coogi-dna-tag", None, None, None, 1, tier=tier, market_snapshot=SNAP, engraving=True)
+    assert eng["unit_amount_cents"] == 865000 and eng["sku"] == f"CDT-{tier.upper()}-ENGRAVED"
+    assert eng["metadata"]["engraving"] == "laser" and eng["variant"].endswith("· Engraved")
+    eng2 = C.resolve_line_item("coogi-dna-tag", None, None, None, 2, tier=tier, market_snapshot=SNAP, engraving=True)
+    assert eng2["unit_amount_cents"] == 865000  # per unit, charged once per unit — never compounded
+
+
+def test_engraving_flag_ignored_for_products_without_surcharge():
+    r = C.resolve_line_item("trace", None, None, None, 1, tier="signature", market_snapshot=SNAP, engraving=True)
+    assert r["unit_amount_cents"] == 45000 and r["sku"] == "TRC-SIGNATURE"
+
+
+# ── LADY JAY — seasonal retirement enforced server-side (mocked clock) ──
+def _utc(iso):
+    from datetime import datetime, timezone
+    return datetime.fromisoformat(iso).astimezone(timezone.utc)
+
+
+@pytest.mark.parametrize("now_iso,available", [
+    ("2026-10-31T23:59:00-04:00", True),   # last minute of the 2026 season (America/Toronto)
+    ("2026-11-01T00:00:00-04:00", False),  # retired at midnight local
+    ("2027-04-01T12:00:00-04:00", False),  # no automatic 2027 reopening
+])
+def test_lady_jay_seasonal_window(monkeypatch, now_iso, available):
+    monkeypatch.setattr(P, "_now_utc", lambda: _utc(now_iso))
+    state = P.season_state("lady-jay")
+    assert state["seasonal"] is True and state["available"] is available and state["reopens_at"] is None
+    if available:
+        r = C.resolve_line_item("lady-jay", None, None, "US 6", 1, tier="foundation", market_snapshot=SNAP)
+        assert r["currency"] == "USD" and r["sku"] == "LJY-FOUNDATION-SZ6"
+    else:
+        assert state["message"] == "Retired Until Opening Day — Jays Season 2027"
+        with pytest.raises(C.CatalogError, match="SEASONALLY_RETIRED"):
+            C.resolve_line_item("lady-jay", None, None, "US 6", 1, tier="foundation", market_snapshot=SNAP)
+
+
+def test_non_seasonal_products_unaffected_by_clock(monkeypatch):
+    monkeypatch.setattr(P, "_now_utc", lambda: _utc("2027-04-01T12:00:00-04:00"))
+    assert P.season_state("trace")["seasonal"] is False
+    assert C.resolve_line_item("trace", None, None, None, 1, tier="signature", market_snapshot=SNAP)["unit_amount_cents"] == 45000
+
+
+def test_merchant_feed_drops_lady_jay_when_retired(monkeypatch):
+    import importlib.util, pathlib
+    spec = importlib.util.spec_from_file_location("gmf", pathlib.Path(__file__).resolve().parents[1] / "scripts/generate_merchant_feed.py")
+    gmf = importlib.util.module_from_spec(spec); spec.loader.exec_module(gmf)
+    monkeypatch.setattr(P, "_now_utc", lambda: _utc("2026-11-01T00:00:00-04:00"))
+    assert gmf._live_feed_price("lady-jay") is None
+    monkeypatch.setattr(P, "_now_utc", lambda: _utc("2026-10-31T12:00:00-04:00"))
+    price = gmf._live_feed_price("lady-jay")
+    assert price and price[1] == "USD" and int(price[0]) >= 4500

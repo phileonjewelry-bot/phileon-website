@@ -98,7 +98,7 @@ def test_dynamic_resolver_requires_market_snapshot(slug, tier, size):
     ("parabola-heritage", "sterling",      "US 10", 125000),
     ("parabola-heritage", "whiteGold10k",  "US 10", 780000),
     ("parabola-heritage", "yellowGold10k", "US 11", 780000),
-    ("ovation",           "silver",        "US 8",  20000),    # $225 → rounds to $200 ($50 luxury increments)
+    ("ovation",           "silver",        "US 8",  22500),    # $225 exact — owner-approved hand-set USD (no $50 rounding)
     ("ovation",           "yellow10k",     "US 8",  85000),    # $850
     ("ovation",           "white10k",      "US 9",  85000),
     ("ovation",           "yellow14k",     "US 8",  110000),   # $1,100

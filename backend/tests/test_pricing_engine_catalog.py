@@ -56,7 +56,7 @@ def test_all_migrated_slugs_are_supported():
     ("battenti-della-villa","gold14k",        "BDV",  620000),
     ("gent",                "gold14k",        "GNT",  680000),   # (needs size)
     ("stackrats",           "dominique_wide", "STK",  290000),
-    ("coogi-dna-tag",       "snow",           "CDT",  1133400),  # $11,334
+    ("coogi-dna-tag",       "snow",           "CDT",  850000),   # $8,500 owner-approved (Oct 15 2026)
     ("katrina-cascata",     "vermeil",        "KC",    49500),   # $495
     ("true-vine",           "signature__rope-22", "TV", 495000), # $4,950
 ])

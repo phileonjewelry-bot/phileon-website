@@ -83,9 +83,10 @@ DYNAMIC_APPROVED = {
     # PARABOLA — owner-confirmed USD retail figures (no CAD→USD conversion).
     ("parabola","sterling"): 125000, ("parabola","whiteGold10k"): 780000, ("parabola","roseGold10k"): 780000,
     ("parabola-heritage","sterling"): 125000, ("parabola-heritage","whiteGold10k"): 780000, ("parabola-heritage","yellowGold10k"): 780000,
-    ("ovation","silver"): 15000, ("ovation","yellow10k"): 65000, ("ovation","white10k"): 65000,
-    ("ovation","yellow14k"): 80000, ("ovation","white14k"): 80000,
-    ("ovation","yellow18k"): 105000, ("ovation","white18k"): 105000,
+    # OVATION — owner-approved hand-set USD (Option B, Oct 15 2026): no CAD→USD conversion.
+    ("ovation","silver"): 22500, ("ovation","yellow10k"): 85000, ("ovation","white10k"): 85000,
+    ("ovation","yellow14k"): 110000, ("ovation","white14k"): 110000,
+    ("ovation","yellow18k"): 140000, ("ovation","white18k"): 140000,
 }
 
 @pytest.mark.parametrize("slug,tier,expected_cents", [(s,t,c) for (s,t),c in DYNAMIC_APPROVED.items()])

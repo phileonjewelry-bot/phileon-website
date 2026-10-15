@@ -120,6 +120,7 @@ class CartItemIn(BaseModel):
     colorway: Optional[str] = None     # e.g. QUADRIGA: "red-black" / "black-red" / …
     tier: Optional[str] = None         # dynamic-ring tier key (foundation/signature/heirloom/…)
     wristSize: Optional[str] = None    # CRESTA NERA wrist size id: small / medium / large / xl
+    engraving: Optional[bool] = False  # optional engraving add-on (surcharge resolved server-side)
     # Client-side snapshot of the price shown at Add-to-Cart. NEVER trusted for
     # payment. Used only to detect price movement between add-to-cart and
     # checkout for live-priced items.
@@ -254,7 +255,7 @@ async def bnpl_quote(body: BnplQuoteIn):
         resolved = [resolve_line_item(
                         i.product_id, i.karat, i.metalColour, i.ringSize,
                         i.quantity, variant=i.variant, colorway=i.colorway,
-                        tier=i.tier, wrist_size=i.wristSize,
+                        tier=i.tier, wrist_size=i.wristSize, engraving=bool(i.engraving),
                     ) for i in body.items]
     except CatalogError as e:
         raise HTTPException(status_code=400, detail={"code": str(e), "message": "Cart contains an item that cannot be priced."})
@@ -310,7 +311,7 @@ async def create_stripe_session(body: StripeSessionIn, request: Request,
                         i.product_id, i.karat, i.metalColour, i.ringSize,
                         i.quantity, variant=i.variant, colorway=i.colorway,
                         tier=i.tier, market_snapshot=market_snapshot,
-                        wrist_size=i.wristSize,
+                        wrist_size=i.wristSize, engraving=bool(i.engraving),
                     ) for i in body.items]
     except CatalogError as e:
         msg = str(e)

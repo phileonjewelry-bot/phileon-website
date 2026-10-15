@@ -7,6 +7,7 @@ import StockBadge from '@/components/StockBadge';
 import { Button } from '@/components/ui/button';
 import { products, catalogProducts } from '@/data/products';
 import { LiveFromPrice } from '@/components/LiveFromPrice';
+import { seasonalState } from "@/data/seasonal";
 import BapeShopCard from '@/components/shop/BapeShopCard';
 import '../styles/shop-drop.css';
 
@@ -703,7 +704,7 @@ const ShopDropPage = () => {
                             </div>
                           )}
                           {product.price_range && !product.is_tribute && (
-                            <p className="shop-drop__card-price">{isPlaceholder ? 'COMING SOON' : <LiveFromPrice slug={product.slug} fallback={product.price_range} />}</p>
+                            <p className="shop-drop__card-price" data-testid={`shop-card-price-${product.slug}`}>{isPlaceholder ? 'COMING SOON' : seasonalState(product.slug).retired ? seasonalState(product.slug).message : <LiveFromPrice slug={product.slug} fallback={product.price_range} />}</p>
                           )}
                           {product.slug === 'the-true-vine' && (
                             <p

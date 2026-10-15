@@ -337,10 +337,13 @@ LIVE_PRICING_CONFIG = {
     # COOGI DNA TAG — PHILEON × COOGI · Tribute Series · Pendant
     # Two static variants (Snow 10K white gold · Sand 10K rose gold).
     # Standardized build: ~15g gold, lab diamonds + synthetic coloured stones.
-    # CAD base $11,334 → cadToUsdLuxury produces $8,500 USD each.
+    # Owner-approved hand-set USD retail: $8,500 each (Oct 2026). Historical CAD base 11,334 retired —
+    # the Aug 2026 migration had classified it hand-set without converting, charging $11,334.
     "coogiDnaTag": {
-        "snow": {"lockedBasePriceCad": 11334, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
-        "sand": {"lockedBasePriceCad": 11334, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0},
+        "snow": {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                 "metal_label": "Solid 10K White Gold"},
+        "sand": {"lockedBasePriceCad": 8500, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                 "metal_label": "Solid 10K Rose Gold"},
     },
     # BATTENTI DELLA VILLA — Ladies Earrings · 4 Metal Tiers
     # Villa Door Knocker Earrings · 45×30mm · ~25g · Omega back.

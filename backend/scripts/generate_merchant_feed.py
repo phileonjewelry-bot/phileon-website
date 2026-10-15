@@ -25,6 +25,28 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SITE_ORIGIN = "https://phileon.com"
+
+# Live-priced products listed in the feed: price is computed from the trusted
+# checkout resolver's lowest purchasable tier at generation time (never a
+# hardcoded snapshot), and seasonal products are dropped once retired.
+LIVE_FEED_SLUGS = {"lady-jay": ("foundation", "US 6")}
+
+
+def _live_feed_price(slug: str):
+    """Return ('5000', 'USD') from the server resolver, or None when unavailable/retired."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    try:
+        from services.pricing_engine_catalog import season_state
+        from services.catalog import resolve_line_item
+        from services import metal_spot
+        if not season_state(slug)["available"]:
+            return None
+        tier, size = LIVE_FEED_SLUGS[slug]
+        r = resolve_line_item(slug, None, None, size, 1, tier=tier, market_snapshot=metal_spot.get_spot())
+        return (str(int(r["unit_amount_cents"]) // 100), r["currency"])
+    except Exception:
+        return None
 CATALOG_PATH = Path("/app/frontend/src/data/products.js")
 OUT_PATH = Path("/app/frontend/public/merchant-feed.xml")
 
@@ -138,9 +160,9 @@ def build_feed(products: list[dict]) -> str:
             continue
         if p.get("purchasable") is False:
             continue
-        price = parse_price_range(p.get("price_range"))
+        price = _live_feed_price(p["slug"]) if p["slug"] in LIVE_FEED_SLUGS else parse_price_range(p.get("price_range"))
         if not price:
-            continue  # never publish an invented price
+            continue  # never publish an invented price (or a seasonally retired piece)
 
         title = html.escape(p["name"])
         link = f"{SITE_ORIGIN}{p['href']}"

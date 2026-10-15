@@ -43,6 +43,7 @@ const SLUG_TO_KEY = {
   "the-true-vine": "theTrueVine",
   "porta-aurea": "portaAurea",
   "coogi-dna-tag": "coogiDnaTag",
+  "ovation": "ovationRibbedRing",
   "battenti-della-villa": "battentiDellaVilla",
   "gent": "gent",
   "stackrats": "stackrats",

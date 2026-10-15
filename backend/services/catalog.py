@@ -254,7 +254,9 @@ _DYNAMIC_RING_TIERS: Dict[str, Dict] = {
         "subtitle": "Ribbed Comfort-Fit Ring",
         "size_profile": "unisex",
         "image": "/products/ovation/hero.jpg",
-        # Hand-set pricing mirrors products.ovationRibbedRing.pricing.
+        # Owner-approved USD retail (Option B, Oct 2026): 225 / 850 / 850 / 1,100 / 1,100 / 1,400 / 1,400.
+        # usd_hand_set → no CAD→USD conversion; weightGrams 0 → no live-metal adjustment.
+        "usd_hand_set": True,
         "tiers": {
             "silver":     {"metal_label": "Sterling Silver",  "metalType": "925", "weightGrams": 0, "lockedBasePriceCad": 225,  "lockedMetalReferenceCad": 0},
             "yellow10k":  {"metal_label": "10K Yellow Gold",  "metalType": "10K", "weightGrams": 0, "lockedBasePriceCad": 850,  "lockedMetalReferenceCad": 0},
@@ -337,7 +339,11 @@ def _resolve_dynamic_ring(product_id: str, tier_key: Optional[str],
         raise CatalogError(f"INVALID_RING_SIZE: '{ring_size}' is not a valid {cfg['product_name']} ring size.")
 
     tier_cfg = cfg["tiers"][tk]
-    unit_cents_cad = _compute_dynamic_cents_cad(tier_cfg, market_snapshot)
+    if cfg.get("usd_hand_set"):
+        # Exact owner-approved USD figure: no live-metal delta, no $50 luxury rounding.
+        unit_cents_cad = int(round(float(tier_cfg["lockedBasePriceCad"]) * 100))
+    else:
+        unit_cents_cad = _compute_dynamic_cents_cad(tier_cfg, market_snapshot)
     # PHILEON is USD-only sitewide. Convert the CAD-derived live-metal price
     # to USD via the single authoritative helper (identical rounding rule
     # used by the frontend cadToUsdLuxury and by every other trusted USD
@@ -526,7 +532,8 @@ def resolve_line_item(product_id: str,
                       colorway: Optional[str] = None,
                       tier: Optional[str] = None,
                       market_snapshot: Optional[Dict] = None,
-                      wrist_size: Optional[str] = None) -> Dict:
+                      wrist_size: Optional[str] = None,
+                      engraving: bool = False) -> Dict:
     if not is_supported(product_id):
         raise CatalogError(f"UNSUPPORTED_PRODUCT: '{product_id}' is not available for online checkout yet.")
     if not isinstance(quantity, int) or quantity < 1 or quantity > 5:
@@ -561,7 +568,7 @@ def resolve_line_item(product_id: str,
         t = tier or variant or karat
         try:
             return _pe_resolve(product_id, t, ring_size, quantity, market_snapshot,
-                               wrist_size=wrist_size)
+                               wrist_size=wrist_size, engraving=engraving)
         except _PEResolverError as e:  # type: ignore
             raise CatalogError(str(e))
 

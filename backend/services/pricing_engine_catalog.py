@@ -126,6 +126,8 @@ PRICING_ENGINE_CATALOG: Dict[str, Dict] = {
         "currency": "USD", "convert_usd_luxury": False,
         "size_profile": None, "needs_size": False, "sku_prefix": "CDT",
         "category": "pendant",
+        # Optional laser engraving — charged exactly once per unit when the customer selects it.
+        "engraving_surcharge_cents": 15000,
     },
     "katrina-cascata": {
         "product_key": "katrinaCascata", "product_name": "KATRINA CASCATA",
@@ -321,6 +323,11 @@ PRICING_ENGINE_CATALOG: Dict[str, Dict] = {
         "currency": "USD", "convert_usd_luxury": True,
         "size_profile": "ladies", "needs_size": True, "sku_prefix": "LJY",
         "category": "ring",
+        # Seasonal (Jays season). Purchasable through 2026-10-31 America/Toronto; retired from
+        # 2026-11-01 00:00 local until the owner authorizes the 2027 reopening (no auto-reopen).
+        "season": {"closes_at": "2026-11-01T00:00:00", "tz": "America/Toronto",
+                   "retired_message": "Retired Until Opening Day — Jays Season 2027",
+                   "reopens_at": None},
     },
     "porta-aurea": {
         "product_key": "portaAurea", "product_name": "PORTA AUREA",
@@ -788,8 +795,44 @@ def _tiers_are_all_static(product_key: str) -> bool:
     return all(int(t.get("weightGrams", 0) or 0) == 0 for t in tiers.values())
 
 
+def _now_utc():
+    """Clock seam (monkeypatched in tests). Never read the system clock elsewhere in this module."""
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc)
+
+
+def season_state(product_id: str, now=None) -> Dict:
+    """{'seasonal': bool, 'available': bool, 'closes_at_utc': iso|None, 'reopens_at': iso|None, 'message': str|None}."""
+    cfg = PRICING_ENGINE_CATALOG.get(product_id) or {}
+    season = cfg.get("season")
+    if not season:
+        return {"seasonal": False, "available": True, "closes_at_utc": None, "reopens_at": None, "message": None}
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    closes_local = datetime.fromisoformat(season["closes_at"]).replace(tzinfo=ZoneInfo(season["tz"]))
+    now = now or _now_utc()
+    reopens = season.get("reopens_at")
+    available = now < closes_local
+    if not available and reopens:
+        reopens_dt = datetime.fromisoformat(reopens)
+        available = now >= reopens_dt
+    return {"seasonal": True, "available": available,
+            "closes_at_utc": closes_local.astimezone(ZoneInfo("UTC")).isoformat(),
+            "reopens_at": reopens, "message": None if available else season["retired_message"]}
+
+
+def _enforce_season_window(cfg: Dict) -> None:
+    season = cfg.get("season")
+    if not season:
+        return
+    slug = next(k for k, v in PRICING_ENGINE_CATALOG.items() if v is cfg)
+    if not season_state(slug)["available"]:
+        raise PricingEngineResolverError(
+            f"SEASONALLY_RETIRED: {cfg['product_name']} is {season['retired_message']}.")
+
+
 def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
-            quantity: int, market_snapshot: Optional[Dict],
+            quantity: int, market_snapshot: Optional[Dict], engraving: bool = False,
             wrist_size: Optional[str] = None) -> Dict:
     """Trusted resolver.
 
@@ -866,6 +909,11 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
     else:
         display_amount = cad_price
     unit_amount_cents = int(round(display_amount * 100))
+    engraving_cents = int(cfg.get("engraving_surcharge_cents") or 0) if engraving else 0
+    unit_amount_cents += engraving_cents
+
+    # Seasonal availability (server-side; the frontend button is not the authority).
+    _enforce_season_window(cfg)
 
     # SKU
     tier_token = resolved_tier.upper().replace("_", "-")
@@ -880,6 +928,9 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
         sku = f"{cfg['sku_prefix']}-{tier_token}"
         size_label = None
         variant = f"{cfg['subtitle']} · {tier_label}"
+    if engraving_cents:
+        sku = f"{sku}-ENGRAVED"
+        variant = f"{variant} · Engraved"
 
     return {
         "product_id": product_id,
@@ -904,6 +955,7 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
         "metadata": {
             "product_slug": product_id, "sku": sku,
             "tier": resolved_tier, "metal": metal_label or "",
+            "engraving": "laser" if engraving_cents else "",
             "market_source": market_snapshot.get("source") or "",
             "market_timestamp": str(int(market_snapshot.get("timestamp", 0))),
         },

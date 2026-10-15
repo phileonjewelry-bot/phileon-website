@@ -90,6 +90,7 @@ const toPayloadItem = (i) => {
     tier: i.tierKey || null,
     // Cresta Nera + any future bangle uses `wristSizeId` (machine key).
     wristSize: i.wristSizeId || null,
+    engraving: !!i.engravingEnabled,
     displayed_unit_amount_cents,
   };
   return row;

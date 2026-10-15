@@ -282,10 +282,6 @@ class TestMerchantFeed:
         assert pmap["parabola"] == "1250 USD"
         assert pmap["parabola-heritage"] == "1250 USD"
 
-    @pytest.mark.xfail(strict=True, reason=(
-        "Pre-existing owner decisions pending (Oct 15 2026 audit): ovation silver feed/PDP $225 vs "
-        "server $150; coogi-dna-tag feed $8,500 vs server $11,334; lady-jay feed $14,500 (static "
-        "price_range) vs lowest tier $5,000. Flip to pass once the owner aligns these three."))
     def test_feed_price_equals_server_lowest(self, spot):
         """Every feed item's price must equal server's lowest resolvable checkout price.
 

@@ -390,9 +390,21 @@ const livePricingConfig = {
   // diamond border. Standardized build: ~15g gold, lab diamonds + synthetic
   // coloured stones, identical architecture across Snow & Sand.
   // CAD base $11,334 → cadToUsdLuxury produces $8,500 USD each.
+  // Owner-approved hand-set USD: $8,500 each (Oct 2026). Engraving +$150 is added by the page/server, not here.
   coogiDnaTag: {
-    snow: { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    sand: { lockedBasePriceCad: 11334, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    snow: { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    sand: { lockedBasePriceCad: 8500, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
+  // OVATION — owner-approved hand-set USD (Option B, Oct 2026). Mirrors backend _DYNAMIC_RING_TIERS["ovation"].
+  ovationRibbedRing: {
+    silver:    { lockedBasePriceCad: 225,  metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    yellow10k: { lockedBasePriceCad: 850,  metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    white10k:  { lockedBasePriceCad: 850,  metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    yellow14k: { lockedBasePriceCad: 1100, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    white14k:  { lockedBasePriceCad: 1100, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    yellow18k: { lockedBasePriceCad: 1400, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    white18k:  { lockedBasePriceCad: 1400, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // BATTENTI DELLA VILLA — Ladies Earrings · 4 Metal Tiers

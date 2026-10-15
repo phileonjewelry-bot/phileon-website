@@ -13,8 +13,9 @@ import { useLocalizedUsdFormatter } from "@/hooks/useLocalizedUsdFormatter";
  * and pavé diamond border. Hand-set, identical to spec.
  *
  * 2 metal tiers wired into livePricingConfig.coogiDnaTag +
- *   pricing_engine.LIVE_PRICING_CONFIG. Both 10K, both same CAD base
- *   ($13,334) → $10,000 USD via cadToUsdLuxury.
+ *   pricing_engine.LIVE_PRICING_CONFIG. Both 10K, owner-approved hand-set
+ *   $8,500 USD each (Oct 2026). Optional engraving +$150 USD, charged once
+ *   server-side when selected.
  *
  * Namespace: .coogi-
  */

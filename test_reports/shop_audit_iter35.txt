@@ -9,7 +9,7 @@ blessed,70000,foundation/USD
 boss-knot,320000,silver/USD
 bound,1000000,foundation/USD
 cocktail-jessica,650000,standard/USD
-coogi-dna-tag,1133400,snow/USD
+coogi-dna-tag,850000,snow/USD
 coogi-i,950000,foundation/USD
 corinthians-15-14,350000,foundation/USD
 cypher,350000,foundation/USD
@@ -57,7 +57,7 @@ monika-couture,105000,silver/USD
 morso,500000,foundation/USD
 neighborhood-nip,1500000,original/USD
 nervatura,105000,foundation/USD
-ovation,15000,silver/USD
+ovation,22500,silver/USD
 parabola,125000,sterling/USD
 parabola-heritage,125000,sterling/USD
 porta-aurea,550000,signature/USD
