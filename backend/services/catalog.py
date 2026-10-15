@@ -183,10 +183,13 @@ _DYNAMIC_RING_TIERS: Dict[str, Dict] = {
         "subtitle": "Rose Halo Diamond Ring",
         "size_profile": "ladies",
         "image": "/products/annie-rose/hero.jpg",
+        # Owner-approved editions (one diamond type per tier — the tier key IS the SKU identity):
+        #   foundation = 10K / lab-grown · signature = 14K / natural · heirloom = 18K / natural.
+        # CAD base inputs + live-metal adjustment + cad_to_usd_luxury unchanged.
         "tiers": {
-            "foundation": {"metal_label": "10K Yellow Gold", "metalType": "10K", "weightGrams": 30, "lockedBasePriceCad": 9200,  "lockedMetalReferenceCad": 1875},
-            "signature":  {"metal_label": "14K Yellow Gold", "metalType": "14K", "weightGrams": 30, "lockedBasePriceCad": 13800, "lockedMetalReferenceCad": 2625},
-            "heirloom":   {"metal_label": "18K Yellow Gold", "metalType": "18K", "weightGrams": 30, "lockedBasePriceCad": 18400, "lockedMetalReferenceCad": 3375},
+            "foundation": {"metal_label": "10K Yellow Gold", "stone_label": "Lab-Grown Diamonds", "metalType": "10K", "weightGrams": 30, "lockedBasePriceCad": 9200,  "lockedMetalReferenceCad": 1875},
+            "signature":  {"metal_label": "14K Yellow Gold", "stone_label": "Natural Diamonds",   "metalType": "14K", "weightGrams": 30, "lockedBasePriceCad": 13800, "lockedMetalReferenceCad": 2625},
+            "heirloom":   {"metal_label": "18K Yellow Gold", "stone_label": "Natural Diamonds",   "metalType": "18K", "weightGrams": 30, "lockedBasePriceCad": 18400, "lockedMetalReferenceCad": 3375},
         },
     },
     "rhythm-mesh-ring": {
@@ -236,6 +239,9 @@ _DYNAMIC_RING_TIERS: Dict[str, Dict] = {
         "subtitle": "Concave Dish Heritage Statement Ring",
         "size_profile": "gents",
         "image": "/products/parabola-heritage/hero.jpg",
+        # Owner-approved USD retail (same treatment as PARABOLA): Sterling $1,250 ·
+        # 10K White Gold $7,800 · 10K Yellow Gold $7,800. No CAD conversion, no live-metal adjustment.
+        "usd_hand_set": True,
         "tiers": {
             "sterling":       {"metal_label": "Sterling Silver", "metalType": "925", "weightGrams": 0, "lockedBasePriceCad": 1250, "lockedMetalReferenceCad": 0},
             "whiteGold10k":   {"metal_label": "10K White Gold",  "metalType": "10K", "weightGrams": 0, "lockedBasePriceCad": 7800, "lockedMetalReferenceCad": 0},
@@ -346,13 +352,15 @@ def _resolve_dynamic_ring(product_id: str, tier_key: Optional[str],
     ring_size_label = f"US {size_norm}"
     slug_upper = product_id.upper().replace("-", "")
     sku = f"{slug_upper}-{tk.upper()}-SZ{size_norm.replace('.', '-')}"
+    stone_label = tier_cfg.get("stone_label")
+    variant_parts = [tier_cfg["metal_label"]] + ([stone_label] if stone_label else []) + [ring_size_label]
     return {
         "product_id": product_id,
         "product_name": cfg["product_name"],
         "subtitle": cfg["subtitle"],
-        "gemstones": None,
+        "gemstones": stone_label,
         "sku": sku,
-        "variant": f"{tier_cfg['metal_label']} · {ring_size_label}",
+        "variant": " · ".join(variant_parts),
         "karat": tier_cfg["metalType"], "metal_colour": tier_cfg["metal_label"],
         "ring_size": ring_size_label,
         "unit_amount_cents": unit_cents,
@@ -368,6 +376,7 @@ def _resolve_dynamic_ring(product_id: str, tier_key: Optional[str],
         "metadata": {
             "product_slug": product_id, "sku": sku,
             "tier": tk, "metal": tier_cfg["metal_label"],
+            "stone": stone_label or "",
             "ring_size": ring_size_label,
             "market_source": market_snapshot.get("source") or "",
             "market_timestamp": str(int(market_snapshot.get("timestamp", 0))),

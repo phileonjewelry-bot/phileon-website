@@ -24,10 +24,14 @@ const livePricingConfig = {
     heirloom18k: { lockedBasePriceCad: 22000, metalType: "18K",  weightGrams: 22,   lockedMetalReferenceCad: 2475 },
   },
 
-  // ANNIE ROSE
+  // ANNIE ROSE — mirrors backend services/catalog.py _DYNAMIC_RING_TIERS["annie-rose"].
+  // Editions: foundation 10K / lab-grown · signature 14K / natural · heirloom 18K / natural.
+  // silver = obsolete historical configuration (retained, not purchasable, excluded from "From").
   annieRose: {
-    silver:     { lockedBasePriceCad: 6400, metalType: "925",  weightGrams: 35, lockedMetalReferenceCad: 41 },
-    gold10k:    { lockedBasePriceCad: 9200, metalType: "10K",  weightGrams: 30, lockedMetalReferenceCad: 1875 },
+    silver:     { lockedBasePriceCad: 6400,  metalType: "925", weightGrams: 35, lockedMetalReferenceCad: 41, purchasable: false },
+    foundation: { lockedBasePriceCad: 9200,  metalType: "10K", weightGrams: 30, lockedMetalReferenceCad: 1875 },
+    signature:  { lockedBasePriceCad: 13800, metalType: "14K", weightGrams: 30, lockedMetalReferenceCad: 2625 },
+    heirloom:   { lockedBasePriceCad: 18400, metalType: "18K", weightGrams: 30, lockedMetalReferenceCad: 3375 },
   },
 
   // PARABOLA — owner-approved USD retail (Sterling $1,250 · 10K White $7,800 · 10K Rose $7,800).
@@ -37,6 +41,13 @@ const livePricingConfig = {
     sterling:     { lockedBasePriceCad: 1250, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
     whiteGold10k: { lockedBasePriceCad: 7800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
     roseGold10k:  { lockedBasePriceCad: 7800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+  },
+
+  // PARABOLA HERITAGE — owner-approved USD retail, same treatment as PARABOLA (usd_hand_set).
+  parabolaHeritage: {
+    sterling:      { lockedBasePriceCad: 1250, metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    whiteGold10k:  { lockedBasePriceCad: 7800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    yellowGold10k: { lockedBasePriceCad: 7800, metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // WYNETTE'S PALETTE — Collector cocktail ring (black onyx + multi-colour halo)

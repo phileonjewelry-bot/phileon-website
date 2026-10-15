@@ -2971,7 +2971,7 @@ This is expression — under control.`,
   // PARABOLA HERITAGE — Gentleman's Club · 22mm concave statement ring.
   // Same master architecture as PARABOLA. Heritage stone palette:
   // ruby → yellow → emerald → black diamond, moving inward through the dish.
-  // Metals: Sterling ($1,250 USD), 10K White Gold ($7,800 CAD), 10K Yellow Gold ($7,800 CAD).
+  // Metals (owner-approved USD): Sterling $1,250 USD, 10K White Gold $7,800 USD, 10K Yellow Gold $7,800 USD.
   // Default metal: 10K Yellow Gold. Default ring size: US 10.
   // Pricing keys: sterling, whiteGold10k, yellowGold10k.
   // ==========================================

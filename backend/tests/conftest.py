@@ -61,6 +61,41 @@ def pytest_sessionfinish(session, exitstatus):
         pass
 
 
+# ── Network guard: tests must never hit the live preview/production API ──
+# (an out-of-process POST to /api/checkout/stripe/session persists real
+# orders in the preview database). Route all HTTP tests through `app_client`.
+_LIVE_HOST_MARKERS = ("preview.emergentagent.com", "emergent.host", "phileon")
+
+
+def _is_live_backend_url(url: str) -> bool:
+    u = str(url or "")
+    if not u.startswith("http"):
+        return False
+    if "localhost" in u or "127.0.0.1" in u or "testserver" in u:
+        return False
+    return any(m in u for m in _LIVE_HOST_MARKERS)
+
+
+@pytest.fixture(autouse=True)
+def _block_live_backend_http(monkeypatch):
+    try:
+        import requests
+    except ImportError:  # pragma: no cover
+        yield
+        return
+    original = requests.Session.request
+
+    def guarded(self, method, url, *args, **kwargs):
+        if _is_live_backend_url(url):
+            pytest.skip(
+                f"Blocked {method} {url}: tests must use the in-process `app_client` "
+                "fixture (disposable DB), never the live preview backend.")
+        return original(self, method, url, *args, **kwargs)
+
+    monkeypatch.setattr(requests.Session, "request", guarded)
+    yield
+
+
 @pytest.fixture(scope="session")
 def app_client():
     """One TestClient instance for the entire pytest session (disposable DB)."""

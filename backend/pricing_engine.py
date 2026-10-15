@@ -30,9 +30,13 @@ LIVE_PRICING_CONFIG = {
         "heirloom14k": {"lockedBasePriceCad": 18000, "metalType": "14K",  "weightGrams": 20,   "lockedMetalReferenceCad": 1750},
         "heirloom18k": {"lockedBasePriceCad": 22000, "metalType": "18K",  "weightGrams": 22,   "lockedMetalReferenceCad": 2475},
     },
+    # ANNIE ROSE — mirrors services/catalog.py _DYNAMIC_RING_TIERS["annie-rose"] (checkout authority).
+    # silver = obsolete historical configuration, retained for records only (not purchasable).
     "annieRose": {
-        "silver":  {"lockedBasePriceCad": 6400, "metalType": "925",  "weightGrams": 35, "lockedMetalReferenceCad": 41},
-        "gold10k": {"lockedBasePriceCad": 9200, "metalType": "10K",  "weightGrams": 30, "lockedMetalReferenceCad": 1875},
+        "silver":     {"lockedBasePriceCad": 6400,  "metalType": "925", "weightGrams": 35, "lockedMetalReferenceCad": 41, "available": False},
+        "foundation": {"lockedBasePriceCad": 9200,  "metalType": "10K", "weightGrams": 30, "lockedMetalReferenceCad": 1875},
+        "signature":  {"lockedBasePriceCad": 13800, "metalType": "14K", "weightGrams": 30, "lockedMetalReferenceCad": 2625},
+        "heirloom":   {"lockedBasePriceCad": 18400, "metalType": "18K", "weightGrams": 30, "lockedMetalReferenceCad": 3375},
     },
     # WYNETTE'S PALETTE — USD-mirrored convention (matches Veyron Noir,
     # Uncle Jo, Battenti). Hand-set USD prices; weightGrams=0 disables
@@ -126,8 +130,8 @@ LIVE_PRICING_CONFIG = {
 
     # PARABOLA HERITAGE — Gentleman's Club · 22mm concave dish statement ring · 3 metal tiers.
     # Heritage expression: ruby / yellow / emerald / black diamond concentric fields.
-    # Sterling ($1,250 USD), 10K White Gold ($7,800 CAD), 10K Yellow Gold ($7,800 CAD).
-    # Locked hand-set pricing — mirrors PARABOLA (same architecture, same tier prices).
+    # Owner-approved USD: Sterling $1,250, 10K White Gold $7,800, 10K Yellow Gold $7,800.
+    # Locked hand-set USD — mirrors PARABOLA (same architecture, same tier prices, no CAD conversion).
     "parabolaHeritage": {
         "sterling":       {"lockedBasePriceCad": 1250, "metalType": "925",   "weightGrams": 0, "lockedMetalReferenceCad": 0},
         "whiteGold10k":   {"lockedBasePriceCad": 7800, "metalType": "10KWG", "weightGrams": 0, "lockedMetalReferenceCad": 0},

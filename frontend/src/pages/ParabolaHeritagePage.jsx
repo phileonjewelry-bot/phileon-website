@@ -21,8 +21,8 @@ import { products } from "@/data/products";
  *
  * Pricing (mirrors PARABOLA family):
  *   • Sterling Silver : $1,250 USD  (premium synthetic red / yellow / green / black stones)
- *   • 10K White Gold  : $7,800 CAD  (genuine rubies, yellow stones, emeralds, black diamonds)
- *   • 10K Yellow Gold : $7,800 CAD  (genuine rubies, yellow stones, emeralds, black diamonds) — default
+ *   • 10K White Gold  : $7,800 USD  (genuine rubies, yellow stones, emeralds, black diamonds)
+ *   • 10K Yellow Gold : $7,800 USD  (genuine rubies, yellow stones, emeralds, black diamonds) — default
  *
  * Default ring size: US 10. Add-to-cart captures product / metal / size /
  * exact price / SKU via `RingProductPage`'s standard wiring.
@@ -144,7 +144,7 @@ const parabolaHeritageProduct = {
       price: heritagePricing.whiteGold10k,
       badge: "SIGNATURE",
       description:
-        "10K White Gold with genuine rubies, yellow stones, emeralds, and black diamonds. $7,800 CAD.",
+        "10K White Gold with genuine rubies, yellow stones, emeralds, and black diamonds. $7,800 USD.",
       media: whiteMetalGallery,
     },
     yellowGold10k: {
@@ -153,7 +153,7 @@ const parabolaHeritageProduct = {
       price: heritagePricing.yellowGold10k,
       badge: "HERITAGE",
       description:
-        "10K Yellow Gold with genuine rubies, yellow stones, emeralds, and black diamonds. $7,800 CAD.",
+        "10K Yellow Gold with genuine rubies, yellow stones, emeralds, and black diamonds. $7,800 USD.",
       media: yellowGoldGallery,
     },
   },

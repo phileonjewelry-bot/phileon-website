@@ -155,20 +155,21 @@ export default function RingProductPage({ product }) {
     const skuToken = ringSizeSkuToken(selectedSize);
     const heroImage = activeGallery.find(m => m.type === "image")?.src || activeGallery[0]?.poster;
 
+    const tierLabel = [currentTier.metal, currentTier.stone].filter(Boolean).join(" · ");
     handleAddToCart({
       id: `${product.id}-${selectedTier}-size-${sizeIdToken}`,
-      name: `${product.name} — ${currentTier.metal} · ${sizeLabelText}`,
+      name: `${product.name} — ${tierLabel} · ${sizeLabelText}`,
       image: heroImage,
       price: liveFor(selectedTier)?.price || currentTier.price,
       currency: product.currency || null,
       productKey: productKey,
       tierKey: selectedTier,
       slug: product.id,
-      materials: [currentTier.metal],
+      materials: [currentTier.metal, currentTier.stone].filter(Boolean),
       ringSize: selectedSize,
       ringSizeLabel: sizeLabelText,
       sku: `${(product.id || "ring").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6)}-${selectedTier.toUpperCase()}-SZ${skuToken}`,
-    }, 1, `${currentTier.name} · ${currentTier.metal} · ${sizeLabelText}`);
+    }, 1, `${currentTier.name} · ${tierLabel} · ${sizeLabelText}`);
   };
 
   return (
@@ -334,6 +335,11 @@ export default function RingProductPage({ product }) {
                       <div className="text-sm text-[#9d9d9d] mt-1">
                         {tier.metal}
                       </div>
+                      {tier.stone && (
+                        <div className="text-xs text-[#9d9d9d]/80 mt-0.5" data-testid={`tier-${key}-stone`}>
+                          {tier.stone}
+                        </div>
+                      )}
                       <div className="text-[#C6A25D] text-2xl lg:text-3xl mt-3">
                         {liveFor(key)?.formatted || _localize(tier.price, presentment)}
                       </div>
@@ -388,7 +394,7 @@ export default function RingProductPage({ product }) {
               className="mt-4 text-xs tracking-[0.14em] text-[#C6A25D]/70"
               data-testid="metal-selected-confirmation"
             >
-              Metal Selected: {currentTier.metal} · {liveFor(selectedTier)?.formatted || _localize(currentTier.price, presentment)}
+              Metal Selected: {[currentTier.metal, currentTier.stone].filter(Boolean).join(" · ")} · {liveFor(selectedTier)?.formatted || _localize(currentTier.price, presentment)}
             </p>
           </div>
 

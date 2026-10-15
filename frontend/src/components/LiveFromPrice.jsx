@@ -30,6 +30,7 @@ const SLUG_TO_KEY = {
   "wynette-palette": "wynettePalette",
   "veyron-noir": "veyronNoir",
   "parabola": "parabola",
+  "parabola-heritage": "parabolaHeritage",
   // Storefront slug → live config key, mirroring backend pricing_engine_catalog.product_key
   "corinthians-15-14": "corinthians1514",
   "fondo-curvo": "fondoCurvo",

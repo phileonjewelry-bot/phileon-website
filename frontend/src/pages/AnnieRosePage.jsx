@@ -8,6 +8,7 @@ const annieRosePricing = products.annieRose.pricing;
 // Annie Rose Product Data (Ironclad Schema)
 const annieRoseProduct = {
   id: "annie-rose",
+  slug: "annie-rose",
   name: "Annie Rose",
   category: "ring",
   sizeProfile: "ladies",
@@ -19,6 +20,7 @@ const annieRoseProduct = {
     foundation: {
       name: "Foundation",
       metal: "10K Yellow Gold",
+      stone: "Lab-Grown Diamonds",
       price: annieRosePricing.lab.gold10k,
       badge: "",
       description: "10K gold with lab-grown diamonds. Ethical brilliance for everyday elegance."
@@ -26,6 +28,7 @@ const annieRoseProduct = {
     signature: {
       name: "Signature",
       metal: "14K Yellow Gold",
+      stone: "Natural Diamonds",
       price: annieRosePricing.natural.gold14k,
       badge: "MOST POPULAR",
       description: "14K gold with natural diamonds. Balanced weight with elevated clarity."
@@ -33,6 +36,7 @@ const annieRoseProduct = {
     heirloom: {
       name: "Heirloom",
       metal: "18K Yellow Gold",
+      stone: "Natural Diamonds",
       price: annieRosePricing.natural.gold18k,
       badge: "COLLECTOR",
       description: "18K gold with natural diamonds. Maximum richness and permanence."
