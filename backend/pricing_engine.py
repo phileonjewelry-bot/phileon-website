@@ -177,15 +177,17 @@ LIVE_PRICING_CONFIG = {
         "foundation": {"lockedBasePriceCad": 3800, "metalType": "10K", "weightGrams": 14, "lockedMetalReferenceCad": 875},
         "signature":  {"lockedBasePriceCad": 5600, "metalType": "14K", "weightGrams": 15, "lockedMetalReferenceCad": 1313},
     },
-    # TRACE — earrings, owner-approved USD retail per pair (weightGrams 0 = hand-set USD, no conversion).
-    # Heirloom (solid 14K) keeps its historical row but is NOT purchasable until its price is approved.
+    # TRACE — earrings, owner-approved USD retail per PAIR (weightGrams 0 = hand-set USD, no conversion).
+    # Four purchasable editions (Oct 2026): signature $450 · foundation $900 · heirloom (14K) $2,400 · heirloom18k $3,200.
     "trace": {
-        "signature":  {"lockedBasePriceCad": 450, "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0,
-                       "metal_label": "925 Sterling Silver · Yellow-Gold Plated"},
-        "foundation": {"lockedBasePriceCad": 900, "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
-                       "metal_label": "Solid 10K Yellow Gold"},
-        "heirloom":   {"lockedBasePriceCad": 3200, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
-                       "metal_label": "Solid 14K Yellow Gold", "available": False},
+        "signature":   {"lockedBasePriceCad": 450,  "metalType": "925", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                        "metal_label": "925 Sterling Silver · Yellow-Gold Plated"},
+        "foundation":  {"lockedBasePriceCad": 900,  "metalType": "10K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                        "metal_label": "Solid 10K Yellow Gold"},
+        "heirloom":    {"lockedBasePriceCad": 2400, "metalType": "14K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                        "metal_label": "Solid 14K Yellow Gold"},
+        "heirloom18k": {"lockedBasePriceCad": 3200, "metalType": "18K", "weightGrams": 0, "lockedMetalReferenceCad": 0,
+                        "metal_label": "Solid 18K Yellow Gold"},
     },
     "bound": {
         "foundation": {"lockedBasePriceCad": 12800, "metalType": "10K", "weightGrams": 22, "lockedMetalReferenceCad": 1375},

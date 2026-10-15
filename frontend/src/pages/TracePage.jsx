@@ -34,12 +34,18 @@ const traceProduct = {
       description: "Solid 10K yellow gold, not plated. Priced per pair."
     },
     heirloom: {
-      name: "Heirloom",
+      name: "Heirloom 14K",
       metal: "Solid 14K Yellow Gold",
       price: tracePricing.heirloom,
-      unavailable: true,
-      badge: "PRICE PENDING",
-      description: "Solid 14K yellow gold. Pricing awaiting owner approval — not yet available to order."
+      badge: "",
+      description: "Solid 14K yellow gold, not plated. Priced per pair."
+    },
+    heirloom18k: {
+      name: "Heirloom 18K",
+      metal: "Solid 18K Yellow Gold",
+      price: tracePricing.heirloom18k,
+      badge: "COLLECTOR",
+      description: "Solid 18K yellow gold, not plated. Priced per pair."
     }
   },
 

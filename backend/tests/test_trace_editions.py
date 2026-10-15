@@ -1,4 +1,4 @@
-"""TRACE earrings — owner-approved editions (preview). No ring size, USD per pair, Heirloom locked."""
+"""TRACE earrings — owner-approved four editions (preview). No ring size, USD per pair, no conversion."""
 import pytest
 from services import catalog as C, pricing_engine_catalog as P
 
@@ -10,18 +10,35 @@ def test_trace_is_earrings_without_size():
     assert cfg["category"] == "earrings" and cfg["needs_size"] is False and cfg["convert_usd_luxury"] is False
 
 
-@pytest.mark.parametrize("tier,usd", [("signature", 45000), ("foundation", 90000)])
-def test_trace_approved_usd_per_pair_no_conversion(tier, usd):
+TRACE_EDITIONS = [
+    ("signature",   45000,  "925", "925 Sterling Silver · Yellow-Gold Plated", "TRC-SIGNATURE"),
+    ("foundation",  90000,  "10K", "Solid 10K Yellow Gold",                    "TRC-FOUNDATION"),
+    ("heirloom",    240000, "14K", "Solid 14K Yellow Gold",                    "TRC-HEIRLOOM"),
+    ("heirloom18k", 320000, "18K", "Solid 18K Yellow Gold",                    "TRC-HEIRLOOM18K"),
+]
+
+
+@pytest.mark.parametrize("tier,usd,karat,metal,sku", TRACE_EDITIONS)
+def test_trace_four_editions_approved_usd_per_pair_no_conversion(tier, usd, karat, metal, sku):
     r = C.resolve_line_item("trace", None, None, None, 1, tier=tier, market_snapshot=SNAP)
     assert r["unit_amount_cents"] == usd and r["currency"] == "USD"
+    assert r["sku"] == sku and r.get("ring_size") in (None, "")
+    assert r["metadata"]["metal"] == metal
     r2 = C.resolve_line_item("trace", None, None, None, 2, tier=tier, market_snapshot={"goldPerGram24kCad": 300.0, "silverPerGramCad": 5.0})
     assert r2["unit_amount_cents"] == usd  # hand-set USD: no metal adjustment, no second conversion
 
 
-def test_trace_heirloom_locked_until_approved():
-    with pytest.raises(C.CatalogError, match="TIER_UNAVAILABLE"):
-        C.resolve_line_item("trace", None, None, None, 1, tier="heirloom", market_snapshot=SNAP)
-    assert "heirloom" in __import__("pricing_engine").LIVE_PRICING_CONFIG["trace"]  # historical row preserved
+def test_trace_has_exactly_four_purchasable_editions_mirrored_in_frontend():
+    import re, pathlib
+    cfg = __import__("pricing_engine").LIVE_PRICING_CONFIG["trace"]
+    assert set(cfg) == {"signature", "foundation", "heirloom", "heirloom18k"}
+    assert all(t.get("available", True) for t in cfg.values())
+    js = (pathlib.Path(__file__).resolve().parents[2] / "frontend/src/data/livePricingConfig.js").read_text()
+    block = re.search(r"\n  trace: \{(.*?)\n  \},", js, re.S).group(1)
+    assert "purchasable: false" not in block
+    for key, t in cfg.items():
+        m = re.search(rf"{key}:\s*\{{\s*lockedBasePriceCad:\s*(\d+),\s*metalType:\s*\"(\w+)\",\s*weightGrams:\s*0", block)
+        assert m and int(m.group(1)) == t["lockedBasePriceCad"] and m.group(2) == t["metalType"], key
 
 
 def test_rhythm_mesh_three_tiers_match_frontend_config():

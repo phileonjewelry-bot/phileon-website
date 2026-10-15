@@ -855,7 +855,7 @@ export const products = {
     slug: "trace",
     category: "earrings",
     audience: "ladies",
-    shopMaterialLine: "Earrings · 10K Gold Plated - 14K Yellow Gold",
+    shopMaterialLine: "Earrings · Yellow-Gold Plated Sterling → Solid 10K · 14K · 18K Gold",
     tagline: "Lines of Movement.",
     basePrice: 450,
     
@@ -863,11 +863,12 @@ export const products = {
     dynamicPricing: false,
     currency: "USD",
     
-    // Owner-approved USD retail per pair (Oct 2026). Historical: plated 900 / solid10k 2400 / solid14k 3200.
+    // Owner-approved USD retail per PAIR (Oct 2026, four editions). Historical: plated 900 / solid10k 2400 / solid14k 3200.
     pricing: {
-      signature: 450,    // 925 sterling silver · yellow-gold plated
-      foundation: 900,   // Solid 10K yellow gold
-      heirloom: null     // Solid 14K yellow gold — price pending owner approval
+      signature: 450,     // 925 sterling silver · yellow-gold plated
+      foundation: 900,    // Solid 10K yellow gold
+      heirloom: 2400,     // Solid 14K yellow gold
+      heirloom18k: 3200   // Solid 18K yellow gold
     }
   },
 
@@ -3331,7 +3332,7 @@ export const catalogProducts = [
   { id: 'rhythm-mesh-ring', name: 'Rhythm Mesh™ Ring', slug: 'rhythm-mesh-ring', materialLine: products.rhythmMeshRing.shopMaterialLine, imageUrl: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/nl2vulxg_1000143088.jpg', href: '/products/rhythm-mesh-ring', price_range: formatPrice(products.rhythmMeshRing.basePrice, 'USD'), inventory_count: 100, is_core: true, category: 'rings', audience: 'unisex', audienceImages: { ladies: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/skzja828_1000143123.png', gentlemensClub: 'https://customer-assets.emergentagent.com/job_b18523eb-3184-4ba4-8ef3-cdebf4fafd5f/artifacts/dptf24st_1000143315.png' } },
   { id: 'tola-ii', name: 'TOLA II', slug: 'tola-ii', materialLine: products.tolaII.shopMaterialLine, imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/rst0mhem_1000143383.png', href: '/products/tola-ii', price_range: formatPrice(products.tolaII.basePrice, 'USD'), inventory_count: 100, is_core: true, category: 'rings', audience: 'gentlemens-club' },
   { id: 'galatians-614', name: 'GALATIANS 6:14', slug: 'galatians-614', materialLine: products.galatians614.shopMaterialLine, imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/tf1ne9cg_1000143695.jpg', href: '/products/galatians-614', price_range: formatPrice(products.galatians614.basePrice, 'USD'), inventory_count: 100, is_core: true, category: 'pendants', audience: 'gentlemens-club' },
-  { id: 'trace', name: 'TRACE', slug: 'trace', materialLine: products.trace.shopMaterialLine, imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/7tyc41kp_1000143768.png', href: '/products/trace', price_range: formatPrice(products.trace.basePrice, 'USD'), inventory_count: 100, is_core: true, category: 'earrings', audience: 'ladies' },
+  { id: 'trace', name: 'TRACE', slug: 'trace', materialLine: products.trace.shopMaterialLine, imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/7tyc41kp_1000143768.png', href: '/products/trace', price_range: 'From $450 USD', inventory_count: 100, is_core: true, category: 'earrings', audience: 'ladies' },
   { id: 'bound', name: 'BOUND', slug: 'bound', materialLine: products.bound.shopMaterialLine, imageUrl: 'https://customer-assets.emergentagent.com/job_a9b887c5-7209-4e2a-b5af-4d14326b755d/artifacts/dxi7r360_1000143892.png', href: '/products/bound', price_range: formatPrice(products.bound.basePrice, 'USD'), inventory_count: 100, is_core: true, category: 'bracelets', audience: 'ladies' },
   { id: 'apex', name: 'APEX', slug: 'apex', materialLine: products.apex.shopMaterialLine, imageUrl: products.apex.imageUrl, href: '/products/apex', price_range: formatPrice(products.apex.basePrice, 'USD'), inventory_count: 100, is_core: true, category: 'earrings', audience: 'ladies' },
   { id: 'homage', name: 'HOMAGE', slug: 'homage', materialLine: 'Fan Earrings · Silver to 18K Gold', imageUrl: products.homage.imageUrl, href: '/products/homage', price_range: products.homage.priceFrom, inventory_count: 100, is_core: true, category: 'earrings', audience: 'ladies' },

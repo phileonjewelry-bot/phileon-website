@@ -220,13 +220,14 @@ const livePricingConfig = {
     signature:  { lockedBasePriceCad: 5600, metalType: "14K", weightGrams: 15, lockedMetalReferenceCad: 1313 },
   },
 
-  // TRACE
-  // TRACE — earrings, owner-approved USD retail per pair (weightGrams 0 = USD passthrough, no conversion).
-  // Heirloom keeps its historical row but is not purchasable until its price is approved.
+  // TRACE — earrings, owner-approved USD retail per PAIR (weightGrams 0 = USD passthrough, no conversion).
+  // Four purchasable editions: signature $450 · foundation $900 · heirloom (14K) $2,400 · heirloom18k $3,200.
+  // Mirrors backend pricing_engine.LIVE_PRICING_CONFIG.trace.
   trace: {
-    signature:  { lockedBasePriceCad: 450,  metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    foundation: { lockedBasePriceCad: 900,  metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
-    heirloom:   { lockedBasePriceCad: 3200, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0, purchasable: false },
+    signature:   { lockedBasePriceCad: 450,  metalType: "925", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    foundation:  { lockedBasePriceCad: 900,  metalType: "10K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    heirloom:    { lockedBasePriceCad: 2400, metalType: "14K", weightGrams: 0, lockedMetalReferenceCad: 0 },
+    heirloom18k: { lockedBasePriceCad: 3200, metalType: "18K", weightGrams: 0, lockedMetalReferenceCad: 0 },
   },
 
   // BOUND

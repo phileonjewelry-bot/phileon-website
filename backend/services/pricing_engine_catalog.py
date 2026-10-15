@@ -869,15 +869,17 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
 
     # SKU
     tier_token = resolved_tier.upper().replace("_", "-")
+    metal_label = tier_config.get("metal_label")  # customer-facing material (when the tier declares one)
+    tier_label = metal_label or resolved_tier
     if cfg["needs_size"]:
         size_token = (size_norm or "").replace(".", "-")
         sku = f"{cfg['sku_prefix']}-{tier_token}-SZ{size_token}"
         size_label = f"US {size_norm}"
-        variant = f"{cfg['subtitle']} · {resolved_tier} · {size_label}"
+        variant = f"{cfg['subtitle']} · {tier_label} · {size_label}"
     else:
         sku = f"{cfg['sku_prefix']}-{tier_token}"
         size_label = None
-        variant = f"{cfg['subtitle']} · {resolved_tier}"
+        variant = f"{cfg['subtitle']} · {tier_label}"
 
     return {
         "product_id": product_id,
@@ -887,7 +889,7 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
         "sku":          sku,
         "variant":      variant,
         "karat":        tier_config.get("metalType"),
-        "metal_colour": None,
+        "metal_colour": metal_label,
         "ring_size":    size_label,
         "unit_amount_cents": unit_amount_cents,
         "currency":     cfg["currency"],
@@ -901,7 +903,8 @@ def resolve(product_id: str, tier_key: Optional[str], ring_size: Optional[str],
         },
         "metadata": {
             "product_slug": product_id, "sku": sku,
-            "tier": resolved_tier, "market_source": market_snapshot.get("source") or "",
+            "tier": resolved_tier, "metal": metal_label or "",
+            "market_source": market_snapshot.get("source") or "",
             "market_timestamp": str(int(market_snapshot.get("timestamp", 0))),
         },
     }
