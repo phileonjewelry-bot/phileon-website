@@ -4,7 +4,7 @@
     <title>PHILEON Fine Jewelry</title>
     <link>https://phileon.com/</link>
     <description>PHILEON — architectural fine jewelry, statement rings, pendants and editorial releases.</description>
-    <lastBuildDate>Thu, 15 Oct 2026 03:12:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2026 03:41:20 GMT</lastBuildDate>
   <item>
     <g:id>trace</g:id>
     <g:title>TRACE</g:title>
@@ -92,6 +92,7 @@
     <g:identifier_exists>no</g:identifier_exists>
     <g:material>Tribute Series · 2026 Season Only · White Gold · Blue Sapphire + White Diamond</g:material>
     <g:gender>female</g:gender>
+    <g:expiration_date>2026-11-01T04:00:00+00:00</g:expiration_date>
   </item>
   <item>
     <g:id>the-true-vine</g:id>

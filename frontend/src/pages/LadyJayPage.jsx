@@ -130,7 +130,7 @@ const GALLERY = [
 const RETIRE_DATE = new Date("2026-10-31T23:59:59-04:00"); // Seasonal cutoff · 2026-11-01 00:00 America/Toronto
 // Seasonal retirement — NOT a permanent discontinuation. The server enforces the same
 // window (SEASONALLY_RETIRED); the 2027 reopening requires explicit owner authorization.
-const RETIRED_HEADLINE = "Retired Until Opening Day — Jays Season 2027";
+const RETIRED_HEADLINE = "Retired until the opening of the 2027 Jays season.";
 const RETIRED_SUBLINE = "Returning for the 2027 season.";
 
 function daysUntilRetire() {
@@ -1557,7 +1557,7 @@ export default function LadyJayPage() {
               className="ladyjay-cta-primary"
               data-testid="lady-jay-commission-btn"
             >
-              {daysLeft <= 0 ? "RETIRED UNTIL OPENING DAY 2027" : isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
+              {daysLeft <= 0 ? "RETIRED UNTIL THE 2027 JAYS SEASON" : isAdding ? "ADDING…" : buttonText === "Added!" ? "ADDED" : "ADD TO CART"}
             </button>
             {daysLeft <= 0 && (
               <p className="ladyjay-urgency-note" data-testid="lady-jay-retired-cta-note">{RETIRED_SUBLINE}</p>

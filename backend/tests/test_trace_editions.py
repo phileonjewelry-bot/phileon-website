@@ -1,4 +1,5 @@
 """TRACE earrings — owner-approved four editions (preview). No ring size, USD per pair, no conversion."""
+import re
 import pytest
 from services import catalog as C, pricing_engine_catalog as P
 
@@ -190,7 +191,7 @@ def test_lady_jay_seasonal_window(monkeypatch, now_iso, available):
         r = C.resolve_line_item("lady-jay", None, None, "US 6", 1, tier="foundation", market_snapshot=SNAP)
         assert r["currency"] == "USD" and r["sku"] == "LJY-FOUNDATION-SZ6"
     else:
-        assert state["message"] == "Retired Until Opening Day — Jays Season 2027"
+        assert state["message"] == "Retired until the opening of the 2027 Jays season."
         with pytest.raises(C.CatalogError, match="SEASONALLY_RETIRED"):
             C.resolve_line_item("lady-jay", None, None, "US 6", 1, tier="foundation", market_snapshot=SNAP)
 
@@ -210,3 +211,33 @@ def test_merchant_feed_drops_lady_jay_when_retired(monkeypatch):
     monkeypatch.setattr(P, "_now_utc", lambda: _utc("2026-10-31T12:00:00-04:00"))
     price = gmf._live_feed_price("lady-jay")
     assert price and price[1] == "USD" and int(price[0]) >= 4500
+
+
+# ── Merchant feed cutoff hardening: request-time filter + static expiration_date ──
+_LJ_FEED = ('<?xml version="1.0"?><rss><channel>\n  <item>\n    <g:id>lady-jay</g:id>\n    <g:price>5000 USD</g:price>\n  </item>\n'
+            '  <item>\n    <g:id>trace</g:id>\n    <g:price>450 USD</g:price>\n  </item>\n</channel></rss>')
+
+
+@pytest.mark.parametrize("now_iso,expect_lady_jay", [("2026-10-31T23:59:00-04:00", True), ("2026-11-01T00:00:00-04:00", False)])
+def test_feed_route_filters_retired_items_at_request_time(monkeypatch, now_iso, expect_lady_jay):
+    from routes.merchant_feed import filter_retired
+    monkeypatch.setattr(P, "_now_utc", lambda: _utc(now_iso))
+    xml, removed = filter_retired(_LJ_FEED)
+    assert ("<g:id>lady-jay</g:id>" in xml) is expect_lady_jay
+    assert "<g:id>trace</g:id>" in xml
+    assert removed == ([] if expect_lady_jay else ["lady-jay"])
+
+
+def test_feed_route_serves_filtered_feed(app_client, monkeypatch):
+    monkeypatch.setattr(P, "_now_utc", lambda: _utc("2026-11-01T00:00:00-04:00"))
+    r = app_client.get("/api/merchant-feed.xml")
+    assert r.status_code == 200 and r.headers["cache-control"] == "no-store"
+    assert "<g:id>lady-jay</g:id>" not in r.text and "<g:id>trace</g:id>" in r.text
+    assert r.headers["x-feed-retired-removed"] == "lady-jay"
+
+
+def test_static_feed_carries_expiration_for_lady_jay():
+    import pathlib
+    xml = (pathlib.Path(__file__).resolve().parents[2] / "frontend/public/merchant-feed.xml").read_text()
+    m = re.search(r"<g:id>lady-jay</g:id>.*?</item>", xml, re.S)
+    assert m and "<g:expiration_date>2026-11-01T04:00:00+00:00</g:expiration_date>" in m.group(0)

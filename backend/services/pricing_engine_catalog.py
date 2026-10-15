@@ -326,7 +326,7 @@ PRICING_ENGINE_CATALOG: Dict[str, Dict] = {
         # Seasonal (Jays season). Purchasable through 2026-10-31 America/Toronto; retired from
         # 2026-11-01 00:00 local until the owner authorizes the 2027 reopening (no auto-reopen).
         "season": {"closes_at": "2026-11-01T00:00:00", "tz": "America/Toronto",
-                   "retired_message": "Retired Until Opening Day — Jays Season 2027",
+                   "retired_message": "Retired until the opening of the 2027 Jays season.",
                    "reopens_at": None},
     },
     "porta-aurea": {

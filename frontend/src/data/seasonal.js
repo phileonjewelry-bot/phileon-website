@@ -4,7 +4,7 @@ export const SEASONAL_PRODUCTS = {
   "lady-jay": {
     closesAt: new Date("2026-11-01T00:00:00-04:00"), // 2026-11-01 00:00 America/Toronto
     reopensAt: null,
-    retiredMessage: "Retired Until Opening Day — Jays Season 2027",
+    retiredMessage: "Retired until the opening of the 2027 Jays season.",
     retiredSubline: "Returning for the 2027 season.",
   },
 };

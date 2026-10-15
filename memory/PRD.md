@@ -1439,3 +1439,24 @@ High-end luxury jewelry e-commerce site (PHILEON) with strict cinematic editoria
 - Tests: test_trace_editions (+ovation, coogi engraving, lady-jay mocked clock, feed exclusion), iter36 agent tests (app_client);
   feed-vs-server xfail removed (now passes). Suite 1593 passed / 93 skipped / 0 deterministic failures (1 intermittent Mongo drop).
   No orders/reservations created (orders_v2 10,250, reservations 0).
+
+## Oct 15, 2026 — Final pre-deployment verification (PREVIEW) — GO/NO-GO
+- LADY JAY feed cutoff: (1) static feed items for seasonal pieces carry <g:expiration_date> = season close
+  (lady-jay 2026-11-01T04:00:00+00:00) → Google stops serving even if the file is never rebuilt; (2) new request-time route
+  GET /api/merchant-feed.xml (routes/merchant_feed.py) serves the static feed minus seasonally retired items, Cache-Control: no-store,
+  header X-Feed-Retired-Removed; (3) generator drops retired items on rebuild. Merchant Center should point at /api/merchant-feed.xml.
+- Wording: "Retired until the opening of the 2027 Jays season." (backend season config, seasonal.js, LadyJayPage; CTA
+  "RETIRED UNTIL THE 2027 JAYS SEASON"). No auto-reopen: season.reopens_at is None; only owner sets it (tests cover 2027-04-01 → retired).
+- MONGO ROOT CAUSE (not harness-only): mongod spawned by supervisor with soft open-files limit 1024; WiredTiger hit EMFILE → fassert →
+  SIGABRT, 46 restarts on Oct 15 (/var/log/supervisor/supervisord.log, /var/log/mongodb.out.log). Any burst of collections/connections
+  (tests creating DBs) tripped it; it WOULD have dropped live shopping sessions in preview. Fix (preview infra):
+  supervisord.conf mongodb command = bash -c "ulimit -n 65536 && exec mongod" (verified Max open files 65536); 13 leaked
+  phileon_layer5/7_test_* DBs dropped. layer5/7 tests 3/3 green; full suite 1598 passed, 0 failed, mongod uptime stable.
+  PRODUCTION NOTE: production Mongo is platform-managed — its fd limit is not controlled by this repo; verify with the deployer.
+- Skipped (93) classification: 17 test_phileon_api + 21 test_true_vine (live-API, URL unset), 12 guard-blocked live-host tests
+  (veyron/wynette validate-cart, shipping e2e stripe session, adaptive i18n), 4 intent_shadow (concierge), 2 opt-in live e2e
+  (returns, admin fulfilment), 1 retention cron env, remainder parametrised duplicates of the above. In-process equivalents run:
+  checkout session (test_checkout_price_moved, test_trace_review, test_regression_consolidated), SKU resolution
+  (test_pricing_engine_catalog, test_catalog, test_full_checkout_audit incl. true-vine/veyron/wynette), price integrity
+  (test_usd_only_migration pinned, test_trace_editions, test_dynamic_rings), seasonal (test_trace_editions lady-jay), shipping quote
+  (test_shipping_quote_endpoint). No essential path is skipped.

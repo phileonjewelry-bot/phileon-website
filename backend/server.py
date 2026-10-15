@@ -1212,6 +1212,8 @@ from routes.checkout import router as checkout_v2_router
 from routes.webhooks_stripe import router as webhooks_stripe_router
 from routes.i18n import router as i18n_router
 app.include_router(checkout_v2_router, prefix="/api")
+from routes.merchant_feed import router as merchant_feed_router  # noqa: E402
+app.include_router(merchant_feed_router, prefix="/api")
 app.include_router(webhooks_stripe_router, prefix="/api")
 app.include_router(i18n_router, prefix="/api")
 from routes.admin_orders import router as admin_orders_router

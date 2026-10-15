@@ -32,6 +32,18 @@ SITE_ORIGIN = "https://phileon.com"
 LIVE_FEED_SLUGS = {"lady-jay": ("foundation", "US 6")}
 
 
+def _season_expiration(slug: str):
+    """ISO-8601 close instant for seasonal pieces → <g:expiration_date> (fail-safe for a stale static file)."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    try:
+        from services.pricing_engine_catalog import season_state
+        st = season_state(slug)
+        return st["closes_at_utc"] if st["seasonal"] else None
+    except Exception:
+        return None
+
+
 def _live_feed_price(slug: str):
     """Return ('5000', 'USD') from the server resolver, or None when unavailable/retired."""
     import sys
@@ -195,6 +207,9 @@ def build_feed(products: list[dict]) -> str:
             item.append(f"    <g:material>{material}</g:material>")
         if gender:
             item.append(f"    <g:gender>{gender}</g:gender>")
+        expires = _season_expiration(p["slug"])
+        if expires:
+            item.append(f"    <g:expiration_date>{expires}</g:expiration_date>")
         item.append("  </item>")
         items.append("\n".join(item))
         kept += 1
